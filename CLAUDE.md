@@ -86,11 +86,12 @@ visual exists only when something is hidden, too big, or too abstract to see, or
 itself is the invisible thing (foundations exception, which applies often with beginners).
 
 **Three sizes. The size is a floor, not a ceiling: pick the size that makes the idea clear to someone meeting it
-for the first time. Anything with a "how it works" gets a Walk at least. Glance is only for ideas that are a
-labeled picture. The idea list names the size for every page.**
-- **Glance** (reference-like ideas only): one animated picture with ONE control, a toggle, a slider, a click
-  that changes the picture. No steps, no inputs, no state to manage. Readable in five seconds while the
-  instructor is talking. Examples: data types and sizes, naming conventions, integer division, JDK/JRE/JVM.
+for the first time. Anything with a "how it works" gets a Walk at least. Glance is only for ideas with no process
+in them. The idea list names the size for every page. NOTHING on this hub is a static picture: every page,
+Glance included, is animated and interactive. That is what makes it a visual hub.**
+- **Glance** (ideas with no process in them): one animation with ONE control, a toggle, a slider, a hover,
+  a click, and the diagram moves in response: boxes resize, layers light up, a value slides into its slot.
+  No steps, no inputs, no state to manage. Examples: data types and sizes, naming conventions, JDK/JRE/JVM.
 - **Walk** (the default): a step-through that shows what happens behind the scenes, 4 to 10 steps, Next and
   Reset, one sentence per step, the picture changes at each step. Evaluation order, truncation, what == compares,
   the string printf builds, the path through if/else, a loop running.
@@ -100,7 +101,7 @@ labeled picture. The idea list names the size for every page.**
   `week-01/visuals/21-method-call-stack.html` is the reference for this size, not the template for all.
 
 **Design is the same for all three sizes** (header, stage, panels where they make sense, takeaway, rail).
-A Glance page may drop the left/right split and put its one control under the picture.
+A Glance page may drop the left/right split and put its one control under the animation.
 
 ## YearUp conventions (differ from Expeditors)
 - Git through IntelliJ (Share Project on GitHub, commit panel), not the CLI. Learner repos are public.
@@ -118,6 +119,11 @@ it gets no visual, no game, no reference entry. Week 1: 1c Module 1 was skipped 
   or invented ones. **Never an exercise**, so no solution is shown ahead of time.
 - Exercise companions are the only place an exercise appears and they are spoiler-free: plain-English
   restatement, inputs and outputs, a flow diagram, one example run. No solution code.
+
+## Agents
+Pages are built by subagents, one page per agent, from this file + the calibration page of the size + the
+workbook text + the demo code. Use **Opus** for pages (quality matters more than cost; a redo costs more).
+Use Sonnet for mechanical work: diffs, link checks, compile checks. The lead verifies every page in a browser.
 
 ## Workflow per week
 1. After the week's content review is done in `04.Weeks/Week NN/review.md`.
