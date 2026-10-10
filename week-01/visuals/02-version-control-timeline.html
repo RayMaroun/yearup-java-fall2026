@@ -28,79 +28,99 @@
   h1{font-family:var(--disp);font-weight:700;font-size:clamp(2.3rem,6vw,3.6rem);line-height:1;margin:0 0 12px;
     letter-spacing:-.03em;background:linear-gradient(180deg,#fff,#b9c6e6);-webkit-background-clip:text;
     background-clip:text;color:transparent}
-  .lede{color:var(--muted);max-width:64ch;font-size:1.05rem;margin:0 0 30px;line-height:1.5}
+  .lede{color:var(--muted);max-width:64ch;font-size:1.05rem;margin:0 0 26px;line-height:1.5}
   .lede b{color:var(--ink)}
-  .lede code,.take code,.status code{font-family:var(--mono);font-size:.92em;color:#bcd0ff}
+  .lede code,.take code,.caption code{font-family:var(--mono);font-size:.92em;color:#bcd0ff}
+
+  /* ---------- stage: picture first, one toolbar, support below ---------- */
   .stage{position:relative;background:linear-gradient(180deg,rgba(255,255,255,.03),rgba(255,255,255,.01));
-    border:1px solid var(--line);border-radius:24px;padding:8px;
+    border:1px solid var(--line);border-radius:24px;padding:18px 18px 14px;
     box-shadow:0 1px 0 rgba(255,255,255,.06) inset,0 30px 80px -30px rgba(0,0,0,.8)}
-  .grid{display:grid;grid-template-columns:340px 1fr;gap:8px}
-  @media (max-width:860px){.grid{grid-template-columns:1fr}}
-  .panelL,.panelR{border-radius:18px;padding:22px}
-  .panelL{background:linear-gradient(180deg,rgba(110,160,255,.06),rgba(139,123,255,.03));border:1px solid var(--line)}
-  .panelR{background:rgba(6,10,20,.5);border:1px solid var(--line);position:relative;overflow:hidden;min-width:0}
-  .lab{font-family:var(--mono);font-size:.7rem;letter-spacing:.12em;text-transform:uppercase;color:var(--muted);margin:0 0 12px}
-  /* readout */
-  .readout{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin:0 0 14px}
-  .stat{background:rgba(255,255,255,.03);border:1px solid var(--line);border-radius:12px;padding:11px 13px}
-  .stat .k{font-family:var(--mono);font-size:.62rem;letter-spacing:.1em;text-transform:uppercase;color:var(--muted)}
-  .stat .v{font-family:var(--disp);font-weight:700;font-size:1.45rem;font-variant-numeric:tabular-nums;margin-top:2px;transition:color .3s;min-height:1.6em}
-  .v.hot{color:var(--accent)} .v.gold{color:var(--gold)} .v.bad{color:var(--warn)} .v.ok{color:var(--good)} .v.dim{color:rgba(132,150,182,.5)}
-  .stepno{font-family:var(--mono);font-size:.64rem;letter-spacing:.14em;text-transform:uppercase;color:var(--muted);margin:0 0 8px}
-  .stepno b{color:var(--accent);font-weight:500}
-  .status{font-family:var(--mono);font-size:.82rem;line-height:1.55;color:var(--ink);min-height:122px;
-    padding:12px 14px;border-radius:12px;background:rgba(0,0,0,.25);border:1px solid var(--line);
-    border-left:3px solid var(--accent);transition:border-color .3s}
-  .status.bad{border-left-color:var(--warn)}
-  .status.look{border-left-color:var(--gold)}
-  .status.ok{border-left-color:var(--good)}
-  .status b.g{color:var(--good)} .status b.w{color:var(--warn)} .status b.a{color:var(--accent)} .status b.y{color:var(--gold)}
-  .actions{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-top:16px}
-  .btn{font-family:var(--body);font-weight:500;font-size:.84rem;padding:9px 12px;border-radius:11px;cursor:pointer;
-    border:1px solid var(--line);background:var(--surface);color:var(--ink);transition:.15s;text-align:center}
-  .btn:hover{border-color:var(--accent);color:var(--accent)}
-  .btn.primary{border-color:rgba(110,160,255,.5);background:rgba(110,160,255,.12);grid-column:1 / -1}
-  .btn.gold:hover{border-color:var(--gold);color:var(--gold)}
-  .btn:disabled{opacity:.35;cursor:not-allowed}
-  .btn:focus-visible{outline:2px solid var(--accent);outline-offset:2px}
-  .hint{font-family:var(--mono);font-size:.7rem;color:var(--muted);margin:14px 0 0;line-height:1.5}
-  .hint b{color:var(--accent)}
-  /* timeline */
-  .tl{position:relative;height:156px;margin:0 0 16px;border:1px dashed rgba(132,150,182,.3);border-radius:14px;background:rgba(0,0,0,.18)}
-  .tl .track{position:absolute;left:12.5%;right:12.5%;top:58px;height:2px;background:rgba(132,150,182,.22)}
-  .tl .fill{position:absolute;left:0;top:0;height:2px;width:0;background:linear-gradient(90deg,var(--accent),var(--good));
+  .topbar{display:flex;align-items:center;gap:10px;margin:0 0 14px;flex-wrap:wrap}
+  .topbar .lab{margin:0 4px 0 0}
+  .lab{font-family:var(--mono);font-size:.7rem;letter-spacing:.12em;text-transform:uppercase;color:var(--muted);margin:0 0 10px}
+  .btn:focus-visible,.focus:focus-visible{outline:2px solid var(--accent);outline-offset:2px}
+  .focus{margin-left:auto;font-family:var(--mono);font-size:.68rem;letter-spacing:.1em;text-transform:uppercase;padding:6px 12px;
+    border-radius:999px;border:1px solid var(--line);background:rgba(0,0,0,.25);color:var(--muted);cursor:pointer;transition:.15s}
+  .focus:hover{border-color:var(--accent);color:var(--accent)}
+  body.solo .focus{border-color:rgba(255,200,98,.6);color:var(--gold);background:rgba(255,200,98,.1)}
+
+  /* hero picture: the commit timeline */
+  .pic{position:relative;height:390px;border:1px solid var(--line);border-radius:18px;background:rgba(6,10,20,.5);overflow:hidden;--ty:150px}
+  body.solo .pic{height:480px;--ty:190px}
+  .tl{position:absolute;inset:0}
+  .tl .track{position:absolute;left:12.5%;right:12.5%;top:calc(var(--ty) - 1px);height:3px;border-radius:2px;background:rgba(132,150,182,.22)}
+  .tl .fill{position:absolute;left:0;top:0;height:3px;width:0;border-radius:2px;background:linear-gradient(90deg,var(--accent),var(--good));
     transition:width .5s cubic-bezier(.2,.9,.3,1)}
-  .tl .empty{position:absolute;left:0;right:0;top:92px;text-align:center;font-family:var(--mono);font-size:.7rem;color:rgba(132,150,182,.6);transition:opacity .3s}
+  .tl .start{position:absolute;left:0;right:0;top:calc(var(--ty) + 46px);text-align:center;font-family:var(--mono);font-size:.8rem;
+    color:var(--muted);pointer-events:none;transition:opacity .3s}
   .node{position:absolute;top:0;width:24%;transform:translateX(-50%);text-align:center;opacity:0;transition:opacity .4s}
   .node.show{opacity:1}
-  .node button{all:unset;cursor:default;display:block;width:100%;padding-top:47px}
+  .node button{all:unset;cursor:default;display:block;width:100%;padding-top:calc(var(--ty) - 16px)}
   .node.saved button{cursor:pointer}
-  .node button:focus-visible .dot{outline:2px solid var(--accent);outline-offset:3px}
-  .node .dot{display:block;margin:0 auto;width:22px;height:22px;border-radius:50%;background:#0b1224;
-    border:2px solid rgba(132,150,182,.5);transition:all .35s;position:relative;z-index:1}
-  .node.saved .dot{background:#bcd0ff;border-color:var(--accent);box-shadow:0 0 14px -4px rgba(110,160,255,.9)}
+  .node button:focus-visible .dot{outline:2px solid var(--accent);outline-offset:4px}
+  .node .dot{display:block;margin:0 auto;width:32px;height:32px;border-radius:50%;background:#0b1224;
+    border:3px solid rgba(132,150,182,.5);transition:all .35s;position:relative;z-index:1}
+  .node.saved .dot{background:#bcd0ff;border-color:var(--accent);box-shadow:0 0 18px -4px rgba(110,160,255,.9)}
   .node.saved button:hover .dot{transform:scale(1.15)}
-  .node.pend .dot{background:transparent;border:2px dashed var(--gold)}
-  .node.broken .dot{background:#ffc9c9;border-color:var(--warn);box-shadow:0 0 14px -4px rgba(255,106,106,.9)}
-  .node.view .dot{box-shadow:0 0 0 5px rgba(255,200,98,.25),0 0 18px -2px rgba(255,200,98,.9);border-color:var(--gold)}
+  .node.pend .dot{background:transparent;border:3px dashed var(--gold)}
+  .node.broken .dot{background:#ffc9c9;border-color:var(--warn);box-shadow:0 0 18px -4px rgba(255,106,106,.9)}
+  .node.view .dot{box-shadow:0 0 0 7px rgba(255,200,98,.25),0 0 22px -2px rgba(255,200,98,.9);border-color:var(--gold)}
   .node.gone{opacity:.45}
   .node.gone .dot{background:transparent;border-style:dashed}
-  .node .h{display:block;font-family:var(--mono);font-size:.6rem;color:var(--muted);margin-top:8px;letter-spacing:.04em}
-  .node .m{display:block;font-family:var(--mono);font-size:.68rem;color:var(--ink);line-height:1.35;margin-top:3px;padding:0 4px}
+  .node .h{display:block;font-family:var(--mono);font-size:.74rem;color:var(--muted);margin-top:12px;letter-spacing:.04em}
+  .node .m{display:block;font-family:var(--mono);font-size:.88rem;color:var(--ink);line-height:1.4;margin-top:5px;padding:0 6px}
+  body.solo .node .m{font-size:.98rem}
   .node.pend .m{color:var(--gold)}
-  .node .t{display:block;font-family:var(--mono);font-size:.6rem;color:rgba(132,150,182,.7);margin-top:2px}
-  .node .gtag{display:inline-block;margin-top:4px;font-family:var(--mono);font-size:.56rem;letter-spacing:.1em;text-transform:uppercase;
-    color:var(--warn);border:1px solid rgba(255,106,106,.5);border-radius:999px;padding:1px 7px}
-  .here{position:absolute;top:10px;transform:translateX(-50%);font-family:var(--mono);font-size:.58rem;letter-spacing:.12em;
-    text-transform:uppercase;color:var(--good);white-space:nowrap;padding:3px 8px;border-radius:999px;
+  .node .t{display:block;font-family:var(--mono);font-size:.74rem;color:rgba(132,150,182,.7);margin-top:4px}
+  .node .gtag{display:inline-block;margin-top:6px;font-family:var(--mono);font-size:.64rem;letter-spacing:.1em;text-transform:uppercase;
+    color:var(--warn);border:1px solid rgba(255,106,106,.5);border-radius:999px;padding:2px 9px}
+  .here{position:absolute;top:calc(var(--ty) - 66px);transform:translateX(-50%);font-family:var(--mono);font-size:.7rem;letter-spacing:.12em;
+    text-transform:uppercase;color:var(--good);white-space:nowrap;padding:4px 11px;border-radius:999px;
     border:1px solid rgba(70,217,138,.5);background:rgba(70,217,138,.1);opacity:0;
     transition:left .55s cubic-bezier(.2,.9,.3,1),opacity .3s,color .3s,border-color .3s,background .3s}
   .here.show{opacity:1}
   .here.edit{color:var(--gold);border-color:rgba(255,200,98,.5);background:rgba(255,200,98,.1)}
-  .here::after{content:"";position:absolute;left:50%;top:100%;width:1px;height:12px;background:currentColor;opacity:.6}
+  .here::after{content:"";position:absolute;left:50%;top:100%;width:1px;height:24px;background:currentColor;opacity:.6}
+
+  /* caption: the one sentence, right under the picture */
+  .caption{display:flex;gap:16px;align-items:flex-start;margin:14px 4px 0;min-height:56px}
+  .caption .n{flex-shrink:0;font-family:var(--disp);font-weight:700;font-size:1.35rem;color:var(--accent);font-variant-numeric:tabular-nums;
+    line-height:1.2;min-width:3.2rem}
+  .caption .n small{display:block;font-family:var(--mono);font-weight:400;font-size:.58rem;letter-spacing:.14em;text-transform:uppercase;color:var(--muted)}
+  .caption .t{font-size:1.02rem;line-height:1.55;color:var(--ink);padding-left:16px;border-left:3px solid var(--accent);transition:border-color .3s}
+  body.solo .caption .t{font-size:1.18rem}
+  .caption.bad .t{border-left-color:var(--warn)} .caption.look .t{border-left-color:var(--gold)} .caption.ok .t{border-left-color:var(--good)}
+  .caption b.g{color:var(--good)} .caption b.w{color:var(--warn)} .caption b.a{color:var(--accent)} .caption b.y{color:var(--gold)}
+
+  /* toolbar: same on every page */
+  .toolbar{display:flex;align-items:center;gap:10px;margin:16px 0 0;padding-top:14px;border-top:1px solid var(--line)}
+  .btn{font-family:var(--body);font-weight:500;font-size:.86rem;padding:9px 16px;border-radius:11px;cursor:pointer;
+    border:1px solid var(--line);background:var(--surface);color:var(--ink);transition:.15s}
+  .btn:hover{border-color:var(--accent);color:var(--accent)}
+  .btn.primary{border-color:rgba(110,160,255,.5);background:rgba(110,160,255,.12);padding:9px 22px}
+  .btn:disabled{opacity:.35;cursor:not-allowed}
+  .btn.ghost{background:transparent;color:var(--muted);margin-left:auto}
+  .dots{display:flex;gap:5px;align-items:center;margin:0 6px}
+  .dots i{display:block;width:8px;height:8px;border-radius:50%;background:rgba(255,255,255,.12);transition:.2s}
+  .dots i.done{background:rgba(110,160,255,.45)}
+  .dots i.now{background:var(--accent);transform:scale(1.35);box-shadow:0 0 10px rgba(110,160,255,.7)}
+  .hint{font-family:var(--mono);font-size:.68rem;color:var(--muted);margin:10px 4px 0;line-height:1.5}
+  .hint b{color:var(--accent)}
+
+  /* support: file, commit details, readouts, console. Below the picture, hidden in focus */
+  .support{display:grid;grid-template-columns:minmax(0,1.3fr) minmax(0,1fr);gap:14px;margin-top:18px}
+  @media (max-width:860px){.support{grid-template-columns:1fr}}
+  body.solo .support,body.solo .take,body.solo .hint{display:none}
+  .side{display:flex;flex-direction:column;gap:12px}
+  .side .lab{margin:0 0 -4px}
+  .readout{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+  .stat{background:rgba(255,255,255,.03);border:1px solid var(--line);border-radius:12px;padding:11px 13px;transition:opacity .3s}
+  .stat.empty{opacity:.3}
+  .stat .k{font-family:var(--mono);font-size:.62rem;letter-spacing:.1em;text-transform:uppercase;color:var(--muted)}
+  .stat .v{font-family:var(--disp);font-weight:700;font-size:1.45rem;font-variant-numeric:tabular-nums;margin-top:2px;transition:color .3s;min-height:1.6em}
+  .v.hot{color:var(--accent)} .v.gold{color:var(--gold)} .v.bad{color:var(--warn)} .v.ok{color:var(--good)} .v.dim{color:rgba(132,150,182,.5)}
   /* file + details */
-  .rgrid{display:grid;grid-template-columns:minmax(0,1.35fr) minmax(0,1fr);gap:16px}
-  @media (max-width:1000px){.rgrid{grid-template-columns:1fr}}
   .fhead{display:flex;justify-content:space-between;align-items:center;gap:8px;margin:0 0 8px;flex-wrap:wrap}
   .fhead .lab{margin:0}
   .badge{font-family:var(--mono);font-size:.62rem;padding:3px 9px;border-radius:999px;border:1px solid var(--line);color:var(--muted);transition:.3s}
@@ -127,7 +147,7 @@
   .card .chg{font-family:var(--mono);font-size:.68rem;color:#9fb0d0;line-height:1.6}
   .card .chg i{font-style:normal;color:var(--good)} .card .chg u{text-decoration:none;color:var(--accent)}
   .card .none{font-family:var(--mono);font-size:.7rem;color:rgba(132,150,182,.6);line-height:1.5}
-  .console{margin-top:12px;font-family:var(--mono);font-size:.74rem;line-height:1.6;background:#05070e;border:1px solid var(--line);
+  .console{font-family:var(--mono);font-size:.74rem;line-height:1.6;background:#05070e;border:1px solid var(--line);
     border-radius:12px;padding:10px 14px;min-height:78px;color:#9fe3b6}
   .console .cl{font-size:.6rem;letter-spacing:.14em;text-transform:uppercase;color:rgba(132,150,182,.6);margin-bottom:4px}
   .console .err{color:var(--warn)}
@@ -149,49 +169,49 @@
 <div class="wrap">
   <p class="tag">Workbook 1b &middot; Section 1-1 &middot; Git</p>
   <h1>Version Control Timeline</h1>
-  <p class="lede">Version control keeps track of every change you make to your code.
-  <b>Each commit is a saved snapshot of the project, with a message that says what changed and why.</b>
-  Step through a morning of edits to <code>Main.java</code> and watch the timeline grow.</p>
+  <p class="lede"><b>Each commit is a saved snapshot of the project, with a message that says what changed and why.</b></p>
 
   <div class="stage">
-    <div class="grid">
-      <div class="panelL">
+    <div class="topbar">
+      <span class="lab">History: the timeline of commits</span>
+      <button class="focus" id="bFocus" title="Hide the code and notes, enlarge the picture">Focus</button>
+    </div>
+
+    <div class="pic" id="pic">
+      <div class="tl" id="tl">
+        <div class="track"><div class="fill" id="fill"></div></div>
+        <div class="start" id="empty">no commits yet</div>
+        <div class="here" id="here">you are here</div>
+      </div>
+    </div>
+
+    <div class="caption" id="caption">
+      <div class="n" id="stepno"><small>step</small>0 / 7</div>
+      <div class="t" id="status">Press <b class="a">Next</b> to start.</div>
+    </div>
+
+    <div class="toolbar">
+      <button class="btn" id="bBack">&larr; Back</button>
+      <div class="dots" id="dots"></div>
+      <button class="btn primary" id="bNext">Next &rarr;</button>
+      <button class="btn ghost" id="bReset">Reset</button>
+    </div>
+    <p class="hint">space = next &middot; <b>click any commit dot</b> to look at that snapshot.</p>
+
+    <div class="support">
+      <div>
+        <div class="fhead"><p class="lab">Main.java</p><span class="badge" id="badge"></span></div>
+        <div class="code" id="code"></div>
+      </div>
+      <div class="side">
         <p class="lab">Where the project stands</p>
         <div class="readout">
-          <div class="stat"><div class="k">Commits saved</div><div class="v dim" id="stCount">0</div></div>
-          <div class="stat"><div class="k">File matches</div><div class="v dim" id="stAt">none</div></div>
+          <div class="stat empty"><div class="k">Commits saved</div><div class="v dim" id="stCount">0</div></div>
+          <div class="stat empty"><div class="k">File matches</div><div class="v dim" id="stAt">none</div></div>
         </div>
-
-        <p class="stepno" id="stepno">Step <b>0</b> of 7</p>
-        <div class="status" id="status">Press <b class="a">Next</b> to start.</div>
-
-        <div class="actions">
-          <button class="btn primary" id="bNext">Next &rarr;</button>
-          <button class="btn gold" id="bBack">&larr; Back</button>
-          <button class="btn" id="bReset">Reset</button>
-        </div>
-        <p class="hint">space = next &middot; <b>click any commit dot</b> to look at that snapshot.</p>
-      </div>
-
-      <div class="panelR">
-        <p class="lab">History: the timeline of commits</p>
-        <div class="tl" id="tl">
-          <div class="track"><div class="fill" id="fill"></div></div>
-          <div class="empty" id="empty">no commits yet</div>
-          <div class="here" id="here">you are here</div>
-        </div>
-
-        <div class="rgrid">
-          <div>
-            <div class="fhead"><p class="lab">Main.java</p><span class="badge" id="badge"></span></div>
-            <div class="code" id="code"></div>
-          </div>
-          <div>
-            <p class="lab">Commit details</p>
-            <div class="card" id="card"></div>
-            <div class="console"><div class="cl">run Main</div><div id="console"></div></div>
-          </div>
-        </div>
+        <p class="lab">Commit details</p>
+        <div class="card" id="card"></div>
+        <div class="console"><div class="cl">run Main</div><div id="console"></div></div>
       </div>
     </div>
   </div>
@@ -256,7 +276,7 @@
      msg:'Roll back to commit 3. The project is that snapshot again and <b class="g">it runs</b>. Commit 4 is not deleted, so you could roll forward to it.'}
   ];
   var at=-1, peek=null, lastFile=-1;
-  var statusEl=$("#status"), tl=$("#tl");
+  var statusEl=$("#status"), capEl=$("#caption"), tl=$("#tl");
 
   /* ---------- timeline nodes ---------- */
   var nodes=[];
@@ -334,25 +354,25 @@
     if(s){ here.className="here show"+(s.pend?" edit":""); here.style.left=slotX(s.pend?n:s.head); here.textContent=s.pend?"you are here, edited":"you are here"; }
     else here.className="here";
   }
-  function setStat(id,txt,c){ var e=$(id); e.textContent=txt; e.className="v "+(c||""); }
+  function setStat(id,txt,c){ var e=$(id); e.textContent=txt; e.className="v "+(c||""); e.parentNode.classList.toggle("empty",c==="dim"); }
 
   function show(i){
     at=i; peek=null;
     if(i<0){
-      $("#stepno").innerHTML="Step <b>0</b> of "+steps.length;
+      $("#stepno").innerHTML="<small>step</small>0 / "+steps.length;
       renderTl(null); renderFile(0,{}); renderCard(null);
       $("#badge").className="badge"; $("#badge").textContent="on disk, not saved in history";
-      statusEl.className="status"; statusEl.innerHTML='This is Main.java from the testing-git demo. Press <b class="a">Next</b> to save its first snapshot.';
+      capEl.className="caption"; statusEl.innerHTML='This is Main.java from the testing-git demo. Press <b class="a">Next</b> to save its first snapshot.';
       setStat("#stCount","0","dim"); setStat("#stAt","none","dim"); setBtns(); return;
     }
     var s=steps[i];
-    $("#stepno").innerHTML="Step <b>"+(i+1)+"</b> of "+steps.length;
+    $("#stepno").innerHTML="<small>step</small>"+(i+1)+" / "+steps.length;
     renderTl(s,s.view); renderFile(s.file,s.marks,s.view!==undefined); renderCard(s.card,s.view!==undefined);
     var bd=$("#badge");
     if(s.view!==undefined){ bd.className="badge look"; bd.textContent="viewing commit "+(s.view+1)+", read only"; }
     else if(s.pend){ bd.className="badge edit"; bd.textContent="changed since commit "+(s.head+1); }
     else { bd.className="badge ok"; bd.textContent="same as commit "+(s.head+1); }
-    statusEl.className="status "+s.cls; statusEl.innerHTML=s.msg;
+    capEl.className="caption "+s.cls; statusEl.innerHTML=s.msg;
     setStat("#stCount",String(s.n),"hot");
     if(s.pend) setStat("#stAt","edited","gold");
     else setStat("#stAt","commit "+(s.head+1),s.head===3?"bad":"ok");
@@ -364,10 +384,18 @@
     peek=idx;
     renderTl(s,idx); renderFile(idx,COMMITS[idx].marks,true); renderCard(idx,true);
     $("#badge").className="badge look"; $("#badge").textContent="viewing commit "+(idx+1)+", read only";
-    statusEl.className="status look";
+    capEl.className="caption look";
     statusEl.innerHTML='You are looking at commit '+(idx+1)+', <b class="y">"'+esc(COMMITS[idx].msg)+'"</b>: the file exactly as it was saved. Next or Back returns to the walk.';
   }
-  function setBtns(){ $("#bNext").disabled=at>=steps.length-1; $("#bBack").disabled=at<0; }
+  function setBtns(){ $("#bNext").disabled=at>=steps.length-1; $("#bBack").disabled=at<0;
+    var d=""; for(var k=0;k<steps.length;k++) d+='<i class="'+(k===at?"now":k<at?"done":"")+'"></i>'; $("#dots").innerHTML=d; }
+  /* focus: picture and caption only. Remembered per browser. */
+  function redraw(){ if(at<0) renderTl(null); else renderTl(steps[at],peek!==null?peek:steps[at].view); }
+  function setFocus(on){ document.body.classList.toggle("solo",on); $("#bFocus").textContent=on?"Focus on":"Focus";
+    try{localStorage.setItem("hub-focus",on?"1":"0");}catch(e){} redraw(); }
+  $("#bFocus").addEventListener("click",function(){ setFocus(!document.body.classList.contains("solo")); this.blur(); });
+  try{ if(localStorage.getItem("hub-focus")==="1") document.body.classList.add("solo"); }catch(e){}
+  if(document.body.classList.contains("solo")) $("#bFocus").textContent="Focus on";
   function next(){ if(at<steps.length-1) show(at+1); }
   function back(){ if(peek!==null){ show(at); return; } if(at>=0) show(at-1); }
   function reset(){ lastFile=-1; show(-1); }

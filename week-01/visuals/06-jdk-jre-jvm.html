@@ -28,59 +28,79 @@
   h1{font-family:var(--disp);font-weight:700;font-size:clamp(2.3rem,6vw,3.6rem);line-height:1;margin:0 0 12px;
     letter-spacing:-.03em;background:linear-gradient(180deg,#fff,#b9c6e6);-webkit-background-clip:text;
     background-clip:text;color:transparent}
-  .lede{color:var(--muted);max-width:64ch;font-size:1.05rem;margin:0 0 30px;line-height:1.5}
+  .lede{color:var(--muted);max-width:64ch;font-size:1.05rem;margin:0 0 26px;line-height:1.5}
   .lede b{color:var(--ink)}
-  .lede code,.take code,.status code{font-family:var(--mono);font-size:.92em;color:#bcd0ff}
-  .stage{position:relative;background:linear-gradient(180deg,rgba(255,255,255,.03),rgba(255,255,255,.01));
-    border:1px solid var(--line);border-radius:24px;padding:8px;
-    box-shadow:0 1px 0 rgba(255,255,255,.06) inset,0 30px 80px -30px rgba(0,0,0,.8)}
-  .panelR{border-radius:18px;padding:22px;background:rgba(6,10,20,.5);border:1px solid var(--line);position:relative;overflow:hidden}
-  .lab{font-family:var(--mono);font-size:.7rem;letter-spacing:.12em;text-transform:uppercase;color:var(--muted);margin:0 0 12px}
+  .lede code,.take code,.caption code{font-family:var(--mono);font-size:.92em;color:#bcd0ff}
 
-  /* the nested layers */
-  .rings{position:relative;max-width:820px;margin:0 auto}
+  /* ---------- stage: picture first, one toolbar ---------- */
+  .stage{position:relative;background:linear-gradient(180deg,rgba(255,255,255,.03),rgba(255,255,255,.01));
+    border:1px solid var(--line);border-radius:24px;padding:18px 18px 14px;
+    box-shadow:0 1px 0 rgba(255,255,255,.06) inset,0 30px 80px -30px rgba(0,0,0,.8)}
+  .topbar{display:flex;align-items:center;gap:10px;margin:0 0 14px;flex-wrap:wrap}
+  .topbar .lab{margin:0 4px 0 0}
+  .lab{font-family:var(--mono);font-size:.7rem;letter-spacing:.12em;text-transform:uppercase;color:var(--muted);margin:0 0 10px}
+  .focus{margin-left:auto;font-family:var(--mono);font-size:.68rem;letter-spacing:.1em;text-transform:uppercase;padding:6px 12px;
+    border-radius:999px;border:1px solid var(--line);background:rgba(0,0,0,.25);color:var(--muted);cursor:pointer;transition:.15s}
+  .focus:hover{border-color:var(--accent);color:var(--accent)}
+  .focus:focus-visible{outline:2px solid var(--accent);outline-offset:2px}
+  body.solo .focus{border-color:rgba(255,200,98,.6);color:var(--gold);background:rgba(255,200,98,.1)}
+
+  /* hero picture: the nested layers, side by side so they fill the width */
+  .pic{position:relative;min-height:390px;height:auto;border:1px solid var(--line);border-radius:18px;background:rgba(6,10,20,.5);overflow:hidden}
+  body.solo .pic{min-height:480px}
+  .rings{height:100%;padding:18px}
+  .rings>.layer{height:100%}
   .layer{position:relative;border-radius:18px;border:1px solid var(--line);background:rgba(255,255,255,.02);
-    padding:16px 18px 18px;transition:border-color .45s,background .45s,box-shadow .45s,opacity .45s,transform .45s}
-  .layer+.layer{margin-top:0}
-  .layer .layer{margin-top:14px}
+    padding:20px 22px;display:grid;grid-template-columns:minmax(0,290px) minmax(0,1fr);gap:24px;
+    transition:border-color .45s,background .45s,box-shadow .45s,opacity .45s,transform .45s}
+  #Ljvm{display:block}
   .layer.on{border-color:rgba(110,160,255,.6);background:rgba(110,160,255,.07);box-shadow:0 0 30px -10px rgba(110,160,255,.5)}
   .layer.off{border-color:rgba(255,255,255,.06);background:transparent}
-  .layer.off>.lhead,.layer.off>.ljob,.layer.off>.tools{opacity:.3}
+  .layer.off>.ltext>.lhead,.layer.off>.ltext>.ljob,.layer.off>.ltext>.tools{opacity:.3}
+  .ltext{min-width:0;max-width:420px}
   .lhead,.ljob,.tools{transition:opacity .45s}
   .lhead{display:flex;align-items:baseline;gap:12px;flex-wrap:wrap}
-  .lname{font-family:var(--disp);font-weight:700;font-size:1.15rem;letter-spacing:-.01em;color:var(--ink);transition:color .4s}
-  .layer.on>.lhead .lname{color:var(--accent)}
-  .lfull{font-family:var(--mono);font-size:.66rem;letter-spacing:.12em;text-transform:uppercase;color:var(--muted)}
-  .ljob{font-size:.86rem;color:var(--muted);margin:4px 0 0;line-height:1.45}
+  .lname{font-family:var(--disp);font-weight:700;font-size:1.6rem;letter-spacing:-.01em;color:var(--ink);transition:color .4s}
+  .layer.on>.ltext>.lhead .lname{color:var(--accent)}
+  .lfull{font-family:var(--mono);font-size:.7rem;letter-spacing:.12em;text-transform:uppercase;color:var(--muted)}
+  .ljob{font-size:1rem;color:var(--muted);margin:8px 0 0;line-height:1.5}
   .ljob b{color:var(--ink);font-weight:500}
-  .tools{display:flex;flex-wrap:wrap;gap:6px;margin-top:10px;min-height:28px}
-  .tool{font-family:var(--mono);font-size:.7rem;padding:4px 9px;border-radius:999px;border:1px solid var(--line);
+  body.solo .ljob{font-size:1.08rem}
+  .tools{display:flex;flex-wrap:wrap;gap:7px;margin-top:14px;min-height:30px}
+  .tool{font-family:var(--mono);font-size:.78rem;padding:5px 11px;border-radius:999px;border:1px solid var(--line);
     background:rgba(0,0,0,.3);color:#bcd0ff;transition:border-color .4s,color .4s,background .4s,transform .4s,opacity .4s}
-  .layer.on>.tools .tool{border-color:rgba(110,160,255,.45)}
-  .tool.hot{border-color:var(--gold);color:#ffe6b0;background:rgba(255,200,98,.12);transform:scale(1.06)}
-  .tool.good{border-color:var(--good);color:#bff3d6;background:rgba(70,217,138,.1)}
-  .need{position:absolute;right:14px;top:14px;font-family:var(--mono);font-size:.62rem;letter-spacing:.14em;text-transform:uppercase;
-    padding:4px 9px;border-radius:999px;border:1px solid transparent;opacity:0;transition:opacity .4s,transform .4s;transform:translateY(-4px)}
+  .layer.on>.ltext>.tools .tool{border-color:rgba(110,160,255,.45)}
+  .need{display:inline-block;margin:0 0 10px;font-family:var(--mono);font-size:.66rem;letter-spacing:.14em;text-transform:uppercase;
+    padding:4px 10px;border-radius:999px;border:1px solid transparent;opacity:0;transition:opacity .4s,transform .4s;transform:translateY(-4px)}
   .need.show{opacity:1;transform:none}
   .need.yes{color:var(--good);border-color:rgba(70,217,138,.5);background:rgba(70,217,138,.08)}
   .need.no{color:var(--muted);border-color:var(--line);background:rgba(0,0,0,.25)}
+  @media (max-width:860px){
+    .pic,body.solo .pic{height:auto}
+    .rings>.layer{height:auto}
+    .layer{grid-template-columns:1fr;gap:14px;padding:16px}
+  }
 
-  /* the one control, under the animation */
-  .ctl{margin-top:20px;display:grid;grid-template-columns:1fr auto;gap:14px;align-items:start}
-  @media (max-width:760px){.ctl{grid-template-columns:1fr}}
-  .seg{display:inline-flex;border:1px solid var(--line);border-radius:12px;overflow:hidden;background:rgba(0,0,0,.25)}
-  .seg button{font-family:var(--body);font-weight:500;font-size:.84rem;padding:10px 16px;border:0;background:transparent;color:var(--muted);
+  /* caption: the sentence for the current choice, right under the picture */
+  .caption{display:flex;gap:16px;align-items:flex-start;margin:14px 4px 0;min-height:56px}
+  .caption .n{flex-shrink:0;font-family:var(--disp);font-weight:700;font-size:1.35rem;color:var(--accent);line-height:1.2;min-width:3.2rem}
+  .caption .n small{display:block;font-family:var(--mono);font-weight:400;font-size:.58rem;letter-spacing:.14em;text-transform:uppercase;color:var(--muted)}
+  .caption .t{font-size:1.02rem;line-height:1.55;color:var(--ink);padding-left:16px;border-left:3px solid var(--accent);transition:border-color .3s}
+  body.solo .caption .t{font-size:1.18rem}
+  .caption b.g{color:var(--good)} .caption b.a{color:var(--accent)} .caption b.y{color:var(--gold)}
+
+  /* toolbar: the one control */
+  .toolbar{display:flex;align-items:center;gap:10px;margin:16px 0 0;padding-top:14px;border-top:1px solid var(--line);flex-wrap:wrap}
+  .seg{display:inline-flex;flex-wrap:wrap;border:1px solid var(--line);border-radius:12px;overflow:hidden;background:rgba(0,0,0,.25)}
+  .seg button{font-family:var(--body);font-weight:500;font-size:.86rem;padding:10px 18px;border:0;background:transparent;color:var(--muted);
     cursor:pointer;transition:.15s;border-right:1px solid var(--line)}
   .seg button:last-child{border-right:0}
   .seg button:hover{color:var(--accent)}
   .seg button.on{background:rgba(110,160,255,.16);color:var(--ink)}
   .seg button:focus-visible{outline:2px solid var(--accent);outline-offset:-2px}
-  .status{font-family:var(--mono);font-size:.82rem;line-height:1.55;color:var(--ink);min-height:60px;
-    padding:12px 14px;border-radius:12px;background:rgba(0,0,0,.25);border:1px solid var(--line);
-    border-left:3px solid var(--accent);transition:border-color .3s;grid-column:1 / -1}
-  .status b.g{color:var(--good)} .status b.a{color:var(--accent)} .status b.y{color:var(--gold)}
-  .hint{font-family:var(--mono);font-size:.7rem;color:var(--muted);margin:14px 0 0;line-height:1.5}
+  .hint{font-family:var(--mono);font-size:.68rem;color:var(--muted);margin:10px 4px 0;line-height:1.5}
   .hint b{color:var(--accent)}
+  body.solo .take,body.solo .hint{display:none}
 
   .take{margin-top:22px;background:linear-gradient(180deg,rgba(110,160,255,.08),rgba(139,123,255,.04));
     border:1px solid var(--line);border-left:3px solid var(--accent);border-radius:12px;padding:16px 18px}
@@ -98,43 +118,56 @@
 <div class="wrap">
   <p class="tag">Workbook 1c &middot; Section 2-1 &middot; The Java platform</p>
   <h1>JDK, JRE, JVM</h1>
-  <p class="lede">Three names that nest inside each other. The JVM runs bytecode. The JRE wraps it with the class libraries so a program can run.
-  The JDK wraps both with the tools to write one. <b>Pick what you want to do and watch which layer lights up.</b></p>
+  <p class="lede">Three names that nest inside each other. <b>Pick what you want to do and watch which layer lights up.</b></p>
 
   <div class="stage">
-    <div class="panelR">
-      <p class="lab">One inside the other</p>
+    <div class="topbar">
+      <span class="lab">One inside the other</span>
+      <button class="focus" id="bFocus" title="Hide the notes, enlarge the picture">Focus</button>
+    </div>
+
+    <div class="pic" id="pic">
       <div class="rings" id="rings">
         <div class="layer" id="Ljdk">
-          <span class="need" id="Njdk"></span>
-          <div class="lhead"><span class="lname">JDK</span><span class="lfull">Java Development Kit</span></div>
-          <p class="ljob"><b>For writing programs.</b> The tools a developer needs, plus a JRE inside so you can test what you wrote.</p>
-          <div class="tools"><span class="tool" id="Tjavac">javac compiler</span><span class="tool">debugger</span><span class="tool">javadoc</span><span class="tool">jar tool</span></div>
+          <div class="ltext">
+            <span class="need" id="Njdk"></span>
+            <div class="lhead"><span class="lname">JDK</span><span class="lfull">Java Development Kit</span></div>
+            <p class="ljob"><b>For writing programs.</b> The tools a developer needs, plus a JRE inside so you can test what you wrote.</p>
+            <div class="tools"><span class="tool" id="Tjavac">javac compiler</span><span class="tool">debugger</span><span class="tool">javadoc</span><span class="tool">jar tool</span></div>
+          </div>
           <div class="layer" id="Ljre">
-            <span class="need" id="Njre"></span>
-            <div class="lhead"><span class="lname">JRE</span><span class="lfull">Java Runtime Environment</span></div>
-            <p class="ljob"><b>For running programs.</b> The class libraries your code calls, plus the JVM that executes it. No compiler.</p>
-            <div class="tools"><span class="tool" id="Tlib">java.lang</span><span class="tool">java.util</span><span class="tool">java.io</span><span class="tool">class libraries</span></div>
+            <div class="ltext">
+              <span class="need" id="Njre"></span>
+              <div class="lhead"><span class="lname">JRE</span><span class="lfull">Java Runtime Environment</span></div>
+              <p class="ljob"><b>For running programs.</b> The class libraries your code calls, plus the JVM that executes it. No compiler.</p>
+              <div class="tools"><span class="tool" id="Tlib">java.lang</span><span class="tool">java.util</span><span class="tool">java.io</span><span class="tool">class libraries</span></div>
+            </div>
             <div class="layer" id="Ljvm">
-              <span class="need" id="Njvm"></span>
-              <div class="lhead"><span class="lname">JVM</span><span class="lfull">Java Virtual Machine</span></div>
-              <p class="ljob"><b>The engine.</b> Loads a .class file and executes its bytecode. One JVM per kind of computer, so the same .class runs anywhere.</p>
-              <div class="tools"><span class="tool" id="Tload">class loader</span><span class="tool" id="Texec">bytecode interpreter</span><span class="tool">garbage collector</span></div>
+              <div class="ltext">
+                <span class="need" id="Njvm"></span>
+                <div class="lhead"><span class="lname">JVM</span><span class="lfull">Java Virtual Machine</span></div>
+                <p class="ljob"><b>The engine.</b> Loads a .class file and executes its bytecode. One JVM per kind of computer, so the same .class runs anywhere.</p>
+                <div class="tools"><span class="tool" id="Tload">class loader</span><span class="tool" id="Texec">bytecode interpreter</span><span class="tool">garbage collector</span></div>
+              </div>
             </div>
           </div>
         </div>
       </div>
-
-      <div class="ctl">
-        <div class="seg" id="seg" role="group" aria-label="What do you want to do?">
-          <button data-m="write" class="on">Write a Java program</button>
-          <button data-m="run">Run a Java program</button>
-          <button data-m="exec">Just execute bytecode</button>
-        </div>
-        <div class="status" id="status"></div>
-      </div>
-      <p class="hint">IntelliJ uses the JDK you installed, <b>Amazon Corretto 17</b>. So you already have all three layers.</p>
     </div>
+
+    <div class="caption" id="caption">
+      <div class="n" id="needno"><small>you need</small>JDK</div>
+      <div class="t" id="status"></div>
+    </div>
+
+    <div class="toolbar">
+      <div class="seg" id="seg" role="group" aria-label="What do you want to do?">
+        <button data-m="write" class="on">Write a Java program</button>
+        <button data-m="run">Run a Java program</button>
+        <button data-m="exec">Just execute bytecode</button>
+      </div>
+    </div>
+    <p class="hint">IntelliJ uses the JDK you installed, <b>Amazon Corretto 17</b>. So you already have all three layers.</p>
   </div>
 
   <div class="take">
@@ -171,7 +204,18 @@
     });
     Array.prototype.forEach.call(document.querySelectorAll("#seg button"),function(b){b.classList.toggle("on",b.getAttribute("data-m")===mode);});
     $("#status").innerHTML=M.msg;
+    var top=["jdk","jre","jvm"].filter(function(k){return M.need[k]==="yes";})[0];
+    $("#needno").innerHTML="<small>you need</small>"+top.toUpperCase();
+    cur=mode;
   }
+  var cur="write";
+
+  /* focus: picture and caption only. Remembered per browser. */
+  function setFocus(on){ document.body.classList.toggle("solo",on); $("#bFocus").textContent=on?"Focus on":"Focus";
+    try{localStorage.setItem("hub-focus",on?"1":"0");}catch(e){} set(cur); }
+  $("#bFocus").addEventListener("click",function(){ setFocus(!document.body.classList.contains("solo")); this.blur(); });
+  try{ if(localStorage.getItem("hub-focus")==="1") document.body.classList.add("solo"); }catch(e){}
+  if(document.body.classList.contains("solo")) $("#bFocus").textContent="Focus on";
 
   $("#seg").addEventListener("click",function(e){ var b=e.target.closest("button"); if(b) set(b.getAttribute("data-m")); });
 

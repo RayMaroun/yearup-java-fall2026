@@ -30,18 +30,30 @@
     background-clip:text;color:transparent}
   .lede{color:var(--muted);max-width:64ch;font-size:1.05rem;margin:0 0 30px;line-height:1.5}
   .lede b{color:var(--ink)}
-  .lede code,.take code,.status code{font-family:var(--mono);font-size:.92em;color:#bcd0ff}
-  .stage{position:relative;background:linear-gradient(180deg,rgba(255,255,255,.03),rgba(255,255,255,.01));
-    border:1px solid var(--line);border-radius:24px;padding:8px;
-    box-shadow:0 1px 0 rgba(255,255,255,.06) inset,0 30px 80px -30px rgba(0,0,0,.8)}
-  .panelR{border-radius:18px;padding:22px;background:rgba(6,10,20,.5);border:1px solid var(--line);position:relative;overflow:hidden}
-  .lab{font-family:var(--mono);font-size:.7rem;letter-spacing:.12em;text-transform:uppercase;color:var(--muted);margin:0 0 12px}
+  .lede code,.take code,.caption code{font-family:var(--mono);font-size:.92em;color:#bcd0ff}
 
-  /* code + rule cards */
-  .grid{display:grid;grid-template-columns:1fr 300px;gap:18px;align-items:start}
-  @media (max-width:1000px){.grid{grid-template-columns:1fr}.cards{flex-direction:row;flex-wrap:wrap}.card{flex:1 1 150px}}
-  .code{margin:0;font-family:var(--mono);font-size:.84rem;line-height:1.75;color:#9fb0cf;background:rgba(0,0,0,.32);
+  /* ---------- stage: picture first, caption under it ---------- */
+  .stage{position:relative;background:linear-gradient(180deg,rgba(255,255,255,.03),rgba(255,255,255,.01));
+    border:1px solid var(--line);border-radius:24px;padding:18px 18px 14px;
+    box-shadow:0 1px 0 rgba(255,255,255,.06) inset,0 30px 80px -30px rgba(0,0,0,.8)}
+  .topbar{display:flex;align-items:center;gap:10px;margin:0 0 14px;flex-wrap:wrap}
+  .topbar .lab{margin:0 4px 0 0}
+  .lab{font-family:var(--mono);font-size:.7rem;letter-spacing:.12em;text-transform:uppercase;color:var(--muted);margin:0 0 12px}
+  .focus{margin-left:auto;font-family:var(--mono);font-size:.68rem;letter-spacing:.1em;text-transform:uppercase;padding:6px 12px;
+    border-radius:999px;border:1px solid var(--line);background:rgba(0,0,0,.25);color:var(--muted);cursor:pointer;transition:.15s}
+  .focus:hover{border-color:var(--accent);color:var(--accent)}
+  .focus:focus-visible{outline:2px solid var(--accent);outline-offset:2px}
+  body.solo .focus{border-color:rgba(255,200,98,.6);color:var(--gold);background:rgba(255,200,98,.1)}
+
+  /* hero picture: the snippet (the one control) beside the five rule cards.
+     The snippet is 23 lines, so the picture grows past 390px rather than shrinking the code. */
+  .pic{position:relative;min-height:390px;border:1px solid var(--line);border-radius:18px;background:rgba(6,10,20,.5);overflow:hidden;
+    display:grid;grid-template-columns:minmax(0,1fr) 250px;gap:18px;padding:18px 20px;align-items:center}
+  body.solo .pic{min-height:480px;grid-template-columns:minmax(0,1fr) 270px}
+  @media (max-width:1000px){.pic,body.solo .pic{grid-template-columns:1fr}.cards{flex-direction:row;flex-wrap:wrap}.card{flex:1 1 150px}}
+  .code{margin:0;font-family:var(--mono);font-size:.86rem;line-height:1.62;color:#9fb0cf;background:rgba(0,0,0,.32);
     border:1px solid var(--line);border-radius:14px;padding:16px 18px;overflow-x:auto;white-space:pre}
+  body.solo .code{font-size:.94rem;line-height:1.66}
   .code .kw{color:#7f8db0}
   .code .str{color:#c9b98a}
   .nm{color:var(--ink);cursor:pointer;border-radius:5px;padding:1px 2px;margin:0 -2px;outline:none;
@@ -50,25 +62,28 @@
   .nm:focus-visible{box-shadow:0 0 0 2px var(--accent)}
   .nm.lit{border-bottom-color:transparent;background:var(--kbg);color:var(--kc)}
   .nm.pick{box-shadow:0 0 0 1.5px var(--kc)}
-  .cards{display:flex;flex-direction:column;gap:8px}
-  .card{border:1px solid var(--line);border-left:3px solid var(--line);border-radius:14px;padding:11px 14px;
+  .cards{display:flex;flex-direction:column;gap:10px}
+  .card{border:1px solid var(--line);border-left:3px solid var(--line);border-radius:14px;padding:13px 16px;
     background:rgba(255,255,255,.02);transition:border-color .25s,background .25s,opacity .25s;opacity:.55}
   .card.on{opacity:1;border-color:var(--kc);background:var(--kbg)}
-  .card .kind{font-family:var(--mono);font-size:.64rem;letter-spacing:.14em;text-transform:uppercase;color:var(--muted);margin:0}
-  .card .shape{font-family:var(--mono);font-size:1rem;color:var(--ink);margin:3px 0 2px;transition:color .25s}
+  .card .kind{font-family:var(--mono);font-size:.66rem;letter-spacing:.14em;text-transform:uppercase;color:var(--muted);margin:0}
+  .card .shape{font-family:var(--mono);font-size:1.12rem;color:var(--ink);margin:4px 0 3px;transition:color .25s}
   .card.on .shape{color:var(--kc)}
-  .card .ex{font-family:var(--mono);font-size:.72rem;color:var(--muted);margin:0}
+  .card .ex{font-family:var(--mono);font-size:.74rem;color:var(--muted);margin:0}
   [data-k=cls]{--kc:#a89bff;--kbg:rgba(139,123,255,.16)}
   [data-k=var]{--kc:#6ea0ff;--kbg:rgba(110,160,255,.16)}
   [data-k=met]{--kc:#46d98a;--kbg:rgba(70,217,138,.13)}
   [data-k=con]{--kc:#ffc862;--kbg:rgba(255,200,98,.14)}
   [data-k=pkg]{--kc:#5fd3e0;--kbg:rgba(95,211,224,.13)}
-  .status{font-family:var(--mono);font-size:.82rem;line-height:1.55;color:var(--ink);min-height:72px;
-    padding:12px 14px;border-radius:12px;background:rgba(0,0,0,.25);border:1px solid var(--line);
-    border-left:3px solid var(--accent);transition:border-color .3s;margin-top:16px}
-  .status b.g{color:var(--good)} .status b.a{color:var(--accent)} .status b.y{color:var(--gold)}
-  .hint{font-family:var(--mono);font-size:.7rem;color:var(--muted);margin:14px 0 0;line-height:1.5}
+
+  /* caption: the picked name's sentence, right under the picture; border takes the kind's color */
+  .caption{display:flex;gap:16px;align-items:flex-start;margin:14px 4px 0;min-height:56px}
+  .caption .t{font-size:1.02rem;line-height:1.55;color:var(--ink);padding-left:16px;border-left:3px solid var(--kc,var(--accent));transition:border-color .3s}
+  body.solo .caption .t{font-size:1.18rem}
+  .caption b.g{color:var(--good)} .caption b.a{color:var(--accent)} .caption b.y{color:var(--gold)}
+  .hint{font-family:var(--mono);font-size:.68rem;color:var(--muted);margin:10px 4px 0;line-height:1.5}
   .hint b{color:var(--accent)}
+  body.solo .take,body.solo .hint{display:none}
 
   .take{margin-top:22px;background:linear-gradient(180deg,rgba(110,160,255,.08),rgba(139,123,255,.04));
     border:1px solid var(--line);border-left:3px solid var(--accent);border-radius:12px;padding:16px 18px}
@@ -86,14 +101,18 @@
 <div class="wrap">
   <p class="tag">Workbook 1c &middot; Section 3-1 &middot; Naming conventions and consistency</p>
   <h1>Naming Conventions</h1>
-  <p class="lede">Every name in Java has a shape: capitals, lowercase, underscores. <b>Click any name in the code and see what kind of thing it is and which rule shaped it.</b></p>
+  <p class="lede"><b>Click any name in the code and see what kind of thing it is and which rule shaped it.</b></p>
 
   <div class="stage">
-    <div class="panelR">
-      <div class="grid">
-        <div>
-          <p class="lab">Real names from this week's demos</p>
-          <pre class="code" id="code"><span class="kw">package</span> <span class="nm" data-n="com.pluralsight" tabindex="0">com.pluralsight</span>;
+    <div class="topbar">
+      <span class="lab">Names</span>
+      <button class="focus" id="bFocus" title="Hide the notes, enlarge the picture">Focus</button>
+    </div>
+
+    <div class="pic" id="pic">
+      <div>
+        <p class="lab">Real names from this week's demos</p>
+        <pre class="code" id="code"><span class="kw">package</span> <span class="nm" data-n="com.pluralsight" tabindex="0">com.pluralsight</span>;
 
 <span class="kw">import</span> <span class="nm" data-n="java.util" tabindex="0">java.util</span>.<span class="nm" data-n="Scanner" tabindex="0">Scanner</span>;
 
@@ -116,21 +135,23 @@
         <span class="kw">return</span> <span class="nm" data-n="firstName" tabindex="0">firstName</span> + <span class="str">" "</span> + <span class="nm" data-n="lastName" tabindex="0">lastName</span>;
     }
 }</pre>
-        </div>
-        <div>
-          <p class="lab">The five shapes</p>
-          <div class="cards" id="cards">
-            <div class="card" data-k="cls"><p class="kind">Class</p><p class="shape">PascalCase</p><p class="ex">Main, HelloWorld, Scanner</p></div>
-            <div class="card" data-k="var"><p class="kind">Variable</p><p class="shape">camelCase</p><p class="ex">firstNumber, isStudent</p></div>
-            <div class="card" data-k="met"><p class="kind">Method</p><p class="shape">camelCase()</p><p class="ex">addNumbers, generateFullName</p></div>
-            <div class="card" data-k="con"><p class="kind">Constant (final)</p><p class="shape">UPPER_SNAKE_CASE</p><p class="ex">DAYS_IN_WEEK</p></div>
-            <div class="card" data-k="pkg"><p class="kind">Package</p><p class="shape">all.lowercase</p><p class="ex">com.pluralsight</p></div>
-          </div>
+      </div>
+      <div>
+        <p class="lab">The five shapes</p>
+        <div class="cards" id="cards">
+          <div class="card" data-k="cls"><p class="kind">Class</p><p class="shape">PascalCase</p><p class="ex">Main, HelloWorld, Scanner</p></div>
+          <div class="card" data-k="var"><p class="kind">Variable</p><p class="shape">camelCase</p><p class="ex">firstNumber, isStudent</p></div>
+          <div class="card" data-k="met"><p class="kind">Method</p><p class="shape">camelCase()</p><p class="ex">addNumbers, generateFullName</p></div>
+          <div class="card" data-k="con"><p class="kind">Constant (final)</p><p class="shape">UPPER_SNAKE_CASE</p><p class="ex">DAYS_IN_WEEK</p></div>
+          <div class="card" data-k="pkg"><p class="kind">Package</p><p class="shape">all.lowercase</p><p class="ex">com.pluralsight</p></div>
         </div>
       </div>
-      <div class="status" id="status" aria-live="polite"></div>
-      <p class="hint">The compiler accepts <b>first_number</b> or <b>main_class</b>. Nobody writes them, so they stand out as wrong.</p>
     </div>
+
+    <div class="caption" id="caption">
+      <div class="t" id="status" aria-live="polite"></div>
+    </div>
+    <p class="hint">The compiler accepts <b>first_number</b> or <b>main_class</b>. Nobody writes them, so they stand out as wrong.</p>
   </div>
 
   <div class="take">
@@ -180,7 +201,9 @@
   var spans=document.querySelectorAll("#code .nm");
   Array.prototype.forEach.call(spans,function(s){ s.setAttribute("data-k",NAMES[s.getAttribute("data-n")][0]); });
 
+  var cur="firstNumber";
   function pick(name){
+    cur=name;
     var k=NAMES[name][0];
     Array.prototype.forEach.call(spans,function(s){
       s.classList.toggle("lit",s.getAttribute("data-k")===k);
@@ -189,6 +212,7 @@
     Array.prototype.forEach.call(document.querySelectorAll("#cards .card"),function(c){
       c.classList.toggle("on",c.getAttribute("data-k")===k);
     });
+    $("#caption").setAttribute("data-k",k);
     $("#status").innerHTML="<code>"+name+"</code> is "+KIND[k]+": "+NAMES[name][1]+".<br>"+RULE[k];
   }
 
@@ -197,6 +221,13 @@
     var s=e.target.closest(".nm");
     if(s&&(e.key==="Enter"||e.key===" ")){ e.preventDefault(); pick(s.getAttribute("data-n")); }
   });
+
+  /* focus: picture and caption only. Remembered per browser. */
+  function setFocus(on){ document.body.classList.toggle("solo",on); $("#bFocus").textContent=on?"Focus on":"Focus";
+    try{localStorage.setItem("hub-focus",on?"1":"0");}catch(e){} pick(cur); }
+  $("#bFocus").addEventListener("click",function(){ setFocus(!document.body.classList.contains("solo")); this.blur(); });
+  try{ if(localStorage.getItem("hub-focus")==="1") document.body.classList.add("solo"); }catch(e){}
+  if(document.body.classList.contains("solo")) $("#bFocus").textContent="Focus on";
 
   /* ---------- ambient canvas ---------- */
   var cv=$("#amb"),ctx=cv.getContext&&cv.getContext("2d"),parts=[];
@@ -210,7 +241,7 @@
     requestAnimationFrame(drawC);}
   if(ctx&&!reduce){sizeC();initParts();drawC();addEventListener("resize",sizeC);}
 
-  pick("firstNumber");
+  pick(cur);
 })();
 </script>
 <script src="../manifest.js"></script>

@@ -28,33 +28,46 @@
   h1{font-family:var(--disp);font-weight:700;font-size:clamp(2.3rem,6vw,3.6rem);line-height:1;margin:0 0 12px;
     letter-spacing:-.03em;background:linear-gradient(180deg,#fff,#b9c6e6);-webkit-background-clip:text;
     background-clip:text;color:transparent}
-  .lede{color:var(--muted);max-width:64ch;font-size:1.05rem;margin:0 0 30px;line-height:1.5}
+  .lede{color:var(--muted);max-width:64ch;font-size:1.05rem;margin:0 0 26px;line-height:1.5}
   .lede b{color:var(--ink)}
-  .lede code,.take code,.status code{font-family:var(--mono);font-size:.92em;color:#bcd0ff}
-  .stage{position:relative;background:linear-gradient(180deg,rgba(255,255,255,.03),rgba(255,255,255,.01));
-    border:1px solid var(--line);border-radius:24px;padding:8px;
-    box-shadow:0 1px 0 rgba(255,255,255,.06) inset,0 30px 80px -30px rgba(0,0,0,.8)}
-  .panelR{border-radius:18px;padding:22px;background:rgba(6,10,20,.5);border:1px solid var(--line);position:relative;overflow:hidden}
-  .lab{font-family:var(--mono);font-size:.7rem;letter-spacing:.12em;text-transform:uppercase;color:var(--muted);margin:0 0 12px}
+  .take code,.caption code{font-family:var(--mono);font-size:.92em;color:#bcd0ff}
 
-  /* the type ladder */
-  .rows{display:flex;flex-direction:column;gap:6px}
-  .row{display:grid;grid-template-columns:96px 1fr 92px;align-items:center;gap:14px;width:100%;text-align:left;
-    font:inherit;color:inherit;cursor:pointer;padding:9px 12px;border-radius:14px;border:1px solid var(--line);
+  /* ---------- stage: picture first, caption, support below ---------- */
+  .stage{position:relative;background:linear-gradient(180deg,rgba(255,255,255,.03),rgba(255,255,255,.01));
+    border:1px solid var(--line);border-radius:24px;padding:18px 18px 14px;
+    box-shadow:0 1px 0 rgba(255,255,255,.06) inset,0 30px 80px -30px rgba(0,0,0,.8)}
+  .topbar{display:flex;align-items:center;gap:10px;margin:0 0 14px;flex-wrap:wrap}
+  .topbar .lab{margin:0 4px 0 0}
+  .lab{font-family:var(--mono);font-size:.7rem;letter-spacing:.12em;text-transform:uppercase;color:var(--muted);margin:0 0 10px}
+  .focus{margin-left:auto;font-family:var(--mono);font-size:.68rem;letter-spacing:.1em;text-transform:uppercase;padding:6px 12px;
+    border-radius:999px;border:1px solid var(--line);background:rgba(0,0,0,.25);color:var(--muted);cursor:pointer;transition:.15s}
+  .focus:hover{border-color:var(--accent);color:var(--accent)}
+  .focus:focus-visible{outline:2px solid var(--accent);outline-offset:2px}
+  body.solo .focus{border-color:rgba(255,200,98,.6);color:var(--gold);background:rgba(255,200,98,.1)}
+
+  /* hero picture: the type ladder, rows are the control */
+  .pic{position:relative;height:390px;border:1px solid var(--line);border-radius:18px;background:rgba(6,10,20,.5);overflow:hidden;
+    display:flex;flex-direction:column;padding:14px 22px 16px}
+  body.solo .pic{height:480px}
+  .rows{flex:1;display:flex;flex-direction:column;gap:5px;min-height:0}
+  .row{flex:1;min-height:0;display:grid;grid-template-columns:140px 1fr 128px;align-items:center;gap:18px;width:100%;text-align:left;
+    font:inherit;color:inherit;cursor:pointer;padding:0 14px;border-radius:12px;border:1px solid var(--line);
     background:rgba(255,255,255,.02);transition:border-color .2s,background .2s,opacity .2s}
   .row:hover{border-color:rgba(110,160,255,.45)}
   .row:focus-visible{outline:2px solid var(--accent);outline-offset:2px}
   .row.on{border-color:rgba(110,160,255,.7);background:rgba(110,160,255,.08);box-shadow:0 0 26px -12px rgba(110,160,255,.6)}
   .row.dim{opacity:.55}
-  .tname{font-family:var(--mono);font-size:.95rem;color:#bcd0ff}
+  .tname{font-family:var(--mono);font-size:1.12rem;line-height:1.1;color:#bcd0ff}
+  body.solo .tname{font-size:1.3rem}
   .row.on .tname{color:var(--ink)}
-  .kind{display:block;font-family:var(--mono);font-size:.6rem;letter-spacing:.1em;text-transform:uppercase;color:var(--muted);margin-top:2px}
-  .track{position:relative;height:26px;border-radius:8px;background:rgba(0,0,0,.25);border:1px dashed rgba(255,255,255,.07)}
-  .bar{position:absolute;left:0;top:50%;height:8px;transform:translateY(-50%);display:flex;gap:2px;border-radius:6px;overflow:hidden;
+  .kind{display:block;font-family:var(--mono);font-size:.6rem;line-height:1.2;letter-spacing:.1em;text-transform:uppercase;color:var(--muted);margin-top:1px}
+  .track{position:relative;height:24px;border-radius:8px;background:rgba(0,0,0,.25);border:1px dashed rgba(255,255,255,.07)}
+  body.solo .track{height:32px}
+  .bar{position:absolute;left:0;top:50%;height:10px;transform:translateY(-50%);display:flex;gap:3px;border-radius:6px;overflow:hidden;
     transition:height .3s ease}
-  .row.on .bar{height:26px}
+  .row.on .bar{height:100%}
   .bar.ref{border:1px dashed rgba(255,200,98,.55);background:rgba(255,200,98,.08);right:0;border-radius:6px;
-    font-family:var(--mono);font-size:.62rem;color:#ffe6b0;align-items:center;padding-left:8px;white-space:nowrap}
+    font-family:var(--mono);font-size:.7rem;color:#ffe6b0;align-items:center;padding-left:10px;white-space:nowrap}
   .bar.ref span{opacity:0;transition:opacity .3s}
   .row.on .bar.ref span{opacity:1}
   .row.on .bar.ref{background:rgba(255,200,98,.16);border-color:var(--gold)}
@@ -62,22 +75,36 @@
   .row.on .cell{background:rgba(110,160,255,.5);border-color:var(--accent)}
   .bar.flt .cell{background:rgba(139,123,255,.25);border-color:rgba(139,123,255,.45)}
   .row.on .bar.flt .cell{background:rgba(139,123,255,.55);border-color:var(--accent2)}
-  .sz{font-family:var(--mono);font-size:.72rem;color:var(--muted);text-align:right}
+  .sz{font-family:var(--mono);font-size:.82rem;color:var(--muted);text-align:right}
   .row.on .sz{color:var(--ink)}
-  .scale{display:grid;grid-template-columns:96px 1fr 92px;gap:14px;padding:0 13px;margin-bottom:6px}
-  .ticks{display:grid;grid-template-columns:repeat(8,1fr);font-family:var(--mono);font-size:.6rem;color:var(--muted)}
-  .ticks span{border-left:1px solid var(--line);padding-left:4px}
+  .scale{display:grid;grid-template-columns:140px 1fr 128px;gap:18px;padding:0 15px;margin-bottom:6px}
+  .ticks{display:grid;grid-template-columns:repeat(8,1fr);font-family:var(--mono);font-size:.66rem;color:var(--muted)}
+  .ticks span{border-left:1px solid var(--line);padding-left:5px}
+  @media (max-width:760px){.row,.scale{grid-template-columns:78px 1fr 70px;gap:10px}.pic{padding:12px}.tname{font-size:.95rem}}
 
-  /* detail panel for the clicked type */
-  .detail{margin-top:18px;display:grid;grid-template-columns:1fr 1fr;gap:8px}
-  @media (max-width:760px){.detail{grid-template-columns:1fr}.row,.scale{grid-template-columns:78px 1fr 70px;gap:10px}}
-  .cardd{border:1px solid var(--line);border-radius:14px;padding:12px 14px;background:rgba(0,0,0,.22);min-height:92px}
+  /* caption: the selected type's range, right under the picture */
+  .caption{display:flex;gap:16px;align-items:flex-start;margin:14px 4px 0;min-height:56px}
+  .caption .n{flex-shrink:0;font-family:var(--disp);font-weight:700;font-size:1.35rem;color:var(--accent);font-variant-numeric:tabular-nums;
+    line-height:1.2;min-width:3.2rem}
+  .caption .n small{display:block;font-family:var(--mono);font-weight:400;font-size:.58rem;letter-spacing:.14em;text-transform:uppercase;color:var(--muted)}
+  .caption .t{font-family:var(--mono);font-size:1.02rem;line-height:1.55;color:var(--ink);padding-left:16px;border-left:3px solid var(--accent);transition:border-color .3s}
+  body.solo .caption .t{font-size:1.18rem}
+  .caption.flt .t{border-left-color:var(--accent2)} .caption.flt .n{color:var(--accent2)}
+  .caption.ref .t{border-left-color:var(--gold)} .caption.ref .n{color:var(--gold)}
+  .caption .t .m{color:var(--muted);font-size:.86em}
+
+  .hint{font-family:var(--mono);font-size:.68rem;color:var(--muted);margin:12px 4px 0;line-height:1.5;padding-top:12px;border-top:1px solid var(--line)}
+  .hint b{color:var(--accent)}
+
+  /* support: example and declared-only. Below the picture, hidden in focus */
+  .support{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1.3fr);gap:14px;margin-top:16px}
+  @media (max-width:860px){.support{grid-template-columns:1fr}}
+  body.solo .support,body.solo .take,body.solo .hint{display:none}
+  .cardd{border:1px solid var(--line);border-radius:14px;padding:12px 14px;background:rgba(0,0,0,.3);min-height:92px}
   .cardd .k{font-family:var(--mono);font-size:.62rem;letter-spacing:.12em;text-transform:uppercase;color:var(--muted);margin:0 0 6px}
-  .cardd .v{font-family:var(--mono);font-size:.84rem;line-height:1.55;color:var(--ink);margin:0;overflow-wrap:anywhere}
+  .cardd .v{font-family:var(--mono);font-size:.84rem;line-height:1.6;color:var(--ink);margin:0;overflow-wrap:anywhere}
   .cardd .v .c{color:#bcd0ff}
   .cardd .v .g{color:var(--good)} .cardd .v .w{color:var(--warn)}
-  .hint{font-family:var(--mono);font-size:.7rem;color:var(--muted);margin:14px 0 0;line-height:1.5}
-  .hint b{color:var(--accent)}
 
   .take{margin-top:22px;background:linear-gradient(180deg,rgba(110,160,255,.08),rgba(139,123,255,.04));
     border:1px solid var(--line);border-left:3px solid var(--accent);border-radius:12px;padding:16px 18px}
@@ -95,21 +122,28 @@
 <div class="wrap">
   <p class="tag">Workbook 1c &middot; Section 3-1 &middot; Data types and variables</p>
   <h1>Data Types and Sizes</h1>
-  <p class="lede">Every variable in Java has a type, and the type fixes how much memory it gets and what fits in it.
-  <b>Click a type to see its size, its range, and what it holds before you give it a value.</b></p>
+  <p class="lede"><b>Click a type to see its size, its range, and what it holds before you give it a value.</b></p>
 
   <div class="stage">
-    <div class="panelR">
-      <p class="lab">Memory each type takes, in bytes (1 byte = 8 bits)</p>
+    <div class="topbar">
+      <span class="lab">Memory each type takes, in bytes (1 byte = 8 bits)</span>
+      <button class="focus" id="bFocus" title="Hide the notes, enlarge the picture">Focus</button>
+    </div>
+
+    <div class="pic" id="pic">
       <div class="scale" aria-hidden="true"><span></span><div class="ticks"><span>1</span><span>2</span><span>3</span><span>4</span><span>5</span><span>6</span><span>7</span><span>8</span></div><span></span></div>
       <div class="rows" id="rows" role="group" aria-label="Pick a data type"></div>
+    </div>
 
-      <div class="detail" aria-live="polite">
-        <div class="cardd"><p class="k">Range</p><p class="v" id="dRange"></p></div>
-        <div class="cardd"><p class="k">Example from the demo</p><p class="v" id="dEx"></p></div>
-        <div class="cardd" style="grid-column:1 / -1"><p class="k">Declared only, no value yet</p><p class="v" id="dDecl"></p></div>
-      </div>
-      <p class="hint">Field = declared in the class, outside any method. Local = declared inside a method, like everything in <b>main</b>.</p>
+    <div class="caption" id="caption" aria-live="polite">
+      <div class="n" id="stepno"><small>bytes</small>4</div>
+      <div class="t" id="dRange"></div>
+    </div>
+    <p class="hint">Field = declared in the class, outside any method. Local = declared inside a method, like everything in <b>main</b>.</p>
+
+    <div class="support" aria-live="polite">
+      <div class="cardd"><p class="k">Example from the demo</p><p class="v" id="dEx"></p></div>
+      <div class="cardd"><p class="k">Declared only, no value yet</p><p class="v" id="dDecl"></p></div>
     </div>
   </div>
 
@@ -161,8 +195,11 @@
       r.classList.toggle("on",on); r.classList.toggle("dim",!on);
       r.setAttribute("aria-pressed",on?"true":"false");
     });
-    $("#dRange").innerHTML=t.range+(t.n==="boolean"?'<br><span style="color:var(--muted)">size in memory is up to the JVM</span>':"")+
-      (t.c==="ref"?'<br><span style="color:var(--muted)">the text lives in an object; its size grows with the text</span>':"");
+    cur=i;
+    $("#caption").className="caption"+(t.c?" "+t.c:"");
+    $("#stepno").innerHTML="<small>bytes</small>"+(t.c==="ref"?"ref":t.b);
+    $("#dRange").innerHTML=t.range+(t.n==="boolean"?'<br><span class="m">size in memory is up to the JVM</span>':"")+
+      (t.c==="ref"?'<br><span class="m">the text lives in an object; its size grows with the text</span>':"");
     $("#dEx").innerHTML='<span class="c">'+t.ex+'</span>'+(t.note?' <span style="color:var(--muted)">(invented)</span>':"");
     var d=t.decl?'<span class="c">'+t.decl+'</span> Here '+t.dv+' is declared only.<br>':"";
     var f=t.field?'<span class="c">'+t.field+'</span> prints false.<br>':"";
@@ -171,6 +208,14 @@
   }
 
   rows.addEventListener("click",function(e){ var b=e.target.closest(".row"); if(b) set(+b.getAttribute("data-i")); });
+
+  /* focus: picture and caption only. Remembered per browser. */
+  var cur=2;
+  function setFocus(on){ document.body.classList.toggle("solo",on); $("#bFocus").textContent=on?"Focus on":"Focus";
+    try{localStorage.setItem("hub-focus",on?"1":"0");}catch(e){} set(cur); }
+  $("#bFocus").addEventListener("click",function(){ setFocus(!document.body.classList.contains("solo")); this.blur(); });
+  try{ if(localStorage.getItem("hub-focus")==="1") document.body.classList.add("solo"); }catch(e){}
+  if(document.body.classList.contains("solo")) $("#bFocus").textContent="Focus on";
 
   /* ---------- ambient canvas ---------- */
   var cv=$("#amb"),ctx=cv.getContext&&cv.getContext("2d"),parts=[];

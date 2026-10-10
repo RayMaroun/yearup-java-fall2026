@@ -28,62 +28,50 @@
   h1{font-family:var(--disp);font-weight:700;font-size:clamp(2.3rem,6vw,3.6rem);line-height:1;margin:0 0 12px;
     letter-spacing:-.03em;background:linear-gradient(180deg,#fff,#b9c6e6);-webkit-background-clip:text;
     background-clip:text;color:transparent}
-  .lede{color:var(--muted);max-width:64ch;font-size:1.05rem;margin:0 0 30px;line-height:1.5}
+  .lede{color:var(--muted);max-width:64ch;font-size:1.05rem;margin:0 0 26px;line-height:1.5}
   .lede b{color:var(--ink)}
-  .lede code,.take code,.status code{font-family:var(--mono);font-size:.92em;color:#bcd0ff}
-  .stage{position:relative;background:linear-gradient(180deg,rgba(255,255,255,.03),rgba(255,255,255,.01));
-    border:1px solid var(--line);border-radius:24px;padding:8px;
-    box-shadow:0 1px 0 rgba(255,255,255,.06) inset,0 30px 80px -30px rgba(0,0,0,.8)}
-  .grid{display:grid;grid-template-columns:300px 1fr;gap:8px}
-  @media (max-width:860px){.grid{grid-template-columns:1fr}}
-  .panelL,.panelR{border-radius:18px;padding:22px}
-  .panelL{background:linear-gradient(180deg,rgba(110,160,255,.06),rgba(139,123,255,.03));border:1px solid var(--line)}
-  .panelR{background:rgba(6,10,20,.5);border:1px solid var(--line);position:relative;overflow:hidden;min-width:0}
-  .lab{font-family:var(--mono);font-size:.7rem;letter-spacing:.12em;text-transform:uppercase;color:var(--muted);margin:0 0 12px}
-  .readout{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin:0 0 14px}
-  .stat{background:rgba(255,255,255,.03);border:1px solid var(--line);border-radius:12px;padding:11px 13px}
-  .stat .k{font-family:var(--mono);font-size:.62rem;letter-spacing:.1em;text-transform:uppercase;color:var(--muted)}
-  .stat .v{font-family:var(--disp);font-weight:700;font-size:1.45rem;font-variant-numeric:tabular-nums;margin-top:2px;transition:color .3s;min-height:1.6em}
-  .v.hot{color:var(--accent)} .v.gold{color:var(--gold)} .v.good{color:var(--good)}
-  .stepno{font-family:var(--mono);font-size:.64rem;letter-spacing:.14em;text-transform:uppercase;color:var(--muted);margin:0 0 8px}
-  .stepno b{color:var(--accent);font-weight:500}
-  .status{font-family:var(--mono);font-size:.82rem;line-height:1.55;color:var(--ink);min-height:150px;
-    padding:12px 14px;border-radius:12px;background:rgba(0,0,0,.25);border:1px solid var(--line);
-    border-left:3px solid var(--accent);transition:border-color .3s}
-  .status.left{border-left-color:var(--gold)}
-  .status.ok{border-left-color:var(--good)}
-  .status b.g{color:var(--good)} .status b.a{color:var(--accent)} .status b.y{color:var(--gold)}
-  .actions{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-top:16px}
-  .btn{font-family:var(--body);font-weight:500;font-size:.84rem;padding:9px 12px;border-radius:11px;cursor:pointer;
-    border:1px solid var(--line);background:var(--surface);color:var(--ink);transition:.15s;text-align:center}
-  .btn:hover{border-color:var(--accent);color:var(--accent)}
-  .btn.primary{border-color:rgba(110,160,255,.5);background:rgba(110,160,255,.12);grid-column:1 / -1}
-  .btn.gold:hover{border-color:var(--gold);color:var(--gold)}
-  .btn:disabled{opacity:.35;cursor:not-allowed}
-  .btn:focus-visible{outline:2px solid var(--accent);outline-offset:2px}
-  .hint{font-family:var(--mono);font-size:.7rem;color:var(--muted);margin:14px 0 0;line-height:1.5}
-  .hint b{color:var(--accent)}
+  .lede code,.take code,.caption code{font-family:var(--mono);font-size:.92em;color:#bcd0ff}
 
-  /* ---------- right: IDE + GitHub ---------- */
-  .rgrid{display:grid;grid-template-columns:minmax(0,1fr) 210px;gap:14px;align-items:start}
-  @media (max-width:1100px){.rgrid{grid-template-columns:1fr}}
-  .ide{position:relative;min-width:0;border:1px solid var(--line);border-radius:14px;background:#0b0f1a;overflow:hidden;
-    font-family:var(--mono);font-size:.66rem;color:#c9d4ea}
-  .bar{display:flex;align-items:center;gap:12px;padding:7px 12px;border-bottom:1px solid var(--line);background:rgba(255,255,255,.03)}
+  /* ---------- stage: picture first, one toolbar, support below ---------- */
+  .stage{position:relative;background:linear-gradient(180deg,rgba(255,255,255,.03),rgba(255,255,255,.01));
+    border:1px solid var(--line);border-radius:24px;padding:18px 18px 14px;
+    box-shadow:0 1px 0 rgba(255,255,255,.06) inset,0 30px 80px -30px rgba(0,0,0,.8)}
+  .topbar{display:flex;align-items:center;gap:10px;margin:0 0 14px;flex-wrap:wrap}
+  .topbar .lab{margin:0 4px 0 0}
+  .lab{font-family:var(--mono);font-size:.7rem;letter-spacing:.12em;text-transform:uppercase;color:var(--muted);margin:0 0 10px}
+  .btn:focus-visible,.focus:focus-visible{outline:2px solid var(--accent);outline-offset:2px}
+  .focus{margin-left:auto;font-family:var(--mono);font-size:.68rem;letter-spacing:.1em;text-transform:uppercase;padding:6px 12px;
+    border-radius:999px;border:1px solid var(--line);background:rgba(0,0,0,.25);color:var(--muted);cursor:pointer;transition:.15s}
+  .focus:hover{border-color:var(--accent);color:var(--accent)}
+  body.solo .focus{border-color:rgba(255,200,98,.6);color:var(--gold);background:rgba(255,200,98,.1)}
+
+  /* hero picture: IntelliJ and GitHub side by side */
+  .pic{position:relative;height:390px;border:1px solid var(--line);border-radius:18px;background:rgba(6,10,20,.5);overflow:hidden;
+    padding:12px 16px 16px;--fs:.82rem}
+  body.solo .pic{height:480px;--fs:.98rem}
+  @media (max-width:860px){.pic,body.solo .pic{height:auto}}
+  .pic .lab{font-size:.62rem;margin:0 0 6px}
+  .rgrid{display:grid;grid-template-columns:minmax(0,1fr) 300px;gap:16px;height:100%}
+  body.solo .rgrid{grid-template-columns:minmax(0,1fr) 350px}
+  @media (max-width:860px){.rgrid,body.solo .rgrid{grid-template-columns:1fr}}
+  .rcol{display:flex;flex-direction:column;min-width:0;min-height:0}
+  .ide{position:relative;flex:1;display:flex;flex-direction:column;min-width:0;border:1px solid var(--line);border-radius:14px;background:#0b0f1a;overflow:hidden;
+    font-family:var(--mono);font-size:var(--fs);color:#c9d4ea}
+  .bar{display:flex;align-items:center;gap:12px;padding:6px 12px;border-bottom:1px solid var(--line);background:rgba(255,255,255,.03)}
   .bar .proj{color:var(--ink);font-weight:500}
   .menu{position:relative;padding:2px 8px;border-radius:6px;color:var(--muted);transition:.2s}
   .menu.open{background:rgba(110,160,255,.18);color:var(--ink)}
-  .drop{position:absolute;left:0;top:calc(100% + 4px);min-width:190px;background:#151b2c;border:1px solid rgba(255,255,255,.14);
+  .drop{position:absolute;left:0;top:calc(100% + 4px);min-width:15em;background:#151b2c;border:1px solid rgba(255,255,255,.14);
     border-radius:8px;padding:4px;z-index:5;box-shadow:0 12px 30px -10px rgba(0,0,0,.8);display:none}
   .menu.open .drop{display:block}
   .mi{display:flex;justify-content:space-between;gap:14px;padding:4px 8px;border-radius:5px;color:#c9d4ea;white-space:nowrap}
   .mi span{color:var(--muted)}
   .mi.sel{background:rgba(110,160,255,.3);color:#fff}
   .mi.sel span{color:#dbe6ff}
-  .body{display:grid;grid-template-columns:150px minmax(0,1fr);min-height:212px}
-  .side{border-right:1px solid var(--line);display:flex;flex-direction:column;min-width:0}
+  .body{flex:1;display:grid;grid-template-columns:14em minmax(0,1fr);min-height:0}
+  .iside{border-right:1px solid var(--line);display:flex;flex-direction:column;min-width:0}
   .tabs{display:flex;border-bottom:1px solid var(--line)}
-  .tabs span{flex:1;text-align:center;padding:5px 0;color:var(--muted);border-bottom:2px solid transparent;transition:.2s}
+  .tabs span{flex:1;text-align:center;padding:4px 0;color:var(--muted);border-bottom:2px solid transparent;transition:.2s}
   .tabs span.on{color:var(--ink);border-bottom-color:var(--accent)}
   .pane{padding:8px 8px 10px;display:none;flex:1}
   .pane.on{display:block}
@@ -92,38 +80,38 @@
   .mod{color:var(--accent)!important}
   .grp{color:var(--muted);margin:0 0 5px}
   .row{display:flex;align-items:center;gap:6px;padding:3px 4px;border-radius:5px;transition:background .2s}
-  .cb{width:12px;height:12px;border-radius:3px;border:1px solid rgba(255,255,255,.35);flex-shrink:0;position:relative;transition:.2s}
+  .cb{width:1em;height:1em;border-radius:3px;border:1px solid rgba(255,255,255,.35);flex-shrink:0;position:relative;transition:.2s}
   .cb.on{background:var(--accent);border-color:var(--accent)}
-  .cb.on::after{content:"";position:absolute;left:3px;top:0;width:4px;height:7px;border:solid #0b0f1a;border-width:0 2px 2px 0;transform:rotate(45deg)}
+  .cb.on::after{content:"";position:absolute;left:30%;top:5%;width:30%;height:60%;border:solid #0b0f1a;border-width:0 2px 2px 0;transform:rotate(45deg)}
   .nochg{color:rgba(132,150,182,.6);padding:3px 4px;display:none}
-  .msgbox{margin-top:10px;min-height:38px;border:1px solid rgba(255,255,255,.14);border-radius:6px;padding:5px 6px;color:rgba(132,150,182,.6);transition:.2s}
+  .msgbox{margin-top:10px;min-height:2.6em;border:1px solid rgba(255,255,255,.14);border-radius:6px;padding:5px 6px;color:rgba(132,150,182,.6);transition:.2s}
   .msgbox.typed{color:var(--ink);border-color:rgba(110,160,255,.5)}
-  .cbtns{display:flex;gap:5px;margin-top:8px}
-  .ib{padding:4px 7px;border-radius:5px;border:1px solid rgba(255,255,255,.14);color:var(--muted);white-space:nowrap;transition:.2s}
+  .cbtns{display:flex;flex-wrap:wrap;gap:5px;margin-top:8px}
+  .ib{padding:3px 7px;border-radius:5px;border:1px solid rgba(255,255,255,.14);color:var(--muted);white-space:nowrap;transition:.2s}
   .ib.ready{background:rgba(110,160,255,.85);border-color:transparent;color:#0b0f1a}
   .ed{min-width:0;display:flex;flex-direction:column}
-  .etab{padding:5px 10px;border-bottom:1px solid var(--line);color:#d7deec;transition:color .3s}
-  .code{padding:8px 0;overflow-x:auto;line-height:1.75}
+  .etab{padding:4px 10px;border-bottom:1px solid var(--line);color:#d7deec;transition:color .3s}
+  .code{padding:6px 0;overflow-x:auto;line-height:1.6}
   .ln{display:flex;gap:8px;padding:0 8px 0 0;white-space:pre;position:relative}
-  .ln .n{width:22px;text-align:right;color:rgba(132,150,182,.5);flex-shrink:0;border-right:3px solid transparent;padding-right:4px;transition:border-color .3s}
+  .ln .n{width:26px;text-align:right;color:rgba(132,150,182,.5);flex-shrink:0;border-right:3px solid transparent;padding-right:4px;transition:border-color .3s}
   .ln.chg .n{border-right-color:var(--accent)}
   .ln.chg{background:rgba(110,160,255,.08)}
   .kw{color:#c792ea} .st{color:#c3e88d}
-  .log{border-top:1px solid var(--line);padding:6px 10px 8px}
-  .log .lh{color:var(--muted);margin-bottom:3px}
-  .cm{display:flex;align-items:center;gap:6px;padding:2px 0;white-space:nowrap}
-  .cm .dt{width:7px;height:7px;border-radius:50%;background:var(--muted);flex-shrink:0}
-  .cm .ref{font-size:.58rem;padding:0 5px;border-radius:999px;border:1px solid}
+  .log{border-top:1px solid var(--line);padding:5px 10px 6px}
+  .log .lh{color:var(--muted);margin-bottom:2px}
+  .cm{display:flex;align-items:center;gap:6px;padding:1px 0;white-space:nowrap}
+  .cm .dt{width:.55em;height:.55em;border-radius:50%;background:var(--muted);flex-shrink:0}
+  .cm .ref{font-size:.85em;padding:0 5px;border-radius:999px;border:1px solid}
   .ref.loc{color:var(--gold);border-color:rgba(255,200,98,.5)}
   .ref.rem{color:#9fe3b6;border-color:rgba(70,217,138,.5)}
   .cm.new{display:none}
   .cm.new.show{display:flex;animation:pop .4s}
   .cm.new .dt{background:var(--gold)}
-  .sbar{display:flex;justify-content:space-between;gap:8px;padding:5px 10px;border-top:1px solid var(--line);background:rgba(255,255,255,.03);color:var(--muted);min-height:24px}
+  .sbar{display:flex;justify-content:space-between;gap:8px;padding:4px 10px;border-top:1px solid var(--line);background:rgba(255,255,255,.03);color:var(--muted);min-height:1.9em}
   .sbar .note{color:var(--ink);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
   .sbar .note.ok{color:var(--good)}
   /* push dialog */
-  .dlg{position:absolute;left:50%;top:44%;transform:translate(-50%,-50%);width:min(300px,86%);background:#151b2c;border:1px solid rgba(255,255,255,.18);
+  .dlg{position:absolute;left:50%;top:44%;transform:translate(-50%,-50%);width:min(24em,86%);background:#151b2c;border:1px solid rgba(255,255,255,.18);
     border-radius:10px;padding:10px 12px;box-shadow:0 20px 50px -10px rgba(0,0,0,.9);display:none;z-index:6}
   .dlg.show{display:block;animation:pop .3s}
   .dlg .dt1{color:var(--ink);font-weight:500;margin-bottom:6px}
@@ -132,12 +120,12 @@
   .dlg .one{padding:4px 6px;border-radius:5px;background:rgba(255,200,98,.1);color:var(--ink);margin-bottom:8px}
   .dlg .db{display:flex;justify-content:flex-end;gap:6px}
   /* github */
-  .gh{border:1px solid rgba(255,255,255,.14);border-radius:14px;background:#0d1117;padding:12px;font-family:var(--mono);font-size:.66rem;color:#c9d4ea;min-width:0;transition:border-color .4s,box-shadow .4s}
+  .gh{flex:1;border:1px solid rgba(255,255,255,.14);border-radius:14px;background:#0d1117;padding:12px 14px;font-family:var(--mono);font-size:var(--fs);color:#c9d4ea;min-width:0;transition:border-color .4s,box-shadow .4s}
   .gh.lit{border-color:rgba(70,217,138,.6);box-shadow:0 0 24px -8px rgba(70,217,138,.6)}
   .gh .url{color:var(--muted);margin-bottom:6px;word-break:break-all}
-  .gh .rn{font-family:var(--disp);font-weight:700;font-size:.9rem;color:var(--ink);display:flex;align-items:center;gap:6px;margin-bottom:10px}
-  .pub{font-family:var(--mono);font-weight:400;font-size:.56rem;padding:1px 6px;border-radius:999px;border:1px solid rgba(255,255,255,.25);color:var(--muted)}
-  .gh .sec{color:var(--muted);text-transform:uppercase;letter-spacing:.1em;font-size:.56rem;margin:10px 0 4px}
+  .gh .rn{font-family:var(--disp);font-weight:700;font-size:1.3em;color:var(--ink);display:flex;align-items:center;gap:6px;margin-bottom:10px}
+  .pub{font-family:var(--mono);font-weight:400;font-size:.62em;padding:1px 6px;border-radius:999px;border:1px solid rgba(255,255,255,.25);color:var(--muted)}
+  .gh .sec{color:var(--muted);text-transform:uppercase;letter-spacing:.1em;font-size:.8em;margin:12px 0 4px}
   .gh .cm{white-space:normal}
   .gh .cm .dt{background:#9fe3b6}
   .gh .preview{background:rgba(255,255,255,.04);border:1px solid var(--line);border-radius:6px;padding:6px;white-space:pre;overflow-x:auto}
@@ -146,6 +134,41 @@
   .cue{outline:2px solid var(--gold);outline-offset:2px;cursor:pointer;animation:cue 1.4s ease-in-out infinite}
   @keyframes cue{50%{outline-color:rgba(255,200,98,.25)}}
   @keyframes pop{from{transform:scale(.85);opacity:0}to{transform:scale(1);opacity:1}}
+
+  /* caption: the one sentence, right under the picture */
+  .caption{display:flex;gap:16px;align-items:flex-start;margin:14px 4px 0;min-height:56px}
+  .caption .n{flex-shrink:0;font-family:var(--disp);font-weight:700;font-size:1.35rem;color:var(--accent);font-variant-numeric:tabular-nums;
+    line-height:1.2;min-width:3.2rem}
+  .caption .n small{display:block;font-family:var(--mono);font-weight:400;font-size:.58rem;letter-spacing:.14em;text-transform:uppercase;color:var(--muted)}
+  .caption .t{font-size:1.02rem;line-height:1.55;color:var(--ink);padding-left:16px;border-left:3px solid var(--accent);transition:border-color .3s}
+  body.solo .caption .t{font-size:1.18rem}
+  .caption.left .t{border-left-color:var(--gold)} .caption.ok .t{border-left-color:var(--good)}
+  .caption b.g{color:var(--good)} .caption b.a{color:var(--accent)} .caption b.y{color:var(--gold)}
+
+  /* toolbar: same on every page */
+  .toolbar{display:flex;align-items:center;gap:10px;margin:16px 0 0;padding-top:14px;border-top:1px solid var(--line)}
+  .btn{font-family:var(--body);font-weight:500;font-size:.86rem;padding:9px 16px;border-radius:11px;cursor:pointer;
+    border:1px solid var(--line);background:var(--surface);color:var(--ink);transition:.15s}
+  .btn:hover{border-color:var(--accent);color:var(--accent)}
+  .btn.primary{border-color:rgba(110,160,255,.5);background:rgba(110,160,255,.12);padding:9px 22px}
+  .btn:disabled{opacity:.35;cursor:not-allowed}
+  .btn.ghost{background:transparent;color:var(--muted);margin-left:auto}
+  .dots{display:flex;gap:5px;align-items:center;margin:0 6px}
+  .dots i{display:block;width:8px;height:8px;border-radius:50%;background:rgba(255,255,255,.12);transition:.2s}
+  .dots i.done{background:rgba(110,160,255,.45)}
+  .dots i.now{background:var(--accent);transform:scale(1.35);box-shadow:0 0 10px rgba(110,160,255,.7)}
+  .hint{font-family:var(--mono);font-size:.68rem;color:var(--muted);margin:10px 4px 0;line-height:1.5}
+  .hint b{color:var(--accent)}
+
+  /* support: the two counters. Below the picture, hidden in focus */
+  .support{margin-top:18px}
+  body.solo .support,body.solo .take,body.solo .hint{display:none}
+  .readout{display:grid;grid-template-columns:1fr 1fr;gap:10px;max-width:520px}
+  .stat{background:rgba(255,255,255,.03);border:1px solid var(--line);border-radius:12px;padding:11px 13px;transition:opacity .3s}
+  .stat.empty{opacity:.3}
+  .stat .k{font-family:var(--mono);font-size:.62rem;letter-spacing:.1em;text-transform:uppercase;color:var(--muted)}
+  .stat .v{font-family:var(--disp);font-weight:700;font-size:1.45rem;font-variant-numeric:tabular-nums;margin-top:2px;transition:color .3s;min-height:1.6em}
+  .v.gold{color:var(--gold)} .v.good{color:var(--good)}
   .take{margin-top:22px;background:linear-gradient(180deg,rgba(110,160,255,.08),rgba(139,123,255,.04));
     border:1px solid var(--line);border-left:3px solid var(--accent);border-radius:12px;padding:16px 18px}
   .take .tk{font-family:var(--mono);font-size:.66rem;letter-spacing:.14em;text-transform:uppercase;color:var(--accent);margin:0 0 8px}
@@ -162,97 +185,101 @@
 <div class="wrap">
   <p class="tag">Workbook 1b &middot; Section 1-3 &middot; GitHub</p>
   <h1>Git Through IntelliJ</h1>
-  <p class="lede">Every change you make follows the same loop inside IntelliJ, no command line.
-  <b>Commit saves a snapshot on your computer; only Push puts it on GitHub.</b>
-  Step through one change to Main.java, or click the glowing spot in the picture.</p>
+  <p class="lede"><b>Commit saves a snapshot on your computer; only Push puts it on GitHub.</b></p>
 
   <div class="stage">
-    <div class="grid">
-      <div class="panelL">
-        <p class="lab">Where the commits are</p>
-        <div class="readout">
-          <div class="stat"><div class="k">Your computer</div><div class="v" id="stLoc">1</div></div>
-          <div class="stat"><div class="k">GitHub</div><div class="v" id="stRem">1</div></div>
-        </div>
+    <div class="topbar">
+      <span class="lab">One change to Main.java</span>
+      <button class="focus" id="bFocus" title="Hide the notes, enlarge the picture">Focus</button>
+    </div>
 
-        <p class="stepno" id="stepno">Step <b>0</b> of 8</p>
-        <div class="status" id="status"></div>
-
-        <div class="actions">
-          <button class="btn primary" id="bNext">Next &rarr;</button>
-          <button class="btn gold" id="bBack">&larr; Back</button>
-          <button class="btn" id="bReset">Reset</button>
-        </div>
-        <p class="hint">space = next &middot; on a Mac, Ctrl is Cmd &middot; later, <b>Commit and Push...</b> does both in one click.</p>
-      </div>
-
-      <div class="panelR">
-        <div class="rgrid">
-          <div>
-            <p class="lab">IntelliJ</p>
-            <div class="ide" id="ide">
-              <div class="bar">
-                <span class="proj">testing-git</span>
-                <span class="menu" id="git">Git
-                  <span class="drop">
-                    <span class="mi" id="miCommit">Commit...<span>Ctrl+K</span></span>
-                    <span class="mi" id="miPush">Push...<span>Ctrl+Shift+K</span></span>
-                    <span class="mi">Pull...<span></span></span>
-                    <span class="mi">GitHub<span>&rsaquo;</span></span>
-                  </span>
+    <div class="pic" id="pic">
+      <div class="rgrid">
+        <div class="rcol">
+          <p class="lab">IntelliJ</p>
+          <div class="ide" id="ide">
+            <div class="bar">
+              <span class="proj">testing-git</span>
+              <span class="menu" id="git">Git
+                <span class="drop">
+                  <span class="mi" id="miCommit">Commit...<span>Ctrl+K</span></span>
+                  <span class="mi" id="miPush">Push...<span>Ctrl+Shift+K</span></span>
+                  <span class="mi">Pull...<span></span></span>
+                  <span class="mi">GitHub<span>&rsaquo;</span></span>
                 </span>
-              </div>
-              <div class="body">
-                <div class="side">
-                  <div class="tabs"><span id="tProj">Project</span><span id="tCommit">Commit</span></div>
-                  <div class="pane" id="pProj">
-                    <div class="tr">testing-git</div>
-                    <div class="tr">&nbsp;&nbsp;src/main/java</div>
-                    <div class="tr">&nbsp;&nbsp;&nbsp;&nbsp;com.pluralsight</div>
-                    <div class="tr f" id="treeMain">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Main.java</div>
-                    <div class="tr f">&nbsp;&nbsp;pom.xml</div>
-                  </div>
-                  <div class="pane" id="pCommit">
-                    <div class="grp" id="chgHead">Changes &middot; 1 file</div>
-                    <div class="row" id="row"><span class="cb" id="cb"></span><span class="mod">Main.java</span></div>
-                    <div class="nochg" id="nochg">No changes</div>
-                    <div class="msgbox" id="msg">Commit Message</div>
-                    <div class="cbtns"><span class="ib" id="bCommit">Commit</span><span class="ib">Commit and Push...</span></div>
-                  </div>
+              </span>
+            </div>
+            <div class="body">
+              <div class="iside">
+                <div class="tabs"><span id="tProj">Project</span><span id="tCommit">Commit</span></div>
+                <div class="pane" id="pProj">
+                  <div class="tr">testing-git</div>
+                  <div class="tr">&nbsp;&nbsp;src/main/java</div>
+                  <div class="tr">&nbsp;&nbsp;&nbsp;&nbsp;com.pluralsight</div>
+                  <div class="tr f" id="treeMain">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Main.java</div>
+                  <div class="tr f">&nbsp;&nbsp;pom.xml</div>
                 </div>
-                <div class="ed">
-                  <div class="etab" id="etab">Main.java</div>
-                  <div class="code" id="code"></div>
+                <div class="pane" id="pCommit">
+                  <div class="grp" id="chgHead">Changes &middot; 1 file</div>
+                  <div class="row" id="row"><span class="cb" id="cb"></span><span class="mod">Main.java</span></div>
+                  <div class="nochg" id="nochg">No changes</div>
+                  <div class="msgbox" id="msg">Commit Message</div>
+                  <div class="cbtns"><span class="ib" id="bCommit">Commit</span><span class="ib">Commit and Push...</span></div>
                 </div>
               </div>
-              <div class="log">
-                <div class="lh">Git &middot; Log</div>
-                <div class="cm new" id="logNew"><span class="dt"></span>Change greeting <span class="ref loc">main</span><span class="ref rem" id="refRemNew">origin/main</span></div>
-                <div class="cm"><span class="dt"></span>Initial Commit <span class="ref loc" id="refLocOld">main</span><span class="ref rem" id="refRemOld">origin/main</span></div>
-              </div>
-              <div class="sbar"><span class="note" id="note"></span><span>main</span></div>
-              <div class="dlg" id="dlg">
-                <div class="dt1">Push Commits to testing-git</div>
-                <div class="route">main &rarr; <b>origin : main</b></div>
-                <div class="one">Change greeting</div>
-                <div class="db"><span class="ib">Cancel</span><span class="ib ready" id="bPush">Push</span></div>
+              <div class="ed">
+                <div class="etab" id="etab">Main.java</div>
+                <div class="code" id="code"></div>
               </div>
             </div>
-          </div>
-          <div>
-            <p class="lab">GitHub</p>
-            <div class="gh" id="gh">
-              <div class="url">github.com/your-name/testing-git</div>
-              <div class="rn">testing-git <span class="pub">Public</span></div>
-              <div class="sec">Commits</div>
-              <div class="cm new" id="ghNew"><span class="dt"></span>Change greeting</div>
-              <div class="cm"><span class="dt"></span>Initial Commit</div>
-              <div class="empty" id="ghEmpty">nothing new</div>
-              <div class="sec">Main.java, line 5</div>
-              <div class="preview" id="ghLine"></div>
+            <div class="log">
+              <div class="lh">Git &middot; Log</div>
+              <div class="cm new" id="logNew"><span class="dt"></span>Change greeting <span class="ref loc">main</span><span class="ref rem" id="refRemNew">origin/main</span></div>
+              <div class="cm"><span class="dt"></span>Initial Commit <span class="ref loc" id="refLocOld">main</span><span class="ref rem" id="refRemOld">origin/main</span></div>
+            </div>
+            <div class="sbar"><span class="note" id="note"></span><span>main</span></div>
+            <div class="dlg" id="dlg">
+              <div class="dt1">Push Commits to testing-git</div>
+              <div class="route">main &rarr; <b>origin : main</b></div>
+              <div class="one">Change greeting</div>
+              <div class="db"><span class="ib">Cancel</span><span class="ib ready" id="bPush">Push</span></div>
             </div>
           </div>
         </div>
+        <div class="rcol">
+          <p class="lab">GitHub</p>
+          <div class="gh" id="gh">
+            <div class="url">github.com/your-name/testing-git</div>
+            <div class="rn">testing-git <span class="pub">Public</span></div>
+            <div class="sec">Commits</div>
+            <div class="cm new" id="ghNew"><span class="dt"></span>Change greeting</div>
+            <div class="cm"><span class="dt"></span>Initial Commit</div>
+            <div class="empty" id="ghEmpty">nothing new</div>
+            <div class="sec">Main.java, line 5</div>
+            <div class="preview" id="ghLine"></div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="caption" id="caption">
+      <div class="n" id="stepno"><small>step</small>0 / 8</div>
+      <div class="t" id="status"></div>
+    </div>
+
+    <div class="toolbar">
+      <button class="btn" id="bBack">&larr; Back</button>
+      <div class="dots" id="dots"></div>
+      <button class="btn primary" id="bNext">Next &rarr;</button>
+      <button class="btn ghost" id="bReset">Reset</button>
+    </div>
+    <p class="hint">space = next &middot; on a Mac, Ctrl is Cmd &middot; later, <b>Commit and Push...</b> does both in one click.</p>
+
+    <div class="support">
+      <p class="lab">Where the commits are</p>
+      <div class="readout">
+        <div class="stat"><div class="k">Your computer</div><div class="v" id="stLoc">1</div></div>
+        <div class="stat"><div class="k">GitHub</div><div class="v" id="stRem">1</div></div>
       </div>
     </div>
   </div>
@@ -344,20 +371,28 @@
     /* the next thing to click glows; clicking it is the same as Next */
     Array.prototype.forEach.call(document.querySelectorAll(".cue"),function(e){e.classList.remove("cue");});
     var cueSel=at<0?"#code":s.cue; if(cueSel) $(cueSel).classList.add("cue");
-    var st=$("#status");
-    st.className="status "+s.cls;
-    st.innerHTML=at<0?'Press <b class="a">Next</b> to start, or click the glowing spot. Watch the GitHub box: it only changes at the very end.':s.msg;
-    $("#stepno").innerHTML="Step <b>"+(at+1)+"</b> of "+STEPS.length;
-    $("#bNext").disabled=at>=STEPS.length-1; $("#bBack").disabled=at<0;
+    $("#caption").className="caption "+s.cls;
+    $("#status").innerHTML=at<0?'Press <b class="a">Next</b> to start, or click the glowing spot. Watch the GitHub box: it only changes at the very end.':s.msg;
+    $("#stepno").innerHTML="<small>step</small>"+(at+1)+" / "+STEPS.length;
+    setBtns();
   }
+  function setBtns(){ $("#bNext").disabled=at>=STEPS.length-1; $("#bBack").disabled=at<0;
+    var d=""; for(var k=0;k<STEPS.length;k++) d+='<i class="'+(k===at?"now":k<at?"done":"")+'"></i>'; $("#dots").innerHTML=d; }
   function next(){ if(at<STEPS.length-1){at++;render();} }
   function back(){ if(at>=0){at--;render();} }
   function reset(){ at=-1; render(); }
 
+  /* focus: picture and caption only. Remembered per browser. */
+  function setFocus(on){ document.body.classList.toggle("solo",on); $("#bFocus").textContent=on?"Focus on":"Focus";
+    try{localStorage.setItem("hub-focus",on?"1":"0");}catch(e){} render(); }
+  $("#bFocus").addEventListener("click",function(){ setFocus(!document.body.classList.contains("solo")); this.blur(); });
+  try{ if(localStorage.getItem("hub-focus")==="1") document.body.classList.add("solo"); }catch(e){}
+  if(document.body.classList.contains("solo")) $("#bFocus").textContent="Focus on";
+
   $("#bNext").addEventListener("click",next);
   $("#bBack").addEventListener("click",back);
   $("#bReset").addEventListener("click",reset);
-  $(".panelR").addEventListener("click",function(e){ if(e.target.closest(".cue")) next(); });
+  $("#pic").addEventListener("click",function(e){ if(e.target.closest(".cue")) next(); });
   document.addEventListener("keydown",function(e){ if(e.code==="Space"&&!/INPUT|BUTTON|TEXTAREA/.test(e.target.tagName)){e.preventDefault();next();} });
 
   /* ---------- ambient canvas ---------- */

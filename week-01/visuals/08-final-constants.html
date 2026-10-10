@@ -30,59 +30,80 @@
     background-clip:text;color:transparent}
   .lede{color:var(--muted);max-width:64ch;font-size:1.05rem;margin:0 0 30px;line-height:1.5}
   .lede b{color:var(--ink)}
-  .lede code,.take code,.status code{font-family:var(--mono);font-size:.92em;color:#bcd0ff}
-  .stage{position:relative;background:linear-gradient(180deg,rgba(255,255,255,.03),rgba(255,255,255,.01));
-    border:1px solid var(--line);border-radius:24px;padding:8px;
-    box-shadow:0 1px 0 rgba(255,255,255,.06) inset,0 30px 80px -30px rgba(0,0,0,.8)}
-  .panelR{border-radius:18px;padding:22px;background:rgba(6,10,20,.5);border:1px solid var(--line);position:relative;overflow:hidden}
-  .lab{font-family:var(--mono);font-size:.7rem;letter-spacing:.12em;text-transform:uppercase;color:var(--muted);margin:0 0 12px}
+  .lede code,.take code,.caption code{font-family:var(--mono);font-size:.92em;color:#bcd0ff}
 
-  /* code + memory */
-  .duo{display:grid;grid-template-columns:1.35fr 1fr;gap:14px}
-  @media (max-width:860px){.duo{grid-template-columns:1fr}}
-  .code{font-family:var(--mono);font-size:.9rem;line-height:1.5;background:rgba(0,0,0,.35);border:1px solid var(--line);
-    border-radius:14px;padding:14px 0;overflow-x:auto}
-  .ln{display:flex;gap:12px;padding:3px 16px;white-space:pre;border-left:3px solid transparent;transition:background .25s,border-color .25s}
+  /* ---------- stage: picture first, one toolbar ---------- */
+  .stage{position:relative;background:linear-gradient(180deg,rgba(255,255,255,.03),rgba(255,255,255,.01));
+    border:1px solid var(--line);border-radius:24px;padding:18px 18px 14px;
+    box-shadow:0 1px 0 rgba(255,255,255,.06) inset,0 30px 80px -30px rgba(0,0,0,.8)}
+  .topbar{display:flex;align-items:center;gap:10px;margin:0 0 14px;flex-wrap:wrap}
+  .topbar .lab{margin:0 4px 0 0}
+  .lab{font-family:var(--mono);font-size:.7rem;letter-spacing:.12em;text-transform:uppercase;color:var(--muted);margin:0 0 12px}
+  .focus{margin-left:auto;font-family:var(--mono);font-size:.68rem;letter-spacing:.1em;text-transform:uppercase;padding:6px 12px;
+    border-radius:999px;border:1px solid var(--line);background:rgba(0,0,0,.25);color:var(--muted);cursor:pointer;transition:.15s}
+  .focus:hover{border-color:var(--accent);color:var(--accent)}
+  .focus:focus-visible{outline:2px solid var(--accent);outline-offset:2px}
+  body.solo .focus{border-color:rgba(255,200,98,.6);color:var(--gold);background:rgba(255,200,98,.1)}
+
+  /* hero picture: the code, the variable box and the output, scaled up */
+  .pic{position:relative;height:390px;border:1px solid var(--line);border-radius:18px;background:rgba(6,10,20,.5);overflow:hidden;
+    display:flex;align-items:center;justify-content:center;padding:22px 28px}
+  body.solo .pic{height:480px}
+  .duo{display:grid;grid-template-columns:minmax(0,1.5fr) minmax(0,1fr);gap:22px;width:100%;max-width:1000px;align-items:center}
+  @media (max-width:860px){.duo{grid-template-columns:1fr}.pic{height:auto;min-height:390px}body.solo .pic{height:auto;min-height:480px}}
+  .code{font-family:var(--mono);font-size:1.12rem;line-height:1.55;background:rgba(0,0,0,.35);border:1px solid var(--line);
+    border-radius:14px;padding:18px 0;overflow-x:auto}
+  body.solo .code{font-size:1.26rem}
+  .ln{display:flex;gap:14px;padding:5px 20px;white-space:pre;border-left:3px solid transparent;transition:background .25s,border-color .25s}
   .ln .no{color:#4b5a78;min-width:1.2em;text-align:right;user-select:none}
   .kw{color:#c9a7ff} .ty{color:#7fd6ff} .st{color:#b9e88a} .nm{color:var(--ink)}
   .fin{color:#ff9f6a;font-weight:500;display:inline-block;transition:opacity .25s,max-width .25s;overflow:hidden;vertical-align:bottom;max-width:7ch}
   .off-final .fin{opacity:0;max-width:0}
   .ln.err{background:rgba(255,106,106,.08);border-left-color:var(--warn)}
-  .ln.err .tgt{text-decoration:underline wavy var(--warn);text-underline-offset:4px}
+  .ln.err .tgt{text-decoration:underline wavy var(--warn);text-underline-offset:5px}
   .ln.ok{background:rgba(70,217,138,.06);border-left-color:var(--good)}
-  .tip{margin:4px 16px 2px 46px;font-family:var(--body);font-size:.8rem;color:#ffd0d0;background:rgba(255,106,106,.12);
-    border:1px solid rgba(255,106,106,.45);border-radius:8px;padding:6px 10px;display:none}
+  .tip{margin:6px 20px 4px 58px;font-family:var(--body);font-size:.92rem;color:#ffd0d0;background:rgba(255,106,106,.12);
+    border:1px solid rgba(255,106,106,.45);border-radius:8px;padding:7px 12px;display:none}
   .on-final .tip{display:block}
-  .side{display:flex;flex-direction:column;gap:14px}
-  .box{border-radius:14px;border:1px solid var(--line);background:rgba(255,255,255,.02);padding:14px 16px;position:relative;
+  .side{display:flex;flex-direction:column;gap:16px}
+  .box{border-radius:14px;border:1px solid var(--line);background:rgba(255,255,255,.02);padding:18px 20px;position:relative;
     transition:border-color .3s,background .3s}
   .box.locked{border-color:rgba(255,200,98,.55);background:rgba(255,200,98,.06)}
-  .bname{font-family:var(--mono);font-size:.78rem;color:var(--muted)}
+  .bname{font-family:var(--mono);font-size:.98rem;color:var(--muted)}
   .bname b{color:#7fd6ff;font-weight:400}
-  .bval{font-family:var(--disp);font-weight:700;font-size:1.35rem;margin-top:6px;color:#b9e88a;min-height:1.8rem}
-  .lock{position:absolute;right:12px;top:12px;font-family:var(--mono);font-size:.62rem;letter-spacing:.14em;text-transform:uppercase;
-    padding:4px 9px;border-radius:999px;border:1px solid var(--line);color:var(--muted);transition:.3s}
+  .bval{font-family:var(--disp);font-weight:700;font-size:1.8rem;margin-top:8px;color:#b9e88a;min-height:2.3rem}
+  body.solo .bval{font-size:2.05rem}
+  .lock{position:absolute;right:14px;top:14px;font-family:var(--mono);font-size:.72rem;letter-spacing:.14em;text-transform:uppercase;
+    padding:5px 11px;border-radius:999px;border:1px solid var(--line);color:var(--muted);transition:.3s}
   .box.locked .lock{color:var(--gold);border-color:rgba(255,200,98,.55)}
-  .lock svg{width:10px;height:10px;vertical-align:-1px;margin-right:4px}
-  .con{font-family:var(--mono);font-size:.8rem;line-height:1.6;background:rgba(0,0,0,.4);border:1px solid var(--line);border-radius:14px;padding:12px 14px;min-height:96px}
-  .con .h{font-size:.62rem;letter-spacing:.14em;text-transform:uppercase;color:var(--muted);margin-bottom:6px}
+  .lock svg{width:12px;height:12px;vertical-align:-1px;margin-right:5px}
+  .con{font-family:var(--mono);font-size:.98rem;line-height:1.6;background:#05070e;border:1px solid var(--line);border-radius:14px;padding:14px 18px;min-height:120px}
+  .con .h{font-size:.66rem;letter-spacing:.14em;text-transform:uppercase;color:var(--muted);margin-bottom:6px}
   .con .out{color:var(--ink)} .con .bad{color:var(--warn)} .con .dim{color:var(--muted)}
-  /* the one control, under the animation */
-  .ctl{margin-top:20px;display:grid;grid-template-columns:1fr auto;gap:14px;align-items:start}
-  @media (max-width:760px){.ctl{grid-template-columns:1fr}}
+
+  /* caption: the sentence for the current state, right under the picture */
+  .caption{display:flex;gap:16px;align-items:flex-start;margin:14px 4px 0;min-height:56px}
+  .caption .n{flex-shrink:0;font-family:var(--disp);font-weight:700;font-size:1.35rem;color:var(--accent);line-height:1.2;min-width:3.2rem}
+  .caption .n small{display:block;font-family:var(--mono);font-weight:400;font-size:.58rem;letter-spacing:.14em;text-transform:uppercase;color:var(--muted)}
+  .caption.locked .n{color:var(--gold)}
+  .caption .t{font-size:1.02rem;line-height:1.55;color:var(--ink);padding-left:16px;border-left:3px solid var(--accent);transition:border-color .3s}
+  body.solo .caption .t{font-size:1.18rem}
+  .caption.locked .t{border-left-color:var(--gold)}
+  .caption b.g{color:var(--good)} .caption b.a{color:var(--accent)} .caption b.y{color:var(--gold)}
+
+  /* toolbar: the one control */
+  .toolbar{display:flex;align-items:center;gap:10px;margin:16px 0 0;padding-top:14px;border-top:1px solid var(--line)}
   .seg{display:inline-flex;border:1px solid var(--line);border-radius:12px;overflow:hidden;background:rgba(0,0,0,.25)}
-  .seg button{font-family:var(--body);font-weight:500;font-size:.84rem;padding:10px 16px;border:0;background:transparent;color:var(--muted);
+  .seg button{font-family:var(--body);font-weight:500;font-size:.86rem;padding:9px 18px;border:0;background:transparent;color:var(--muted);
     cursor:pointer;transition:.15s;border-right:1px solid var(--line)}
   .seg button:last-child{border-right:0}
   .seg button:hover{color:var(--accent)}
   .seg button.on{background:rgba(110,160,255,.16);color:var(--ink)}
   .seg button:focus-visible{outline:2px solid var(--accent);outline-offset:-2px}
-  .status{font-family:var(--mono);font-size:.82rem;line-height:1.55;color:var(--ink);min-height:60px;
-    padding:12px 14px;border-radius:12px;background:rgba(0,0,0,.25);border:1px solid var(--line);
-    border-left:3px solid var(--accent);transition:border-color .3s;grid-column:1 / -1}
-  .status b.g{color:var(--good)} .status b.a{color:var(--accent)} .status b.y{color:var(--gold)}
-  .hint{font-family:var(--mono);font-size:.7rem;color:var(--muted);margin:14px 0 0;line-height:1.5}
+  .hint{font-family:var(--mono);font-size:.68rem;color:var(--muted);margin:10px 4px 0;line-height:1.5}
   .hint b{color:var(--accent)}
+  .hint code{font-family:var(--mono);color:#bcd0ff}
+  body.solo .take,body.solo .hint{display:none}
 
   .take{margin-top:22px;background:linear-gradient(180deg,rgba(110,160,255,.08),rgba(139,123,255,.04));
     border:1px solid var(--line);border-left:3px solid var(--accent);border-radius:12px;padding:16px 18px}
@@ -100,21 +121,22 @@
 <div class="wrap">
   <p class="tag">Workbook 1c &middot; Section 3-1 &middot; Read-only variables</p>
   <h1>final Constants</h1>
-  <p class="lede">A <code>final</code> variable gets its value once, when it is declared, and keeps it.
-  <b>Flip final on and the line that tries to change it no longer compiles.</b></p>
+  <p class="lede"><b>Flip final on and the line that tries to change it no longer compiles.</b></p>
 
   <div class="stage">
-    <div class="panelR">
+    <div class="topbar">
+      <span class="lab">Main.java</span>
+      <button class="focus" id="bFocus" title="Hide the notes, enlarge the picture">Focus</button>
+    </div>
+
+    <div class="pic" id="pic">
       <div class="duo">
-        <div>
-          <p class="lab">Main.java</p>
-          <div class="code off-final" id="code">
-            <div class="ln" id="l1"><span class="no">1</span><span><span class="fin kw">final </span><span class="ty">String</span> myName = <span class="st">"Raymond"</span>;</span></div>
-            <div class="ln" id="l2"><span class="no">2</span><span>System.out.println(<span class="st">"Your name is: "</span> + myName);</span></div>
-            <div class="ln" id="l3"><span class="no">3</span><span><span class="tgt">myName</span> = myName + <span class="st">" Maroun"</span>;</span></div>
-            <div class="tip" id="tip">Cannot assign a value to final variable 'myName'</div>
-            <div class="ln" id="l4"><span class="no">4</span><span>System.out.println(<span class="st">"The full name is: "</span> + myName);</span></div>
-          </div>
+        <div class="code off-final" id="code">
+          <div class="ln" id="l1"><span class="no">1</span><span><span class="fin kw">final </span><span class="ty">String</span> myName = <span class="st">"Raymond"</span>;</span></div>
+          <div class="ln" id="l2"><span class="no">2</span><span>System.out.println(<span class="st">"Your name is: "</span> + myName);</span></div>
+          <div class="ln" id="l3"><span class="no">3</span><span><span class="tgt">myName</span> = myName + <span class="st">" Maroun"</span>;</span></div>
+          <div class="tip" id="tip">Cannot assign a value to final variable 'myName'</div>
+          <div class="ln" id="l4"><span class="no">4</span><span>System.out.println(<span class="st">"The full name is: "</span> + myName);</span></div>
         </div>
         <div class="side">
           <div>
@@ -128,16 +150,20 @@
           <div class="con" id="con"></div>
         </div>
       </div>
-
-      <div class="ctl">
-        <div class="seg" id="seg" role="group" aria-label="final on or off">
-          <button data-m="off" class="on">final off</button>
-          <button data-m="on">final on</button>
-        </div>
-        <div class="status" id="status"></div>
-      </div>
-      <p class="hint">A value fixed for every run is a constant, named in <b>UPPER_SNAKE_CASE</b>: <code>final int DAYS_IN_WEEK = 7;</code></p>
     </div>
+
+    <div class="caption" id="caption">
+      <div class="n" id="stepno"><small>final</small>off</div>
+      <div class="t" id="status"></div>
+    </div>
+
+    <div class="toolbar">
+      <div class="seg" id="seg" role="group" aria-label="final on or off">
+        <button data-m="off" class="on">final off</button>
+        <button data-m="on">final on</button>
+      </div>
+    </div>
+    <p class="hint">A value fixed for every run is a constant, named in <b>UPPER_SNAKE_CASE</b>: <code>final int DAYS_IN_WEEK = 7;</code></p>
   </div>
 
   <div class="take">
@@ -174,11 +200,21 @@
     $("#bval").textContent=M.val;
     $("#con").innerHTML=M.con;
     $("#status").innerHTML=M.msg;
-    $("#status").style.borderLeftColor=on?"var(--gold)":"var(--accent)";
+    $("#caption").className="caption"+(on?" locked":"");
+    $("#stepno").innerHTML="<small>final</small>"+mode;
+    cur=mode;
     Array.prototype.forEach.call(document.querySelectorAll("#seg button"),function(b){b.classList.toggle("on",b.getAttribute("data-m")===mode);});
   }
 
   $("#seg").addEventListener("click",function(e){ var b=e.target.closest("button"); if(b) set(b.getAttribute("data-m")); });
+
+  /* focus: picture and caption only. Remembered per browser. */
+  var cur="off";
+  function setFocus(on){ document.body.classList.toggle("solo",on); $("#bFocus").textContent=on?"Focus on":"Focus";
+    try{localStorage.setItem("hub-focus",on?"1":"0");}catch(e){} set(cur); }
+  $("#bFocus").addEventListener("click",function(){ setFocus(!document.body.classList.contains("solo")); this.blur(); });
+  try{ if(localStorage.getItem("hub-focus")==="1") document.body.classList.add("solo"); }catch(e){}
+  if(document.body.classList.contains("solo")) $("#bFocus").textContent="Focus on";
 
   /* ---------- ambient canvas ---------- */
   var cv=$("#amb"),ctx=cv.getContext&&cv.getContext("2d"),parts=[];

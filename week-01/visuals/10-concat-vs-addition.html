@@ -29,93 +29,118 @@
   h1{font-family:var(--disp);font-weight:700;font-size:clamp(2.3rem,6vw,3.6rem);line-height:1;margin:0 0 12px;
     letter-spacing:-.03em;background:linear-gradient(180deg,#fff,#b9c6e6);-webkit-background-clip:text;
     background-clip:text;color:transparent}
-  .lede{color:var(--muted);max-width:64ch;font-size:1.05rem;margin:0 0 30px;line-height:1.5}
+  .lede{color:var(--muted);max-width:64ch;font-size:1.05rem;margin:0 0 26px;line-height:1.5}
   .lede b{color:var(--ink)}
-  .lede code,.take code,.status code{font-family:var(--mono);font-size:.92em;color:#bcd0ff;white-space:pre}
+  .lede code,.take code,.caption code,.hint code{font-family:var(--mono);font-size:.92em;color:#bcd0ff;white-space:pre}
+
+  /* ---------- stage: picture first, one toolbar, support below ---------- */
   .stage{position:relative;background:linear-gradient(180deg,rgba(255,255,255,.03),rgba(255,255,255,.01));
-    border:1px solid var(--line);border-radius:24px;padding:8px;
+    border:1px solid var(--line);border-radius:24px;padding:18px 18px 14px;
     box-shadow:0 1px 0 rgba(255,255,255,.06) inset,0 30px 80px -30px rgba(0,0,0,.8)}
-  .grid{display:grid;grid-template-columns:340px 1fr;gap:8px}
-  @media (max-width:860px){.grid{grid-template-columns:1fr}}
-  .panelL,.panelR{border-radius:18px;padding:22px;min-width:0}
-  .panelL{background:linear-gradient(180deg,rgba(110,160,255,.06),rgba(139,123,255,.03));border:1px solid var(--line)}
-  .panelR{background:rgba(6,10,20,.5);border:1px solid var(--line);position:relative;overflow:hidden}
-  .lab{font-family:var(--mono);font-size:.7rem;letter-spacing:.12em;text-transform:uppercase;color:var(--muted);margin:0 0 12px}
-  /* example chips */
-  .chips{display:flex;flex-wrap:wrap;gap:6px;margin-bottom:16px}
+  .topbar{display:flex;align-items:center;gap:10px;margin:0 0 14px;flex-wrap:wrap}
+  .topbar .lab{margin:0 4px 0 0}
+  .lab{font-family:var(--mono);font-size:.7rem;letter-spacing:.12em;text-transform:uppercase;color:var(--muted);margin:0 0 10px}
+  .chips{display:flex;flex-wrap:wrap;gap:6px}
   .chip{font-family:var(--mono);font-size:.74rem;padding:5px 11px;border-radius:999px;cursor:pointer;white-space:pre;
     border:1px solid var(--line);background:rgba(0,0,0,.25);color:var(--muted);transition:.15s}
   .chip:hover{border-color:var(--accent);color:var(--accent)}
   .chip.on{border-color:rgba(110,160,255,.6);background:rgba(110,160,255,.14);color:var(--ink)}
-  .chip:focus-visible{outline:2px solid var(--accent);outline-offset:2px}
-  /* readout */
-  .readout{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin:0 0 14px}
-  .stat{background:rgba(255,255,255,.03);border:1px solid var(--line);border-radius:12px;padding:11px 13px}
-  .stat .k{font-family:var(--mono);font-size:.62rem;letter-spacing:.1em;text-transform:uppercase;color:var(--muted)}
-  .stat .v{font-family:var(--disp);font-weight:700;font-size:1.2rem;font-variant-numeric:tabular-nums;margin-top:2px;transition:color .3s;min-height:1.6em;line-height:1.6}
-  .v.add{color:var(--gold)} .v.cat{color:var(--good)} .v.dim{color:rgba(132,150,182,.5)}
-  .stepno{font-family:var(--mono);font-size:.64rem;letter-spacing:.14em;text-transform:uppercase;color:var(--muted);margin:0 0 8px}
-  .stepno b{color:var(--accent);font-weight:500}
-  .status{font-family:var(--mono);font-size:.82rem;line-height:1.55;color:var(--ink);min-height:132px;
-    padding:12px 14px;border-radius:12px;background:rgba(0,0,0,.25);border:1px solid var(--line);
-    border-left:3px solid var(--accent);transition:border-color .3s}
-  .status.add{border-left-color:var(--gold)}
-  .status.cat,.status.acting{border-left-color:var(--good)}
-  .status.trouble{border-left-color:var(--warn)}
-  .status b.g{color:var(--good)} .status b.w{color:var(--warn)} .status b.a{color:var(--accent)} .status b.y{color:var(--gold)}
-  .actions{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-top:16px}
-  .btn{font-family:var(--body);font-weight:500;font-size:.84rem;padding:9px 12px;border-radius:11px;cursor:pointer;
-    border:1px solid var(--line);background:var(--surface);color:var(--ink);transition:.15s;text-align:center}
-  .btn:hover{border-color:var(--accent);color:var(--accent)}
-  .btn.primary{border-color:rgba(110,160,255,.5);background:rgba(110,160,255,.12);grid-column:1 / -1}
-  .btn.gold:hover{border-color:var(--gold);color:var(--gold)}
-  .btn:disabled{opacity:.35;cursor:not-allowed}
-  .btn:focus-visible{outline:2px solid var(--accent);outline-offset:2px}
-  .hint{font-family:var(--mono);font-size:.7rem;color:var(--muted);margin:14px 0 0;line-height:1.5}
-  .hint b{color:var(--accent)}
-  /* right: code, the line being reduced, the rule, console */
-  .code{min-width:0;font-family:var(--mono);font-size:.8rem;line-height:1.8;background:rgba(0,0,0,.35);border:1px solid var(--line);
-    border-radius:14px;padding:12px 0;overflow-x:auto;margin-bottom:16px}
-  .ln{display:flex;gap:12px;padding:0 14px;white-space:pre;color:#c9d4ea;transition:background .2s,opacity .3s}
-  .ln .n{width:20px;text-align:right;color:rgba(132,150,182,.55);user-select:none;flex-shrink:0}
-  .ln.cur{background:rgba(110,160,255,.14);box-shadow:inset 3px 0 0 var(--accent)}
-  .ln.cur .n{color:var(--accent)}
-  .kw{color:#c792ea} .ty{color:#82aaff} .st{color:var(--str)} .nm{color:var(--num)} .fn{color:#ffcb6b}
-  .board{position:relative;min-height:262px;border:1px dashed rgba(132,150,182,.3);border-radius:14px;background:rgba(0,0,0,.18);padding:14px 14px 10px}
-  .legend{position:absolute;right:12px;top:10px;display:flex;gap:12px;font-family:var(--mono);font-size:.6rem;letter-spacing:.1em;text-transform:uppercase;color:var(--muted)}
+  .chip:focus-visible,.btn:focus-visible,.focus:focus-visible{outline:2px solid var(--accent);outline-offset:2px}
+  .focus{margin-left:auto;font-family:var(--mono);font-size:.68rem;letter-spacing:.1em;text-transform:uppercase;padding:6px 12px;
+    border-radius:999px;border:1px solid var(--line);background:rgba(0,0,0,.25);color:var(--muted);cursor:pointer;transition:.15s}
+  .focus:hover{border-color:var(--accent);color:var(--accent)}
+  body.solo .focus{border-color:rgba(255,200,98,.6);color:var(--gold);background:rgba(255,200,98,.1)}
+
+  /* hero picture: the line collapsing, one + at a time */
+  .pic{position:relative;height:390px;border:1px solid var(--line);border-radius:18px;background:rgba(6,10,20,.5);overflow:hidden}
+  body.solo .pic{height:480px}
+  .pic .zone{position:absolute;left:20px;top:16px;font-family:var(--mono);font-size:.62rem;letter-spacing:.14em;text-transform:uppercase;
+    color:rgba(132,150,182,.55)}
+  .legend{position:absolute;right:18px;top:-26px;display:flex;gap:12px;font-family:var(--mono);font-size:.62rem;letter-spacing:.1em;text-transform:uppercase;color:var(--muted)}
   .legend i{display:inline-block;width:9px;height:9px;border-radius:3px;margin-right:5px;vertical-align:-1px}
   .legend .ls{background:rgba(70,217,138,.25);border:1px solid rgba(70,217,138,.6)}
   .legend .lnum{background:rgba(247,140,108,.25);border:1px solid rgba(247,140,108,.6)}
-  .row{display:flex;align-items:flex-start;gap:6px;flex-wrap:wrap;padding:8px 10px;margin-top:6px;border-radius:12px;
+  .board{position:absolute;left:0;right:0;top:40px;bottom:66px;display:flex;align-items:center;justify-content:center;padding:0 20px}
+  .rows{display:flex;flex-direction:column;align-items:flex-start;gap:8px;max-width:100%}
+  .row{display:flex;align-items:flex-start;gap:10px;flex-wrap:wrap;padding:8px 14px;border-radius:14px;
     border:1px solid transparent;transition:opacity .3s,background .3s,border-color .3s}
-  .row:first-of-type{margin-top:22px}
   .row.cur{background:rgba(110,160,255,.06);border-color:rgba(110,160,255,.22)}
   .row.old{opacity:.38}
-  .row .rn{width:16px;font-family:var(--mono);font-size:1rem;color:var(--muted);padding-top:7px;flex-shrink:0}
+  .row .rn{width:26px;font-family:var(--mono);font-size:1.7rem;color:var(--muted);padding-top:9px;flex-shrink:0;line-height:1.2}
   .tok{display:flex;flex-direction:column;align-items:center}
-  .tok .bx{font-family:var(--mono);font-size:1rem;padding:6px 10px;border-radius:9px;border:1px solid transparent;white-space:pre;
+  .tok .bx{font-family:var(--mono);font-size:1.7rem;line-height:1.2;padding:9px 16px;border-radius:12px;border:1px solid transparent;white-space:pre;
     transition:box-shadow .3s,transform .3s,color .3s}
+  body.solo .tok .bx,body.solo .row .rn{font-size:2.1rem}
   .tok.s .bx{color:var(--str);border-color:rgba(70,217,138,.45);background:rgba(70,217,138,.08)}
   .tok.n .bx{color:var(--num);border-color:rgba(247,140,108,.45);background:rgba(247,140,108,.08)}
-  .tok.op .bx,.tok.par .bx{color:var(--muted);padding:6px 3px}
-  .tok .tt{font-family:var(--mono);font-size:.56rem;letter-spacing:.1em;text-transform:uppercase;color:rgba(132,150,182,.7);margin-top:4px;min-height:1em}
-  .tok.lit .bx{box-shadow:0 0 0 2px var(--accent),0 0 18px -4px rgba(110,160,255,.8)}
+  .tok.op .bx,.tok.par .bx{color:var(--muted);padding:9px 4px}
+  .tok .tt{font-family:var(--mono);font-size:.64rem;letter-spacing:.1em;text-transform:uppercase;color:rgba(132,150,182,.7);margin-top:5px;min-height:1em}
+  .tok.lit .bx{box-shadow:0 0 0 2px var(--accent),0 0 22px -4px rgba(110,160,255,.8)}
   .tok.op.lit .bx{color:var(--ink);transform:scale(1.3);box-shadow:none}
   .tok.op.lit.add .tt{color:var(--gold)} .tok.op.lit.cat .tt{color:var(--good)}
   .tok.fresh .bx{animation:pop .45s}
-  .tok.fresh.s .bx{box-shadow:0 0 0 2px var(--good),0 0 18px -4px rgba(70,217,138,.8)}
-  .tok.fresh.n .bx{box-shadow:0 0 0 2px var(--gold),0 0 18px -4px rgba(255,200,98,.8)}
-  .lower{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr);gap:14px;margin-top:14px}
-  @media (max-width:1000px){.lower{grid-template-columns:1fr}}
-  .rules{border:1px solid var(--line);border-radius:12px;padding:10px 12px;background:rgba(0,0,0,.2)}
-  .rule{font-family:var(--mono);font-size:.74rem;padding:6px 8px;border-radius:8px;color:rgba(132,150,182,.75);transition:.3s;border:1px solid transparent}
+  .tok.fresh.s .bx{box-shadow:0 0 0 2px var(--good),0 0 22px -4px rgba(70,217,138,.8)}
+  .tok.fresh.n .bx{box-shadow:0 0 0 2px var(--gold),0 0 22px -4px rgba(255,200,98,.8)}
+  .pic .start{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;font-family:var(--mono);
+    font-size:.8rem;color:var(--muted);pointer-events:none;white-space:pre}
+  .pic .start b{color:var(--accent);font-weight:500}
+  .rules{position:absolute;left:18px;right:18px;bottom:14px;display:flex;justify-content:center;gap:10px;flex-wrap:wrap}
+  .rule{font-family:var(--mono);font-size:.8rem;padding:7px 12px;border-radius:9px;color:rgba(132,150,182,.75);transition:.3s;
+    border:1px solid var(--line);background:rgba(0,0,0,.2)}
   .rule b{font-weight:500}
   .rule.on.add{color:var(--ink);background:rgba(255,200,98,.1);border-color:rgba(255,200,98,.5)}
   .rule.on.add b{color:var(--gold)}
   .rule.on.cat{color:var(--ink);background:rgba(70,217,138,.1);border-color:rgba(70,217,138,.5)}
   .rule.on.cat b{color:var(--good)}
-  .console{font-family:var(--mono);font-size:.82rem;line-height:1.6;background:#05070e;border:1px solid var(--line);
-    border-radius:12px;padding:10px 14px;min-height:84px;color:#9fe3b6;white-space:pre}
+  @media (max-width:700px){.tok .bx,.row .rn,body.solo .tok .bx,body.solo .row .rn{font-size:1.1rem}.tok .bx{padding:6px 9px}.rule{font-size:.68rem}}
+
+  /* caption: the one sentence, right under the picture */
+  .caption{display:flex;gap:16px;align-items:flex-start;margin:14px 4px 0;min-height:56px}
+  .caption .n{flex-shrink:0;font-family:var(--disp);font-weight:700;font-size:1.35rem;color:var(--accent);font-variant-numeric:tabular-nums;
+    line-height:1.2;min-width:3.2rem}
+  .caption .n small{display:block;font-family:var(--mono);font-weight:400;font-size:.58rem;letter-spacing:.14em;text-transform:uppercase;color:var(--muted)}
+  .caption .t{font-size:1.02rem;line-height:1.55;color:var(--ink);padding-left:16px;border-left:3px solid var(--accent);transition:border-color .3s}
+  body.solo .caption .t{font-size:1.18rem}
+  .caption.add .t{border-left-color:var(--gold)}
+  .caption.cat .t,.caption.acting .t{border-left-color:var(--good)}
+  .caption.trouble .t{border-left-color:var(--warn)}
+  .caption b.g{color:var(--good)} .caption b.w{color:var(--warn)} .caption b.a{color:var(--accent)} .caption b.y{color:var(--gold)}
+
+  /* toolbar: same on every page */
+  .toolbar{display:flex;align-items:center;gap:10px;margin:16px 0 0;padding-top:14px;border-top:1px solid var(--line)}
+  .btn{font-family:var(--body);font-weight:500;font-size:.86rem;padding:9px 16px;border-radius:11px;cursor:pointer;
+    border:1px solid var(--line);background:var(--surface);color:var(--ink);transition:.15s}
+  .btn:hover{border-color:var(--accent);color:var(--accent)}
+  .btn.primary{border-color:rgba(110,160,255,.5);background:rgba(110,160,255,.12);padding:9px 22px}
+  .btn:disabled{opacity:.35;cursor:not-allowed}
+  .btn.ghost{background:transparent;color:var(--muted);margin-left:auto}
+  .dots{display:flex;gap:5px;align-items:center;margin:0 6px}
+  .dots i{display:block;width:8px;height:8px;border-radius:50%;background:rgba(255,255,255,.12);transition:.2s}
+  .dots i.done{background:rgba(110,160,255,.45)}
+  .dots i.now{background:var(--accent);transform:scale(1.35);box-shadow:0 0 10px rgba(110,160,255,.7)}
+  .hint{font-family:var(--mono);font-size:.68rem;color:var(--muted);margin:10px 4px 0;line-height:1.5}
+  .hint b{color:var(--accent)}
+
+  /* support: code, console, readouts. Below the picture, hidden in focus */
+  .support{display:grid;grid-template-columns:minmax(0,1.3fr) minmax(0,1fr);gap:14px;margin-top:18px}
+  @media (max-width:860px){.support{grid-template-columns:1fr}}
+  body.solo .support,body.solo .take,body.solo .hint{display:none}
+  .code{min-width:0;font-family:var(--mono);font-size:.76rem;line-height:1.8;background:rgba(0,0,0,.35);border:1px solid var(--line);
+    border-radius:14px;padding:12px 0;overflow-x:auto}
+  .ln{display:flex;gap:12px;padding:0 14px;white-space:pre;color:#c9d4ea;transition:background .2s,opacity .3s}
+  .ln .n{width:20px;text-align:right;color:rgba(132,150,182,.55);user-select:none;flex-shrink:0}
+  .ln.cur{background:rgba(110,160,255,.14);box-shadow:inset 3px 0 0 var(--accent)}
+  .ln.cur .n{color:var(--accent)}
+  .kw{color:#c792ea} .ty{color:#82aaff} .st{color:var(--str)} .nm{color:var(--num)} .fn{color:#ffcb6b}
+  .side{display:flex;flex-direction:column;gap:12px}
+  .readout{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+  .stat{background:rgba(255,255,255,.03);border:1px solid var(--line);border-radius:12px;padding:11px 13px;transition:opacity .3s}
+  .stat.empty{opacity:.3}
+  .stat .k{font-family:var(--mono);font-size:.62rem;letter-spacing:.1em;text-transform:uppercase;color:var(--muted)}
+  .stat .v{font-family:var(--disp);font-weight:700;font-size:1.45rem;font-variant-numeric:tabular-nums;margin-top:2px;transition:color .3s;min-height:1.6em}
+  .v.add{color:var(--gold)} .v.cat{color:var(--good)} .v.dim{color:rgba(132,150,182,.5)}
+  .console{font-family:var(--mono);font-size:.76rem;line-height:1.6;background:#05070e;border:1px solid var(--line);
+    border-radius:12px;padding:10px 14px;min-height:64px;color:#9fe3b6;flex:1;white-space:pre}
   .console .cl{font-size:.6rem;letter-spacing:.14em;text-transform:uppercase;color:rgba(132,150,182,.6);margin-bottom:4px}
   .console .out{animation:pop .3s}
   @keyframes pop{from{transform:scale(.6);opacity:0}to{transform:scale(1);opacity:1}}
@@ -135,46 +160,48 @@
 <div class="wrap">
   <p class="tag">Workbook 1c &middot; Section 3-2 &middot; String concatenation</p>
   <h1>Concatenation vs Addition</h1>
-  <p class="lede">In Java, <code>+</code> has two jobs.
-  <b>Between two numbers it adds; the moment a String is on either side, it glues text together.</b>
-  Step through one line and watch each <code>+</code> decide.</p>
+  <p class="lede">In Java, <code>+</code> has two jobs. <b>Between two numbers it adds; the moment a String is on either side, it glues text together.</b></p>
 
   <div class="stage">
-    <div class="grid">
-      <div class="panelL">
-        <p class="lab">Pick an expression</p>
-        <div class="chips" id="chips"></div>
+    <div class="topbar">
+      <span class="lab">Pick an expression</span>
+      <div class="chips" id="chips"></div>
+      <button class="focus" id="bFocus" title="Hide the code and notes, enlarge the picture">Focus</button>
+    </div>
 
-        <div class="readout">
-          <div class="stat"><div class="k">this + means</div><div class="v dim" id="stKind">?</div></div>
-          <div class="stat"><div class="k">result type</div><div class="v dim" id="stType">?</div></div>
-        </div>
-
-        <p class="stepno" id="stepno">Step <b>0</b> of 6</p>
-        <div class="status" id="status">Press <b class="a">Next</b> to start.</div>
-
-        <div class="actions">
-          <button class="btn primary" id="bNext">Next &rarr;</button>
-          <button class="btn gold" id="bBack">&larr; Back</button>
-          <button class="btn" id="bReset">Reset</button>
-        </div>
-        <p class="hint">space = next &middot; the same + builds <code>greeting = firstWord + " " + secondWord</code> in the operators demo. <b>Try all three.</b></p>
+    <div class="pic" id="pic">
+      <span class="zone">How Java reads the line, one + at a time</span>
+      <div class="board" id="board"></div>
+      <div class="rules">
+        <div class="rule add" id="rAdd">number + number &rarr; <b>addition</b></div>
+        <div class="rule cat" id="rCat">String + anything &rarr; <b>concatenation</b></div>
       </div>
+    </div>
 
-      <div class="panelR">
+    <div class="caption" id="caption">
+      <div class="n" id="stepno"><small>step</small>0 / 6</div>
+      <div class="t" id="status">Press <b class="a">Next</b> to start.</div>
+    </div>
+
+    <div class="toolbar">
+      <button class="btn" id="bBack">&larr; Back</button>
+      <div class="dots" id="dots"></div>
+      <button class="btn primary" id="bNext">Next &rarr;</button>
+      <button class="btn ghost" id="bReset">Reset</button>
+    </div>
+    <p class="hint">space = next &middot; the same + builds <code>greeting = firstWord + " " + secondWord</code> in the operators demo. <b>Try all three.</b></p>
+
+    <div class="support">
+      <div>
         <p class="lab">Main.java</p>
         <div class="code" id="code"></div>
-
-        <p class="lab">How Java reads the line, one + at a time</p>
-        <div class="board" id="board"></div>
-
-        <div class="lower">
-          <div class="rules">
-            <div class="rule add" id="rAdd">number + number &rarr; <b>addition</b></div>
-            <div class="rule cat" id="rCat">String + anything &rarr; <b>concatenation</b></div>
-          </div>
-          <div class="console"><div class="cl">console</div><div id="console"></div></div>
+      </div>
+      <div class="side">
+        <div class="readout">
+          <div class="stat empty"><div class="k">this + means</div><div class="v dim" id="stKind">?</div></div>
+          <div class="stat empty"><div class="k">result type</div><div class="v dim" id="stType">?</div></div>
         </div>
+        <div class="console"><div class="cl">console</div><div id="console"></div></div>
       </div>
     </div>
   </div>
@@ -303,19 +330,22 @@
   function renderBoard(s){
     var html='<div class="legend"><span><i class="ls"></i>String</span><span><i class="lnum"></i>int</span></div>';
     var n=s?s.rows:0;
+    if(!n){ var st=document.createElement("span"); st.textContent=PRESETS[cur].label;
+      boardEl.innerHTML=html+'<div class="start">'+st.innerHTML+' \u00b7 press <b>Next</b></div>'; return; }
+    html+='<div class="rows">';
     for(var r=0;r<n;r++){
       var isCur=(r===n-1);
       html+='<div class="row'+(isCur&&s.line===1?' cur':(isCur?'':' old'))+'"><span class="rn">'+(r===0?'':'=')+'</span>'+
         model.states[r].map(function(x,i){return tokHtml(x,i,s,isCur);}).join("")+'</div>';
     }
-    boardEl.innerHTML=html;
+    boardEl.innerHTML=html+'</div>';
   }
-  function setStat(id,v,c){var e=$(id); if(v===null){e.textContent="?";e.className="v dim";} else {e.textContent=v;e.className="v "+(c||"");}}
+  function setStat(id,v,c){var e=$(id),box=e.parentNode; if(v===null){e.textContent="?";e.className="v dim";box.classList.add("empty");} else {e.textContent=v;e.className="v "+(c||"");box.classList.remove("empty");}}
 
   function show(i){
     at=i;
     var s=i<0?null:steps[i];
-    $("#stepno").innerHTML="Step <b>"+(i+1)+"</b> of "+steps.length;
+    $("#stepno").innerHTML="<small>step</small>"+(i+1)+" / "+steps.length;
     renderCode(s?s.line:0); renderBoard(s);
     $("#rAdd").className="rule add"+(s&&s.kind==="add"?" on":"");
     $("#rCat").className="rule cat"+(s&&s.kind==="cat"?" on":"");
@@ -323,10 +353,18 @@
     setStat("#stType",s&&s.rtype?(s.rtype==="s"?"String":"int"):null,s&&s.rtype?(s.rtype==="s"?"cat":"add"):"");
     if(s&&s.out!==undefined){consEl.innerHTML=""; var d=document.createElement("div"); d.className="out"; d.textContent=s.out; consEl.appendChild(d);}
     else consEl.innerHTML='<span style="color:rgba(132,150,182,.5)">(nothing printed yet)</span>';
-    statusEl.className="status"+(s?(s.cls?" "+s.cls:(s.kind?" "+s.kind:"")):"");
+    $("#caption").className="caption"+(s?(s.cls?" "+s.cls:(s.kind?" "+s.kind:"")):"");
     statusEl.innerHTML=s?s.msg:'Press <b class="a">Next</b> to start. Each step runs one <code>+</code> and shows which job it does.';
-    $("#bNext").disabled=at>=steps.length-1; $("#bBack").disabled=at<0;
+    setBtns();
   }
+  function setBtns(){ $("#bNext").disabled=at>=steps.length-1; $("#bBack").disabled=at<0;
+    var d=""; for(var k=0;k<steps.length;k++) d+='<i class="'+(k===at?"now":k<at?"done":"")+'"></i>'; $("#dots").innerHTML=d; }
+  /* focus: picture and caption only. Remembered per browser. */
+  function setFocus(on){ document.body.classList.toggle("solo",on); $("#bFocus").textContent=on?"Focus on":"Focus";
+    try{localStorage.setItem("hub-focus",on?"1":"0");}catch(e){} renderBoard(at>=0?steps[at]:null); }
+  $("#bFocus").addEventListener("click",function(){ setFocus(!document.body.classList.contains("solo")); this.blur(); });
+  try{ if(localStorage.getItem("hub-focus")==="1") document.body.classList.add("solo"); }catch(e){}
+  if(document.body.classList.contains("solo")) $("#bFocus").textContent="Focus on";
   function next(){ if(at<steps.length-1) show(at+1); }
   function back(){ if(at>=0) show(at-1); }
   function reset(){ model=build(); steps=model.steps; show(-1); }

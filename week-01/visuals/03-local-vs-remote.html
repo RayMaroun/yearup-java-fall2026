@@ -28,46 +28,57 @@
   h1{font-family:var(--disp);font-weight:700;font-size:clamp(2.3rem,6vw,3.6rem);line-height:1;margin:0 0 12px;
     letter-spacing:-.03em;background:linear-gradient(180deg,#fff,#b9c6e6);-webkit-background-clip:text;
     background-clip:text;color:transparent}
-  .lede{color:var(--muted);max-width:64ch;font-size:1.05rem;margin:0 0 30px;line-height:1.5}
+  .lede{color:var(--muted);max-width:64ch;font-size:1.05rem;margin:0 0 26px;line-height:1.5}
   .lede b{color:var(--ink)}
-  .lede code,.take code,.status code{font-family:var(--mono);font-size:.92em;color:#bcd0ff}
-  .stage{position:relative;background:linear-gradient(180deg,rgba(255,255,255,.03),rgba(255,255,255,.01));
-    border:1px solid var(--line);border-radius:24px;padding:8px;
-    box-shadow:0 1px 0 rgba(255,255,255,.06) inset,0 30px 80px -30px rgba(0,0,0,.8)}
-  .panelR{border-radius:18px;padding:22px;background:rgba(6,10,20,.5);border:1px solid var(--line);position:relative;overflow:hidden}
-  .lab{font-family:var(--mono);font-size:.7rem;letter-spacing:.12em;text-transform:uppercase;color:var(--muted);margin:0 0 12px}
+  .lede code,.take code,.caption code{font-family:var(--mono);font-size:.92em;color:#bcd0ff}
 
-  /* the three places */
-  .places{display:grid;grid-template-columns:1.25fr 74px 1fr 74px 1fr;align-items:stretch}
-  .place{border-radius:14px;border:1px solid var(--line);background:rgba(255,255,255,.02);padding:14px 14px 12px;
-    display:flex;flex-direction:column;gap:10px;transition:border-color .3s,background .3s,box-shadow .3s}
+  /* ---------- stage: picture first, one toolbar ---------- */
+  .stage{position:relative;background:linear-gradient(180deg,rgba(255,255,255,.03),rgba(255,255,255,.01));
+    border:1px solid var(--line);border-radius:24px;padding:18px 18px 14px;
+    box-shadow:0 1px 0 rgba(255,255,255,.06) inset,0 30px 80px -30px rgba(0,0,0,.8)}
+  .topbar{display:flex;align-items:center;gap:10px;margin:0 0 14px;flex-wrap:wrap}
+  .topbar .lab{margin:0 4px 0 0}
+  .lab{font-family:var(--mono);font-size:.7rem;letter-spacing:.12em;text-transform:uppercase;color:var(--muted);margin:0 0 10px}
+  .focus{margin-left:auto;font-family:var(--mono);font-size:.68rem;letter-spacing:.1em;text-transform:uppercase;padding:6px 12px;
+    border-radius:999px;border:1px solid var(--line);background:rgba(0,0,0,.25);color:var(--muted);cursor:pointer;transition:.15s}
+  .focus:hover{border-color:var(--accent);color:var(--accent)}
+  .focus:focus-visible{outline:2px solid var(--accent);outline-offset:2px}
+  body.solo .focus{border-color:rgba(255,200,98,.6);color:var(--gold);background:rgba(255,200,98,.1)}
+
+  /* hero picture: the three places. Sizes are in em so Focus scales the whole diagram */
+  .pic{position:relative;min-height:390px;border:1px solid var(--line);border-radius:18px;background:rgba(6,10,20,.5);
+    overflow:hidden;padding:14px;display:flex;align-items:center;font-size:15px}
+  body.solo .pic{min-height:480px;font-size:18px}
+  .places{width:100%;max-width:1040px;margin:0 auto;display:grid;grid-template-columns:1.25fr 6em 1fr 6em 1fr;align-items:stretch}
+  .place{border-radius:14px;border:1px solid var(--line);background:rgba(255,255,255,.02);padding:.95em .95em .8em;
+    display:flex;flex-direction:column;gap:.6em;transition:border-color .3s,background .3s,box-shadow .3s}
   .place.has{border-color:rgba(255,200,98,.55);background:rgba(255,200,98,.05);box-shadow:0 0 30px -12px rgba(255,200,98,.5)}
   .phead{display:flex;flex-direction:column;gap:2px}
-  .pname{font-family:var(--disp);font-weight:700;font-size:1.05rem;letter-spacing:-.01em}
-  .pwhere{font-family:var(--mono);font-size:.62rem;letter-spacing:.12em;text-transform:uppercase;color:var(--muted)}
-  .box{border-radius:12px;border:1px solid var(--line);background:rgba(0,0,0,.25);padding:10px 12px;transition:border-color .3s}
-  .box .bt{font-family:var(--mono);font-size:.62rem;letter-spacing:.12em;text-transform:uppercase;color:var(--muted);margin:0 0 7px}
-  .file{font-family:var(--mono);font-size:.74rem;color:#bcd0ff;display:flex;justify-content:space-between;gap:8px;padding:2px 0}
-  .file .st{font-size:.62rem;letter-spacing:.08em;text-transform:uppercase;color:var(--muted);transition:color .3s}
+  .pname{font-family:var(--disp);font-weight:700;font-size:1.35em;letter-spacing:-.01em;line-height:1.2}
+  .pwhere{font-family:var(--mono);font-size:.7em;letter-spacing:.12em;text-transform:uppercase;color:var(--muted)}
+  .box{border-radius:12px;border:1px solid var(--line);background:rgba(0,0,0,.25);padding:.7em .8em;transition:border-color .3s}
+  .box .bt{font-family:var(--mono);font-size:.68em;letter-spacing:.12em;text-transform:uppercase;color:var(--muted);margin:0 0 .6em}
+  .file{font-family:var(--mono);font-size:.9em;color:#bcd0ff;display:flex;justify-content:space-between;gap:8px;padding:2px 0}
+  .file .st{font-size:.76em;letter-spacing:.08em;text-transform:uppercase;color:var(--muted);transition:color .3s}
   .file.mod{color:var(--accent)} .file.mod .st{color:var(--accent)}
-  .commits{display:flex;flex-direction:column;gap:5px}
-  .cm{font-family:var(--mono);font-size:.72rem;padding:5px 9px;border-radius:9px;border:1px solid var(--line);
+  .commits{display:flex;flex-direction:column;gap:.35em}
+  .cm{font-family:var(--mono);font-size:.86em;padding:.35em .7em;border-radius:9px;border:1px solid var(--line);
     background:rgba(0,0,0,.3);color:var(--ink);display:flex;gap:8px;transition:border-color .3s,color .3s,background .3s,opacity .3s}
   .cm .h{color:var(--muted)}
   .cm.new{border-color:var(--gold);color:#ffe6b0;background:rgba(255,200,98,.12)}
   .cm.new .h{color:var(--gold)}
   .cm.miss{border-style:dashed;background:transparent;color:var(--muted);opacity:.55}
   .cm.miss .h{color:var(--muted)}
-  .down{font-family:var(--mono);font-size:.62rem;letter-spacing:.12em;text-transform:uppercase;color:var(--muted);
+  .down{font-family:var(--mono);font-size:.7em;letter-spacing:.12em;text-transform:uppercase;color:var(--muted);
     text-align:center;transition:color .3s}
   .down.on{color:var(--gold)}
-  .seen{margin-top:auto;font-family:var(--mono);font-size:.66rem;line-height:1.4;padding:6px 9px;border-radius:9px;
+  .seen{margin-top:auto;font-family:var(--mono);font-size:.76em;line-height:1.4;padding:.45em .7em;border-radius:9px;
     border:1px solid var(--line);color:var(--muted);transition:color .3s,border-color .3s,background .3s}
   .seen.yes{color:var(--good);border-color:rgba(70,217,138,.5);background:rgba(70,217,138,.08)}
   .seen.no{color:var(--warn);border-color:rgba(255,106,106,.45);background:rgba(255,106,106,.06)}
-  .arrow{display:flex;flex-direction:column;align-items:center;justify-content:center;gap:6px;color:var(--muted);
-    font-family:var(--mono);font-size:.64rem;letter-spacing:.1em;text-transform:uppercase;text-align:center;transition:color .3s}
-  .arrow .ln{width:52px;height:2px;background:var(--line);position:relative;transition:background .3s}
+  .arrow{display:flex;flex-direction:column;align-items:center;justify-content:center;gap:.5em;color:var(--muted);
+    font-family:var(--mono);font-size:.72em;letter-spacing:.1em;text-transform:uppercase;text-align:center;transition:color .3s}
+  .arrow .ln{width:5.6em;height:2px;background:var(--line);position:relative;transition:background .3s}
   .arrow .ln::after{content:"";position:absolute;right:-1px;top:-4px;border:5px solid transparent;border-left:7px solid var(--line);border-right:0;transition:border-color .3s}
   .arrow.on{color:var(--gold)}
   .arrow.on .ln{background:var(--gold)}
@@ -80,22 +91,28 @@
     .arrow.on .ln::after{border-top-color:var(--gold);border-left-color:transparent}
   }
 
-  /* the one control, under the animation */
-  .ctl{margin-top:20px;display:grid;grid-template-columns:1fr auto;gap:14px;align-items:start}
-  @media (max-width:760px){.ctl{grid-template-columns:1fr}}
+  /* caption: the sentence for the current moment, right under the picture */
+  .caption{display:flex;gap:16px;align-items:flex-start;margin:14px 4px 0;min-height:56px}
+  .caption .n{flex-shrink:0;font-family:var(--disp);font-weight:700;font-size:1.35rem;color:var(--accent);font-variant-numeric:tabular-nums;
+    line-height:1.2;min-width:3.2rem}
+  .caption .n small{display:block;font-family:var(--mono);font-weight:400;font-size:.58rem;letter-spacing:.14em;text-transform:uppercase;color:var(--muted)}
+  .caption .t{font-size:1.02rem;line-height:1.55;color:var(--ink);padding-left:16px;border-left:3px solid var(--accent);transition:border-color .3s}
+  body.solo .caption .t{font-size:1.18rem}
+  .caption.left .t{border-left-color:var(--gold)} .caption.ok .t{border-left-color:var(--good)}
+  .caption b.g{color:var(--good)} .caption b.a{color:var(--accent)} .caption b.y{color:var(--gold)}
+
+  /* toolbar: the one control */
+  .toolbar{display:flex;align-items:center;gap:10px;margin:16px 0 0;padding-top:14px;border-top:1px solid var(--line);flex-wrap:wrap}
   .seg{display:inline-flex;border:1px solid var(--line);border-radius:12px;overflow:hidden;background:rgba(0,0,0,.25)}
-  .seg button{font-family:var(--body);font-weight:500;font-size:.84rem;padding:10px 16px;border:0;background:transparent;color:var(--muted);
+  .seg button{font-family:var(--body);font-weight:500;font-size:.86rem;padding:9px 18px;border:0;background:transparent;color:var(--muted);
     cursor:pointer;transition:.15s;border-right:1px solid var(--line)}
   .seg button:last-child{border-right:0}
   .seg button:hover{color:var(--accent)}
   .seg button.on{background:rgba(110,160,255,.16);color:var(--ink)}
   .seg button:focus-visible{outline:2px solid var(--accent);outline-offset:-2px}
-  .status{font-family:var(--mono);font-size:.82rem;line-height:1.55;color:var(--ink);min-height:60px;
-    padding:12px 14px;border-radius:12px;background:rgba(0,0,0,.25);border:1px solid var(--line);
-    border-left:3px solid var(--accent);transition:border-color .3s;grid-column:1 / -1}
-  .status b.g{color:var(--good)} .status b.a{color:var(--accent)} .status b.y{color:var(--gold)}
-  .hint{font-family:var(--mono);font-size:.7rem;color:var(--muted);margin:14px 0 0;line-height:1.5}
+  .hint{font-family:var(--mono);font-size:.68rem;color:var(--muted);margin:10px 4px 0;line-height:1.5}
   .hint b{color:var(--accent)}
+  body.solo .take,body.solo .hint{display:none}
 
   .take{margin-top:22px;background:linear-gradient(180deg,rgba(110,160,255,.08),rgba(139,123,255,.04));
     border:1px solid var(--line);border-left:3px solid var(--accent);border-radius:12px;padding:16px 18px}
@@ -113,12 +130,15 @@
 <div class="wrap">
   <p class="tag">Workbook 1b &middot; Section 1-2 &middot; Local repository and GitHub</p>
   <h1>Local vs Remote Repository</h1>
-  <p class="lede">Your project lives in three places: the working folder, the local repository on your computer, and the remote repository on GitHub.
-  <b>A commit saves on your computer only. Nobody else sees it until you push.</b> Pick a moment below.</p>
+  <p class="lede"><b>A commit saves on your computer only. Nobody else sees it until you push.</b></p>
 
   <div class="stage">
-    <div class="panelR">
-      <p class="lab">Where is the commit "Print Hello"?</p>
+    <div class="topbar">
+      <span class="lab">Where is the commit "Print Hello"?</span>
+      <button class="focus" id="bFocus" title="Hide the notes, enlarge the picture">Focus</button>
+    </div>
+
+    <div class="pic" id="pic">
       <div class="places">
         <div class="place" id="Pme">
           <div class="phead"><span class="pname">Your computer</span><span class="pwhere">~/pluralsight/testing-git</span></div>
@@ -153,18 +173,22 @@
           <div class="seen" id="Vmate"></div>
         </div>
       </div>
-
-      <div class="ctl">
-        <div class="seg" id="seg" role="group" aria-label="Pick a moment">
-          <button data-m="edit" class="on">Edited</button>
-          <button data-m="commit">Committed</button>
-          <button data-m="push">Pushed</button>
-          <button data-m="pull">Pulled</button>
-        </div>
-        <div class="status" id="status"></div>
-      </div>
-      <p class="hint">In IntelliJ: <b>Commit</b> and <b>Commit and Push</b> in the Commit tool window. Share Project on GitHub does the first push for you.</p>
     </div>
+
+    <div class="caption" id="caption">
+      <div class="n" id="stepno"><small>moment</small>2 / 4</div>
+      <div class="t" id="status"></div>
+    </div>
+
+    <div class="toolbar">
+      <div class="seg" id="seg" role="group" aria-label="Pick a moment">
+        <button data-m="edit">Edited</button>
+        <button data-m="commit" class="on">Committed</button>
+        <button data-m="push">Pushed</button>
+        <button data-m="pull">Pulled</button>
+      </div>
+    </div>
+    <p class="hint">In IntelliJ: <b>Commit</b> and <b>Commit and Push</b> in the Commit tool window. Share Project on GitHub does the first push for you.</p>
   </div>
 
   <div class="take">
@@ -222,7 +246,18 @@
     $("#Apull").classList.toggle("on",M.arrow==="pull");
     Array.prototype.forEach.call(document.querySelectorAll("#seg button"),function(b){b.classList.toggle("on",b.getAttribute("data-m")===mode);});
     $("#status").innerHTML=M.msg;
+    cur=mode;
+    $("#caption").className="caption "+(CAP[mode]||"");
+    $("#stepno").innerHTML="<small>moment</small>"+(ORDER.indexOf(mode)+1)+" / "+ORDER.length;
   }
+  var ORDER=["edit","commit","push","pull"], CAP={edit:"left",push:"ok",pull:"ok"}, cur="commit";
+
+  /* focus: picture and caption only. Remembered per browser. */
+  function setFocus(on){ document.body.classList.toggle("solo",on); $("#bFocus").textContent=on?"Focus on":"Focus";
+    try{localStorage.setItem("hub-focus",on?"1":"0");}catch(e){} set(cur); }
+  $("#bFocus").addEventListener("click",function(){ setFocus(!document.body.classList.contains("solo")); this.blur(); });
+  try{ if(localStorage.getItem("hub-focus")==="1") document.body.classList.add("solo"); }catch(e){}
+  if(document.body.classList.contains("solo")) $("#bFocus").textContent="Focus on";
 
   $("#seg").addEventListener("click",function(e){ var b=e.target.closest("button"); if(b) set(b.getAttribute("data-m")); });
   /* ---------- ambient canvas ---------- */
