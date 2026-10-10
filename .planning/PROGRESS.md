@@ -1,8 +1,7 @@
 # PROGRESS
 
 ## Week 1 visuals (25). Updated 2026-10-12, 9 pm Beirut.
-- Verified in Chrome and committed: 01 to 19, 21, 22, 24, 25 (15 incl. experiment)
-- Agents still running: 20 23
+- ALL 25 visuals verified in Chrome and committed (2026-10-12, 9:30 pm Beirut).
 - Lead verification routine per page: open via http://127.0.0.1:8765/YearUp/YearUp-Fall-2026/06.Website/yearup-java-fall2026/week-01/visuals/NN-slug.html
   (server: `python3 -m http.server 8765 --bind 127.0.0.1` from /Users/ray/Desktop/Training/Pluralsight), click through steps/chips with
   the Chrome tools, read console errors, run the static sweep (scratchpad sweep.sh: node --check, div balance, one style, title, take, rail, fonts, no em dash, no entity in script, back link, char count), then commit.

@@ -7,3 +7,475 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Sora:wght@500;700&family=Inter:wght@400;500&family=JetBrains+Mono:wght@400;500&display=swap">
 <style>
+  :root{
+    --bg:#080c17; --bg2:#0c1428; --surface:rgba(255,255,255,.045); --line:rgba(255,255,255,.09);
+    --ink:#eef2fb; --muted:#8496b6; --accent:#6ea0ff; --accent2:#8b7bff; --good:#46d98a; --warn:#ff6a6a;
+    --gold:#ffc862; --disp:'Sora',system-ui,sans-serif; --body:'Inter',system-ui,sans-serif;
+    --mono:'JetBrains Mono',ui-monospace,monospace;
+  }
+  *{box-sizing:border-box}
+  body{margin:0;min-height:100vh;color:var(--ink);font-family:var(--body);
+    background:radial-gradient(1200px 700px at 70% -10%,#141d38 0%,transparent 55%),
+               radial-gradient(900px 600px at 10% 110%,#161233 0%,transparent 50%),#080c17;
+    overflow-x:hidden}
+  #amb{position:fixed;inset:0;z-index:0;pointer-events:none;opacity:.6}
+  .back{position:relative;z-index:2;display:block;max-width:1120px;margin:0 auto;padding:26px 24px 0;
+    width:100%;font-family:var(--mono);font-size:.8rem;letter-spacing:.04em;color:var(--muted);
+    text-decoration:none;transition:color .15s}
+  .back:hover{color:var(--accent)}
+  .wrap{position:relative;z-index:1;max-width:1120px;margin:0 auto;padding:22px 24px 70px}
+  .tag{font-family:var(--mono);font-size:.72rem;letter-spacing:.22em;text-transform:uppercase;color:var(--accent);margin:0 0 14px}
+  h1{font-family:var(--disp);font-weight:700;font-size:clamp(2.3rem,6vw,3.6rem);line-height:1;margin:0 0 12px;
+    letter-spacing:-.03em;background:linear-gradient(180deg,#fff,#b9c6e6);-webkit-background-clip:text;
+    background-clip:text;color:transparent}
+  .lede{color:var(--muted);max-width:64ch;font-size:1.05rem;margin:0 0 30px;line-height:1.5}
+  .lede b{color:var(--ink)}
+  .lede code,.take code,.status code{font-family:var(--mono);font-size:.92em;color:#bcd0ff}
+  .stage{position:relative;background:linear-gradient(180deg,rgba(255,255,255,.03),rgba(255,255,255,.01));
+    border:1px solid var(--line);border-radius:24px;padding:8px;
+    box-shadow:0 1px 0 rgba(255,255,255,.06) inset,0 30px 80px -30px rgba(0,0,0,.8)}
+  .grid{display:grid;grid-template-columns:340px 1fr;gap:8px}
+  @media (max-width:860px){.grid{grid-template-columns:1fr}}
+  .panelL,.panelR{border-radius:18px;padding:22px}
+  .panelL{background:linear-gradient(180deg,rgba(110,160,255,.06),rgba(139,123,255,.03));border:1px solid var(--line)}
+  .panelR{background:rgba(6,10,20,.5);border:1px solid var(--line);position:relative;overflow:hidden;min-width:0}
+  .lab{font-family:var(--mono);font-size:.7rem;letter-spacing:.12em;text-transform:uppercase;color:var(--muted);margin:0 0 12px}
+  /* preset chips */
+  .chips{display:flex;flex-wrap:wrap;gap:6px;margin-bottom:16px}
+  .chip{font-family:var(--mono);font-size:.74rem;padding:5px 11px;border-radius:999px;cursor:pointer;
+    border:1px solid var(--line);background:rgba(0,0,0,.25);color:var(--muted);transition:.15s}
+  .chip:hover{border-color:var(--accent);color:var(--accent)}
+  .chip.on{border-color:rgba(110,160,255,.6);background:rgba(110,160,255,.14);color:var(--ink)}
+  .chip.trap:hover{border-color:var(--warn);color:var(--warn)}
+  .chip.trap.on{border-color:rgba(255,106,106,.6);background:rgba(255,106,106,.12);color:var(--ink)}
+  .chip:focus-visible{outline:2px solid var(--accent);outline-offset:2px}
+  /* readout */
+  .readout{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin:0 0 14px}
+  .stat{background:rgba(255,255,255,.03);border:1px solid var(--line);border-radius:12px;padding:11px 13px}
+  .stat .k{font-family:var(--mono);font-size:.62rem;letter-spacing:.1em;text-transform:uppercase;color:var(--muted)}
+  .stat .v{font-family:var(--disp);font-weight:700;font-size:1.45rem;font-variant-numeric:tabular-nums;margin-top:2px;transition:color .3s;min-height:1.6em}
+  .v.hot{color:var(--accent)} .v.bad{color:var(--warn)} .v.dim{color:rgba(132,150,182,.5)} .v.ok{color:var(--good)}
+  .stepno{font-family:var(--mono);font-size:.64rem;letter-spacing:.14em;text-transform:uppercase;color:var(--muted);margin:0 0 8px}
+  .stepno b{color:var(--accent);font-weight:500}
+  .status{font-family:var(--mono);font-size:.82rem;line-height:1.55;color:var(--ink);min-height:156px;
+    padding:12px 14px;border-radius:12px;background:rgba(0,0,0,.25);border:1px solid var(--line);
+    border-left:3px solid var(--accent);transition:border-color .3s}
+  .status.cut{border-left-color:var(--warn)}
+  .status.left{border-left-color:var(--gold)}
+  .status.ok{border-left-color:var(--good)}
+  .status b.g{color:var(--good)} .status b.w{color:var(--warn)} .status b.a{color:var(--accent)} .status b.y{color:var(--gold)}
+  .actions{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-top:16px}
+  .btn{font-family:var(--body);font-weight:500;font-size:.84rem;padding:9px 12px;border-radius:11px;cursor:pointer;
+    border:1px solid var(--line);background:var(--surface);color:var(--ink);transition:.15s;text-align:center}
+  .btn:hover{border-color:var(--accent);color:var(--accent)}
+  .btn.primary{border-color:rgba(110,160,255,.5);background:rgba(110,160,255,.12);grid-column:1 / -1}
+  .btn.gold:hover{border-color:var(--gold);color:var(--gold)}
+  .btn:disabled{opacity:.35;cursor:not-allowed}
+  .btn:focus-visible{outline:2px solid var(--accent);outline-offset:2px}
+  .hint{font-family:var(--mono);font-size:.7rem;color:var(--muted);margin:14px 0 0;line-height:1.5}
+  .hint b{color:var(--accent)}
+  /* the picture: keyboard, Scanner objects, variable names */
+  .pic{position:relative;height:262px;border:1px dashed rgba(132,150,182,.3);border-radius:14px;background:rgba(0,0,0,.18);overflow:hidden;margin-bottom:16px}
+  .pic svg{position:absolute;inset:0;width:100%;height:100%;pointer-events:none}
+  .pic svg path{fill:none;stroke-width:2;transition:opacity .3s}
+  .zone{position:absolute;top:10px;font-family:var(--mono);font-size:.58rem;letter-spacing:.14em;text-transform:uppercase;color:rgba(132,150,182,.55)}
+  .kbd{position:absolute;left:3%;width:24%;top:72px;min-height:118px;border-radius:12px;padding:10px;
+    border:1px solid rgba(255,200,98,.45);background:rgba(255,200,98,.06);transition:border-color .3s,background .3s}
+  .kbd .t{font-family:var(--mono);font-size:.76rem;color:var(--gold)}
+  .kbd .s{font-family:var(--mono);font-size:.58rem;color:var(--muted);letter-spacing:.06em;margin-top:2px}
+  .kbd .typed{font-family:var(--mono);font-size:.72rem;color:var(--ink);margin-top:10px;line-height:1.7;min-height:2.4em;word-break:break-word}
+  .kbd .typed .key{display:inline-block;font-size:.56rem;padding:0 5px;border:1px solid rgba(132,150,182,.5);border-radius:4px;color:var(--muted);margin-left:4px;line-height:1.5}
+  .kbd.closed{border-color:rgba(255,106,106,.7);background:rgba(255,106,106,.08)}
+  .kbd.closed .t{color:var(--warn)}
+  .badge{position:absolute;left:3%;top:40px;font-family:var(--mono);font-size:.6rem;color:var(--warn);padding:3px 8px;border-radius:999px;
+    border:1px solid rgba(255,106,106,.6);background:rgba(255,106,106,.1);opacity:0;transition:opacity .3s;white-space:nowrap}
+  .badge.show{opacity:1}
+  .obj{position:absolute;left:37%;width:31%;border-radius:12px;padding:9px 10px;opacity:0;
+    border:1px solid rgba(110,160,255,.45);background:rgba(110,160,255,.08);transition:opacity .3s,border-color .3s,background .3s}
+  .obj.show{opacity:1}
+  .obj.lit{border-color:rgba(110,160,255,.85);background:rgba(110,160,255,.15);box-shadow:0 0 18px -6px rgba(110,160,255,.6)}
+  .obj.bad{border-color:rgba(255,106,106,.7);background:rgba(255,106,106,.08)}
+  .obj.closed{opacity:.5}
+  .obj .t{font-family:var(--disp);font-weight:500;font-size:.8rem;color:var(--ink)}
+  .obj.bad .t{color:var(--warn)}
+  .obj .s{font-family:var(--mono);font-size:.56rem;color:var(--muted);letter-spacing:.06em;margin-top:1px}
+  .obj .s .x{color:var(--warn)}
+  .buf{display:flex;flex-wrap:wrap;gap:4px;margin-top:8px;min-height:22px;align-items:center}
+  .buf .bl{font-family:var(--mono);font-size:.54rem;letter-spacing:.1em;text-transform:uppercase;color:rgba(132,150,182,.7);margin-right:2px}
+  .tok{font-family:var(--mono);font-size:.66rem;padding:1px 7px;border-radius:999px;border:1px solid rgba(110,160,255,.5);color:#cfe0ff;background:rgba(110,160,255,.1);transition:.3s}
+  .tok.taken{opacity:.45;text-decoration:line-through}
+  .tok.stuck{border-color:rgba(255,200,98,.7);background:rgba(255,200,98,.14);color:#ffe6b0}
+  .tok.empty{border-style:dashed;border-color:rgba(132,150,182,.4);background:transparent;color:var(--muted)}
+  .tok.wait{border-color:rgba(255,106,106,.6);color:var(--warn);background:transparent}
+  .vtag{position:absolute;left:75%;width:22%;border-radius:10px;padding:7px 9px;opacity:0;
+    border:1px solid var(--line);background:rgba(255,255,255,.04);transition:opacity .35s,border-color .3s,background .3s}
+  .vtag.show{opacity:1}
+  .vtag.lit{border-color:rgba(110,160,255,.7);background:rgba(110,160,255,.12)}
+  .vtag.bad{border-color:rgba(255,106,106,.6);background:rgba(255,106,106,.08)}
+  .vtag .in{font-family:var(--mono);font-size:.56rem;letter-spacing:.08em;color:var(--muted)}
+  .vtag .nm2{font-family:var(--mono);font-size:.7rem;color:var(--gold);margin-top:2px;word-break:break-all}
+  .ref{position:absolute;width:14px;height:14px;border-radius:50%;background:#bcd0ff;border:2px solid var(--accent);
+    box-shadow:0 0 14px -2px rgba(110,160,255,.9);opacity:0;pointer-events:none;transition:left .65s cubic-bezier(.2,.9,.3,1),top .65s cubic-bezier(.2,.9,.3,1),opacity .2s}
+  /* code + console */
+  .rgrid{display:grid;grid-template-columns:minmax(0,1.7fr) minmax(0,1fr);gap:16px}
+  @media (max-width:1000px){.rgrid{grid-template-columns:1fr}}
+  .code{min-width:0;font-family:var(--mono);font-size:.7rem;line-height:1.75;background:rgba(0,0,0,.35);border:1px solid var(--line);
+    border-radius:14px;padding:10px 0;overflow-x:auto}
+  .ln{display:flex;gap:10px;padding:0 12px;white-space:pre;color:#c9d4ea;transition:background .2s,opacity .3s}
+  .ln .n{width:18px;text-align:right;color:rgba(132,150,182,.55);user-select:none;flex-shrink:0}
+  .ln.cur{background:rgba(110,160,255,.14);box-shadow:inset 3px 0 0 var(--accent)}
+  .ln.cur .n{color:var(--accent)}
+  .ln.cut{background:rgba(255,106,106,.12);box-shadow:inset 3px 0 0 var(--warn)}
+  .ln.left{background:rgba(255,200,98,.12);box-shadow:inset 3px 0 0 var(--gold)}
+  .ln.ok{background:rgba(70,217,138,.1);box-shadow:inset 3px 0 0 var(--good)}
+  .kw{color:#c792ea} .ty{color:#82aaff} .st{color:#c3e88d} .nm{color:#f78c6c} .vr{color:#ffcb6b}
+  .console{font-family:var(--mono);font-size:.72rem;line-height:1.6;background:#05070e;border:1px solid var(--line);
+    border-radius:12px;padding:10px 14px;min-height:120px;color:#9fe3b6;word-break:break-word}
+  .console .cl{font-size:.6rem;letter-spacing:.14em;text-transform:uppercase;color:rgba(132,150,182,.6);margin-bottom:4px}
+  .console .out{animation:pop .3s}
+  .console .in2{color:#ffe6b0}
+  .console .caret{display:inline-block;width:7px;height:1em;background:var(--warn);vertical-align:-2px;animation:blink 1s steps(1) infinite}
+  @keyframes pop{from{transform:scale(.9);opacity:0}to{transform:scale(1);opacity:1}}
+  @keyframes blink{50%{opacity:0}}
+  .take{margin-top:22px;background:linear-gradient(180deg,rgba(110,160,255,.08),rgba(139,123,255,.04));
+    border:1px solid var(--line);border-left:3px solid var(--accent);border-radius:12px;padding:16px 18px}
+  .take .tk{font-family:var(--mono);font-size:.66rem;letter-spacing:.14em;text-transform:uppercase;color:var(--accent);margin:0 0 8px}
+  .take p{margin:0;font-size:.95rem;color:var(--ink);line-height:1.55}
+  .take b{color:#fff}
+  @media (prefers-reduced-motion:reduce){*{animation-duration:.01ms!important;transition-duration:.01ms!important}#amb{display:none}}
+</style>
+</head>
+<body>
+
+<a class="back" href="../index.html#23-one-scanner">&#8592; Week 1 index</a>
+
+<canvas id="amb"></canvas>
+<div class="wrap">
+  <p class="tag">Workbook 1c &middot; Section 4-2 &middot; Passing a Scanner to a method</p>
+  <h1>One Scanner, Many Methods</h1>
+  <p class="lede">System.in is one keyboard stream, so the program needs one Scanner reading it.
+  <b>Create the Scanner once in main and pass it to every method that needs input: the parameter name can change, the object stays the same.</b>
+  Step through, then try the trap.</p>
+
+  <div class="stage">
+    <div class="grid">
+      <div class="panelL">
+        <p class="lab">Pick a run</p>
+        <div class="chips" id="chips"></div>
+
+        <div class="readout">
+          <div class="stat"><div class="k">Scanner objects</div><div class="v dim" id="stObj">0</div></div>
+          <div class="stat"><div class="k">Last value read</div><div class="v dim" id="stRead">?</div></div>
+        </div>
+
+        <p class="stepno" id="stepno">Step <b>0</b> of 7</p>
+        <div class="status" id="status">Press <b class="a">Next</b> to start.</div>
+
+        <div class="actions">
+          <button class="btn primary" id="bNext">Next &rarr;</button>
+          <button class="btn gold" id="bBack">&larr; Back</button>
+          <button class="btn" id="bReset">Reset</button>
+        </div>
+        <p class="hint">space = next &middot; names from Raymond's InputApp demo. <b>Try the trap.</b></p>
+      </div>
+
+      <div class="panelR">
+        <p class="lab">One keyboard, the Scanner objects, the names that point to them</p>
+        <div class="pic" id="pic">
+          <svg id="arrows" aria-hidden="true"></svg>
+          <span class="zone" style="left:3%">keyboard</span>
+          <span class="zone" style="left:37%">objects</span>
+          <span class="zone" style="left:75%">variables</span>
+          <span class="badge" id="badge">2 readers, 1 keyboard</span>
+          <div class="kbd" id="kbd"><div class="t">System.in</div><div class="s" id="kbdS">the one keyboard stream</div><div class="typed" id="typed"></div></div>
+          <div class="obj" id="o1" style="top:30px"><div class="t">Scanner object</div><div class="s" id="o1s">reads System.in</div><div class="buf" id="b1"></div></div>
+          <div class="obj" id="o2" style="top:152px"><div class="t">second Scanner object</div><div class="s" id="o2s">also reads System.in</div><div class="buf" id="b2"></div></div>
+          <div class="vtag" id="tMain" style="top:36px"><div class="in">in main</div><div class="nm2">myScanner</div></div>
+          <div class="vtag" id="tMeth" style="top:158px"><div class="in" id="tMethIn">in doAdd</div><div class="nm2" id="tMethNm">potatoScanner</div></div>
+          <div class="ref" id="ref"></div>
+        </div>
+        <div class="rgrid">
+          <div>
+            <p class="lab">InputApp.java</p>
+            <div class="code" id="code"></div>
+          </div>
+          <div>
+            <p class="lab">Console</p>
+            <div class="console" id="console"></div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="take">
+    <p class="tk">The one idea</p>
+    <p><b>One Scanner per program, created in main, handed to methods as a parameter.</b>
+    <code>myScanner</code>, <code>potatoScanner</code> and <code>tomatoScanner</code> are different names for one object:
+    Java passes a reference to the Scanner, not a copy of the keyboard. A second <code>new Scanner(System.in)</code> inside a method
+    costs duplicate code, swallowed input and a leaked resource.</p>
+  </div>
+
+  <div id="rail"></div>
+</div>
+
+<script>
+(function(){
+  "use strict";
+  var $=function(s){return document.querySelector(s);};
+  var reduce=matchMedia("(prefers-reduced-motion: reduce)").matches;
+
+  /* ---------- runs: method and parameter names from the InputApp demo ---------- */
+  var RUNS=[
+    {label:"doAdd(myScanner)",m:"doAdd",p:"potatoScanner",cmd:1,op:"+",rv:"sum",res:"30.500000"},
+    {label:"doSubtract(myScanner)",m:"doSubtract",p:"tomatoScanner",cmd:2,op:"-",rv:"difference",res:"20.000000"},
+    {label:"Trap: a second Scanner",m:"doAdd",p:"potatoScanner",cmd:1,op:"+",rv:"sum",res:"",trap:true}
+  ];
+  var R=RUNS[0];
+  var ASK="What do you want to do (1-add, 2= subtract) ?";
+
+  function hl(t){
+    return t.split(/("[^"]*")/).map(function(part,i){
+      if(i%2) return '<span class="st">'+part+'</span>';
+      return part
+        .replace(/\b(public|static|void|double|int|if|else|new)\b/g,'<span class="kw">$1</span>')
+        .replace(/\b(Scanner|String|System)\b/g,'<span class="ty">$1</span>')
+        .replace(/\b(myScanner|potatoScanner|tomatoScanner)\b/g,'<span class="vr">$1</span>')
+        .replace(/\b(\d+)\b/g,'<span class="nm">$1</span>');
+    }).join("");
+  }
+
+  function lines(){
+    var arg=R.trap?"":"myScanner";
+    var L=[
+      ["mainH","public static void main(String[] args) {"],
+      ["new","  Scanner myScanner = new Scanner(System.in);"],
+      ["ask",'  System.out.print("'+ASK+'");'],
+      ["cmd","  int command = myScanner.nextInt();"],
+      ["if","  if (command == 1) {"],
+      ["cAdd","    doAdd("+arg+");"],
+      ["elif","  } else if (command == 2) {"],
+      ["cSub","    doSubtract("+arg+");"],
+      ["end","  }"],
+      ["close","  myScanner.close();"],
+      ["mainE","}"],
+      ["",""],
+      ["mH","public static void "+R.m+"("+(R.trap?"":"Scanner "+R.p)+") {"]
+    ];
+    if(R.trap) L.push(["new2","  Scanner "+R.p+" = new Scanner(System.in);"]);
+    return L.concat([
+      ["p1",'  System.out.print("Enter 1st number: ");'],
+      ["r1","  double num1 = "+R.p+".nextDouble();"],
+      ["p2",'  System.out.print("Enter 2nd number: ");'],
+      ["r2","  double num2 = "+R.p+".nextDouble();"],
+      ["calc","  double "+R.rv+" = num1 "+R.op+" num2;"],
+      ["out",'  System.out.printf("%f '+R.op+' %f = %f", num1, num2, '+R.rv+');'],
+      ["mE","}"]
+    ]);
+  }
+
+  /* ---------- picture state helper ---------- */
+  function pic(o){
+    var b={o1:1,o2:0,c1:0,c2:0,tMain:"on",tMeth:"off",to:1,typed:"",b1:[],b2:null,kc:0,badge:0,lit1:0,leak:0};
+    for(var k in o) b[k]=o[k];
+    return b;
+  }
+
+  /* ---------- the walk ---------- */
+  function build(){
+    var c=String(R.cmd), call=R.cmd===1?["if","cAdd"]:["elif","cSub"];
+    var S=[];
+    S.push({line:["new"],cls:"",objs:1,read:null,con:[],
+      pic:pic({tMain:"lit",lit1:1}),
+      msg:'<code>new Scanner(System.in)</code> builds <b class="a">one Scanner object</b> that reads the keyboard stream, and the variable <code>myScanner</code> points to it.'});
+    if(!R.trap){
+      var con1=[[ASK,c]], con2=con1.concat([["Enter 1st number: ","25.25"]]), con3=con2.concat([["Enter 2nd number: ","5.25"]]);
+      S.push({line:["ask","cmd"],cls:"",objs:1,read:c,con:con1,
+        pic:pic({tMain:"lit",lit1:1,typed:c,b1:[[c,"taken"]]}),
+        msg:'The user types <b class="a">'+c+'</b> and presses Enter. The text flows into the Scanner, and <code>nextInt()</code> hands '+c+' to <code>command</code>.'});
+      S.push({line:call,cls:"",objs:1,read:c,con:con1,pass:1,
+        pic:pic({tMeth:"lit"}),
+        msg:'main calls <code>'+R.m+'(myScanner)</code>. Java hands over a <b class="a">reference</b>, not a new Scanner, so the parameter <code>'+R.p+'</code> points to <b class="g">the same object</b>.'});
+      S.push({line:["p1","r1"],cls:"",objs:1,read:"25.25",con:con2,
+        pic:pic({tMeth:"lit",lit1:1,typed:"25.25",b1:[["25.25","taken"]]}),
+        msg:'A different name, the same Scanner: <code>'+R.p+'.nextDouble()</code> reads <b class="a">25.25</b> from the keyboard stream that main opened.'});
+      S.push({line:["p2","r2"],cls:"",objs:1,read:"5.25",con:con3,
+        pic:pic({tMeth:"lit",lit1:1,typed:"5.25",b1:[["5.25","taken"]]}),
+        msg:'It reads <b class="a">5.25</b> the same way. Still only <b class="g">one object</b> stands between the program and the keyboard.'});
+      S.push({line:["calc","out","mE"],cls:"ok",objs:1,read:"5.25",con:con3.concat([["25.250000 "+R.op+" 5.250000 = "+R.res,""]]),
+        pic:pic({}),
+        msg:'<code>'+R.m+'</code> prints the result and ends. The name <code>'+R.p+'</code> goes away with it, but <b class="g">the Scanner object stays</b>.'});
+      S.push({line:["close"],cls:"",objs:1,read:"5.25",con:con3.concat([["25.250000 "+R.op+" 5.250000 = "+R.res,""]]),
+        pic:pic({tMain:"lit",c1:1}),
+        msg:'Back in main, <code>myScanner</code> still points to that same Scanner, which kept working the whole time. main <b class="a">closes it once</b>, at the end.'});
+    } else {
+      var t1=[[ASK,"1 25.25 5.25"]], stuck=[["25.25","stuck"],["5.25","stuck"]];
+      var t2=t1.concat([["Enter 1st number: ","",1]]);
+      S.push({line:["ask","cmd"],cls:"left",objs:1,read:"1",con:t1,
+        pic:pic({tMain:"lit",lit1:1,typed:"1 25.25 5.25",b1:[["1","taken"]].concat(stuck)}),
+        msg:'Say the user types ahead, <b class="a">1 25.25 5.25</b>, then Enter. The whole line lands in this Scanner\'s buffer, <code>nextInt()</code> takes the 1, and <b class="y">25.25 and 5.25 wait there</b>.'});
+      S.push({line:["if","cAdd"],cls:"cut",objs:1,read:"1",con:t1,
+        pic:pic({b1:stuck}),
+        msg:'main calls <code>doAdd()</code> and passes <b class="w">nothing</b>, so doAdd has no way to reach myScanner or its buffer.'});
+      S.push({line:["mH","new2"],cls:"cut",objs:2,read:"1",con:t1,
+        pic:pic({o2:1,b1:stuck,b2:[],tMeth:"bad",to:2,badge:1}),
+        msg:'Inside, <code>new Scanner(System.in)</code> builds a <b class="w">second Scanner on the same keyboard</b>, with its own empty buffer. Same kind of line, different object.'});
+      S.push({line:["p1","r1"],cls:"cut",objs:2,read:"waiting",con:t2,
+        pic:pic({o2:1,b1:stuck,b2:"wait",tMeth:"bad",to:2,badge:1}),
+        msg:'<code>potatoScanner.nextDouble()</code> finds its buffer empty and <b class="w">waits for new typing</b>, while 25.25 and 5.25 sit out of reach in the first Scanner. The workbook calls this swallowing an input.'});
+      S.push({line:["new2"],cls:"cut",objs:2,read:"waiting",con:t2,
+        pic:pic({o2:1,b1:stuck,b2:"wait",tMeth:"bad",to:2,badge:1,leak:1}),
+        msg:'The workbook lists the cost: <b class="w">duplicate code</b> in every method, <b class="w">swallowed input</b>, and a <b class="w">leaked resource</b>, since this second Scanner is never closed.'});
+      S.push({line:["mE"],cls:"cut",objs:2,read:"waiting",con:t2,
+        pic:pic({o2:1,c2:1,b1:stuck,b2:[],tMeth:"bad",to:2,kc:1}),
+        msg:'Closing it is no fix: closing a Scanner also <b class="w">closes System.in</b>, and myScanner could never read the keyboard again. <b class="g">Pass myScanner in instead.</b>'});
+    }
+    return S;
+  }
+
+  /* ---------- state ---------- */
+  var steps=[],at=-1;
+  var codeEl=$("#code"),consEl=$("#console"),statusEl=$("#status"),picEl=$("#pic");
+
+  function renderCode(cur,cls){
+    codeEl.innerHTML=lines().map(function(l,i){
+      var c="ln";
+      if(cur&&l[0]&&cur.indexOf(l[0])>=0) c+=" "+(cls==="cut"?"cut":cls==="left"?"left":cls==="ok"?"ok":"cur");
+      return '<div class="'+c+'"><span class="n">'+(i+1)+'</span><span>'+(l[1]?hl(l[1]):" ")+'</span></div>';
+    }).join("");
+  }
+
+  function renderConsole(con){
+    var html='<div class="cl">output</div>';
+    if(!con||!con.length) html+='<span style="color:rgba(132,150,182,.5)">(nothing yet)</span>';
+    else html+=con.map(function(r){
+      return '<div class="out">'+r[0]+(r[1]?'<span class="in2">'+r[1]+'</span>':'')+(r[2]?'<span class="caret"></span>':'')+'</div>';
+    }).join("");
+    consEl.innerHTML=html;
+  }
+
+  function bufHtml(b){
+    if(b==="wait") return '<span class="bl">buffer</span><span class="tok wait">empty, waiting</span>';
+    if(!b||!b.length) return '<span class="bl">buffer</span><span class="tok empty">empty</span>';
+    return '<span class="bl">buffer</span>'+b.map(function(t){return '<span class="tok '+t[1]+'">'+t[0]+'</span>';}).join("");
+  }
+
+  function rel(el){
+    var p=picEl.getBoundingClientRect(), r=el.getBoundingClientRect();
+    return {l:r.left-p.left,t:r.top-p.top,r:r.right-p.left,b:r.bottom-p.top,h:r.height,w:r.width};
+  }
+  function curve(a,b){
+    var dx=Math.max(24,Math.abs(b.x-a.x)*.45), dir=b.x<a.x?-1:1;
+    return 'M'+a.x+' '+a.y+' C'+(a.x+dir*dx)+' '+a.y+','+(b.x-dir*dx)+' '+b.y+','+b.x+' '+b.y;
+  }
+  var COL={a:"#6ea0ff",m:"rgba(132,150,182,.55)",w:"#ff6a6a",g:"#ffc862"};
+  function drawArrows(p){
+    var svg=$("#arrows");
+    if(!p){svg.innerHTML="";return;}
+    var defs='<defs>'+Object.keys(COL).map(function(k){
+      return '<marker id="ah'+k+'" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0 L10 5 L0 10 z" fill="'+COL[k]+'" stroke="none"/></marker>';
+    }).join("")+'</defs>';
+    var out=[], kb=rel($("#kbd")), o1=rel($("#o1")), o2=rel($("#o2")), tm=rel($("#tMain")), tt=rel($("#tMeth"));
+    function arrow(a,b,k,dash){ out.push('<path d="'+curve(a,b)+'" stroke="'+COL[k]+'"'+(dash?' stroke-dasharray="5 5"':'')+' marker-end="url(#ah'+k+')"/>'); }
+    if(p.o1) arrow({x:kb.r,y:kb.t+kb.h*.4},{x:o1.l-2,y:o1.t+o1.h*.5},p.kc?"w":(p.lit1?"g":"m"),!!p.kc);
+    if(p.o2) arrow({x:kb.r,y:kb.t+kb.h*.75},{x:o2.l-2,y:o2.t+o2.h*.5},"w",!!p.kc);
+    if(p.tMain!=="off") arrow({x:tm.l,y:tm.t+tm.h/2},{x:o1.r+2,y:o1.t+o1.h*.32},p.tMain==="lit"?"a":"m");
+    if(p.tMeth!=="off"){ var tg=p.to===2?o2:o1; arrow({x:tt.l,y:tt.t+tt.h/2},{x:tg.r+2,y:tg.t+tg.h*(p.to===2?.5:.72)},p.to===2?"w":(p.tMeth==="lit"?"a":"m")); }
+    svg.innerHTML=defs+out.join("");
+  }
+
+  function renderPic(p){
+    var kbd=$("#kbd"), o1=$("#o1"), o2=$("#o2"), tm=$("#tMain"), tt=$("#tMeth");
+    $("#tMethIn").textContent="in "+R.m; $("#tMethNm").textContent=R.p;
+    if(!p){
+      kbd.className="kbd"; $("#typed").innerHTML=""; $("#kbdS").textContent="the one keyboard stream";
+      o1.className="obj"; o2.className="obj"; tm.className="vtag"; tt.className="vtag"; $("#badge").className="badge";
+      drawArrows(null); return;
+    }
+    kbd.className="kbd"+(p.kc?" closed":"");
+    $("#kbdS").textContent=p.kc?"closed":"the one keyboard stream";
+    $("#typed").innerHTML=p.typed?p.typed+'<span class="key">Enter</span>':"";
+    o1.className="obj"+(p.o1?" show":"")+(p.lit1?" lit":"")+(p.c1?" closed":"");
+    $("#o1s").textContent=p.c1?"closed by main":"reads System.in";
+    $("#b1").innerHTML=bufHtml(p.b1);
+    o2.className="obj bad"+(p.o2?" show":"")+(p.c2?" closed":"");
+    $("#o2s").innerHTML=p.c2?'closed, and System.in with it':(p.leak?'<span class="x">never closed</span>':'also reads System.in');
+    $("#b2").innerHTML=bufHtml(p.b2);
+    tm.className="vtag"+(p.tMain!=="off"?" show":"")+(p.tMain==="lit"?" lit":"")+(p.kc?" bad":"");
+    tt.className="vtag"+(p.tMeth!=="off"?" show":"")+(p.tMeth==="lit"?" lit":"")+(p.tMeth==="bad"?" bad":"");
+    $("#badge").className="badge"+(p.badge?" show":"");
+    drawArrows(p);
+  }
+
+  /* the reference travels from myScanner to the parameter: the only moving part */
+  var refTimer=null;
+  function sendRef(){
+    var ref=$("#ref"), a=rel($("#tMain")), b=rel($("#tMeth"));
+    clearTimeout(refTimer);
+    if(reduce){ref.style.opacity=0;return;}
+    ref.style.transition="none";
+    ref.style.left=(a.l+a.w/2-7)+"px"; ref.style.top=(a.b-7)+"px"; ref.style.opacity=1;
+    void ref.offsetWidth;
+    ref.style.transition="";
+    ref.style.left=(b.l+b.w/2-7)+"px"; ref.style.top=(b.t-7)+"px";
+    refTimer=setTimeout(function(){ref.style.opacity=0;},800);
+  }
+
+  function setStat(id,v,c){ var e=$(id); if(v===null){e.textContent="?";e.className="v dim";} else {e.textContent=v;e.className="v "+(c||"");} }
+
+  function show(i,fwd){
+    at=i;
+    if(i<0){
+      renderCode(null); renderPic(null); renderConsole([]);
+      statusEl.className="status"; statusEl.innerHTML='Press <b class="a">Next</b> to start. The picture above the code changes at every step.';
+      $("#stepno").innerHTML="Step <b>0</b> of "+steps.length;
+      setStat("#stObj","0","dim"); setStat("#stRead",null); setBtns(); return;
+    }
+    var s=steps[i];
+    $("#stepno").innerHTML="Step <b>"+(i+1)+"</b> of "+steps.length;
+    renderCode(s.line,s.cls); renderPic(s.pic); renderConsole(s.con);
+    statusEl.className="status "+s.cls; statusEl.innerHTML=s.msg;
+    setStat("#stObj",String(s.objs),s.objs>1?"bad":"ok");
+    setStat("#stRead",s.read,s.read==="waiting"?"bad":"hot");
+    if(s.pass&&fwd) setTimeout(sendRef,reduce?0:120);
+    setBtns();
+  }
+  function setBtns(){ $("#bNext").disabled=at>=steps.length-1; $("#bBack").disabled=at<0; }
+  function next(){ if(at<steps.length-1) show(at+1,true); }
+  function back(){ if(at>=0) show(at-1,false); }
+  function reset(){ steps=build(); show(-1); }
+  function pick(idx){
+    R=RUNS[idx];
+    Array.prototype.forEach.call(document.querySelectorAll(".chip"),function(c,j){c.classList.toggle("on",j===idx);});
+    if(document.activeElement&&document.activeElement.blur) document.activeElement.blur();
+    reset();
+  }
+
+  $("#chips").innerHTML=RUNS.map(function(r,j){return '<button class="chip'+(r.trap?' trap':'')+(j===0?' on':'')+'" data-i="'+j+'">'+r.label+'</button>';}).join("");
+  $("#chips").addEventListener("click",function(e){ var b=e.target.closest(".chip"); if(b) pick(+b.getAttribute("data-i")); });
+  $("#bNext").addEventListener("click",function(){next();});
+  $("#bBack").addEventListener("click",back);
+  $("#bReset").addEventListener("click",reset);
+  document.addEventListener("keydown",function(e){ if(e.code==="Space"&&!/INPUT|BUTTON/.test(e.target.tagName)){e.preventDefault();next();} });
+  addEventListener("resize",function(){ drawArrows(at>=0?steps[at].pic:null); });
+
+  /* ---------- ambient canvas ---------- */
+  var cv=$("#amb"),ctx=cv.getContext&&cv.getContext("2d"),parts=[];
+  function sizeC(){if(!ctx)return;cv.width=innerWidth;cv.height=innerHeight;}
+  function initParts(){parts=[];for(var i=0;i<46;i++)parts.push({x:Math.random(),y:Math.random(),
+    r:Math.random()*1.6+.3,s:Math.random()*.02+.004,o:Math.random()*.4+.1});}
+  function drawC(){if(!ctx)return;ctx.clearRect(0,0,cv.width,cv.height);
+    parts.forEach(function(p){p.y-=p.s/60;if(p.y<-.02)p.y=1.02;
+      ctx.beginPath();ctx.arc(p.x*cv.width,p.y*cv.height,p.r,0,7);
+      ctx.fillStyle="rgba(140,170,255,"+p.o+")";ctx.fill();});
+    requestAnimationFrame(drawC);}
+  if(ctx&&!reduce){sizeC();initParts();drawC();addEventListener("resize",sizeC);}
+
+  reset();
+})();
+</script>
+<script src="../manifest.js"></script>
+<script src="../../assets/rail.js"></script>
+<script>Rail.render(document.getElementById("rail"),{kind:"visuals",current:"23-one-scanner"});</script>
+</body>
+</html>
