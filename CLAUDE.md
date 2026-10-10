@@ -73,28 +73,31 @@ search.js, build-search-index.js, search-index.json
    whole tab, the current one marked, titles on hover, prev/next.
 8. `<title>Title | Week N Visual Hub</title>`. Keyboard: ← / → = prev/next, Esc = back to index.
 
-## THE DOCTRINE (from the Expeditors hub, applies here unchanged)
-A visual takes ONE idea and makes the invisible part visible and manipulable, so the moment of
-interaction is the moment of understanding. It is an extra: it exists only when there is genuinely
-something to show.
-- **Three lenses**, pick the one that matches why the idea is hard: behind-the-scenes (a hidden mechanism:
-  the Scanner buffer, the call stack, the compiler's steps), big-picture (a system too large to hold:
-  JDK/JRE/JVM, Maven layout), tangible (an abstract rule given a body: widening vs narrowing, integer division).
-- **The gate, idea by idea, never section by section.** List the module's distinct ideas from the learning
-  objectives. For each: is something hidden, too big, or too abstract, AND not already carried by a sentence,
-  a table, or a workbook image? If not, no visual, and say why. Then add an extra only for a non-headline
-  idea that trips learners up. Lands at roughly 8 to 12 rich visuals per module.
-- **The test for code weeks:** what can't they see when they run it themselves? If "nothing", it isn't a visual.
-  Never replay the demo in a browser; show the machinery under it.
-- **Foundations exception:** for a beginner cohort, the mental model itself may be the invisible thing
-  (what a class is, what a test is). Those get a page even if there is no hidden mechanism.
-- **The richness bar**, all six: a model not a slideshow (outcomes computed, not canned); depth (a third
-  interaction still teaches); breadth (several different things to try); shows the machinery (intermediate
-  states, cause→effect); contingent narration (the explanation responds to the specific action); you can get
-  it wrong and learn from it. Fewer, richer beats many, thin.
-- **Minimal prose.** One `.lede`, one `.take`. Under ~1600 visible non-code characters, 2000 hard ceiling.
-- **Design the interaction to the topic.** Step-throughs, click-to-run, builders, sorters, matrices, live
-  consoles. A multi-state machine is right when the states are the mechanism.
+## THE DOCTRINE — adapted for this cohort (set 2026-10-11 with the instructor)
+The audience is beginners, most of them not developers yet. The hub is a whiteboard that moves while the
+instructor talks: a visual **complements the live explanation**, it is not a lab the learner has to work
+through, and it must not overload them. The Expeditors doctrine (richness bar, mini-simulators) was written
+for experienced engineers; here it applies only to the few pages where the hidden mechanism IS the lesson.
+
+**Rules that stay from Expeditors:** one idea per page; the thing on screen is what you interact with;
+minimal prose (one `.lede`, one `.take`, under ~1200 visible non-code characters); never replay the demo in
+a browser; the gate is idea by idea from the workbook's learning objectives, not section by section; a
+visual exists only when something is hidden, too big, or too abstract to see, or when the mental model
+itself is the invisible thing (foundations exception, which applies often with beginners).
+
+**Three sizes. Pick the smallest that shows the idea. The idea list names the size for every page.**
+- **Glance** (the default, most pages): one animated picture with ONE control, a toggle, a slider, a click
+  that changes the picture. No steps, no inputs, no state to manage. Readable in five seconds while the
+  instructor is talking. Examples: data types and sizes, naming conventions, integer division, JDK/JRE/JVM.
+- **Walk**: a short step-through, 4 to 8 steps, Next and Reset only, one sentence per step, the picture
+  changes at each step. For processes with a few states: compilation flow, an if/else path, a loop running.
+- **Model**: the full simulator with editable inputs, computed outcomes, and an experiment that lets the
+  learner break the rule and see the consequence. Only where the mechanism is the whole point and the
+  instructor wants to play with it in class: the call stack, the Scanner buffer. Few per week.
+  `week-01/visuals/21-method-call-stack.html` is the reference for this size, not the template for all.
+
+**Design is the same for all three sizes** (header, stage, panels where they make sense, takeaway, rail).
+A Glance page may drop the left/right split and put its one control under the picture.
 
 ## YearUp conventions (differ from Expeditors)
 - Git through IntelliJ (Share Project on GitHub, commit panel), not the CLI. Learner repos are public.
@@ -114,8 +117,8 @@ something to show.
 2. Read the fall workbooks for the week and the spring hub's pages for the same week.
 3. Produce the idea list: for each idea, keep-and-reskin / rebuild / new / drop, with a one-line reason;
    same for reference pages, exercise companions, games. Instructor confirms before building.
-4. Build: one page per task, against the approved reference page (`week-01/visuals/NN-method-call-stack.html`
-   is the calibration page). Verify every page in a browser: interaction works, text budget, links resolve,
+4. Build: one page per task, at the size named in the idea list, against the approved reference page for
+   that size (Model: `week-01/visuals/21-method-call-stack.html`; Glance and Walk: the first approved page of each). Verify every page in a browser: interaction works, text budget, links resolve,
    rail renders, `node --check` on the inline script.
 5. Update `week-NN/manifest.js`, the week index, the landing page, and run `build-search-index.js`.
 6. Record progress in `.planning/PROGRESS.md`; plan changes in `.planning/DECISIONS.md`.
