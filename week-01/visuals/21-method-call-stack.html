@@ -1,0 +1,364 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Method Call Stack | Week 1 Visual Hub</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Sora:wght@500;700&family=Inter:wght@400;500&family=JetBrains+Mono:wght@400;500&display=swap">
+<style>
+  :root{
+    --bg:#080c17; --bg2:#0c1428; --surface:rgba(255,255,255,.045); --line:rgba(255,255,255,.09);
+    --ink:#eef2fb; --muted:#8496b6; --accent:#6ea0ff; --accent2:#8b7bff; --good:#46d98a; --warn:#ff6a6a;
+    --gold:#ffc862; --disp:'Sora',system-ui,sans-serif; --body:'Inter',system-ui,sans-serif;
+    --mono:'JetBrains Mono',ui-monospace,monospace;
+  }
+  *{box-sizing:border-box}
+  body{margin:0;min-height:100vh;color:var(--ink);font-family:var(--body);
+    background:radial-gradient(1200px 700px at 70% -10%,#141d38 0%,transparent 55%),
+               radial-gradient(900px 600px at 10% 110%,#161233 0%,transparent 50%),#080c17;
+    overflow-x:hidden}
+  #amb{position:fixed;inset:0;z-index:0;pointer-events:none;opacity:.6}
+  .back{position:relative;z-index:2;display:block;max-width:1120px;margin:0 auto;padding:26px 24px 0;
+    width:100%;font-family:var(--mono);font-size:.8rem;letter-spacing:.04em;color:var(--muted);
+    text-decoration:none;transition:color .15s}
+  .back:hover{color:var(--accent)}
+  .wrap{position:relative;z-index:1;max-width:1120px;margin:0 auto;padding:22px 24px 70px}
+  .tag{font-family:var(--mono);font-size:.72rem;letter-spacing:.22em;text-transform:uppercase;color:var(--accent);margin:0 0 14px}
+  h1{font-family:var(--disp);font-weight:700;font-size:clamp(2.3rem,6vw,3.6rem);line-height:1;margin:0 0 12px;
+    letter-spacing:-.03em;background:linear-gradient(180deg,#fff,#b9c6e6);-webkit-background-clip:text;
+    background-clip:text;color:transparent}
+  .lede{color:var(--muted);max-width:64ch;font-size:1.05rem;margin:0 0 30px;line-height:1.5}
+  .lede b{color:var(--ink)}
+  .stage{position:relative;background:linear-gradient(180deg,rgba(255,255,255,.03),rgba(255,255,255,.01));
+    border:1px solid var(--line);border-radius:24px;padding:8px;
+    box-shadow:0 1px 0 rgba(255,255,255,.06) inset,0 30px 80px -30px rgba(0,0,0,.8)}
+  .grid{display:grid;grid-template-columns:340px 1fr;gap:8px}
+  @media (max-width:860px){.grid{grid-template-columns:1fr}}
+  .panelL,.panelR{border-radius:18px;padding:22px}
+  .panelL{background:linear-gradient(180deg,rgba(110,160,255,.06),rgba(139,123,255,.03));border:1px solid var(--line)}
+  .panelR{background:rgba(6,10,20,.5);border:1px solid var(--line);position:relative;overflow:hidden}
+  .lab{font-family:var(--mono);font-size:.7rem;letter-spacing:.12em;text-transform:uppercase;color:var(--muted);margin:0 0 12px}
+  /* inputs */
+  .inputs{background:rgba(0,0,0,.32);border:1px solid var(--line);border-radius:14px;padding:14px 16px;margin-bottom:14px}
+  .ititle{font-family:var(--mono);font-size:.64rem;letter-spacing:.1em;text-transform:uppercase;color:var(--gold);margin:0 0 10px}
+  .irow{display:flex;align-items:center;justify-content:space-between;font-family:var(--mono);font-size:.85rem;margin:7px 0;gap:10px}
+  .irow .kk{color:var(--muted)}
+  .irow input{width:112px;font-family:var(--mono);font-size:.85rem;color:var(--ink);background:rgba(255,255,255,.05);
+    border:1px solid var(--line);border-radius:8px;padding:5px 8px;text-align:right;transition:.15s}
+  .irow input:focus{outline:none;border-color:var(--gold)}
+  .irow input:disabled{opacity:.5}
+  .inote{font-size:.78rem;color:var(--muted);margin:8px 0 0;line-height:1.45}
+  /* readout */
+  .readout{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin:14px 0}
+  .stat{background:rgba(255,255,255,.03);border:1px solid var(--line);border-radius:12px;padding:11px 13px}
+  .stat .k{font-family:var(--mono);font-size:.62rem;letter-spacing:.1em;text-transform:uppercase;color:var(--muted)}
+  .stat .v{font-family:var(--disp);font-weight:700;font-size:1.45rem;font-variant-numeric:tabular-nums;margin-top:2px;transition:color .3s}
+  .v.hot{color:var(--accent)}
+  .status{font-family:var(--mono);font-size:.82rem;line-height:1.55;color:var(--ink);min-height:84px;
+    padding:12px 14px;border-radius:12px;background:rgba(0,0,0,.25);border:1px solid var(--line);
+    border-left:3px solid var(--accent);transition:border-color .3s}
+  .status.push{border-left-color:var(--gold)}
+  .status.pop{border-left-color:var(--good)}
+  .status.trouble{border-left-color:var(--warn)}
+  .status b.g{color:var(--good)} .status b.w{color:var(--warn)} .status b.a{color:var(--accent)} .status b.y{color:var(--gold)}
+  .actions{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-top:16px}
+  .btn{font-family:var(--body);font-weight:500;font-size:.84rem;padding:9px 12px;border-radius:11px;cursor:pointer;
+    border:1px solid var(--line);background:var(--surface);color:var(--ink);transition:.15s;text-align:center}
+  .btn:hover{border-color:var(--accent);color:var(--accent)}
+  .btn.primary{border-color:rgba(110,160,255,.5);background:rgba(110,160,255,.12)}
+  .btn.warn:hover{border-color:var(--warn);color:var(--warn)}
+  .btn.gold:hover{border-color:var(--gold);color:var(--gold)}
+  .btn:disabled{opacity:.35;cursor:not-allowed}
+  .btn:focus-visible{outline:2px solid var(--accent);outline-offset:2px}
+  .btn.wide{grid-column:1 / -1}
+  .btn.on{border-color:var(--warn);color:var(--warn);background:rgba(255,106,106,.1)}
+  .hint{font-family:var(--mono);font-size:.7rem;color:var(--muted);margin:14px 0 0;line-height:1.5}
+  .hint b{color:var(--accent)}
+  /* right: code + stack + console */
+  .rgrid{display:grid;grid-template-columns:minmax(0,1.15fr) minmax(0,1fr);gap:16px}
+  @media (max-width:1000px){.rgrid{grid-template-columns:1fr}}
+  .code{min-width:0;font-family:var(--mono);font-size:.74rem;line-height:1.75;background:rgba(0,0,0,.35);border:1px solid var(--line);
+    border-radius:14px;padding:12px 0;overflow-x:auto}
+  .ln{display:flex;gap:12px;padding:0 14px;white-space:pre-wrap;word-break:break-word;color:#c9d4ea;transition:background .2s;position:relative}
+  .ln .n{width:20px;text-align:right;color:rgba(132,150,182,.55);user-select:none;flex-shrink:0}
+  .ln.cur{background:rgba(110,160,255,.14);box-shadow:inset 3px 0 0 var(--accent)}
+  .ln.cur .n{color:var(--accent)}
+  .ln.ret{background:rgba(70,217,138,.12);box-shadow:inset 3px 0 0 var(--good)}
+  .ln.mut{background:rgba(255,106,106,.12);box-shadow:inset 3px 0 0 var(--warn)}
+  .ln.dim{opacity:.35}
+  .kw{color:#c792ea} .ty{color:#82aaff} .st{color:#c3e88d} .nm{color:#f78c6c} .cm{color:#5f6b85;font-style:italic} .fn{color:#ffcb6b}
+  .stackwrap{display:flex;flex-direction:column}
+  .stack{flex:1;min-height:250px;display:flex;flex-direction:column-reverse;gap:8px;justify-content:flex-start;
+    border:1px dashed rgba(132,150,182,.3);border-radius:14px;padding:12px;background:rgba(0,0,0,.18);position:relative}
+  .stack::after{content:"stack bottom";position:absolute;bottom:4px;right:12px;font-family:var(--mono);font-size:.58rem;
+    letter-spacing:.14em;text-transform:uppercase;color:rgba(132,150,182,.5)}
+  .frame{border-radius:12px;padding:10px 12px;border:1px solid var(--line);background:rgba(255,255,255,.03);
+    animation:pop .4s cubic-bezier(.2,1.4,.4,1);transition:.25s}
+  .frame.top{border-color:rgba(110,160,255,.55);background:rgba(110,160,255,.1);box-shadow:0 0 22px -8px rgba(110,160,255,.6)}
+  .frame.leaving{animation:die .4s forwards}
+  .fname{font-family:var(--mono);font-size:.72rem;color:var(--accent);display:flex;justify-content:space-between;align-items:center}
+  .frame:not(.top) .fname{color:var(--muted)}
+  .fname .where{font-size:.6rem;color:var(--muted);letter-spacing:.06em}
+  .vars{display:flex;flex-wrap:wrap;gap:6px;margin-top:8px;min-height:22px}
+  .var{font-family:var(--mono);font-size:.7rem;padding:3px 8px;border-radius:999px;border:1px solid var(--line);
+    background:rgba(0,0,0,.3);color:#bcd0ff;animation:pop .35s}
+  .var.new{border-color:rgba(255,200,98,.6);color:#ffe6b0;background:rgba(255,200,98,.08)}
+  .var.chg{border-color:rgba(255,106,106,.6);color:#ffc2c2;background:rgba(255,106,106,.1)}
+  .var.copy{border-color:rgba(70,217,138,.6);color:#bff3d6;background:rgba(70,217,138,.08)}
+  .var i{color:var(--muted);font-style:normal}
+  .empty{font-family:var(--mono);font-size:.7rem;color:rgba(132,150,182,.55);text-align:center;margin:auto}
+  .bubble{position:absolute;left:50%;transform:translateX(-50%);top:14px;font-family:var(--mono);font-size:.74rem;
+    padding:6px 12px;border-radius:999px;background:rgba(70,217,138,.14);border:1px solid rgba(70,217,138,.55);
+    color:#bff3d6;opacity:0;pointer-events:none;transition:opacity .25s,top .4s}
+  .bubble.show{opacity:1;top:38px}
+  .console{margin-top:14px;font-family:var(--mono);font-size:.76rem;line-height:1.6;background:#05070e;border:1px solid var(--line);
+    border-radius:12px;padding:10px 14px;min-height:64px;color:#9fe3b6}
+  .console .cl{font-size:.6rem;letter-spacing:.14em;text-transform:uppercase;color:rgba(132,150,182,.6);margin-bottom:4px}
+  .console .out{animation:pop .3s}
+  @keyframes pop{from{transform:scale(.6);opacity:0}to{transform:scale(1);opacity:1}}
+  @keyframes die{to{transform:translateY(-10px) scale(.85);opacity:0}}
+  .take{margin-top:22px;background:linear-gradient(180deg,rgba(110,160,255,.08),rgba(139,123,255,.04));
+    border:1px solid var(--line);border-left:3px solid var(--accent);border-radius:12px;padding:16px 18px}
+  .take .tk{font-family:var(--mono);font-size:.66rem;letter-spacing:.14em;text-transform:uppercase;color:var(--accent);margin:0 0 8px}
+  .take p{margin:0;font-size:.95rem;color:var(--ink);line-height:1.55}
+  .take b{color:#fff}
+  @media (prefers-reduced-motion:reduce){*{animation-duration:.01ms!important;transition-duration:.01ms!important}#amb{display:none}}
+</style>
+</head>
+<body>
+
+<a class="back" href="../index.html#21-method-call-stack">&#8592; Week 1 index</a>
+
+<canvas id="amb"></canvas>
+<div class="wrap">
+  <p class="tag">Workbook 1c &middot; Section 4-2 &middot; Static methods</p>
+  <h1>Method Call Stack</h1>
+  <p class="lede">When <code>main</code> calls <code>addNumbers</code>, Java does not jump into the method. It builds a new
+  box, copies the arguments into it, runs the method there, then throws the box away and hands back one value.
+  <b>Step through it and watch the boxes stack up and come down.</b> Change the inputs, or break the rule on purpose.</p>
+
+  <div class="stage">
+    <div class="grid">
+      <div class="panelL">
+        <p class="lab">Inputs &middot; what main starts with</p>
+        <div class="inputs">
+          <p class="ititle">main's variables</p>
+          <div class="irow"><span class="kk">firstNumber</span><input id="inA" type="number" value="17"></div>
+          <div class="irow"><span class="kk">secondNumber</span><input id="inB" type="number" value="3"></div>
+          <div class="irow"><span class="kk">firstName</span><input id="inF" type="text" value="Ada" maxlength="12"></div>
+          <div class="irow"><span class="kk">lastName</span><input id="inL" type="text" value="Lovelace" maxlength="12"></div>
+          <p class="inote">Edit while stopped. The run below is computed from these, not replayed.</p>
+        </div>
+
+        <div class="readout">
+          <div class="stat"><div class="k">frames on stack</div><div class="v" id="stDepth">0</div></div>
+          <div class="stat"><div class="k">deepest so far</div><div class="v" id="stMax">0</div></div>
+        </div>
+
+        <div class="status" id="status">Press <b class="a">Step</b> to start the program, or <b class="a">Run</b> to watch it play.</div>
+
+        <div class="actions">
+          <button class="btn primary" id="bStep">Step &rarr;</button>
+          <button class="btn" id="bRun">Run</button>
+          <button class="btn gold" id="bBack">&larr; Back</button>
+          <button class="btn" id="bReset">Reset</button>
+          <button class="btn warn wide" id="bMut">Experiment: change num1 inside addNumbers</button>
+        </div>
+        <p class="hint">space = step &middot; the experiment adds a line that writes to the parameter. <b>Does main's firstNumber change?</b></p>
+      </div>
+
+      <div class="panelR">
+        <div class="rgrid">
+          <div>
+            <p class="lab">Main.java</p>
+            <div class="code" id="code"></div>
+          </div>
+          <div class="stackwrap">
+            <p class="lab">The call stack</p>
+            <div class="stack" id="stack"><div class="empty">nothing running yet</div><div class="bubble" id="bubble"></div></div>
+            <div class="console"><div class="cl">console</div><div id="console"></div></div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="take">
+    <p class="tk">The one idea</p>
+    <p>Every call gets its <b>own frame</b> with its own copies of the values. <b>Parameters are copies, not links:</b>
+    changing <code>num1</code> inside <code>addNumbers</code> leaves <code>firstNumber</code> in <code>main</code> untouched.
+    The only thing that comes back is the <code>return</code> value, and the frame is gone the moment it returns.</p>
+  </div>
+
+  <div id="rail"></div>
+</div>
+
+<script>
+(function(){
+  "use strict";
+  var $=function(s){return document.querySelector(s);};
+  var reduce=matchMedia("(prefers-reduced-motion: reduce)").matches;
+
+  /* ---------- the program (from the Week 1 methods demo) ---------- */
+  function lines(mut){
+    var L=[
+      '<span class="kw">public static void</span> <span class="fn">main</span>(<span class="ty">String</span>[] args) {',
+      '    <span class="ty">int</span> firstNumber = <span class="nm">{A}</span>;',
+      '    <span class="ty">int</span> secondNumber = <span class="nm">{B}</span>;',
+      '    <span class="ty">int</span> result = <span class="fn">addNumbers</span>(firstNumber, secondNumber);',
+      '    System.out.println(<span class="st">"The sum is: "</span> + result);',
+      '    <span class="ty">String</span> fullName = <span class="fn">generateFullName</span>(<span class="st">"{F}"</span>, <span class="st">"{L}"</span>);',
+      '    System.out.println(<span class="st">"The full name is: "</span> + fullName);',
+      '}',
+      '',
+      '<span class="kw">public static</span> <span class="ty">int</span> <span class="fn">addNumbers</span>(<span class="ty">int</span> num1, <span class="ty">int</span> num2) {',
+      mut?'    num1 = <span class="nm">100</span>;   <span class="cm">// the experiment</span>':'    <span class="cm">// (experiment off)</span>',
+      '    <span class="ty">int</span> sum = num1 + num2;',
+      '    <span class="kw">return</span> sum;',
+      '}',
+      '',
+      '<span class="kw">public static</span> <span class="ty">String</span> <span class="fn">generateFullName</span>(<span class="ty">String</span> firstName, <span class="ty">String</span> lastName) {',
+      '    <span class="ty">String</span> fullName = firstName + <span class="st">" "</span> + lastName;',
+      '    <span class="kw">return</span> fullName;',
+      '}'
+    ];
+    return L;
+  }
+
+  /* ---------- build the run as a list of snapshots, computed from the inputs ---------- */
+  function build(inp,mut){
+    var S=[];
+    var frames=[];
+    function snap(line,msg,cls,extra){
+      S.push({line:line,msg:msg,cls:cls||"",frames:JSON.parse(JSON.stringify(frames)),
+        out:(extra&&extra.out)||null,bubble:(extra&&extra.bubble)||null,mark:(extra&&extra.mark)||null});
+    }
+    var A=inp.A,B=inp.B,F=inp.F,Lw=inp.L;
+    frames.push({name:"main",vars:[]});
+    snap(1,'The JVM starts by <b class="y">pushing a frame for main</b>. It is the bottom of the stack and it stays until the program ends.',"push",{mark:["main","push"]});
+    frames[0].vars.push({k:"firstNumber",v:A,s:"new"});
+    snap(2,'<b class="a">firstNumber</b> is created inside main’s frame and holds '+A+'.');
+    frames[0].vars.forEach(function(v){v.s="";}); frames[0].vars.push({k:"secondNumber",v:B,s:"new"});
+    snap(3,'<b class="a">secondNumber</b> is created inside main’s frame and holds '+B+'.');
+    frames[0].vars.forEach(function(v){v.s="";});
+    snap(4,'main reaches a call. It <b class="y">pauses here</b> and asks for a new frame for addNumbers. Nothing has been added yet.',"",{});
+    frames.push({name:"addNumbers",vars:[{k:"num1",v:A,s:"copy"},{k:"num2",v:B,s:"copy"}],where:"called from main, line 4"});
+    snap(10,'<b class="y">A new frame</b> for addNumbers goes on top. The values '+A+' and '+B+' are <b class="g">copied</b> into num1 and num2. main’s variables are not shared, only their values travel.',"push",{mark:["addNumbers","push"]});
+    if(mut){
+      frames[1].vars[0].v=100; frames[1].vars[0].s="chg"; frames[1].vars[1].s="";
+      snap(11,'<b class="w">num1 = 100</b> writes to the copy in this frame. Look at main’s frame below: <b class="a">firstNumber is still '+A+'</b>. The caller never sees this.',"trouble",{mark:["addNumbers","mut"]});
+    }
+    var n1=mut?100:A, sum=n1+B;
+    frames[1].vars.forEach(function(v){v.s="";}); frames[1].vars.push({k:"sum",v:sum,s:"new"});
+    snap(12,'sum is computed from the copies: '+n1+' + '+B+' = <b class="a">'+sum+'</b>. It lives only in this frame.');
+    frames[1].vars.forEach(function(v){v.s="";});
+    snap(13,'<b class="g">return sum</b> sends one value, '+sum+', back down to the caller. That is the only thing that leaves this frame.',"pop",{bubble:"returns "+sum,mark:["addNumbers","ret"]});
+    frames.pop();
+    frames[0].vars.push({k:"result",v:sum,s:"copy"});
+    snap(4,'The addNumbers frame is <b class="g">gone</b>, num1, num2 and sum with it. The returned '+sum+' lands in <b class="a">result</b>, and main continues where it paused.',"pop",{bubble:null});
+    frames[0].vars.forEach(function(v){v.s="";});
+    snap(5,'println runs inside main. Output goes to the console.',"",{out:"The sum is: "+sum});
+    snap(6,'A second call. Same mechanism, different method: main pauses and a frame for generateFullName is built.');
+    frames.push({name:"generateFullName",vars:[{k:"firstName",v:'"'+F+'"',s:"copy"},{k:"lastName",v:'"'+Lw+'"',s:"copy"}],where:"called from main, line 6"});
+    snap(16,'<b class="y">Push.</b> The two Strings are copied into firstName and lastName. Notice the stack never went two frames deep at once: addNumbers was already gone.',"push",{mark:["generateFullName","push"]});
+    var full=F+" "+Lw;
+    frames[1].vars.forEach(function(v){v.s="";}); frames[1].vars.push({k:"fullName",v:'"'+full+'"',s:"new"});
+    snap(17,'fullName is built from the copies: <b class="a">"'+full+'"</b>.');
+    frames[1].vars.forEach(function(v){v.s="";});
+    snap(18,'<b class="g">return fullName</b> hands the String back down. The frame is about to disappear.',"pop",{bubble:'returns "'+full+'"',mark:["generateFullName","ret"]});
+    frames.pop();
+    frames[0].vars.push({k:"fullName",v:'"'+full+'"',s:"copy"});
+    snap(6,'Frame <b class="g">popped</b>. main gets the value in its own <b class="a">fullName</b>, a different variable with the same name in a different frame.',"pop");
+    frames[0].vars.forEach(function(v){v.s="";});
+    snap(7,'Second println, from main.',"",{out:"The full name is: "+full});
+    frames.pop();
+    snap(8,'main returns to the JVM. <b class="g">The last frame is popped</b> and the program ends. The stack is empty again.',"pop",{mark:["main","ret"]});
+    return S;
+  }
+
+  /* ---------- state ---------- */
+  var mut=false, steps=[], at=-1, timer=null, maxDepth=0, out=[];
+  var codeEl=$("#code"), stackEl=$("#stack"), consEl=$("#console"), statusEl=$("#status"), bubble=$("#bubble");
+
+  function inputs(){
+    var A=parseInt($("#inA").value,10); if(isNaN(A))A=0;
+    var B=parseInt($("#inB").value,10); if(isNaN(B))B=0;
+    var F=$("#inF").value.trim()||"Ada", L=$("#inL").value.trim()||"Lovelace";
+    return {A:A,B:B,F:F,L:L};
+  }
+  function renderCode(cur,mark){
+    var inp=inputs(), L=lines(mut);
+    codeEl.innerHTML=L.map(function(t,i){
+      var n=i+1, cls="ln";
+      if(n===cur) cls+=(mark&&mark[1]==="ret"?" ret":mark&&mark[1]==="mut"?" mut":" cur");
+      var html=t.replace("{A}",inp.A).replace("{B}",inp.B).replace("{F}",inp.F).replace("{L}",inp.L);
+      return '<div class="'+cls+'"><span class="n">'+n+'</span><span>'+(html||" ")+'</span></div>';
+    }).join("");
+  }
+  function renderStack(frames){
+    if(!frames.length){stackEl.innerHTML='<div class="empty">nothing running yet</div><div class="bubble" id="bubble"></div>';bubble=$("#bubble");return;}
+    stackEl.innerHTML=frames.map(function(f,i){
+      var top=i===frames.length-1;
+      return '<div class="frame'+(top?' top':'')+'"><div class="fname"><span>'+f.name+'()</span><span class="where">'+(f.where||"entry point")+'</span></div>'
+        +'<div class="vars">'+(f.vars.length?f.vars.map(function(v){return '<span class="var '+(v.s||"")+'">'+v.k+' <i>=</i> '+v.v+'</span>';}).join(""):'<span class="var" style="opacity:.45">no variables yet</span>')+'</div></div>';
+    }).join("")+'<div class="bubble" id="bubble"></div>';
+    bubble=$("#bubble");
+  }
+  function show(i){
+    at=i;
+    if(i<0){renderCode(0);renderStack([]);consEl.innerHTML="";out=[];maxDepth=0;
+      statusEl.className="status";statusEl.innerHTML='Press <b class="a">Step</b> to start the program, or <b class="a">Run</b> to watch it play.';
+      $("#stDepth").textContent="0";$("#stMax").textContent="0";setBtns();return;}
+    var s=steps[i];
+    renderCode(s.line,s.mark); renderStack(s.frames);
+    out=[]; for(var k=0;k<=i;k++){ if(steps[k].out) out.push(steps[k].out); }
+    consEl.innerHTML=out.map(function(o){return '<div class="out">'+o+'</div>';}).join("")||'<span style="color:rgba(132,150,182,.5)">(nothing printed yet)</span>';
+    statusEl.className="status "+s.cls; statusEl.innerHTML=s.msg;
+    var d=s.frames.length; maxDepth=0; for(k=0;k<=i;k++){ if(steps[k].frames.length>maxDepth) maxDepth=steps[k].frames.length; }
+    var dv=$("#stDepth"); dv.textContent=d; dv.className="v"+(s.cls==="push"?" hot":""); $("#stMax").textContent=maxDepth;
+    if(s.bubble){ bubble.textContent=s.bubble; requestAnimationFrame(function(){bubble.classList.add("show");}); }
+    setBtns();
+  }
+  function setBtns(){
+    var end=steps.length>0&&at>=steps.length-1;
+    $("#bStep").disabled=end; $("#bBack").disabled=at<0; $("#bRun").textContent=timer?"Pause":(end?"Run again":"Run");
+    $("#bStep").disabled=end;
+    ["#inA","#inB","#inF","#inL"].forEach(function(id){$(id).disabled=at>=0;});
+  }
+  function rebuild(){ steps=build(inputs(),mut); }
+  function step(){ if(at<0) rebuild(); if(at<steps.length-1) show(at+1); else stop(); }
+  function back(){ if(at>=0) show(at-1); }
+  function reset(){ stop(); show(-1); }
+  function stop(){ if(timer){clearInterval(timer);timer=null;} setBtns(); }
+  function run(){ if(timer){stop();return;} if(at>=steps.length-1&&steps.length) show(-1); step(); timer=setInterval(function(){ if(at>=steps.length-1) stop(); else step(); }, reduce?400:1400); setBtns(); }
+
+  $("#bStep").addEventListener("click",function(){stop();step();});
+  $("#bBack").addEventListener("click",function(){stop();back();});
+  $("#bReset").addEventListener("click",reset);
+  $("#bRun").addEventListener("click",run);
+  $("#bMut").addEventListener("click",function(){ mut=!mut; this.classList.toggle("on",mut);
+    this.textContent=mut?"Experiment ON: num1 = 100 inside addNumbers":"Experiment: change num1 inside addNumbers"; reset(); });
+  ["#inA","#inB","#inF","#inL"].forEach(function(id){$(id).addEventListener("input",function(){ if(at<0) renderCode(0); });});
+  document.addEventListener("keydown",function(e){ if(e.code==="Space"&&!/INPUT/.test(e.target.tagName)){e.preventDefault();stop();step();} });
+
+  /* ---------- ambient canvas ---------- */
+  var cv=$("#amb"),ctx=cv.getContext&&cv.getContext("2d"),parts=[];
+  function sizeC(){if(!ctx)return;cv.width=innerWidth;cv.height=innerHeight;}
+  function initParts(){parts=[];for(var i=0;i<46;i++)parts.push({x:Math.random(),y:Math.random(),
+    r:Math.random()*1.6+.3,s:Math.random()*.02+.004,o:Math.random()*.4+.1});}
+  function drawC(){if(!ctx)return;ctx.clearRect(0,0,cv.width,cv.height);
+    parts.forEach(function(p){p.y-=p.s/60;if(p.y<-.02)p.y=1.02;
+      ctx.beginPath();ctx.arc(p.x*cv.width,p.y*cv.height,p.r,0,7);
+      ctx.fillStyle="rgba(140,170,255,"+p.o+")";ctx.fill();});
+    requestAnimationFrame(drawC);}
+  if(ctx&&!reduce){sizeC();initParts();drawC();addEventListener("resize",sizeC);}
+
+  show(-1);
+})();
+</script>
+<script src="../manifest.js"></script>
+<script src="../../assets/rail.js"></script>
+<script>Rail.render(document.getElementById("rail"),{kind:"visuals",current:"21-method-call-stack"});</script>
+</body>
+</html>
