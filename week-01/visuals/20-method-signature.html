@@ -212,6 +212,7 @@
 
   /* ---------- the walk, built from the preset ---------- */
   function ord(j){ return ["first","second","third"][j]; }
+  function an(t){ return /^[aeiou]/i.test(t.replace(/<[^>]+>/g,""))?"an "+t:"a "+t; }
   function build(G){
     var St=[], n=P.params.length, types=P.params.map(function(p){return p.t;}).join(", ");
     var isVoid=P.ret==="void";
@@ -225,11 +226,11 @@
     var pl={po:"lit",pc:"lit"},pn=[];
     P.params.forEach(function(p,j){ pl["p"+j]="lit"; pn.push({ids:["p"+j],t:"param "+(j+1)}); });
     St.push({focus:[G.hdrLn],lit:pl,notes:pn,back:true,pass:true,
-      msg:'The <b class="a">parameter list</b> in the parentheses: '+(n===1?'one parameter':n+' parameters')+', each a type and a name, so every call must pass <b class="a">'+types+'</b>'+(n>1?', in that order':'')+'.'});
+      msg:'The <b class="a">parameter list</b> in the parentheses: '+(n===1?'one parameter, a type and a name,':['','','two','three'][n]+' parameters, each a type and a name,')+' so every call must pass <b class="a">'+types+'</b>'+(n>1?', in that order':'')+'.'});
     var cl={cname:"lit",hname:"lit"},cn=[];
     P.params.forEach(function(p,j){ cl["a"+j]="lit"; cn.push({ids:["a"+j],t:"arg "+(j+1)}); });
     St.push({focus:[G.callLn,G.hdrLn],lit:cl,notes:cn,links:[{a:"cname",b:"hname",c:"pl"}],back:true,pass:true,
-      msg:'Now <code>main</code> calls it: the name matches the header, and the values in the parentheses are the <b class="a">arguments</b>, one per parameter.'});
+      msg:'Now <code>main</code> calls it: the name matches the header, and the '+(n===1?'value in the parentheses is the <b class="a">argument</b> for the one parameter.':'values in the parentheses are the <b class="a">arguments</b>, one per parameter.')});
     P.params.forEach(function(p,j){
       var lt={},nt=[],lk=[],k;
       for(k=0;k<=j;k++){
@@ -244,7 +245,7 @@
       else if(j===0) extra=' (the names differ, and that is fine)';
       if(j===1&&p.t==="String") extra=' (order matters: swapped, the name would come out "Lopez Maya")';
       St.push({focus:[G.callLn,G.hdrLn],lit:lt,notes:nt,links:lk,cls:"ok",back:true,pass:true,
-        msg:'Argument '+(j+1)+', <code>'+p.arg+'</code>, is a <b class="g">'+p.t+'</b>; the '+ord(j)+' parameter, <code>'+p.n+'</code>, wants a <b class="g">'+p.t+'</b>: it matches, so '+p.n+' gets '+p.v+extra+'.'});
+        msg:'Argument '+(j+1)+', <code>'+p.arg+'</code>, is '+an('<b class="g">'+p.t+'</b>')+'; the '+ord(j)+' parameter, <code>'+p.n+'</code>, wants '+an('<b class="g">'+p.t+'</b>')+': it matches, so '+p.n+' gets '+p.v+extra+'.'});
     });
     if(isVoid){
       St.push({focus:[G.callLn,G.hdrLn],lit:{ret:"gold",cname:"gold",cend:"gold"},notes:[{ids:["ret"],t:"nothing comes back",c:"gold"},{ids:["cend"],t:"no variable to fill",c:"gold",right:true}],
@@ -254,7 +255,7 @@
       St.push({focus:[G.retLn,G.hdrLn,G.callLn],lit:{rkw:"gold",rval:"gold",ret:"gold",vtype:"gold",vname:"gold"},
         notes:[{ids:["ret"],t:"promised "+P.ret,c:"gold"}],flow:{from:"rval",to:"vname",t:P.retVal},
         cls:"gold",back:true,pass:true,
-        msg:'<code>return '+P.retVar+';</code> hands back <b class="y">'+P.retVal+'</b>, a '+P.ret+' as the header promised, and it lands in <code>'+P.ret+' '+P.store+'</code>: the variable must be able to hold the return type.'});
+        msg:'<code>return '+P.retVar+';</code> hands back <b class="y">'+P.retVal+'</b>, '+an(P.ret)+' as the header promised, and it lands in <code>'+P.ret+' '+P.store+'</code>: the variable must be able to hold the return type.'});
     }
     return St;
   }
