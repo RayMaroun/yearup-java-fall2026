@@ -1,0 +1,319 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Pick a Learner | Visual Hub Tools</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Sora:wght@500;700&family=Inter:wght@400;500&family=JetBrains+Mono:wght@400;500&display=swap">
+<style>
+  :root{
+    --bg:#080c17; --bg2:#0c1428; --surface:rgba(255,255,255,.045); --line:rgba(255,255,255,.09);
+    --ink:#eef2fb; --muted:#8496b6; --accent:#6ea0ff; --accent2:#8b7bff; --good:#46d98a; --warn:#ff6a6a;
+    --gold:#ffc862; --disp:'Sora',system-ui,sans-serif; --body:'Inter',system-ui,sans-serif;
+    --mono:'JetBrains Mono',ui-monospace,monospace;
+  }
+  *{box-sizing:border-box}
+  body{margin:0;min-height:100vh;color:var(--ink);font-family:var(--body);
+    background:radial-gradient(1200px 700px at 70% -10%,#141d38 0%,transparent 55%),
+               radial-gradient(900px 600px at 10% 110%,#161233 0%,transparent 50%),#080c17;
+    overflow-x:hidden}
+  #amb{position:fixed;inset:0;z-index:0;pointer-events:none;opacity:.6}
+  .back{position:relative;z-index:2;display:block;max-width:1120px;margin:0 auto;padding:26px 24px 0;
+    width:100%;font-family:var(--mono);font-size:.8rem;letter-spacing:.04em;color:var(--muted);
+    text-decoration:none;transition:color .15s}
+  .back:hover{color:var(--accent)}
+  .wrap{position:relative;z-index:1;max-width:1120px;margin:0 auto;padding:22px 24px 70px}
+  .tag{font-family:var(--mono);font-size:.72rem;letter-spacing:.22em;text-transform:uppercase;color:var(--accent);margin:0 0 14px}
+  h1{font-family:var(--disp);font-weight:700;font-size:clamp(2.3rem,6vw,3.6rem);line-height:1;margin:0 0 12px;
+    letter-spacing:-.03em;background:linear-gradient(180deg,#fff,#b9c6e6);-webkit-background-clip:text;
+    background-clip:text;color:transparent}
+  .lede{color:var(--muted);max-width:64ch;font-size:1.05rem;margin:0 0 26px;line-height:1.5}
+  .lede b{color:var(--ink)}
+  .stage{position:relative;background:linear-gradient(180deg,rgba(255,255,255,.03),rgba(255,255,255,.01));
+    border:1px solid var(--line);border-radius:24px;padding:8px;
+    box-shadow:0 1px 0 rgba(255,255,255,.06) inset,0 30px 80px -30px rgba(0,0,0,.8)}
+  .grid{display:grid;grid-template-columns:300px 1fr;gap:8px}
+  @media (max-width:860px){.grid{grid-template-columns:1fr}}
+  .panelL,.panelR{border-radius:18px;padding:22px}
+  .panelL{background:linear-gradient(180deg,rgba(110,160,255,.06),rgba(139,123,255,.03));border:1px solid var(--line)}
+  .panelR{background:rgba(6,10,20,.5);border:1px solid var(--line);position:relative;overflow:hidden;min-height:620px;
+    display:flex;flex-direction:column;align-items:center;justify-content:center;gap:18px}
+  body.solo .grid{grid-template-columns:1fr}
+  body.solo .panelL{display:none}
+  .lab{font-family:var(--mono);font-size:.7rem;letter-spacing:.12em;text-transform:uppercase;color:var(--muted);margin:0 0 10px}
+  textarea{width:100%;height:150px;font-family:var(--mono);font-size:.78rem;line-height:1.5;color:var(--ink);background:rgba(0,0,0,.32);
+    border:1px solid var(--line);border-radius:12px;padding:10px 12px;resize:vertical}
+  textarea:focus{outline:none;border-color:var(--accent)}
+  .note{font-size:.76rem;color:var(--muted);line-height:1.45;margin:8px 0 14px}
+  .note b{color:var(--gold)}
+  .btn{font-family:var(--body);font-weight:500;font-size:.84rem;padding:9px 14px;border-radius:11px;cursor:pointer;
+    border:1px solid var(--line);background:var(--surface);color:var(--ink);transition:.15s}
+  .btn:hover{border-color:var(--accent);color:var(--accent)}
+  .btn.primary{border-color:rgba(110,160,255,.5);background:rgba(110,160,255,.12)}
+  .btn.warn:hover{border-color:var(--warn);color:var(--warn)}
+  .btn:disabled{opacity:.35;cursor:not-allowed}
+  .btn:focus-visible{outline:2px solid var(--accent);outline-offset:2px}
+  .row{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:14px}
+  .stats{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin:0 0 14px}
+  .stat{background:rgba(255,255,255,.03);border:1px solid var(--line);border-radius:12px;padding:11px 13px}
+  .stat .k{font-family:var(--mono);font-size:.62rem;letter-spacing:.1em;text-transform:uppercase;color:var(--muted)}
+  .stat .v{font-family:var(--disp);font-weight:700;font-size:1.45rem;font-variant-numeric:tabular-nums;margin-top:2px}
+  .opt{display:flex;align-items:center;gap:10px;font-size:.84rem;margin:6px 0;cursor:pointer;color:var(--ink)}
+  .opt input{accent-color:var(--accent);width:16px;height:16px}
+  .picked{margin-top:14px}
+  .picked ol{margin:0;padding-left:20px;font-family:var(--mono);font-size:.76rem;line-height:1.7;color:#bcd0ff;max-height:150px;overflow:auto}
+  .picked li.last{color:var(--gold)}
+  .focus{position:absolute;right:16px;top:16px;z-index:3;font-family:var(--mono);font-size:.68rem;letter-spacing:.1em;text-transform:uppercase;padding:6px 12px;
+    border-radius:999px;border:1px solid var(--line);background:rgba(0,0,0,.35);color:var(--muted);cursor:pointer;transition:.15s}
+  .focus:hover{border-color:var(--accent);color:var(--accent)}
+  body.solo .focus{border-color:rgba(255,200,98,.6);color:var(--gold);background:rgba(255,200,98,.1)}
+
+  /* the wheel */
+  .wheelwrap{position:relative;width:min(560px,86vw);aspect-ratio:1;flex-shrink:0}
+  body.solo .wheelwrap{width:min(640px,80vh)}
+  canvas.wheel{width:100%;height:100%;border-radius:50%;box-shadow:0 0 0 8px rgba(255,255,255,.04),0 0 80px -20px rgba(110,160,255,.5),0 40px 80px -30px rgba(0,0,0,.9);
+    background:#0a1020}
+  .pointer{position:absolute;left:50%;top:-6px;transform:translateX(-50%);width:0;height:0;border-left:16px solid transparent;border-right:16px solid transparent;
+    border-top:34px solid var(--gold);filter:drop-shadow(0 6px 10px rgba(0,0,0,.7));z-index:2;transition:transform .08s}
+  .pointer.tick{transform:translateX(-50%) rotate(-10deg)}
+  .hub{position:absolute;left:50%;top:50%;transform:translate(-50%,-50%);width:88px;height:88px;border-radius:50%;z-index:2;
+    background:radial-gradient(circle at 35% 35%,#1b2746,#0a1020);border:3px solid rgba(255,255,255,.12);box-shadow:0 10px 30px rgba(0,0,0,.7);
+    display:flex;align-items:center;justify-content:center;font-family:var(--disp);font-weight:700;font-size:.95rem;color:var(--ink);cursor:pointer;
+    letter-spacing:.02em;transition:.15s;user-select:none}
+  .hub:hover{border-color:var(--accent);color:var(--accent)}
+  .hub.busy{cursor:default;color:var(--muted)}
+  .big{display:flex;gap:10px;align-items:center}
+  .big .btn.primary{font-size:1rem;padding:12px 26px}
+  .hint{font-family:var(--mono);font-size:.7rem;color:var(--muted);margin:0;text-align:center}
+  .hint b{color:var(--accent)}
+
+  /* the winner card */
+  .card{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;z-index:5;pointer-events:none;opacity:0;transition:opacity .3s}
+  .card.show{opacity:1;pointer-events:auto}
+  .card .inner{text-align:center;padding:36px 48px;border-radius:24px;background:rgba(8,12,23,.92);border:1px solid rgba(255,200,98,.5);
+    box-shadow:0 0 0 1px rgba(255,255,255,.05),0 40px 100px -20px rgba(0,0,0,.9),0 0 120px -30px rgba(255,200,98,.6);
+    transform:scale(.8);transition:transform .45s cubic-bezier(.2,1.4,.4,1)}
+  .card.show .inner{transform:scale(1)}
+  .card .eyebrow{font-family:var(--mono);font-size:.7rem;letter-spacing:.22em;text-transform:uppercase;color:var(--gold);margin:0 0 10px}
+  .card .name{font-family:var(--disp);font-weight:700;font-size:clamp(2.4rem,7vw,4.6rem);line-height:1.05;letter-spacing:-.03em;margin:0 0 20px;
+    background:linear-gradient(180deg,#fff,#ffe6b0);-webkit-background-clip:text;background-clip:text;color:transparent}
+  .card .row{justify-content:center;margin:0}
+  #confetti{position:absolute;inset:0;z-index:4;pointer-events:none}
+  @media (prefers-reduced-motion:reduce){*{animation-duration:.01ms!important;transition-duration:.01ms!important}#amb{display:none}}
+</style>
+</head>
+<body>
+
+<a class="back" href="../index.html">&#8592; Visual Hub</a>
+
+<canvas id="amb"></canvas>
+<div class="wrap">
+  <p class="tag">Tools &middot; In class</p>
+  <h1>Pick a Learner</h1>
+  <p class="lede"><b>Spin the wheel and let it choose who answers next.</b> Names stay in this browser only; nothing is uploaded.</p>
+
+  <div class="stage">
+    <div class="grid">
+      <div class="panelL">
+        <p class="lab">Roster &middot; one name per line</p>
+        <textarea id="roster" placeholder="Paste names here, one per line"></textarea>
+        <p class="note">Saved in this browser when you press <b>Save</b>. First names are enough.</p>
+        <div class="row">
+          <button class="btn primary" id="bSave">Save roster</button>
+          <button class="btn" id="bSample">Sample names</button>
+        </div>
+        <div class="stats">
+          <div class="stat"><div class="k">on the wheel</div><div class="v" id="stLeft">0</div></div>
+          <div class="stat"><div class="k">picked today</div><div class="v" id="stPicked">0</div></div>
+        </div>
+        <label class="opt"><input type="checkbox" id="optOnce" checked> Each learner once until reset</label>
+        <div class="picked">
+          <p class="lab">Picked so far</p>
+          <ol id="pickedList"></ol>
+          <div class="row" style="margin-top:10px"><button class="btn warn" id="bReset">Reset picks</button></div>
+        </div>
+      </div>
+
+      <div class="panelR">
+        <button class="focus" id="bFocus" title="Wheel only, bigger">Focus</button>
+        <div class="wheelwrap">
+          <div class="pointer" id="pointer"></div>
+          <canvas class="wheel" id="wheel" width="1200" height="1200"></canvas>
+          <div class="hub" id="hub">SPIN</div>
+        </div>
+        <div class="big">
+          <button class="btn primary" id="bSpin">Spin the wheel</button>
+          <button class="btn" id="bPair">Pick two</button>
+        </div>
+        <p class="hint"><b>space</b> = spin &middot; click a name on the wheel to put it back</p>
+        <canvas id="confetti"></canvas>
+        <div class="card" id="card">
+          <div class="inner">
+            <p class="eyebrow" id="cardEyebrow">Your turn</p>
+            <p class="name" id="cardName">Ada</p>
+            <div class="row">
+              <button class="btn primary" id="bAgain">Spin again</button>
+              <button class="btn" id="bPutBack">Put back on the wheel</button>
+              <button class="btn" id="bClose">Close</button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script>
+(function(){
+  "use strict";
+  var $=function(s){return document.querySelector(s);};
+  var reduce=matchMedia("(prefers-reduced-motion: reduce)").matches;
+  var SAMPLE=["Ada","Grace","Linus","Dennis","Margaret","Alan","Barbara","Ken","Radia","Tim","Guido","Anders"];
+  var COLORS=["#6ea0ff","#8b7bff","#46d98a","#ffc862","#ff8fb1","#5ad1e6","#c792ea","#ffa06e"];
+  var names=[], picked=[], angle=0, spinning=false, lastWinner=null, pairMode=false, pairFirst=null;
+
+  /* ---------- storage ---------- */
+  function load(){
+    try{ names=JSON.parse(localStorage.getItem("hub-roster")||"[]"); picked=JSON.parse(localStorage.getItem("hub-picked")||"[]"); }catch(e){ names=[]; picked=[]; }
+    $("#roster").value=names.join("\n");
+  }
+  function save(){
+    try{ localStorage.setItem("hub-roster",JSON.stringify(names)); localStorage.setItem("hub-picked",JSON.stringify(picked)); }catch(e){}
+  }
+  function parseRoster(){
+    names=$("#roster").value.split(/\r?\n/).map(function(n){return n.trim();}).filter(Boolean);
+    var seen={}; names=names.filter(function(n){ if(seen[n.toLowerCase()]) return false; seen[n.toLowerCase()]=true; return true; });
+    picked=picked.filter(function(p){return names.indexOf(p)>=0;});
+    save(); refresh();
+  }
+
+  /* ---------- wheel drawing ---------- */
+  var cv=$("#wheel"), ctx=cv.getContext("2d"), R=600;
+  function eligible(){ return $("#optOnce").checked ? names.filter(function(n){return picked.indexOf(n)<0;}) : names.slice(); }
+  function draw(){
+    var list=names.length?names:SAMPLE, n=list.length, seg=Math.PI*2/n;
+    ctx.clearRect(0,0,1200,1200);
+    ctx.save(); ctx.translate(R,R); ctx.rotate(angle);
+    for(var i=0;i<n;i++){
+      var a0=i*seg-Math.PI/2, a1=a0+seg, out=picked.indexOf(list[i])>=0&&$("#optOnce").checked&&names.length;
+      ctx.beginPath(); ctx.moveTo(0,0); ctx.arc(0,0,R-14,a0,a1); ctx.closePath();
+      ctx.fillStyle=out?"rgba(255,255,255,.04)":COLORS[i%COLORS.length];
+      if(!out){ ctx.globalAlpha=.85; } ctx.fill(); ctx.globalAlpha=1;
+      ctx.strokeStyle="rgba(8,12,23,.9)"; ctx.lineWidth=4; ctx.stroke();
+      ctx.save(); ctx.rotate(a0+seg/2); ctx.textAlign="right"; ctx.textBaseline="middle";
+      var fs=n>24?30:n>16?36:n>10?44:52; ctx.font="700 "+fs+"px Sora, system-ui, sans-serif";
+      ctx.fillStyle=out?"rgba(132,150,182,.45)":"#0a1020";
+      var label=list[i].length>14?list[i].slice(0,13)+"…":list[i];
+      ctx.fillText(label,R-40,0); ctx.restore();
+    }
+    ctx.restore();
+    ctx.beginPath(); ctx.arc(R,R,R-12,0,Math.PI*2); ctx.strokeStyle="rgba(255,255,255,.12)"; ctx.lineWidth=6; ctx.stroke();
+  }
+  function indexAtPointer(){
+    var list=names.length?names:SAMPLE, n=list.length, seg=Math.PI*2/n;
+    var a=((-angle)%(Math.PI*2)+Math.PI*2)%(Math.PI*2);
+    return Math.floor(a/seg)%n;
+  }
+
+  /* ---------- spinning ---------- */
+  function spin(){
+    if(spinning) return;
+    var list=names.length?names:SAMPLE, pool=names.length?eligible():SAMPLE.slice();
+    if(!pool.length){ status("Everyone has been picked. Reset picks to start again."); return; }
+    spinning=true; $("#hub").classList.add("busy"); $("#hub").textContent="..."; $("#bSpin").disabled=true; $("#bPair").disabled=true;
+    var target=pool[Math.floor(Math.random()*pool.length)], idx=list.indexOf(target), n=list.length, seg=Math.PI*2/n;
+    var jitter=(Math.random()-.5)*seg*.7;
+    var finalA=-(idx*seg+seg/2+jitter);
+    var turns=reduce?1:5+Math.floor(Math.random()*3);
+    var start=angle, startNorm=((start%(Math.PI*2))+Math.PI*2)%(Math.PI*2);
+    var delta=(finalA-startNorm); while(delta>0) delta-=Math.PI*2; delta-=turns*Math.PI*2;
+    var dur=reduce?600:4200+Math.random()*800, t0=performance.now(), lastIdx=indexAtPointer();
+    function ease(t){ return 1-Math.pow(1-t,3); }
+    function frame(now){
+      var t=Math.min(1,(now-t0)/dur); angle=start+delta*ease(t); draw();
+      var ci=indexAtPointer(); if(ci!==lastIdx){ lastIdx=ci; var p=$("#pointer"); p.classList.add("tick"); setTimeout(function(){p.classList.remove("tick");},60); }
+      if(t<1) requestAnimationFrame(frame); else land(target);
+    }
+    requestAnimationFrame(frame);
+  }
+  function land(name){
+    spinning=false; $("#hub").classList.remove("busy"); $("#hub").textContent="SPIN"; $("#bSpin").disabled=false; $("#bPair").disabled=false;
+    lastWinner=name;
+    if(names.length&&picked.indexOf(name)<0) picked.push(name);
+    save(); refresh(); confetti();
+    if(pairMode&&!pairFirst){ pairFirst=name; $("#cardEyebrow").textContent="First of two"; $("#cardName").textContent=name; $("#card").classList.add("show");
+      setTimeout(function(){ $("#card").classList.remove("show"); setTimeout(spin,300); },1400); return; }
+    if(pairMode&&pairFirst){ $("#cardEyebrow").textContent="Pair up"; $("#cardName").textContent=pairFirst+" & "+name; pairMode=false; pairFirst=null; }
+    else { $("#cardEyebrow").textContent="Your turn"; $("#cardName").textContent=name; }
+    $("#card").classList.add("show");
+  }
+  function status(msg){ $("#cardEyebrow").textContent="Wheel"; $("#cardName").textContent=msg; $("#card").classList.add("show"); }
+
+  /* ---------- confetti ---------- */
+  var cc=$("#confetti"), cctx=cc.getContext("2d"), parts=[], confTimer=null;
+  function sizeConf(){ var r=cc.parentNode.getBoundingClientRect(); cc.width=r.width; cc.height=r.height; }
+  function confetti(){
+    if(reduce) return; sizeConf(); parts=[];
+    for(var i=0;i<160;i++) parts.push({x:cc.width/2,y:cc.height/2,vx:(Math.random()-.5)*16,vy:-Math.random()*14-4,g:.35,r:Math.random()*6+3,
+      c:COLORS[i%COLORS.length],rot:Math.random()*6,vr:(Math.random()-.5)*.3,life:1});
+    if(confTimer) cancelAnimationFrame(confTimer);
+    (function tick(){ cctx.clearRect(0,0,cc.width,cc.height); var alive=0;
+      parts.forEach(function(p){ p.x+=p.vx; p.y+=p.vy; p.vy+=p.g; p.vx*=.99; p.rot+=p.vr; p.life-=.008; if(p.life<=0||p.y>cc.height+20) return; alive++;
+        cctx.save(); cctx.translate(p.x,p.y); cctx.rotate(p.rot); cctx.globalAlpha=Math.max(0,p.life); cctx.fillStyle=p.c; cctx.fillRect(-p.r/2,-p.r/2,p.r,p.r*.6); cctx.restore(); });
+      if(alive) confTimer=requestAnimationFrame(tick); else cctx.clearRect(0,0,cc.width,cc.height); })();
+  }
+
+  /* ---------- ui ---------- */
+  function refresh(){
+    var left=names.length?eligible().length:0;
+    $("#stLeft").textContent=names.length?left:"0"; $("#stPicked").textContent=picked.length;
+    $("#pickedList").innerHTML=picked.map(function(p,i){return '<li'+(i===picked.length-1?' class="last"':'')+'>'+esc(p)+'</li>';}).join("");
+    draw();
+  }
+  function esc(t){ return String(t).replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/>/g,"&gt;"); }
+  function closeCard(){ $("#card").classList.remove("show"); }
+
+  $("#bSave").addEventListener("click",parseRoster);
+  $("#bSample").addEventListener("click",function(){ $("#roster").value=SAMPLE.join("\n"); parseRoster(); });
+  $("#bReset").addEventListener("click",function(){ picked=[]; save(); refresh(); closeCard(); });
+  $("#optOnce").addEventListener("change",refresh);
+  $("#bSpin").addEventListener("click",function(){ closeCard(); spin(); });
+  $("#hub").addEventListener("click",function(){ closeCard(); spin(); });
+  $("#bPair").addEventListener("click",function(){ closeCard(); if(eligible().length<2){ status("Need at least two names left."); return; } pairMode=true; pairFirst=null; spin(); });
+  $("#bAgain").addEventListener("click",function(){ closeCard(); spin(); });
+  $("#bPutBack").addEventListener("click",function(){ if(lastWinner){ picked=picked.filter(function(p){return p!==lastWinner;}); save(); refresh(); } closeCard(); });
+  $("#bClose").addEventListener("click",closeCard);
+  cv.addEventListener("click",function(e){
+    if(spinning||!names.length) return;
+    var r=cv.getBoundingClientRect(), x=(e.clientX-r.left)/r.width*1200-R, y=(e.clientY-r.top)/r.height*1200-R;
+    if(Math.sqrt(x*x+y*y)<60) return;
+    var a=Math.atan2(y,x)+Math.PI/2-angle; a=((a%(Math.PI*2))+Math.PI*2)%(Math.PI*2);
+    var i=Math.floor(a/(Math.PI*2/names.length)), n=names[i];
+    if(picked.indexOf(n)>=0){ picked=picked.filter(function(p){return p!==n;}); save(); refresh(); }
+  });
+  document.addEventListener("keydown",function(e){
+    if(/TEXTAREA|INPUT/.test(e.target.tagName)) return;
+    if(e.code==="Space"){ e.preventDefault(); closeCard(); spin(); }
+    else if(e.key==="Escape") closeCard();
+  });
+  function setSolo(on){ document.body.classList.toggle("solo",on); $("#bFocus").textContent=on?"Focus on":"Focus"; try{localStorage.setItem("hub-focus",on?"1":"0");}catch(e){} sizeConf(); }
+  $("#bFocus").addEventListener("click",function(){ setSolo(!document.body.classList.contains("solo")); this.blur(); });
+  try{ if(localStorage.getItem("hub-focus")==="1") setSolo(true); }catch(e){}
+  addEventListener("resize",sizeConf);
+
+  /* ---------- ambient canvas ---------- */
+  var av=$("#amb"),actx=av.getContext&&av.getContext("2d"),ap=[];
+  function sizeA(){if(!actx)return;av.width=innerWidth;av.height=innerHeight;}
+  function initA(){ap=[];for(var i=0;i<46;i++)ap.push({x:Math.random(),y:Math.random(),r:Math.random()*1.6+.3,s:Math.random()*.02+.004,o:Math.random()*.4+.1});}
+  function drawA(){if(!actx)return;actx.clearRect(0,0,av.width,av.height);
+    ap.forEach(function(p){p.y-=p.s/60;if(p.y<-.02)p.y=1.02;actx.beginPath();actx.arc(p.x*av.width,p.y*av.height,p.r,0,7);actx.fillStyle="rgba(140,170,255,"+p.o+")";actx.fill();});
+    requestAnimationFrame(drawA);}
+  if(actx&&!reduce){sizeA();initA();drawA();addEventListener("resize",sizeA);}
+
+  load(); refresh(); sizeConf();
+  if(document.fonts&&document.fonts.ready) document.fonts.ready.then(draw);
+})();
+</script>
+</body>
+</html>
