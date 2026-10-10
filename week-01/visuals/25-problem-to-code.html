@@ -30,61 +30,55 @@
     background-clip:text;color:transparent}
   .lede{color:var(--muted);max-width:64ch;font-size:1.05rem;margin:0 0 30px;line-height:1.5}
   .lede b{color:var(--ink)}
-  .lede code,.take code,.status code{font-family:var(--mono);font-size:.92em;color:#bcd0ff}
+  .lede code,.take code,.caption code{font-family:var(--mono);font-size:.92em;color:#bcd0ff}
+
+  /* ---------- stage: picture first, one toolbar, support below ---------- */
   .stage{position:relative;background:linear-gradient(180deg,rgba(255,255,255,.03),rgba(255,255,255,.01));
-    border:1px solid var(--line);border-radius:24px;padding:8px;
+    border:1px solid var(--line);border-radius:24px;padding:18px 18px 14px;
     box-shadow:0 1px 0 rgba(255,255,255,.06) inset,0 30px 80px -30px rgba(0,0,0,.8)}
-  .grid{display:grid;grid-template-columns:340px 1fr;gap:8px}
-  @media (max-width:860px){.grid{grid-template-columns:1fr}}
-  .panelL,.panelR{border-radius:18px;padding:22px}
-  .panelL{background:linear-gradient(180deg,rgba(110,160,255,.06),rgba(139,123,255,.03));border:1px solid var(--line)}
-  .panelR{background:rgba(6,10,20,.5);border:1px solid var(--line);position:relative;overflow:hidden}
-  .lab{font-family:var(--mono);font-size:.7rem;letter-spacing:.12em;text-transform:uppercase;color:var(--muted);margin:0 0 12px}
-  /* the problem statement */
-  .prob{font-size:.98rem;line-height:1.85;color:#c9d4ea;background:rgba(0,0,0,.25);border:1px solid var(--line);
-    border-radius:14px;padding:14px 16px;margin:0 0 10px}
-  .ph{border-radius:5px;padding:1px 3px;transition:background .35s,color .35s,box-shadow .35s}
-  .ph.on.in{background:rgba(110,160,255,.18);color:#d6e3ff;box-shadow:inset 0 -2px 0 var(--accent)}
-  .ph.on.out{background:rgba(70,217,138,.16);color:#c9f5dc;box-shadow:inset 0 -2px 0 var(--good)}
-  .ph.on.dec{background:rgba(255,200,98,.16);color:#ffe6b0;box-shadow:inset 0 -2px 0 var(--gold)}
-  .ph.on.fix{background:rgba(139,123,255,.18);color:#dcd5ff;box-shadow:inset 0 -2px 0 var(--accent2)}
-  .ph.on.vb{color:#fff;font-weight:500;text-decoration:underline;text-decoration-thickness:2px;text-underline-offset:4px;text-decoration-color:var(--ink)}
-  .ph.new{animation:glow 1s ease-out}
-  @keyframes glow{0%{box-shadow:0 0 0 3px rgba(255,255,255,.35)}100%{}}
-  .legend{display:flex;flex-wrap:wrap;gap:6px 12px;margin:0 0 16px;font-family:var(--mono);font-size:.64rem;color:rgba(132,150,182,.45)}
-  .legend span{display:inline-flex;align-items:center;gap:5px;transition:color .3s}
-  .legend i{width:9px;height:9px;border-radius:3px;background:rgba(132,150,182,.25);transition:background .3s}
+  .topbar{display:flex;align-items:center;gap:10px;margin:0 0 14px;flex-wrap:wrap}
+  .topbar .lab{margin:0 4px 0 0}
+  .lab{font-family:var(--mono);font-size:.7rem;letter-spacing:.12em;text-transform:uppercase;color:var(--muted);margin:0 0 10px}
+  .btn:focus-visible,.focus:focus-visible{outline:2px solid var(--accent);outline-offset:2px}
+  .focus{margin-left:auto;font-family:var(--mono);font-size:.68rem;letter-spacing:.1em;text-transform:uppercase;padding:6px 12px;
+    border-radius:999px;border:1px solid var(--line);background:rgba(0,0,0,.25);color:var(--muted);cursor:pointer;transition:.15s}
+  .focus:hover{border-color:var(--accent);color:var(--accent)}
+  body.solo .focus{border-color:rgba(255,200,98,.6);color:var(--gold);background:rgba(255,200,98,.1)}
+  /* legend: the key to the highlights, in the topbar */
+  .legend{display:flex;flex-wrap:wrap;gap:6px 14px;font-family:var(--mono);font-size:.72rem;color:rgba(132,150,182,.45)}
+  .legend span{display:inline-flex;align-items:center;gap:6px;transition:color .3s}
+  .legend i{width:10px;height:10px;border-radius:3px;background:rgba(132,150,182,.25);transition:background .3s}
   .legend .on{color:var(--muted)}
   .legend .on.in i{background:var(--accent)} .legend .on.out i{background:var(--good)}
   .legend .on.dec i{background:var(--gold)} .legend .on.fix i{background:var(--accent2)}
   .legend .on.vb i{background:var(--ink);height:2px;border-radius:0}
-  .stepno{font-family:var(--mono);font-size:.64rem;letter-spacing:.14em;text-transform:uppercase;color:var(--muted);margin:0 0 8px}
-  .stepno b{color:var(--accent);font-weight:500}
-  .status{font-family:var(--mono);font-size:.82rem;line-height:1.55;color:var(--ink);min-height:128px;
-    padding:12px 14px;border-radius:12px;background:rgba(0,0,0,.25);border:1px solid var(--line);
-    border-left:3px solid var(--accent);transition:border-color .3s}
-  .status.out{border-left-color:var(--good)} .status.dec{border-left-color:var(--gold)} .status.calc{border-left-color:var(--accent2)}
-  .status b.g{color:var(--good)} .status b.a{color:var(--accent)} .status b.y{color:var(--gold)} .status b.v{color:#b3a8ff}
-  .actions{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-top:16px}
-  .btn{font-family:var(--body);font-weight:500;font-size:.84rem;padding:9px 12px;border-radius:11px;cursor:pointer;
-    border:1px solid var(--line);background:var(--surface);color:var(--ink);transition:.15s;text-align:center}
-  .btn:hover{border-color:var(--accent);color:var(--accent)}
-  .btn.primary{border-color:rgba(110,160,255,.5);background:rgba(110,160,255,.12);grid-column:1 / -1}
-  .btn.gold:hover{border-color:var(--gold);color:var(--gold)}
-  .btn:disabled{opacity:.35;cursor:not-allowed}
-  .btn:focus-visible{outline:2px solid var(--accent);outline-offset:2px}
-  .hint{font-family:var(--mono);font-size:.7rem;color:var(--muted);margin:14px 0 0;line-height:1.5}
-  /* right: data + plan, then Java */
-  .rgrid{display:grid;grid-template-columns:minmax(0,.8fr) minmax(0,1.2fr);gap:16px}
-  @media (max-width:1000px){.rgrid{grid-template-columns:1fr}}
-  .box{background:rgba(0,0,0,.22);border:1px dashed rgba(132,150,182,.3);border-radius:14px;padding:10px 12px;min-height:60px;margin-bottom:14px}
-  .empty{font-family:var(--mono);font-size:.7rem;color:rgba(132,150,182,.5)}
-  .row{display:flex;align-items:baseline;gap:8px;font-family:var(--mono);font-size:.74rem;line-height:1.5;padding:5px 8px;margin:3px 0;
+
+  /* hero picture: the problem on the left, Data + Plan on the right */
+  .pic{position:relative;min-height:390px;border:1px solid var(--line);border-radius:18px;background:rgba(6,10,20,.5);overflow:hidden;
+    display:grid;grid-template-columns:minmax(0,1.1fr) minmax(0,1fr);gap:26px;padding:26px 28px}
+  body.solo .pic{min-height:480px;padding:34px 36px}
+  @media (max-width:860px){.pic{grid-template-columns:1fr}}
+  .pic .lab{margin:0 0 12px}
+  .prob{font-size:1.32rem;line-height:1.95;color:#c9d4ea;margin:0}
+  body.solo .prob{font-size:1.5rem}
+  .ph{border-radius:6px;padding:2px 4px;transition:background .35s,color .35s,box-shadow .35s}
+  .ph.on.in{background:rgba(110,160,255,.18);color:#d6e3ff;box-shadow:inset 0 -2px 0 var(--accent)}
+  .ph.on.out{background:rgba(70,217,138,.16);color:#c9f5dc;box-shadow:inset 0 -2px 0 var(--good)}
+  .ph.on.dec{background:rgba(255,200,98,.16);color:#ffe6b0;box-shadow:inset 0 -2px 0 var(--gold)}
+  .ph.on.fix{background:rgba(139,123,255,.18);color:#dcd5ff;box-shadow:inset 0 -2px 0 var(--accent2)}
+  .ph.on.vb{color:#fff;font-weight:500;text-decoration:underline;text-decoration-thickness:2px;text-underline-offset:5px;text-decoration-color:var(--ink)}
+  .ph.new{animation:glow 1s ease-out}
+  @keyframes glow{0%{box-shadow:0 0 0 3px rgba(255,255,255,.35)}100%{}}
+  .box{background:rgba(0,0,0,.22);border:1px dashed rgba(132,150,182,.3);border-radius:14px;padding:10px 12px;min-height:64px;margin-bottom:16px}
+  .box:last-child{margin-bottom:0}
+  .empty{font-family:var(--mono);font-size:.78rem;color:rgba(132,150,182,.5)}
+  .row{display:flex;align-items:baseline;gap:10px;font-family:var(--mono);font-size:.9rem;line-height:1.5;padding:6px 10px;margin:3px 0;
     border-radius:9px;border:1px solid transparent;color:#c9d4ea;transition:background .3s,border-color .3s,opacity .3s}
+  body.solo .row{font-size:.98rem}
   .row.fresh{animation:pop .35s}
-  .row .kd{flex-shrink:0;font-size:.58rem;letter-spacing:.1em;text-transform:uppercase;padding:1px 6px;border-radius:999px;border:1px solid currentColor}
+  .row .kd{flex-shrink:0;font-size:.66rem;letter-spacing:.1em;text-transform:uppercase;padding:1px 7px;border-radius:999px;border:1px solid currentColor}
   .row.in .kd{color:var(--accent)} .row.out .kd{color:var(--good)} .row.dec .kd{color:var(--gold)} .row.fix .kd{color:#b3a8ff} .row.calc .kd{color:#b3a8ff}
-  .row .nn{flex-shrink:0;color:rgba(132,150,182,.6);width:14px}
+  .row .nn{flex-shrink:0;color:rgba(132,150,182,.6);width:16px}
   .row.act{background:rgba(110,160,255,.12);border-color:rgba(110,160,255,.45)}
   .row.act.dec{background:rgba(255,200,98,.1);border-color:rgba(255,200,98,.5)}
   .row.act.out{background:rgba(70,217,138,.1);border-color:rgba(70,217,138,.5)}
@@ -92,17 +86,47 @@
   .row.done{opacity:.55}
   .row .ok{margin-left:auto;color:var(--good);opacity:0;transition:opacity .3s}
   .row.done .ok{opacity:1}
-  .code{min-width:0;font-family:var(--mono);font-size:.72rem;line-height:1.7;background:rgba(0,0,0,.35);border:1px solid var(--line);
-    border-radius:14px;padding:10px 0;overflow-x:auto;min-height:120px}
-  .ln{display:flex;gap:10px;padding:0 12px;white-space:pre;color:#c9d4ea;transition:background .3s}
-  .ln .n{width:18px;text-align:right;color:rgba(132,150,182,.55);user-select:none;flex-shrink:0}
+
+  /* caption: the one sentence, right under the picture */
+  .caption{display:flex;gap:16px;align-items:flex-start;margin:14px 4px 0;min-height:56px}
+  .caption .n{flex-shrink:0;font-family:var(--disp);font-weight:700;font-size:1.35rem;color:var(--accent);font-variant-numeric:tabular-nums;
+    line-height:1.2;min-width:3.2rem}
+  .caption .n small{display:block;font-family:var(--mono);font-weight:400;font-size:.58rem;letter-spacing:.14em;text-transform:uppercase;color:var(--muted)}
+  .caption .t{font-size:1.02rem;line-height:1.55;color:var(--ink);padding-left:16px;border-left:3px solid var(--accent);transition:border-color .3s}
+  body.solo .caption .t{font-size:1.18rem}
+  .caption.out .t{border-left-color:var(--good)} .caption.dec .t{border-left-color:var(--gold)} .caption.calc .t{border-left-color:var(--accent2)}
+  .caption b.g{color:var(--good)} .caption b.a{color:var(--accent)} .caption b.y{color:var(--gold)} .caption b.v{color:#b3a8ff}
+
+  /* toolbar */
+  .toolbar{display:flex;align-items:center;gap:10px;margin:16px 0 0;padding-top:14px;border-top:1px solid var(--line)}
+  .btn{font-family:var(--body);font-weight:500;font-size:.86rem;padding:9px 16px;border-radius:11px;cursor:pointer;
+    border:1px solid var(--line);background:var(--surface);color:var(--ink);transition:.15s}
+  .btn:hover{border-color:var(--accent);color:var(--accent)}
+  .btn.primary{border-color:rgba(110,160,255,.5);background:rgba(110,160,255,.12);padding:9px 22px}
+  .btn:disabled{opacity:.35;cursor:not-allowed}
+  .btn.ghost{background:transparent;color:var(--muted);margin-left:auto}
+  .dots{display:flex;gap:5px;align-items:center;margin:0 6px}
+  .dots i{display:block;width:8px;height:8px;border-radius:50%;background:rgba(255,255,255,.12);transition:.2s}
+  .dots i.done{background:rgba(110,160,255,.45)}
+  .dots i.now{background:var(--accent);transform:scale(1.35);box-shadow:0 0 10px rgba(110,160,255,.7)}
+  .hint{font-family:var(--mono);font-size:.68rem;color:var(--muted);margin:10px 4px 0;line-height:1.5}
+
+  /* support: the Java grows on the left, the console on the right. Hidden in focus */
+  .support{display:grid;grid-template-columns:minmax(0,1.5fr) minmax(0,1fr);gap:14px;margin-top:18px}
+  @media (max-width:860px){.support{grid-template-columns:1fr}}
+  body.solo .support,body.solo .take,body.solo .hint{display:none}
+  .code{min-width:0;font-family:var(--mono);font-size:.76rem;line-height:1.75;background:rgba(0,0,0,.35);border:1px solid var(--line);
+    border-radius:14px;padding:12px 0;overflow-x:auto;min-height:120px}
+  .ln{display:flex;gap:12px;padding:0 14px;white-space:pre;color:#c9d4ea;transition:background .3s}
+  .ln .n{width:20px;text-align:right;color:rgba(132,150,182,.55);user-select:none;flex-shrink:0}
   .ln.fresh{animation:pop .35s}
   .ln.new.in{background:rgba(110,160,255,.14);box-shadow:inset 3px 0 0 var(--accent)}
   .ln.new.dec{background:rgba(255,200,98,.12);box-shadow:inset 3px 0 0 var(--gold)}
   .ln.new.calc{background:rgba(139,123,255,.14);box-shadow:inset 3px 0 0 var(--accent2)}
   .ln.new.out{background:rgba(70,217,138,.12);box-shadow:inset 3px 0 0 var(--good)}
   .kw{color:#c792ea} .ty{color:#82aaff} .st{color:#c3e88d} .nm{color:#f78c6c} .fn{color:#ffcb6b}
-  .console{margin-top:14px;font-family:var(--mono);font-size:.76rem;line-height:1.6;background:#05070e;border:1px solid var(--line);
+  .side{display:flex;flex-direction:column;gap:12px}
+  .console{font-family:var(--mono);font-size:.76rem;line-height:1.6;background:#05070e;border:1px solid var(--line);
     border-radius:12px;padding:10px 14px;min-height:92px;color:#9fe3b6}
   .console .cl{font-size:.6rem;letter-spacing:.14em;text-transform:uppercase;color:rgba(132,150,182,.6);margin-bottom:4px}
   .console .out{animation:pop .3s}
@@ -124,51 +148,56 @@
 <div class="wrap">
   <p class="tag">Workbook 1c &middot; Module 4 &middot; From a problem statement to a program</p>
   <h1>From Problem to Code</h1>
-  <p class="lede">A problem statement is a program written in English.
-  <b>Mark the data and the steps first; then every line of the plan becomes a few lines of Java.</b>
-  Step through one small problem from first read to first run.</p>
+  <p class="lede"><b>Mark the data and the steps first; then every line of the plan becomes a few lines of Java.</b></p>
 
   <div class="stage">
-    <div class="grid">
-      <div class="panelL">
-        <p class="lab">The problem</p>
+    <div class="topbar">
+      <span class="lab">The problem</span>
+      <div class="legend" id="legend">
+        <span class="in" data-s="1"><i></i>input</span><span class="out" data-s="2"><i></i>output</span>
+        <span class="dec" data-s="3"><i></i>decision</span><span class="fix" data-s="3"><i></i>fixed value</span>
+        <span class="vb" data-s="4"><i></i>verb = step</span>
+      </div>
+      <button class="focus" id="bFocus" title="Hide the code and notes, enlarge the picture">Focus</button>
+    </div>
+
+    <div class="pic" id="pic">
+      <div>
         <p class="prob" id="prob">A print shop <span class="ph vb" data-s="4">charges</span>
           <span class="ph fix" data-s="3">$0.10 per page</span> <span class="ph dec" data-s="3">for black and white</span>
           and <span class="ph fix" data-s="3">$0.25 per page</span> <span class="ph dec" data-s="3">for color</span>.
           <span class="ph vb" data-s="4">Ask</span> the customer <span class="ph in" data-s="1">whether they want color</span>
           and <span class="ph in" data-s="1">how many pages</span> they need.
           <span class="ph vb" data-s="4">Print</span> <span class="ph out" data-s="2">the total cost, with two decimals</span>.</p>
-        <div class="legend" id="legend">
-          <span class="in" data-s="1"><i></i>input</span><span class="out" data-s="2"><i></i>output</span>
-          <span class="dec" data-s="3"><i></i>decision</span><span class="fix" data-s="3"><i></i>fixed value</span>
-          <span class="vb" data-s="4"><i></i>verb = step</span>
-        </div>
-
-        <p class="stepno" id="stepno">Step <b>0</b> of 9</p>
-        <div class="status" id="status">Press <b class="a">Next</b> to start.</div>
-
-        <div class="actions">
-          <button class="btn primary" id="bNext">Next &rarr;</button>
-          <button class="btn gold" id="bBack">&larr; Back</button>
-          <button class="btn" id="bReset">Reset</button>
-        </div>
-        <p class="hint">space = next &middot; the print shop is an invented problem</p>
       </div>
+      <div>
+        <p class="lab">Data (the nouns)</p>
+        <div class="box" id="data"></div>
+        <p class="lab">Plan (the verbs, in order)</p>
+        <div class="box" id="plan"></div>
+      </div>
+    </div>
 
-      <div class="panelR">
-        <div class="rgrid">
-          <div>
-            <p class="lab">Data (the nouns)</p>
-            <div class="box" id="data"></div>
-            <p class="lab">Plan (the verbs, in order)</p>
-            <div class="box" id="plan"></div>
-          </div>
-          <div>
-            <p class="lab">Main.java</p>
-            <div class="code" id="code"></div>
-            <div class="console"><div class="cl">console</div><div id="console"></div></div>
-          </div>
-        </div>
+    <div class="caption" id="caption">
+      <div class="n" id="stepno"><small>step</small>0 / 9</div>
+      <div class="t" id="status">Press <b class="a">Next</b> to start.</div>
+    </div>
+
+    <div class="toolbar">
+      <button class="btn" id="bBack">&larr; Back</button>
+      <div class="dots" id="dots"></div>
+      <button class="btn primary" id="bNext">Next &rarr;</button>
+      <button class="btn ghost" id="bReset">Reset</button>
+    </div>
+    <p class="hint">space = next &middot; the print shop is an invented problem</p>
+
+    <div class="support">
+      <div>
+        <p class="lab">Main.java</p>
+        <div class="code" id="code"></div>
+      </div>
+      <div class="side">
+        <div class="console"><div class="cl">console</div><div id="console"></div></div>
       </div>
     </div>
   </div>
@@ -294,17 +323,25 @@
 
   function show(i){
     var prev=at; at=i;
-    $("#stepno").innerHTML="Step <b>"+(i+1)+"</b> of "+STEPS.length;
+    $("#stepno").innerHTML="<small>step</small>"+(i+1)+" / "+STEPS.length;
     if(i<0){
-      statusEl.className="status";
-      statusEl.innerHTML='Press <b class="a">Next</b> to start. The problem stays on the left; the plan and the Java build on the right.';
+      $("#caption").className="caption";
+      statusEl.innerHTML='Press <b class="a">Next</b> to start. The problem stays on the left; the plan builds on the right, the Java below.';
     } else {
-      statusEl.className="status "+STEPS[i].c;
+      $("#caption").className="caption "+STEPS[i].c;
       statusEl.innerHTML=STEPS[i].msg;
     }
     render(i,prev);
-    $("#bNext").disabled=at>=STEPS.length-1; $("#bBack").disabled=at<0;
+    setBtns();
   }
+  function setBtns(){ $("#bNext").disabled=at>=STEPS.length-1; $("#bBack").disabled=at<0;
+    var d=""; for(var k=0;k<STEPS.length;k++) d+='<i class="'+(k===at?"now":k<at?"done":"")+'"></i>'; $("#dots").innerHTML=d; }
+  /* focus: picture and caption only. Remembered per browser. */
+  function setFocus(on){ document.body.classList.toggle("solo",on); $("#bFocus").textContent=on?"Focus on":"Focus";
+    try{localStorage.setItem("hub-focus",on?"1":"0");}catch(e){} render(at,at); }
+  $("#bFocus").addEventListener("click",function(){ setFocus(!document.body.classList.contains("solo")); this.blur(); });
+  try{ if(localStorage.getItem("hub-focus")==="1") document.body.classList.add("solo"); }catch(e){}
+  if(document.body.classList.contains("solo")) $("#bFocus").textContent="Focus on";
   function next(){ if(at<STEPS.length-1) show(at+1); }
   function back(){ if(at>=0) show(at-1); }
   function reset(){ at=-1; show(-1); }

@@ -28,109 +28,133 @@
   h1{font-family:var(--disp);font-weight:700;font-size:clamp(2.3rem,6vw,3.6rem);line-height:1;margin:0 0 12px;
     letter-spacing:-.03em;background:linear-gradient(180deg,#fff,#b9c6e6);-webkit-background-clip:text;
     background-clip:text;color:transparent}
-  .lede{color:var(--muted);max-width:64ch;font-size:1.05rem;margin:0 0 30px;line-height:1.5}
+  .lede{color:var(--muted);max-width:64ch;font-size:1.05rem;margin:0 0 26px;line-height:1.5}
   .lede b{color:var(--ink)}
-  .lede code,.take code,.status code{font-family:var(--mono);font-size:.92em;color:#bcd0ff}
+  .lede code,.take code,.caption code{font-family:var(--mono);font-size:.92em;color:#bcd0ff}
+
+  /* ---------- stage: picture first, one toolbar, support below ---------- */
   .stage{position:relative;background:linear-gradient(180deg,rgba(255,255,255,.03),rgba(255,255,255,.01));
-    border:1px solid var(--line);border-radius:24px;padding:8px;
+    border:1px solid var(--line);border-radius:24px;padding:18px 18px 14px;
     box-shadow:0 1px 0 rgba(255,255,255,.06) inset,0 30px 80px -30px rgba(0,0,0,.8)}
-  .grid{display:grid;grid-template-columns:340px 1fr;gap:8px}
-  @media (max-width:860px){.grid{grid-template-columns:1fr}}
-  .panelL,.panelR{border-radius:18px;padding:22px}
-  .panelL{background:linear-gradient(180deg,rgba(110,160,255,.06),rgba(139,123,255,.03));border:1px solid var(--line)}
-  .panelR{background:rgba(6,10,20,.5);border:1px solid var(--line);position:relative;overflow:hidden;min-width:0}
-  .lab{font-family:var(--mono);font-size:.7rem;letter-spacing:.12em;text-transform:uppercase;color:var(--muted);margin:0 0 12px}
-  /* preset chips */
-  .chips{display:flex;flex-wrap:wrap;gap:6px;margin-bottom:16px}
+  .topbar{display:flex;align-items:center;gap:10px;margin:0 0 14px;flex-wrap:wrap}
+  .topbar .lab{margin:0 4px 0 0}
+  .lab{font-family:var(--mono);font-size:.7rem;letter-spacing:.12em;text-transform:uppercase;color:var(--muted);margin:0 0 10px}
+  .chips{display:flex;flex-wrap:wrap;gap:6px}
   .chip{font-family:var(--mono);font-size:.74rem;padding:5px 11px;border-radius:999px;cursor:pointer;
     border:1px solid var(--line);background:rgba(0,0,0,.25);color:var(--muted);transition:.15s}
   .chip:hover{border-color:var(--accent);color:var(--accent)}
   .chip.on{border-color:rgba(110,160,255,.6);background:rgba(110,160,255,.14);color:var(--ink)}
   .chip.trap:hover{border-color:var(--warn);color:var(--warn)}
   .chip.trap.on{border-color:rgba(255,106,106,.6);background:rgba(255,106,106,.12);color:var(--ink)}
-  .chip:focus-visible{outline:2px solid var(--accent);outline-offset:2px}
-  /* readout */
-  .readout{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin:0 0 14px}
-  .stat{background:rgba(255,255,255,.03);border:1px solid var(--line);border-radius:12px;padding:11px 13px}
-  .stat .k{font-family:var(--mono);font-size:.62rem;letter-spacing:.1em;text-transform:uppercase;color:var(--muted)}
-  .stat .v{font-family:var(--disp);font-weight:700;font-size:1.45rem;font-variant-numeric:tabular-nums;margin-top:2px;transition:color .3s;min-height:1.6em}
-  .v.hot{color:var(--accent)} .v.bad{color:var(--warn)} .v.dim{color:rgba(132,150,182,.5)} .v.ok{color:var(--good)}
-  .stepno{font-family:var(--mono);font-size:.64rem;letter-spacing:.14em;text-transform:uppercase;color:var(--muted);margin:0 0 8px}
-  .stepno b{color:var(--accent);font-weight:500}
-  .status{font-family:var(--mono);font-size:.82rem;line-height:1.55;color:var(--ink);min-height:156px;
-    padding:12px 14px;border-radius:12px;background:rgba(0,0,0,.25);border:1px solid var(--line);
-    border-left:3px solid var(--accent);transition:border-color .3s}
-  .status.cut{border-left-color:var(--warn)}
-  .status.left{border-left-color:var(--gold)}
-  .status.ok{border-left-color:var(--good)}
-  .status b.g{color:var(--good)} .status b.w{color:var(--warn)} .status b.a{color:var(--accent)} .status b.y{color:var(--gold)}
-  .actions{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-top:16px}
-  .btn{font-family:var(--body);font-weight:500;font-size:.84rem;padding:9px 12px;border-radius:11px;cursor:pointer;
-    border:1px solid var(--line);background:var(--surface);color:var(--ink);transition:.15s;text-align:center}
-  .btn:hover{border-color:var(--accent);color:var(--accent)}
-  .btn.primary{border-color:rgba(110,160,255,.5);background:rgba(110,160,255,.12);grid-column:1 / -1}
-  .btn.gold:hover{border-color:var(--gold);color:var(--gold)}
-  .btn:disabled{opacity:.35;cursor:not-allowed}
-  .btn:focus-visible{outline:2px solid var(--accent);outline-offset:2px}
-  .hint{font-family:var(--mono);font-size:.7rem;color:var(--muted);margin:14px 0 0;line-height:1.5}
-  .hint b{color:var(--accent)}
-  /* the picture: keyboard, Scanner objects, variable names */
-  .pic{position:relative;height:262px;border:1px dashed rgba(132,150,182,.3);border-radius:14px;background:rgba(0,0,0,.18);overflow:hidden;margin-bottom:16px}
+  .chip:focus-visible,.btn:focus-visible,.focus:focus-visible{outline:2px solid var(--accent);outline-offset:2px}
+  .focus{margin-left:auto;font-family:var(--mono);font-size:.68rem;letter-spacing:.1em;text-transform:uppercase;padding:6px 12px;
+    border-radius:999px;border:1px solid var(--line);background:rgba(0,0,0,.25);color:var(--muted);cursor:pointer;transition:.15s}
+  .focus:hover{border-color:var(--accent);color:var(--accent)}
+  body.solo .focus{border-color:rgba(255,200,98,.6);color:var(--gold);background:rgba(255,200,98,.1)}
+
+  /* hero picture: keyboard, Scanner objects, variable names */
+  .pic{position:relative;height:390px;border:1px solid var(--line);border-radius:18px;background:rgba(6,10,20,.5);overflow:hidden}
+  body.solo .pic{height:480px}
   .pic svg{position:absolute;inset:0;width:100%;height:100%;pointer-events:none}
-  .pic svg path{fill:none;stroke-width:2;transition:opacity .3s}
-  .zone{position:absolute;top:10px;font-family:var(--mono);font-size:.58rem;letter-spacing:.14em;text-transform:uppercase;color:rgba(132,150,182,.55)}
-  .kbd{position:absolute;left:3%;width:24%;top:72px;min-height:118px;border-radius:12px;padding:10px;
+  .pic svg path{fill:none;stroke-width:2.6;transition:opacity .3s}
+  .zone{position:absolute;top:18px;font-family:var(--mono);font-size:.68rem;letter-spacing:.14em;text-transform:uppercase;color:rgba(132,150,182,.55)}
+  .pic .start{position:absolute;left:37%;width:30%;top:0;bottom:0;display:flex;align-items:center;justify-content:center;font-family:var(--mono);
+    font-size:.8rem;color:var(--muted);pointer-events:none;transition:opacity .3s}
+  .pic .start b{color:var(--accent);font-weight:500}
+  .kbd{position:absolute;left:4%;width:23%;top:112px;min-height:168px;border-radius:14px;padding:14px;
     border:1px solid rgba(255,200,98,.45);background:rgba(255,200,98,.06);transition:border-color .3s,background .3s}
-  .kbd .t{font-family:var(--mono);font-size:.76rem;color:var(--gold)}
-  .kbd .s{font-family:var(--mono);font-size:.58rem;color:var(--muted);letter-spacing:.06em;margin-top:2px}
-  .kbd .typed{font-family:var(--mono);font-size:.72rem;color:var(--ink);margin-top:10px;line-height:1.7;min-height:2.4em;word-break:break-word}
-  .kbd .typed .key{display:inline-block;font-size:.56rem;padding:0 5px;border:1px solid rgba(132,150,182,.5);border-radius:4px;color:var(--muted);margin-left:4px;line-height:1.5}
+  body.solo .kbd{top:140px;min-height:200px}
+  .kbd .t{font-family:var(--mono);font-size:1.05rem;color:var(--gold)}
+  .kbd .s{font-family:var(--mono);font-size:.74rem;color:var(--muted);letter-spacing:.06em;margin-top:3px}
+  .kbd .typed{font-family:var(--mono);font-size:1rem;color:var(--ink);margin-top:14px;line-height:1.7;min-height:2.4em;word-break:break-word}
+  .kbd .typed .key{display:inline-block;font-size:.7rem;padding:0 6px;border:1px solid rgba(132,150,182,.5);border-radius:5px;color:var(--muted);margin-left:5px;line-height:1.5}
   .kbd.closed{border-color:rgba(255,106,106,.7);background:rgba(255,106,106,.08)}
   .kbd.closed .t{color:var(--warn)}
-  .badge{position:absolute;left:3%;top:40px;font-family:var(--mono);font-size:.6rem;color:var(--warn);padding:3px 8px;border-radius:999px;
+  .badge{position:absolute;left:4%;top:72px;font-family:var(--mono);font-size:.74rem;color:var(--warn);padding:4px 10px;border-radius:999px;
     border:1px solid rgba(255,106,106,.6);background:rgba(255,106,106,.1);opacity:0;transition:opacity .3s;white-space:nowrap}
+  body.solo .badge{top:96px}
   .badge.show{opacity:1}
-  .obj{position:absolute;left:37%;width:31%;border-radius:12px;padding:9px 10px;opacity:0;
+  .obj{position:absolute;left:37%;width:30%;border-radius:14px;padding:13px 15px;opacity:0;
     border:1px solid rgba(110,160,255,.45);background:rgba(110,160,255,.08);transition:opacity .3s,border-color .3s,background .3s}
+  #o1{top:46px} #o2{top:214px}
+  body.solo #o1{top:62px} body.solo #o2{top:270px}
   .obj.show{opacity:1}
-  .obj.lit{border-color:rgba(110,160,255,.85);background:rgba(110,160,255,.15);box-shadow:0 0 18px -6px rgba(110,160,255,.6)}
+  .obj.lit{border-color:rgba(110,160,255,.85);background:rgba(110,160,255,.15);box-shadow:0 0 22px -6px rgba(110,160,255,.6)}
   .obj.bad{border-color:rgba(255,106,106,.7);background:rgba(255,106,106,.08)}
   .obj.closed{opacity:.5}
-  .obj .t{font-family:var(--disp);font-weight:500;font-size:.8rem;color:var(--ink)}
+  .obj .t{font-family:var(--disp);font-weight:500;font-size:1.1rem;color:var(--ink)}
   .obj.bad .t{color:var(--warn)}
-  .obj .s{font-family:var(--mono);font-size:.56rem;color:var(--muted);letter-spacing:.06em;margin-top:1px}
+  .obj .s{font-family:var(--mono);font-size:.74rem;color:var(--muted);letter-spacing:.06em;margin-top:2px}
   .obj .s .x{color:var(--warn)}
-  .buf{display:flex;flex-wrap:wrap;gap:4px;margin-top:8px;min-height:22px;align-items:center}
-  .buf .bl{font-family:var(--mono);font-size:.54rem;letter-spacing:.1em;text-transform:uppercase;color:rgba(132,150,182,.7);margin-right:2px}
-  .tok{font-family:var(--mono);font-size:.66rem;padding:1px 7px;border-radius:999px;border:1px solid rgba(110,160,255,.5);color:#cfe0ff;background:rgba(110,160,255,.1);transition:.3s}
+  .buf{display:flex;flex-wrap:wrap;gap:6px;margin-top:12px;min-height:30px;align-items:center}
+  .buf .bl{font-family:var(--mono);font-size:.66rem;letter-spacing:.1em;text-transform:uppercase;color:rgba(132,150,182,.7);margin-right:3px}
+  .tok{font-family:var(--mono);font-size:.88rem;padding:2px 10px;border-radius:999px;border:1px solid rgba(110,160,255,.5);color:#cfe0ff;background:rgba(110,160,255,.1);transition:.3s}
   .tok.taken{opacity:.45;text-decoration:line-through}
   .tok.stuck{border-color:rgba(255,200,98,.7);background:rgba(255,200,98,.14);color:#ffe6b0}
   .tok.empty{border-style:dashed;border-color:rgba(132,150,182,.4);background:transparent;color:var(--muted)}
   .tok.wait{border-color:rgba(255,106,106,.6);color:var(--warn);background:transparent}
-  .vtag{position:absolute;left:75%;width:22%;border-radius:10px;padding:7px 9px;opacity:0;
+  .vtag{position:absolute;left:74%;width:22%;border-radius:12px;padding:11px 13px;opacity:0;
     border:1px solid var(--line);background:rgba(255,255,255,.04);transition:opacity .35s,border-color .3s,background .3s}
+  #tMain{top:58px} #tMeth{top:226px}
+  body.solo #tMain{top:76px} body.solo #tMeth{top:284px}
   .vtag.show{opacity:1}
   .vtag.lit{border-color:rgba(110,160,255,.7);background:rgba(110,160,255,.12)}
   .vtag.bad{border-color:rgba(255,106,106,.6);background:rgba(255,106,106,.08)}
-  .vtag .in{font-family:var(--mono);font-size:.56rem;letter-spacing:.08em;color:var(--muted)}
-  .vtag .nm2{font-family:var(--mono);font-size:.7rem;color:var(--gold);margin-top:2px;word-break:break-all}
-  .ref{position:absolute;width:14px;height:14px;border-radius:50%;background:#bcd0ff;border:2px solid var(--accent);
-    box-shadow:0 0 14px -2px rgba(110,160,255,.9);opacity:0;pointer-events:none;transition:left .65s cubic-bezier(.2,.9,.3,1),top .65s cubic-bezier(.2,.9,.3,1),opacity .2s}
-  /* code + console */
-  .rgrid{display:grid;grid-template-columns:minmax(0,1.7fr) minmax(0,1fr);gap:16px}
-  @media (max-width:1000px){.rgrid{grid-template-columns:1fr}}
-  .code{min-width:0;font-family:var(--mono);font-size:.7rem;line-height:1.75;background:rgba(0,0,0,.35);border:1px solid var(--line);
-    border-radius:14px;padding:10px 0;overflow-x:auto}
-  .ln{display:flex;gap:10px;padding:0 12px;white-space:pre;color:#c9d4ea;transition:background .2s,opacity .3s}
-  .ln .n{width:18px;text-align:right;color:rgba(132,150,182,.55);user-select:none;flex-shrink:0}
+  .vtag .in{font-family:var(--mono);font-size:.72rem;letter-spacing:.08em;color:var(--muted)}
+  .vtag .nm2{font-family:var(--mono);font-size:.98rem;color:var(--gold);margin-top:3px;word-break:break-all}
+  .ref{position:absolute;width:18px;height:18px;border-radius:50%;background:#bcd0ff;border:2px solid var(--accent);
+    box-shadow:0 0 16px -2px rgba(110,160,255,.9);opacity:0;pointer-events:none;transition:left .65s cubic-bezier(.2,.9,.3,1),top .65s cubic-bezier(.2,.9,.3,1),opacity .2s}
+  @media (max-width:760px){.kbd .t,.obj .t{font-size:.84rem}.kbd .typed,.vtag .nm2{font-size:.76rem}.tok{font-size:.7rem;padding:1px 7px}
+    .obj .s,.kbd .s,.vtag .in{font-size:.6rem}}
+
+  /* caption: the one sentence, right under the picture */
+  .caption{display:flex;gap:16px;align-items:flex-start;margin:14px 4px 0;min-height:56px}
+  .caption .n{flex-shrink:0;font-family:var(--disp);font-weight:700;font-size:1.35rem;color:var(--accent);font-variant-numeric:tabular-nums;
+    line-height:1.2;min-width:3.2rem}
+  .caption .n small{display:block;font-family:var(--mono);font-weight:400;font-size:.58rem;letter-spacing:.14em;text-transform:uppercase;color:var(--muted)}
+  .caption .t{font-size:1.02rem;line-height:1.55;color:var(--ink);padding-left:16px;border-left:3px solid var(--accent);transition:border-color .3s}
+  body.solo .caption .t{font-size:1.18rem}
+  .caption.cut .t{border-left-color:var(--warn)} .caption.left .t{border-left-color:var(--gold)} .caption.ok .t{border-left-color:var(--good)}
+  .caption b.g{color:var(--good)} .caption b.w{color:var(--warn)} .caption b.a{color:var(--accent)} .caption b.y{color:var(--gold)}
+
+  /* toolbar: same on every page */
+  .toolbar{display:flex;align-items:center;gap:10px;margin:16px 0 0;padding-top:14px;border-top:1px solid var(--line)}
+  .btn{font-family:var(--body);font-weight:500;font-size:.86rem;padding:9px 16px;border-radius:11px;cursor:pointer;
+    border:1px solid var(--line);background:var(--surface);color:var(--ink);transition:.15s}
+  .btn:hover{border-color:var(--accent);color:var(--accent)}
+  .btn.primary{border-color:rgba(110,160,255,.5);background:rgba(110,160,255,.12);padding:9px 22px}
+  .btn:disabled{opacity:.35;cursor:not-allowed}
+  .btn.ghost{background:transparent;color:var(--muted);margin-left:auto}
+  .dots{display:flex;gap:5px;align-items:center;margin:0 6px}
+  .dots i{display:block;width:8px;height:8px;border-radius:50%;background:rgba(255,255,255,.12);transition:.2s}
+  .dots i.done{background:rgba(110,160,255,.45)}
+  .dots i.now{background:var(--accent);transform:scale(1.35);box-shadow:0 0 10px rgba(110,160,255,.7)}
+  .hint{font-family:var(--mono);font-size:.68rem;color:var(--muted);margin:10px 4px 0;line-height:1.5}
+  .hint b{color:var(--accent)}
+
+  /* support: code, readouts, console. Below the picture, hidden in focus */
+  .support{display:grid;grid-template-columns:minmax(0,1.5fr) minmax(0,1fr);gap:14px;margin-top:18px}
+  @media (max-width:860px){.support{grid-template-columns:1fr}}
+  body.solo .support,body.solo .take,body.solo .hint{display:none}
+  .code{min-width:0;font-family:var(--mono);font-size:.74rem;line-height:1.75;background:rgba(0,0,0,.35);border:1px solid var(--line);
+    border-radius:14px;padding:12px 0;overflow-x:auto}
+  .ln{display:flex;gap:12px;padding:0 14px;white-space:pre;color:#c9d4ea;transition:background .2s,opacity .3s}
+  .ln .n{width:20px;text-align:right;color:rgba(132,150,182,.55);user-select:none;flex-shrink:0}
   .ln.cur{background:rgba(110,160,255,.14);box-shadow:inset 3px 0 0 var(--accent)}
   .ln.cur .n{color:var(--accent)}
   .ln.cut{background:rgba(255,106,106,.12);box-shadow:inset 3px 0 0 var(--warn)}
   .ln.left{background:rgba(255,200,98,.12);box-shadow:inset 3px 0 0 var(--gold)}
   .ln.ok{background:rgba(70,217,138,.1);box-shadow:inset 3px 0 0 var(--good)}
   .kw{color:#c792ea} .ty{color:#82aaff} .st{color:#c3e88d} .nm{color:#f78c6c} .vr{color:#ffcb6b}
-  .console{font-family:var(--mono);font-size:.72rem;line-height:1.6;background:#05070e;border:1px solid var(--line);
-    border-radius:12px;padding:10px 14px;min-height:120px;color:#9fe3b6;word-break:break-word}
+  .side{display:flex;flex-direction:column;gap:12px;min-width:0}
+  .readout{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+  .stat{background:rgba(255,255,255,.03);border:1px solid var(--line);border-radius:12px;padding:11px 13px;transition:opacity .3s}
+  .stat.empty{opacity:.3}
+  .stat .k{font-family:var(--mono);font-size:.62rem;letter-spacing:.1em;text-transform:uppercase;color:var(--muted)}
+  .stat .v{font-family:var(--disp);font-weight:700;font-size:1.45rem;font-variant-numeric:tabular-nums;margin-top:2px;transition:color .3s;min-height:1.6em}
+  .v.hot{color:var(--accent)} .v.bad{color:var(--warn)} .v.dim{color:rgba(132,150,182,.5)} .v.ok{color:var(--good)}
+  .console{font-family:var(--mono);font-size:.74rem;line-height:1.6;background:#05070e;border:1px solid var(--line);
+    border-radius:12px;padding:10px 14px;min-height:120px;color:#9fe3b6;word-break:break-word;flex:1}
   .console .cl{font-size:.6rem;letter-spacing:.14em;text-transform:uppercase;color:rgba(132,150,182,.6);margin-bottom:4px}
   .console .out{animation:pop .3s}
   .console .in2{color:#ffe6b0}
@@ -153,57 +177,54 @@
 <div class="wrap">
   <p class="tag">Workbook 1c &middot; Section 4-2 &middot; Passing a Scanner to a method</p>
   <h1>One Scanner, Many Methods</h1>
-  <p class="lede">System.in is one keyboard stream, so the program needs one Scanner reading it.
-  <b>Create the Scanner once in main and pass it to every method that needs input: the parameter name can change, the object stays the same.</b>
-  Step through, then try the trap.</p>
+  <p class="lede"><b>Create the Scanner once in main and pass it to every method that needs input: the parameter name can change, the object stays the same.</b></p>
 
   <div class="stage">
-    <div class="grid">
-      <div class="panelL">
-        <p class="lab">Pick a run</p>
-        <div class="chips" id="chips"></div>
+    <div class="topbar">
+      <span class="lab">Pick a run</span>
+      <div class="chips" id="chips"></div>
+      <button class="focus" id="bFocus" title="Hide the code and notes, enlarge the picture">Focus</button>
+    </div>
 
-        <div class="readout">
-          <div class="stat"><div class="k">Scanner objects</div><div class="v dim" id="stObj">0</div></div>
-          <div class="stat"><div class="k">Last value read</div><div class="v dim" id="stRead">?</div></div>
-        </div>
+    <div class="pic" id="pic">
+      <svg id="arrows" aria-hidden="true"></svg>
+      <span class="zone" style="left:4%">keyboard</span>
+      <span class="zone" style="left:37%">objects</span>
+      <span class="zone" style="left:74%">variables</span>
+      <span class="badge" id="badge">2 readers, 1 keyboard</span>
+      <div class="start" id="start">press <b>Next</b></div>
+      <div class="kbd" id="kbd"><div class="t">System.in</div><div class="s" id="kbdS">the one keyboard stream</div><div class="typed" id="typed"></div></div>
+      <div class="obj" id="o1"><div class="t">Scanner object</div><div class="s" id="o1s">reads System.in</div><div class="buf" id="b1"></div></div>
+      <div class="obj" id="o2"><div class="t">second Scanner object</div><div class="s" id="o2s">also reads System.in</div><div class="buf" id="b2"></div></div>
+      <div class="vtag" id="tMain"><div class="in">in main</div><div class="nm2">myScanner</div></div>
+      <div class="vtag" id="tMeth"><div class="in" id="tMethIn">in doAdd</div><div class="nm2" id="tMethNm">potatoScanner</div></div>
+      <div class="ref" id="ref"></div>
+    </div>
 
-        <p class="stepno" id="stepno">Step <b>0</b> of 7</p>
-        <div class="status" id="status">Press <b class="a">Next</b> to start.</div>
+    <div class="caption" id="caption">
+      <div class="n" id="stepno"><small>step</small>0 / 7</div>
+      <div class="t" id="status">Press <b class="a">Next</b> to start.</div>
+    </div>
 
-        <div class="actions">
-          <button class="btn primary" id="bNext">Next &rarr;</button>
-          <button class="btn gold" id="bBack">&larr; Back</button>
-          <button class="btn" id="bReset">Reset</button>
-        </div>
-        <p class="hint">space = next &middot; names from Raymond's InputApp demo. <b>Try the trap.</b></p>
+    <div class="toolbar">
+      <button class="btn" id="bBack">&larr; Back</button>
+      <div class="dots" id="dots"></div>
+      <button class="btn primary" id="bNext">Next &rarr;</button>
+      <button class="btn ghost" id="bReset">Reset</button>
+    </div>
+    <p class="hint">space = next &middot; names from Raymond's InputApp demo. <b>Try the trap.</b></p>
+
+    <div class="support">
+      <div>
+        <p class="lab">InputApp.java</p>
+        <div class="code" id="code"></div>
       </div>
-
-      <div class="panelR">
-        <p class="lab">One keyboard, the Scanner objects, the names that point to them</p>
-        <div class="pic" id="pic">
-          <svg id="arrows" aria-hidden="true"></svg>
-          <span class="zone" style="left:3%">keyboard</span>
-          <span class="zone" style="left:37%">objects</span>
-          <span class="zone" style="left:75%">variables</span>
-          <span class="badge" id="badge">2 readers, 1 keyboard</span>
-          <div class="kbd" id="kbd"><div class="t">System.in</div><div class="s" id="kbdS">the one keyboard stream</div><div class="typed" id="typed"></div></div>
-          <div class="obj" id="o1" style="top:30px"><div class="t">Scanner object</div><div class="s" id="o1s">reads System.in</div><div class="buf" id="b1"></div></div>
-          <div class="obj" id="o2" style="top:152px"><div class="t">second Scanner object</div><div class="s" id="o2s">also reads System.in</div><div class="buf" id="b2"></div></div>
-          <div class="vtag" id="tMain" style="top:36px"><div class="in">in main</div><div class="nm2">myScanner</div></div>
-          <div class="vtag" id="tMeth" style="top:158px"><div class="in" id="tMethIn">in doAdd</div><div class="nm2" id="tMethNm">potatoScanner</div></div>
-          <div class="ref" id="ref"></div>
+      <div class="side">
+        <div class="readout">
+          <div class="stat empty"><div class="k">Scanner objects</div><div class="v dim" id="stObj">0</div></div>
+          <div class="stat empty"><div class="k">Last value read</div><div class="v dim" id="stRead">?</div></div>
         </div>
-        <div class="rgrid">
-          <div>
-            <p class="lab">InputApp.java</p>
-            <div class="code" id="code"></div>
-          </div>
-          <div>
-            <p class="lab">Console</p>
-            <div class="console" id="console"></div>
-          </div>
-        </div>
+        <div class="console" id="console"></div>
       </div>
     </div>
   </div>
@@ -388,10 +409,12 @@
     var kbd=$("#kbd"), o1=$("#o1"), o2=$("#o2"), tm=$("#tMain"), tt=$("#tMeth");
     $("#tMethIn").textContent="in "+R.m; $("#tMethNm").textContent=R.p;
     if(!p){
+      $("#start").style.opacity=1;
       kbd.className="kbd"; $("#typed").innerHTML=""; $("#kbdS").textContent="the one keyboard stream";
       o1.className="obj"; o2.className="obj"; tm.className="vtag"; tt.className="vtag"; $("#badge").className="badge";
       drawArrows(null); return;
     }
+    $("#start").style.opacity=0;
     kbd.className="kbd"+(p.kc?" closed":"");
     $("#kbdS").textContent=p.kc?"closed":"the one keyboard stream";
     $("#typed").innerHTML=p.typed?p.typed+'<span class="key">Enter</span>':"";
@@ -414,33 +437,40 @@
     clearTimeout(refTimer);
     if(reduce){ref.style.opacity=0;return;}
     ref.style.transition="none";
-    ref.style.left=(a.l+a.w/2-7)+"px"; ref.style.top=(a.b-7)+"px"; ref.style.opacity=1;
+    ref.style.left=(a.l+a.w/2-9)+"px"; ref.style.top=(a.b-9)+"px"; ref.style.opacity=1;
     void ref.offsetWidth;
     ref.style.transition="";
-    ref.style.left=(b.l+b.w/2-7)+"px"; ref.style.top=(b.t-7)+"px";
+    ref.style.left=(b.l+b.w/2-9)+"px"; ref.style.top=(b.t-9)+"px";
     refTimer=setTimeout(function(){ref.style.opacity=0;},800);
   }
 
-  function setStat(id,v,c){ var e=$(id); if(v===null){e.textContent="?";e.className="v dim";} else {e.textContent=v;e.className="v "+(c||"");} }
+  function setStat(id,v,c){ var e=$(id), box=e.parentNode; if(v===null){e.textContent="?";e.className="v dim";box.classList.add("empty");} else {e.textContent=v;e.className="v "+(c||"");box.classList.toggle("empty",c==="dim");} }
 
   function show(i,fwd){
     at=i;
     if(i<0){
       renderCode(null); renderPic(null); renderConsole([]);
-      statusEl.className="status"; statusEl.innerHTML='Press <b class="a">Next</b> to start. The picture above the code changes at every step.';
-      $("#stepno").innerHTML="Step <b>0</b> of "+steps.length;
+      $("#caption").className="caption"; statusEl.innerHTML='Press <b class="a">Next</b> to start. The picture above the code changes at every step.';
+      $("#stepno").innerHTML="<small>step</small>0 / "+steps.length;
       setStat("#stObj","0","dim"); setStat("#stRead",null); setBtns(); return;
     }
     var s=steps[i];
-    $("#stepno").innerHTML="Step <b>"+(i+1)+"</b> of "+steps.length;
+    $("#stepno").innerHTML="<small>step</small>"+(i+1)+" / "+steps.length;
     renderCode(s.line,s.cls); renderPic(s.pic); renderConsole(s.con);
-    statusEl.className="status "+s.cls; statusEl.innerHTML=s.msg;
+    $("#caption").className="caption "+s.cls; statusEl.innerHTML=s.msg;
     setStat("#stObj",String(s.objs),s.objs>1?"bad":"ok");
     setStat("#stRead",s.read,s.read==="waiting"?"bad":"hot");
     if(s.pass&&fwd) setTimeout(sendRef,reduce?0:120);
     setBtns();
   }
-  function setBtns(){ $("#bNext").disabled=at>=steps.length-1; $("#bBack").disabled=at<0; }
+  function setBtns(){ $("#bNext").disabled=at>=steps.length-1; $("#bBack").disabled=at<0;
+    var d=""; for(var k=0;k<steps.length;k++) d+='<i class="'+(k===at?"now":k<at?"done":"")+'"></i>'; $("#dots").innerHTML=d; }
+  /* focus: picture and caption only. Remembered per browser. Arrows are measured, so redraw. */
+  function setFocus(on){ document.body.classList.toggle("solo",on); $("#bFocus").textContent=on?"Focus on":"Focus";
+    try{localStorage.setItem("hub-focus",on?"1":"0");}catch(e){} renderPic(at>=0?steps[at].pic:null); }
+  $("#bFocus").addEventListener("click",function(){ setFocus(!document.body.classList.contains("solo")); this.blur(); });
+  try{ if(localStorage.getItem("hub-focus")==="1") document.body.classList.add("solo"); }catch(e){}
+  if(document.body.classList.contains("solo")) $("#bFocus").textContent="Focus on";
   function next(){ if(at<steps.length-1) show(at+1,true); }
   function back(){ if(at>=0) show(at-1,false); }
   function reset(){ steps=build(); show(-1); }
@@ -458,6 +488,7 @@
   $("#bReset").addEventListener("click",reset);
   document.addEventListener("keydown",function(e){ if(e.code==="Space"&&!/INPUT|BUTTON/.test(e.target.tagName)){e.preventDefault();next();} });
   addEventListener("resize",function(){ drawArrows(at>=0?steps[at].pic:null); });
+  if(document.fonts&&document.fonts.ready) document.fonts.ready.then(function(){ drawArrows(at>=0?steps[at].pic:null); });
 
   /* ---------- ambient canvas ---------- */
   var cv=$("#amb"),ctx=cv.getContext&&cv.getContext("2d"),parts=[];

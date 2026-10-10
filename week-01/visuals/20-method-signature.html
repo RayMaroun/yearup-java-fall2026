@@ -28,79 +28,96 @@
   h1{font-family:var(--disp);font-weight:700;font-size:clamp(2.3rem,6vw,3.6rem);line-height:1;margin:0 0 12px;
     letter-spacing:-.03em;background:linear-gradient(180deg,#fff,#b9c6e6);-webkit-background-clip:text;
     background-clip:text;color:transparent}
-  .lede{color:var(--muted);max-width:64ch;font-size:1.05rem;margin:0 0 30px;line-height:1.5}
+  .lede{color:var(--muted);max-width:64ch;font-size:1.05rem;margin:0 0 26px;line-height:1.5}
   .lede b{color:var(--ink)}
-  .lede code,.take code,.status code{font-family:var(--mono);font-size:.92em;color:#bcd0ff}
+  .lede code,.take code,.caption code{font-family:var(--mono);font-size:.92em;color:#bcd0ff}
+
+  /* ---------- stage: picture first, one toolbar, support below ---------- */
   .stage{position:relative;background:linear-gradient(180deg,rgba(255,255,255,.03),rgba(255,255,255,.01));
-    border:1px solid var(--line);border-radius:24px;padding:8px;
+    border:1px solid var(--line);border-radius:24px;padding:18px 18px 14px;
     box-shadow:0 1px 0 rgba(255,255,255,.06) inset,0 30px 80px -30px rgba(0,0,0,.8)}
-  .grid{display:grid;grid-template-columns:340px 1fr;gap:8px}
-  @media (max-width:860px){.grid{grid-template-columns:1fr}}
-  .panelL,.panelR{border-radius:18px;padding:22px;min-width:0}
-  .panelL{background:linear-gradient(180deg,rgba(110,160,255,.06),rgba(139,123,255,.03));border:1px solid var(--line)}
-  .panelR{background:rgba(6,10,20,.5);border:1px solid var(--line);position:relative;overflow:hidden}
-  .lab{font-family:var(--mono);font-size:.7rem;letter-spacing:.12em;text-transform:uppercase;color:var(--muted);margin:0 0 12px}
-  /* example chips */
-  .chips{display:flex;flex-wrap:wrap;gap:6px;margin-bottom:16px}
+  .topbar{display:flex;align-items:center;gap:10px;margin:0 0 14px;flex-wrap:wrap}
+  .topbar .lab{margin:0 4px 0 0}
+  .lab{font-family:var(--mono);font-size:.7rem;letter-spacing:.12em;text-transform:uppercase;color:var(--muted);margin:0 0 10px}
+  .chips{display:flex;flex-wrap:wrap;gap:6px}
   .chip{font-family:var(--mono);font-size:.74rem;padding:5px 11px;border-radius:999px;cursor:pointer;
     border:1px solid var(--line);background:rgba(0,0,0,.25);color:var(--muted);transition:.15s}
   .chip:hover{border-color:var(--accent);color:var(--accent)}
   .chip.on{border-color:rgba(110,160,255,.6);background:rgba(110,160,255,.14);color:var(--ink)}
-  .chip:focus-visible{outline:2px solid var(--accent);outline-offset:2px}
-  /* readout: the contract, filled in as the header is read */
-  .readout{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin:0 0 14px}
-  .stat{background:rgba(255,255,255,.03);border:1px solid var(--line);border-radius:12px;padding:11px 13px;min-width:0}
-  .stat .k{font-family:var(--mono);font-size:.62rem;letter-spacing:.1em;text-transform:uppercase;color:var(--muted)}
-  .stat .v{font-family:var(--disp);font-weight:700;font-size:1.05rem;font-variant-numeric:tabular-nums;margin-top:4px;
-    transition:color .3s;min-height:1.6em;overflow-wrap:anywhere}
-  .v.hot{color:var(--accent)} .v.gold{color:var(--gold)} .v.dim{color:rgba(132,150,182,.5)}
-  .stepno{font-family:var(--mono);font-size:.64rem;letter-spacing:.14em;text-transform:uppercase;color:var(--muted);margin:0 0 8px}
-  .stepno b{color:var(--accent);font-weight:500}
-  .status{font-family:var(--mono);font-size:.82rem;line-height:1.55;color:var(--ink);min-height:144px;
-    padding:12px 14px;border-radius:12px;background:rgba(0,0,0,.25);border:1px solid var(--line);
-    border-left:3px solid var(--accent);transition:border-color .3s}
-  .status.ok{border-left-color:var(--good)}
-  .status.gold{border-left-color:var(--gold)}
-  .status b.g{color:var(--good)} .status b.w{color:var(--warn)} .status b.a{color:var(--accent)} .status b.y{color:var(--gold)}
-  .actions{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-top:16px}
-  .btn{font-family:var(--body);font-weight:500;font-size:.84rem;padding:9px 12px;border-radius:11px;cursor:pointer;
-    border:1px solid var(--line);background:var(--surface);color:var(--ink);transition:.15s;text-align:center}
-  .btn:hover{border-color:var(--accent);color:var(--accent)}
-  .btn.primary{border-color:rgba(110,160,255,.5);background:rgba(110,160,255,.12);grid-column:1 / -1}
-  .btn.gold:hover{border-color:var(--gold);color:var(--gold)}
-  .btn:disabled{opacity:.35;cursor:not-allowed}
-  .btn:focus-visible{outline:2px solid var(--accent);outline-offset:2px}
-  .hint{font-family:var(--mono);font-size:.7rem;color:var(--muted);margin:14px 0 0;line-height:1.5}
-  .hint b{color:var(--accent)}
-  /* right: the code IS the picture */
-  .code{min-width:0;font-family:var(--mono);background:rgba(0,0,0,.35);border:1px solid var(--line);
-    border-radius:14px;padding:14px 0;overflow-x:auto}
-  .codein{position:relative;display:inline-block;min-width:100%;font-size:13px;line-height:2.15;padding-right:34px}
-  .ln{display:flex;gap:12px;padding:0 14px;white-space:pre;color:#c9d4ea;transition:opacity .3s}
-  .ln .n{width:20px;text-align:right;color:rgba(132,150,182,.55);user-select:none;flex-shrink:0}
+  .chip:focus-visible,.btn:focus-visible,.focus:focus-visible{outline:2px solid var(--accent);outline-offset:2px}
+  .focus{margin-left:auto;font-family:var(--mono);font-size:.68rem;letter-spacing:.1em;text-transform:uppercase;padding:6px 12px;
+    border-radius:999px;border:1px solid var(--line);background:rgba(0,0,0,.25);color:var(--muted);cursor:pointer;transition:.15s}
+  .focus:hover{border-color:var(--accent);color:var(--accent)}
+  body.solo .focus{border-color:rgba(255,200,98,.6);color:var(--gold);background:rgba(255,200,98,.1)}
+
+  /* hero picture: the code itself, scaled to fill and centered */
+  .pic{position:relative;height:390px;border:1px solid var(--line);border-radius:18px;background:rgba(6,10,20,.5);overflow:hidden;
+    display:flex;align-items:center;justify-content:center;padding:34px 16px 14px}
+  body.solo .pic{height:480px}
+  .pic .zone{position:absolute;left:18px;top:14px;font-family:var(--mono);font-size:.62rem;letter-spacing:.14em;text-transform:uppercase;
+    color:rgba(132,150,182,.55)}
+  .code{max-width:100%;max-height:100%;overflow:auto;font-family:var(--mono)}
+  .codein{position:relative;display:inline-block;font-size:13px;line-height:1.8;padding:4px 34px 4px 0}
+  .ln{display:flex;gap:.9em;padding:0 14px;white-space:pre;color:#c9d4ea;transition:opacity .3s}
+  .ln .n{width:1.6em;text-align:right;color:rgba(132,150,182,.55);user-select:none;flex-shrink:0}
   .ln.dim{opacity:.32}
-  .ln.focus .n{color:var(--accent)}
+  .ln.cur .n{color:var(--accent)}
   .kw{color:#c792ea} .ty{color:#82aaff} .st{color:#c3e88d} .nm{color:#f78c6c} .fn{color:#ffcb6b}
   .tok{border-radius:5px;transition:background .3s,box-shadow .3s}
   .tok.lit{background:rgba(110,160,255,.2);box-shadow:0 0 0 1px rgba(110,160,255,.65)}
   .tok.ok{background:rgba(70,217,138,.16);box-shadow:0 0 0 1px rgba(70,217,138,.65)}
   .tok.gold{background:rgba(255,200,98,.16);box-shadow:0 0 0 1px rgba(255,200,98,.7)}
   #ov{position:absolute;left:0;top:0;pointer-events:none;overflow:visible}
-  #ov path{fill:none;stroke-width:1.6}
+  #ov path{fill:none;stroke-width:1.8}
   #ov .pl{stroke:rgba(110,160,255,.7);stroke-dasharray:4 4}
   #ov .pg{stroke:rgba(70,217,138,.75)}
   #ov .py{stroke:rgba(255,200,98,.8);stroke-dasharray:5 4}
-  .note{position:absolute;transform:translateX(-50%);font-family:var(--mono);font-size:9.5px;line-height:1.5;padding:0 7px;
+  .note{position:absolute;transform:translateX(-50%);font-family:var(--mono);font-size:.73em;line-height:1.5;padding:0 .7em;
     border-radius:999px;white-space:nowrap;border:1px solid rgba(110,160,255,.55);background:#0d1630;color:#bcd0ff;
     animation:pop .3s}
   .note.ok{border-color:rgba(70,217,138,.6);background:#0b1f18;color:#bff3d6}
   .note.gold{border-color:rgba(255,200,98,.7);background:#231b0b;color:#ffe6b0}
-  .note.right{transform:none}
-  .flow{position:absolute;transform:translateX(-50%);font-family:var(--mono);font-size:11px;font-weight:500;line-height:1.5;padding:0 8px;
+  .note.right{transform:none;animation:none}
+  .flow{position:absolute;transform:translateX(-50%);font-family:var(--mono);font-size:.85em;font-weight:500;line-height:1.5;padding:0 .7em;
     border-radius:999px;white-space:nowrap;border:1px solid var(--gold);background:#2a200c;color:#ffe6b0;
     box-shadow:0 0 16px -4px rgba(255,200,98,.8);transition:left .8s cubic-bezier(.2,.9,.3,1),top .8s cubic-bezier(.2,.9,.3,1)}
   @keyframes pop{from{transform:translateX(-50%) scale(.6);opacity:0}to{transform:translateX(-50%) scale(1);opacity:1}}
-  .note.right{animation:none}
+
+  /* caption: the one sentence, right under the picture */
+  .caption{display:flex;gap:16px;align-items:flex-start;margin:14px 4px 0;min-height:56px}
+  .caption .n{flex-shrink:0;font-family:var(--disp);font-weight:700;font-size:1.35rem;color:var(--accent);font-variant-numeric:tabular-nums;
+    line-height:1.2;min-width:3.2rem}
+  .caption .n small{display:block;font-family:var(--mono);font-weight:400;font-size:.58rem;letter-spacing:.14em;text-transform:uppercase;color:var(--muted)}
+  .caption .t{font-size:1.02rem;line-height:1.55;color:var(--ink);padding-left:16px;border-left:3px solid var(--accent);transition:border-color .3s}
+  body.solo .caption .t{font-size:1.18rem}
+  .caption.ok .t{border-left-color:var(--good)} .caption.gold .t{border-left-color:var(--gold)}
+  .caption b.g{color:var(--good)} .caption b.w{color:var(--warn)} .caption b.a{color:var(--accent)} .caption b.y{color:var(--gold)}
+
+  /* toolbar: same on every page */
+  .toolbar{display:flex;align-items:center;gap:10px;margin:16px 0 0;padding-top:14px;border-top:1px solid var(--line)}
+  .btn{font-family:var(--body);font-weight:500;font-size:.86rem;padding:9px 16px;border-radius:11px;cursor:pointer;
+    border:1px solid var(--line);background:var(--surface);color:var(--ink);transition:.15s}
+  .btn:hover{border-color:var(--accent);color:var(--accent)}
+  .btn.primary{border-color:rgba(110,160,255,.5);background:rgba(110,160,255,.12);padding:9px 22px}
+  .btn:disabled{opacity:.35;cursor:not-allowed}
+  .btn.ghost{background:transparent;color:var(--muted);margin-left:auto}
+  .dots{display:flex;gap:5px;align-items:center;margin:0 6px}
+  .dots i{display:block;width:8px;height:8px;border-radius:50%;background:rgba(255,255,255,.12);transition:.2s}
+  .dots i.done{background:rgba(110,160,255,.45)}
+  .dots i.now{background:var(--accent);transform:scale(1.35);box-shadow:0 0 10px rgba(110,160,255,.7)}
+  .hint{font-family:var(--mono);font-size:.68rem;color:var(--muted);margin:10px 4px 0;line-height:1.5}
+  .hint b{color:var(--accent)}
+
+  /* support: the contract readouts. Below the picture, hidden in focus */
+  .support{margin-top:18px}
+  body.solo .support,body.solo .take,body.solo .hint{display:none}
+  .readout{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+  .stat{background:rgba(255,255,255,.03);border:1px solid var(--line);border-radius:12px;padding:11px 13px;min-width:0;transition:opacity .3s}
+  .stat.empty{opacity:.3}
+  .stat .k{font-family:var(--mono);font-size:.62rem;letter-spacing:.1em;text-transform:uppercase;color:var(--muted)}
+  .stat .v{font-family:var(--disp);font-weight:700;font-size:1.25rem;font-variant-numeric:tabular-nums;margin-top:4px;
+    transition:color .3s;min-height:1.6em;overflow-wrap:anywhere}
+  .v.hot{color:var(--accent)} .v.gold{color:var(--gold)} .v.dim{color:rgba(132,150,182,.5)}
   .take{margin-top:22px;background:linear-gradient(180deg,rgba(110,160,255,.08),rgba(139,123,255,.04));
     border:1px solid var(--line);border-left:3px solid var(--accent);border-radius:12px;padding:16px 18px}
   .take .tk{font-family:var(--mono);font-size:.66rem;letter-spacing:.14em;text-transform:uppercase;color:var(--accent);margin:0 0 8px}
@@ -117,35 +134,37 @@
 <div class="wrap">
   <p class="tag">Workbook 1c &middot; Section 4-2 &middot; Static methods</p>
   <h1>Method Signature</h1>
-  <p class="lede">The first line of a method tells you everything you need to call it.
-  <b>It says what you must pass, in what order, and what you get back, and every call has to match it.</b>
-  Step through the header, then watch a call line up against it.</p>
+  <p class="lede"><b>It says what you must pass, in what order, and what you get back, and every call has to match it.</b></p>
 
   <div class="stage">
-    <div class="grid">
-      <div class="panelL">
-        <p class="lab">Pick a method from the demo</p>
-        <div class="chips" id="chips"></div>
+    <div class="topbar">
+      <span class="lab">Pick a method from the demo</span>
+      <div class="chips" id="chips"></div>
+      <button class="focus" id="bFocus" title="Hide the notes, enlarge the picture">Focus</button>
+    </div>
 
-        <div class="readout">
-          <div class="stat"><div class="k">You must pass</div><div class="v dim" id="stPass">?</div></div>
-          <div class="stat"><div class="k">You get back</div><div class="v dim" id="stBack">?</div></div>
-        </div>
+    <div class="pic" id="pic">
+      <span class="zone">Main.java, inside class Main</span>
+      <div class="code" id="code"><div class="codein" id="codein"></div></div>
+    </div>
 
-        <p class="stepno" id="stepno">Step <b>0</b> of 8</p>
-        <div class="status" id="status">Press <b class="a">Next</b> to start.</div>
+    <div class="caption" id="caption">
+      <div class="n" id="stepno"><small>step</small>0 / 8</div>
+      <div class="t" id="status">Press <b class="a">Next</b> to start.</div>
+    </div>
 
-        <div class="actions">
-          <button class="btn primary" id="bNext">Next &rarr;</button>
-          <button class="btn gold" id="bBack">&larr; Back</button>
-          <button class="btn" id="bReset">Reset</button>
-        </div>
-        <p class="hint">space = next &middot; all three methods are in the methods demo. <b>Try greetUser for void.</b></p>
-      </div>
+    <div class="toolbar">
+      <button class="btn" id="bBack">&larr; Back</button>
+      <div class="dots" id="dots"></div>
+      <button class="btn primary" id="bNext">Next &rarr;</button>
+      <button class="btn ghost" id="bReset">Reset</button>
+    </div>
+    <p class="hint">space = next &middot; all three methods are in the methods demo. <b>Try greetUser for void.</b></p>
 
-      <div class="panelR">
-        <p class="lab">Main.java, inside class Main</p>
-        <div class="code" id="code"><div class="codein" id="codein"></div></div>
+    <div class="support">
+      <div class="readout">
+        <div class="stat empty"><div class="k">You must pass</div><div class="v dim" id="stPass">?</div></div>
+        <div class="stat empty"><div class="k">You get back</div><div class="v dim" id="stBack">?</div></div>
       </div>
     </div>
   </div>
@@ -261,27 +280,32 @@
   }
 
   /* ---------- render ---------- */
-  var G,steps=[],at=-1,codeIn=$("#codein"),codeBox=$("#code"),statusEl=$("#status");
+  var G,steps=[],at=-1,codeIn=$("#codein"),picEl=$("#pic"),statusEl=$("#status");
 
   function renderCode(s){
     var focus=s?s.focus:null, lt=s?s.lit:{};
     codeIn.innerHTML=G.lines.map(function(segs,i){
       var c="ln";
-      if(focus) c+=focus.indexOf(i)>=0?" focus":" dim";
+      if(focus) c+=focus.indexOf(i)>=0?" cur":" dim";
       var h=segs.map(function(g){
         if(!g.id) return g.h;
         return '<span class="tok'+(lt[g.id]?" "+lt[g.id]:"")+'" data-k="'+g.id+'">'+g.h+'</span>';
       }).join("");
       return '<div class="'+c+'"><span class="n">'+(i+1)+'</span><span>'+(h||" ")+'</span></div>';
-    }).join("")+'<svg id="ov"></svg>';
+    }).join("")+'<svg id="ov" width="0" height="0"></svg>';
     fit();
     overlay(s);
   }
+  /* scale the code up to fill the picture (bigger in Focus), shrink only if it does not fit */
   function fit(){
-    var fs=13;
+    var fs=document.body.classList.contains("solo")?24:20;
+    var cs=getComputedStyle(picEl);
+    var aw=picEl.clientWidth-parseFloat(cs.paddingLeft)-parseFloat(cs.paddingRight);
+    var ah=picEl.clientHeight-parseFloat(cs.paddingTop)-parseFloat(cs.paddingBottom);
     codeIn.style.fontSize=fs+"px";
-    while(codeIn.scrollWidth>codeBox.clientWidth&&fs>10.5){ fs-=.5; codeIn.style.fontSize=fs+"px"; }
+    while((codeIn.scrollWidth>aw||codeIn.scrollHeight>ah)&&fs>10.5){ fs-=.5; codeIn.style.fontSize=fs+"px"; }
   }
+  function fsz(){ return parseFloat(codeIn.style.fontSize)||13; }
   function tok(id){ return codeIn.querySelector('[data-k="'+id+'"]'); }
   function box(id){ var e=tok(id); return e?{x:e.offsetLeft,y:e.offsetTop,w:e.offsetWidth,h:e.offsetHeight}:null; }
   function lineH(){ var l=codeIn.querySelector(".ln"); return l?l.offsetHeight:28; }
@@ -289,17 +313,17 @@
   function overlay(s){
     var svg=$("#ov"); svg.setAttribute("width",codeIn.scrollWidth); svg.setAttribute("height",codeIn.scrollHeight);
     if(!s) return;
-    var lh=lineH(), html="", paths="";
+    var lh=lineH(), em=fsz(), html="", paths="";
     (s.notes||[]).forEach(function(n){
       var a=box(n.ids[0]), b=box(n.ids[n.ids.length-1]); if(!a||!b) return;
-      if(n.right) html+='<span class="note right '+(n.c||"")+'" style="left:'+(b.x+b.w+10)+'px;top:'+(b.y+(b.h-15)/2)+'px">'+n.t+'</span>';
+      if(n.right) html+='<span class="note right '+(n.c||"")+'" style="left:'+(b.x+b.w+10)+'px;top:'+(b.y+(b.h-em*1.1)/2)+'px">'+n.t+'</span>';
       else html+='<span class="note '+(n.c||"")+'" style="left:'+((a.x+b.x+b.w)/2)+'px;top:'+(a.y-lh*0.62)+'px">'+n.t+'</span>';
     });
     (s.links||[]).forEach(function(k){
       var a=box(k.a), b=box(k.b); if(!a||!b) return;
       var x1=a.x+a.w/2, y1=a.y+a.h-1, x2=b.x+b.w/2, y2=b.y-lh*0.62, ym=(y1+y2)/2;
       paths+='<path class="'+k.c+'" d="M'+x1+' '+y1+' C'+x1+' '+ym+' '+x2+' '+ym+' '+x2+' '+y2+'"/>';
-      if(k.badge) html+='<span class="note ok" style="left:'+((x1+x2)/2)+'px;top:'+(ym-8)+'px">'+k.badge+'</span>';
+      if(k.badge) html+='<span class="note ok" style="left:'+((x1+x2)/2)+'px;top:'+(ym-em*0.55)+'px">'+k.badge+'</span>';
     });
     if(s.flow){
       var f=box(s.flow.from), t=box(s.flow.to);
@@ -307,7 +331,7 @@
         var maxR=0; Array.prototype.forEach.call(codeIn.querySelectorAll(".ln > span:last-child"),function(e){ maxR=Math.max(maxR,e.offsetLeft+e.offsetWidth); });
         var sx=f.x+f.w+4, sy=f.y+f.h/2, xr=maxR+16, ty=t.y-lh*0.5, tx=t.x+t.w/2;
         paths+='<path class="py" d="M'+sx+' '+sy+' L'+(xr-8)+' '+sy+' Q'+xr+' '+sy+' '+xr+' '+(sy-8)+' L'+xr+' '+(ty+8)+' Q'+xr+' '+ty+' '+(xr-8)+' '+ty+' L'+(tx+8)+' '+ty+' Q'+tx+' '+ty+' '+tx+' '+(ty+6)+'"/>';
-        html+='<span class="flow" id="flow" style="left:'+(f.x+f.w+40)+'px;top:'+(sy-9)+'px">'+s.flow.t+'</span>';
+        html+='<span class="flow" id="flow" style="left:'+(f.x+f.w+40)+'px;top:'+(sy-em*0.64)+'px">'+s.flow.t+'</span>';
         s._to={x:tx,y:t.y-lh*0.62};
       }
     }
@@ -322,24 +346,31 @@
     }
   }
 
-  function setStat(id,v,c){ var e=$(id); if(v===null){e.textContent="?";e.className="v dim";} else {e.textContent=v;e.className="v "+(c||"");} }
+  function setStat(id,v,c){ var e=$(id), box=e.parentNode; if(v===null){e.textContent="?";e.className="v dim";box.classList.add("empty");} else {e.textContent=v;e.className="v "+(c||"");box.classList.remove("empty");} }
   function show(i,animate){
     at=i;
-    $("#stepno").innerHTML="Step <b>"+(i<0?0:i+1)+"</b> of "+steps.length;
+    $("#stepno").innerHTML="<small>step</small>"+(i<0?0:i+1)+" / "+steps.length;
     if(i<0){
       renderCode(null);
-      statusEl.className="status";
-      statusEl.innerHTML='Press <b class="a">Next</b> to read the header of <code>'+P.name+'</code> part by part. The code on the right lights up at every step.';
+      $("#caption").className="caption";
+      statusEl.innerHTML='Press <b class="a">Next</b> to read the header of <code>'+P.name+'</code> part by part. The code above lights up at every step.';
       setStat("#stPass",null); setStat("#stBack",null); setBtns(); return;
     }
     var s=steps[i]; s._animate=!!animate;
     renderCode(s);
-    statusEl.className="status "+(s.cls||""); statusEl.innerHTML=s.msg;
+    $("#caption").className="caption "+(s.cls||""); statusEl.innerHTML=s.msg;
     setStat("#stPass",s.pass?P.params.map(function(p){return p.t;}).join(", "):null,"hot");
     setStat("#stBack",s.back?(P.ret==="void"?"nothing":P.ret):null,"gold");
     setBtns();
   }
-  function setBtns(){ $("#bNext").disabled=at>=steps.length-1; $("#bBack").disabled=at<0; }
+  function setBtns(){ $("#bNext").disabled=at>=steps.length-1; $("#bBack").disabled=at<0;
+    var d=""; for(var k=0;k<steps.length;k++) d+='<i class="'+(k===at?"now":k<at?"done":"")+'"></i>'; $("#dots").innerHTML=d; }
+  /* focus: picture and caption only. Remembered per browser. Labels are measured, so redraw. */
+  function setFocus(on){ document.body.classList.toggle("solo",on); $("#bFocus").textContent=on?"Focus on":"Focus";
+    try{localStorage.setItem("hub-focus",on?"1":"0");}catch(e){} show(at,false); }
+  $("#bFocus").addEventListener("click",function(){ setFocus(!document.body.classList.contains("solo")); this.blur(); });
+  try{ if(localStorage.getItem("hub-focus")==="1") document.body.classList.add("solo"); }catch(e){}
+  if(document.body.classList.contains("solo")) $("#bFocus").textContent="Focus on";
   function next(){ if(at<steps.length-1) show(at+1,true); }
   function back(){ if(at>=0) show(at-1,false); }
   function reset(){ G=program(); steps=build(G); show(-1); }
