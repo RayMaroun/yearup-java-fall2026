@@ -1,4 +1,4 @@
-# Week 1 idea list — DRAFT for instructor confirmation (2026-10-11)
+# Week 1 idea list — CONFIRMED by the instructor 2026-10-12 (drafted 2026-10-11)
 
 Source: fall Workbooks 1a, 1b, 1c (v7.2Y) learning objectives, cross-checked against the 25 spring visuals.
 Verdicts: KEEP = same idea, re-skin in the new design at the named size. REBUILD = same idea, new interaction or new example.
@@ -46,4 +46,4 @@ shopping-list (renamed from shopping-cart), string-application, math-application
 type-matcher, cast-or-crash, name-that-convention, output-predictor*, format-fixer, bug-hunter*, condition-crafter, switch-tracer (both switch forms), method-builder, binary-challenge, flashcard-quiz, git-mission (IntelliJ flow), your-first-day*.
 (*) verify the code shown is demo-based or invented, never an exercise solution.
 
-## Size balance: 21 visuals = Glance 6 · Walk 13 · Model 2. Theme: A (Expeditors tokens) unless the instructor asks for the light-theme mock.
+## Size balance (corrected 2026-10-12): 25 visuals = Glance 6 · Walk 17 · Model 2. Theme: A (Expeditors tokens), confirmed by the instructor 2026-10-12. File number = position in the manifest order (01 to 25); the call stack stays 21.
