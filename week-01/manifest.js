@@ -19,7 +19,7 @@ window.HUB_MANIFEST = {
     { file: "13-widening-narrowing.html", title: "Widening, Narrowing, Casting", group: "Workbook 1c · Section 3-2", size: "walk" },
     { file: "14-printf-format.html", title: "printf Format Specifiers", group: "Workbook 1c · Section 3-3", size: "walk" },
     { file: "15-scanner-buffer.html", title: "Scanner Buffer", group: "Workbook 1c · Section 3-3", size: "model" },
-    { file: "16-scanner-methods.html", title: "Scanner Methods", group: "Workbook 1c · Section 3-3", size: "walk" },
+    { file: "16-scanner-methods.html", title: "Scanner Methods", group: "Workbook 1c · Section 3-3", size: "glance" },
     { file: "17-if-else-path.html", title: "if / else Path", group: "Workbook 1c · Section 4-1", size: "walk" },
     { file: "18-logical-operators.html", title: "Logical Operators", group: "Workbook 1c · Section 4-1", size: "walk" },
     { file: "19-string-comparison.html", title: "== vs .equals", group: "Workbook 1c · Section 4-1", size: "walk" },

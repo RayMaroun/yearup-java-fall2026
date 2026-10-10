@@ -101,7 +101,14 @@
   .caption b.g{color:var(--good)} .caption b.w{color:var(--warn)} .caption b.a{color:var(--accent)} .caption b.y{color:var(--gold)}
 
   /* toolbar: same on every page */
-  .toolbar{display:flex;align-items:center;gap:10px;margin:16px 0 0;padding-top:14px;border-top:1px solid var(--line)}
+  .toolbar{display:flex;align-items:center;gap:10px;margin:16px 0 0;padding-top:14px;border-top:1px solid var(--line);flex-wrap:wrap}
+  .seg{display:inline-flex;border:1px solid var(--line);border-radius:12px;overflow:hidden;background:rgba(0,0,0,.25)}
+  .seg button{font-family:var(--mono);font-weight:500;font-size:.86rem;padding:10px 16px;border:0;background:transparent;color:var(--muted);
+    cursor:pointer;transition:.15s;border-right:1px solid var(--line)}
+  .seg button:last-child{border-right:0}
+  .seg button:hover{color:var(--accent)}
+  .seg button.on{background:rgba(110,160,255,.16);color:var(--ink)}
+  .seg button:focus-visible{outline:2px solid var(--accent);outline-offset:-2px}
   .btn{font-family:var(--body);font-weight:500;font-size:.86rem;padding:9px 16px;border-radius:11px;cursor:pointer;
     border:1px solid var(--line);background:var(--surface);color:var(--ink);transition:.15s}
   .btn:hover{border-color:var(--accent);color:var(--accent)}
@@ -171,21 +178,25 @@
     <div class="pic" id="pic"></div>
 
     <div class="caption" id="caption">
-      <div class="n" id="stepno"><small>step</small>0 / 6</div>
+      <div class="n" id="stepno"><small>method</small>next()</div>
       <div class="t" id="status"></div>
     </div>
 
     <div class="toolbar">
-      <button class="btn" id="bBack">&larr; Back</button>
-      <div class="dots" id="dots"></div>
-      <button class="btn primary" id="bNext">Next &rarr;</button>
-      <button class="btn ghost" id="bReset">Reset</button>
+      <span class="lab" style="margin:0 6px 0 0">Run</span>
+      <div class="seg" id="seg" role="group" aria-label="Scanner method">
+        <button data-m="next" class="on">next()</button>
+        <button data-m="nextLine">nextLine()</button>
+        <button data-m="nextInt">nextInt()</button>
+        <button data-m="nextDouble">nextDouble()</button>
+        <button data-m="all">all four</button>
+      </div>
     </div>
-    <p class="hint">space = next &middot; each step is a fresh run on the same line. <b>Try 42 apples.</b></p>
+    <p class="hint">each method runs alone on a fresh copy of the typed line &middot; <b>try 42 apples, then nextInt()</b></p>
 
     <div class="support">
       <div>
-        <p class="lab">Main.java</p>
+        <p class="lab">The one line that runs</p>
         <div class="code" id="code"></div>
       </div>
       <div class="side">
@@ -222,7 +233,7 @@
   var CODE=[
     '<span class="ty">Scanner</span> myScanner = <span class="kw">new</span> <span class="ty">Scanner</span>(System.in);',
     '',
-    '<span class="cm">// each call below runs on a freshly typed line</span>',
+    '',
     '<span class="ty">String</span> word = myScanner.<span class="fn">next</span>();',
     '<span class="ty">String</span> name = myScanner.<span class="fn">nextLine</span>();',
     '<span class="ty">int</span> firstNumber = myScanner.<span class="fn">nextInt</span>();',
@@ -246,38 +257,32 @@
     return {ok:false,from:t.start,to:t.end,raw:t.text};
   }
 
-  var RUNS=[
-    {m:"next",line:4,type:"String",name:"word"},
-    {m:"nextLine",line:5,type:"String",name:"name"},
-    {m:"nextInt",line:6,type:"int",name:"firstNumber"},
-    {m:"nextDouble",line:7,type:"double",name:"salary"}
-  ];
-
-  function build(){
-    var S=[];
-    S.push({kind:"typed",line:[1],cls:"",msg:'The learner types <b class="a">'+LINE+'</b> and presses Enter. Scanner now holds the line, character by character, ending with the Enter key.'});
-    RUNS.forEach(function(r){
-      var res=run(r.m), msg, cls;
-      if(r.m==="next"){ cls="acting"; msg='<code>next()</code> skips leading spaces and takes characters <b class="g">until it reaches a space</b>: '+res.value+'.'+(res.to<LINE.length?' The rest stays in the line.':' Here there is no space, so it takes the one word.'); }
-      else if(r.m==="nextLine"){ cls="acting"; msg='<code>nextLine()</code> takes <b class="g">everything up to the Enter key</b>, spaces included: '+res.value+'. The Enter itself is thrown away.'; }
-      else if(res.ok){ cls="acting"; msg='<code>'+r.m+'()</code> reads one token, <b class="g">'+res.raw+'</b>, and turns it into '+(r.m==="nextInt"?'the int ':'the double ')+'<b class="g">'+res.value+'</b>.'+(r.m==="nextDouble"&&res.raw.indexOf(".")<0?' A whole number is fine for a double.':'')+(res.to<LINE.length?' The rest stays in the line.':''); }
-      else { cls="trouble"; msg='<code>'+r.m+'()</code> reads the token <b class="w">'+res.raw+'</b>. '+(r.m==="nextInt"&&/^[+-]?(\d+\.?\d*|\.\d+)$/.test(res.raw)?'It has a decimal point, so it is not an int. ':'That is not a number. ')+'Scanner <b class="w">throws InputMismatchException</b> and the program stops.'; }
-      S.push({kind:"run",run:r,res:res,line:[r.line],cls:cls,msg:msg});
-    });
-    S.push({kind:"sum",line:[4,5,6,7],cls:"",msg:'Side by side, same typed line: <b class="a">next</b> stops at a space, <b class="a">nextLine</b> goes to the end, <b class="a">nextInt</b> and <b class="a">nextDouble</b> only accept a number.'});
-    return S;
+  var RUNS={
+    next:{m:"next",type:"String",name:"word"},
+    nextLine:{m:"nextLine",type:"String",name:"name"},
+    nextInt:{m:"nextInt",type:"int",name:"firstNumber"},
+    nextDouble:{m:"nextDouble",type:"double",name:"salary"}
+  };
+  var ORDER=["next","nextLine","nextInt","nextDouble"];
+  function sentence(r,res){
+    if(r.m==="next") return {cls:"acting",msg:'<code>next()</code> skips leading spaces and takes characters <b class="g">until it reaches a space</b>: '+res.value+'.'+(res.to<LINE.length?' The rest stays in the line.':' Here there is no space, so it takes the one word.')};
+    if(r.m==="nextLine") return {cls:"acting",msg:'<code>nextLine()</code> takes <b class="g">everything up to the Enter key</b>, spaces included: '+res.value+'. The Enter itself is thrown away.'};
+    if(res.ok) return {cls:"acting",msg:'<code>'+r.m+'()</code> reads one token, <b class="g">'+res.raw+'</b>, and turns it into '+(r.m==="nextInt"?'the int ':'the double ')+'<b class="g">'+res.value+'</b>.'+(r.m==="nextDouble"&&res.raw.indexOf(".")<0?' A whole number is fine for a double.':'')+(res.to<LINE.length?' The rest stays in the line.':'')};
+    return {cls:"trouble",msg:'<code>'+r.m+'()</code> reads the token <b class="w">'+res.raw+'</b>. '+(r.m==="nextInt"&&/^[+-]?(\d+\.?\d*|\.\d+)$/.test(res.raw)?'It has a decimal point, so it is not an int. ':'That is not a number. ')+'Scanner <b class="w">throws InputMismatchException</b> and the program stops.'};
   }
 
   /* ---------- rendering ---------- */
-  var steps=[],at=-1,timer=null;
+  var MODE="next", timer=null;
   var codeEl=$("#code"),picEl=$("#pic"),consEl=$("#console"),statusEl=$("#status");
   function esc(s){ var d=document.createElement("div"); d.textContent=s; return d.innerHTML; }
 
-  function renderCode(cur,bad){
-    codeEl.innerHTML=CODE.map(function(t,i){
+  function renderCode(mode,bad){
+    var lines=[CODE[0],''];
+    if(mode==="all"){ lines=lines.concat([CODE[3],CODE[4],CODE[5],CODE[6]]); }
+    else { var idx={next:3,nextLine:4,nextInt:5,nextDouble:6}[mode]; lines.push(CODE[idx]); }
+    codeEl.innerHTML=lines.map(function(t,i){
       var n=i+1,c="ln";
-      if(cur&&cur.indexOf(n)>=0) c+=bad?" bad":" cur";
-      else if(cur&&n>=4) c+=" dim";
+      if(mode!=="all"&&n===3) c+=bad?" bad":" cur";
       return '<div class="'+c+'"><span class="n">'+n+'</span><span>'+(t||" ")+'</span></div>';
     }).join("");
   }
@@ -293,7 +298,7 @@
         else if(res.ok&&i>=res.to) c+=" left";
         else if(res.ok&&i<res.from) c+=phase==="moved"?" gone":"";
       }
-      h+='<span class="'+c+'" data-i="'+i+'">'+(ch===" "?"\u00b7":esc(ch))+'</span>';
+      h+='<span class="'+c+'" data-i="'+i+'">'+(ch===" "?"·":esc(ch))+'</span>';
     }
     c="cell nl";
     if(res&&res.ok) c+=res.dropNl?" drop":" left";
@@ -301,114 +306,95 @@
     return h;
   }
 
-  function renderPic(s,phase){
-    if(!s){ picEl.innerHTML='<p class="zone">the typed line</p><div class="note">Nothing typed yet.</div>'; return; }
-    if(s.kind==="sum"){ renderSum(); return; }
-    var h='<p class="zone">the typed line'+(s.run?' \u00b7 <b>'+s.run.m+'()</b> runs on it':'')+'</p>';
-    h+='<div class="cells" id="cells">'+cellsHtml(s.res,phase)+'</div>';
-    if(s.run){
-      var r=s.run,res=s.res,slot;
-      if(!res.ok) slot='<span class="slot warn">no value</span>';
-      else if(phase==="moved") slot='<span class="slot good" id="slot">'+esc(res.value)+'</span>';
-      else slot='<span class="slot" id="slot"></span>';
-      h+='<div class="var"><span><span class="ty">'+r.type+'</span> '+r.name+' =</span>'+slot+'</div>';
-      if(res.ok) h+='<p class="note"><span class="g">green</span> = taken \u00b7 <span class="y">gold</span> = still in the line'+(res.dropNl?' \u00b7 the Enter is thrown away':'')+'</p>';
-      else h+='<p class="note"><span class="w">red</span> = the token Scanner tried to read</p>';
-    }
+  function renderPic(mode,phase){
+    if(mode==="all"){ renderSum(); return; }
+    var r=RUNS[mode], res=run(mode);
+    var h='<p class="zone">the typed line · <b>'+r.m+'()</b> runs on it</p>';
+    h+='<div class="cells" id="cells">'+cellsHtml(res,phase)+'</div>';
+    var slot;
+    if(!res.ok) slot='<span class="slot warn">no value</span>';
+    else if(phase==="moved") slot='<span class="slot good" id="slot">'+esc(res.value)+'</span>';
+    else slot='<span class="slot" id="slot"></span>';
+    h+='<div class="var"><span><span class="ty">'+r.type+'</span> '+r.name+' =</span>'+slot+'</div>';
+    if(res.ok) h+='<p class="note"><span class="g">green</span> = taken · <span class="y">gold</span> = still in the line'+(res.dropNl?' · the Enter is thrown away':'')+'</p>';
+    else h+='<p class="note"><span class="w">red</span> = the token Scanner tried to read</p>';
     picEl.innerHTML=h;
   }
 
   function renderSum(){
-    var h='<p class="zone">four runs on <b>'+esc(LINE)+'</b></p><div class="sum">';
-    RUNS.forEach(function(r){
-      var res=run(r.m);
-      h+='<span class="m">'+r.m+'()</span><span class="r">'+cellsHtml(res,"lit")+'<span class="arrow">\u2192</span>'+
+    var h='<p class="zone">four separate runs on <b>'+esc(LINE)+'</b></p><div class="sum">';
+    ORDER.forEach(function(m){
+      var res=run(m);
+      h+='<span class="m">'+m+'()</span><span class="r">'+cellsHtml(res,"lit")+'<span class="arrow">→</span>'+
         (res.ok?'<span class="got">'+esc(res.value)+'</span>':'<span class="err">InputMismatchException</span>')+'</span>';
     });
     picEl.innerHTML=h+'</div>';
   }
 
   /* the taken text lifts out of the cells and lands in the variable */
-  function fly(s){
-    var cells=document.querySelectorAll("#cells .cell"), slot=$("#slot");
-    if(!slot||s.res.from>=s.res.to) return;
-    var first=cells[s.res.from], pr=picEl.getBoundingClientRect(), fr=first.getBoundingClientRect(), sr=slot.getBoundingClientRect();
-    var g=document.createElement("div"); g.className="ghost"; g.textContent=s.res.value;
+  function fly(mode){
+    var res=run(mode), cells=document.querySelectorAll("#cells .cell"), slot=$("#slot");
+    if(!slot||res.from>=res.to) return;
+    var first=cells[res.from], pr=picEl.getBoundingClientRect(), fr=first.getBoundingClientRect(), sr=slot.getBoundingClientRect();
+    var g=document.createElement("div"); g.className="ghost"; g.textContent=res.value;
     g.style.left=(fr.left-pr.left)+"px"; g.style.top=(fr.top-pr.top)+"px";
     picEl.appendChild(g);
     void g.offsetWidth;
     g.style.left=(sr.left-pr.left)+"px"; g.style.top=(sr.top-pr.top)+"px";
-    timer=setTimeout(function(){ renderPic(s,"moved"); },650);
+    timer=setTimeout(function(){ renderPic(mode,"moved"); },650);
   }
 
-  function renderConsole(s){
-    if(!s||s.kind==="sum"){ consEl.innerHTML='<span style="color:rgba(132,150,182,.5)">'+(s?'(four separate runs)':'(waiting for input)')+'</span>'; return; }
-    var p=s.run?PROMPTS[s.run.m]:"Please enter your Name: ";
+  function renderConsole(mode){
+    if(mode==="all"){ consEl.innerHTML='<span style="color:rgba(132,150,182,.5)">(four separate runs)</span>'; return; }
+    var res=run(mode), p=PROMPTS[mode];
     var h='<div>'+esc(p)+'</div><div class="in">'+esc(LINE)+'</div>';
-    if(s.run&&!s.res.ok) h+='<div class="ex out">Exception in thread "main" java.util.InputMismatchException\n    ...\n    at com.pluralsight.Main.main(Main.java:'+s.run.line+')</div>';
+    if(!res.ok) h+='<div class="ex out">Exception in thread "main" java.util.InputMismatchException\n    ...\n    at com.pluralsight.Main.main(Main.java:3)</div>';
     consEl.innerHTML=h;
   }
 
   function setStat(id,v,c){ var e=$(id), box=e.parentNode; if(v===null){e.textContent="?";e.className="v dim";box.classList.add("empty");} else {e.textContent=v;e.className="v "+(c||"");box.classList.remove("empty");} }
 
-  function show(i){
-    clearTimeout(timer); at=i;
-    if(i<0){
-      renderCode(null); renderPic(null); renderConsole(null);
-      $("#caption").className="caption"; statusEl.innerHTML='Press <b class="a">Next</b> to start. Each step runs one Scanner call on the line <b class="a">'+esc(LINE)+'</b>.';
-      setStat("#stTook",null); setStat("#stLeft",null);
-      $("#stepno").innerHTML="<small>step</small>0 / "+steps.length; setBtns(); return;
+  function show(mode,animate){
+    clearTimeout(timer); MODE=mode;
+    Array.prototype.forEach.call(document.querySelectorAll("#seg button"),function(b){b.classList.toggle("on",b.getAttribute("data-m")===mode);});
+    $("#stepno").innerHTML="<small>method</small>"+(mode==="all"?"all four":mode+"()");
+    if(mode==="all"){
+      renderCode("all",false); renderPic("all"); renderConsole("all");
+      $("#caption").className="caption"; statusEl.innerHTML='Side by side, same typed line: <b class="a">next</b> stops at a space, <b class="a">nextLine</b> goes to the end, <b class="a">nextInt</b> and <b class="a">nextDouble</b> only accept a number.';
+      setStat("#stTook",null); setStat("#stLeft",null); return;
     }
-    var s=steps[i];
-    $("#stepno").innerHTML="<small>step</small>"+(i+1)+" / "+steps.length;
-    renderCode(s.line,s.cls==="trouble");
-    $("#caption").className="caption "+s.cls; statusEl.innerHTML=s.msg;
-    renderConsole(s);
-    if(s.kind==="run"){
-      var res=s.res;
-      if(res.ok){
-        setStat("#stTook",res.value,"good");
-        var rest=LINE.slice(res.to)+(res.dropNl?"":" + Enter");
-        setStat("#stLeft",res.dropNl?"nothing":rest.replace(/^ /,"·"),"");
-        if(reduce){ renderPic(s,"moved"); } else { renderPic(s,"lit"); fly(s); }
-      } else {
-        setStat("#stTook","nothing","warn"); setStat("#stLeft",LINE.slice(res.from)+" + Enter","");
-        renderPic(s,"lit");
-      }
-    } else if(s.kind==="typed"){
-      renderPic(s,""); setStat("#stTook",null); setStat("#stLeft",LINE+" + Enter","");
+    var r=RUNS[mode], res=run(mode), t=sentence(r,res);
+    renderCode(mode,!res.ok);
+    $("#caption").className="caption "+t.cls; statusEl.innerHTML=t.msg;
+    renderConsole(mode);
+    if(res.ok){
+      setStat("#stTook",res.value,"good");
+      var rest=LINE.slice(res.to)+(res.dropNl?"":" + Enter");
+      setStat("#stLeft",res.dropNl?"nothing":rest.replace(/^ /,"·"),"");
+      if(reduce||!animate){ renderPic(mode,"moved"); } else { renderPic(mode,"lit"); fly(mode); }
     } else {
-      renderPic(s,""); setStat("#stTook",null); setStat("#stLeft",null);
+      setStat("#stTook","nothing","warn"); setStat("#stLeft",LINE.slice(res.from)+" + Enter","");
+      renderPic(mode,"lit");
     }
-    setBtns();
   }
-  function setBtns(){ $("#bNext").disabled=at>=steps.length-1; $("#bBack").disabled=at<0;
-    var d=""; for(var k=0;k<steps.length;k++) d+='<i class="'+(k===at?"now":k<at?"done":"")+'"></i>'; $("#dots").innerHTML=d; }
-  /* redraw the picture at its final state for the current step (no flight) */
-  function redraw(){ clearTimeout(timer); if(at<0){ renderPic(null); return; } var s=steps[at];
-    if(s.kind==="run") renderPic(s,s.res.ok?"moved":"lit"); else renderPic(s,""); }
+  function redraw(){ show(MODE,false); }
   /* focus: picture and caption only. Remembered per browser. */
   function setFocus(on){ document.body.classList.toggle("solo",on); $("#bFocus").textContent=on?"Focus on":"Focus";
     try{localStorage.setItem("hub-focus",on?"1":"0");}catch(e){} redraw(); }
   $("#bFocus").addEventListener("click",function(){ setFocus(!document.body.classList.contains("solo")); this.blur(); });
   try{ if(localStorage.getItem("hub-focus")==="1") document.body.classList.add("solo"); }catch(e){}
   if(document.body.classList.contains("solo")) $("#bFocus").textContent="Focus on";
-  function next(){ if(at<steps.length-1) show(at+1); }
-  function back(){ if(at>=0) show(at-1); }
-  function reset(){ steps=build(); show(-1); }
   function pick(idx){
     LINE=PRESETS[idx];
     Array.prototype.forEach.call(document.querySelectorAll(".chip"),function(c,j){c.classList.toggle("on",j===idx);});
     if(document.activeElement&&document.activeElement.blur) document.activeElement.blur();
-    reset();
+    show(MODE,true);
   }
 
   $("#chips").innerHTML=PRESETS.map(function(p,j){return '<button class="chip'+(j===0?' on':'')+'" data-i="'+j+'">'+esc(p)+'</button>';}).join("");
   $("#chips").addEventListener("click",function(e){ var b=e.target.closest(".chip"); if(b) pick(+b.getAttribute("data-i")); });
-  $("#bNext").addEventListener("click",next);
-  $("#bBack").addEventListener("click",back);
-  $("#bReset").addEventListener("click",reset);
-  document.addEventListener("keydown",function(e){ if(e.code==="Space"&&!/INPUT|BUTTON/.test(e.target.tagName)){e.preventDefault();next();} });
+  $("#seg").addEventListener("click",function(e){ var b=e.target.closest("button"); if(b){ show(b.getAttribute("data-m"),true); b.blur(); } });
+  addEventListener("resize",redraw);
 
   /* ---------- ambient canvas ---------- */
   var cv=$("#amb"),ctx=cv.getContext&&cv.getContext("2d"),parts=[];
@@ -422,7 +408,7 @@
     requestAnimationFrame(drawC);}
   if(ctx&&!reduce){sizeC();initParts();drawC();addEventListener("resize",sizeC);}
 
-  reset();
+  show("next",true);
 })();
 </script>
 <script src="../manifest.js"></script>

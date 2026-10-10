@@ -8,3 +8,6 @@ Instructor kept the Expeditors tokens as they are (THEME-B variant deleted) and 
 
 ## 2026-10-12 — Calibration feedback
 Instructor: no animation for its own sake (JDK page: travelling file removed, the switch that lights the needed layer stays). Walk page step 9: the per-group "+ .5" chips were wrong; the leftover now moves into a dashed partial group labeled ".5 of a group" and the readout shows 3 + .5 = 3.5. The Walk page was approved in form ("looks great, the animation really helps").
+
+## 2026-10-12 — Page 16 is a comparison, not a run
+Instructor: stepping "line by line" through four Scanner calls read like one program eating the same buffer. Rebuilt as a Glance: the method is the one control (next / nextLine / nextInt / nextDouble / all four), typed-line chips stay, the code area shows only the one line that runs. Rule for later pages: a catalog of alternatives is a switch, never a step sequence.
