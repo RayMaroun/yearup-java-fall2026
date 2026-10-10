@@ -1,0 +1,247 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Local vs Remote Repository | Week 1 Visual Hub</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Sora:wght@500;700&family=Inter:wght@400;500&family=JetBrains+Mono:wght@400;500&display=swap">
+<style>
+  :root{
+    --bg:#080c17; --bg2:#0c1428; --surface:rgba(255,255,255,.045); --line:rgba(255,255,255,.09);
+    --ink:#eef2fb; --muted:#8496b6; --accent:#6ea0ff; --accent2:#8b7bff; --good:#46d98a; --warn:#ff6a6a;
+    --gold:#ffc862; --disp:'Sora',system-ui,sans-serif; --body:'Inter',system-ui,sans-serif;
+    --mono:'JetBrains Mono',ui-monospace,monospace;
+  }
+  *{box-sizing:border-box}
+  body{margin:0;min-height:100vh;color:var(--ink);font-family:var(--body);
+    background:radial-gradient(1200px 700px at 70% -10%,#141d38 0%,transparent 55%),
+               radial-gradient(900px 600px at 10% 110%,#161233 0%,transparent 50%),#080c17;
+    overflow-x:hidden}
+  #amb{position:fixed;inset:0;z-index:0;pointer-events:none;opacity:.6}
+  .back{position:relative;z-index:2;display:block;max-width:1120px;margin:0 auto;padding:26px 24px 0;
+    width:100%;font-family:var(--mono);font-size:.8rem;letter-spacing:.04em;color:var(--muted);
+    text-decoration:none;transition:color .15s}
+  .back:hover{color:var(--accent)}
+  .wrap{position:relative;z-index:1;max-width:1120px;margin:0 auto;padding:22px 24px 70px}
+  .tag{font-family:var(--mono);font-size:.72rem;letter-spacing:.22em;text-transform:uppercase;color:var(--accent);margin:0 0 14px}
+  h1{font-family:var(--disp);font-weight:700;font-size:clamp(2.3rem,6vw,3.6rem);line-height:1;margin:0 0 12px;
+    letter-spacing:-.03em;background:linear-gradient(180deg,#fff,#b9c6e6);-webkit-background-clip:text;
+    background-clip:text;color:transparent}
+  .lede{color:var(--muted);max-width:64ch;font-size:1.05rem;margin:0 0 30px;line-height:1.5}
+  .lede b{color:var(--ink)}
+  .lede code,.take code,.status code{font-family:var(--mono);font-size:.92em;color:#bcd0ff}
+  .stage{position:relative;background:linear-gradient(180deg,rgba(255,255,255,.03),rgba(255,255,255,.01));
+    border:1px solid var(--line);border-radius:24px;padding:8px;
+    box-shadow:0 1px 0 rgba(255,255,255,.06) inset,0 30px 80px -30px rgba(0,0,0,.8)}
+  .panelR{border-radius:18px;padding:22px;background:rgba(6,10,20,.5);border:1px solid var(--line);position:relative;overflow:hidden}
+  .lab{font-family:var(--mono);font-size:.7rem;letter-spacing:.12em;text-transform:uppercase;color:var(--muted);margin:0 0 12px}
+
+  /* the three places */
+  .places{display:grid;grid-template-columns:1.25fr 74px 1fr 74px 1fr;align-items:stretch}
+  .place{border-radius:14px;border:1px solid var(--line);background:rgba(255,255,255,.02);padding:14px 14px 12px;
+    display:flex;flex-direction:column;gap:10px;transition:border-color .3s,background .3s,box-shadow .3s}
+  .place.has{border-color:rgba(255,200,98,.55);background:rgba(255,200,98,.05);box-shadow:0 0 30px -12px rgba(255,200,98,.5)}
+  .phead{display:flex;flex-direction:column;gap:2px}
+  .pname{font-family:var(--disp);font-weight:700;font-size:1.05rem;letter-spacing:-.01em}
+  .pwhere{font-family:var(--mono);font-size:.62rem;letter-spacing:.12em;text-transform:uppercase;color:var(--muted)}
+  .box{border-radius:12px;border:1px solid var(--line);background:rgba(0,0,0,.25);padding:10px 12px;transition:border-color .3s}
+  .box .bt{font-family:var(--mono);font-size:.62rem;letter-spacing:.12em;text-transform:uppercase;color:var(--muted);margin:0 0 7px}
+  .file{font-family:var(--mono);font-size:.74rem;color:#bcd0ff;display:flex;justify-content:space-between;gap:8px;padding:2px 0}
+  .file .st{font-size:.62rem;letter-spacing:.08em;text-transform:uppercase;color:var(--muted);transition:color .3s}
+  .file.mod{color:var(--accent)} .file.mod .st{color:var(--accent)}
+  .commits{display:flex;flex-direction:column;gap:5px}
+  .cm{font-family:var(--mono);font-size:.72rem;padding:5px 9px;border-radius:9px;border:1px solid var(--line);
+    background:rgba(0,0,0,.3);color:var(--ink);display:flex;gap:8px;transition:border-color .3s,color .3s,background .3s,opacity .3s}
+  .cm .h{color:var(--muted)}
+  .cm.new{border-color:var(--gold);color:#ffe6b0;background:rgba(255,200,98,.12)}
+  .cm.new .h{color:var(--gold)}
+  .cm.miss{border-style:dashed;background:transparent;color:var(--muted);opacity:.55}
+  .cm.miss .h{color:var(--muted)}
+  .down{font-family:var(--mono);font-size:.62rem;letter-spacing:.12em;text-transform:uppercase;color:var(--muted);
+    text-align:center;transition:color .3s}
+  .down.on{color:var(--gold)}
+  .seen{margin-top:auto;font-family:var(--mono);font-size:.66rem;line-height:1.4;padding:6px 9px;border-radius:9px;
+    border:1px solid var(--line);color:var(--muted);transition:color .3s,border-color .3s,background .3s}
+  .seen.yes{color:var(--good);border-color:rgba(70,217,138,.5);background:rgba(70,217,138,.08)}
+  .seen.no{color:var(--warn);border-color:rgba(255,106,106,.45);background:rgba(255,106,106,.06)}
+  .arrow{display:flex;flex-direction:column;align-items:center;justify-content:center;gap:6px;color:var(--muted);
+    font-family:var(--mono);font-size:.64rem;letter-spacing:.1em;text-transform:uppercase;text-align:center;transition:color .3s}
+  .arrow .ln{width:52px;height:2px;background:var(--line);position:relative;transition:background .3s}
+  .arrow .ln::after{content:"";position:absolute;right:-1px;top:-4px;border:5px solid transparent;border-left:7px solid var(--line);border-right:0;transition:border-color .3s}
+  .arrow.on{color:var(--gold)}
+  .arrow.on .ln{background:var(--gold)}
+  .arrow.on .ln::after{border-left-color:var(--gold)}
+  @media (max-width:860px){
+    .places{grid-template-columns:1fr}
+    .arrow{flex-direction:row;padding:10px 0}
+    .arrow .ln{width:2px;height:28px}
+    .arrow .ln::after{right:-4px;top:auto;bottom:-1px;border:5px solid transparent;border-top:7px solid var(--line);border-bottom:0}
+    .arrow.on .ln::after{border-top-color:var(--gold);border-left-color:transparent}
+  }
+
+  /* the one control, under the animation */
+  .ctl{margin-top:20px;display:grid;grid-template-columns:1fr auto;gap:14px;align-items:start}
+  @media (max-width:760px){.ctl{grid-template-columns:1fr}}
+  .seg{display:inline-flex;border:1px solid var(--line);border-radius:12px;overflow:hidden;background:rgba(0,0,0,.25)}
+  .seg button{font-family:var(--body);font-weight:500;font-size:.84rem;padding:10px 16px;border:0;background:transparent;color:var(--muted);
+    cursor:pointer;transition:.15s;border-right:1px solid var(--line)}
+  .seg button:last-child{border-right:0}
+  .seg button:hover{color:var(--accent)}
+  .seg button.on{background:rgba(110,160,255,.16);color:var(--ink)}
+  .seg button:focus-visible{outline:2px solid var(--accent);outline-offset:-2px}
+  .status{font-family:var(--mono);font-size:.82rem;line-height:1.55;color:var(--ink);min-height:60px;
+    padding:12px 14px;border-radius:12px;background:rgba(0,0,0,.25);border:1px solid var(--line);
+    border-left:3px solid var(--accent);transition:border-color .3s;grid-column:1 / -1}
+  .status b.g{color:var(--good)} .status b.a{color:var(--accent)} .status b.y{color:var(--gold)}
+  .hint{font-family:var(--mono);font-size:.7rem;color:var(--muted);margin:14px 0 0;line-height:1.5}
+  .hint b{color:var(--accent)}
+
+  .take{margin-top:22px;background:linear-gradient(180deg,rgba(110,160,255,.08),rgba(139,123,255,.04));
+    border:1px solid var(--line);border-left:3px solid var(--accent);border-radius:12px;padding:16px 18px}
+  .take .tk{font-family:var(--mono);font-size:.66rem;letter-spacing:.14em;text-transform:uppercase;color:var(--accent);margin:0 0 8px}
+  .take p{margin:0;font-size:.95rem;color:var(--ink);line-height:1.55}
+  .take b{color:#fff}
+  @media (prefers-reduced-motion:reduce){*{animation-duration:.01ms!important;transition-duration:.01ms!important}#amb{display:none}}
+</style>
+</head>
+<body>
+
+<a class="back" href="../index.html#03-local-vs-remote">&#8592; Week 1 index</a>
+
+<canvas id="amb"></canvas>
+<div class="wrap">
+  <p class="tag">Workbook 1b &middot; Section 1-2 &middot; Local repository and GitHub</p>
+  <h1>Local vs Remote Repository</h1>
+  <p class="lede">Your project lives in three places: the working folder, the local repository on your computer, and the remote repository on GitHub.
+  <b>A commit saves on your computer only. Nobody else sees it until you push.</b> Pick a moment below.</p>
+
+  <div class="stage">
+    <div class="panelR">
+      <p class="lab">Where is the commit "Print Hello"?</p>
+      <div class="places">
+        <div class="place" id="Pme">
+          <div class="phead"><span class="pname">Your computer</span><span class="pwhere">~/pluralsight/testing-git</span></div>
+          <div class="box">
+            <p class="bt">Working folder: the files you edit</p>
+            <div class="file" id="Fmain"><span>src/.../Main.java</span><span class="st" id="Smain"></span></div>
+            <div class="file"><span>pom.xml</span><span class="st">saved</span></div>
+          </div>
+          <div class="down" id="Acommit">&#8595; commit</div>
+          <div class="box">
+            <p class="bt">Local repository (.git folder)</p>
+            <div class="commits" id="Cme"></div>
+          </div>
+          <div class="seen" id="Vme"></div>
+        </div>
+        <div class="arrow" id="Apush"><span class="ln"></span><span>push</span></div>
+        <div class="place" id="Pgh">
+          <div class="phead"><span class="pname">GitHub</span><span class="pwhere">remote repository &middot; public</span></div>
+          <div class="box">
+            <p class="bt">github.com/you/testing-git</p>
+            <div class="commits" id="Cgh"></div>
+          </div>
+          <div class="seen" id="Vgh"></div>
+        </div>
+        <div class="arrow" id="Apull"><span class="ln"></span><span>clone / pull</span></div>
+        <div class="place" id="Pmate">
+          <div class="phead"><span class="pname">Another computer</span><span class="pwhere">a teammate's copy</span></div>
+          <div class="box">
+            <p class="bt">Their local repository</p>
+            <div class="commits" id="Cmate"></div>
+          </div>
+          <div class="seen" id="Vmate"></div>
+        </div>
+      </div>
+
+      <div class="ctl">
+        <div class="seg" id="seg" role="group" aria-label="Pick a moment">
+          <button data-m="edit" class="on">Edited</button>
+          <button data-m="commit">Committed</button>
+          <button data-m="push">Pushed</button>
+          <button data-m="pull">Pulled</button>
+        </div>
+        <div class="status" id="status"></div>
+      </div>
+      <p class="hint">In IntelliJ: <b>Commit</b> and <b>Commit and Push</b> in the Commit tool window. Share Project on GitHub does the first push for you.</p>
+    </div>
+  </div>
+
+  <div class="take">
+    <p class="tk">The one idea</p>
+    <p><b>Commit saves on your machine only. Nothing exists on GitHub until you push.</b>
+    Your repositories are public, so once you push, Raymond can open GitHub and see your work.</p>
+  </div>
+
+  <div id="rail"></div>
+</div>
+
+<script>
+(function(){
+  "use strict";
+  var $=function(s){return document.querySelector(s);};
+  var reduce=matchMedia("(prefers-reduced-motion: reduce)").matches;
+
+  /* which places hold the new commit in each moment */
+  var MODES={
+    edit:{me:false,gh:false,mate:false,mod:true,arrow:"",
+      msg:'You changed <code>Main.java</code> and saved it. The change is only in the working folder. <b class="y">No commit yet</b>, so no copy holds it.'},
+    commit:{me:true,gh:false,mate:false,mod:false,arrow:"commit",
+      msg:'The commit is in your <b class="a">local repository</b>. GitHub still shows only Initial Commit. If Raymond opens your repo now, he does not see it.'},
+    push:{me:true,gh:true,mate:false,mod:false,arrow:"push",
+      msg:'Push copied the commit up to <b class="a">GitHub</b>. The repo is public, so <b class="g">Raymond can see it</b>. A teammate\'s copy is still old until they pull.'},
+    pull:{me:true,gh:true,mate:true,mod:false,arrow:"pull",
+      msg:'Pull (or clone, the first time) copied the commit down. Now <b class="g">all three repositories</b> hold the same history.'}
+  };
+  var SEEN={
+    me:["Only you can see this","Only you can see this"],
+    gh:["Raymond cannot see the new commit","Raymond can see it in the browser"],
+    mate:["Teammate does not have it","Teammate has it"]
+  };
+
+  function commits(has){
+    return '<div class="cm"><span class="h">a1f3</span><span>Initial Commit</span></div>'+
+      (has?'<div class="cm new"><span class="h">7c2e</span><span>Print Hello</span></div>'
+          :'<div class="cm miss"><span class="h">----</span><span>Print Hello: not here</span></div>');
+  }
+
+  function set(mode){
+    var M=MODES[mode];
+    ["me","gh","mate"].forEach(function(k){
+      var has=M[k];
+      document.getElementById("P"+k).classList.toggle("has",has);
+      document.getElementById("C"+k).innerHTML=commits(has);
+      var v=document.getElementById("V"+k);
+      if(k==="me"){v.className="seen";v.textContent=SEEN.me[0];}
+      else{v.className="seen "+(has?"yes":"no");v.textContent=SEEN[k][has?1:0];}
+    });
+    $("#Fmain").classList.toggle("mod",M.mod);
+    $("#Smain").textContent=M.mod?"modified":"committed";
+    $("#Acommit").classList.toggle("on",M.arrow==="commit");
+    $("#Apush").classList.toggle("on",M.arrow==="push");
+    $("#Apull").classList.toggle("on",M.arrow==="pull");
+    Array.prototype.forEach.call(document.querySelectorAll("#seg button"),function(b){b.classList.toggle("on",b.getAttribute("data-m")===mode);});
+    $("#status").innerHTML=M.msg;
+  }
+
+  $("#seg").addEventListener("click",function(e){ var b=e.target.closest("button"); if(b) set(b.getAttribute("data-m")); });
+  /* ---------- ambient canvas ---------- */
+  var cv=$("#amb"),ctx=cv.getContext&&cv.getContext("2d"),parts=[];
+  function sizeC(){if(!ctx)return;cv.width=innerWidth;cv.height=innerHeight;}
+  function initParts(){parts=[];for(var i=0;i<46;i++)parts.push({x:Math.random(),y:Math.random(),
+    r:Math.random()*1.6+.3,s:Math.random()*.02+.004,o:Math.random()*.4+.1});}
+  function drawC(){if(!ctx)return;ctx.clearRect(0,0,cv.width,cv.height);
+    parts.forEach(function(p){p.y-=p.s/60;if(p.y<-.02)p.y=1.02;
+      ctx.beginPath();ctx.arc(p.x*cv.width,p.y*cv.height,p.r,0,7);
+      ctx.fillStyle="rgba(140,170,255,"+p.o+")";ctx.fill();});
+    requestAnimationFrame(drawC);}
+  if(ctx&&!reduce){sizeC();initParts();drawC();addEventListener("resize",sizeC);}
+
+  set("commit");
+})();
+</script>
+<script src="../manifest.js"></script>
+<script src="../../assets/rail.js"></script>
+<script>Rail.render(document.getElementById("rail"),{kind:"visuals",current:"03-local-vs-remote"});</script>
+</body>
+</html>

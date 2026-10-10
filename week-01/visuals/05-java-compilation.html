@@ -1,0 +1,403 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Compile, Bytecode, JVM | Week 1 Visual Hub</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Sora:wght@500;700&family=Inter:wght@400;500&family=JetBrains+Mono:wght@400;500&display=swap">
+<style>
+  :root{
+    --bg:#080c17; --bg2:#0c1428; --surface:rgba(255,255,255,.045); --line:rgba(255,255,255,.09);
+    --ink:#eef2fb; --muted:#8496b6; --accent:#6ea0ff; --accent2:#8b7bff; --good:#46d98a; --warn:#ff6a6a;
+    --gold:#ffc862; --disp:'Sora',system-ui,sans-serif; --body:'Inter',system-ui,sans-serif;
+    --mono:'JetBrains Mono',ui-monospace,monospace;
+  }
+  *{box-sizing:border-box}
+  body{margin:0;min-height:100vh;color:var(--ink);font-family:var(--body);
+    background:radial-gradient(1200px 700px at 70% -10%,#141d38 0%,transparent 55%),
+               radial-gradient(900px 600px at 10% 110%,#161233 0%,transparent 50%),#080c17;
+    overflow-x:hidden}
+  #amb{position:fixed;inset:0;z-index:0;pointer-events:none;opacity:.6}
+  .back{position:relative;z-index:2;display:block;max-width:1120px;margin:0 auto;padding:26px 24px 0;
+    width:100%;font-family:var(--mono);font-size:.8rem;letter-spacing:.04em;color:var(--muted);
+    text-decoration:none;transition:color .15s}
+  .back:hover{color:var(--accent)}
+  .wrap{position:relative;z-index:1;max-width:1120px;margin:0 auto;padding:22px 24px 70px}
+  .tag{font-family:var(--mono);font-size:.72rem;letter-spacing:.22em;text-transform:uppercase;color:var(--accent);margin:0 0 14px}
+  h1{font-family:var(--disp);font-weight:700;font-size:clamp(2.3rem,6vw,3.6rem);line-height:1;margin:0 0 12px;
+    letter-spacing:-.03em;background:linear-gradient(180deg,#fff,#b9c6e6);-webkit-background-clip:text;
+    background-clip:text;color:transparent}
+  .lede{color:var(--muted);max-width:64ch;font-size:1.05rem;margin:0 0 30px;line-height:1.5}
+  .lede b{color:var(--ink)}
+  .lede code,.take code,.status code{font-family:var(--mono);font-size:.92em;color:#bcd0ff}
+  .stage{position:relative;background:linear-gradient(180deg,rgba(255,255,255,.03),rgba(255,255,255,.01));
+    border:1px solid var(--line);border-radius:24px;padding:8px;
+    box-shadow:0 1px 0 rgba(255,255,255,.06) inset,0 30px 80px -30px rgba(0,0,0,.8)}
+  .grid{display:grid;grid-template-columns:340px 1fr;gap:8px}
+  @media (max-width:860px){.grid{grid-template-columns:1fr}}
+  .panelL,.panelR{border-radius:18px;padding:22px}
+  .panelL{background:linear-gradient(180deg,rgba(110,160,255,.06),rgba(139,123,255,.03));border:1px solid var(--line)}
+  .panelR{background:rgba(6,10,20,.5);border:1px solid var(--line);position:relative;overflow:hidden;min-width:0}
+  .lab{font-family:var(--mono);font-size:.7rem;letter-spacing:.12em;text-transform:uppercase;color:var(--muted);margin:0 0 12px}
+  .chips{display:flex;flex-wrap:wrap;gap:6px;margin-bottom:16px}
+  .chip{font-family:var(--mono);font-size:.74rem;padding:5px 11px;border-radius:999px;cursor:pointer;
+    border:1px solid var(--line);background:rgba(0,0,0,.25);color:var(--muted);transition:.15s}
+  .chip:hover{border-color:var(--accent);color:var(--accent)}
+  .chip.on{border-color:rgba(110,160,255,.6);background:rgba(110,160,255,.14);color:var(--ink)}
+  .chip:focus-visible{outline:2px solid var(--accent);outline-offset:2px}
+  .readout{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin:0 0 14px}
+  .stat{background:rgba(255,255,255,.03);border:1px solid var(--line);border-radius:12px;padding:11px 13px}
+  .stat .k{font-family:var(--mono);font-size:.62rem;letter-spacing:.1em;text-transform:uppercase;color:var(--muted)}
+  .stat .v{font-family:var(--disp);font-weight:700;font-size:1.45rem;font-variant-numeric:tabular-nums;margin-top:2px;transition:color .3s;min-height:1.6em}
+  .v.good{color:var(--good)} .v.bad{color:var(--warn)} .v.dim{color:rgba(132,150,182,.5)}
+  .stepno{font-family:var(--mono);font-size:.64rem;letter-spacing:.14em;text-transform:uppercase;color:var(--muted);margin:0 0 8px}
+  .stepno b{color:var(--accent);font-weight:500}
+  .status{font-family:var(--mono);font-size:.82rem;line-height:1.55;color:var(--ink);min-height:140px;
+    padding:12px 14px;border-radius:12px;background:rgba(0,0,0,.25);border:1px solid var(--line);
+    border-left:3px solid var(--accent);transition:border-color .3s}
+  .status.bad{border-left-color:var(--warn)}
+  .status.fix{border-left-color:var(--gold)}
+  .status.ok{border-left-color:var(--good)}
+  .status b.g{color:var(--good)} .status b.w{color:var(--warn)} .status b.a{color:var(--accent)} .status b.y{color:var(--gold)}
+  .actions{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-top:16px}
+  .btn{font-family:var(--body);font-weight:500;font-size:.84rem;padding:9px 12px;border-radius:11px;cursor:pointer;
+    border:1px solid var(--line);background:var(--surface);color:var(--ink);transition:.15s;text-align:center}
+  .btn:hover{border-color:var(--accent);color:var(--accent)}
+  .btn.primary{border-color:rgba(110,160,255,.5);background:rgba(110,160,255,.12);grid-column:1 / -1}
+  .btn.gold:hover{border-color:var(--gold);color:var(--gold)}
+  .btn:disabled{opacity:.35;cursor:not-allowed}
+  .btn:focus-visible{outline:2px solid var(--accent);outline-offset:2px}
+  .hint{font-family:var(--mono);font-size:.7rem;color:var(--muted);margin:14px 0 0;line-height:1.5}
+  .hint b{color:var(--accent)}
+  /* right: the journey, top to bottom */
+  .code{min-width:0;font-family:var(--mono);font-size:.74rem;line-height:1.75;background:rgba(0,0,0,.35);border:1px solid var(--line);
+    border-radius:14px;padding:10px 0;overflow-x:auto;transition:border-color .3s,box-shadow .3s}
+  .code.lit{border-color:rgba(110,160,255,.55);box-shadow:0 0 22px -10px rgba(110,160,255,.8)}
+  .ln{display:flex;gap:12px;padding:0 14px;white-space:pre;color:#c9d4ea;transition:background .2s}
+  .ln .n{width:16px;text-align:right;color:rgba(132,150,182,.55);user-select:none;flex-shrink:0}
+  .ln .t{flex:1}
+  .ln.bad{background:rgba(255,106,106,.12);box-shadow:inset 3px 0 0 var(--warn)}
+  .ln.fix{background:rgba(255,200,98,.1);box-shadow:inset 3px 0 0 var(--gold)}
+  .ck{font-size:.62rem;letter-spacing:.08em;color:var(--good);opacity:0;transition:opacity .25s;flex-shrink:0}
+  .ck.bad{color:var(--warn)}
+  .code.checked .ck{opacity:1}
+  .gap{display:inline-block;width:.7em;height:1.15em;vertical-align:-.2em;border:1px dashed rgba(255,106,106,.7);border-radius:3px;text-align:center;color:var(--gold);line-height:1.1}
+  .kw{color:#c792ea} .ty{color:#82aaff} .st{color:#c3e88d} .fn{color:#ffcb6b}
+  .conn{display:flex;align-items:center;gap:10px;height:34px;padding-left:44px;font-family:var(--mono);font-size:.64rem;
+    letter-spacing:.06em;color:rgba(132,150,182,.5);transition:color .3s}
+  .conn i{position:relative;width:2px;height:22px;background:rgba(132,150,182,.25);transition:background .3s}
+  .conn i::after{content:"";position:absolute;left:-4px;bottom:-4px;border:5px solid transparent;border-top:6px solid rgba(132,150,182,.25);border-bottom:0;transition:border-color .3s}
+  .conn.on{color:var(--accent)} .conn.on i{background:var(--accent)} .conn.on i::after{border-top-color:var(--accent)}
+  .conn.dead{color:var(--warn)} .conn.dead i{background:rgba(255,106,106,.35)} .conn.dead i::after{border-top-color:rgba(255,106,106,.35)}
+  .row2{display:grid;grid-template-columns:minmax(0,.9fr) 28px minmax(0,1.1fr);align-items:stretch}
+  .box{border-radius:14px;border:1px solid var(--line);background:rgba(0,0,0,.25);padding:11px 13px;min-width:0;
+    transition:border-color .3s,background .3s,box-shadow .3s,opacity .3s}
+  .box .bh{font-family:var(--disp);font-weight:700;font-size:.98rem;transition:color .3s}
+  .box .bs{font-family:var(--mono);font-size:.6rem;letter-spacing:.06em;color:var(--muted);margin:1px 0 8px;overflow-wrap:anywhere}
+  .box .bb{font-family:var(--mono);font-size:.68rem;line-height:1.6;color:var(--muted);white-space:pre-wrap;overflow-wrap:anywhere}
+  .box.lit{border-color:rgba(110,160,255,.6);background:rgba(110,160,255,.08)}
+  .box.good{border-color:rgba(70,217,138,.55);background:rgba(70,217,138,.06)}
+  .box.good .bb{color:var(--good)}
+  .box.bad{border-color:rgba(255,106,106,.65);background:rgba(255,106,106,.08)}
+  .box.bad .bb{color:#ffb3b3;background:#05070e;border-radius:8px;padding:6px 8px}
+  .box.gold{border-color:rgba(255,200,98,.55)} .box.gold .bb{color:var(--gold)}
+  .box.ghost{border-style:dashed;opacity:.55}
+  .box.ghost .bh{color:var(--muted)}
+  .box.gone{border-style:dashed;border-color:rgba(255,106,106,.6);background:rgba(255,106,106,.04)}
+  .box.gone .bh{color:var(--warn);text-decoration:line-through}
+  .box.gone .bb{color:var(--warn)}
+  .arrowR{align-self:center;justify-self:center;width:0;height:0;border:7px solid transparent;border-left:10px solid rgba(132,150,182,.25);border-right:0;transition:border-color .3s}
+  .arrowR.on{border-left-color:var(--accent)} .arrowR.dead{border-left-color:rgba(255,106,106,.5)}
+  .bytes{color:#bcd0ff;letter-spacing:.04em}
+  .op{color:#c9d4ea;transition:color .3s}
+  .box.inside .op{color:var(--gold)}
+  .badge{display:inline-block;margin-top:7px;font-family:var(--mono);font-size:.6rem;padding:3px 8px;border-radius:999px;
+    border:1px solid rgba(255,200,98,.55);color:var(--gold);background:rgba(255,200,98,.08);opacity:0;transition:opacity .3s}
+  .box.inside .badge{opacity:1}
+  .pcs{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:10px}
+  .pc{border-radius:14px;border:1px solid var(--line);background:rgba(255,255,255,.02);padding:10px;min-width:0;transition:border-color .3s,opacity .3s}
+  .pc .os{font-family:var(--disp);font-weight:700;font-size:.86rem}
+  .pc .hw{font-family:var(--mono);font-size:.58rem;color:var(--muted);margin-bottom:8px}
+  .slot{font-family:var(--mono);font-size:.6rem;text-align:center;padding:4px 4px;border-radius:8px;border:1px dashed rgba(132,150,182,.3);
+    color:rgba(132,150,182,.55);margin-bottom:6px;transition:all .35s;overflow-wrap:anywhere}
+  .slot.in{border-style:solid;border-color:rgba(110,160,255,.6);background:rgba(110,160,255,.12);color:var(--ink);animation:pop .35s}
+  .slot.none{border-color:rgba(255,106,106,.55);color:var(--warn)}
+  .jvm{border-radius:9px;border:1px solid var(--line);padding:6px 8px;background:rgba(0,0,0,.25);transition:all .3s;opacity:.45}
+  .jvm b{font-family:var(--disp);font-size:.78rem;color:var(--muted);transition:color .3s}
+  .jvm span{display:block;font-family:var(--mono);font-size:.58rem;color:var(--muted);min-height:1.5em;overflow-wrap:anywhere}
+  .jvm.on{opacity:1;border-color:rgba(110,160,255,.6);background:rgba(110,160,255,.1)}
+  .jvm.on b{color:var(--accent)}
+  .jvm.run{opacity:1;border-color:rgba(70,217,138,.55);background:rgba(70,217,138,.08)}
+  .jvm.run b{color:var(--good)}
+  .scr{margin-top:6px;font-family:var(--mono);font-size:.62rem;background:#05070e;border:1px solid var(--line);border-radius:8px;
+    padding:5px 7px;min-height:2.6em;color:#9fe3b6;overflow-wrap:anywhere}
+  .scr .out{animation:pop .3s}
+  .pc.dead{opacity:.45}
+  @keyframes pop{from{transform:scale(.6);opacity:0}to{transform:scale(1);opacity:1}}
+  .take{margin-top:22px;background:linear-gradient(180deg,rgba(110,160,255,.08),rgba(139,123,255,.04));
+    border:1px solid var(--line);border-left:3px solid var(--accent);border-radius:12px;padding:16px 18px}
+  .take .tk{font-family:var(--mono);font-size:.66rem;letter-spacing:.14em;text-transform:uppercase;color:var(--accent);margin:0 0 8px}
+  .take p{margin:0;font-size:.95rem;color:var(--ink);line-height:1.55}
+  .take b{color:#fff}
+  @media (prefers-reduced-motion:reduce){*{animation-duration:.01ms!important;transition-duration:.01ms!important;transition-delay:0s!important}#amb{display:none}}
+</style>
+</head>
+<body>
+
+<a class="back" href="../index.html#05-java-compilation">&#8592; Week 1 index</a>
+
+<canvas id="amb"></canvas>
+<div class="wrap">
+  <p class="tag">Workbook 1c &middot; Section 2-1 &middot; Compiling Java</p>
+  <h1>Compile, Bytecode, JVM</h1>
+  <p class="lede">HelloWorld.java is text for people, not something a computer can run.
+  <b>javac checks it and turns it into bytecode once; a JVM on any computer runs that same bytecode.</b>
+  Follow one program on its journey, then try it with a missing semicolon.</p>
+
+  <div class="stage">
+    <div class="grid">
+      <div class="panelL">
+        <p class="lab">Pick the source</p>
+        <div class="chips" id="chips"></div>
+
+        <div class="readout">
+          <div class="stat"><div class="k">.class file</div><div class="v dim" id="stCls">?</div></div>
+          <div class="stat"><div class="k">Runs on</div><div class="v dim" id="stRun">?</div></div>
+        </div>
+
+        <p class="stepno" id="stepno">Step <b>0</b> of 8</p>
+        <div class="status" id="status">Press <b class="a">Next</b> to start.</div>
+
+        <div class="actions">
+          <button class="btn primary" id="bNext">Next &rarr;</button>
+          <button class="btn gold" id="bBack">&larr; Back</button>
+          <button class="btn" id="bReset">Reset</button>
+        </div>
+        <p class="hint">space = next &middot; the source is HelloWorld.java from the first Maven project demo. <b>Try missing semicolon.</b></p>
+      </div>
+
+      <div class="panelR">
+        <p class="lab">HelloWorld.java &middot; source text</p>
+        <div class="code" id="code"></div>
+
+        <div class="conn" id="c1"><i></i><span>javac HelloWorld.java</span></div>
+
+        <div class="row2">
+          <div class="box" id="jv">
+            <div class="bh">javac</div>
+            <div class="bs">the Java compiler</div>
+            <div class="bb" id="jvBody"></div>
+          </div>
+          <div class="arrowR" id="aR"></div>
+          <div class="box ghost" id="cls">
+            <div class="bh">HelloWorld.class</div>
+            <div class="bs">target/classes/com/pluralsight</div>
+            <div class="bb" id="clsBody"></div>
+          </div>
+        </div>
+
+        <div class="conn" id="c2"><i></i><span id="c2t">the same .class, copied to any computer</span></div>
+
+        <div class="pcs" id="pcs"></div>
+      </div>
+    </div>
+  </div>
+
+  <div class="take">
+    <p class="tk">The one idea</p>
+    <p><b>javac turns source into bytecode once</b>, and only when the grammar is right. <b>The JVM runs that bytecode anywhere</b>:
+    the same HelloWorld.class works on a Mac, a Windows PC and a Linux machine. A syntax error stops at javac: <b>no .class, nothing to run</b>.</p>
+  </div>
+
+  <div id="rail"></div>
+</div>
+
+<script>
+(function(){
+  "use strict";
+  var $=function(s){return document.querySelector(s);};
+  var reduce=matchMedia("(prefers-reduced-motion: reduce)").matches;
+
+  /* ---------- the source: HelloWorld.java from the first-maven-project demo ---------- */
+  function lines(broken,fixing){
+    var end=broken?(fixing?'<span class="gap">;</span>':'<span class="gap"></span>'):';';
+    return [
+      '<span class="kw">package</span> com.pluralsight;',
+      '',
+      '<span class="kw">public class</span> <span class="ty">HelloWorld</span> {',
+      '    <span class="kw">public static void</span> <span class="fn">main</span>(<span class="ty">String</span>[] args) {',
+      '        System.out.<span class="fn">println</span>(<span class="st">"Hello I am Raymond!"</span>)'+end,
+      '    }',
+      '}'
+    ];
+  }
+
+  var PCS=[
+    {os:"macOS",hw:"Apple chip (ARM64)",chip:"Apple chip"},
+    {os:"Windows",hw:"Intel or AMD (x64)",chip:"x64 chip"},
+    {os:"Linux",hw:"Intel or AMD (x64)",chip:"x64 chip"}
+  ];
+
+  /* ---------- the two walks: one snapshot per step ---------- */
+  var WALKS={
+    clean:[
+      {code:"lit",jv:"idle",cls:"none",c1:"",c2:"",pc:"off",
+       msg:'This is <code>HelloWorld.java</code>: <b class="a">plain text written for people</b>. No computer can run it as it is.'},
+      {code:"check",jv:"reading",cls:"none",c1:"on",c2:"",pc:"off",
+       msg:'<b class="a">javac</b>, the Java compiler, reads the file and checks the grammar of every line: keywords, braces, quotes, semicolons.'},
+      {code:"done",jv:"ok",cls:"written",c1:"on",c2:"",pc:"off",sCls:"written",
+       msg:'No syntax errors, so javac translates the code and <b class="g">writes HelloWorld.class</b>. Maven puts it in <code>target/classes</code>.'},
+      {code:"done",jv:"ok",cls:"inside",c1:"on",c2:"",pc:"off",sCls:"written",
+       msg:'Inside is <b class="y">bytecode</b>: instructions for a JVM, <b class="a">not machine code</b> for an Intel or Apple chip. No single kind of computer owns it.'},
+      {code:"done",jv:"ok",cls:"written",c1:"on",c2:"on",pc:"copied",sCls:"written",
+       msg:'The same HelloWorld.class goes to a Mac, a Windows PC and a Linux machine. <b class="a">Nobody compiles it again.</b>'},
+      {code:"done",jv:"ok",cls:"written",c1:"on",c2:"on",pc:"loaded",sCls:"written",
+       msg:'Each computer has its own <b class="a">JVM</b>. The JVM loads HelloWorld.class and finds <code>main</code>.'},
+      {code:"done",jv:"ok",cls:"written",c1:"on",c2:"on",pc:"exec",sCls:"written",
+       msg:'Each JVM executes the bytecode on its own hardware: an Apple chip on the Mac, x64 chips on Windows and Linux.'},
+      {code:"done",jv:"ok",cls:"written",c1:"on",c2:"on",pc:"out",sCls:"written",sRun:"3 PCs",st:"ok",
+       msg:'Same output on all three: <b class="g">Hello I am Raymond!</b> Compiled once, run anywhere: <b class="g">write once, run anywhere</b>.'}
+    ],
+    broken:[
+      {code:"lit",jv:"idle",cls:"none",c1:"",c2:"",pc:"off",
+       msg:'Same file, one change: line 5 lost its <b class="w">semicolon</b>. To a person it still reads fine.'},
+      {code:"check",jv:"reading",cls:"none",c1:"on",c2:"",pc:"off",st:"bad",
+       msg:'javac checks the grammar of every line. Line 5 breaks a rule: <b class="w">a statement must end with ;</b>'},
+      {code:"done",jv:"err",cls:"none",c1:"on",c2:"",pc:"off",st:"bad",
+       msg:'javac prints the error with the file name and the line number: <b class="w">HelloWorld.java:5: error: \';\' expected</b>'},
+      {code:"done",jv:"err",cls:"gone",c1:"on",c2:"",pc:"off",sCls:"none",st:"bad",
+       msg:'Because of the error, <b class="w">no HelloWorld.class is written</b>. No bytecode exists, not even for the lines that were fine.'},
+      {code:"done",jv:"err",cls:"gone",c1:"on",c2:"dead",pc:"empty",sCls:"none",sRun:"0",st:"bad",
+       msg:'The JVMs on the three computers have <b class="w">nothing to load</b>. The program never runs, anywhere.'},
+      {code:"fix",jv:"fix",cls:"gone",c1:"on",c2:"dead",pc:"empty",sCls:"none",sRun:"0",st:"fix",
+       msg:'The fix happens in the source: put the <b class="y">;</b> back and compile again. Pick <b class="a">clean code</b> to watch that run.'}
+    ]
+  };
+  var PRESETS=[{key:"clean",label:"clean code"},{key:"broken",label:"missing semicolon"}];
+  var mode="clean",steps=WALKS.clean,at=-1;
+
+  var codeEl=$("#code"),statusEl=$("#status");
+
+  function renderCode(s){
+    var broken=mode==="broken", L=lines(broken,s&&s.code==="fix");
+    var c="code"+(s&&(s.code==="lit")?" lit":"")+(s&&s.code!=="lit"?" checked":"");
+    codeEl.className=c;
+    codeEl.innerHTML=L.map(function(t,i){
+      var n=i+1, cls="ln", ck="";
+      if(t){
+        var bad=broken&&n===5;
+        ck='<span class="ck'+(bad?' bad':'')+'" style="transition-delay:'+(s&&s.code==="check"?i*110:0)+'ms">'+(bad?'error':'ok')+'</span>';
+        if(bad&&s&&s.code!=="lit") cls+=(s.code==="fix"?" fix":" bad");
+      }
+      return '<div class="'+cls+'"><span class="n">'+n+'</span><span class="t">'+(t||" ")+'</span>'+ck+'</div>';
+    }).join("");
+    if(s&&s.code==="check"){ /* replay the line-by-line check */
+      codeEl.classList.remove("checked"); void codeEl.offsetWidth; codeEl.classList.add("checked");
+    }
+  }
+
+  function renderJavac(k){
+    var box=$("#jv"),b=$("#jvBody");
+    var map={
+      idle:["box","waiting for a .java file"],
+      reading:["box lit","checking the grammar, line by line"],
+      ok:["box good","0 errors\ntranslating to bytecode"],
+      err:["box bad","HelloWorld.java:5: error: ';' expected\n1 error"],
+      fix:["box gold","add the ; on line 5,\nthen run javac again"]
+    };
+    box.className=map[k][0]; b.textContent=map[k][1];
+  }
+
+  function renderClass(k){
+    var box=$("#cls"),b=$("#clsBody"),a=$("#aR");
+    if(k==="none"){ box.className="box ghost"; b.textContent="(not written yet)"; a.className="arrowR"; return; }
+    if(k==="gone"){ box.className="box gone"; b.textContent="not created: javac found an error"; a.className="arrowR dead"; return; }
+    box.className="box good"+(k==="inside"?" inside":""); a.className="arrowR on";
+    b.innerHTML='<span class="bytes">CA FE BA BE 00 00 00 3D ...</span>\n'+
+      '<span class="op">getstatic System.out\nldc "Hello I am Raymond!"\ninvokevirtual println\nreturn</span>\n'+
+      '<span class="badge">for a JVM, not for a chip</span>';
+  }
+
+  function buildPcs(){
+    $("#pcs").innerHTML=PCS.map(function(p,i){
+      return '<div class="pc" id="pc'+i+'"><div class="os">'+p.os+'</div><div class="hw">'+p.hw+'</div>'+
+        '<div class="slot" id="sl'+i+'"></div>'+
+        '<div class="jvm" id="jvm'+i+'"><b>JVM</b><span id="jt'+i+'"></span></div>'+
+        '<div class="scr" id="scr'+i+'"></div></div>';
+    }).join("");
+  }
+  function renderPcs(k){
+    PCS.forEach(function(p,i){
+      var pc=$("#pc"+i),sl=$("#sl"+i),jv=$("#jvm"+i),jt=$("#jt"+i),sc=$("#scr"+i);
+      var has=k==="copied"||k==="loaded"||k==="exec"||k==="out";
+      pc.className="pc"+(k==="empty"?" dead":"");
+      var slCls="slot"+(has?" in":"")+(k==="empty"?" none":"");
+      if(sl.className!==slCls){ sl.className=slCls; }
+      sl.textContent=has?"HelloWorld.class":(k==="empty"?"nothing to load":"(no .class yet)");
+      jv.className="jvm"+(k==="loaded"?" on":"")+((k==="exec"||k==="out")?" run":"");
+      jt.textContent=k==="loaded"?"loaded HelloWorld.class":(k==="exec"||k==="out")?"running on the "+p.chip:(k==="empty"?"idle":"");
+      sc.innerHTML=k==="out"?'<div class="out">Hello I am Raymond!</div>':'<span style="color:rgba(132,150,182,.45)">(screen)</span>';
+    });
+  }
+
+  function setStat(id,v,c){ var e=$(id); if(v===undefined||v===null){e.textContent="?";e.className="v dim";} else {e.textContent=v;e.className="v "+(c||"");} }
+
+  function show(i){
+    at=i;
+    $("#stepno").innerHTML="Step <b>"+(i+1)+"</b> of "+steps.length;
+    if(i<0){
+      renderCode(null); renderJavac("idle"); renderClass("none"); renderPcs("off");
+      $("#c1").className="conn"; $("#c2").className="conn"; $("#c2t").textContent="the same .class, copied to any computer";
+      statusEl.className="status"; statusEl.innerHTML='Press <b class="a">Next</b> to start. The picture on the right changes at every step.';
+      setStat("#stCls",null); setStat("#stRun",null); setBtns(); return;
+    }
+    var s=steps[i];
+    renderCode(s); renderJavac(s.jv); renderClass(s.cls); renderPcs(s.pc);
+    $("#c1").className="conn"+(s.c1?" "+s.c1:"");
+    $("#c2").className="conn"+(s.c2?" "+s.c2:"");
+    $("#c2t").textContent=s.c2==="dead"?"nothing to copy":"the same .class, copied to any computer";
+    statusEl.className="status"+(s.st?" "+s.st:""); statusEl.innerHTML=s.msg;
+    setStat("#stCls",s.sCls,s.sCls==="written"?"good":"bad");
+    setStat("#stRun",s.sRun,s.sRun==="0"?"bad":"good");
+    setBtns();
+  }
+  function setBtns(){ $("#bNext").disabled=at>=steps.length-1; $("#bBack").disabled=at<0; }
+  function next(){ if(at<steps.length-1) show(at+1); }
+  function back(){ if(at>=0) show(at-1); }
+  function reset(){ steps=WALKS[mode]; show(-1); }
+  function pick(idx){
+    mode=PRESETS[idx].key;
+    Array.prototype.forEach.call(document.querySelectorAll(".chip"),function(c,j){c.classList.toggle("on",j===idx);});
+    if(document.activeElement&&document.activeElement.blur) document.activeElement.blur();
+    reset();
+  }
+
+  $("#chips").innerHTML=PRESETS.map(function(p,j){return '<button class="chip'+(j===0?' on':'')+'" data-i="'+j+'">'+p.label+'</button>';}).join("");
+  $("#chips").addEventListener("click",function(e){ var b=e.target.closest(".chip"); if(b) pick(+b.getAttribute("data-i")); });
+  $("#bNext").addEventListener("click",next);
+  $("#bBack").addEventListener("click",back);
+  $("#bReset").addEventListener("click",reset);
+  document.addEventListener("keydown",function(e){ if(e.code==="Space"&&!/INPUT|BUTTON/.test(e.target.tagName)){e.preventDefault();next();} });
+
+  /* ---------- ambient canvas ---------- */
+  var cv=$("#amb"),ctx=cv.getContext&&cv.getContext("2d"),parts=[];
+  function sizeC(){if(!ctx)return;cv.width=innerWidth;cv.height=innerHeight;}
+  function initParts(){parts=[];for(var i=0;i<46;i++)parts.push({x:Math.random(),y:Math.random(),
+    r:Math.random()*1.6+.3,s:Math.random()*.02+.004,o:Math.random()*.4+.1});}
+  function drawC(){if(!ctx)return;ctx.clearRect(0,0,cv.width,cv.height);
+    parts.forEach(function(p){p.y-=p.s/60;if(p.y<-.02)p.y=1.02;
+      ctx.beginPath();ctx.arc(p.x*cv.width,p.y*cv.height,p.r,0,7);
+      ctx.fillStyle="rgba(140,170,255,"+p.o+")";ctx.fill();});
+    requestAnimationFrame(drawC);}
+  if(ctx&&!reduce){sizeC();initParts();drawC();addEventListener("resize",sizeC);}
+
+  buildPcs();
+  reset();
+})();
+</script>
+<script src="../manifest.js"></script>
+<script src="../../assets/rail.js"></script>
+<script>Rail.render(document.getElementById("rail"),{kind:"visuals",current:"05-java-compilation"});</script>
+</body>
+</html>

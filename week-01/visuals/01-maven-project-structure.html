@@ -1,0 +1,268 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Maven Project Structure | Week 1 Visual Hub</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Sora:wght@500;700&family=Inter:wght@400;500&family=JetBrains+Mono:wght@400;500&display=swap">
+<style>
+  :root{
+    --bg:#080c17; --bg2:#0c1428; --surface:rgba(255,255,255,.045); --line:rgba(255,255,255,.09);
+    --ink:#eef2fb; --muted:#8496b6; --accent:#6ea0ff; --accent2:#8b7bff; --good:#46d98a; --warn:#ff6a6a;
+    --gold:#ffc862; --disp:'Sora',system-ui,sans-serif; --body:'Inter',system-ui,sans-serif;
+    --mono:'JetBrains Mono',ui-monospace,monospace;
+  }
+  *{box-sizing:border-box}
+  body{margin:0;min-height:100vh;color:var(--ink);font-family:var(--body);
+    background:radial-gradient(1200px 700px at 70% -10%,#141d38 0%,transparent 55%),
+               radial-gradient(900px 600px at 10% 110%,#161233 0%,transparent 50%),#080c17;
+    overflow-x:hidden}
+  #amb{position:fixed;inset:0;z-index:0;pointer-events:none;opacity:.6}
+  .back{position:relative;z-index:2;display:block;max-width:1120px;margin:0 auto;padding:26px 24px 0;
+    width:100%;font-family:var(--mono);font-size:.8rem;letter-spacing:.04em;color:var(--muted);
+    text-decoration:none;transition:color .15s}
+  .back:hover{color:var(--accent)}
+  .wrap{position:relative;z-index:1;max-width:1120px;margin:0 auto;padding:22px 24px 70px}
+  .tag{font-family:var(--mono);font-size:.72rem;letter-spacing:.22em;text-transform:uppercase;color:var(--accent);margin:0 0 14px}
+  h1{font-family:var(--disp);font-weight:700;font-size:clamp(2.3rem,6vw,3.6rem);line-height:1;margin:0 0 12px;
+    letter-spacing:-.03em;background:linear-gradient(180deg,#fff,#b9c6e6);-webkit-background-clip:text;
+    background-clip:text;color:transparent}
+  .lede{color:var(--muted);max-width:64ch;font-size:1.05rem;margin:0 0 30px;line-height:1.5}
+  .lede b{color:var(--ink)}
+  .lede code,.take code,.status code,.say code{font-family:var(--mono);font-size:.92em;color:#bcd0ff}
+  .stage{position:relative;background:linear-gradient(180deg,rgba(255,255,255,.03),rgba(255,255,255,.01));
+    border:1px solid var(--line);border-radius:24px;padding:8px;
+    box-shadow:0 1px 0 rgba(255,255,255,.06) inset,0 30px 80px -30px rgba(0,0,0,.8)}
+  .grid{display:grid;grid-template-columns:360px 1fr;gap:8px}
+  @media (max-width:860px){.grid{grid-template-columns:1fr}}
+  .panelL{border-radius:18px;padding:22px;border:1px solid var(--line);
+    background:linear-gradient(180deg,rgba(110,160,255,.07),rgba(139,123,255,.03))}
+  .panelR{border-radius:18px;padding:22px;background:rgba(6,10,20,.5);border:1px solid var(--line);position:relative;overflow:hidden;min-width:0}
+  .lab{font-family:var(--mono);font-size:.7rem;letter-spacing:.12em;text-transform:uppercase;color:var(--muted);margin:0 0 12px}
+
+  /* the tree: the one control */
+  .tree,.tree ul{list-style:none;margin:0;padding:0}
+  .tree ul{margin-left:13px;padding-left:12px;border-left:1px solid rgba(255,255,255,.1);transition:border-color .25s}
+  .tree ul.lit{border-left-color:rgba(110,160,255,.7)}
+  .node{display:flex;align-items:center;gap:8px;width:100%;text-align:left;font-family:var(--mono);font-size:.84rem;
+    color:var(--muted);background:transparent;border:1px solid transparent;border-radius:9px;padding:6px 9px;margin:1px 0;
+    cursor:pointer;transition:color .2s,background .2s,border-color .2s}
+  .node:hover{color:var(--ink);background:rgba(255,255,255,.04)}
+  .node:focus-visible{outline:2px solid var(--accent);outline-offset:1px}
+  .node .ic{flex:0 0 auto;width:14px;height:12px;border-radius:2px;border:1.5px solid currentColor;opacity:.75}
+  .node.dir .ic{border-top-width:3px}
+  .node.file .ic{width:11px;height:13px;border-radius:1px 4px 1px 1px}
+  .node.pkg .ic{border-radius:50%;width:11px;height:11px}
+  .node .note{margin-left:auto;font-size:.62rem;letter-spacing:.1em;text-transform:uppercase;color:var(--muted);opacity:.8}
+  .node.gen{border-style:dashed;border-color:rgba(255,106,106,.28)}
+  .node.path{color:var(--accent)}
+  .node.sel{color:var(--ink);background:rgba(110,160,255,.16);border-color:rgba(110,160,255,.55);border-style:solid}
+  .node.gen.sel{background:rgba(255,106,106,.1);border-color:rgba(255,106,106,.6)}
+  .hint{font-family:var(--mono);font-size:.7rem;color:var(--muted);margin:16px 0 0;line-height:1.5}
+  .hint b{color:var(--accent)}
+
+  /* the detail side */
+  .crumb{font-family:var(--mono);font-size:.78rem;color:var(--muted);margin:0 0 16px;line-height:1.6;word-break:break-word}
+  .crumb span{color:var(--accent)} .crumb span.end{color:var(--ink)}
+  .dhead{display:flex;align-items:center;gap:12px;flex-wrap:wrap;margin:0 0 8px}
+  .dname{font-family:var(--disp);font-weight:700;font-size:1.45rem;letter-spacing:-.01em;margin:0}
+  .badge{font-family:var(--mono);font-size:.62rem;letter-spacing:.14em;text-transform:uppercase;padding:4px 9px;border-radius:999px;border:1px solid}
+  .badge.you{color:var(--good);border-color:rgba(70,217,138,.5);background:rgba(70,217,138,.08)}
+  .badge.cfg{color:var(--gold);border-color:rgba(255,200,98,.5);background:rgba(255,200,98,.08)}
+  .badge.dir{color:var(--accent);border-color:rgba(110,160,255,.5);background:rgba(110,160,255,.08)}
+  .badge.gen{color:var(--warn);border-color:rgba(255,106,106,.5);background:rgba(255,106,106,.08)}
+  .say{color:var(--muted);font-size:.95rem;line-height:1.55;margin:0 0 16px;min-height:4.7em;max-width:62ch}
+  .say b{color:var(--ink);font-weight:500}
+  .ex{border-radius:12px;background:rgba(0,0,0,.35);border:1px solid var(--line);overflow:hidden}
+  .ex .exh{font-family:var(--mono);font-size:.66rem;letter-spacing:.12em;text-transform:uppercase;color:var(--muted);
+    padding:9px 14px;border-bottom:1px solid var(--line)}
+  .ex pre{margin:0;padding:12px 0;font-family:var(--mono);font-size:.8rem;line-height:1.6;overflow-x:auto;min-height:150px}
+  .ex .ln{display:block;padding:0 14px;color:#a9b8d6;white-space:pre}
+  .ex .ln.hot{color:#fff;background:rgba(110,160,255,.14);box-shadow:inset 3px 0 0 var(--accent)}
+  .ex .ln.dim{color:var(--muted);font-style:italic}
+
+  .take{margin-top:22px;background:linear-gradient(180deg,rgba(110,160,255,.08),rgba(139,123,255,.04));
+    border:1px solid var(--line);border-left:3px solid var(--accent);border-radius:12px;padding:16px 18px}
+  .take .tk{font-family:var(--mono);font-size:.66rem;letter-spacing:.14em;text-transform:uppercase;color:var(--accent);margin:0 0 8px}
+  .take p{margin:0;font-size:.95rem;color:var(--ink);line-height:1.55}
+  .take b{color:#fff}
+  @media (prefers-reduced-motion:reduce){*{animation-duration:.01ms!important;transition-duration:.01ms!important}#amb{display:none}}
+</style>
+</head>
+<body>
+
+<a class="back" href="../index.html#01-maven-project-structure">&#8592; Week 1 index</a>
+
+<canvas id="amb"></canvas>
+<div class="wrap">
+  <p class="tag">Workbook 1a &middot; Maven project folder structure</p>
+  <h1>Maven Project Structure</h1>
+  <p class="lede">Every Maven project has the same folders, so any developer knows where to look.
+  <b>Click a folder or file to see what goes there.</b></p>
+
+  <div class="stage">
+    <div class="grid">
+      <div class="panelL">
+        <p class="lab">first-maven-project, as IntelliJ shows it</p>
+        <ul class="tree" id="tree">
+          <li><button class="node dir" data-id="root"><span class="ic"></span>first-maven-project</button>
+            <ul>
+              <li><button class="node dir" data-id="src"><span class="ic"></span>src</button>
+                <ul>
+                  <li><button class="node dir" data-id="main"><span class="ic"></span>main</button>
+                    <ul>
+                      <li><button class="node dir" data-id="mjava"><span class="ic"></span>java</button>
+                        <ul>
+                          <li><button class="node pkg" data-id="pkg"><span class="ic"></span>com.pluralsight</button>
+                            <ul>
+                              <li><button class="node file" data-id="hello"><span class="ic"></span>HelloWorld.java</button></li>
+                            </ul>
+                          </li>
+                        </ul>
+                      </li>
+                      <li><button class="node dir" data-id="res"><span class="ic"></span>resources</button></li>
+                    </ul>
+                  </li>
+                  <li><button class="node dir" data-id="test"><span class="ic"></span>test</button>
+                    <ul>
+                      <li><button class="node dir" data-id="tjava"><span class="ic"></span>java</button></li>
+                    </ul>
+                  </li>
+                </ul>
+              </li>
+              <li><button class="node dir gen" data-id="target"><span class="ic"></span>target<span class="note">after build</span></button></li>
+              <li><button class="node file" data-id="gi"><span class="ic"></span>.gitignore</button></li>
+              <li><button class="node file" data-id="pom"><span class="ic"></span>pom.xml</button></li>
+            </ul>
+          </li>
+        </ul>
+        <p class="hint">Real files from Raymond's <b>first-maven-project</b> demo.</p>
+      </div>
+
+      <div class="panelR" aria-live="polite">
+        <p class="crumb" id="crumb"></p>
+        <div class="dhead"><h2 class="dname" id="dname"></h2><span class="badge" id="badge"></span></div>
+        <p class="say" id="say"></p>
+        <div class="ex">
+          <div class="exh" id="exh"></div>
+          <pre id="code"></pre>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="take">
+    <p class="tk">The one idea</p>
+    <p><b>Your code goes in <code>src/main/java</code>, inside a package like <code>com.pluralsight</code>.
+    <code>pom.xml</code> describes the project. <code>target</code> is generated by the build and never committed.</b></p>
+  </div>
+
+  <div id="rail"></div>
+</div>
+
+<script>
+(function(){
+  "use strict";
+  var $=function(s){return document.querySelector(s);};
+  var reduce=matchMedia("(prefers-reduced-motion: reduce)").matches;
+
+  var N={
+    root:{name:"first-maven-project",parent:null,badge:["dir","Project root"],
+      say:"The project folder. IntelliJ named it after the <b>artifactId</b> you typed when you created the project. Everything below lives inside it.",
+      exh:"What is inside",code:["first-maven-project/","  src/","  .gitignore","  pom.xml"],hot:[0]},
+    src:{name:"src",parent:"root",badge:["dir","Folder"],
+      say:"Short for source. <b>Everything you write lives under src</b>: the program in main, the tests in test.",
+      exh:"What is inside",code:["src/","  main/","  test/"],hot:[0]},
+    main:{name:"main",parent:"src",badge:["dir","Folder"],
+      say:"The program itself. Its Java code goes in <code>java</code>, its non-code files go in <code>resources</code>.",
+      exh:"What is inside",code:["main/","  java/","  resources/"],hot:[0]},
+    mjava:{name:"java",parent:"main",badge:["you","Your code"],
+      say:"<b>All application code goes here.</b> Never put a .java file directly in this folder: add a package first, and the file goes inside it.",
+      exh:"src/main/java",code:["java/","  com/","    pluralsight/","      HelloWorld.java"],hot:[0]},
+    pkg:{name:"com.pluralsight",parent:"mjava",badge:["you","Package"],
+      say:"A package is a folder for your classes. <b>Each dot is a subfolder</b>, so on disk this is <code>com/pluralsight</code>. Every file inside starts with the package line.",
+      exh:"First line of every file in it",code:["package com.pluralsight;"],hot:[0]},
+    hello:{name:"HelloWorld.java",parent:"pkg",badge:["you","Your code"],
+      say:"A class you wrote, sitting <b>inside the package, inside src/main/java</b>. This is where every program you write this week goes.",
+      exh:"src/main/java/com/pluralsight/HelloWorld.java",
+      code:["package com.pluralsight;","","public class HelloWorld {","    public static void main(String[] args) {","        System.out.println(\"Hello I am Raymond!\");","    }","}"],hot:[0]},
+    res:{name:"resources",parent:"main",badge:["dir","Non-code files"],
+      say:"Files your program uses that are not Java code. <b>Empty in this project.</b>",
+      exh:"src/main/resources",code:["(empty)"],dim:[0]},
+    test:{name:"test",parent:"src",badge:["dir","Folder"],
+      say:"Code that checks your code. Same layout as main, kept apart so tests never ship with the program.",
+      exh:"What is inside",code:["test/","  java/"],hot:[0]},
+    tjava:{name:"java",parent:"test",badge:["dir","Unit tests"],
+      say:"Unit tests go here. <b>Empty for now</b>; you will learn unit tests later in the cohort.",
+      exh:"src/test/java",code:["(empty)"],dim:[0]},
+    target:{name:"target",parent:"root",badge:["gen","Generated, never committed"],
+      say:"Maven creates it when you build or run, and fills it with the compiled .class files. <b>You never edit it and never commit it</b>: .gitignore tells Git to skip it.",
+      exh:"After you press Run",code:["target/","  classes/","    com/","      pluralsight/","        HelloWorld.class"],hot:[4]},
+    gi:{name:".gitignore",parent:"root",badge:["cfg","Git config"],
+      say:"Lists what Git should not track. IntelliJ wrote it for you. <b>Its first line is target/</b>, which keeps build output out of your repo.",
+      exh:".gitignore (first lines)",code:["target/","!.mvn/wrapper/maven-wrapper.jar","...",".DS_Store"],hot:[0]},
+    pom:{name:"pom.xml",parent:"root",badge:["cfg","Project description"],
+      say:"<b>Describes the project to Maven</b>: who made it (groupId), its name (artifactId), its version, and the Java version to build with. You will add dependencies here later.",
+      exh:"pom.xml",
+      code:["<groupId>com.pluralsight</groupId>","<artifactId>first-maven-project</artifactId>","<version>1.0-SNAPSHOT</version>","","<properties>","    <maven.compiler.source>17</maven.compiler.source>","    <maven.compiler.target>17</maven.compiler.target>","</properties>"],hot:[0,1]}
+  };
+
+  var btns={};
+  Array.prototype.forEach.call(document.querySelectorAll("#tree .node"),function(b){btns[b.getAttribute("data-id")]=b;});
+
+  function chain(id){var c=[];while(id){c.unshift(id);id=N[id].parent;}return c;}
+
+  function select(id){
+    var c=chain(id), n=N[id];
+    Object.keys(btns).forEach(function(k){
+      var b=btns[k];
+      b.classList.toggle("sel",k===id);
+      b.classList.toggle("path",k!==id&&c.indexOf(k)>=0);
+      b.setAttribute("aria-pressed",k===id?"true":"false");
+    });
+    /* light the guide line of every list on the path */
+    Array.prototype.forEach.call(document.querySelectorAll("#tree ul"),function(u){
+      var owner=u.parentNode.querySelector(".node");
+      var oid=owner&&owner.getAttribute("data-id");
+      u.classList.toggle("lit",!!oid&&oid!==id&&c.indexOf(oid)>=0);
+    });
+    var crumb=$("#crumb"); crumb.textContent="";
+    c.forEach(function(k,i){
+      if(i){crumb.appendChild(document.createTextNode(" / "));}
+      var s=document.createElement("span"); s.textContent=N[k].name; if(i===c.length-1)s.className="end"; crumb.appendChild(s);
+    });
+    $("#dname").textContent=n.name;
+    var bd=$("#badge"); bd.className="badge "+n.badge[0]; bd.textContent=n.badge[1];
+    $("#say").innerHTML=n.say;
+    $("#exh").textContent=n.exh;
+    var pre=$("#code"); pre.textContent="";
+    n.code.forEach(function(line,i){
+      var s=document.createElement("span");
+      s.className="ln"+((n.hot||[]).indexOf(i)>=0?" hot":"")+((n.dim||[]).indexOf(i)>=0?" dim":"");
+      s.textContent=line===""?" ":line; pre.appendChild(s);
+    });
+  }
+
+  $("#tree").addEventListener("click",function(e){var b=e.target.closest(".node"); if(b) select(b.getAttribute("data-id"));});
+
+  /* ---------- ambient canvas ---------- */
+  var cv=$("#amb"),ctx=cv.getContext&&cv.getContext("2d"),parts=[];
+  function sizeC(){if(!ctx)return;cv.width=innerWidth;cv.height=innerHeight;}
+  function initParts(){parts=[];for(var i=0;i<46;i++)parts.push({x:Math.random(),y:Math.random(),
+    r:Math.random()*1.6+.3,s:Math.random()*.02+.004,o:Math.random()*.4+.1});}
+  function drawC(){if(!ctx)return;ctx.clearRect(0,0,cv.width,cv.height);
+    parts.forEach(function(p){p.y-=p.s/60;if(p.y<-.02)p.y=1.02;
+      ctx.beginPath();ctx.arc(p.x*cv.width,p.y*cv.height,p.r,0,7);
+      ctx.fillStyle="rgba(140,170,255,"+p.o+")";ctx.fill();});
+    requestAnimationFrame(drawC);}
+  if(ctx&&!reduce){sizeC();initParts();drawC();addEventListener("resize",sizeC);}
+
+  select("hello");
+})();
+</script>
+<script src="../manifest.js"></script>
+<script src="../../assets/rail.js"></script>
+<script>Rail.render(document.getElementById("rail"),{kind:"visuals",current:"01-maven-project-structure"});</script>
+</body>
+</html>

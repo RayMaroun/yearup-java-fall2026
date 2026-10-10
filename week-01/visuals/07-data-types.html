@@ -1,0 +1,194 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Data Types and Sizes | Week 1 Visual Hub</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Sora:wght@500;700&family=Inter:wght@400;500&family=JetBrains+Mono:wght@400;500&display=swap">
+<style>
+  :root{
+    --bg:#080c17; --bg2:#0c1428; --surface:rgba(255,255,255,.045); --line:rgba(255,255,255,.09);
+    --ink:#eef2fb; --muted:#8496b6; --accent:#6ea0ff; --accent2:#8b7bff; --good:#46d98a; --warn:#ff6a6a;
+    --gold:#ffc862; --disp:'Sora',system-ui,sans-serif; --body:'Inter',system-ui,sans-serif;
+    --mono:'JetBrains Mono',ui-monospace,monospace;
+  }
+  *{box-sizing:border-box}
+  body{margin:0;min-height:100vh;color:var(--ink);font-family:var(--body);
+    background:radial-gradient(1200px 700px at 70% -10%,#141d38 0%,transparent 55%),
+               radial-gradient(900px 600px at 10% 110%,#161233 0%,transparent 50%),#080c17;
+    overflow-x:hidden}
+  #amb{position:fixed;inset:0;z-index:0;pointer-events:none;opacity:.6}
+  .back{position:relative;z-index:2;display:block;max-width:1120px;margin:0 auto;padding:26px 24px 0;
+    width:100%;font-family:var(--mono);font-size:.8rem;letter-spacing:.04em;color:var(--muted);
+    text-decoration:none;transition:color .15s}
+  .back:hover{color:var(--accent)}
+  .wrap{position:relative;z-index:1;max-width:1120px;margin:0 auto;padding:22px 24px 70px}
+  .tag{font-family:var(--mono);font-size:.72rem;letter-spacing:.22em;text-transform:uppercase;color:var(--accent);margin:0 0 14px}
+  h1{font-family:var(--disp);font-weight:700;font-size:clamp(2.3rem,6vw,3.6rem);line-height:1;margin:0 0 12px;
+    letter-spacing:-.03em;background:linear-gradient(180deg,#fff,#b9c6e6);-webkit-background-clip:text;
+    background-clip:text;color:transparent}
+  .lede{color:var(--muted);max-width:64ch;font-size:1.05rem;margin:0 0 30px;line-height:1.5}
+  .lede b{color:var(--ink)}
+  .lede code,.take code,.status code{font-family:var(--mono);font-size:.92em;color:#bcd0ff}
+  .stage{position:relative;background:linear-gradient(180deg,rgba(255,255,255,.03),rgba(255,255,255,.01));
+    border:1px solid var(--line);border-radius:24px;padding:8px;
+    box-shadow:0 1px 0 rgba(255,255,255,.06) inset,0 30px 80px -30px rgba(0,0,0,.8)}
+  .panelR{border-radius:18px;padding:22px;background:rgba(6,10,20,.5);border:1px solid var(--line);position:relative;overflow:hidden}
+  .lab{font-family:var(--mono);font-size:.7rem;letter-spacing:.12em;text-transform:uppercase;color:var(--muted);margin:0 0 12px}
+
+  /* the type ladder */
+  .rows{display:flex;flex-direction:column;gap:6px}
+  .row{display:grid;grid-template-columns:96px 1fr 92px;align-items:center;gap:14px;width:100%;text-align:left;
+    font:inherit;color:inherit;cursor:pointer;padding:9px 12px;border-radius:14px;border:1px solid var(--line);
+    background:rgba(255,255,255,.02);transition:border-color .2s,background .2s,opacity .2s}
+  .row:hover{border-color:rgba(110,160,255,.45)}
+  .row:focus-visible{outline:2px solid var(--accent);outline-offset:2px}
+  .row.on{border-color:rgba(110,160,255,.7);background:rgba(110,160,255,.08);box-shadow:0 0 26px -12px rgba(110,160,255,.6)}
+  .row.dim{opacity:.55}
+  .tname{font-family:var(--mono);font-size:.95rem;color:#bcd0ff}
+  .row.on .tname{color:var(--ink)}
+  .kind{display:block;font-family:var(--mono);font-size:.6rem;letter-spacing:.1em;text-transform:uppercase;color:var(--muted);margin-top:2px}
+  .track{position:relative;height:26px;border-radius:8px;background:rgba(0,0,0,.25);border:1px dashed rgba(255,255,255,.07)}
+  .bar{position:absolute;left:0;top:50%;height:8px;transform:translateY(-50%);display:flex;gap:2px;border-radius:6px;overflow:hidden;
+    transition:height .3s ease}
+  .row.on .bar{height:26px}
+  .bar.ref{border:1px dashed rgba(255,200,98,.55);background:rgba(255,200,98,.08);right:0;border-radius:6px;
+    font-family:var(--mono);font-size:.62rem;color:#ffe6b0;align-items:center;padding-left:8px;white-space:nowrap}
+  .bar.ref span{opacity:0;transition:opacity .3s}
+  .row.on .bar.ref span{opacity:1}
+  .row.on .bar.ref{background:rgba(255,200,98,.16);border-color:var(--gold)}
+  .cell{flex:1;min-width:0;border-radius:4px;background:rgba(110,160,255,.22);border:1px solid rgba(110,160,255,.35)}
+  .row.on .cell{background:rgba(110,160,255,.5);border-color:var(--accent)}
+  .bar.flt .cell{background:rgba(139,123,255,.25);border-color:rgba(139,123,255,.45)}
+  .row.on .bar.flt .cell{background:rgba(139,123,255,.55);border-color:var(--accent2)}
+  .sz{font-family:var(--mono);font-size:.72rem;color:var(--muted);text-align:right}
+  .row.on .sz{color:var(--ink)}
+  .scale{display:grid;grid-template-columns:96px 1fr 92px;gap:14px;padding:0 13px;margin-bottom:6px}
+  .ticks{display:grid;grid-template-columns:repeat(8,1fr);font-family:var(--mono);font-size:.6rem;color:var(--muted)}
+  .ticks span{border-left:1px solid var(--line);padding-left:4px}
+
+  /* detail panel for the clicked type */
+  .detail{margin-top:18px;display:grid;grid-template-columns:1fr 1fr;gap:8px}
+  @media (max-width:760px){.detail{grid-template-columns:1fr}.row,.scale{grid-template-columns:78px 1fr 70px;gap:10px}}
+  .cardd{border:1px solid var(--line);border-radius:14px;padding:12px 14px;background:rgba(0,0,0,.22);min-height:92px}
+  .cardd .k{font-family:var(--mono);font-size:.62rem;letter-spacing:.12em;text-transform:uppercase;color:var(--muted);margin:0 0 6px}
+  .cardd .v{font-family:var(--mono);font-size:.84rem;line-height:1.55;color:var(--ink);margin:0;overflow-wrap:anywhere}
+  .cardd .v .c{color:#bcd0ff}
+  .cardd .v .g{color:var(--good)} .cardd .v .w{color:var(--warn)}
+  .hint{font-family:var(--mono);font-size:.7rem;color:var(--muted);margin:14px 0 0;line-height:1.5}
+  .hint b{color:var(--accent)}
+
+  .take{margin-top:22px;background:linear-gradient(180deg,rgba(110,160,255,.08),rgba(139,123,255,.04));
+    border:1px solid var(--line);border-left:3px solid var(--accent);border-radius:12px;padding:16px 18px}
+  .take .tk{font-family:var(--mono);font-size:.66rem;letter-spacing:.14em;text-transform:uppercase;color:var(--accent);margin:0 0 8px}
+  .take p{margin:0;font-size:.95rem;color:var(--ink);line-height:1.55}
+  .take b{color:#fff}
+  @media (prefers-reduced-motion:reduce){*{animation-duration:.01ms!important;transition-duration:.01ms!important}#amb{display:none}}
+</style>
+</head>
+<body>
+
+<a class="back" href="../index.html#07-data-types">&#8592; Week 1 index</a>
+
+<canvas id="amb"></canvas>
+<div class="wrap">
+  <p class="tag">Workbook 1c &middot; Section 3-1 &middot; Data types and variables</p>
+  <h1>Data Types and Sizes</h1>
+  <p class="lede">Every variable in Java has a type, and the type fixes how much memory it gets and what fits in it.
+  <b>Click a type to see its size, its range, and what it holds before you give it a value.</b></p>
+
+  <div class="stage">
+    <div class="panelR">
+      <p class="lab">Memory each type takes, in bytes (1 byte = 8 bits)</p>
+      <div class="scale" aria-hidden="true"><span></span><div class="ticks"><span>1</span><span>2</span><span>3</span><span>4</span><span>5</span><span>6</span><span>7</span><span>8</span></div><span></span></div>
+      <div class="rows" id="rows" role="group" aria-label="Pick a data type"></div>
+
+      <div class="detail" aria-live="polite">
+        <div class="cardd"><p class="k">Range</p><p class="v" id="dRange"></p></div>
+        <div class="cardd"><p class="k">Example from the demo</p><p class="v" id="dEx"></p></div>
+        <div class="cardd" style="grid-column:1 / -1"><p class="k">Declared only, no value yet</p><p class="v" id="dDecl"></p></div>
+      </div>
+      <p class="hint">Field = declared in the class, outside any method. Local = declared inside a method, like everything in <b>main</b>.</p>
+    </div>
+  </div>
+
+  <div class="take">
+    <p class="tk">The one idea</p>
+    <p><b>Pick the type for the kind and size of value: whole number, decimal, character, true/false, or text.</b>
+    A declared local variable holds nothing usable until you give it a value; only fields get a default.</p>
+  </div>
+
+  <div id="rail"></div>
+</div>
+
+<script>
+(function(){
+  "use strict";
+  var $=function(s){return document.querySelector(s);};
+  var reduce=matchMedia("(prefers-reduced-motion: reduce)").matches;
+
+  var T=[
+    {n:"byte",k:"whole",b:1,range:"-128 to 127",ex:"byte level = 100;",note:"invented",def:"0"},
+    {n:"short",k:"whole",b:2,range:"-32,768 to 32,767",ex:"short year = 2026;",note:"invented",def:"0"},
+    {n:"int",k:"whole",b:4,range:"about -2.1 billion to 2.1 billion",ex:"int firstNumber = 26;",def:"0",decl:"int x = 5, y, z = 50;",dv:"y"},
+    {n:"long",k:"whole",b:8,range:"about -9.2 to 9.2 quintillion",ex:"long views = 8000000000L;",note:"invented",def:"0"},
+    {n:"float",k:"decimal",b:4,c:"flt",range:"about 6 to 7 significant digits",ex:"float rate = 4.5f;",note:"invented",def:"0.0"},
+    {n:"double",k:"decimal",b:8,c:"flt",range:"about 15 significant digits",ex:"double price = 19.99;",note:"invented",def:"0.0"},
+    {n:"char",k:"character",b:2,range:"one Unicode character (0 to 65,535)",ex:"char letter = 'C';",def:"'\\u0000' (empty character)"},
+    {n:"boolean",k:"true/false",b:1,range:"true or false only",ex:"boolean isStudent = true;",def:"false",field:"public static boolean newVariable;"},
+    {n:"String",k:"text, a class",b:8,c:"ref",range:"any text; the variable points to a String object",ex:"String name;  name = \"Raymond\";",def:"null"}
+  ];
+
+  var rows=$("#rows");
+  T.forEach(function(t,i){
+    var b=document.createElement("button");
+    b.className="row"; b.type="button"; b.setAttribute("data-i",i);
+    var cells="";
+    if(t.c==="ref")cells="<span>size grows with the text</span>";
+    else for(var j=0;j<t.b;j++)cells+='<span class="cell"></span>';
+    var sz=t.c==="ref"?"reference":(t.n==="boolean"?"1 bit used":t.b*8+" bits");
+    b.innerHTML='<span><span class="tname">'+t.n+'</span><span class="kind">'+t.k+'</span></span>'+
+      '<span class="track"><span class="bar '+(t.c||"")+'"'+(t.c==="ref"?"":' style="width:'+(t.b/8*100)+'%"')+'>'+cells+'</span></span>'+
+      '<span class="sz">'+sz+'</span>';
+    rows.appendChild(b);
+  });
+
+  function set(i){
+    var t=T[i];
+    Array.prototype.forEach.call(rows.children,function(r,j){
+      var on=j===i;
+      r.classList.toggle("on",on); r.classList.toggle("dim",!on);
+      r.setAttribute("aria-pressed",on?"true":"false");
+    });
+    $("#dRange").innerHTML=t.range+(t.n==="boolean"?'<br><span style="color:var(--muted)">size in memory is up to the JVM</span>':"")+
+      (t.c==="ref"?'<br><span style="color:var(--muted)">the text lives in an object; its size grows with the text</span>':"");
+    $("#dEx").innerHTML='<span class="c">'+t.ex+'</span>'+(t.note?' <span style="color:var(--muted)">(invented)</span>':"");
+    var d=t.decl?'<span class="c">'+t.decl+'</span> Here '+t.dv+' is declared only.<br>':"";
+    var f=t.field?'<span class="c">'+t.field+'</span> prints false.<br>':"";
+    $("#dDecl").innerHTML=d+f+'As a field: <span class="g">'+t.def+'</span> by default. '+
+      'As a local: <span class="w">compile error</span> if you read it before you assign it.';
+  }
+
+  rows.addEventListener("click",function(e){ var b=e.target.closest(".row"); if(b) set(+b.getAttribute("data-i")); });
+
+  /* ---------- ambient canvas ---------- */
+  var cv=$("#amb"),ctx=cv.getContext&&cv.getContext("2d"),parts=[];
+  function sizeC(){if(!ctx)return;cv.width=innerWidth;cv.height=innerHeight;}
+  function initParts(){parts=[];for(var i=0;i<46;i++)parts.push({x:Math.random(),y:Math.random(),
+    r:Math.random()*1.6+.3,s:Math.random()*.02+.004,o:Math.random()*.4+.1});}
+  function drawC(){if(!ctx)return;ctx.clearRect(0,0,cv.width,cv.height);
+    parts.forEach(function(p){p.y-=p.s/60;if(p.y<-.02)p.y=1.02;
+      ctx.beginPath();ctx.arc(p.x*cv.width,p.y*cv.height,p.r,0,7);
+      ctx.fillStyle="rgba(140,170,255,"+p.o+")";ctx.fill();});
+    requestAnimationFrame(drawC);}
+  if(ctx&&!reduce){sizeC();initParts();drawC();addEventListener("resize",sizeC);}
+
+  set(2);
+})();
+</script>
+<script src="../manifest.js"></script>
+<script src="../../assets/rail.js"></script>
+<script>Rail.render(document.getElementById("rail"),{kind:"visuals",current:"07-data-types"});</script>
+</body>
+</html>
