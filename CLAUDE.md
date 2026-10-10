@@ -59,19 +59,31 @@ search.js, build-search-index.js, search-index.json
   `week-09/index.html`, `capstone/08-the-pipeline.html` (header + rail), `capstone/assets/rail.js`.
 - NOT taken from the capstone set: the SVG system map. It was capstone-specific.
 
-## Every visual page
-1. `<a class="back" href="../index.html#NN-slug">← Week N index</a>` (lands on the item, right tab).
-2. `.tag` = the workbook section it belongs to (e.g. "Workbook 1c · Section 4-2 · Static methods").
-3. `h1` title, `.lede` one or two sentences with one bold claim, readable alone, may include "click…".
-4. `.stage` with the interactive model. The thing on screen IS what you interact with: click a line to run
-   it, step a flow, drag, build, break it. Never "read static code, then operate a widget below".
-5. Optional hint line (mono .72rem muted).
-6. Exactly one `.take` box.
-7. `<div id="rail"></div>` + `<script src="../../assets/rail.js"></script>` +
-   `Rail.render(document.getElementById('rail'), {week:1, kind:'visuals', current:'21-method-call-stack'})`.
-   The rail reads `week-NN/manifest.js` (one array per kind, in order) so every page gets dots for the
-   whole tab, the current one marked, titles on hover, prev/next.
-8. `<title>Title | Week N Visual Hub</title>`. Keyboard: ← / → = prev/next, Esc = back to index.
+## Every visual page: the HERO LAYOUT (approved by the instructor 2026-10-12; reference `week-01/visuals/11-integer-division.html`)
+The picture is the page. Everything else supports it and sits below it. Order, top to bottom:
+1. `<a class="back" href="../index.html#NN-slug">← Week N index</a>`
+2. `.tag` eyebrow (workbook section), `h1`, `.lede` = ONE line, the bold claim only (under ~140 characters).
+3. `.stage` (padding 18px, no inner panel split):
+   - `.topbar`: a `.lab` word, the preset `.chips` (Walk/Model), and the `.focus` button on the right (always present).
+   - `.pic`: the hero picture, full width, 390px tall (480px in Focus). It is the ONLY thing the eye should land on.
+     Glance: the diagram itself. Walk: the thing that changes per step. Model: the live model (stack, buffer, ...).
+     Empty state shows a small centered mono hint ("10 and 3 · press Next").
+   - `.caption`: the one sentence for the current step, directly under the picture: `.n` step number ("3 / 9", Sora,
+     accent) and `.t` the sentence (Inter 1.02rem, left border 3px that takes the step color). Glance: the sentence that
+     describes the current state of the control.
+   - `.toolbar` (border-top): Walk = Back · `.dots` (one per step, current marked) · Next · Reset (ghost, right).
+     Model = Step · Run · Back · Reset · Experiment. Glance = its ONE control (segmented switch, slider, ...) lives here.
+   - `.hint` one mono line (keys, where the example comes from).
+   - `.support` (2 columns, hidden in Focus): left the code (`.code`), right `.side` with `.readout` stat tiles and the
+     `.console`. Readouts carry class `empty` (faded) until they hold a value. Model inputs go here too, above the readouts.
+4. Exactly one `.take` (hidden in Focus).
+5. `<div id="rail"></div>` + manifest + rail scripts, exactly as before.
+- **Focus** (`body.solo`): hides `.support`, `.take`, `.hint`; enlarges `.pic` and the caption text. Toggled by `#bFocus`,
+  stored in `localStorage["hub-focus"]`, read on load. Full view is the default. The button label flips "Focus" / "Focus on".
+  Never name the body class `focus` (it collides with the button class).
+- Nothing appears before it has a value; no "?" tiles in the eye line. One accent color per step state, not several.
+- Keyboard: ← / → = prev/next page (rail), Esc = index, space = next step (Walk/Model) when focus is not on a control.
+- `<title>Title | Week N Visual Hub</title>`. One `<style>`, one inline `<script>` for the page.
 
 ## THE DOCTRINE — adapted for this cohort (set 2026-10-11 with the instructor)
 The audience is beginners, most of them not developers yet. The hub is a whiteboard that moves while the
