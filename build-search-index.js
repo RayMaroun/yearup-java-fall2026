@@ -1,42 +1,61 @@
 /*
- * build-search-index.js — regenerate search-index.json for the visual hub.
+ * build-search-index.js: regenerate search-index.json for the Fall 2026 hub.
  *
- * Run locally whenever you add/rename pages or flip something Live:
+ * Run locally whenever pages are added or renamed:
  *     node build-search-index.js
- * (GitHub Pages does NOT run this — it just serves the search-index.json it produces.)
+ * (GitHub Pages does not run this; it only serves the search-index.json it produces.)
  *
- * It reads each week-NN/index.html, and for every item card that is LIVE it records the
- * title + description + section + module group + a slice of the target page's body text.
- * Items marked Building (class contains `wip`) are SKIPPED entirely — their pages aren't even
- * opened — so nothing that isn't publicly Live on the index can appear in search.
+ * Source of truth is each week-NN/manifest.js (window.HUB_MANIFEST). For every entry of every kind
+ * (visuals, reference, exercises, games) whose file exists under week-NN/<kind>/<file>, it records
+ * the manifest fields plus the first 1500 characters of the page's visible text. Entries whose file
+ * does not exist yet are skipped and counted, so search never links to a missing page.
+ *
+ * Output item shape (read by search.js):
+ *   { week, weekLabel, section, title, desc, group, url, text }
  */
 const fs = require('fs');
 const path = require('path');
 
 const HUB = __dirname;
-const BODY_TEXT_CHARS = 1500; // how much of each page's visible text to index
+const BODY_TEXT_CHARS = 1500;
+const KINDS = [
+  ['visuals', 'Visuals'],
+  ['reference', 'Reference'],
+  ['exercises', 'Exercises'],
+  ['games', 'Games']
+];
+
+const NAMED = { amp: '&', lt: '<', gt: '>', quot: '"', apos: "'", nbsp: ' ', middot: '·',
+  mdash: '—', ndash: '–', hellip: '…', rarr: '→', larr: '←',
+  lsquo: '‘', rsquo: '’', ldquo: '“', rdquo: '”', times: '×', bull: '•' };
 
 function decodeEntities(s) {
-  return s
-    .replace(/&amp;/g, '&').replace(/&lt;/g, '<').replace(/&gt;/g, '>')
-    .replace(/&#39;/g, "'").replace(/&quot;/g, '"').replace(/&nbsp;/g, ' ')
-    .replace(/&middot;/g, '·');
+  return s.replace(/&(#x[0-9a-f]+|#\d+|[a-z]+);/gi, (m, e) => {
+    if (e[0] === '#') {
+      const n = e[1] === 'x' || e[1] === 'X' ? parseInt(e.slice(2), 16) : parseInt(e.slice(1), 10);
+      try { return String.fromCodePoint(n); } catch (_) { return m; }
+    }
+    const v = NAMED[e.toLowerCase()];
+    return v !== undefined ? v : m;
+  });
 }
 
-function stripTags(html) {
+function visibleText(html) {
+  const body = (html.match(/<body\b[^>]*>([\s\S]*)<\/body>/i) || [, html])[1];
   return decodeEntities(
-    html
+    body
+      .replace(/<!--[\s\S]*?-->/g, ' ')
       .replace(/<script\b[\s\S]*?<\/script>/gi, ' ')
       .replace(/<style\b[\s\S]*?<\/style>/gi, ' ')
       .replace(/<[^>]+>/g, ' ')
   ).replace(/\s+/g, ' ').trim();
 }
 
-function sectionFromClass(cls) {
-  if (/\bref\b/.test(cls)) return 'Reference';
-  if (/\bex\b/.test(cls)) return 'Exercises';
-  if (/\bgame\b/.test(cls)) return 'Games';
-  return 'Visuals';
+function loadManifest(file) {
+  const src = fs.readFileSync(file, 'utf8');
+  const win = {};
+  new Function('window', src)(win);
+  return win.HUB_MANIFEST;
 }
 
 const weekDirs = fs
@@ -45,136 +64,39 @@ const weekDirs = fs
   .sort();
 
 const index = [];
-let liveCount = 0;
 let skipped = 0;
-let noindexed = 0;
+let weeksRead = 0;
 
 for (const wk of weekDirs) {
-  const weekNum = parseInt(wk.split('-')[1], 10);
-  const weekLabel = 'Week ' + weekNum;
-  const idxPath = path.join(HUB, wk, 'index.html');
-  if (!fs.existsSync(idxPath)) continue;
-  const html = fs.readFileSync(idxPath, 'utf8');
+  const manPath = path.join(HUB, wk, 'manifest.js');
+  if (!fs.existsSync(manPath)) continue;
+  let man;
+  try { man = loadManifest(manPath); }
+  catch (err) { console.warn(`[search] ${wk}/manifest.js failed to evaluate: ${err.message}`); continue; }
+  if (!man) { console.warn(`[search] ${wk}/manifest.js did not set window.HUB_MANIFEST`); continue; }
+  weeksRead++;
+  const week = Number(man.week) || parseInt(wk.split('-')[1], 10);
+  const weekLabel = 'Week ' + week;
 
-  // Walk section-titles and item cards in document order so each card keeps its module group.
-  const tokenRe = /<div class="section-title">([\s\S]*?)<\/div>|<a\b([^>]*\bclass="link[^"]*"[^>]*)>([\s\S]*?)<\/a>/g;
-  let m;
-  let currentGroup = '';
-  while ((m = tokenRe.exec(html)) !== null) {
-    if (m[1] !== undefined) {
-      currentGroup = stripTags(m[1]);
-      continue;
-    }
-    const attrs = m[2];
-    const inner = m[3];
-    const cls = (attrs.match(/class="([^"]*)"/) || [, ''])[1];
-    if (/\bwip\b/.test(cls)) { skipped++; continue; } // Building -> never indexed
-    if (/\bnoindex\b/.test(cls)) { noindexed++; continue; } // Live locally, deliberately kept out of search
-    const href = (attrs.match(/href="([^"]*)"/) || [, ''])[1];
-    if (!href) continue;
-    const title = decodeEntities(((inner.match(/<div class="title">([\s\S]*?)<\/div>/) || [, ''])[1]).trim());
-    const desc = decodeEntities(((inner.match(/<div class="desc">([\s\S]*?)<\/div>/) || [, ''])[1]).trim());
-    const section = sectionFromClass(cls);
-
-    let text = '';
-    const target = path.join(HUB, wk, href);
-    if (fs.existsSync(target)) {
-      text = stripTags(fs.readFileSync(target, 'utf8')).slice(0, BODY_TEXT_CHARS);
-    }
-
-    index.push({ title, desc, section, group: currentGroup, week: weekLabel, weekNum, url: `${wk}/${href}`, text });
-    liveCount++;
-  }
-}
-
-// ----- Assessment reviews (cross-week; e.g. assessment-reviews/kc1/index.html) -----
-const arRoot = path.join(HUB, 'assessment-reviews');
-if (fs.existsSync(arRoot)) {
-  const arDirs = fs
-    .readdirSync(arRoot)
-    .filter(d => fs.statSync(path.join(arRoot, d)).isDirectory())
-    .sort();
-  for (const ar of arDirs) {
-    const idxPath = path.join(arRoot, ar, 'index.html');
-    if (!fs.existsSync(idxPath)) continue;
-    const html = fs.readFileSync(idxPath, 'utf8');
-    const label = ar.toUpperCase() + ' Review'; // e.g. "KC1 Review"
-    const linkRe = /<a\b([^>]*\bclass="link[^"]*"[^>]*)>([\s\S]*?)<\/a>/g;
-    let m;
-    while ((m = linkRe.exec(html)) !== null) {
-      const attrs = m[1];
-      const inner = m[2];
-      const cls = (attrs.match(/class="([^"]*)"/) || [, ''])[1];
-      if (/\bwip\b/.test(cls)) { skipped++; continue; }
-      if (/\bnoindex\b/.test(cls)) { noindexed++; continue; }
-      const href = (attrs.match(/href="([^"]*)"/) || [, ''])[1];
-      if (!href) continue;
-      const title = decodeEntities(((inner.match(/<div class="title">([\s\S]*?)<\/div>/) || [, ''])[1]).trim());
-      const desc = decodeEntities(((inner.match(/<div class="desc">([\s\S]*?)<\/div>/) || [, ''])[1]).trim());
-      let text = '';
-      const target = path.join(arRoot, ar, href);
-      if (fs.existsSync(target)) text = stripTags(fs.readFileSync(target, 'utf8')).slice(0, BODY_TEXT_CHARS);
-      index.push({ title, desc, section: 'Assessment', group: label, week: label, weekNum: 100, url: `assessment-reviews/${ar}/${href}`, text });
-      liveCount++;
+  for (const [kind, section] of KINDS) {
+    for (const entry of man[kind] || []) {
+      if (!entry || !entry.file) continue;
+      const rel = `${wk}/${kind}/${entry.file}`;
+      const abs = path.join(HUB, rel);
+      if (!fs.existsSync(abs)) { skipped++; continue; }
+      index.push({
+        week,
+        weekLabel,
+        section,
+        title: entry.title || entry.file,
+        desc: entry.desc || '',
+        group: entry.group || '',
+        url: rel,
+        text: visibleText(fs.readFileSync(abs, 'utf8')).slice(0, BODY_TEXT_CHARS)
+      });
     }
   }
 }
 
-// ----- Capstone (weeks 10-11; one flat index.html of link cards grouped by "Part N" headings) -----
-const capRoot = path.join(HUB, 'capstone');
-const capIdxPath = path.join(capRoot, 'index.html');
-if (fs.existsSync(capIdxPath)) {
-  const html = fs.readFileSync(capIdxPath, 'utf8');
-  // Capstone groups are "Part N  ·  Title" / "Reference" section-title divs, not week module headers.
-  const tokenRe = /<div class="section-title">([\s\S]*?)<\/div>|<a\b([^>]*\bclass="link[^"]*"[^>]*)>([\s\S]*?)<\/a>/g;
-  let m;
-  let currentGroup = '';
-  while ((m = tokenRe.exec(html)) !== null) {
-    if (m[1] !== undefined) {
-      currentGroup = stripTags(m[1]);
-      continue;
-    }
-    const attrs = m[2];
-    const inner = m[3];
-    const cls = (attrs.match(/class="([^"]*)"/) || [, ''])[1];
-    if (/\bwip\b/.test(cls)) { skipped++; continue; } // Building -> never indexed (none currently: all Live)
-    if (/\bnoindex\b/.test(cls)) { noindexed++; continue; }
-    const href = (attrs.match(/href="([^"]*)"/) || [, ''])[1];
-    if (!href) continue;
-    const title = decodeEntities(((inner.match(/<div class="title">([\s\S]*?)<\/div>/) || [, ''])[1]).trim());
-    const desc = decodeEntities(((inner.match(/<div class="desc">([\s\S]*?)<\/div>/) || [, ''])[1]).trim());
-
-    let text = '';
-    const target = path.join(capRoot, href);
-    if (fs.existsSync(target)) {
-      text = stripTags(fs.readFileSync(target, 'utf8')).slice(0, BODY_TEXT_CHARS);
-    }
-
-    index.push({ title, desc, section: 'Capstone', group: currentGroup, week: 'Capstone', weekNum: 200, url: `capstone/${href}`, text });
-    liveCount++;
-  }
-
-  // Two capstone reference pages that are not link cards on the index: the one-scroll overview
-  // (linked from "Where to start") and the theme sheets page. Indexed the same way as the
-  // Reference cards above.
-  const capExtra = [
-    { href: 'overview.html', title: 'The capstone, in one scroll',
-      desc: 'the whole story on one page: what the two weeks produce, one change travelling from an editor to a live watched system, the eight parts on the shared map, the four themes compared, the path with its two milestones, and the last day' },
-    { href: 'themes.html', title: 'Choose your theme',
-      desc: 'the three theme sheets and the custom option, read on the six things every one of them asks for, with what each makes easy, what each hides, and a "choose this if" for all four' },
-    { href: 'commands.html', title: 'Commands',
-      desc: 'every command the screens ask you to run, grouped by what you are doing: what it does with the flags that matter explained, what you should see if it worked, and the page it comes from' }
-  ];
-  for (const { href, title, desc } of capExtra) {
-    const target = path.join(capRoot, href);
-    if (!fs.existsSync(target)) continue;
-    // They are link cards on the index now (Part 0), so they are already indexed above.
-    if (index.some(it => it.url === `capstone/${href}`)) continue;
-    const text = stripTags(fs.readFileSync(target, 'utf8')).slice(0, BODY_TEXT_CHARS);
-    index.push({ title, desc, section: 'Capstone', group: 'Reference', week: 'Capstone', weekNum: 200, url: `capstone/${href}`, text });
-    liveCount++;
-  }
-}
-
-fs.writeFileSync(path.join(HUB, 'search-index.json'), JSON.stringify(index));
-console.log(`search-index.json written: ${liveCount} live items, ${skipped} Building item(s) skipped.${noindexed ? ' ' + noindexed + ' kept out of search (noindex).' : ''}`);
+fs.writeFileSync(path.join(HUB, 'search-index.json'), JSON.stringify(index, null, 2) + '\n');
+console.log(`search-index.json written: ${index.length} item(s) indexed from ${weeksRead} manifest(s), ${skipped} skipped (file not on disk yet).`);

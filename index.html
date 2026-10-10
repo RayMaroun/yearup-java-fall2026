@@ -1,0 +1,92 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Java Visual Hub · Year Up Fall 2026</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Sora:wght@500;700&family=Inter:wght@400;500&family=JetBrains+Mono:wght@400;500&display=swap">
+<style>
+  :root{
+    --bg:#080c17; --bg2:#0c1428; --surface:rgba(255,255,255,.045); --line:rgba(255,255,255,.09);
+    --ink:#eef2fb; --muted:#8496b6; --accent:#6ea0ff; --accent2:#8b7bff; --good:#46d98a; --warn:#ff6a6a;
+    --gold:#ffc862; --disp:'Sora',system-ui,sans-serif; --body:'Inter',system-ui,sans-serif;
+    --mono:'JetBrains Mono',ui-monospace,monospace;
+  }
+  *{box-sizing:border-box}
+  body{margin:0;min-height:100vh;color:var(--ink);font-family:var(--body);
+    background:radial-gradient(1200px 700px at 70% -10%,#141d38 0%,transparent 55%),
+               radial-gradient(900px 600px at 10% 110%,#161233 0%,transparent 50%),#080c17;overflow-x:hidden}
+  #amb{position:fixed;inset:0;z-index:0;pointer-events:none;opacity:.6}
+  .wrap{position:relative;z-index:1;max-width:1120px;margin:0 auto;padding:56px 24px 70px}
+  .tag{font-family:var(--mono);font-size:.72rem;letter-spacing:.22em;text-transform:uppercase;color:var(--accent);margin:0 0 14px}
+  h1{font-family:var(--disp);font-weight:700;font-size:clamp(2.6rem,7vw,4.2rem);line-height:1;margin:0 0 14px;letter-spacing:-.03em;
+    background:linear-gradient(180deg,#fff,#b9c6e6);-webkit-background-clip:text;background-clip:text;color:transparent}
+  .lede{color:var(--muted);max-width:64ch;font-size:1.08rem;margin:0 0 34px;line-height:1.5}
+  .lede b{color:var(--ink)}
+  .section-title{font-family:var(--mono);font-size:.72rem;letter-spacing:.16em;text-transform:uppercase;color:var(--accent);margin:34px 0 12px}
+  .grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(250px,1fr));gap:10px}
+  .wk{display:block;padding:16px 18px;border-radius:14px;border:1px solid var(--line);background:var(--surface);color:var(--ink);text-decoration:none;transition:.15s;position:relative;min-height:112px}
+  .wk:hover{border-color:var(--accent);transform:translateY(-1px)}
+  .wk.soon{opacity:.45;pointer-events:none}
+  .wk .n{font-family:var(--mono);font-size:.66rem;letter-spacing:.16em;text-transform:uppercase;color:var(--muted);margin:0 0 6px}
+  .wk .t{font-family:var(--disp);font-weight:500;font-size:1.05rem;margin:0 0 6px;line-height:1.25}
+  .wk .d{font-family:var(--mono);font-size:.72rem;color:var(--muted);margin:0}
+  .wk .live{position:absolute;right:12px;top:12px;font-family:var(--mono);font-size:.6rem;letter-spacing:.14em;text-transform:uppercase;color:var(--good);
+    padding:3px 8px;border-radius:999px;border:1px solid rgba(70,217,138,.5);background:rgba(70,217,138,.08)}
+  .wk.cap{border-color:rgba(255,200,98,.3)} .wk.cap .n{color:var(--gold)}
+  .tools{display:grid;grid-template-columns:repeat(auto-fill,minmax(250px,1fr));gap:10px}
+  .foot{margin-top:46px;padding-top:18px;border-top:1px solid var(--line);font-family:var(--mono);font-size:.72rem;color:var(--muted)}
+  .foot a{color:var(--muted);text-decoration:none}.foot a:hover{color:var(--accent)}
+  @media (prefers-reduced-motion:reduce){*{transition-duration:.01ms!important}#amb{display:none}}
+</style>
+</head>
+<body>
+<canvas id="amb"></canvas>
+<div class="wrap">
+  <p class="tag">Year Up United &middot; Java Focus Academy &middot; Fall 2026 &middot; Section 8</p>
+  <h1>Java Visual Hub</h1>
+  <p class="lede"><b>Pictures that move, for the ideas that are hard to see.</b> One page per idea, step by step or one control, built from the week's demos. Used on screen in class and on your own afterwards.</p>
+
+  <p class="section-title">Weeks</p>
+  <div class="grid" id="weeks"></div>
+
+  <p class="section-title">Tools</p>
+  <div class="tools">
+    <a class="wk" href="tools/pick-a-learner.html"><p class="n">In class</p><p class="t">Pick a Learner</p><p class="d">spin the wheel</p></a>
+  </div>
+
+  <div class="foot">Raymond's hub for the Fall 2026 cohort &middot; <a href="https://github.com/RayMaroun/yearup-fall-section-8-2026">code repo</a> &middot; press / to search</div>
+</div>
+
+<script>
+(function(){
+  "use strict";
+  var WEEKS=[
+    [1,"Introduction to Java","Oct 12 to 16",true,false],
+    [2,"Strings, Loops and Arrays","Oct 19 to 23",false,false],
+    [3,"Collections and File IO","Oct 26 to 30",false,false],
+    [4,"Capstone 1","Nov 2 to 6",false,true],
+    [5,"Introduction to OOP","Nov 9 to 13",false,false],
+    [6,"Inheritance","Nov 16 to 20",false,false],
+    [7,"Advanced OOP","Nov 23 to 25",false,false],
+    [8,"Capstone 2","Nov 30 to Dec 4",false,true],
+    [9,"Introduction to SQL","Dec 7 to 11",false,false],
+    [10,"Spring Boot and JPA","Dec 14 to 18",false,false],
+    [11,"REST APIs and Spring Boot","Dec 21 to 23",false,false],
+    [12,"Capstone 3","Dec 24 to 31",false,true]
+  ];
+  document.getElementById("weeks").innerHTML=WEEKS.map(function(w){
+    var nn=(w[0]<10?"0":"")+w[0];
+    return '<a class="wk'+(w[3]?"":" soon")+(w[4]?" cap":"")+'" href="week-'+nn+'/index.html"><p class="n">Week '+w[0]+'</p><p class="t">'+w[1]+'</p><p class="d">'+w[2]+'</p>'+(w[3]?'<span class="live">live</span>':'')+'</a>';
+  }).join("");
+  var cv=document.getElementById("amb"),ctx=cv.getContext&&cv.getContext("2d"),parts=[],reduce=matchMedia("(prefers-reduced-motion: reduce)").matches;
+  function sizeC(){if(!ctx)return;cv.width=innerWidth;cv.height=innerHeight;}
+  function initParts(){parts=[];for(var i=0;i<46;i++)parts.push({x:Math.random(),y:Math.random(),r:Math.random()*1.6+.3,s:Math.random()*.02+.004,o:Math.random()*.4+.1});}
+  function drawC(){if(!ctx)return;ctx.clearRect(0,0,cv.width,cv.height);parts.forEach(function(p){p.y-=p.s/60;if(p.y<-.02)p.y=1.02;ctx.beginPath();ctx.arc(p.x*cv.width,p.y*cv.height,p.r,0,7);ctx.fillStyle="rgba(140,170,255,"+p.o+")";ctx.fill();});requestAnimationFrame(drawC);}
+  if(ctx&&!reduce){sizeC();initParts();drawC();addEventListener("resize",sizeC);}
+})();
+</script>
+<script src="search.js"></script>
+</body>
+</html>

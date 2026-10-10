@@ -30,7 +30,12 @@ window.HUB_MANIFEST = {
     { file: "24-switch-flow.html", title: "switch, Both Forms", group: "Workbook 1c · Section 4-3", size: "walk" },
     { file: "25-problem-to-code.html", title: "From Problem to Code", group: "Workbook 1c · Module 4", size: "walk" }
   ],
-  reference: [],
+  reference: [
+    { file: "cheat-sheet.html", title: "Week 1 Cheat Sheet", group: "Reference", desc: "The syntax of the week on one page: types, operators, Scanner, printf, if, switch, methods." },
+    { file: "glossary.html", title: "Glossary", group: "Reference", desc: "The words of the week, each in one sentence, with the page that shows it." },
+    { file: "common-errors.html", title: "Common Errors", group: "Reference", desc: "What the compiler says, what it means, how to fix it." },
+    { file: "intellij-shortcuts.html", title: "IntelliJ Shortcuts", group: "Reference", desc: "The keys worth knowing in week 1, Mac and Windows side by side." }
+  ],
   exercises: [],
   games: []
 };
