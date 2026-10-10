@@ -1,0 +1,380 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Method Signature | Week 1 Visual Hub</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Sora:wght@500;700&family=Inter:wght@400;500&family=JetBrains+Mono:wght@400;500&display=swap">
+<style>
+  :root{
+    --bg:#080c17; --bg2:#0c1428; --surface:rgba(255,255,255,.045); --line:rgba(255,255,255,.09);
+    --ink:#eef2fb; --muted:#8496b6; --accent:#6ea0ff; --accent2:#8b7bff; --good:#46d98a; --warn:#ff6a6a;
+    --gold:#ffc862; --disp:'Sora',system-ui,sans-serif; --body:'Inter',system-ui,sans-serif;
+    --mono:'JetBrains Mono',ui-monospace,monospace;
+  }
+  *{box-sizing:border-box}
+  body{margin:0;min-height:100vh;color:var(--ink);font-family:var(--body);
+    background:radial-gradient(1200px 700px at 70% -10%,#141d38 0%,transparent 55%),
+               radial-gradient(900px 600px at 10% 110%,#161233 0%,transparent 50%),#080c17;
+    overflow-x:hidden}
+  #amb{position:fixed;inset:0;z-index:0;pointer-events:none;opacity:.6}
+  .back{position:relative;z-index:2;display:block;max-width:1120px;margin:0 auto;padding:26px 24px 0;
+    width:100%;font-family:var(--mono);font-size:.8rem;letter-spacing:.04em;color:var(--muted);
+    text-decoration:none;transition:color .15s}
+  .back:hover{color:var(--accent)}
+  .wrap{position:relative;z-index:1;max-width:1120px;margin:0 auto;padding:22px 24px 70px}
+  .tag{font-family:var(--mono);font-size:.72rem;letter-spacing:.22em;text-transform:uppercase;color:var(--accent);margin:0 0 14px}
+  h1{font-family:var(--disp);font-weight:700;font-size:clamp(2.3rem,6vw,3.6rem);line-height:1;margin:0 0 12px;
+    letter-spacing:-.03em;background:linear-gradient(180deg,#fff,#b9c6e6);-webkit-background-clip:text;
+    background-clip:text;color:transparent}
+  .lede{color:var(--muted);max-width:64ch;font-size:1.05rem;margin:0 0 30px;line-height:1.5}
+  .lede b{color:var(--ink)}
+  .lede code,.take code,.status code{font-family:var(--mono);font-size:.92em;color:#bcd0ff}
+  .stage{position:relative;background:linear-gradient(180deg,rgba(255,255,255,.03),rgba(255,255,255,.01));
+    border:1px solid var(--line);border-radius:24px;padding:8px;
+    box-shadow:0 1px 0 rgba(255,255,255,.06) inset,0 30px 80px -30px rgba(0,0,0,.8)}
+  .grid{display:grid;grid-template-columns:340px 1fr;gap:8px}
+  @media (max-width:860px){.grid{grid-template-columns:1fr}}
+  .panelL,.panelR{border-radius:18px;padding:22px;min-width:0}
+  .panelL{background:linear-gradient(180deg,rgba(110,160,255,.06),rgba(139,123,255,.03));border:1px solid var(--line)}
+  .panelR{background:rgba(6,10,20,.5);border:1px solid var(--line);position:relative;overflow:hidden}
+  .lab{font-family:var(--mono);font-size:.7rem;letter-spacing:.12em;text-transform:uppercase;color:var(--muted);margin:0 0 12px}
+  /* example chips */
+  .chips{display:flex;flex-wrap:wrap;gap:6px;margin-bottom:16px}
+  .chip{font-family:var(--mono);font-size:.74rem;padding:5px 11px;border-radius:999px;cursor:pointer;
+    border:1px solid var(--line);background:rgba(0,0,0,.25);color:var(--muted);transition:.15s}
+  .chip:hover{border-color:var(--accent);color:var(--accent)}
+  .chip.on{border-color:rgba(110,160,255,.6);background:rgba(110,160,255,.14);color:var(--ink)}
+  .chip:focus-visible{outline:2px solid var(--accent);outline-offset:2px}
+  /* readout: the contract, filled in as the header is read */
+  .readout{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin:0 0 14px}
+  .stat{background:rgba(255,255,255,.03);border:1px solid var(--line);border-radius:12px;padding:11px 13px;min-width:0}
+  .stat .k{font-family:var(--mono);font-size:.62rem;letter-spacing:.1em;text-transform:uppercase;color:var(--muted)}
+  .stat .v{font-family:var(--disp);font-weight:700;font-size:1.05rem;font-variant-numeric:tabular-nums;margin-top:4px;
+    transition:color .3s;min-height:1.6em;overflow-wrap:anywhere}
+  .v.hot{color:var(--accent)} .v.gold{color:var(--gold)} .v.dim{color:rgba(132,150,182,.5)}
+  .stepno{font-family:var(--mono);font-size:.64rem;letter-spacing:.14em;text-transform:uppercase;color:var(--muted);margin:0 0 8px}
+  .stepno b{color:var(--accent);font-weight:500}
+  .status{font-family:var(--mono);font-size:.82rem;line-height:1.55;color:var(--ink);min-height:144px;
+    padding:12px 14px;border-radius:12px;background:rgba(0,0,0,.25);border:1px solid var(--line);
+    border-left:3px solid var(--accent);transition:border-color .3s}
+  .status.ok{border-left-color:var(--good)}
+  .status.gold{border-left-color:var(--gold)}
+  .status b.g{color:var(--good)} .status b.w{color:var(--warn)} .status b.a{color:var(--accent)} .status b.y{color:var(--gold)}
+  .actions{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-top:16px}
+  .btn{font-family:var(--body);font-weight:500;font-size:.84rem;padding:9px 12px;border-radius:11px;cursor:pointer;
+    border:1px solid var(--line);background:var(--surface);color:var(--ink);transition:.15s;text-align:center}
+  .btn:hover{border-color:var(--accent);color:var(--accent)}
+  .btn.primary{border-color:rgba(110,160,255,.5);background:rgba(110,160,255,.12);grid-column:1 / -1}
+  .btn.gold:hover{border-color:var(--gold);color:var(--gold)}
+  .btn:disabled{opacity:.35;cursor:not-allowed}
+  .btn:focus-visible{outline:2px solid var(--accent);outline-offset:2px}
+  .hint{font-family:var(--mono);font-size:.7rem;color:var(--muted);margin:14px 0 0;line-height:1.5}
+  .hint b{color:var(--accent)}
+  /* right: the code IS the picture */
+  .code{min-width:0;font-family:var(--mono);background:rgba(0,0,0,.35);border:1px solid var(--line);
+    border-radius:14px;padding:14px 0;overflow-x:auto}
+  .codein{position:relative;display:inline-block;min-width:100%;font-size:13px;line-height:2.15;padding-right:34px}
+  .ln{display:flex;gap:12px;padding:0 14px;white-space:pre;color:#c9d4ea;transition:opacity .3s}
+  .ln .n{width:20px;text-align:right;color:rgba(132,150,182,.55);user-select:none;flex-shrink:0}
+  .ln.dim{opacity:.32}
+  .ln.focus .n{color:var(--accent)}
+  .kw{color:#c792ea} .ty{color:#82aaff} .st{color:#c3e88d} .nm{color:#f78c6c} .fn{color:#ffcb6b}
+  .tok{border-radius:5px;transition:background .3s,box-shadow .3s}
+  .tok.lit{background:rgba(110,160,255,.2);box-shadow:0 0 0 1px rgba(110,160,255,.65)}
+  .tok.ok{background:rgba(70,217,138,.16);box-shadow:0 0 0 1px rgba(70,217,138,.65)}
+  .tok.gold{background:rgba(255,200,98,.16);box-shadow:0 0 0 1px rgba(255,200,98,.7)}
+  #ov{position:absolute;left:0;top:0;pointer-events:none;overflow:visible}
+  #ov path{fill:none;stroke-width:1.6}
+  #ov .pl{stroke:rgba(110,160,255,.7);stroke-dasharray:4 4}
+  #ov .pg{stroke:rgba(70,217,138,.75)}
+  #ov .py{stroke:rgba(255,200,98,.8);stroke-dasharray:5 4}
+  .note{position:absolute;transform:translateX(-50%);font-family:var(--mono);font-size:9.5px;line-height:1.5;padding:0 7px;
+    border-radius:999px;white-space:nowrap;border:1px solid rgba(110,160,255,.55);background:#0d1630;color:#bcd0ff;
+    animation:pop .3s}
+  .note.ok{border-color:rgba(70,217,138,.6);background:#0b1f18;color:#bff3d6}
+  .note.gold{border-color:rgba(255,200,98,.7);background:#231b0b;color:#ffe6b0}
+  .note.right{transform:none}
+  .flow{position:absolute;transform:translateX(-50%);font-family:var(--mono);font-size:11px;font-weight:500;line-height:1.5;padding:0 8px;
+    border-radius:999px;white-space:nowrap;border:1px solid var(--gold);background:#2a200c;color:#ffe6b0;
+    box-shadow:0 0 16px -4px rgba(255,200,98,.8);transition:left .8s cubic-bezier(.2,.9,.3,1),top .8s cubic-bezier(.2,.9,.3,1)}
+  @keyframes pop{from{transform:translateX(-50%) scale(.6);opacity:0}to{transform:translateX(-50%) scale(1);opacity:1}}
+  .note.right{animation:none}
+  .take{margin-top:22px;background:linear-gradient(180deg,rgba(110,160,255,.08),rgba(139,123,255,.04));
+    border:1px solid var(--line);border-left:3px solid var(--accent);border-radius:12px;padding:16px 18px}
+  .take .tk{font-family:var(--mono);font-size:.66rem;letter-spacing:.14em;text-transform:uppercase;color:var(--accent);margin:0 0 8px}
+  .take p{margin:0;font-size:.95rem;color:var(--ink);line-height:1.55}
+  .take b{color:#fff}
+  @media (prefers-reduced-motion:reduce){*{animation-duration:.01ms!important;transition-duration:.01ms!important}#amb{display:none}}
+</style>
+</head>
+<body>
+
+<a class="back" href="../index.html#20-method-signature">&#8592; Week 1 index</a>
+
+<canvas id="amb"></canvas>
+<div class="wrap">
+  <p class="tag">Workbook 1c &middot; Section 4-2 &middot; Static methods</p>
+  <h1>Method Signature</h1>
+  <p class="lede">The first line of a method tells you everything you need to call it.
+  <b>It says what you must pass, in what order, and what you get back, and every call has to match it.</b>
+  Step through the header, then watch a call line up against it.</p>
+
+  <div class="stage">
+    <div class="grid">
+      <div class="panelL">
+        <p class="lab">Pick a method from the demo</p>
+        <div class="chips" id="chips"></div>
+
+        <div class="readout">
+          <div class="stat"><div class="k">You must pass</div><div class="v dim" id="stPass">?</div></div>
+          <div class="stat"><div class="k">You get back</div><div class="v dim" id="stBack">?</div></div>
+        </div>
+
+        <p class="stepno" id="stepno">Step <b>0</b> of 8</p>
+        <div class="status" id="status">Press <b class="a">Next</b> to start.</div>
+
+        <div class="actions">
+          <button class="btn primary" id="bNext">Next &rarr;</button>
+          <button class="btn gold" id="bBack">&larr; Back</button>
+          <button class="btn" id="bReset">Reset</button>
+        </div>
+        <p class="hint">space = next &middot; all three methods are in the methods demo. <b>Try greetUser for void.</b></p>
+      </div>
+
+      <div class="panelR">
+        <p class="lab">Main.java, inside class Main</p>
+        <div class="code" id="code"><div class="codein" id="codein"></div></div>
+      </div>
+    </div>
+  </div>
+
+  <div class="take">
+    <p class="tk">The one idea</p>
+    <p><b>The header is a contract.</b> The parameter list says what you must pass and in what order: each argument must have
+    its parameter's type, and the names do not have to match. The return type says what comes back and what you can store it in;
+    <code>void</code> means nothing comes back.</p>
+  </div>
+
+  <div id="rail"></div>
+</div>
+
+<script>
+(function(){
+  "use strict";
+  var $=function(s){return document.querySelector(s);};
+  var reduce=matchMedia("(prefers-reduced-motion: reduce)").matches;
+
+  /* ---------- tokens: {h: html, id: optional token id} ---------- */
+  function S(h,id,c){ return {h:c?'<span class="'+c+'">'+h+'</span>':h,id:id}; }
+  function K(t,id){return S(t,id,"kw");} function T(t,id){return S(t,id,"ty");}
+  function F(t,id){return S(t,id,"fn");} function X(t,id){return S(t,id);}
+  function lit(v){ return v.charAt(0)==='"'?S(v,null,"st"):S(v,null,"nm"); }
+
+  /* ---------- the three methods from demo-methods-java-2 (values invented) ---------- */
+  var PRESETS=[
+    {chip:"addNumbers", name:"addNumbers", ret:"int", store:"result", retVar:"sum", retVal:"20",
+     params:[{t:"int",n:"num1",arg:"firstNumber",v:"17"},{t:"int",n:"num2",arg:"secondNumber",v:"3"}],
+     body:[[S("    "),T("int"),X(" sum = num1 + num2;")]]},
+    {chip:"generateFullName", name:"generateFullName", ret:"String", store:"generatedFullName", retVar:"fullName", retVal:'"Maya Lopez"',
+     params:[{t:"String",n:"firstName",arg:"firstName",v:'"Maya"'},{t:"String",n:"lastName",arg:"lastName",v:'"Lopez"'}],
+     body:[[S("    "),T("String"),X(" fullName = firstName + "),lit('" "'),X(" + lastName;")]]},
+    {chip:"greetUser (void)", name:"greetUser", ret:"void", store:null,
+     params:[{t:"String",n:"name",arg:"name",v:'"Maya"'}],
+     body:[[S("    System.out.println("),lit('"Hello "'),X(" + name + "),lit('"!"'),X(");")]]}
+  ];
+  var P=PRESETS[0];
+
+  /* lines of Main.java for the current preset; returns {lines, callLn, hdrLn, retLn} */
+  function program(){
+    var L=[],i;
+    L.push([K("public"),X(" "),K("static"),X(" "),K("void"),X(" "),F("main"),X("("),T("String[]"),X(" args) {")]);
+    P.params.forEach(function(p){ L.push([X("    "),T(p.t),X(" "+p.arg+" = "),lit(p.v),X(";")]); });
+    L.push([]);
+    var call=[X("    ")];
+    if(P.store){ call.push(T(P.ret,"vtype"),X(" "),X(P.store,"vname"),X(" = ")); }
+    call.push(F(P.name,"cname"),X("("));
+    P.params.forEach(function(p,j){ if(j) call.push(X(", ")); call.push(X(p.arg,"a"+j)); });
+    call.push(X(");","cend"));
+    var callLn=L.length; L.push(call);
+    L.push([X("}")]); L.push([]);
+    var hdr=[K("public","pub"),X(" "),K("static","stat"),X(" "),(P.ret==="void"?K:T)(P.ret,"ret"),X(" "),F(P.name,"hname"),X("(","po")];
+    P.params.forEach(function(p,j){ if(j) hdr.push(X(", ")); hdr.push(S('<span class="ty">'+p.t+'</span> '+p.n,"p"+j)); });
+    hdr.push(X(")","pc"),X(" {"));
+    var hdrLn=L.length; L.push(hdr);
+    for(i=0;i<P.body.length;i++) L.push(P.body[i]);
+    var retLn=-1;
+    if(P.ret!=="void"){ retLn=L.length; L.push([X("    "),K("return","rkw"),X(" "),X(P.retVar,"rval"),X(";")]); }
+    L.push([X("}")]);
+    return {lines:L,callLn:callLn,hdrLn:hdrLn,retLn:retLn};
+  }
+
+  /* ---------- the walk, built from the preset ---------- */
+  function ord(j){ return ["first","second","third"][j]; }
+  function build(G){
+    var St=[], n=P.params.length, types=P.params.map(function(p){return p.t;}).join(", ");
+    var isVoid=P.ret==="void";
+    St.push({focus:[G.hdrLn],lit:{pub:"lit",stat:"lit"},notes:[{ids:["pub","stat"],t:"modifiers"}],
+      msg:'<code>public</code> is the <b class="a">access modifier</b> (any code may call this method) and <code>static</code> means no object is needed first: in Week 1 every method starts with both.'});
+    St.push({focus:[G.hdrLn],lit:{ret:"gold"},notes:[{ids:["ret"],t:"return type",c:"gold"}],back:true,
+      msg:isVoid?'<code>void</code> sits where the <b class="y">return type</b> goes: this method hands <b class="y">nothing</b> back, it only does something.'
+                :'<code>'+P.ret+'</code> is the <b class="y">return type</b>: this method promises to hand back one '+P.ret+' value.'});
+    St.push({focus:[G.hdrLn],lit:{hname:"lit"},notes:[{ids:["hname"],t:"method name"}],back:true,
+      msg:'<code>'+P.name+'</code> is the <b class="a">method name</b>: a call must spell it exactly, capitals included.'});
+    var pl={po:"lit",pc:"lit"},pn=[];
+    P.params.forEach(function(p,j){ pl["p"+j]="lit"; pn.push({ids:["p"+j],t:"param "+(j+1)}); });
+    St.push({focus:[G.hdrLn],lit:pl,notes:pn,back:true,pass:true,
+      msg:'The <b class="a">parameter list</b> in the parentheses: '+(n===1?'one parameter':n+' parameters')+', each a type and a name, so every call must pass <b class="a">'+types+'</b>'+(n>1?', in that order':'')+'.'});
+    var cl={cname:"lit",hname:"lit"},cn=[];
+    P.params.forEach(function(p,j){ cl["a"+j]="lit"; cn.push({ids:["a"+j],t:"arg "+(j+1)}); });
+    St.push({focus:[G.callLn,G.hdrLn],lit:cl,notes:cn,links:[{a:"cname",b:"hname",c:"pl"}],back:true,pass:true,
+      msg:'Now <code>main</code> calls it: the name matches the header, and the values in the parentheses are the <b class="a">arguments</b>, one per parameter.'});
+    P.params.forEach(function(p,j){
+      var lt={},nt=[],lk=[],k;
+      for(k=0;k<=j;k++){
+        var q=P.params[k];
+        lt["a"+k]="ok"; lt["p"+k]="ok";
+        nt.push({ids:["a"+k],t:q.v,c:"ok"});
+        nt.push({ids:["p"+k],t:q.n+" = "+q.v,c:"ok"});
+        lk.push({a:"a"+k,b:"p"+k,c:"pg",badge:k===j?q.t+" = "+q.t:null});
+      }
+      var extra='';
+      if(p.arg===p.n) extra=' (same name here, but only type and position decide the match)';
+      else if(j===0) extra=' (the names differ, and that is fine)';
+      if(j===1&&p.t==="String") extra=' (order matters: swapped, the name would come out "Lopez Maya")';
+      St.push({focus:[G.callLn,G.hdrLn],lit:lt,notes:nt,links:lk,cls:"ok",back:true,pass:true,
+        msg:'Argument '+(j+1)+', <code>'+p.arg+'</code>, is a <b class="g">'+p.t+'</b>; the '+ord(j)+' parameter, <code>'+p.n+'</code>, wants a <b class="g">'+p.t+'</b>: it matches, so '+p.n+' gets '+p.v+extra+'.'});
+    });
+    if(isVoid){
+      St.push({focus:[G.callLn,G.hdrLn],lit:{ret:"gold",cname:"gold",cend:"gold"},notes:[{ids:["ret"],t:"nothing comes back",c:"gold"},{ids:["cend"],t:"no variable to fill",c:"gold",right:true}],
+        cls:"gold",back:true,pass:true,
+        msg:'Because the header says <code>void</code>, <b class="y">nothing comes back</b>: the call stands alone on its line, and <code>String s = greetUser(name);</code> would not compile.'});
+    } else {
+      St.push({focus:[G.retLn,G.hdrLn,G.callLn],lit:{rkw:"gold",rval:"gold",ret:"gold",vtype:"gold",vname:"gold"},
+        notes:[{ids:["ret"],t:"promised "+P.ret,c:"gold"}],flow:{from:"rval",to:"vname",t:P.retVal},
+        cls:"gold",back:true,pass:true,
+        msg:'<code>return '+P.retVar+';</code> hands back <b class="y">'+P.retVal+'</b>, a '+P.ret+' as the header promised, and it lands in <code>'+P.ret+' '+P.store+'</code>: the variable must be able to hold the return type.'});
+    }
+    return St;
+  }
+
+  /* ---------- render ---------- */
+  var G,steps=[],at=-1,codeIn=$("#codein"),codeBox=$("#code"),statusEl=$("#status");
+
+  function renderCode(s){
+    var focus=s?s.focus:null, lt=s?s.lit:{};
+    codeIn.innerHTML=G.lines.map(function(segs,i){
+      var c="ln";
+      if(focus) c+=focus.indexOf(i)>=0?" focus":" dim";
+      var h=segs.map(function(g){
+        if(!g.id) return g.h;
+        return '<span class="tok'+(lt[g.id]?" "+lt[g.id]:"")+'" data-k="'+g.id+'">'+g.h+'</span>';
+      }).join("");
+      return '<div class="'+c+'"><span class="n">'+(i+1)+'</span><span>'+(h||" ")+'</span></div>';
+    }).join("")+'<svg id="ov"></svg>';
+    fit();
+    overlay(s);
+  }
+  function fit(){
+    var fs=13;
+    codeIn.style.fontSize=fs+"px";
+    while(codeIn.scrollWidth>codeBox.clientWidth&&fs>10.5){ fs-=.5; codeIn.style.fontSize=fs+"px"; }
+  }
+  function tok(id){ return codeIn.querySelector('[data-k="'+id+'"]'); }
+  function box(id){ var e=tok(id); return e?{x:e.offsetLeft,y:e.offsetTop,w:e.offsetWidth,h:e.offsetHeight}:null; }
+  function lineH(){ var l=codeIn.querySelector(".ln"); return l?l.offsetHeight:28; }
+
+  function overlay(s){
+    var svg=$("#ov"); svg.setAttribute("width",codeIn.scrollWidth); svg.setAttribute("height",codeIn.scrollHeight);
+    if(!s) return;
+    var lh=lineH(), html="", paths="";
+    (s.notes||[]).forEach(function(n){
+      var a=box(n.ids[0]), b=box(n.ids[n.ids.length-1]); if(!a||!b) return;
+      if(n.right) html+='<span class="note right '+(n.c||"")+'" style="left:'+(b.x+b.w+10)+'px;top:'+(b.y+(b.h-15)/2)+'px">'+n.t+'</span>';
+      else html+='<span class="note '+(n.c||"")+'" style="left:'+((a.x+b.x+b.w)/2)+'px;top:'+(a.y-lh*0.62)+'px">'+n.t+'</span>';
+    });
+    (s.links||[]).forEach(function(k){
+      var a=box(k.a), b=box(k.b); if(!a||!b) return;
+      var x1=a.x+a.w/2, y1=a.y+a.h-1, x2=b.x+b.w/2, y2=b.y-lh*0.62, ym=(y1+y2)/2;
+      paths+='<path class="'+k.c+'" d="M'+x1+' '+y1+' C'+x1+' '+ym+' '+x2+' '+ym+' '+x2+' '+y2+'"/>';
+      if(k.badge) html+='<span class="note ok" style="left:'+((x1+x2)/2)+'px;top:'+(ym-8)+'px">'+k.badge+'</span>';
+    });
+    if(s.flow){
+      var f=box(s.flow.from), t=box(s.flow.to);
+      if(f&&t){
+        var maxR=0; Array.prototype.forEach.call(codeIn.querySelectorAll(".ln > span:last-child"),function(e){ maxR=Math.max(maxR,e.offsetLeft+e.offsetWidth); });
+        var sx=f.x+f.w+4, sy=f.y+f.h/2, xr=maxR+16, ty=t.y-lh*0.5, tx=t.x+t.w/2;
+        paths+='<path class="py" d="M'+sx+' '+sy+' L'+(xr-8)+' '+sy+' Q'+xr+' '+sy+' '+xr+' '+(sy-8)+' L'+xr+' '+(ty+8)+' Q'+xr+' '+ty+' '+(xr-8)+' '+ty+' L'+(tx+8)+' '+ty+' Q'+tx+' '+ty+' '+tx+' '+(ty+6)+'"/>';
+        html+='<span class="flow" id="flow" style="left:'+(f.x+f.w+40)+'px;top:'+(sy-9)+'px">'+s.flow.t+'</span>';
+        s._to={x:tx,y:t.y-lh*0.62};
+      }
+    }
+    svg.innerHTML=paths;
+    var holder=document.createElement("div"); holder.innerHTML=html;
+    while(holder.firstChild) codeIn.appendChild(holder.firstChild);
+    var fl=$("#flow");
+    if(fl&&s._to){
+      if(reduce||!s._animate){ fl.style.transition="none"; }
+      else { void fl.offsetWidth; }
+      fl.style.left=s._to.x+"px"; fl.style.top=s._to.y+"px";
+    }
+  }
+
+  function setStat(id,v,c){ var e=$(id); if(v===null){e.textContent="?";e.className="v dim";} else {e.textContent=v;e.className="v "+(c||"");} }
+  function show(i,animate){
+    at=i;
+    $("#stepno").innerHTML="Step <b>"+(i<0?0:i+1)+"</b> of "+steps.length;
+    if(i<0){
+      renderCode(null);
+      statusEl.className="status";
+      statusEl.innerHTML='Press <b class="a">Next</b> to read the header of <code>'+P.name+'</code> part by part. The code on the right lights up at every step.';
+      setStat("#stPass",null); setStat("#stBack",null); setBtns(); return;
+    }
+    var s=steps[i]; s._animate=!!animate;
+    renderCode(s);
+    statusEl.className="status "+(s.cls||""); statusEl.innerHTML=s.msg;
+    setStat("#stPass",s.pass?P.params.map(function(p){return p.t;}).join(", "):null,"hot");
+    setStat("#stBack",s.back?(P.ret==="void"?"nothing":P.ret):null,"gold");
+    setBtns();
+  }
+  function setBtns(){ $("#bNext").disabled=at>=steps.length-1; $("#bBack").disabled=at<0; }
+  function next(){ if(at<steps.length-1) show(at+1,true); }
+  function back(){ if(at>=0) show(at-1,false); }
+  function reset(){ G=program(); steps=build(G); show(-1); }
+  function pick(idx){
+    P=PRESETS[idx];
+    Array.prototype.forEach.call(document.querySelectorAll(".chip"),function(c,j){c.classList.toggle("on",j===idx);});
+    if(document.activeElement&&document.activeElement.blur) document.activeElement.blur();
+    reset();
+  }
+
+  $("#chips").innerHTML=PRESETS.map(function(p,j){return '<button class="chip'+(j===0?' on':'')+'" data-i="'+j+'">'+p.chip+'</button>';}).join("");
+  $("#chips").addEventListener("click",function(e){ var b=e.target.closest(".chip"); if(b) pick(+b.getAttribute("data-i")); });
+  $("#bNext").addEventListener("click",next);
+  $("#bBack").addEventListener("click",back);
+  $("#bReset").addEventListener("click",reset);
+  document.addEventListener("keydown",function(e){ if(e.code==="Space"&&!/INPUT|BUTTON/.test(e.target.tagName)){e.preventDefault();next();} });
+  addEventListener("resize",function(){ show(at,false); });
+  if(document.fonts&&document.fonts.ready) document.fonts.ready.then(function(){ show(at,false); });
+
+  /* ---------- ambient canvas ---------- */
+  var cv=$("#amb"),ctx=cv.getContext&&cv.getContext("2d"),parts=[];
+  function sizeC(){if(!ctx)return;cv.width=innerWidth;cv.height=innerHeight;}
+  function initParts(){parts=[];for(var i=0;i<46;i++)parts.push({x:Math.random(),y:Math.random(),
+    r:Math.random()*1.6+.3,s:Math.random()*.02+.004,o:Math.random()*.4+.1});}
+  function drawC(){if(!ctx)return;ctx.clearRect(0,0,cv.width,cv.height);
+    parts.forEach(function(p){p.y-=p.s/60;if(p.y<-.02)p.y=1.02;
+      ctx.beginPath();ctx.arc(p.x*cv.width,p.y*cv.height,p.r,0,7);
+      ctx.fillStyle="rgba(140,170,255,"+p.o+")";ctx.fill();});
+    requestAnimationFrame(drawC);}
+  if(ctx&&!reduce){sizeC();initParts();drawC();addEventListener("resize",sizeC);}
+
+  reset();
+})();
+</script>
+<script src="../manifest.js"></script>
+<script src="../../assets/rail.js"></script>
+<script>Rail.render(document.getElementById("rail"),{kind:"visuals",current:"20-method-signature"});</script>
+</body>
+</html>

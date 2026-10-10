@@ -1,0 +1,375 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>switch, Both Forms | Week 1 Visual Hub</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Sora:wght@500;700&family=Inter:wght@400;500&family=JetBrains+Mono:wght@400;500&display=swap">
+<style>
+  :root{
+    --bg:#080c17; --bg2:#0c1428; --surface:rgba(255,255,255,.045); --line:rgba(255,255,255,.09);
+    --ink:#eef2fb; --muted:#8496b6; --accent:#6ea0ff; --accent2:#8b7bff; --good:#46d98a; --warn:#ff6a6a;
+    --gold:#ffc862; --disp:'Sora',system-ui,sans-serif; --body:'Inter',system-ui,sans-serif;
+    --mono:'JetBrains Mono',ui-monospace,monospace;
+  }
+  *{box-sizing:border-box}
+  body{margin:0;min-height:100vh;color:var(--ink);font-family:var(--body);
+    background:radial-gradient(1200px 700px at 70% -10%,#141d38 0%,transparent 55%),
+               radial-gradient(900px 600px at 10% 110%,#161233 0%,transparent 50%),#080c17;
+    overflow-x:hidden}
+  #amb{position:fixed;inset:0;z-index:0;pointer-events:none;opacity:.6}
+  .back{position:relative;z-index:2;display:block;max-width:1120px;margin:0 auto;padding:26px 24px 0;
+    width:100%;font-family:var(--mono);font-size:.8rem;letter-spacing:.04em;color:var(--muted);
+    text-decoration:none;transition:color .15s}
+  .back:hover{color:var(--accent)}
+  .wrap{position:relative;z-index:1;max-width:1120px;margin:0 auto;padding:22px 24px 70px}
+  .tag{font-family:var(--mono);font-size:.72rem;letter-spacing:.22em;text-transform:uppercase;color:var(--accent);margin:0 0 14px}
+  h1{font-family:var(--disp);font-weight:700;font-size:clamp(2.3rem,6vw,3.6rem);line-height:1;margin:0 0 12px;
+    letter-spacing:-.03em;background:linear-gradient(180deg,#fff,#b9c6e6);-webkit-background-clip:text;
+    background-clip:text;color:transparent}
+  .lede{color:var(--muted);max-width:64ch;font-size:1.05rem;margin:0 0 30px;line-height:1.5}
+  .lede b{color:var(--ink)}
+  .lede code,.take code,.status code{font-family:var(--mono);font-size:.92em;color:#bcd0ff}
+  .stage{position:relative;background:linear-gradient(180deg,rgba(255,255,255,.03),rgba(255,255,255,.01));
+    border:1px solid var(--line);border-radius:24px;padding:8px;
+    box-shadow:0 1px 0 rgba(255,255,255,.06) inset,0 30px 80px -30px rgba(0,0,0,.8)}
+  .grid{display:grid;grid-template-columns:340px 1fr;gap:8px}
+  @media (max-width:860px){.grid{grid-template-columns:1fr}}
+  .panelL,.panelR{border-radius:18px;padding:22px}
+  .panelL{background:linear-gradient(180deg,rgba(110,160,255,.06),rgba(139,123,255,.03));border:1px solid var(--line)}
+  .panelR{background:rgba(6,10,20,.5);border:1px solid var(--line);position:relative;overflow:hidden}
+  .lab{font-family:var(--mono);font-size:.7rem;letter-spacing:.12em;text-transform:uppercase;color:var(--muted);margin:0 0 12px}
+  .chips{display:flex;flex-wrap:wrap;gap:6px;margin-bottom:16px}
+  .chip{font-family:var(--mono);font-size:.74rem;padding:5px 11px;border-radius:999px;cursor:pointer;
+    border:1px solid var(--line);background:rgba(0,0,0,.25);color:var(--muted);transition:.15s}
+  .chip:hover{border-color:var(--accent);color:var(--accent)}
+  .chip.on{border-color:rgba(110,160,255,.6);background:rgba(110,160,255,.14);color:var(--ink)}
+  .chip.trap.on{border-color:rgba(255,106,106,.6);background:rgba(255,106,106,.12)}
+  .chip:focus-visible{outline:2px solid var(--accent);outline-offset:2px}
+  .readout{display:grid;grid-template-columns:1fr 1.5fr;gap:10px;margin:0 0 14px}
+  .stat{background:rgba(255,255,255,.03);border:1px solid var(--line);border-radius:12px;padding:11px 13px}
+  .stat .k{font-family:var(--mono);font-size:.62rem;letter-spacing:.1em;text-transform:uppercase;color:var(--muted)}
+  .stat .v{font-family:var(--disp);font-weight:700;font-size:1.45rem;font-variant-numeric:tabular-nums;margin-top:2px;transition:color .3s;min-height:1.6em}
+  .v.hot{color:var(--accent)} .v.good{color:var(--good)} .v.bad{color:var(--warn)} .v.dim{color:rgba(132,150,182,.5)}
+  .stepno{font-family:var(--mono);font-size:.64rem;letter-spacing:.14em;text-transform:uppercase;color:var(--muted);margin:0 0 8px}
+  .stepno b{color:var(--accent);font-weight:500}
+  .status{font-family:var(--mono);font-size:.82rem;line-height:1.55;color:var(--ink);min-height:132px;
+    padding:12px 14px;border-radius:12px;background:rgba(0,0,0,.25);border:1px solid var(--line);
+    border-left:3px solid var(--accent);transition:border-color .3s}
+  .status.cut{border-left-color:var(--warn)}
+  .status.ok{border-left-color:var(--good)}
+  .status b.g{color:var(--good)} .status b.w{color:var(--warn)} .status b.a{color:var(--accent)} .status b.y{color:var(--gold)}
+  .actions{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-top:16px}
+  .btn{font-family:var(--body);font-weight:500;font-size:.84rem;padding:9px 12px;border-radius:11px;cursor:pointer;
+    border:1px solid var(--line);background:var(--surface);color:var(--ink);transition:.15s;text-align:center}
+  .btn:hover{border-color:var(--accent);color:var(--accent)}
+  .btn.primary{border-color:rgba(110,160,255,.5);background:rgba(110,160,255,.12);grid-column:1 / -1}
+  .btn.gold:hover{border-color:var(--gold);color:var(--gold)}
+  .btn:disabled{opacity:.35;cursor:not-allowed}
+  .btn:focus-visible{outline:2px solid var(--accent);outline-offset:2px}
+  .hint{font-family:var(--mono);font-size:.7rem;color:var(--muted);margin:14px 0 0;line-height:1.5}
+  .hint b{color:var(--accent)}
+  /* right: two forms side by side */
+  .rgrid{display:grid;grid-template-columns:minmax(0,1.1fr) minmax(0,1fr);gap:14px;align-items:start}
+  @media (max-width:1000px){.rgrid{grid-template-columns:1fr}}
+  .pane{min-width:0;transition:opacity .3s}
+  .pane.off{opacity:.38}
+  .pane .lab span{color:var(--accent)}
+  .pane.off .lab span{color:var(--muted)}
+  .code{position:relative;min-width:0;font-family:var(--mono);font-size:.72rem;line-height:1.6;background:rgba(0,0,0,.35);border:1px solid var(--line);
+    border-radius:14px;padding:10px 0;overflow-x:auto}
+  .code.shared{margin-bottom:12px}
+  .code.after{margin-top:12px}
+  .ln{display:flex;gap:10px;padding:0 12px 0 22px;white-space:pre;color:#c9d4ea;transition:background .2s,opacity .3s,color .3s}
+  .ln .n{width:18px;text-align:right;color:rgba(132,150,182,.55);user-select:none;flex-shrink:0}
+  .ln.cur{background:rgba(110,160,255,.16);box-shadow:inset 3px 0 0 var(--accent)}
+  .ln.cur .n{color:var(--accent)}
+  .ln.ran{background:rgba(70,217,138,.08)}
+  .ln.ok{background:rgba(70,217,138,.16);box-shadow:inset 3px 0 0 var(--good)}
+  .ln.fall{background:rgba(255,106,106,.1)}
+  .ln.bad{background:rgba(255,106,106,.18);box-shadow:inset 3px 0 0 var(--warn)}
+  .ln.bad .n,.ln.fall .n{color:var(--warn)}
+  .ln.skip{opacity:.32}
+  .kw{color:#c792ea} .ty{color:#82aaff} .st{color:#c3e88d} .nm{color:#f78c6c} .cm{color:#5f6b85;font-style:italic} .fn{color:#ffcb6b}
+  .ptr{position:absolute;left:5px;width:0;height:0;border-top:6px solid transparent;border-bottom:6px solid transparent;
+    border-left:9px solid var(--accent);opacity:0;transition:top .45s cubic-bezier(.2,.9,.3,1),opacity .25s,border-left-color .3s}
+  .ptr.show{opacity:1}
+  .ptr.bad{border-left-color:var(--warn)} .ptr.ok{border-left-color:var(--good)}
+  .note{font-family:var(--mono);font-size:.62rem;color:var(--muted);margin-left:10px}
+  .ln.bad .note,.ln.fall .note{color:var(--warn)}
+  .console{margin-top:12px;font-family:var(--mono);font-size:.76rem;line-height:1.6;background:#05070e;border:1px solid var(--line);
+    border-radius:12px;padding:10px 14px;min-height:62px;color:#9fe3b6}
+  .console .cl{font-size:.6rem;letter-spacing:.14em;text-transform:uppercase;color:rgba(132,150,182,.6);margin-bottom:4px}
+  .console .out{animation:pop .3s}
+  .console .out.bad{color:var(--warn)}
+  .console .typed{color:var(--ink)}
+  @keyframes pop{from{transform:scale(.9);opacity:0}to{transform:scale(1);opacity:1}}
+  .take{margin-top:22px;background:linear-gradient(180deg,rgba(110,160,255,.08),rgba(139,123,255,.04));
+    border:1px solid var(--line);border-left:3px solid var(--accent);border-radius:12px;padding:16px 18px}
+  .take .tk{font-family:var(--mono);font-size:.66rem;letter-spacing:.14em;text-transform:uppercase;color:var(--accent);margin:0 0 8px}
+  .take p{margin:0;font-size:.95rem;color:var(--ink);line-height:1.55}
+  .take b{color:#fff}
+  @media (prefers-reduced-motion:reduce){*{animation-duration:.01ms!important;transition-duration:.01ms!important}#amb{display:none}}
+</style>
+</head>
+<body>
+
+<a class="back" href="../index.html#24-switch-flow">&#8592; Week 1 index</a>
+
+<canvas id="amb"></canvas>
+<div class="wrap">
+  <p class="tag">Workbook 1c &middot; Section 4-3 &middot; The switch statement</p>
+  <h1>switch, Both Forms</h1>
+  <p class="lede">A switch reads one value and jumps straight to the matching case.
+  <b>In the traditional form it keeps running until it hits a <code>break</code>; in the arrow form it runs one branch and stops.</b>
+  Pick a form and step through it.</p>
+
+  <div class="stage">
+    <div class="grid">
+      <div class="panelL">
+        <p class="lab">Pick a version</p>
+        <div class="chips" id="chips"></div>
+
+        <div class="readout">
+          <div class="stat"><div class="k">dayNumber</div><div class="v dim" id="stNum">?</div></div>
+          <div class="stat"><div class="k">dayName</div><div class="v dim" id="stName">?</div></div>
+        </div>
+
+        <p class="stepno" id="stepno">Step <b>0</b> of 6</p>
+        <div class="status" id="status"></div>
+
+        <div class="actions">
+          <button class="btn primary" id="bNext">Next &rarr;</button>
+          <button class="btn gold" id="bBack">&larr; Back</button>
+          <button class="btn" id="bReset">Reset</button>
+        </div>
+        <p class="hint">space = next &middot; the day-of-week switch from the switch demo, with the learner typing 3. <b>Try the break removed.</b></p>
+      </div>
+
+      <div class="panelR">
+        <div class="code shared" id="codeIn"></div>
+        <div class="rgrid">
+          <div class="pane" id="paneT">
+            <p class="lab">Traditional <span>case 3:</span></p>
+            <div class="code" id="codeT"></div>
+          </div>
+          <div class="pane" id="paneA">
+            <p class="lab">Arrow <span>case 3 -&gt;</span></p>
+            <div class="code" id="codeA"></div>
+          </div>
+        </div>
+        <div class="code after" id="codeOut"></div>
+        <div class="console"><div class="cl">console</div><div id="console"></div></div>
+      </div>
+    </div>
+  </div>
+
+  <div class="take">
+    <p class="tk">The one idea</p>
+    <p>Both forms jump straight to the case that matches, and <code>default</code> catches every value no case names.
+    <b>The traditional form keeps running down the cases until it reaches a <code>break</code>,</b> so a missing break
+    lets the next case run too. <b>The arrow form runs only its own branch and stops:</b> no break, no fall-through.</p>
+  </div>
+
+  <div id="rail"></div>
+</div>
+
+<script>
+(function(){
+  "use strict";
+  var $=function(s){return document.querySelector(s);};
+  var reduce=matchMedia("(prefers-reduced-motion: reduce)").matches;
+
+  /* ---------- code, from the switch demo (dayNumber 0 to 6) ---------- */
+  function k(t){return '<span class="kw">'+t+'</span>';}
+  function s(t){return '<span class="st">"'+t+'"</span>';}
+  function n(t){return '<span class="nm">'+t+'</span>';}
+  var SOUT='System.out.<span class="fn">println</span>';
+  var DAYS=["Sunday","Monday","Tuesday","Wednesday","Thursday","Friday","Saturday"];
+
+  var IN=[
+    '<span class="ty">int</span> dayNumber = myScanner.<span class="fn">nextInt</span>();  <span class="cm">// learner types 3</span>',
+    '<span class="ty">String</span> dayName = '+s("")+';'
+  ];
+  var OUT=[SOUT+'('+s("The name of the day chosen is: ")+' + dayName);'];
+
+  function tradLines(broken){
+    var L=[k("switch")+' (dayNumber) {'];
+    for(var d=0;d<7;d++){
+      L.push('    '+k("case")+' '+n(d)+':');
+      L.push('        dayName = '+s(DAYS[d])+';');
+      if(d===3&&broken) L.push('        <span class="cm">// break; was removed</span>');
+      else L.push('        '+k("break")+';');
+    }
+    L.push('    '+k("default")+':');
+    L.push('        '+SOUT+'('+s("Invalid Input!")+');');
+    L.push('        '+k("return")+';');
+    L.push('}');
+    return L;
+  }
+  function arrowLines(){
+    var L=[k("switch")+' (dayNumber) {'];
+    L.push('    '+k("case")+' '+n(0)+' -> {');
+    L.push('        dayName = '+s("Sunday")+';');
+    L.push('        '+SOUT+'('+s("The day is: ")+' + dayName);');
+    L.push('    }');
+    for(var d=1;d<7;d++) L.push('    '+k("case")+' '+n(d)+' -> dayName = '+s(DAYS[d])+';');
+    L.push('    '+k("default")+' -> {');
+    L.push('        '+SOUT+'('+s("Invalid Input!")+');');
+    L.push('        '+k("return")+';');
+    L.push('    }');
+    L.push('}');
+    return L;
+  }
+  /* traditional: line 0 = switch, case d label at 1+3d, body at 2+3d, break at 3+3d, default 22..24, close 25 */
+  function range(a,b){var r=[];for(var i=a;i<=b;i++)r.push(i);return r;}
+  var T_CASE3=10,T_BODY3=11,T_BRK3=12,T_CASE4=13,T_BODY4=14,T_BRK4=15;
+  var A_CASE3=7;
+
+  /* ---------- the three walks ---------- */
+  var MSG_IN='The learner types <b class="a">3</b> at the prompt, so <code>dayNumber</code> holds 3. <code>dayName</code> starts empty.';
+  var MSG_SW='<code>switch (dayNumber)</code> reads the value <b class="a">once</b>: 3. Now it looks for the case label that matches 3.';
+  var GOOD_OUT="The name of the day chosen is: Wednesday";
+
+  var PRESETS=[
+    {label:"traditional, with break",form:"T",broken:false,steps:[
+      {at:"in",i:0,num:3,name:"",msg:MSG_IN},
+      {at:"T",i:0,num:3,name:"",msg:MSG_SW},
+      {at:"T",i:T_CASE3,skip:range(1,9),num:3,name:"",msg:'It <b class="a">jumps straight to <code>case 3:</code></b>, skipping cases 0, 1 and 2. If no label matched 3, it would jump to <code>default:</code> instead.'},
+      {at:"T",i:T_BODY3,ran:[T_CASE3],skip:range(1,9),num:3,name:"Wednesday",nameC:"hot",msg:'It runs the lines under <code>case 3:</code> one by one. <code>dayName</code> becomes <b class="a">"Wednesday"</b>.'},
+      {at:"T",i:T_BRK3,cls:"ok",ran:[T_CASE3,T_BODY3],skip:range(1,9).concat(range(13,24)),num:3,name:"Wednesday",nameC:"hot",msg:'<code>break;</code> <b class="g">leaves the switch right here.</b> Case 4, 5, 6 and default never run.'},
+      {at:"out",i:0,cls:"ok",ran:[T_CASE3,T_BODY3,T_BRK3],skip:range(1,9).concat(range(13,24)),num:3,name:"Wednesday",nameC:"good",out:GOOD_OUT,msg:'After the switch, println shows <b class="g">Wednesday</b>. One case ran, then break stopped it.'}
+    ]},
+    {label:"traditional, break removed",form:"T",broken:true,trap:true,steps:[
+      {at:"in",i:0,num:3,name:"",msg:MSG_IN},
+      {at:"T",i:0,num:3,name:"",msg:MSG_SW+' Notice the <b class="w">break under case 3 is gone</b>.'},
+      {at:"T",i:T_CASE3,skip:range(1,9),num:3,name:"",msg:'Same as before: it <b class="a">jumps straight to <code>case 3:</code></b> and skips the cases above it.'},
+      {at:"T",i:T_BODY3,ran:[T_CASE3],skip:range(1,9),num:3,name:"Wednesday",nameC:"hot",msg:'<code>dayName</code> becomes <b class="a">"Wednesday"</b>. So far, so good.'},
+      {at:"T",i:T_CASE4,cls:"cut",ran:[T_CASE3,T_BODY3],fall:[T_BRK3],skip:range(1,9),num:3,name:"Wednesday",nameC:"hot",msg:'No break, so Java <b class="w">keeps going down</b>. <code>case 4:</code> is only a label: it is not checked again. Execution <b class="w">falls through</b> into case 4.'},
+      {at:"T",i:T_BODY4,cls:"cut",ran:[T_CASE3,T_BODY3],fall:[T_BRK3,T_CASE4],skip:range(1,9),num:3,name:"Thursday",nameC:"bad",msg:'Case 4\'s line runs too: <code>dayName</code> is overwritten with <b class="w">"Thursday"</b>. The learner typed 3.'},
+      {at:"T",i:T_BRK4,cls:"cut",ran:[T_CASE3,T_BODY3],fall:[T_BRK3,T_CASE4,T_BODY4],skip:range(1,9).concat(range(16,24)),num:3,name:"Thursday",nameC:"bad",msg:'The next <code>break;</code> is the one under case 4. Only <b class="a">there</b> does the switch stop.'},
+      {at:"out",i:0,cls:"cut",ran:[T_CASE3,T_BODY3],fall:[T_BRK3,T_CASE4,T_BODY4,T_BRK4],skip:range(1,9).concat(range(16,24)),num:3,name:"Thursday",nameC:"bad",out:"The name of the day chosen is: Thursday",outBad:true,msg:'println shows <b class="w">Thursday</b> for day 3. No error, no warning: <b class="w">one missing break gave a wrong answer</b>.'}
+    ]},
+    {label:"arrow form",form:"A",broken:false,steps:[
+      {at:"in",i:0,num:3,name:"",msg:MSG_IN},
+      {at:"A",i:0,num:3,name:"",msg:MSG_SW},
+      {at:"A",i:A_CASE3,skip:range(1,6),num:3,name:"",msg:'It <b class="a">jumps straight to <code>case 3 -></code></b>. If no label matched, it would jump to <code>default -></code>.'},
+      {at:"A",i:A_CASE3,cls:"ok",curOk:true,skip:range(1,6),num:3,name:"Wednesday",nameC:"hot",msg:'The branch is the code after the arrow, nothing more. It runs: <code>dayName</code> becomes <b class="a">"Wednesday"</b>.'},
+      {at:"A",i:15,cls:"ok",ran:[A_CASE3],skip:range(1,6).concat(range(8,14)),num:3,name:"Wednesday",nameC:"hot",msg:'The branch is done, so <b class="g">the switch is done</b>. No break needed, and no way to fall into case 4.'},
+      {at:"out",i:0,cls:"ok",ran:[A_CASE3],skip:range(1,6).concat(range(8,14)),num:3,name:"Wednesday",nameC:"good",out:GOOD_OUT,msg:'println shows <b class="g">Wednesday</b>. Same answer as the traditional form with its breaks, in fewer lines.'}
+    ]}
+  ];
+
+  /* ---------- state + render ---------- */
+  var P=PRESETS[0],at=-1;
+  var statusEl=$("#status"),consEl=$("#console");
+
+  function paint(el,lines,st,mine){
+    var html=lines.map(function(t,i){
+      var c="ln";
+      if(st&&mine){
+        if(st.skip&&st.skip.indexOf(i)>=0) c+=" skip";
+        if(st.ran&&st.ran.indexOf(i)>=0) c+=" ran";
+        if(st.fall&&st.fall.indexOf(i)>=0) c+=" fall";
+        if(st.i===i&&st.here) c+=" "+(st.cls==="cut"?"bad":(st.curOk||(st.cls==="ok"&&st.at!=="out"))?"ok":"cur");
+      }
+      return '<div class="'+c+'"><span class="n">'+(i+1)+'</span><span>'+(t||" ")+'</span></div>';
+    }).join("")+'<div class="ptr"></div>';
+    el.innerHTML=html;
+    if(st&&mine&&st.here) el.querySelector(".ptr").className="ptr show"+(st.cls==="cut"?" bad":(st.cls==="ok"?" ok":""));
+  }
+
+  var lastTop={};
+  function placePtr(el,st,mine,key){
+    /* animate the pointer from where it was to the new line */
+    var ptr=el.querySelector(".ptr");
+    if(!(st&&mine&&st.here)){ptr.className="ptr";if(lastTop[key]!==undefined)ptr.style.top=lastTop[key]+"px";return;}
+    var row=el.children[st.i], top=row.offsetTop+row.offsetHeight/2-6;
+    if(lastTop[key]!==undefined&&!reduce){
+      ptr.style.transition="none"; ptr.style.top=lastTop[key]+"px"; void ptr.offsetTop; ptr.style.transition="";
+    }
+    ptr.style.top=top+"px"; lastTop[key]=top;
+  }
+
+  function render(st){
+    var form=P.form;
+    var view=st?Object.assign({},st):null;
+    function v(where){ if(!view) return null; var o=Object.assign({},view); o.here=(view.at===where); return o; }
+    var vin=v("in"), vout=v("out"), vt=v("T"), va=v("A");
+    if(vin){vin.skip=[];vin.ran=[];vin.fall=[];}
+    if(vout){vout.skip=[];vout.ran=[];vout.fall=[];}
+    if(vin&&view.at!=="in") vin.ran=[0,1];
+    if(vout&&view.at!=="out") vout.ran=[];
+    paint($("#codeIn"),IN,vin,true); placePtr($("#codeIn"),vin,true,"in");
+    paint($("#codeOut"),OUT,vout,true); placePtr($("#codeOut"),vout,true,"out");
+    if(vin&&view.at==="in") $("#codeIn").children[1].className+=" cur";
+    paint($("#codeT"),tradLines(P.broken),vt,form==="T"); placePtr($("#codeT"),vt,form==="T","T");
+    paint($("#codeA"),arrowLines(),va,form==="A"); placePtr($("#codeA"),va,form==="A","A");
+    $("#paneT").className="pane"+(form==="T"?"":" off");
+    $("#paneA").className="pane"+(form==="A"?"":" off");
+  }
+
+  function setStat(id,val,c){ var e=$(id); if(val===null){e.textContent="?";e.className="v dim";} else {e.textContent=val===""?'""':val;e.className="v "+(c||"");} }
+
+  function show(i){
+    at=i;
+    var steps=P.steps;
+    if(i<0){
+      lastTop={};
+      render(null);
+      $("#stepno").innerHTML="Step <b>0</b> of "+steps.length;
+      statusEl.className="status";
+      statusEl.innerHTML='Press <b class="a">Next</b> to start. A pointer will walk through the '+(P.form==="A"?'arrow':'traditional')+' switch, line by line.';
+      consEl.innerHTML='<span style="color:rgba(132,150,182,.5)">(nothing printed yet)</span>';
+      setStat("#stNum",null); setStat("#stName",null); setBtns(); return;
+    }
+    var st=steps[i];
+    render(st);
+    $("#stepno").innerHTML="Step <b>"+(i+1)+"</b> of "+steps.length;
+    statusEl.className="status "+(st.cls||""); statusEl.innerHTML=st.msg;
+    var out='<div class="typed">Enter the number of the day you want to display(0-6):</div><div class="typed">3</div>';
+    if(st.out) out+='<div class="out'+(st.outBad?' bad':'')+'">'+st.out+'</div>';
+    consEl.innerHTML=out;
+    setStat("#stNum",st.num,"hot"); setStat("#stName",st.name,st.nameC||"");
+    setBtns();
+  }
+  function setBtns(){ $("#bNext").disabled=at>=P.steps.length-1; $("#bBack").disabled=at<0; }
+  function next(){ if(at<P.steps.length-1) show(at+1); }
+  function back(){ if(at>=0) show(at-1); }
+  function reset(){ show(-1); }
+  function pick(idx){
+    P=PRESETS[idx];
+    Array.prototype.forEach.call(document.querySelectorAll(".chip"),function(c,j){c.classList.toggle("on",j===idx);});
+    if(document.activeElement&&document.activeElement.blur) document.activeElement.blur();
+    reset();
+  }
+
+  $("#chips").innerHTML=PRESETS.map(function(p,j){return '<button class="chip'+(p.trap?' trap':'')+(j===0?' on':'')+'" data-i="'+j+'">'+p.label+'</button>';}).join("");
+  $("#chips").addEventListener("click",function(e){ var b=e.target.closest(".chip"); if(b) pick(+b.getAttribute("data-i")); });
+  $("#bNext").addEventListener("click",next);
+  $("#bBack").addEventListener("click",back);
+  $("#bReset").addEventListener("click",reset);
+  document.addEventListener("keydown",function(e){ if(e.code==="Space"&&!/INPUT|BUTTON/.test(e.target.tagName)){e.preventDefault();next();} });
+  addEventListener("resize",function(){ lastTop={}; show(at); });
+
+  /* ---------- ambient canvas ---------- */
+  var cv=$("#amb"),ctx=cv.getContext&&cv.getContext("2d"),parts=[];
+  function sizeC(){if(!ctx)return;cv.width=innerWidth;cv.height=innerHeight;}
+  function initParts(){parts=[];for(var i=0;i<46;i++)parts.push({x:Math.random(),y:Math.random(),
+    r:Math.random()*1.6+.3,s:Math.random()*.02+.004,o:Math.random()*.4+.1});}
+  function drawC(){if(!ctx)return;ctx.clearRect(0,0,cv.width,cv.height);
+    parts.forEach(function(p){p.y-=p.s/60;if(p.y<-.02)p.y=1.02;
+      ctx.beginPath();ctx.arc(p.x*cv.width,p.y*cv.height,p.r,0,7);
+      ctx.fillStyle="rgba(140,170,255,"+p.o+")";ctx.fill();});
+    requestAnimationFrame(drawC);}
+  if(ctx&&!reduce){sizeC();initParts();drawC();addEventListener("resize",sizeC);}
+
+  reset();
+})();
+</script>
+<script src="../manifest.js"></script>
+<script src="../../assets/rail.js"></script>
+<script>Rail.render(document.getElementById("rail"),{kind:"visuals",current:"24-switch-flow"});</script>
+</body>
+</html>

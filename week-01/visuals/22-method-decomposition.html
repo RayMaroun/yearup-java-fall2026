@@ -1,0 +1,328 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Repeated Code to One Method | Week 1 Visual Hub</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Sora:wght@500;700&family=Inter:wght@400;500&family=JetBrains+Mono:wght@400;500&display=swap">
+<style>
+  :root{
+    --bg:#080c17; --bg2:#0c1428; --surface:rgba(255,255,255,.045); --line:rgba(255,255,255,.09);
+    --ink:#eef2fb; --muted:#8496b6; --accent:#6ea0ff; --accent2:#8b7bff; --good:#46d98a; --warn:#ff6a6a;
+    --gold:#ffc862; --disp:'Sora',system-ui,sans-serif; --body:'Inter',system-ui,sans-serif;
+    --mono:'JetBrains Mono',ui-monospace,monospace;
+  }
+  *{box-sizing:border-box}
+  body{margin:0;min-height:100vh;color:var(--ink);font-family:var(--body);
+    background:radial-gradient(1200px 700px at 70% -10%,#141d38 0%,transparent 55%),
+               radial-gradient(900px 600px at 10% 110%,#161233 0%,transparent 50%),#080c17;
+    overflow-x:hidden}
+  #amb{position:fixed;inset:0;z-index:0;pointer-events:none;opacity:.6}
+  .back{position:relative;z-index:2;display:block;max-width:1120px;margin:0 auto;padding:26px 24px 0;
+    width:100%;font-family:var(--mono);font-size:.8rem;letter-spacing:.04em;color:var(--muted);
+    text-decoration:none;transition:color .15s}
+  .back:hover{color:var(--accent)}
+  .wrap{position:relative;z-index:1;max-width:1120px;margin:0 auto;padding:22px 24px 70px}
+  .tag{font-family:var(--mono);font-size:.72rem;letter-spacing:.22em;text-transform:uppercase;color:var(--accent);margin:0 0 14px}
+  h1{font-family:var(--disp);font-weight:700;font-size:clamp(2.3rem,6vw,3.6rem);line-height:1;margin:0 0 12px;
+    letter-spacing:-.03em;background:linear-gradient(180deg,#fff,#b9c6e6);-webkit-background-clip:text;
+    background-clip:text;color:transparent}
+  .lede{color:var(--muted);max-width:64ch;font-size:1.05rem;margin:0 0 30px;line-height:1.5}
+  .lede b{color:var(--ink)}
+  .lede code,.take code,.status code{font-family:var(--mono);font-size:.92em;color:#bcd0ff}
+  .stage{position:relative;background:linear-gradient(180deg,rgba(255,255,255,.03),rgba(255,255,255,.01));
+    border:1px solid var(--line);border-radius:24px;padding:8px;
+    box-shadow:0 1px 0 rgba(255,255,255,.06) inset,0 30px 80px -30px rgba(0,0,0,.8)}
+  .grid{display:grid;grid-template-columns:340px 1fr;gap:8px}
+  @media (max-width:860px){.grid{grid-template-columns:1fr}}
+  .panelL,.panelR{border-radius:18px;padding:22px}
+  .panelL{background:linear-gradient(180deg,rgba(110,160,255,.06),rgba(139,123,255,.03));border:1px solid var(--line)}
+  .panelR{background:rgba(6,10,20,.5);border:1px solid var(--line);position:relative;overflow:hidden}
+  .lab{font-family:var(--mono);font-size:.7rem;letter-spacing:.12em;text-transform:uppercase;color:var(--muted);margin:0 0 12px}
+  /* readout */
+  .readout{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin:0 0 14px}
+  .stat{background:rgba(255,255,255,.03);border:1px solid var(--line);border-radius:12px;padding:11px 13px}
+  .stat .k{font-family:var(--mono);font-size:.62rem;letter-spacing:.1em;text-transform:uppercase;color:var(--muted)}
+  .stat .v{font-family:var(--disp);font-weight:700;font-size:1.45rem;font-variant-numeric:tabular-nums;margin-top:2px;transition:color .3s;min-height:1.6em}
+  .v.hot{color:var(--accent)} .v.gold{color:var(--gold)} .v.good{color:var(--good)} .v.dim{color:rgba(132,150,182,.5)}
+  .stepno{font-family:var(--mono);font-size:.64rem;letter-spacing:.14em;text-transform:uppercase;color:var(--muted);margin:0 0 8px}
+  .stepno b{color:var(--accent);font-weight:500}
+  .status{font-family:var(--mono);font-size:.82rem;line-height:1.55;color:var(--ink);min-height:142px;
+    padding:12px 14px;border-radius:12px;background:rgba(0,0,0,.25);border:1px solid var(--line);
+    border-left:3px solid var(--accent);transition:border-color .3s}
+  .status.rep{border-left-color:var(--gold)}
+  .status.bad{border-left-color:var(--warn)}
+  .status.ok{border-left-color:var(--good)}
+  .status b.g{color:var(--good)} .status b.w{color:var(--warn)} .status b.a{color:var(--accent)} .status b.y{color:var(--gold)}
+  .actions{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-top:16px}
+  .btn{font-family:var(--body);font-weight:500;font-size:.84rem;padding:9px 12px;border-radius:11px;cursor:pointer;
+    border:1px solid var(--line);background:var(--surface);color:var(--ink);transition:.15s;text-align:center}
+  .btn:hover{border-color:var(--accent);color:var(--accent)}
+  .btn.primary{border-color:rgba(110,160,255,.5);background:rgba(110,160,255,.12);grid-column:1 / -1}
+  .btn.gold:hover{border-color:var(--gold);color:var(--gold)}
+  .btn:disabled{opacity:.35;cursor:not-allowed}
+  .btn:focus-visible{outline:2px solid var(--accent);outline-offset:2px}
+  .hint{font-family:var(--mono);font-size:.7rem;color:var(--muted);margin:14px 0 0;line-height:1.5}
+  .hint b{color:var(--accent)}
+  /* right: code + console */
+  .rgrid{display:grid;grid-template-columns:minmax(0,1fr) 200px;gap:16px}
+  @media (max-width:1000px){.rgrid{grid-template-columns:1fr}}
+  .code{min-width:0;font-family:var(--mono);font-size:.74rem;line-height:1.75;background:rgba(0,0,0,.35);border:1px solid var(--line);
+    border-radius:14px;padding:12px 0;overflow-x:auto}
+  .ln{display:flex;gap:10px;padding:0 12px;white-space:pre;color:#c9d4ea;transition:background .25s,opacity .3s}
+  .ln .n{width:18px;text-align:right;color:rgba(132,150,182,.55);user-select:none;flex-shrink:0}
+  .ln.cur{background:rgba(110,160,255,.14);box-shadow:inset 3px 0 0 var(--accent)}
+  .ln.cur .n{color:var(--accent)}
+  .ln.rep{background:rgba(255,200,98,.1);box-shadow:inset 3px 0 0 var(--gold)}
+  .ln.rep .n{color:var(--gold)}
+  .ln.bad{background:rgba(255,106,106,.13);box-shadow:inset 3px 0 0 var(--warn)}
+  .ln.good{background:rgba(70,217,138,.12);box-shadow:inset 3px 0 0 var(--good)}
+  .ln.dim{opacity:.4}
+  .ln.new{animation:slide .35s}
+  @keyframes slide{from{opacity:0;transform:translateX(-8px)}to{opacity:1;transform:none}}
+  .kw{color:#c792ea} .ty{color:#82aaff} .st{color:#c3e88d} .nm{color:#f78c6c} .cm{color:#5f6b85;font-style:italic} .fn{color:#ffcb6b}
+  .diff{border-radius:4px;padding:0 2px;background:rgba(255,200,98,.22);box-shadow:0 0 0 1px rgba(255,200,98,.6)}
+  .par{border-radius:4px;padding:0 2px;color:#dce6ff;background:rgba(110,160,255,.22);box-shadow:0 0 0 1px rgba(110,160,255,.6)}
+  .console{font-family:var(--mono);font-size:.76rem;line-height:1.6;background:#05070e;border:1px solid var(--line);
+    border-radius:12px;padding:10px 14px;min-height:120px;color:#9fe3b6}
+  .console .cl{font-size:.6rem;letter-spacing:.14em;text-transform:uppercase;color:rgba(132,150,182,.6);margin-bottom:6px}
+  .og{border-radius:8px;padding:4px 8px;margin:0 -8px 6px;border:1px solid transparent;transition:background .25s,border-color .25s}
+  .og .src{display:block;font-size:.58rem;letter-spacing:.12em;text-transform:uppercase;color:rgba(132,150,182,.6)}
+  .og .src i{font-style:normal;color:var(--accent)}
+  .og.rep{border-color:rgba(255,200,98,.45);background:rgba(255,200,98,.06)}
+  .og.cur{border-color:rgba(110,160,255,.5);background:rgba(110,160,255,.08)}
+  .og .bad{color:var(--warn)} .og .good{color:var(--good)}
+  .og s{color:rgba(255,106,106,.7);margin-left:6px;font-size:.9em}
+  .og .why{color:rgba(255,106,106,.75);font-size:.62rem;margin-left:4px}
+  .pop{display:inline-block;animation:pop .35s}
+  @keyframes pop{from{transform:scale(.6);opacity:0}to{transform:scale(1);opacity:1}}
+  .empty{color:rgba(132,150,182,.5)}
+  .take{margin-top:22px;background:linear-gradient(180deg,rgba(110,160,255,.08),rgba(139,123,255,.04));
+    border:1px solid var(--line);border-left:3px solid var(--accent);border-radius:12px;padding:16px 18px}
+  .take .tk{font-family:var(--mono);font-size:.66rem;letter-spacing:.14em;text-transform:uppercase;color:var(--accent);margin:0 0 8px}
+  .take p{margin:0;font-size:.95rem;color:var(--ink);line-height:1.55}
+  .take b{color:#fff}
+  @media (prefers-reduced-motion:reduce){*{animation-duration:.01ms!important;transition-duration:.01ms!important}#amb{display:none}}
+</style>
+</head>
+<body>
+
+<a class="back" href="../index.html#22-method-decomposition">&#8592; Week 1 index</a>
+
+<canvas id="amb"></canvas>
+<div class="wrap">
+  <p class="tag">Workbook 1c &middot; Section 4-2 &middot; Why methods</p>
+  <h1>Repeated Code to One Method</h1>
+  <p class="lede">The same four lines, copied three times, with only the numbers changed.
+  <b>Pull them into one method, turn the numbers into parameters, and call it: main gets shorter, and a fix in one place reaches every call.</b>
+  Step through it.</p>
+
+  <div class="stage">
+    <div class="grid">
+      <div class="panelL">
+        <p class="lab">The program so far</p>
+        <div class="readout">
+          <div class="stat"><div class="k">lines in main</div><div class="v dim" id="stLines">?</div></div>
+          <div class="stat"><div class="k">copies of the code</div><div class="v dim" id="stCopies">?</div></div>
+        </div>
+
+        <p class="stepno" id="stepno">Step <b>0</b> of 8</p>
+        <div class="status" id="status">Press <b class="a">Next</b> to start. The code and the console change at every step.</div>
+
+        <div class="actions">
+          <button class="btn primary" id="bNext">Next &rarr;</button>
+          <button class="btn gold" id="bBack">&larr; Back</button>
+          <button class="btn" id="bReset">Reset</button>
+        </div>
+        <p class="hint">space = next &middot; the rectangle comes from the <b>methods demo</b>, with fixed sizes instead of Scanner input.</p>
+      </div>
+
+      <div class="panelR">
+        <div class="rgrid">
+          <div>
+            <p class="lab">Main.java</p>
+            <div class="code" id="code"></div>
+          </div>
+          <div>
+            <p class="lab">Output</p>
+            <div class="console"><div class="cl">console</div><div id="console"></div></div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="take">
+    <p class="tk">The one idea</p>
+    <p><b>Write it once, name it, call it.</b> When the same lines show up again and again, move them into a method, turn
+    the values that change into parameters, and replace each copy with a call. main reads like a list of what happens,
+    and <b>a change in one place reaches every call</b>. The workbook calls this D.R.Y.: Don't Repeat Yourself.</p>
+  </div>
+
+  <div id="rail"></div>
+</div>
+
+<script>
+(function(){
+  "use strict";
+  var $=function(s){return document.querySelector(s);};
+  var reduce=matchMedia("(prefers-reduced-motion: reduce)").matches;
+
+  /* three rectangles, invented sizes; the shape of the code follows the methods demo */
+  var R=[[4,3],[6,2],[5,5]];
+
+  /* ---------- the walk: each step is a state of the program, the code and output are computed from it ---------- */
+  var STEPS=[
+    {calls:0,method:0,fixed:false,mark:"run",cls:"",
+     msg:'Three rectangles, three blocks of code. Each block works out an area and a perimeter, then prints them. <b class="a">Run it:</b> six lines of output.'},
+    {calls:0,method:0,fixed:false,mark:"rep",cls:"rep",
+     msg:'Look closer: the <b class="y">same four lines</b> appear three times. Only the two numbers change. Everything else was copied and pasted.'},
+    {calls:0,method:1,fixed:false,mark:"method",cls:"",
+     msg:'Copy one block into its own method and give it a name that says what the block does: <b class="a">printRectangle</b>. Nothing calls it yet, so the output has not changed.'},
+    {calls:0,method:2,fixed:false,mark:"params",cls:"",
+     msg:'The numbers were the only difference between the copies, so they become <b class="a">parameters</b>: <code>int length, int width</code>. Now the method works for any rectangle.'},
+    {calls:1,method:2,fixed:false,mark:"call1",cls:"ok",
+     msg:'Replace the first copy with one call: <code>printRectangle(4, 3)</code>. 4 goes into length, 3 into width, and the method prints the <b class="g">same two lines</b> as before.'},
+    {calls:3,method:2,fixed:false,mark:"calls",cls:"ok",
+     msg:'Do the same for the other two copies. main drops from 14 lines to 3, the output is <b class="g">exactly the same</b>, and main now reads like a list of what happens.'},
+    {calls:3,method:2,fixed:false,mark:"bug",cls:"bad",
+     msg:'Now a bug: a 4 by 3 rectangle has a perimeter of 14, not 7. The formula forgot the <code>2 *</code>. <b class="w">Before the method, this mistake sat in three places.</b>'},
+    {calls:3,method:2,fixed:true,mark:"fix",cls:"ok",
+     msg:'Fix it <b class="g">once</b>, inside the method: <code>2 * (length + width)</code>. All three calls run that same code, so <b class="g">all three outputs change</b>.'}
+  ];
+
+  function ty(s){return '<span class="ty">'+s+'</span>';}
+  function kw(s){return '<span class="kw">'+s+'</span>';}
+  function st(s){return '<span class="st">'+s+'</span>';}
+  function fn(s){return '<span class="fn">'+s+'</span>';}
+  function nm(s){return '<span class="nm">'+s+'</span>';}
+  var IND="    ";
+
+  /* returns [{t:html, c:class, key:id}] for the whole file at this step */
+  function codeLines(s){
+    var L=[], i, n, l, w, d;
+    L.push({t:kw("public static void")+" "+fn("main")+"("+ty("String")+"[] args) {",key:"mh"});
+    for(i=0;i<3;i++){
+      l=R[i][0]; w=R[i][1]; n=i+1;
+      if(i<s.calls){
+        L.push({t:IND+fn("printRectangle")+"("+nm(l)+", "+nm(w)+");",key:"call"+i,
+          c:(s.mark==="call1"&&i===0)||(s.mark==="calls")?"cur":"",nw:(s.mark==="call1"&&i===0)||(s.mark==="calls"&&i>0)});
+      } else {
+        if(i>0) L.push({t:"",key:"gap"+i});
+        d=s.mark==="rep";
+        var A=d?'<span class="diff">'+nm(l)+'</span>':nm(l), B=d?'<span class="diff">'+nm(w)+'</span>':nm(w);
+        var c=d?"rep":"";
+        L.push({t:IND+ty("int")+" area"+n+" = "+A+" * "+B+";",c:c,key:"b"+i+"a"});
+        L.push({t:IND+ty("int")+" perimeter"+n+" = "+A+" + "+B+";",c:c,key:"b"+i+"p"});
+        L.push({t:IND+"System.out.println("+st('"Area: "')+" + area"+n+");",c:c,key:"b"+i+"x"});
+        L.push({t:IND+"System.out.println("+st('"Perimeter: "')+" + perimeter"+n+");",c:c,key:"b"+i+"y"});
+      }
+    }
+    L.push({t:"}",key:"me"});
+    if(s.method>0){
+      var p=s.method===2, mk=s.mark;
+      var LL=p?'<span class="'+(mk==="params"?"par":"")+'">length</span>':nm(4);
+      var WW=p?'<span class="'+(mk==="params"?"par":"")+'">width</span>':nm(3);
+      var sig=p?(mk==="params"?'<span class="par">'+ty("int")+' length, '+ty("int")+' width</span>':ty("int")+" length, "+ty("int")+" width"):"";
+      var newM=mk==="method", hiM=mk==="method"||mk==="calls"||mk==="call1";
+      L.push({t:"",key:"gm"});
+      L.push({t:kw("public static void")+" "+fn("printRectangle")+"("+sig+") {",key:"sig",c:hiM||mk==="params"?"cur":"",nw:newM});
+      L.push({t:IND+ty("int")+" area = "+LL+" * "+WW+";",key:"ma",c:newM||mk==="params"?"cur":"",nw:newM});
+      var per=s.fixed?nm(2)+" * ("+LL+" + "+WW+")":LL+" + "+WW;
+      L.push({t:IND+ty("int")+" perimeter = "+per+";",key:"mp",
+        c:mk==="bug"?"bad":mk==="fix"?"good":(newM||mk==="params"?"cur":""),nw:newM||mk==="fix"});
+      L.push({t:IND+"System.out.println("+st('"Area: "')+" + area);",key:"mx",c:newM?"cur":"",nw:newM});
+      L.push({t:IND+"System.out.println("+st('"Perimeter: "')+" + perimeter);",key:"my",c:newM?"cur":"",nw:newM});
+      L.push({t:"}",key:"mz",c:newM?"cur":"",nw:newM});
+    }
+    return L;
+  }
+
+  function mainLines(s){ var L=codeLines(s),k; for(k=0;k<L.length;k++) if(L[k].key==="me") return k-1; return 0; }
+  function copies(s){ return (3-s.calls)+(s.method>0?1:0); }
+
+  /* ---------- state ---------- */
+  var at=-1;
+  var codeEl=$("#code"),consEl=$("#console"),statusEl=$("#status");
+
+  function renderCode(s){
+    if(!s){ s={calls:0,method:0,fixed:false,mark:"none"}; }
+    var L=codeLines(s);
+    codeEl.innerHTML=L.map(function(o,i){
+      var c="ln"+(o.c?" "+o.c:"")+(o.nw&&!reduce?" new":"");
+      return '<div class="'+c+'"><span class="n">'+(i+1)+'</span><span>'+(o.t||" ")+'</span></div>';
+    }).join("");
+  }
+
+  function renderConsole(s,prev){
+    if(!s){ consEl.innerHTML='<span class="empty">(nothing printed yet)</span>'; return; }
+    var html="", i;
+    for(i=0;i<3;i++){
+      var l=R[i][0], w=R[i][1], area=l*w, perOld=l+w, per=s.fixed?2*(l+w):perOld;
+      var viaM=i<s.calls;
+      var gc="og";
+      if(s.mark==="rep") gc+=" rep";
+      if((s.mark==="call1"&&i===0)||s.mark==="calls"||s.mark==="fix"||s.mark==="bug") gc+=" cur";
+      var popAll=s.mark==="run"&&prev!=="run";
+      var popGrp=popAll||(s.mark==="call1"&&i===0)||(s.mark==="calls"&&i>0);
+      var src='<span class="src">'+l+' by '+w+' \u00b7 '+(viaM?'<i>printRectangle('+l+', '+w+')</i>':'copy '+(i+1))+'</span>';
+      var perLine;
+      if(s.mark==="bug") perLine='<span class="bad">Perimeter: '+per+'</span><span class="why">should be '+(2*(l+w))+'</span>';
+      else if(s.mark==="fix") perLine='<span class="good pop">Perimeter: '+per+'</span><s>'+perOld+'</s>';
+      else perLine='Perimeter: '+per;
+      html+='<div class="'+gc+'">'+src+'<div'+(popGrp?' class="pop"':'')+'>Area: '+area+'</div><div'+(popGrp?' class="pop"':'')+'>'+perLine+'</div></div>';
+    }
+    consEl.innerHTML=html;
+  }
+
+  function setStat(id,v,c){ var e=$(id); if(v===null){e.textContent="?";e.className="v dim";} else {e.textContent=v;e.className="v "+(c||"");} }
+
+  function show(i){
+    var prev=at>=0&&STEPS[at]?STEPS[at].mark:null;
+    at=i;
+    if(i<0){
+      renderCode(null); renderConsole(null);
+      statusEl.className="status"; statusEl.innerHTML='Press <b class="a">Next</b> to start. The code and the console change at every step.';
+      setStat("#stLines",null); setStat("#stCopies",null);
+      $("#stepno").innerHTML="Step <b>0</b> of "+STEPS.length; setBtns(); return;
+    }
+    var s=STEPS[i];
+    $("#stepno").innerHTML="Step <b>"+(i+1)+"</b> of "+STEPS.length;
+    renderCode(s); renderConsole(s,prev);
+    statusEl.className="status "+s.cls; statusEl.innerHTML=s.msg;
+    var ml=mainLines(s), cp=copies(s);
+    setStat("#stLines",ml,ml<=3?"good":"");
+    setStat("#stCopies",cp,cp===1?"good":(s.mark==="rep"?"gold":""));
+    setBtns();
+  }
+  function setBtns(){ $("#bNext").disabled=at>=STEPS.length-1; $("#bBack").disabled=at<0; }
+  function next(){ if(at<STEPS.length-1) show(at+1); }
+  function back(){ if(at>=0) show(at-1); }
+  function reset(){ at=-1; show(-1); }
+
+  $("#bNext").addEventListener("click",next);
+  $("#bBack").addEventListener("click",back);
+  $("#bReset").addEventListener("click",reset);
+  document.addEventListener("keydown",function(e){ if(e.code==="Space"&&!/INPUT|BUTTON/.test(e.target.tagName)){e.preventDefault();next();} });
+
+  /* ---------- ambient canvas ---------- */
+  var cv=$("#amb"),ctx=cv.getContext&&cv.getContext("2d"),parts=[];
+  function sizeC(){if(!ctx)return;cv.width=innerWidth;cv.height=innerHeight;}
+  function initParts(){parts=[];for(var i=0;i<46;i++)parts.push({x:Math.random(),y:Math.random(),
+    r:Math.random()*1.6+.3,s:Math.random()*.02+.004,o:Math.random()*.4+.1});}
+  function drawC(){if(!ctx)return;ctx.clearRect(0,0,cv.width,cv.height);
+    parts.forEach(function(p){p.y-=p.s/60;if(p.y<-.02)p.y=1.02;
+      ctx.beginPath();ctx.arc(p.x*cv.width,p.y*cv.height,p.r,0,7);
+      ctx.fillStyle="rgba(140,170,255,"+p.o+")";ctx.fill();});
+    requestAnimationFrame(drawC);}
+  if(ctx&&!reduce){sizeC();initParts();drawC();addEventListener("resize",sizeC);}
+
+  reset();
+})();
+</script>
+<script src="../manifest.js"></script>
+<script src="../../assets/rail.js"></script>
+<script>Rail.render(document.getElementById("rail"),{kind:"visuals",current:"22-method-decomposition"});</script>
+</body>
+</html>

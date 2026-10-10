@@ -28,7 +28,7 @@ window.HUB_MANIFEST = {
     { file: "22-method-decomposition.html", title: "Repeated Code to One Method", group: "Workbook 1c · Section 4-2", size: "walk" },
     { file: "23-one-scanner.html", title: "One Scanner, Many Methods", group: "Workbook 1c · Section 4-2", size: "walk" },
     { file: "24-switch-flow.html", title: "switch, Both Forms", group: "Workbook 1c · Section 4-3", size: "walk" },
-    { file: "25-problem-to-code.html", title: "From Problem to Code", group: "Workbook 1c · Section 4-3", size: "walk" }
+    { file: "25-problem-to-code.html", title: "From Problem to Code", group: "Workbook 1c · Module 4", size: "walk" }
   ],
   reference: [],
   exercises: [],
