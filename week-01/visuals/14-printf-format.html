@@ -30,49 +30,99 @@
     background-clip:text;color:transparent}
   .lede{color:var(--muted);max-width:64ch;font-size:1.05rem;margin:0 0 30px;line-height:1.5}
   .lede b{color:var(--ink)}
-  .lede code,.take code,.status code{font-family:var(--mono);font-size:.92em;color:#bcd0ff}
+  .lede code,.take code,.caption code{font-family:var(--mono);font-size:.92em;color:#bcd0ff}
+
+  /* ---------- stage: picture first, one toolbar, support below ---------- */
   .stage{position:relative;background:linear-gradient(180deg,rgba(255,255,255,.03),rgba(255,255,255,.01));
-    border:1px solid var(--line);border-radius:24px;padding:8px;
+    border:1px solid var(--line);border-radius:24px;padding:18px 18px 14px;
     box-shadow:0 1px 0 rgba(255,255,255,.06) inset,0 30px 80px -30px rgba(0,0,0,.8)}
-  .grid{display:grid;grid-template-columns:340px 1fr;gap:8px}
-  @media (max-width:860px){.grid{grid-template-columns:1fr}}
-  .panelL,.panelR{border-radius:18px;padding:22px}
-  .panelL{background:linear-gradient(180deg,rgba(110,160,255,.06),rgba(139,123,255,.03));border:1px solid var(--line)}
-  .panelR{background:rgba(6,10,20,.5);border:1px solid var(--line);position:relative;overflow:hidden}
-  .lab{font-family:var(--mono);font-size:.7rem;letter-spacing:.12em;text-transform:uppercase;color:var(--muted);margin:0 0 12px}
-  /* example chips */
-  .chips{display:flex;flex-wrap:wrap;gap:6px;margin-bottom:16px}
+  .topbar{display:flex;align-items:center;gap:10px;margin:0 0 14px;flex-wrap:wrap}
+  .topbar .lab{margin:0 4px 0 0}
+  .lab{font-family:var(--mono);font-size:.7rem;letter-spacing:.12em;text-transform:uppercase;color:var(--muted);margin:0 0 10px}
+  .chips{display:flex;flex-wrap:wrap;gap:6px}
   .chip{font-family:var(--mono);font-size:.74rem;padding:5px 11px;border-radius:999px;cursor:pointer;
     border:1px solid var(--line);background:rgba(0,0,0,.25);color:var(--muted);transition:.15s}
   .chip:hover{border-color:var(--accent);color:var(--accent)}
   .chip.on{border-color:rgba(110,160,255,.6);background:rgba(110,160,255,.14);color:var(--ink)}
-  .chip:focus-visible{outline:2px solid var(--accent);outline-offset:2px}
-  /* readout */
-  .readout{display:grid;grid-template-columns:1fr 1.3fr;gap:10px;margin:0 0 14px}
-  .stat{background:rgba(255,255,255,.03);border:1px solid var(--line);border-radius:12px;padding:11px 13px;min-width:0}
-  .stat .k{font-family:var(--mono);font-size:.62rem;letter-spacing:.1em;text-transform:uppercase;color:var(--muted)}
-  .stat .v{font-family:var(--disp);font-weight:700;font-size:1.3rem;font-variant-numeric:tabular-nums;margin-top:2px;transition:color .3s;min-height:1.6em;overflow-wrap:anywhere}
-  .v.hot{color:var(--accent)} .v.gold{color:var(--gold)} .v.dim{color:rgba(132,150,182,.5)}
-  .stepno{font-family:var(--mono);font-size:.64rem;letter-spacing:.14em;text-transform:uppercase;color:var(--muted);margin:0 0 8px}
-  .stepno b{color:var(--accent);font-weight:500}
-  .status{font-family:var(--mono);font-size:.82rem;line-height:1.55;color:var(--ink);min-height:146px;
-    padding:12px 14px;border-radius:12px;background:rgba(0,0,0,.25);border:1px solid var(--line);
-    border-left:3px solid var(--accent);transition:border-color .3s}
-  .status.ok{border-left-color:var(--good)}
-  .status b.g{color:var(--good)} .status b.a{color:var(--accent)} .status b.y{color:var(--gold)}
-  .actions{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-top:16px}
-  .btn{font-family:var(--body);font-weight:500;font-size:.84rem;padding:9px 12px;border-radius:11px;cursor:pointer;
-    border:1px solid var(--line);background:var(--surface);color:var(--ink);transition:.15s;text-align:center}
+  .chip:focus-visible,.btn:focus-visible,.focus:focus-visible{outline:2px solid var(--accent);outline-offset:2px}
+  .focus{margin-left:auto;font-family:var(--mono);font-size:.68rem;letter-spacing:.1em;text-transform:uppercase;padding:6px 12px;
+    border-radius:999px;border:1px solid var(--line);background:rgba(0,0,0,.25);color:var(--muted);cursor:pointer;transition:.15s}
+  .focus:hover{border-color:var(--accent);color:var(--accent)}
+  body.solo .focus{border-color:rgba(255,200,98,.6);color:var(--gold);background:rgba(255,200,98,.1)}
+
+  /* hero picture: the pairing table and the line being built */
+  .pic{position:relative;height:390px;border:1px solid var(--line);border-radius:18px;background:rgba(6,10,20,.5);overflow:hidden;
+    display:flex;flex-direction:column;justify-content:center;padding:20px 32px}
+  body.solo .pic{height:480px}
+  .pic .inner{width:100%;max-width:920px;margin:0 auto}
+  .pic .lab{font-size:.64rem;letter-spacing:.14em;color:rgba(132,150,182,.7)}
+  /* pairing table */
+  .pair{display:grid;grid-template-columns:118px repeat(var(--cols),minmax(0,1fr));gap:8px 12px;margin-bottom:26px}
+  .pair .rh{font-family:var(--mono);font-size:.64rem;letter-spacing:.12em;text-transform:uppercase;color:var(--muted);align-self:center}
+  .cell{position:relative;font-family:var(--mono);font-size:1.22rem;text-align:center;padding:13px 8px;border-radius:12px;
+    border:1px solid var(--line);background:rgba(255,255,255,.03);color:var(--ink);transition:all .3s;min-width:0;overflow-wrap:anywhere}
+  .cell small{display:block;font-size:.7rem;color:var(--muted);margin-top:3px}
+  .cell .no{position:absolute;top:-10px;left:-8px;width:22px;height:22px;border-radius:50%;font-size:.66rem;line-height:22px;
+    background:#1a2442;border:1px solid var(--line);color:var(--muted)}
+  .cell.ph.cur{border-color:var(--accent);background:rgba(110,160,255,.16);box-shadow:0 0 22px -6px rgba(110,160,255,.7)}
+  .cell.ph.cur .no{background:var(--accent);color:#0a1020;border-color:var(--accent)}
+  .cell.arg.cur{border-color:var(--gold);background:rgba(255,200,98,.14);box-shadow:0 0 22px -6px rgba(255,200,98,.7)}
+  .cell.arg.cur .no{background:var(--gold);color:#1a1200;border-color:var(--gold)}
+  .cell.done{opacity:.45}
+  .cell.none{border-style:dashed;color:var(--muted);font-size:.82rem;display:flex;align-items:center;justify-content:center}
+  .cell.none.cur{border-color:var(--accent);color:var(--ink)}
+  .arrow{grid-column:auto;text-align:center;font-family:var(--mono);font-size:1rem;color:transparent;line-height:.7;transition:color .3s}
+  .arrow.cur{color:var(--gold)}
+  body.solo .cell{font-size:1.4rem;padding:16px 8px}
+  /* output being built */
+  .outbox{font-family:var(--mono);font-size:1.4rem;line-height:1;background:rgba(0,0,0,.25);border:1px dashed rgba(132,150,182,.3);
+    border-radius:14px;padding:24px 20px 42px;min-height:100px;white-space:pre;overflow-x:auto}
+  body.solo .outbox{font-size:1.62rem;padding:30px 22px 48px}
+  .outbox .empty{color:rgba(132,150,182,.5);font-size:.8rem}
+  .lit{color:var(--muted)}
+  .fld{position:relative;display:inline-block;border:1px solid rgba(110,160,255,.4);border-radius:6px;padding:5px 2px;
+    background:rgba(110,160,255,.06);margin:0 1px}
+  .fld .val{color:var(--gold)}
+  .fld .pad{color:rgba(132,150,182,.55)}
+  .fld .fl{position:absolute;left:0;right:0;top:calc(100% + 6px);font-size:.66rem;color:var(--accent);text-align:center;letter-spacing:.04em}
+  .fld.new{border-color:var(--accent);background:rgba(110,160,255,.16);animation:slide .45s cubic-bezier(.2,.9,.3,1)}
+  .lit.new{animation:fade .45s}
+  .nl{display:inline-block;font-size:.8rem;color:var(--accent);border:1px dashed rgba(110,160,255,.6);border-radius:6px;padding:4px 8px;margin-left:6px;vertical-align:middle}
+  .nl.new{animation:slide .45s cubic-bezier(.2,.9,.3,1)}
+  @keyframes slide{from{transform:translateY(-22px);opacity:0}to{transform:translateY(0);opacity:1}}
+  @keyframes fade{from{opacity:0}to{opacity:1}}
+
+  /* caption: the one sentence, right under the picture */
+  .caption{display:flex;gap:16px;align-items:flex-start;margin:14px 4px 0;min-height:56px}
+  .caption .n{flex-shrink:0;font-family:var(--disp);font-weight:700;font-size:1.35rem;color:var(--accent);font-variant-numeric:tabular-nums;
+    line-height:1.2;min-width:3.2rem}
+  .caption .n small{display:block;font-family:var(--mono);font-weight:400;font-size:.58rem;letter-spacing:.14em;text-transform:uppercase;color:var(--muted)}
+  .caption .t{font-size:1.02rem;line-height:1.55;color:var(--ink);padding-left:16px;border-left:3px solid var(--accent);transition:border-color .3s}
+  body.solo .caption .t{font-size:1.18rem}
+  .caption.ok .t{border-left-color:var(--good)}
+  .caption b.g{color:var(--good)} .caption b.a{color:var(--accent)} .caption b.y{color:var(--gold)}
+
+  /* toolbar: same on every page */
+  .toolbar{display:flex;align-items:center;gap:10px;margin:16px 0 0;padding-top:14px;border-top:1px solid var(--line)}
+  .btn{font-family:var(--body);font-weight:500;font-size:.86rem;padding:9px 16px;border-radius:11px;cursor:pointer;
+    border:1px solid var(--line);background:var(--surface);color:var(--ink);transition:.15s}
   .btn:hover{border-color:var(--accent);color:var(--accent)}
-  .btn.primary{border-color:rgba(110,160,255,.5);background:rgba(110,160,255,.12);grid-column:1 / -1}
-  .btn.gold:hover{border-color:var(--gold);color:var(--gold)}
+  .btn.primary{border-color:rgba(110,160,255,.5);background:rgba(110,160,255,.12);padding:9px 22px}
   .btn:disabled{opacity:.35;cursor:not-allowed}
-  .btn:focus-visible{outline:2px solid var(--accent);outline-offset:2px}
-  .hint{font-family:var(--mono);font-size:.7rem;color:var(--muted);margin:14px 0 0;line-height:1.5}
+  .btn.ghost{background:transparent;color:var(--muted);margin-left:auto}
+  .dots{display:flex;gap:5px;align-items:center;margin:0 6px}
+  .dots i{display:block;width:8px;height:8px;border-radius:50%;background:rgba(255,255,255,.12);transition:.2s}
+  .dots i.done{background:rgba(110,160,255,.45)}
+  .dots i.now{background:var(--accent);transform:scale(1.35);box-shadow:0 0 10px rgba(110,160,255,.7)}
+  .hint{font-family:var(--mono);font-size:.68rem;color:var(--muted);margin:10px 4px 0;line-height:1.5}
   .hint b{color:var(--accent)}
-  /* right: code, pairing, output, console */
-  .code{min-width:0;font-family:var(--mono);font-size:.78rem;line-height:1.8;background:rgba(0,0,0,.35);border:1px solid var(--line);
-    border-radius:14px;padding:12px 0;overflow-x:auto;margin-bottom:16px}
+
+  /* support: code, readouts, console. Below the picture, hidden in focus */
+  .support{display:grid;grid-template-columns:minmax(0,1.3fr) minmax(0,1fr);gap:14px;margin-top:18px}
+  @media (max-width:860px){.support{grid-template-columns:1fr}}
+  body.solo .support,body.solo .take,body.solo .hint{display:none}
+  .code{min-width:0;font-family:var(--mono);font-size:.76rem;line-height:1.8;background:rgba(0,0,0,.35);border:1px solid var(--line);
+    border-radius:14px;padding:12px 0;overflow-x:auto}
   .ln{display:flex;gap:12px;padding:0 14px;white-space:pre;color:#c9d4ea;transition:background .2s}
   .ln .n{width:20px;text-align:right;color:rgba(132,150,182,.55);user-select:none;flex-shrink:0}
   .ln.call{background:rgba(110,160,255,.07)}
@@ -82,41 +132,15 @@
   .cph.cur{background:rgba(110,160,255,.25);box-shadow:0 0 0 1px var(--accent);color:#fff}
   .carg.cur{background:rgba(255,200,98,.2);box-shadow:0 0 0 1px var(--gold);color:#fff}
   .cph.done,.carg.done{opacity:.55}
-  /* pairing table */
-  .pair{display:grid;grid-template-columns:96px repeat(var(--cols),minmax(0,1fr));gap:6px;margin-bottom:18px}
-  .pair .rh{font-family:var(--mono);font-size:.6rem;letter-spacing:.12em;text-transform:uppercase;color:var(--muted);align-self:center}
-  .cell{position:relative;font-family:var(--mono);font-size:.9rem;text-align:center;padding:9px 6px;border-radius:10px;
-    border:1px solid var(--line);background:rgba(255,255,255,.03);color:var(--ink);transition:all .3s;min-width:0;overflow-wrap:anywhere}
-  .cell small{display:block;font-size:.62rem;color:var(--muted);margin-top:2px}
-  .cell .no{position:absolute;top:-8px;left:-6px;width:18px;height:18px;border-radius:50%;font-size:.6rem;line-height:18px;
-    background:#1a2442;border:1px solid var(--line);color:var(--muted)}
-  .cell.ph.cur{border-color:var(--accent);background:rgba(110,160,255,.16);box-shadow:0 0 18px -6px rgba(110,160,255,.7)}
-  .cell.ph.cur .no{background:var(--accent);color:#0a1020;border-color:var(--accent)}
-  .cell.arg.cur{border-color:var(--gold);background:rgba(255,200,98,.14);box-shadow:0 0 18px -6px rgba(255,200,98,.7)}
-  .cell.arg.cur .no{background:var(--gold);color:#1a1200;border-color:var(--gold)}
-  .cell.done{opacity:.45}
-  .cell.none{border-style:dashed;color:var(--muted);font-size:.72rem}
-  .cell.none.cur{border-color:var(--accent);color:var(--ink)}
-  .arrow{grid-column:auto;text-align:center;font-family:var(--mono);font-size:.8rem;color:transparent;line-height:.6;transition:color .3s}
-  .arrow.cur{color:var(--gold)}
-  /* output being built */
-  .outbox{font-family:var(--mono);font-size:1.02rem;line-height:1;background:rgba(0,0,0,.25);border:1px dashed rgba(132,150,182,.3);
-    border-radius:14px;padding:18px 16px 34px;min-height:78px;white-space:pre;overflow-x:auto}
-  .outbox .empty{color:rgba(132,150,182,.5);font-size:.76rem}
-  .lit{color:var(--muted)}
-  .fld{position:relative;display:inline-block;border:1px solid rgba(110,160,255,.4);border-radius:5px;padding:4px 1px;
-    background:rgba(110,160,255,.06);margin:0 1px}
-  .fld .val{color:var(--gold)}
-  .fld .pad{color:rgba(132,150,182,.55)}
-  .fld .fl{position:absolute;left:0;right:0;top:calc(100% + 5px);font-size:.58rem;color:var(--accent);text-align:center;letter-spacing:.04em}
-  .fld.new{border-color:var(--accent);background:rgba(110,160,255,.16);animation:slide .45s cubic-bezier(.2,.9,.3,1)}
-  .lit.new{animation:fade .45s}
-  .nl{display:inline-block;font-size:.66rem;color:var(--accent);border:1px dashed rgba(110,160,255,.6);border-radius:5px;padding:3px 6px;margin-left:4px;vertical-align:middle}
-  .nl.new{animation:slide .45s cubic-bezier(.2,.9,.3,1)}
-  @keyframes slide{from{transform:translateY(-22px);opacity:0}to{transform:translateY(0);opacity:1}}
-  @keyframes fade{from{opacity:0}to{opacity:1}}
-  .console{margin-top:14px;font-family:var(--mono);font-size:.82rem;line-height:1.6;background:#05070e;border:1px solid var(--line);
-    border-radius:12px;padding:10px 14px;min-height:72px;color:#9fe3b6;overflow-x:auto}
+  .side{display:flex;flex-direction:column;gap:12px}
+  .readout{display:grid;grid-template-columns:1fr 1.3fr;gap:10px}
+  .stat{background:rgba(255,255,255,.03);border:1px solid var(--line);border-radius:12px;padding:11px 13px;min-width:0;transition:opacity .3s}
+  .stat.empty{opacity:.3}
+  .stat .k{font-family:var(--mono);font-size:.62rem;letter-spacing:.1em;text-transform:uppercase;color:var(--muted)}
+  .stat .v{font-family:var(--disp);font-weight:700;font-size:1.3rem;font-variant-numeric:tabular-nums;margin-top:2px;transition:color .3s;min-height:1.6em;overflow-wrap:anywhere}
+  .v.hot{color:var(--accent)} .v.gold{color:var(--gold)} .v.dim{color:rgba(132,150,182,.5)}
+  .console{font-family:var(--mono);font-size:.76rem;line-height:1.6;background:#05070e;border:1px solid var(--line);
+    border-radius:12px;padding:10px 14px;min-height:64px;color:#9fe3b6;overflow-x:auto;flex:1}
   .console .cl{font-size:.6rem;letter-spacing:.14em;text-transform:uppercase;color:rgba(132,150,182,.6);margin-bottom:4px}
   .console pre{margin:0;font:inherit;animation:pop .3s}
   .caret{display:inline-block;width:8px;height:1em;background:rgba(159,227,182,.5);vertical-align:text-bottom}
@@ -137,39 +161,47 @@
 <div class="wrap">
   <p class="tag">Workbook 1c &middot; Section 3-3 &middot; Formatting output</p>
   <h1>printf Format Specifiers</h1>
-  <p class="lede"><code>printf</code> prints a template with blanks in it.
-  <b>Each % placeholder takes the next argument, in order, and the letters after the % say how that value is written.</b>
-  Step through and watch the line being built.</p>
+  <p class="lede"><b>Each % placeholder takes the next argument, in order, and the letters after the % say how that value is written.</b></p>
 
   <div class="stage">
-    <div class="grid">
-      <div class="panelL">
-        <p class="lab">Pick a printf line</p>
-        <div class="chips" id="chips"></div>
+    <div class="topbar">
+      <span class="lab">Pick a printf line</span>
+      <div class="chips" id="chips"></div>
+      <button class="focus" id="bFocus" title="Hide the code and notes, enlarge the picture">Focus</button>
+    </div>
 
-        <div class="readout">
-          <div class="stat"><div class="k">placeholder</div><div class="v dim" id="stPh">?</div></div>
-          <div class="stat"><div class="k">takes argument</div><div class="v dim" id="stArg">?</div></div>
-        </div>
-
-        <p class="stepno" id="stepno">Step <b>0</b> of 6</p>
-        <div class="status" id="status">Press <b class="a">Next</b> to start.</div>
-
-        <div class="actions">
-          <button class="btn primary" id="bNext">Next &rarr;</button>
-          <button class="btn gold" id="bBack">&larr; Back</button>
-          <button class="btn" id="bReset">Reset</button>
-        </div>
-        <p class="hint">space = next &middot; dots in the output are spaces added to reach the width. <b>Try the width line.</b></p>
-      </div>
-
-      <div class="panelR">
-        <p class="lab">Main.java</p>
-        <div class="code" id="code"></div>
+    <div class="pic" id="pic">
+      <div class="inner">
         <p class="lab">Placeholders and arguments, matched in order</p>
         <div class="pair" id="pair"></div>
         <p class="lab">The line printf builds</p>
         <div class="outbox" id="outbox"></div>
+      </div>
+    </div>
+
+    <div class="caption" id="caption">
+      <div class="n" id="stepno"><small>step</small>0 / 6</div>
+      <div class="t" id="status">Press <b class="a">Next</b> to start.</div>
+    </div>
+
+    <div class="toolbar">
+      <button class="btn" id="bBack">&larr; Back</button>
+      <div class="dots" id="dots"></div>
+      <button class="btn primary" id="bNext">Next &rarr;</button>
+      <button class="btn ghost" id="bReset">Reset</button>
+    </div>
+    <p class="hint">space = next &middot; dots in the output are spaces added to reach the width. <b>Try the width line.</b></p>
+
+    <div class="support">
+      <div>
+        <p class="lab">Main.java</p>
+        <div class="code" id="code"></div>
+      </div>
+      <div class="side">
+        <div class="readout">
+          <div class="stat empty"><div class="k">placeholder</div><div class="v dim" id="stPh">?</div></div>
+          <div class="stat empty"><div class="k">takes argument</div><div class="v dim" id="stArg">?</div></div>
+        </div>
         <div class="console"><div class="cl">console</div><div id="console"></div></div>
       </div>
     </div>
@@ -327,24 +359,31 @@
     }).join("");
   }
 
-  function setStat(id,v,c){ var e=$(id); if(v===null||v===undefined){e.textContent="?";e.className="v dim";} else {e.textContent=v;e.className="v "+(c||"");} }
+  function setStat(id,v,c){ var e=$(id), box=e.parentNode; if(v===null||v===undefined){e.textContent="?";e.className="v dim";box.classList.add("empty");} else {e.textContent=v;e.className="v "+(c||"");box.classList.remove("empty");} }
 
   function show(i){
     at=i;
-    $("#stepno").innerHTML="Step <b>"+(i+1)+"</b> of "+steps.length;
+    $("#stepno").innerHTML="<small>step</small>"+(i+1)+" / "+steps.length;
     var s=i<0?null:steps[i];
     renderCode(s); renderPair(s); renderOut(s);
     if(!s){
-      statusEl.className="status"; statusEl.innerHTML='Press <b class="a">Next</b> to start. Each step fills one placeholder.';
+      $("#caption").className="caption"; statusEl.innerHTML='Press <b class="a">Next</b> to start. Each step fills one placeholder.';
       consEl.innerHTML='<span style="color:rgba(132,150,182,.5)">(nothing printed yet)</span>';
       setStat("#stPh",null); setStat("#stArg",null); setBtns(); return;
     }
-    statusEl.className="status"+(s.done?" ok":""); statusEl.innerHTML=s.msg;
+    $("#caption").className="caption"+(s.done?" ok":""); statusEl.innerHTML=s.msg;
     consEl.innerHTML=s.out!==undefined?'<pre>'+esc(s.out)+'\n<span class="caret"></span></pre>':'<span style="color:rgba(132,150,182,.5)">(nothing printed yet)</span>';
     setStat("#stPh",s.phSpec,"hot"); setStat("#stArg",s.argName,s.argName==="none"?"dim":"gold");
     setBtns();
   }
-  function setBtns(){ $("#bNext").disabled=at>=steps.length-1; $("#bBack").disabled=at<0; }
+  function setBtns(){ $("#bNext").disabled=at>=steps.length-1; $("#bBack").disabled=at<0;
+    var d=""; for(var k=0;k<steps.length;k++) d+='<i class="'+(k===at?"now":k<at?"done":"")+'"></i>'; $("#dots").innerHTML=d; }
+  /* focus: picture and caption only. Remembered per browser. */
+  function setFocus(on){ document.body.classList.toggle("solo",on); $("#bFocus").textContent=on?"Focus on":"Focus";
+    try{localStorage.setItem("hub-focus",on?"1":"0");}catch(e){} var s=at<0?null:steps[at]; renderPair(s); renderOut(s); }
+  $("#bFocus").addEventListener("click",function(){ setFocus(!document.body.classList.contains("solo")); this.blur(); });
+  try{ if(localStorage.getItem("hub-focus")==="1") document.body.classList.add("solo"); }catch(e){}
+  if(document.body.classList.contains("solo")) $("#bFocus").textContent="Focus on";
   function next(){ if(at<steps.length-1) show(at+1); }
   function back(){ if(at>=0) show(at-1); }
   function reset(){ model=build(); steps=model.steps; show(-1); }
