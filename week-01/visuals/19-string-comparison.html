@@ -1,0 +1,396 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>== vs .equals | Week 1 Visual Hub</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Sora:wght@500;700&family=Inter:wght@400;500&family=JetBrains+Mono:wght@400;500&display=swap">
+<style>
+  :root{
+    --bg:#080c17; --bg2:#0c1428; --surface:rgba(255,255,255,.045); --line:rgba(255,255,255,.09);
+    --ink:#eef2fb; --muted:#8496b6; --accent:#6ea0ff; --accent2:#8b7bff; --good:#46d98a; --warn:#ff6a6a;
+    --gold:#ffc862; --disp:'Sora',system-ui,sans-serif; --body:'Inter',system-ui,sans-serif;
+    --mono:'JetBrains Mono',ui-monospace,monospace;
+  }
+  *{box-sizing:border-box}
+  body{margin:0;min-height:100vh;color:var(--ink);font-family:var(--body);
+    background:radial-gradient(1200px 700px at 70% -10%,#141d38 0%,transparent 55%),
+               radial-gradient(900px 600px at 10% 110%,#161233 0%,transparent 50%),#080c17;
+    overflow-x:hidden}
+  #amb{position:fixed;inset:0;z-index:0;pointer-events:none;opacity:.6}
+  .back{position:relative;z-index:2;display:block;max-width:1120px;margin:0 auto;padding:26px 24px 0;
+    width:100%;font-family:var(--mono);font-size:.8rem;letter-spacing:.04em;color:var(--muted);
+    text-decoration:none;transition:color .15s}
+  .back:hover{color:var(--accent)}
+  .wrap{position:relative;z-index:1;max-width:1120px;margin:0 auto;padding:22px 24px 70px}
+  .tag{font-family:var(--mono);font-size:.72rem;letter-spacing:.22em;text-transform:uppercase;color:var(--accent);margin:0 0 14px}
+  h1{font-family:var(--disp);font-weight:700;font-size:clamp(2.3rem,6vw,3.6rem);line-height:1;margin:0 0 12px;
+    letter-spacing:-.03em;background:linear-gradient(180deg,#fff,#b9c6e6);-webkit-background-clip:text;
+    background-clip:text;color:transparent}
+  .lede{color:var(--muted);max-width:64ch;font-size:1.05rem;margin:0 0 30px;line-height:1.5}
+  .lede b{color:var(--ink)}
+  .lede code,.take code,.status code{font-family:var(--mono);font-size:.92em;color:#bcd0ff}
+  .stage{position:relative;background:linear-gradient(180deg,rgba(255,255,255,.03),rgba(255,255,255,.01));
+    border:1px solid var(--line);border-radius:24px;padding:8px;
+    box-shadow:0 1px 0 rgba(255,255,255,.06) inset,0 30px 80px -30px rgba(0,0,0,.8)}
+  .grid{display:grid;grid-template-columns:340px 1fr;gap:8px}
+  @media (max-width:860px){.grid{grid-template-columns:1fr}}
+  .panelL,.panelR{border-radius:18px;padding:22px}
+  .panelL{background:linear-gradient(180deg,rgba(110,160,255,.06),rgba(139,123,255,.03));border:1px solid var(--line)}
+  .panelR{background:rgba(6,10,20,.5);border:1px solid var(--line);position:relative;overflow:hidden;min-width:0}
+  .lab{font-family:var(--mono);font-size:.7rem;letter-spacing:.12em;text-transform:uppercase;color:var(--muted);margin:0 0 12px}
+  .chips{display:flex;flex-wrap:wrap;gap:6px;margin-bottom:16px}
+  .chip{font-family:var(--mono);font-size:.74rem;padding:5px 11px;border-radius:999px;cursor:pointer;
+    border:1px solid var(--line);background:rgba(0,0,0,.25);color:var(--muted);transition:.15s}
+  .chip:hover{border-color:var(--accent);color:var(--accent)}
+  .chip.on{border-color:rgba(110,160,255,.6);background:rgba(110,160,255,.14);color:var(--ink)}
+  .chip:focus-visible{outline:2px solid var(--accent);outline-offset:2px}
+  .readout{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin:0 0 14px}
+  .stat{background:rgba(255,255,255,.03);border:1px solid var(--line);border-radius:12px;padding:11px 13px}
+  .stat .k{font-family:var(--mono);font-size:.62rem;letter-spacing:.1em;text-transform:uppercase;color:var(--muted)}
+  .stat .v{font-family:var(--disp);font-weight:700;font-size:1.45rem;font-variant-numeric:tabular-nums;margin-top:2px;transition:color .3s;min-height:1.6em}
+  .v.t{color:var(--good)} .v.f{color:var(--warn)} .v.dim{color:rgba(132,150,182,.5)}
+  .stepno{font-family:var(--mono);font-size:.64rem;letter-spacing:.14em;text-transform:uppercase;color:var(--muted);margin:0 0 8px}
+  .stepno b{color:var(--accent);font-weight:500}
+  .status{font-family:var(--mono);font-size:.82rem;line-height:1.55;color:var(--ink);min-height:160px;
+    padding:12px 14px;border-radius:12px;background:rgba(0,0,0,.25);border:1px solid var(--line);
+    border-left:3px solid var(--accent);transition:border-color .3s}
+  .status.cut{border-left-color:var(--warn)}
+  .status.left{border-left-color:var(--gold)}
+  .status.ok{border-left-color:var(--good)}
+  .status b.g{color:var(--good)} .status b.w{color:var(--warn)} .status b.a{color:var(--accent)} .status b.y{color:var(--gold)}
+  .actions{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-top:16px}
+  .btn{font-family:var(--body);font-weight:500;font-size:.84rem;padding:9px 12px;border-radius:11px;cursor:pointer;
+    border:1px solid var(--line);background:var(--surface);color:var(--ink);transition:.15s;text-align:center}
+  .btn:hover{border-color:var(--accent);color:var(--accent)}
+  .btn.primary{border-color:rgba(110,160,255,.5);background:rgba(110,160,255,.12);grid-column:1 / -1}
+  .btn.gold:hover{border-color:var(--gold);color:var(--gold)}
+  .btn:disabled{opacity:.35;cursor:not-allowed}
+  .btn:focus-visible{outline:2px solid var(--accent);outline-offset:2px}
+  .hint{font-family:var(--mono);font-size:.7rem;color:var(--muted);margin:14px 0 0;line-height:1.5}
+  .hint b{color:var(--accent)}
+  /* right: code, memory picture, console */
+  .code{min-width:0;font-family:var(--mono);font-size:.76rem;line-height:1.8;background:rgba(0,0,0,.35);border:1px solid var(--line);
+    border-radius:14px;padding:12px 0;overflow-x:auto;margin-bottom:14px}
+  .ln{display:flex;gap:12px;padding:0 14px;white-space:pre;color:#c9d4ea;transition:background .2s,opacity .3s}
+  .ln .n{width:20px;text-align:right;color:rgba(132,150,182,.55);user-select:none;flex-shrink:0}
+  .ln.cur{background:rgba(110,160,255,.14);box-shadow:inset 3px 0 0 var(--accent)}
+  .ln.cur .n{color:var(--accent)}
+  .ln.cut{background:rgba(255,106,106,.12);box-shadow:inset 3px 0 0 var(--warn)}
+  .ln.ok{background:rgba(70,217,138,.1);box-shadow:inset 3px 0 0 var(--good)}
+  .kw{color:#c792ea} .ty{color:#82aaff} .st{color:#c3e88d} .nm{color:#f78c6c} .cm{color:#5f6b85;font-style:italic} .fn{color:#ffcb6b}
+  .pic{position:relative;height:290px;border:1px dashed rgba(132,150,182,.3);border-radius:14px;background:rgba(0,0,0,.18);overflow:hidden}
+  .pic .zone{position:absolute;font-family:var(--mono);font-size:.6rem;letter-spacing:.14em;text-transform:uppercase;color:rgba(132,150,182,.55)}
+  .pool{position:absolute;left:44%;right:12px;top:150px;bottom:12px;border:1px dashed rgba(255,200,98,.35);border-radius:12px;
+    background:rgba(255,200,98,.03);transition:border-color .3s,background .3s}
+  .pool.on{border-color:rgba(255,200,98,.7);background:rgba(255,200,98,.07)}
+  .pool .zone{left:10px;top:8px;color:rgba(255,200,98,.7)}
+  .var{position:absolute;left:14px;width:132px;padding:8px 26px 8px 10px;border-radius:10px;border:1px solid var(--line);
+    background:rgba(255,255,255,.04);font-family:var(--mono);font-size:.74rem;opacity:0;
+    transition:opacity .35s,border-color .3s}
+  .var.show{opacity:1}
+  .var .vt{color:#82aaff;font-size:.62rem;display:block}
+  .var .vn{color:var(--ink)}
+  .var .ref{position:absolute;right:9px;top:50%;width:10px;height:10px;margin-top:-5px;border-radius:50%;background:var(--accent)}
+  .var.same{border-color:rgba(70,217,138,.7)} .var.same .ref{background:var(--good)}
+  .var.diff{border-color:rgba(255,106,106,.7)} .var.diff .ref{background:var(--warn)}
+  .obj{position:absolute;left:calc(44% + 14px);opacity:0;transition:opacity .4s}
+  .obj.show{opacity:1}
+  .obj .cap{font-family:var(--mono);font-size:.6rem;color:var(--muted);margin:0 0 5px;white-space:nowrap}
+  .obj .cells{display:flex;gap:3px;padding:5px;border-radius:9px;border:1px solid rgba(110,160,255,.35);background:rgba(110,160,255,.06);transition:border-color .3s,box-shadow .3s}
+  .obj.same .cells{border-color:rgba(70,217,138,.8);box-shadow:0 0 18px -6px rgba(70,217,138,.7)}
+  .obj.diff .cells{border-color:rgba(255,106,106,.8);box-shadow:0 0 18px -6px rgba(255,106,106,.6)}
+  .cell{width:24px;height:30px;display:flex;align-items:center;justify-content:center;border-radius:6px;
+    font-family:var(--mono);font-size:.9rem;color:var(--ink);background:rgba(0,0,0,.3);border:1px solid transparent;
+    transition:background .25s,border-color .25s,color .25s}
+  .cell.m{background:rgba(70,217,138,.16);border-color:rgba(70,217,138,.7);color:#bff3d6}
+  .cell.x{background:rgba(255,106,106,.16);border-color:rgba(255,106,106,.8);color:#ffc4c4}
+  .cell.i{background:rgba(255,200,98,.16);border-color:rgba(255,200,98,.8);color:#ffe6b0}
+  .marks{position:absolute;left:calc(44% + 20px);top:116px;display:flex;gap:3px;opacity:0;transition:opacity .3s}
+  .marks.show{opacity:1}
+  .marks span{width:24px;text-align:center;font-family:var(--mono);font-size:.8rem;color:var(--muted);transition:color .25s}
+  .marks span.m{color:var(--good)} .marks span.x{color:var(--warn)} .marks span.i{color:var(--gold)}
+  svg.arrows{position:absolute;inset:0;width:100%;height:100%;pointer-events:none;overflow:visible}
+  svg.arrows path{fill:none;stroke:rgba(110,160,255,.75);stroke-width:2;transition:stroke .3s,opacity .3s}
+  svg.arrows path.same{stroke:var(--good);stroke-width:3}
+  svg.arrows path.diff{stroke:var(--warn);stroke-width:3}
+  .verdict{position:absolute;left:14px;bottom:14px;font-family:var(--mono);font-size:.72rem;padding:5px 10px;border-radius:999px;
+    border:1px solid var(--line);opacity:0;transition:opacity .3s;white-space:nowrap}
+  .verdict.show{opacity:1}
+  .verdict.t{color:var(--good);border-color:rgba(70,217,138,.6);background:rgba(70,217,138,.08)}
+  .verdict.f{color:var(--warn);border-color:rgba(255,106,106,.6);background:rgba(255,106,106,.08)}
+  .console{margin-top:14px;font-family:var(--mono);font-size:.76rem;line-height:1.6;background:#05070e;border:1px solid var(--line);
+    border-radius:12px;padding:10px 14px;min-height:96px;color:#9fe3b6}
+  .console .cl{font-size:.6rem;letter-spacing:.14em;text-transform:uppercase;color:rgba(132,150,182,.6);margin-bottom:4px}
+  .console .out{animation:pop .3s}
+  .console .in{color:var(--ink)} .console .in i{color:rgba(132,150,182,.6);font-style:normal}
+  .console .f{color:#ff9a9a}
+  @keyframes pop{from{transform:scale(.6);opacity:0}to{transform:scale(1);opacity:1}}
+  .take{margin-top:22px;background:linear-gradient(180deg,rgba(110,160,255,.08),rgba(139,123,255,.04));
+    border:1px solid var(--line);border-left:3px solid var(--accent);border-radius:12px;padding:16px 18px}
+  .take .tk{font-family:var(--mono);font-size:.66rem;letter-spacing:.14em;text-transform:uppercase;color:var(--accent);margin:0 0 8px}
+  .take p{margin:0;font-size:.95rem;color:var(--ink);line-height:1.55}
+  .take b{color:#fff}
+  @media (prefers-reduced-motion:reduce){*{animation-duration:.01ms!important;transition-duration:.01ms!important;transition-delay:0s!important}#amb{display:none}}
+</style>
+</head>
+<body>
+
+<a class="back" href="../index.html#19-string-comparison">&#8592; Week 1 index</a>
+
+<canvas id="amb"></canvas>
+<div class="wrap">
+  <p class="tag">Workbook 1c &middot; Section 4-1 &middot; Comparing Strings</p>
+  <h1>== vs .equals</h1>
+  <p class="lede">A String variable does not hold the text. It holds an arrow to a String object somewhere in memory.
+  <b><code>==</code> checks whether two arrows point at the same object; <code>.equals</code> checks whether the characters match.</b>
+  Step through and watch what each one compares.</p>
+
+  <div class="stage">
+    <div class="grid">
+      <div class="panelL">
+        <p class="lab">Where do the two Strings come from?</p>
+        <div class="chips" id="chips"></div>
+
+        <div class="readout">
+          <div class="stat"><div class="k">name == expected</div><div class="v dim" id="stEq">?</div></div>
+          <div class="stat"><div class="k">.equals</div><div class="v dim" id="stEquals">?</div></div>
+        </div>
+
+        <p class="stepno" id="stepno">Step <b>0</b> of 5</p>
+        <div class="status" id="status">Press <b class="a">Next</b> to start.</div>
+
+        <div class="actions">
+          <button class="btn primary" id="bNext">Next &rarr;</button>
+          <button class="btn gold" id="bBack">&larr; Back</button>
+          <button class="btn" id="bReset">Reset</button>
+        </div>
+        <p class="hint">space = next &middot; "raymond" and equalsIgnoreCase come from the conditionals demo. <b>Try two literals.</b></p>
+      </div>
+
+      <div class="panelR">
+        <p class="lab">Main.java</p>
+        <div class="code" id="code"></div>
+        <p class="lab">Memory</p>
+        <div class="pic" id="pic"></div>
+        <div class="console"><div class="cl">console</div><div id="console"></div></div>
+      </div>
+    </div>
+  </div>
+
+  <div class="take">
+    <p class="tk">The one idea</p>
+    <p><b><code>==</code> asks "same object?", <code>.equals</code> asks "same characters?"</b> Text the user types is a new object,
+    so <code>==</code> against a literal is false even when the words match. Two identical literals share one pooled object,
+    which is why <code>==</code> sometimes seems to work. <b>For text you almost always mean <code>.equals</code></b>,
+    or <code>.equalsIgnoreCase</code> when capital letters should not matter.</p>
+  </div>
+
+  <div id="rail"></div>
+</div>
+
+<script>
+(function(){
+  "use strict";
+  var $=function(s){return document.querySelector(s);};
+  var reduce=matchMedia("(prefers-reduced-motion: reduce)").matches;
+
+  /* presets: "raymond" and equalsIgnoreCase come from the conditionals demo */
+  var PRESETS=[
+    {label:"typed vs literal",typed:true,name:"raymond"},
+    {label:"two literals",typed:false,name:"raymond"},
+    {label:"different case",typed:true,name:"Raymond"}
+  ];
+  var P=PRESETS[0], LIT="raymond";
+
+  function q(s){return '<span class="st">"'+s+'"</span>';}
+  function lines(){
+    return [
+      P.typed?'<span class="ty">Scanner</span> myScanner = <span class="kw">new</span> <span class="ty">Scanner</span>(System.in);'
+             :'<span class="cm">// no Scanner this time: both are literals</span>',
+      P.typed?'<span class="ty">String</span> name = myScanner.<span class="fn">nextLine</span>();  <span class="cm">// user types '+P.name+'</span>'
+             :'<span class="ty">String</span> name = '+q(P.name)+';',
+      '<span class="ty">String</span> expected = '+q(LIT)+';',
+      '',
+      'System.out.<span class="fn">println</span>(name == expected);',
+      'System.out.<span class="fn">println</span>(name.<span class="fn">equals</span>(expected));',
+      'System.out.<span class="fn">println</span>(name.<span class="fn">equalsIgnoreCase</span>(expected));'
+    ];
+  }
+
+  /* computed results, as Java would give them for these three cases */
+  function results(){
+    var sameObj=!P.typed && P.name===LIT; /* identical literals share one pooled object */
+    return {eq:sameObj, equals:P.name===LIT, ic:P.name.toLowerCase()===LIT.toLowerCase(), same:sameObj};
+  }
+
+  function build(){
+    var R=results(), S=[];
+    if(P.typed){
+      S.push({line:[2],pic:1,cls:"",msg:'<code>nextLine()</code> builds a <b class="a">brand new String object</b> from what the user typed: '+P.name+'. <code>name</code> holds an arrow to that object, not the text itself.'});
+      S.push({line:[3],pic:2,cls:"",msg:'A literal in quotes lives in the <b class="y">string pool</b>. <code>expected</code> points there. Two arrows, <b class="a">two separate objects</b>.'});
+    } else {
+      S.push({line:[2],pic:1,cls:"",msg:'The literal '+LIT+' is stored once in the <b class="y">string pool</b>. <code>name</code> holds an arrow to that pooled object.'});
+      S.push({line:[3],pic:2,cls:"",msg:'Java finds '+LIT+' already in the pool and <b class="a">reuses it</b>: <code>expected</code> points at the very same object. Two arrows, one object.'});
+    }
+    S.push({line:[5],pic:3,cls:R.eq?"ok":"cut",eq:R.eq,out:[String(R.eq)],
+      msg:'<code>==</code> compares the <b class="a">arrows</b>, not the text: do they land on the same object? '+
+        (R.eq?'<b class="g">Yes, so true.</b> Only because the pool shared one object. Do not count on it.'
+             :'<b class="w">No, so false</b>'+(R.equals?', even though the text looks identical.':'.')) });
+    var mis=-1; for(var k=0;k<LIT.length;k++){ if(P.name.charAt(k)!==LIT.charAt(k)){mis=k;break;} }
+    S.push({line:[6],pic:4,cls:R.equals?"ok":"cut",eq:R.eq,equals:R.equals,out:[String(R.eq),String(R.equals)],
+      msg:'<code>.equals</code> ignores the arrows and compares the <b class="a">characters, one by one</b>. '+
+        (R.equals?(R.same?'Same object, so every character matches: <b class="g">true</b>.':'All '+LIT.length+' match: <b class="g">true</b>.')
+                 :'<b class="w">'+P.name.charAt(mis)+'</b> and <b class="w">'+LIT.charAt(mis)+'</b> are different characters, so <b class="w">false</b>. Case matters.') });
+    S.push({line:[7],pic:5,cls:R.ic?"ok":"cut",eq:R.eq,equals:R.equals,out:[String(R.eq),String(R.equals),String(R.ic)],
+      msg:'<code>.equalsIgnoreCase</code> compares characters too, but <b class="y">R and r count as the same letter</b>: <b class="g">'+R.ic+'</b>. '+
+        (P.name!==LIT?'That is why the demo checks <code>name.equalsIgnoreCase("raymond")</code>.':'Here nothing differs, so it agrees with <code>.equals</code>.') });
+    return S;
+  }
+
+  var steps=[],at=-1;
+  var codeEl=$("#code"),picEl=$("#pic"),consEl=$("#console"),statusEl=$("#status");
+
+  function renderCode(cur,cls){
+    codeEl.innerHTML=lines().map(function(t,i){
+      var n=i+1,c="ln";
+      if(cur&&cur.indexOf(n)>=0) c+=" "+(cls==="cut"?"cut":cls==="ok"?"ok":"cur");
+      return '<div class="'+c+'"><span class="n">'+n+'</span><span>'+(t||" ")+'</span></div>';
+    }).join("");
+  }
+
+  /* ---------- the picture: variable boxes, arrows, String objects ---------- */
+  function cellsHtml(s,id){
+    var h='<div class="cells">';
+    for(var i=0;i<s.length;i++) h+='<span class="cell" id="'+id+i+'">'+s.charAt(i)+'</span>';
+    return h+'</div>';
+  }
+  function buildPic(){
+    var h='<span class="zone" style="left:14px;top:12px">variables</span>';
+    h+='<span class="zone" style="left:calc(44% + 14px);top:12px">objects in memory</span>';
+    h+='<div class="pool" id="pool"><span class="zone">string pool</span></div>';
+    h+='<div class="var" id="vName" style="top:56px"><span class="vt">String</span><span class="vn">name</span><span class="ref"></span></div>';
+    h+='<div class="var" id="vExp" style="top:176px"><span class="vt">String</span><span class="vn">expected</span><span class="ref"></span></div>';
+    h+='<div class="obj" id="oNew" style="top:40px"><p class="cap">new object, made by nextLine()</p>'+cellsHtml(P.name,"a")+'</div>';
+    h+='<div class="obj" id="oPool" style="top:180px"><p class="cap">literal "raymond"</p>'+cellsHtml(LIT,"b")+'</div>';
+    h+='<div class="marks" id="marks">';
+    for(var i=0;i<LIT.length;i++) h+='<span id="mk'+i+'"></span>';
+    h+='</div>';
+    h+='<svg class="arrows" id="arrows"><defs>'+
+      '<marker id="ah" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" style="fill:rgba(110,160,255,.9);stroke:none"/></marker>'+
+      '<marker id="ahg" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" style="fill:#46d98a;stroke:none"/></marker>'+
+      '<marker id="ahw" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" style="fill:#ff6a6a;stroke:none"/></marker>'+
+      '</defs><path id="arN" style="opacity:0"/><path id="arE" style="opacity:0"/></svg>';
+    h+='<span class="verdict" id="verdict"></span>';
+    picEl.innerHTML=h;
+  }
+  function anchor(el,side){
+    var p=picEl.getBoundingClientRect(), r=el.getBoundingClientRect();
+    return {x:(side==="r"?r.right:r.left)-p.left, y:r.top+r.height/2-p.top};
+  }
+  function arrow(id,fromEl,toEl,show,cls){
+    var path=$("#"+id);
+    if(!show){ path.style.opacity=0; return; }
+    var a=anchor(fromEl.querySelector(".ref"),"r"), b=anchor(toEl.querySelector(".cells"),"l");
+    a.x-=5; b.x-=3;
+    var mx=(a.x+b.x)/2;
+    path.setAttribute("d","M"+a.x+","+a.y+" C"+mx+","+a.y+" "+mx+","+b.y+" "+b.x+","+b.y);
+    path.setAttribute("class",cls||"");
+    path.setAttribute("marker-end","url(#"+(cls==="same"?"ahg":cls==="diff"?"ahw":"ah")+")");
+    path.style.opacity=1;
+  }
+  function renderPic(stage){
+    var R=results(), vN=$("#vName"), vE=$("#vExp"), oN=$("#oNew"), oP=$("#oPool"), pool=$("#pool");
+    var nameTarget=P.typed?oN:oP, i;
+    vN.className="var"+(stage>=1?" show":"");
+    vE.className="var"+(stage>=2?" show":"");
+    oN.className="obj"+(P.typed&&stage>=1?" show":"");
+    oP.className="obj"+((stage>=2||(!P.typed&&stage>=1))?" show":"");
+    pool.className="pool"+((stage===2||(!P.typed&&stage===1))?" on":"");
+    var cmp=stage===3?(R.same?" same":" diff"):"";
+    if(cmp){ vN.className+=cmp; vE.className+=cmp; oP.className+=cmp; if(P.typed) oN.className+=cmp; }
+    var aCls=stage===3?(R.same?"same":"diff"):"";
+    arrow("arN",vN,nameTarget,stage>=1,aCls);
+    arrow("arE",vE,oP,stage>=2,aCls);
+    /* cell by cell */
+    var marks=$("#marks"); marks.className="marks"+(P.typed&&stage>=4?" show":"");
+    for(i=0;i<LIT.length;i++){
+      var c1=P.name.charAt(i), c2=LIT.charAt(i), st="";
+      if(stage===4) st=c1===c2?"m":"x";
+      if(stage===5) st=c1===c2?"m":(c1.toLowerCase()===c2.toLowerCase()?"i":"x");
+      var delay=reduce?"0s":(i*0.09)+"s";
+      [$("#a"+i),$("#b"+i)].forEach(function(e){ e.className="cell"+(st?" "+st:""); e.style.transitionDelay=st?delay:"0s"; });
+      var mk=$("#mk"+i); mk.className=st; mk.style.transitionDelay=st?delay:"0s";
+      mk.textContent=st==="x"?"≠":"=";
+    }
+    var v=$("#verdict");
+    if(stage===3){ v.textContent="same object? "+(R.same?"yes":"no"); v.className="verdict show "+(R.same?"t":"f"); }
+    else if(stage===4){ v.textContent="same characters? "+(R.equals?"yes":"no"); v.className="verdict show "+(R.equals?"t":"f"); }
+    else if(stage===5){ v.textContent="same letters, any case? "+(R.ic?"yes":"no"); v.className="verdict show "+(R.ic?"t":"f"); }
+    else v.className="verdict";
+  }
+
+  function renderConsole(s){
+    var h="";
+    if(P.typed&&s&&s.pic>=1) h+='<div class="in"><i>typed: </i>'+P.name+'</div>';
+    if(s&&s.out) h+=s.out.map(function(o){return '<div class="out'+(o==="false"?" f":"")+'">'+o+'</div>';}).join("");
+    consEl.innerHTML=h||'<span style="color:rgba(132,150,182,.5)">(nothing printed yet)</span>';
+  }
+
+  function show(i){
+    at=i;
+    if(i<0){
+      renderCode(null); renderPic(0); renderConsole(null);
+      statusEl.className="status"; statusEl.innerHTML='Press <b class="a">Next</b> to start. The memory picture changes at every step.';
+      setStat("#stEq"); setStat("#stEquals");
+      $("#stepno").innerHTML="Step <b>0</b> of "+steps.length; setBtns(); return;
+    }
+    var s=steps[i];
+    $("#stepno").innerHTML="Step <b>"+(i+1)+"</b> of "+steps.length;
+    renderCode(s.line,s.cls); renderPic(s.pic); renderConsole(s);
+    statusEl.className="status "+s.cls; statusEl.innerHTML=s.msg;
+    setStat("#stEq",s.eq); setStat("#stEquals",s.equals);
+    setBtns();
+  }
+  function setStat(id,v){ var e=$(id); if(v===undefined){e.textContent="?";e.className="v dim";} else {e.textContent=String(v);e.className="v "+(v?"t":"f");} }
+  function setBtns(){ $("#bNext").disabled=at>=steps.length-1; $("#bBack").disabled=at<0; }
+  function next(){ if(at<steps.length-1) show(at+1); }
+  function back(){ if(at>=0) show(at-1); }
+  function reset(){ steps=build(); buildPic(); show(-1); }
+  function pick(idx){
+    P=PRESETS[idx];
+    Array.prototype.forEach.call(document.querySelectorAll(".chip"),function(c,j){c.classList.toggle("on",j===idx);});
+    if(document.activeElement&&document.activeElement.blur) document.activeElement.blur();
+    reset();
+  }
+
+  $("#chips").innerHTML=PRESETS.map(function(p,j){return '<button class="chip'+(j===0?' on':'')+'" data-i="'+j+'">'+p.label+'</button>';}).join("");
+  $("#chips").addEventListener("click",function(e){ var b=e.target.closest(".chip"); if(b) pick(+b.getAttribute("data-i")); });
+  $("#bNext").addEventListener("click",next);
+  $("#bBack").addEventListener("click",back);
+  $("#bReset").addEventListener("click",reset);
+  document.addEventListener("keydown",function(e){ if(e.code==="Space"&&!/INPUT|BUTTON/.test(e.target.tagName)){e.preventDefault();next();} });
+  addEventListener("resize",function(){ renderPic(at>=0?steps[at].pic:0); });
+
+  /* ---------- ambient canvas ---------- */
+  var cv=$("#amb"),ctx=cv.getContext&&cv.getContext("2d"),parts=[];
+  function sizeC(){if(!ctx)return;cv.width=innerWidth;cv.height=innerHeight;}
+  function initParts(){parts=[];for(var i=0;i<46;i++)parts.push({x:Math.random(),y:Math.random(),
+    r:Math.random()*1.6+.3,s:Math.random()*.02+.004,o:Math.random()*.4+.1});}
+  function drawC(){if(!ctx)return;ctx.clearRect(0,0,cv.width,cv.height);
+    parts.forEach(function(p){p.y-=p.s/60;if(p.y<-.02)p.y=1.02;
+      ctx.beginPath();ctx.arc(p.x*cv.width,p.y*cv.height,p.r,0,7);
+      ctx.fillStyle="rgba(140,170,255,"+p.o+")";ctx.fill();});
+    requestAnimationFrame(drawC);}
+  if(ctx&&!reduce){sizeC();initParts();drawC();addEventListener("resize",sizeC);}
+
+  reset();
+  if(document.fonts&&document.fonts.ready) document.fonts.ready.then(function(){ renderPic(at>=0?steps[at].pic:0); });
+})();
+</script>
+<script src="../manifest.js"></script>
+<script src="../../assets/rail.js"></script>
+<script>Rail.render(document.getElementById("rail"),{kind:"visuals",current:"19-string-comparison"});</script>
+</body>
+</html>

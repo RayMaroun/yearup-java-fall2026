@@ -1,0 +1,445 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Scanner Buffer | Week 1 Visual Hub</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Sora:wght@500;700&family=Inter:wght@400;500&family=JetBrains+Mono:wght@400;500&display=swap">
+<style>
+  :root{
+    --bg:#080c17; --bg2:#0c1428; --surface:rgba(255,255,255,.045); --line:rgba(255,255,255,.09);
+    --ink:#eef2fb; --muted:#8496b6; --accent:#6ea0ff; --accent2:#8b7bff; --good:#46d98a; --warn:#ff6a6a;
+    --gold:#ffc862; --disp:'Sora',system-ui,sans-serif; --body:'Inter',system-ui,sans-serif;
+    --mono:'JetBrains Mono',ui-monospace,monospace;
+  }
+  *{box-sizing:border-box}
+  body{margin:0;min-height:100vh;color:var(--ink);font-family:var(--body);
+    background:radial-gradient(1200px 700px at 70% -10%,#141d38 0%,transparent 55%),
+               radial-gradient(900px 600px at 10% 110%,#161233 0%,transparent 50%),#080c17;
+    overflow-x:hidden}
+  #amb{position:fixed;inset:0;z-index:0;pointer-events:none;opacity:.6}
+  .back{position:relative;z-index:2;display:block;max-width:1120px;margin:0 auto;padding:26px 24px 0;
+    width:100%;font-family:var(--mono);font-size:.8rem;letter-spacing:.04em;color:var(--muted);
+    text-decoration:none;transition:color .15s}
+  .back:hover{color:var(--accent)}
+  .wrap{position:relative;z-index:1;max-width:1120px;margin:0 auto;padding:22px 24px 70px}
+  .tag{font-family:var(--mono);font-size:.72rem;letter-spacing:.22em;text-transform:uppercase;color:var(--accent);margin:0 0 14px}
+  h1{font-family:var(--disp);font-weight:700;font-size:clamp(2.3rem,6vw,3.6rem);line-height:1;margin:0 0 12px;
+    letter-spacing:-.03em;background:linear-gradient(180deg,#fff,#b9c6e6);-webkit-background-clip:text;
+    background-clip:text;color:transparent}
+  .lede{color:var(--muted);max-width:64ch;font-size:1.05rem;margin:0 0 30px;line-height:1.5}
+  .lede b{color:var(--ink)}
+  code{font-family:var(--mono);font-size:.9em}
+  .stage{position:relative;background:linear-gradient(180deg,rgba(255,255,255,.03),rgba(255,255,255,.01));
+    border:1px solid var(--line);border-radius:24px;padding:8px;
+    box-shadow:0 1px 0 rgba(255,255,255,.06) inset,0 30px 80px -30px rgba(0,0,0,.8)}
+  .grid{display:grid;grid-template-columns:340px 1fr;gap:8px}
+  @media (max-width:860px){.grid{grid-template-columns:1fr}}
+  .panelL,.panelR{border-radius:18px;padding:22px}
+  .panelL{background:linear-gradient(180deg,rgba(110,160,255,.06),rgba(139,123,255,.03));border:1px solid var(--line)}
+  .panelR{background:rgba(6,10,20,.5);border:1px solid var(--line);position:relative;overflow:hidden;min-width:0}
+  .lab{font-family:var(--mono);font-size:.7rem;letter-spacing:.12em;text-transform:uppercase;color:var(--muted);margin:0 0 12px}
+  /* inputs */
+  .inputs{background:rgba(0,0,0,.32);border:1px solid var(--line);border-radius:14px;padding:14px 16px;margin-bottom:14px}
+  .ititle{font-family:var(--mono);font-size:.64rem;letter-spacing:.1em;text-transform:uppercase;color:var(--gold);margin:0 0 10px}
+  .irow{display:flex;align-items:center;justify-content:space-between;font-family:var(--mono);font-size:.85rem;margin:7px 0;gap:10px}
+  .irow .kk{color:var(--muted)}
+  .irow input{width:112px;font-family:var(--mono);font-size:.85rem;color:var(--ink);background:rgba(255,255,255,.05);
+    border:1px solid var(--line);border-radius:8px;padding:5px 8px;text-align:right;transition:.15s}
+  .irow input:focus{outline:none;border-color:var(--gold)}
+  .irow input:disabled{opacity:.5}
+  .inote{font-size:.78rem;color:var(--muted);margin:8px 0 0;line-height:1.45}
+  /* readout */
+  .readout{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin:14px 0}
+  .stat{background:rgba(255,255,255,.03);border:1px solid var(--line);border-radius:12px;padding:11px 13px}
+  .stat .k{font-family:var(--mono);font-size:.62rem;letter-spacing:.1em;text-transform:uppercase;color:var(--muted)}
+  .stat .v{font-family:var(--disp);font-weight:700;font-size:1.45rem;font-variant-numeric:tabular-nums;margin-top:2px;transition:color .3s}
+  .v.hot{color:var(--gold)} .v.bad{color:var(--warn)} .v.ok{color:var(--good)}
+  .status{font-family:var(--mono);font-size:.82rem;line-height:1.55;color:var(--ink);min-height:106px;
+    padding:12px 14px;border-radius:12px;background:rgba(0,0,0,.25);border:1px solid var(--line);
+    border-left:3px solid var(--accent);transition:border-color .3s}
+  .status.push{border-left-color:var(--gold)}
+  .status.pop{border-left-color:var(--good)}
+  .status.trouble{border-left-color:var(--warn)}
+  .status b.g{color:var(--good)} .status b.w{color:var(--warn)} .status b.a{color:var(--accent)} .status b.y{color:var(--gold)}
+  .actions{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-top:16px}
+  .btn{font-family:var(--body);font-weight:500;font-size:.84rem;padding:9px 12px;border-radius:11px;cursor:pointer;
+    border:1px solid var(--line);background:var(--surface);color:var(--ink);transition:.15s;text-align:center}
+  .btn:hover{border-color:var(--accent);color:var(--accent)}
+  .btn.primary{border-color:rgba(110,160,255,.5);background:rgba(110,160,255,.12)}
+  .btn.warn:hover{border-color:var(--warn);color:var(--warn)}
+  .btn.gold:hover{border-color:var(--gold);color:var(--gold)}
+  .btn:disabled{opacity:.35;cursor:not-allowed}
+  .btn:focus-visible{outline:2px solid var(--accent);outline-offset:2px}
+  .btn.wide{grid-column:1 / -1}
+  .btn.on{border-color:var(--good);color:var(--good);background:rgba(70,217,138,.1)}
+  .hint{font-family:var(--mono);font-size:.7rem;color:var(--muted);margin:14px 0 0;line-height:1.5}
+  .hint b{color:var(--accent)}
+  /* right: buffer + code + console */
+  .bufwrap{margin-bottom:16px}
+  .buffer{display:flex;flex-wrap:wrap;gap:6px 4px;min-height:74px;align-items:flex-end;align-content:flex-start;
+    border:1px dashed rgba(132,150,182,.3);border-radius:14px;padding:22px 12px 12px;background:rgba(0,0,0,.18);position:relative}
+  .buffer::before{content:"System.in buffer";position:absolute;top:5px;right:12px;font-family:var(--mono);font-size:.58rem;
+    letter-spacing:.14em;text-transform:uppercase;color:rgba(132,150,182,.5)}
+  .cell{position:relative;min-width:28px;height:36px;padding:0 6px;display:flex;align-items:center;justify-content:center;
+    font-family:var(--mono);font-size:.9rem;border-radius:8px;border:1px solid var(--line);background:rgba(255,255,255,.05);
+    color:var(--ink);transition:background .25s,border-color .25s,opacity .25s}
+  .cell.nl{color:var(--gold);border-color:rgba(255,200,98,.45);background:rgba(255,200,98,.08);font-size:.78rem}
+  .cell.used{opacity:.28}
+  .cell.new{animation:pop .35s cubic-bezier(.2,1.4,.4,1)}
+  .cell.read{opacity:1;border-color:rgba(110,160,255,.7);background:rgba(110,160,255,.2);color:#d6e4ff}
+  .cell.skip{opacity:1;border-color:rgba(132,150,182,.6);background:rgba(132,150,182,.12);text-decoration:line-through}
+  .cell.eat{opacity:1;border-color:rgba(255,106,106,.7);background:rgba(255,106,106,.16);color:#ffc2c2}
+  .cell.eatok{opacity:1;border-color:rgba(70,217,138,.7);background:rgba(70,217,138,.14);color:#bff3d6}
+  .cell.next{box-shadow:-3px 0 0 0 var(--accent)}
+  .cell.next::before{content:"next";position:absolute;top:-17px;left:-4px;font-family:var(--mono);font-size:.56rem;
+    letter-spacing:.08em;color:var(--accent)}
+  .cell.end{border-style:dashed;background:transparent;color:rgba(132,150,182,.55);font-size:.66rem;min-width:44px}
+  .cell.end.wait{border-color:var(--gold);color:var(--gold);animation:breathe 1.4s ease-in-out infinite}
+  .legend{display:flex;flex-wrap:wrap;gap:14px;margin-top:8px;font-family:var(--mono);font-size:.62rem;color:var(--muted)}
+  .legend i{display:inline-block;width:10px;height:10px;border-radius:3px;margin-right:5px;vertical-align:-1px}
+  .rgrid{display:grid;grid-template-columns:minmax(0,1.25fr) minmax(0,1fr);gap:16px}
+  @media (max-width:1000px){.rgrid{grid-template-columns:1fr}}
+  .code{min-width:0;font-family:var(--mono);font-size:.72rem;line-height:1.75;background:rgba(0,0,0,.35);border:1px solid var(--line);
+    border-radius:14px;padding:12px 0;overflow-x:auto}
+  .ln{display:flex;gap:12px;padding:0 14px;white-space:pre-wrap;word-break:break-word;color:#c9d4ea;transition:background .2s;position:relative}
+  .ln .n{width:20px;text-align:right;color:rgba(132,150,182,.55);user-select:none;flex-shrink:0}
+  .ln.cur{background:rgba(110,160,255,.14);box-shadow:inset 3px 0 0 var(--accent)}
+  .ln.cur .n{color:var(--accent)}
+  .ln.ret{background:rgba(70,217,138,.12);box-shadow:inset 3px 0 0 var(--good)}
+  .ln.mut{background:rgba(255,106,106,.12);box-shadow:inset 3px 0 0 var(--warn)}
+  .ln.dim{opacity:.35}
+  .kw{color:#c792ea} .ty{color:#82aaff} .st{color:#c3e88d} .nm{color:#f78c6c} .cm{color:#5f6b85;font-style:italic} .fn{color:#ffcb6b}
+  .vars{display:flex;flex-wrap:wrap;gap:6px;min-height:26px}
+  .var{font-family:var(--mono);font-size:.7rem;padding:3px 8px;border-radius:999px;border:1px solid var(--line);
+    background:rgba(0,0,0,.3);color:#bcd0ff;animation:pop .35s}
+  .var.new{border-color:rgba(255,200,98,.6);color:#ffe6b0;background:rgba(255,200,98,.08)}
+  .var.bad{border-color:rgba(255,106,106,.6);color:#ffc2c2;background:rgba(255,106,106,.1)}
+  .var i{color:var(--muted);font-style:normal}
+  .console{margin-top:14px;font-family:var(--mono);font-size:.74rem;line-height:1.6;background:#05070e;border:1px solid var(--line);
+    border-radius:12px;padding:10px 14px;min-height:120px;color:#9fe3b6;word-break:break-word}
+  .console .cl{font-size:.6rem;letter-spacing:.14em;text-transform:uppercase;color:rgba(132,150,182,.6);margin-bottom:4px}
+  .console .typed{color:var(--gold)}
+  .console .typed::after{content:" \21B5";color:rgba(255,200,98,.6)}
+  .console .err{color:var(--warn)}
+  .console .last{animation:pop .3s}
+  @keyframes pop{from{transform:scale(.6);opacity:0}to{transform:scale(1);opacity:1}}
+  @keyframes breathe{0%,100%{box-shadow:0 0 0 0 rgba(255,200,98,0)}50%{box-shadow:0 0 14px 0 rgba(255,200,98,.45)}}
+  .take{margin-top:22px;background:linear-gradient(180deg,rgba(110,160,255,.08),rgba(139,123,255,.04));
+    border:1px solid var(--line);border-left:3px solid var(--accent);border-radius:12px;padding:16px 18px}
+  .take .tk{font-family:var(--mono);font-size:.66rem;letter-spacing:.14em;text-transform:uppercase;color:var(--accent);margin:0 0 8px}
+  .take p{margin:0;font-size:.95rem;color:var(--ink);line-height:1.55}
+  .take b{color:#fff}
+  @media (prefers-reduced-motion:reduce){*{animation-duration:.01ms!important;transition-duration:.01ms!important}#amb{display:none}}
+</style>
+</head>
+<body>
+
+<a class="back" href="../index.html#15-scanner-buffer">&#8592; Week 1 index</a>
+
+<canvas id="amb"></canvas>
+<div class="wrap">
+  <p class="tag">Workbook 1c &middot; Section 3-3 &middot; Buffered input and line separators</p>
+  <h1>Scanner Buffer</h1>
+  <p class="lede">Everything you type, ENTER included, lands in a buffer that Scanner reads from.
+  <b>nextInt() takes the digits and leaves the line separator behind, so the next nextLine() returns an empty String without waiting.</b>
+  Step through it, then turn on the fix.</p>
+
+  <div class="stage">
+    <div class="grid">
+      <div class="panelL">
+        <p class="lab">Inputs &middot; what you type</p>
+        <div class="inputs">
+          <p class="ititle">typed at each prompt, then ENTER</p>
+          <div class="irow"><span class="kk">first number</span><input id="inA" type="text" value="13" maxlength="9" spellcheck="false"></div>
+          <div class="irow"><span class="kk">second number</span><input id="inB" type="text" value="145" maxlength="9" spellcheck="false"></div>
+          <div class="irow"><span class="kk">operation</span><input id="inO" type="text" value="add" maxlength="12" spellcheck="false"></div>
+          <p class="inote">Edit while stopped. The run is computed from these. Try a word for a number too.</p>
+        </div>
+
+        <div class="readout">
+          <div class="stat"><div class="k">waited for you</div><div class="v" id="stWait">0</div></div>
+          <div class="stat"><div class="k">unread in buffer</div><div class="v" id="stLeft">0</div></div>
+        </div>
+
+        <div class="status" id="status">Press <b class="a">Step</b> to start the program, or <b class="a">Run</b> to watch it play.</div>
+
+        <div class="actions">
+          <button class="btn primary" id="bStep">Step &rarr;</button>
+          <button class="btn" id="bRun">Run</button>
+          <button class="btn gold" id="bBack">&larr; Back</button>
+          <button class="btn" id="bReset">Reset</button>
+          <button class="btn warn wide" id="bFix">Experiment: add myScanner.nextLine() after nextInt()</button>
+        </div>
+        <p class="hint">space = step &middot; watch the <b>\n</b> cell after the second number. <b>Who reads it?</b></p>
+      </div>
+
+      <div class="panelR">
+        <div class="bufwrap">
+          <p class="lab">The input buffer &middot; one cell per character</p>
+          <div class="buffer" id="buffer"></div>
+          <div class="legend">
+            <span><i style="background:rgba(110,160,255,.5)"></i>read now</span>
+            <span><i style="background:rgba(132,150,182,.4)"></i>skipped as whitespace</span>
+            <span><i style="background:rgba(255,200,98,.5)"></i>\n = ENTER (line separator)</span>
+            <span><i style="background:rgba(255,255,255,.12)"></i>faded = already used</span>
+          </div>
+        </div>
+        <div class="rgrid">
+          <div>
+            <p class="lab">Main.java &middot; inside main</p>
+            <div class="code" id="code"></div>
+          </div>
+          <div>
+            <p class="lab">Variables</p>
+            <div class="vars" id="vars"></div>
+            <div class="console"><div class="cl">console</div><div id="console"></div></div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="take">
+    <p class="tk">The one idea</p>
+    <p><b>nextInt() stops before the line separator and leaves it in the buffer.</b> Another nextInt() skips it, but
+    nextLine() reads up to it, finds nothing, and returns "". When you read a number and then a line,
+    <b>consume the leftover first</b> with an extra <code>myScanner.nextLine()</code>.</p>
+  </div>
+
+  <div id="rail"></div>
+</div>
+
+<script>
+(function(){
+  "use strict";
+  var $=function(s){return document.querySelector(s);};
+  var reduce=matchMedia("(prefers-reduced-motion: reduce)").matches;
+  var NL="\n";
+
+  /* ---------- the program (Week 1 demo-java-io, Main.java) ---------- */
+  function lines(fix){
+    return [
+      '<span class="ty">Scanner</span> myScanner = <span class="kw">new</span> <span class="ty">Scanner</span>(System.in);',
+      'System.out.println(<span class="st">"Enter the first number: "</span>);',
+      '<span class="ty">int</span> firstNumber = myScanner.<span class="fn">nextInt</span>();',
+      'System.out.println(<span class="st">"Enter the second number: "</span>);',
+      '<span class="ty">int</span> secondNumber = myScanner.<span class="fn">nextInt</span>();',
+      fix?'myScanner.<span class="fn">nextLine</span>();   <span class="cm">// eat the leftover \\n</span>':'<span class="cm">// (experiment off: nothing here)</span>',
+      '<span class="ty">int</span> result = firstNumber + secondNumber;',
+      'System.out.println(<span class="st">"The result is: "</span> + result);',
+      'System.out.println(<span class="st">"Which operation you would like to do next?"</span>);',
+      '<span class="ty">String</span> operation = myScanner.<span class="fn">nextLine</span>();',
+      'System.out.println(<span class="st">"The new operation is: "</span> + operation);'
+    ];
+  }
+
+  function esc(s){var d=document.createElement("div");d.textContent=String(s);return d.innerHTML;}
+  function isWS(c){return c===" "||c===NL||c==="\t";}
+  function isInt(t){return /^[+-]?\d{1,9}$/.test(t);}
+
+  /* ---------- simulate the Scanner over a real character buffer ---------- */
+  function build(inp,fix){
+    var S=[], cells=[], cur=0, out=[], vars=[], waits=0, queue=[inp.A,inp.B,inp.O], dead=false;
+    function snap(line,msg,cls,o){
+      o=o||{};
+      S.push({line:line,msg:msg,cls:cls||"",mark:o.mark||"cur",wait:!!o.wait,
+        cells:cells.map(function(c){return {ch:c.ch,used:c.used,hl:c.hl};}),cur:cur,
+        out:out.slice(),vars:vars.map(function(v){return {k:v.k,v:v.v,s:v.s};}),waits:waits});
+      cells.forEach(function(c){c.hl="";});
+      vars.forEach(function(v){if(v.s==="new")v.s="";});
+    }
+    function setVar(k,v,s){vars.push({k:k,v:v,s:s||"new"});}
+    function typeLine(line){
+      var t=queue.length?queue.shift():"";
+      waits++;
+      for(var i=0;i<t.length;i++) cells.push({ch:t[i],used:false,hl:"new"});
+      cells.push({ch:NL,used:false,hl:"new"});
+      out.push({t:esc(t),c:"typed"});
+      snap(line,'You type <b class="y">'+(esc(t)||"nothing")+'</b> and press ENTER. '+(t.length+1)+' characters go into the buffer: '+(t.length?'the text, then ':'just ')+'<b class="y">\\n</b>.',"push");
+    }
+    function nextInt(line,name){
+      var skipped=0;
+      while(cur<cells.length&&isWS(cells[cur].ch)){cells[cur].used=true;cells[cur].hl="skip";cur++;skipped++;}
+      var skipMsg=skipped?'nextInt() <b class="a">skips the leftover \\n</b>: to a number reader it is just whitespace. ':'';
+      if(cur>=cells.length){
+        snap(line,skipMsg+(skipped?'Then the buffer is empty, so the program <b class="y">waits for you</b>.':'nextInt() looks in the buffer. It is empty, so the program <b class="y">waits for you</b> to type.'),"",{wait:true});
+        typeLine(line);
+        skipMsg="";
+      }
+      var j=cur, tok="";
+      while(j<cells.length&&!isWS(cells[j].ch)){tok+=cells[j].ch;j++;}
+      if(!isInt(tok)){
+        for(var k=cur;k<j;k++) cells[k].hl="eat";
+        out.push({t:'Exception in thread "main" java.util.InputMismatchException',c:"err"});
+        dead=true;
+        snap(line,skipMsg+'nextInt() finds <b class="w">'+esc(tok)+'</b>, which is not a whole number. It throws <b class="w">InputMismatchException</b> and the program stops.',"trouble",{mark:"mut"});
+        return;
+      }
+      for(var m=cur;m<j;m++){cells[m].used=true;cells[m].hl="read";}
+      cur=j;
+      var val=parseInt(tok,10);
+      setVar(name,val);
+      snap(line,skipMsg+'nextInt() reads <b class="a">'+esc(tok)+'</b> and <b class="y">stops right before the \\n</b>. '+name+' = '+val+'. The \\n stays in the buffer.',"pop",{mark:"ret"});
+      return val;
+    }
+    function nextLine(line,name){
+      var waited=false;
+      if(cur>=cells.length){
+        snap(line,'nextLine() looks in the buffer. It is empty, so the program <b class="y">waits for you</b> to type.',"",{wait:true});
+        typeLine(line);
+        waited=true;
+      }
+      var j=cur, txt="";
+      while(cells[j].ch!==NL){txt+=cells[j].ch;cells[j].used=true;cells[j].hl="read";j++;}
+      cells[j].used=true;
+      cur=j+1;
+      if(!name){
+        cells[j].hl="eatok";
+        snap(line,'myScanner.nextLine() reads up to the next \\n. The leftover \\n is the very next cell, so it <b class="g">consumes it</b> and returns "", which we ignore. The buffer is clean.',"pop",{mark:"ret"});
+        return;
+      }
+      var empty=(txt===""&&!waited);
+      cells[j].hl=empty?"eat":"eatok";
+      setVar(name,'"'+esc(txt)+'"',empty?"bad":"new");
+      if(empty){
+        snap(line,'nextLine() reads up to the next \\n. The <b class="w">leftover \\n</b> is right there, so it returns "" at once. It <b class="w">never waited</b>: operation is empty.',"trouble",{mark:"mut"});
+      }else{
+        snap(line,'nextLine() reads <b class="a">"'+esc(txt)+'"</b> up to the \\n and consumes the \\n too. operation = "'+esc(txt)+'".',"pop",{mark:"ret"});
+      }
+      return {txt:txt,empty:empty};
+    }
+
+    snap(1,'A Scanner is created on System.in. Its <b class="a">buffer is empty</b>: nothing has been typed yet.');
+    out.push({t:"Enter the first number: ",c:""});
+    snap(2,'The first question is printed.');
+    var a=nextInt(3,"firstNumber"); if(dead) return S;
+    out.push({t:"Enter the second number: ",c:""});
+    snap(4,'The second question is printed. Look at the buffer: the <b class="y">\\n</b> from your first ENTER is still unread.');
+    var b=nextInt(5,"secondNumber"); if(dead) return S;
+    if(fix) nextLine(6,null);
+    setVar("result",a+b);
+    snap(7,'result = '+a+' + '+b+' = <b class="a">'+(a+b)+'</b>. The buffer is not touched.');
+    out.push({t:"The result is: "+(a+b),c:""});
+    snap(8,'The result is printed.');
+    out.push({t:"Which operation you would like to do next?",c:""});
+    snap(9,fix?'The third question is printed. The buffer is empty, as it should be.':'The third question is printed. The buffer still holds <b class="y">one \\n</b>, left behind by the second nextInt().');
+    var r=nextLine(10,"operation");
+    out.push({t:"The new operation is: "+esc(r.txt),c:""});
+    if(r.empty){
+      snap(11,'The program prints an empty operation and ends. <b class="w">It skipped your answer</b>: "'+esc(inp.O)+'" was never asked for. Turn on the experiment.',"trouble");
+    }else{
+      snap(11,'The program printed your answer. <b class="g">Every question waited for you.</b>',"pop");
+    }
+    return S;
+  }
+
+  /* ---------- state ---------- */
+  var fix=false, steps=[], at=-1, timer=null;
+  var codeEl=$("#code"), bufEl=$("#buffer"), consEl=$("#console"), statusEl=$("#status"), varsEl=$("#vars");
+  var ids=["#inA","#inB","#inO"];
+
+  function inputs(){
+    return {A:$("#inA").value.replace(/\s+/g,""),B:$("#inB").value.replace(/\s+/g,""),O:$("#inO").value};
+  }
+  function renderCode(cur,mark){
+    codeEl.innerHTML=lines(fix).map(function(t,i){
+      var n=i+1, cls="ln";
+      if(n===6&&!fix) cls+=" dim";
+      if(n===cur) cls+=(mark==="ret"?" ret":mark==="mut"?" mut":" cur");
+      return '<div class="'+cls+'"><span class="n">'+n+'</span><span>'+t+'</span></div>';
+    }).join("");
+  }
+  function renderBuffer(cells,cur,wait){
+    var h=cells.map(function(c,i){
+      var cls="cell";
+      if(c.ch===NL) cls+=" nl";
+      if(c.used) cls+=" used";
+      if(c.hl) cls+=" "+c.hl;
+      if(i===cur) cls+=" next";
+      var shown=c.ch===NL?"\\n":(c.ch===" "?"\u2423":esc(c.ch));
+      return '<span class="'+cls+'">'+shown+'</span>';
+    }).join("");
+    h+='<span class="cell end'+(cur>=cells.length?" next":"")+(wait?" wait":"")+'">'+(wait?"waiting":"end")+'</span>';
+    bufEl.innerHTML=h;
+  }
+  function renderVars(vs){
+    varsEl.innerHTML=vs.length?vs.map(function(v){return '<span class="var '+(v.s||"")+'">'+v.k+' <i>=</i> '+v.v+'</span>';}).join("")
+      :'<span class="var" style="opacity:.45">none yet</span>';
+  }
+  function renderConsole(o,fresh){
+    consEl.innerHTML=o.length?o.map(function(x,i){
+      return '<div class="'+x.c+(fresh&&i===o.length-1?" last":"")+'">'+(x.t||" ")+'</div>';
+    }).join(""):'<span style="color:rgba(132,150,182,.5)">(nothing printed yet)</span>';
+  }
+  function show(i){
+    at=i;
+    if(i<0){
+      renderCode(0); renderBuffer([],0,false); renderVars([]); renderConsole([]);
+      statusEl.className="status"; statusEl.innerHTML='Press <b class="a">Step</b> to start the program, or <b class="a">Run</b> to watch it play.';
+      $("#stWait").textContent="0"; $("#stWait").className="v"; $("#stLeft").textContent="0"; $("#stLeft").className="v";
+      setBtns(); return;
+    }
+    var s=steps[i], prev=i>0?steps[i-1]:null;
+    renderCode(s.line,s.mark); renderBuffer(s.cells,s.cur,s.wait); renderVars(s.vars);
+    renderConsole(s.out,!prev||prev.out.length!==s.out.length);
+    statusEl.className="status "+s.cls; statusEl.innerHTML=s.msg;
+    $("#stWait").textContent=s.waits; $("#stWait").className="v"+(s.wait?" hot":"");
+    var left=s.cells.length-s.cur;
+    var lv=$("#stLeft"); lv.textContent=left;
+    lv.className="v"+(left>0&&s.cells[s.cur].ch===NL&&left===1?" hot":"")+(s.cls==="trouble"?" bad":"");
+    setBtns();
+  }
+  function setBtns(){
+    var end=steps.length>0&&at>=steps.length-1;
+    $("#bStep").disabled=end; $("#bBack").disabled=at<0;
+    $("#bRun").textContent=timer?"Pause":(end?"Run again":"Run");
+    ids.forEach(function(id){$(id).disabled=at>=0;});
+  }
+  function rebuild(){ steps=build(inputs(),fix); }
+  function step(){ if(at<0) rebuild(); if(at<steps.length-1) show(at+1); else stop(); }
+  function back(){ if(at>=0) show(at-1); }
+  function stop(){ if(timer){clearInterval(timer);timer=null;} setBtns(); }
+  function reset(){ stop(); steps=[]; show(-1); }
+  function run(){
+    if(timer){stop();return;}
+    if(steps.length&&at>=steps.length-1) show(-1);
+    step();
+    timer=setInterval(function(){ if(at>=steps.length-1) stop(); else step(); }, reduce?400:1400);
+    setBtns();
+  }
+
+  $("#bStep").addEventListener("click",function(){stop();step();});
+  $("#bBack").addEventListener("click",function(){stop();back();});
+  $("#bReset").addEventListener("click",reset);
+  $("#bRun").addEventListener("click",run);
+  $("#bFix").addEventListener("click",function(){
+    fix=!fix; this.classList.toggle("on",fix);
+    this.textContent=fix?"Experiment ON: myScanner.nextLine() eats the \\n":"Experiment: add myScanner.nextLine() after nextInt()";
+    reset();
+  });
+  document.addEventListener("keydown",function(e){
+    if(e.code==="Space"&&!/INPUT|BUTTON|TEXTAREA|SELECT/.test(e.target.tagName)){e.preventDefault();stop();step();}
+  });
+
+  /* ---------- ambient canvas ---------- */
+  var cv=$("#amb"),ctx=cv.getContext&&cv.getContext("2d"),parts=[];
+  function sizeC(){if(!ctx)return;cv.width=innerWidth;cv.height=innerHeight;}
+  function initParts(){parts=[];for(var i=0;i<46;i++)parts.push({x:Math.random(),y:Math.random(),
+    r:Math.random()*1.6+.3,s:Math.random()*.02+.004,o:Math.random()*.4+.1});}
+  function drawC(){if(!ctx)return;ctx.clearRect(0,0,cv.width,cv.height);
+    parts.forEach(function(p){p.y-=p.s/60;if(p.y<-.02)p.y=1.02;
+      ctx.beginPath();ctx.arc(p.x*cv.width,p.y*cv.height,p.r,0,7);
+      ctx.fillStyle="rgba(140,170,255,"+p.o+")";ctx.fill();});
+    requestAnimationFrame(drawC);}
+  if(ctx&&!reduce){sizeC();initParts();drawC();addEventListener("resize",sizeC);}
+
+  show(-1);
+})();
+</script>
+<script src="../manifest.js"></script>
+<script src="../../assets/rail.js"></script>
+<script>Rail.render(document.getElementById("rail"),{kind:"visuals",current:"15-scanner-buffer"});</script>
+</body>
+</html>

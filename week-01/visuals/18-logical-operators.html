@@ -1,0 +1,401 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Logical Operators | Week 1 Visual Hub</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Sora:wght@500;700&family=Inter:wght@400;500&family=JetBrains+Mono:wght@400;500&display=swap">
+<style>
+  :root{
+    --bg:#080c17; --bg2:#0c1428; --surface:rgba(255,255,255,.045); --line:rgba(255,255,255,.09);
+    --ink:#eef2fb; --muted:#8496b6; --accent:#6ea0ff; --accent2:#8b7bff; --good:#46d98a; --warn:#ff6a6a;
+    --gold:#ffc862; --disp:'Sora',system-ui,sans-serif; --body:'Inter',system-ui,sans-serif;
+    --mono:'JetBrains Mono',ui-monospace,monospace;
+  }
+  *{box-sizing:border-box}
+  body{margin:0;min-height:100vh;color:var(--ink);font-family:var(--body);
+    background:radial-gradient(1200px 700px at 70% -10%,#141d38 0%,transparent 55%),
+               radial-gradient(900px 600px at 10% 110%,#161233 0%,transparent 50%),#080c17;
+    overflow-x:hidden}
+  #amb{position:fixed;inset:0;z-index:0;pointer-events:none;opacity:.6}
+  .back{position:relative;z-index:2;display:block;max-width:1120px;margin:0 auto;padding:26px 24px 0;
+    width:100%;font-family:var(--mono);font-size:.8rem;letter-spacing:.04em;color:var(--muted);
+    text-decoration:none;transition:color .15s}
+  .back:hover{color:var(--accent)}
+  .wrap{position:relative;z-index:1;max-width:1120px;margin:0 auto;padding:22px 24px 70px}
+  .tag{font-family:var(--mono);font-size:.72rem;letter-spacing:.22em;text-transform:uppercase;color:var(--accent);margin:0 0 14px}
+  h1{font-family:var(--disp);font-weight:700;font-size:clamp(2.3rem,6vw,3.6rem);line-height:1;margin:0 0 12px;
+    letter-spacing:-.03em;background:linear-gradient(180deg,#fff,#b9c6e6);-webkit-background-clip:text;
+    background-clip:text;color:transparent}
+  .lede{color:var(--muted);max-width:64ch;font-size:1.05rem;margin:0 0 30px;line-height:1.5}
+  .lede b{color:var(--ink)}
+  .lede code,.take code,.status code{font-family:var(--mono);font-size:.92em;color:#bcd0ff}
+  .stage{position:relative;background:linear-gradient(180deg,rgba(255,255,255,.03),rgba(255,255,255,.01));
+    border:1px solid var(--line);border-radius:24px;padding:8px;
+    box-shadow:0 1px 0 rgba(255,255,255,.06) inset,0 30px 80px -30px rgba(0,0,0,.8)}
+  .grid{display:grid;grid-template-columns:340px 1fr;gap:8px}
+  @media (max-width:860px){.grid{grid-template-columns:1fr}}
+  .panelL,.panelR{border-radius:18px;padding:22px}
+  .panelL{background:linear-gradient(180deg,rgba(110,160,255,.06),rgba(139,123,255,.03));border:1px solid var(--line)}
+  .panelR{background:rgba(6,10,20,.5);border:1px solid var(--line);position:relative;overflow:hidden}
+  .lab{font-family:var(--mono);font-size:.7rem;letter-spacing:.12em;text-transform:uppercase;color:var(--muted);margin:0 0 12px}
+  /* example chips */
+  .chips{display:flex;flex-wrap:wrap;gap:6px;margin-bottom:16px}
+  .chip{font-family:var(--mono);font-size:.72rem;padding:5px 11px;border-radius:999px;cursor:pointer;
+    border:1px solid var(--line);background:rgba(0,0,0,.25);color:var(--muted);transition:.15s}
+  .chip:hover{border-color:var(--accent);color:var(--accent)}
+  .chip.on{border-color:rgba(110,160,255,.6);background:rgba(110,160,255,.14);color:var(--ink)}
+  .chip:focus-visible{outline:2px solid var(--accent);outline-offset:2px}
+  /* readout */
+  .readout{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin:0 0 14px}
+  .stat{background:rgba(255,255,255,.03);border:1px solid var(--line);border-radius:12px;padding:11px 13px}
+  .stat .k{font-family:var(--mono);font-size:.62rem;letter-spacing:.1em;text-transform:uppercase;color:var(--muted)}
+  .stat .v{font-family:var(--disp);font-weight:700;font-size:1.45rem;font-variant-numeric:tabular-nums;margin-top:2px;transition:color .3s;min-height:1.6em}
+  .v.t{color:var(--good)} .v.f{color:var(--warn)} .v.y{color:var(--gold);font-size:1.05rem;line-height:1.5} .v.dim{color:rgba(132,150,182,.5)}
+  .stepno{font-family:var(--mono);font-size:.64rem;letter-spacing:.14em;text-transform:uppercase;color:var(--muted);margin:0 0 8px}
+  .stepno b{color:var(--accent);font-weight:500}
+  .status{font-family:var(--mono);font-size:.82rem;line-height:1.55;color:var(--ink);min-height:122px;
+    padding:12px 14px;border-radius:12px;background:rgba(0,0,0,.25);border:1px solid var(--line);
+    border-left:3px solid var(--accent);transition:border-color .3s}
+  .status.skip{border-left-color:var(--gold)}
+  .status.ok{border-left-color:var(--good)}
+  .status.no{border-left-color:var(--warn)}
+  .status b.g{color:var(--good)} .status b.w{color:var(--warn)} .status b.a{color:var(--accent)} .status b.y{color:var(--gold)}
+  .actions{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-top:16px}
+  .btn{font-family:var(--body);font-weight:500;font-size:.84rem;padding:9px 12px;border-radius:11px;cursor:pointer;
+    border:1px solid var(--line);background:var(--surface);color:var(--ink);transition:.15s;text-align:center}
+  .btn:hover{border-color:var(--accent);color:var(--accent)}
+  .btn.primary{border-color:rgba(110,160,255,.5);background:rgba(110,160,255,.12);grid-column:1 / -1}
+  .btn.gold:hover{border-color:var(--gold);color:var(--gold)}
+  .btn:disabled{opacity:.35;cursor:not-allowed}
+  .btn:focus-visible{outline:2px solid var(--accent);outline-offset:2px}
+  .hint{font-family:var(--mono);font-size:.7rem;color:var(--muted);margin:14px 0 0;line-height:1.5}
+  .hint b{color:var(--accent)}
+  /* right: code + picture + console */
+  .rgrid{display:grid;grid-template-columns:minmax(0,1.05fr) minmax(0,1fr);gap:16px}
+  @media (max-width:1000px){.rgrid{grid-template-columns:1fr}}
+  .code{min-width:0;font-family:var(--mono);font-size:.76rem;line-height:1.8;background:rgba(0,0,0,.35);border:1px solid var(--line);
+    border-radius:14px;padding:12px 0;overflow-x:auto}
+  .ln{display:flex;gap:12px;padding:0 14px;white-space:pre;color:#c9d4ea;transition:background .2s,opacity .3s}
+  .ln .n{width:20px;text-align:right;color:rgba(132,150,182,.55);user-select:none;flex-shrink:0}
+  .ln.cur{background:rgba(110,160,255,.14);box-shadow:inset 3px 0 0 var(--accent)}
+  .ln.cur .n{color:var(--accent)}
+  .ln.ok{background:rgba(70,217,138,.12);box-shadow:inset 3px 0 0 var(--good)}
+  .ln.ok .n{color:var(--good)}
+  .ln.dim{opacity:.4}
+  .kw{color:#c792ea} .ty{color:#82aaff} .st{color:#c3e88d} .nm{color:#f78c6c}
+  .pL,.pR{border-radius:4px;padding:1px 2px;transition:background .3s,opacity .3s,color .3s}
+  .code.evL .pL{background:rgba(110,160,255,.3);color:#fff}
+  .code.evR .pR{background:rgba(110,160,255,.3);color:#fff}
+  .code.skR .pR{opacity:.35;text-decoration:line-through;text-decoration-color:var(--gold)}
+  /* the picture: left side, operator, right side, whole condition, branch */
+  .pic{border:1px dashed rgba(132,150,182,.3);border-radius:14px;background:rgba(0,0,0,.18);padding:16px 14px;min-height:296px;
+    display:flex;flex-direction:column;gap:12px}
+  .expr{display:grid;grid-template-columns:minmax(0,1fr) auto minmax(0,1fr);gap:8px;align-items:stretch}
+  .side{position:relative;border:1px solid var(--line);border-radius:12px;padding:12px 8px 10px;background:rgba(255,255,255,.02);
+    text-align:center;transition:border-color .3s,background .3s,opacity .4s,box-shadow .3s}
+  .side .k{font-family:var(--mono);font-size:.58rem;letter-spacing:.14em;text-transform:uppercase;color:var(--muted)}
+  .side .src{font-family:var(--mono);font-size:.76rem;color:#c9d4ea;margin:6px 0 2px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+  .side .sub{font-family:var(--mono);font-size:.7rem;color:var(--muted);min-height:1.3em;white-space:nowrap}
+  .side .sub s{color:var(--muted);text-decoration-color:var(--gold)}
+  .side.lit{border-color:rgba(110,160,255,.7);background:rgba(110,160,255,.1);box-shadow:0 0 18px -6px rgba(110,160,255,.6)}
+  .side.need{border-style:dashed;border-color:rgba(110,160,255,.6)}
+  .side.skip{opacity:.38;border-style:dashed}
+  .skiptag{position:absolute;left:50%;top:-10px;transform:translateX(-50%);font-family:var(--mono);font-size:.6rem;white-space:nowrap;
+    color:var(--gold);padding:2px 8px;border-radius:999px;border:1px solid rgba(255,200,98,.6);background:#1a1710;opacity:0;transition:opacity .3s}
+  .side.skip .skiptag{opacity:1}
+  .pv{display:inline-block;margin-top:6px;font-family:var(--mono);font-size:.74rem;padding:2px 10px;border-radius:999px;
+    border:1px solid var(--line);color:rgba(132,150,182,.6);transition:all .3s}
+  .pv.t{color:var(--good);border-color:rgba(70,217,138,.6);background:rgba(70,217,138,.1)}
+  .pv.f{color:var(--warn);border-color:rgba(255,106,106,.6);background:rgba(255,106,106,.1)}
+  .op{display:flex;flex-direction:column;align-items:center;justify-content:center;min-width:46px;padding:0 4px;
+    border-radius:12px;border:1px solid transparent;transition:border-color .3s,background .3s}
+  .op .o{font-family:var(--disp);font-weight:700;font-size:1.5rem;color:var(--accent2)}
+  .op.lit{border-color:rgba(139,123,255,.5);background:rgba(139,123,255,.1)}
+  .rule{font-family:var(--mono);font-size:.66rem;color:var(--muted);text-align:center;line-height:1.5}
+  .rule b{color:var(--accent2);font-weight:500}
+  .res{display:flex;align-items:center;justify-content:center;gap:12px;border:1px solid var(--line);border-radius:12px;padding:10px;
+    font-family:var(--mono);font-size:.72rem;color:var(--muted);transition:border-color .3s,background .3s}
+  .res.t{border-color:rgba(70,217,138,.55);background:rgba(70,217,138,.07)}
+  .res.f{border-color:rgba(255,106,106,.55);background:rgba(255,106,106,.07)}
+  .res .pv{margin-top:0}
+  .branches{display:grid;grid-template-columns:1fr 1fr;gap:8px}
+  .br{border:1px solid var(--line);border-radius:12px;padding:9px 10px;font-family:var(--mono);font-size:.7rem;color:#c9d4ea;transition:all .3s}
+  .br .k{font-size:.58rem;letter-spacing:.14em;text-transform:uppercase;color:var(--muted);margin-bottom:3px}
+  .br.on{border-color:rgba(70,217,138,.65);background:rgba(70,217,138,.1);box-shadow:0 0 18px -8px rgba(70,217,138,.8)}
+  .br.on .k{color:var(--good)}
+  .br.off{opacity:.35}
+  .console{margin-top:14px;font-family:var(--mono);font-size:.76rem;line-height:1.6;background:#05070e;border:1px solid var(--line);
+    border-radius:12px;padding:10px 14px;min-height:64px;color:#9fe3b6}
+  .console .cl{font-size:.6rem;letter-spacing:.14em;text-transform:uppercase;color:rgba(132,150,182,.6);margin-bottom:4px}
+  .console .out{animation:pop .3s}
+  @keyframes pop{from{transform:scale(.6);opacity:0}to{transform:scale(1);opacity:1}}
+  .take{margin-top:22px;background:linear-gradient(180deg,rgba(110,160,255,.08),rgba(139,123,255,.04));
+    border:1px solid var(--line);border-left:3px solid var(--accent);border-radius:12px;padding:16px 18px}
+  .take .tk{font-family:var(--mono);font-size:.66rem;letter-spacing:.14em;text-transform:uppercase;color:var(--accent);margin:0 0 8px}
+  .take p{margin:0;font-size:.95rem;color:var(--ink);line-height:1.55}
+  .take b{color:#fff}
+  .take code,.lede code,.status code{font-family:var(--mono);font-size:.92em;color:#bcd0ff}
+  @media (prefers-reduced-motion:reduce){*{animation-duration:.01ms!important;transition-duration:.01ms!important}#amb{display:none}}
+</style>
+</head>
+<body>
+
+<a class="back" href="../index.html#18-logical-operators">&#8592; Week 1 index</a>
+
+<canvas id="amb"></canvas>
+<div class="wrap">
+  <p class="tag">Workbook 1c &middot; Section 4-1 &middot; Logical operators</p>
+  <h1>Logical Operators</h1>
+  <p class="lede"><code>&amp;&amp;</code>, <code>||</code> and <code>!</code> join comparisons into one true or false answer.
+  <b>Java reads the condition left to right and stops as soon as the answer is known.</b>
+  Pick the values, then step through.</p>
+
+  <div class="stage">
+    <div class="grid">
+      <div class="panelL">
+        <p class="lab">Pick the values</p>
+        <div class="chips" id="chips"></div>
+
+        <div class="readout">
+          <div class="stat"><div class="k">left side</div><div class="v dim" id="stL">?</div></div>
+          <div class="stat"><div class="k">right side</div><div class="v dim" id="stR">?</div></div>
+        </div>
+
+        <p class="stepno" id="stepno">Step <b>0</b> of 7</p>
+        <div class="status" id="status">Press <b class="a">Next</b> to start.</div>
+
+        <div class="actions">
+          <button class="btn primary" id="bNext">Next &rarr;</button>
+          <button class="btn gold" id="bBack">&larr; Back</button>
+          <button class="btn" id="bReset">Reset</button>
+        </div>
+        <p class="hint">space = next &middot; the <code>||</code> condition is the one from the conditionals demo. <b>Try age 12, then age 30.</b></p>
+      </div>
+
+      <div class="panelR">
+        <div class="rgrid">
+          <div>
+            <p class="lab">Main.java</p>
+            <div class="code" id="code"></div>
+          </div>
+          <div>
+            <p class="lab">How Java reads the condition</p>
+            <div class="pic">
+              <div class="expr">
+                <div class="side" id="sideL"><div class="k">left</div><div class="src" id="srcL"></div><div class="sub" id="subL"></div><span class="pv" id="pvL">?</span></div>
+                <div class="op" id="op"><span class="o" id="opO"></span></div>
+                <div class="side" id="sideR"><span class="skiptag">not checked</span><div class="k">right</div><div class="src" id="srcR"></div><div class="sub" id="subR"></div><span class="pv" id="pvR">?</span></div>
+              </div>
+              <div class="rule" id="rule"></div>
+              <div class="res" id="res">whole condition <span class="pv" id="pvRes">?</span></div>
+              <div class="branches">
+                <div class="br" id="brIf"><div class="k">if block</div><div id="bodyIf"></div></div>
+                <div class="br" id="brElse"><div class="k">else block</div><div id="bodyElse"></div></div>
+              </div>
+            </div>
+            <div class="console"><div class="cl">console</div><div id="console"></div></div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="take">
+    <p class="tk">The one idea</p>
+    <p><b><code>&amp;&amp;</code> needs both sides true, <code>||</code> needs one, <code>!</code> flips true and false.</b>
+    Java reads left to right and <b>stops as soon as the answer is known</b>: a false left side settles an <code>&amp;&amp;</code>,
+    a true left side settles an <code>||</code>, and the right side is never checked.</p>
+  </div>
+
+  <div id="rail"></div>
+</div>
+
+<script>
+(function(){
+  "use strict";
+  var $=function(s){return document.querySelector(s);};
+  var reduce=matchMedia("(prefers-reduced-motion: reduce)").matches;
+
+  /* ---------- presets: the || condition is from the conditionals demo, the && ones are invented ---------- */
+  var PRESETS=[
+    {chip:"age 12 · ||",age:12,op:"||"},
+    {chip:"age 70 · ||",age:70,op:"||"},
+    {chip:"age 30 · ||",age:30,op:"||"},
+    {chip:"age 16 · &&",age:16,op:"&&",mem:true},
+    {chip:"age 30, member · &&",age:30,op:"&&",mem:true},
+    {chip:"age 30, not member · !",age:30,op:"&&",mem:false,not:true}
+  ];
+  var P=PRESETS[0];
+
+  var escBox=document.createElement("span");
+  function esc(s){escBox.textContent=s;return escBox.innerHTML;}
+  function dbl(x){var s=String(x);return s.indexOf(".")<0?s+".0":s;}
+  function tf(b){return b?"true":"false";}
+  function pill(b){return '<b class="'+(b?"g":"w")+'">'+tf(b)+'</b>';}
+
+  /* the program for the current preset, everything computed from it */
+  function model(){
+    var m={};
+    if(P.op==="||"){
+      m.Ls="age < 18"; m.Lsub=P.age+" < 18"; m.Lv=P.age<18;
+      m.Rs="age >= 65"; m.Rsub=P.age+" >= 65"; m.Rv=P.age>=65;
+      m.ifP=18.00; m.elseP=25.00;
+    } else {
+      m.Ls="age >= 18"; m.Lsub=P.age+" >= 18"; m.Lv=P.age>=18;
+      if(P.not){ m.Rs="!isMember"; m.Rraw=P.mem; m.Rsub="!"+tf(P.mem); m.Rv=!P.mem; m.ifP=30.00; }
+      else { m.Rs="isMember"; m.Rsub=tf(P.mem); m.Rv=P.mem; m.ifP=20.00; }
+      m.elseP=25.00;
+    }
+    m.short=P.op==="&&"?!m.Lv:m.Lv;
+    m.res=m.short?m.Lv:(P.op==="&&"?(m.Lv&&m.Rv):(m.Lv||m.Rv));
+    m.price=m.res?m.ifP:m.elseP;
+    return m;
+  }
+
+  function lines(m){
+    var L=['<span class="ty">int</span> age = <span class="nm">'+P.age+'</span>;'];
+    if(P.op==="&&") L.push('<span class="ty">boolean</span> isMember = <span class="kw">'+tf(P.mem)+'</span>;');
+    L.push('<span class="ty">double</span> price;','');
+    L.push('<span class="kw">if</span> (<span class="pL">'+esc(m.Ls)+'</span> '+esc(P.op)+' <span class="pR">'+esc(m.Rs)+'</span>) {');
+    L.push('    price = <span class="nm">'+m.ifP.toFixed(2)+'</span>;','} <span class="kw">else</span> {','    price = <span class="nm">'+m.elseP.toFixed(2)+'</span>;','}');
+    L.push('System.out.println(<span class="st">"The price is: "</span> + price);');
+    return L;
+  }
+
+  /* ---------- the walk: one snapshot per step ---------- */
+  var IF=0,IFB=0,ELB=0,PR=0,VARS=null;
+  function build(m){
+    var off=P.op==="&&"?1:0; VARS=off?[1,2]:[1]; IF=4+off; IFB=5+off; ELB=7+off; PR=9+off;
+    var S=[], opn="<code>"+esc(P.op)+"</code>";
+    S.push({line:VARS,cls:"",pic:{},
+      msg:'The values first: <code>age</code> is <b class="a">'+P.age+'</b>'+(off?' and <code>isMember</code> is <b class="a">'+tf(P.mem)+'</b>':'')+'. The <code>if</code> needs one answer, true or false, from the whole condition.'});
+    S.push({line:[IF],cls:"",code:"evL",pic:{L:"lit",Lv:1},
+      msg:'Java starts on the left: <code>'+esc(m.Ls)+'</code> becomes <code>'+esc(m.Lsub)+'</code>, which is '+pill(m.Lv)+'.'});
+    if(m.short){
+      S.push({line:[IF],cls:"skip",code:"skR",pic:{L:"lit",Lv:1,R:"skip",op:1,res:1},
+        msg:(P.op==="||"?'With '+opn+', one true side is enough. The left is already true, so the answer is '+pill(true):'With '+opn+', both sides must be true. The left is already false, so the answer is '+pill(false))+
+          '. Java <b class="y">never looks at the right side</b>.'});
+    } else {
+      S.push({line:[IF],cls:"",code:"evL",pic:{L:"lit",Lv:1,R:"need",op:1},
+        msg:(P.op==="||"?'With '+opn+', a false left side settles nothing: the right side could still be true.':'With '+opn+', a true left side settles nothing: the right side must be true too.')+' Java <b class="a">has to check the right side</b>.'});
+      if(P.not){
+        S.push({line:[IF],cls:"",code:"evR",pic:{L:"done",Lv:1,R:"lit",raw:1},
+          msg:'Right side: <code>isMember</code> is <b class="w">false</b>. But there is a <code>!</code> in front of it.'});
+        S.push({line:[IF],cls:"",code:"evR",pic:{L:"done",Lv:1,R:"lit",Rv:1},
+          msg:'<code>!</code> flips the value: <code>!false</code> is '+pill(true)+'. The right side counts as true.'});
+      } else {
+        S.push({line:[IF],cls:"",code:"evR",pic:{L:"done",Lv:1,R:"lit",Rv:1},
+          msg:P.op==="&&"?'Right side: <code>isMember</code> is a boolean already, it holds '+pill(m.Rv)+'.':'Right side: <code>'+esc(m.Rs)+'</code> becomes <code>'+esc(m.Rsub)+'</code>, which is '+pill(m.Rv)+'.'});
+      }
+      S.push({line:[IF],cls:m.res?"ok":"no",pic:{L:"done",Lv:1,R:"done",Rv:1,op:1,res:1},
+        msg:'<code>'+tf(m.Lv)+' '+esc(P.op)+' '+tf(m.Rv)+'</code> is '+pill(m.res)+': '+
+          (P.op==="&&"?(m.res?'both sides passed.':'one side failed.'):(m.res?'one true side is enough.':'neither side passed.'))});
+    }
+    var R=m.short?{L:"done",Lv:1,R:"skip",res:1}:{L:"done",Lv:1,R:"done",Rv:1,res:1};
+    var br=function(x){var o={};for(var k in R)o[k]=R[k];o.br=x;return o;};
+    S.push({line:[m.res?IFB:ELB],cls:m.res?"ok":"no",lineCls:"ok",code:m.short?"skR":"",pic:br(1),
+      msg:'The condition is '+pill(m.res)+', so the <b class="a">'+(m.res?'if':'else')+' block</b> runs: <code>price = '+m.price.toFixed(2)+'</code>.'});
+    S.push({line:[PR],cls:"ok",code:m.short?"skR":"",pic:br(1),out:"The price is: "+dbl(m.price),
+      msg:'println shows the price. A double prints as <b class="g">'+dbl(m.price)+'</b>.'});
+    return S;
+  }
+
+  /* ---------- state ---------- */
+  var M,steps=[],at=-1;
+  var codeEl=$("#code"),consEl=$("#console"),statusEl=$("#status");
+
+  function renderCode(s){
+    var L=lines(M), cur=s?s.line:null;
+    codeEl.className="code"+(s&&s.code?" "+s.code:"");
+    codeEl.innerHTML=L.map(function(t,i){
+      var n=i+1,c="ln";
+      if(cur&&cur.indexOf(n)>=0) c+=" "+(s.lineCls||"cur");
+      else if(s&&s.pic.br&&(n===IFB||n===ELB)) c+=" dim";
+      return '<div class="'+c+'"><span class="n">'+n+'</span><span>'+(t||" ")+'</span></div>';
+    }).join("");
+  }
+
+  function setPv(el,v){ el.className="pv"+(v===null?"":v?" t":" f"); el.textContent=v===null?"?":tf(v); }
+
+  function renderPic(p){
+    p=p||{};
+    $("#srcL").textContent=M.Ls; $("#srcR").textContent=M.Rs; $("#opO").textContent=P.op;
+    $("#rule").innerHTML=P.op==="&&"?'<b>'+esc("&&")+'</b> true only if both are true. A false left ends it.':'<b>||</b> true if at least one is true. A true left ends it.';
+    $("#sideL").className="side"+(p.L==="lit"?" lit":"");
+    $("#subL").textContent=p.Lv?M.Lsub:"";
+    setPv($("#pvL"),p.Lv?M.Lv:null);
+    $("#sideR").className="side"+(p.R==="lit"?" lit":p.R==="need"?" need":p.R==="skip"?" skip":"");
+    if(p.raw) $("#subR").innerHTML="isMember is false";
+    else $("#subR").textContent=p.Rv?M.Rsub:"";
+    setPv($("#pvR"),p.raw?M.Rraw:(p.Rv?M.Rv:null));
+    $("#op").className="op"+(p.op?" lit":"");
+    var rs=$("#res"); rs.className="res"+(p.res?(M.res?" t":" f"):""); setPv($("#pvRes"),p.res?M.res:null);
+    $("#bodyIf").textContent="price = "+M.ifP.toFixed(2)+";"; $("#bodyElse").textContent="price = "+M.elseP.toFixed(2)+";";
+    $("#brIf").className="br"+(p.br?(M.res?" on":" off"):"");
+    $("#brElse").className="br"+(p.br?(M.res?" off":" on"):"");
+  }
+
+  function setStat(id,v){
+    var e=$(id);
+    if(v==="skip"){e.textContent="not checked";e.className="v y";}
+    else if(v===null||v===undefined){e.textContent="?";e.className="v dim";}
+    else {e.textContent=tf(v);e.className="v "+(v?"t":"f");}
+  }
+
+  function show(i){
+    at=i;
+    $("#stepno").innerHTML="Step <b>"+Math.max(i+1,0)+"</b> of "+steps.length;
+    if(i<0){
+      renderCode(null); renderPic(null);
+      consEl.innerHTML='<span style="color:rgba(132,150,182,.5)">(nothing printed yet)</span>';
+      statusEl.className="status"; statusEl.innerHTML='Press <b class="a">Next</b> to start. The picture on the right changes at every step.';
+      setStat("#stL",null); setStat("#stR",null); setBtns(); return;
+    }
+    var s=steps[i];
+    renderCode(s); renderPic(s.pic);
+    consEl.innerHTML=s.out?'<div class="out">'+esc(s.out)+'</div>':'<span style="color:rgba(132,150,182,.5)">(nothing printed yet)</span>';
+    statusEl.className="status "+s.cls; statusEl.innerHTML=s.msg;
+    setStat("#stL",s.pic.Lv?M.Lv:null);
+    setStat("#stR",s.pic.R==="skip"?"skip":s.pic.raw?M.Rraw:(s.pic.Rv?M.Rv:null));
+    setBtns();
+  }
+  function setBtns(){ $("#bNext").disabled=at>=steps.length-1; $("#bBack").disabled=at<0; }
+  function next(){ if(at<steps.length-1) show(at+1); }
+  function back(){ if(at>=0) show(at-1); }
+  function reset(){ M=model(); steps=build(M); show(-1); }
+  function pick(idx){
+    P=PRESETS[idx];
+    Array.prototype.forEach.call(document.querySelectorAll(".chip"),function(c,j){c.classList.toggle("on",j===idx);});
+    if(document.activeElement&&document.activeElement.blur) document.activeElement.blur();
+    reset();
+  }
+
+  $("#chips").innerHTML=PRESETS.map(function(p,j){return '<button class="chip'+(j===0?' on':'')+'" data-i="'+j+'">'+esc(p.chip)+'</button>';}).join("");
+  $("#chips").addEventListener("click",function(e){ var b=e.target.closest(".chip"); if(b) pick(+b.getAttribute("data-i")); });
+  $("#bNext").addEventListener("click",next);
+  $("#bBack").addEventListener("click",back);
+  $("#bReset").addEventListener("click",reset);
+  document.addEventListener("keydown",function(e){ if(e.code==="Space"&&!/INPUT|BUTTON/.test(e.target.tagName)){e.preventDefault();next();} });
+
+  /* ---------- ambient canvas ---------- */
+  var cv=$("#amb"),ctx=cv.getContext&&cv.getContext("2d"),parts=[];
+  function sizeC(){if(!ctx)return;cv.width=innerWidth;cv.height=innerHeight;}
+  function initParts(){parts=[];for(var i=0;i<46;i++)parts.push({x:Math.random(),y:Math.random(),
+    r:Math.random()*1.6+.3,s:Math.random()*.02+.004,o:Math.random()*.4+.1});}
+  function drawC(){if(!ctx)return;ctx.clearRect(0,0,cv.width,cv.height);
+    parts.forEach(function(p){p.y-=p.s/60;if(p.y<-.02)p.y=1.02;
+      ctx.beginPath();ctx.arc(p.x*cv.width,p.y*cv.height,p.r,0,7);
+      ctx.fillStyle="rgba(140,170,255,"+p.o+")";ctx.fill();});
+    requestAnimationFrame(drawC);}
+  if(ctx&&!reduce){sizeC();initParts();drawC();addEventListener("resize",sizeC);}
+
+  reset();
+})();
+</script>
+<script src="../manifest.js"></script>
+<script src="../../assets/rail.js"></script>
+<script>Rail.render(document.getElementById("rail"),{kind:"visuals",current:"18-logical-operators"});</script>
+</body>
+</html>

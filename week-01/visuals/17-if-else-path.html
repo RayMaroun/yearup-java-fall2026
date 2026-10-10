@@ -1,0 +1,429 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>if / else Path | Week 1 Visual Hub</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Sora:wght@500;700&family=Inter:wght@400;500&family=JetBrains+Mono:wght@400;500&display=swap">
+<style>
+  :root{
+    --bg:#080c17; --bg2:#0c1428; --surface:rgba(255,255,255,.045); --line:rgba(255,255,255,.09);
+    --ink:#eef2fb; --muted:#8496b6; --accent:#6ea0ff; --accent2:#8b7bff; --good:#46d98a; --warn:#ff6a6a;
+    --gold:#ffc862; --disp:'Sora',system-ui,sans-serif; --body:'Inter',system-ui,sans-serif;
+    --mono:'JetBrains Mono',ui-monospace,monospace;
+  }
+  *{box-sizing:border-box}
+  body{margin:0;min-height:100vh;color:var(--ink);font-family:var(--body);
+    background:radial-gradient(1200px 700px at 70% -10%,#141d38 0%,transparent 55%),
+               radial-gradient(900px 600px at 10% 110%,#161233 0%,transparent 50%),#080c17;
+    overflow-x:hidden}
+  #amb{position:fixed;inset:0;z-index:0;pointer-events:none;opacity:.6}
+  .back{position:relative;z-index:2;display:block;max-width:1120px;margin:0 auto;padding:26px 24px 0;
+    width:100%;font-family:var(--mono);font-size:.8rem;letter-spacing:.04em;color:var(--muted);
+    text-decoration:none;transition:color .15s}
+  .back:hover{color:var(--accent)}
+  .wrap{position:relative;z-index:1;max-width:1120px;margin:0 auto;padding:22px 24px 70px}
+  .tag{font-family:var(--mono);font-size:.72rem;letter-spacing:.22em;text-transform:uppercase;color:var(--accent);margin:0 0 14px}
+  h1{font-family:var(--disp);font-weight:700;font-size:clamp(2.3rem,6vw,3.6rem);line-height:1;margin:0 0 12px;
+    letter-spacing:-.03em;background:linear-gradient(180deg,#fff,#b9c6e6);-webkit-background-clip:text;
+    background-clip:text;color:transparent}
+  .lede{color:var(--muted);max-width:64ch;font-size:1.05rem;margin:0 0 30px;line-height:1.5}
+  .lede b{color:var(--ink)}
+  .lede code,.take code,.status code{font-family:var(--mono);font-size:.92em;color:#bcd0ff}
+  .stage{position:relative;background:linear-gradient(180deg,rgba(255,255,255,.03),rgba(255,255,255,.01));
+    border:1px solid var(--line);border-radius:24px;padding:8px;
+    box-shadow:0 1px 0 rgba(255,255,255,.06) inset,0 30px 80px -30px rgba(0,0,0,.8)}
+  .grid{display:grid;grid-template-columns:340px 1fr;gap:8px}
+  @media (max-width:860px){.grid{grid-template-columns:1fr}}
+  .panelL,.panelR{border-radius:18px;padding:22px}
+  .panelL{background:linear-gradient(180deg,rgba(110,160,255,.06),rgba(139,123,255,.03));border:1px solid var(--line)}
+  .panelR{background:rgba(6,10,20,.5);border:1px solid var(--line);position:relative;overflow:hidden}
+  .lab{font-family:var(--mono);font-size:.7rem;letter-spacing:.12em;text-transform:uppercase;color:var(--muted);margin:0 0 12px}
+  /* chips */
+  .chips{display:flex;flex-wrap:wrap;gap:6px;margin-bottom:16px}
+  .chip{font-family:var(--mono);font-size:.74rem;padding:5px 11px;border-radius:999px;cursor:pointer;
+    border:1px solid var(--line);background:rgba(0,0,0,.25);color:var(--muted);transition:.15s}
+  .chip:hover{border-color:var(--accent);color:var(--accent)}
+  .chip.on{border-color:rgba(110,160,255,.6);background:rgba(110,160,255,.14);color:var(--ink)}
+  .chip:focus-visible{outline:2px solid var(--accent);outline-offset:2px}
+  .chip.sw{border-style:dashed}
+  .chip.sw.on{border-style:solid;border-color:rgba(139,123,255,.7);background:rgba(139,123,255,.16)}
+  /* readout */
+  .readout{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin:0 0 14px}
+  .stat{background:rgba(255,255,255,.03);border:1px solid var(--line);border-radius:12px;padding:11px 13px}
+  .stat .k{font-family:var(--mono);font-size:.62rem;letter-spacing:.1em;text-transform:uppercase;color:var(--muted)}
+  .stat .v{font-family:var(--disp);font-weight:700;font-size:1.45rem;font-variant-numeric:tabular-nums;margin-top:2px;transition:color .3s;min-height:1.6em}
+  .v.hot{color:var(--accent)} .v.good{color:var(--good)} .v.dim{color:rgba(132,150,182,.5)}
+  .stepno{font-family:var(--mono);font-size:.64rem;letter-spacing:.14em;text-transform:uppercase;color:var(--muted);margin:0 0 8px}
+  .stepno b{color:var(--accent);font-weight:500}
+  .status{font-family:var(--mono);font-size:.82rem;line-height:1.55;color:var(--ink);min-height:140px;
+    padding:12px 14px;border-radius:12px;background:rgba(0,0,0,.25);border:1px solid var(--line);
+    border-left:3px solid var(--accent);transition:border-color .3s}
+  .status.ok{border-left-color:var(--good)}
+  .status.no{border-left-color:var(--warn)}
+  .status b.g{color:var(--good)} .status b.w{color:var(--warn)} .status b.a{color:var(--accent)}
+  .actions{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-top:16px}
+  .btn{font-family:var(--body);font-weight:500;font-size:.84rem;padding:9px 12px;border-radius:11px;cursor:pointer;
+    border:1px solid var(--line);background:var(--surface);color:var(--ink);transition:.15s;text-align:center}
+  .btn:hover{border-color:var(--accent);color:var(--accent)}
+  .btn.primary{border-color:rgba(110,160,255,.5);background:rgba(110,160,255,.12);grid-column:1 / -1}
+  .btn.gold:hover{border-color:var(--gold);color:var(--gold)}
+  .btn:disabled{opacity:.35;cursor:not-allowed}
+  .btn:focus-visible{outline:2px solid var(--accent);outline-offset:2px}
+  .hint{font-family:var(--mono);font-size:.7rem;color:var(--muted);margin:14px 0 0;line-height:1.5}
+  .hint b{color:var(--accent)}
+  /* right: code + flowchart + console */
+  .rgrid{display:grid;grid-template-columns:minmax(0,1.2fr) minmax(0,1fr);gap:16px}
+  @media (max-width:1000px){.rgrid{grid-template-columns:1fr}}
+  .code{min-width:0;font-family:var(--mono);font-size:.76rem;line-height:1.8;background:rgba(0,0,0,.35);border:1px solid var(--line);
+    border-radius:14px;padding:12px 0;overflow-x:auto}
+  .ln{display:flex;gap:12px;padding:0 14px;white-space:pre;color:#c9d4ea;transition:background .2s,opacity .3s}
+  .ln .n{width:20px;text-align:right;color:rgba(132,150,182,.55);user-select:none;flex-shrink:0}
+  .ln.cur{background:rgba(110,160,255,.14);box-shadow:inset 3px 0 0 var(--accent)}
+  .ln.cur .n{color:var(--accent)}
+  .ln.ok{background:rgba(70,217,138,.12);box-shadow:inset 3px 0 0 var(--good)}
+  .ln.ok .n{color:var(--good)}
+  .ln.no{background:rgba(255,106,106,.1);box-shadow:inset 3px 0 0 var(--warn)}
+  .ln.no .n{color:var(--warn)}
+  .ln.dim{opacity:.3}
+  .badge{font-size:.62rem;padding:0 7px;border-radius:999px;margin-left:8px;border:1px solid;align-self:center;line-height:1.5}
+  .badge.t{color:var(--good);border-color:rgba(70,217,138,.6);background:rgba(70,217,138,.1)}
+  .badge.f{color:var(--warn);border-color:rgba(255,106,106,.6);background:rgba(255,106,106,.1)}
+  .badge.s{color:var(--muted);border-color:rgba(132,150,182,.4)}
+  .sg{border-radius:4px;padding:1px 2px;transition:background .2s,opacity .3s}
+  .sg.cur{background:rgba(110,160,255,.25)}
+  .sg.ok{background:rgba(70,217,138,.22);color:#d6f8e5}
+  .sg.no{background:rgba(255,106,106,.2)}
+  .sg.dim{opacity:.3}
+  .kw{color:#c792ea} .ty{color:#82aaff} .st{color:#c3e88d} .nm{color:#f78c6c} .cm{color:#5f6b85;font-style:italic} .fn{color:#ffcb6b}
+  .pic{position:relative;border:1px dashed rgba(132,150,182,.3);border-radius:14px;background:rgba(0,0,0,.18);padding:6px}
+  .pic svg{display:block;width:100%;height:auto;max-height:400px}
+  .nd rect,.nd polygon{fill:rgba(255,255,255,.03);stroke:rgba(132,150,182,.45);stroke-width:1.2;transition:fill .3s,stroke .3s}
+  .nd text{fill:#c9d4ea;font-family:var(--mono);font-size:11px;text-anchor:middle;dominant-baseline:central}
+  .nd{transition:opacity .3s}
+  .nd.lit rect,.nd.lit polygon{stroke:var(--accent);fill:rgba(110,160,255,.14)}
+  .nd.ok rect,.nd.ok polygon{stroke:var(--good);fill:rgba(70,217,138,.16)}
+  .nd.no rect,.nd.no polygon{stroke:var(--warn);fill:rgba(255,106,106,.1)}
+  .nd.dim{opacity:.25}
+  .ed{fill:none;stroke:rgba(132,150,182,.35);stroke-width:1.6;marker-end:url(#mk);transition:stroke .3s,opacity .3s}
+  .ed.go{stroke:var(--accent);marker-end:url(#mkA)}
+  .ed.ok{stroke:var(--good);stroke-width:2.6;marker-end:url(#mkG)}
+  .ed.no{stroke:var(--warn);stroke-width:2.2;stroke-dasharray:5 4;marker-end:url(#mkR)}
+  .ed.dim{opacity:.25}
+  .el{font-family:var(--mono);font-size:10px;fill:rgba(132,150,182,.7);transition:fill .3s,opacity .3s}
+  .el.ok{fill:var(--good)} .el.no{fill:var(--warn)} .el.dim{opacity:.25}
+  .cap{font-family:var(--mono);font-size:10px;fill:rgba(132,150,182,.6);letter-spacing:.1em}
+  .console{margin-top:14px;font-family:var(--mono);font-size:.76rem;line-height:1.6;background:#05070e;border:1px solid var(--line);
+    border-radius:12px;padding:10px 14px;min-height:56px;color:#9fe3b6}
+  .console .cl{font-size:.6rem;letter-spacing:.14em;text-transform:uppercase;color:rgba(132,150,182,.6);margin-bottom:4px}
+  .console .out{animation:pop .3s}
+  @keyframes pop{from{transform:scale(.6);opacity:0}to{transform:scale(1);opacity:1}}
+  .take{margin-top:22px;background:linear-gradient(180deg,rgba(110,160,255,.08),rgba(139,123,255,.04));
+    border:1px solid var(--line);border-left:3px solid var(--accent);border-radius:12px;padding:16px 18px}
+  .take .tk{font-family:var(--mono);font-size:.66rem;letter-spacing:.14em;text-transform:uppercase;color:var(--accent);margin:0 0 8px}
+  .take p{margin:0;font-size:.95rem;color:var(--ink);line-height:1.55}
+  .take b{color:#fff}
+  @media (prefers-reduced-motion:reduce){*{animation-duration:.01ms!important;transition-duration:.01ms!important}#amb{display:none}}
+</style>
+</head>
+<body>
+
+<a class="back" href="../index.html#17-if-else-path">&#8592; Week 1 index</a>
+
+<canvas id="amb"></canvas>
+<div class="wrap">
+  <p class="tag">Workbook 1c &middot; Section 4-1 and 4-3 &middot; if, else if, else, and the conditional operator</p>
+  <h1>if / else Path</h1>
+  <p class="lede">An if / else if / else chain is a list of questions asked in order.
+  <b>Java checks the conditions top to bottom, runs the block of the first one that is true, and skips the rest.</b>
+  Pick an age and step through the path.</p>
+
+  <div class="stage">
+    <div class="grid">
+      <div class="panelL">
+        <p class="lab">The age the user typed</p>
+        <div class="chips" id="chips"></div>
+
+        <div class="readout">
+          <div class="stat"><div class="k">age</div><div class="v dim" id="stAge">?</div></div>
+          <div class="stat"><div class="k">price</div><div class="v dim" id="stPrice">?</div></div>
+        </div>
+
+        <p class="stepno" id="stepno">Step <b>0</b> of 5</p>
+        <div class="status" id="status"></div>
+
+        <div class="actions">
+          <button class="btn primary" id="bNext">Next &rarr;</button>
+          <button class="btn gold" id="bBack">&larr; Back</button>
+          <button class="btn" id="bReset">Reset</button>
+        </div>
+        <p class="hint">space = next &middot; the chain and prices are from the conditionals demo. <b>Try 15: it is also under 65.</b></p>
+      </div>
+
+      <div class="panelR">
+        <div class="rgrid">
+          <div>
+            <p class="lab">Main.java</p>
+            <div class="code" id="code"></div>
+            <div class="console"><div class="cl">console</div><div id="console"></div></div>
+          </div>
+          <div>
+            <p class="lab">The path Java takes</p>
+            <div class="pic" id="pic"></div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="take">
+    <p class="tk">The one idea</p>
+    <p><b>Java checks the conditions in order, runs the first true one, and skips the rest</b>, even a later condition
+    that would also be true. <code>else</code> has no condition: it catches whatever is left.
+    <b><code>cond ? a : b</code> is the same choice written as a value</b>:
+    <code>double price = (age &lt; 18) ? 22.50 : 25.00;</code></p>
+  </div>
+
+  <div id="rail"></div>
+</div>
+
+<script>
+(function(){
+  "use strict";
+  var $=function(s){return document.querySelector(s);};
+  var reduce=matchMedia("(prefers-reduced-motion: reduce)").matches;
+
+  /* ---------- presets: invented ages; chain and prices from demo-java-conditionals ---------- */
+  var AGES=[15,40,70];
+  var AGE=15, TERN=false;
+
+  function jd(x){ var s=String(x); return s.indexOf(".")<0?s+".0":s; } /* how Java prints a double */
+
+  /* ---------- code views ---------- */
+  function chainLines(){
+    return [
+      '<span class="ty">int</span> age = <span class="nm">'+AGE+'</span>; <span class="cm">// typed by the user</span>',
+      '<span class="ty">double</span> price;',
+      '',
+      '<span class="kw">if</span> (age < <span class="nm">18</span>) {',
+      '    price = <span class="nm">22.50</span>;',
+      '} <span class="kw">else if</span> (age < <span class="nm">65</span>) {',
+      '    price = <span class="nm">30.50</span>;',
+      '} <span class="kw">else</span> {',
+      '    price = <span class="nm">25.00</span>;',
+      '}',
+      '',
+      'System.out.<span class="fn">println</span>(<span class="st">"The price is: "</span>',
+      '        + price);'
+    ];
+  }
+  function ternLines(segs){
+    segs=segs||{};
+    function sg(id,html){ return '<span class="sg '+(segs[id]||"")+'">'+html+'</span>'; }
+    return [
+      '<span class="ty">int</span> age = <span class="nm">'+AGE+'</span>; <span class="cm">// typed by the user</span>',
+      '<span class="ty">double</span> price = '+sg("c",'(age < <span class="nm">18</span>)')+' ? '+sg("t",'<span class="nm">22.50</span>')+' : '+sg("f",'<span class="nm">25.00</span>')+';',
+      '',
+      'System.out.<span class="fn">println</span>(<span class="st">"The price is: "</span>',
+      '        + price);'
+    ];
+  }
+
+  /* ---------- flowcharts ---------- */
+  function node(id,shape,label){
+    return '<g class="nd" id="n-'+id+'">'+shape+'<text x="'+label[0]+'" y="'+label[1]+'" id="t-'+id+'">'+label[2]+'</text></g>';
+  }
+  function rect(x,y,w,h,r){ return '<rect x="'+x+'" y="'+y+'" width="'+w+'" height="'+h+'" rx="'+r+'"/>'; }
+  function dia(cx,cy,hw,hh){ return '<polygon points="'+cx+','+(cy-hh)+' '+(cx+hw)+','+cy+' '+cx+','+(cy+hh)+' '+(cx-hw)+','+cy+'"/>'; }
+  function ed(id,d){ return '<path class="ed" id="e-'+id+'" d="'+d+'"/>'; }
+  function el(id,x,y,t,anchor){ return '<text class="el" id="l-'+id+'" x="'+x+'" y="'+y+'" text-anchor="'+(anchor||"start")+'">'+t+'</text>'; }
+  function markers(){
+    var m=[["mk","rgba(132,150,182,.6)"],["mkA","#6ea0ff"],["mkG","#46d98a"],["mkR","#ff6a6a"]];
+    return '<defs>'+m.map(function(x){return '<marker id="'+x[0]+'" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="'+x[1]+'"/></marker>';}).join("")+'</defs>';
+  }
+  function chainSvg(){
+    var s='<svg viewBox="0 0 320 400" role="img" aria-label="Flowchart of the if, else if, else chain">'+markers();
+    s+=ed("e0","M100,36 V60");
+    s+=ed("e1y","M166,92 H198")+el("e1y",182,84,"true","middle");
+    s+=ed("e1n","M100,122 V158")+el("e1n",108,143,"false");
+    s+=ed("e2y","M166,190 H198")+el("e2y",182,182,"true","middle");
+    s+=ed("e2n","M100,220 V256")+el("e2n",108,241,"false");
+    s+=ed("m1","M310,92 H316 V330 H175 V351");
+    s+=ed("m2","M310,190 H316 V330 H175 V351");
+    s+=ed("m3","M100,288 V330 H145 V351");
+    s+=node("start",rect(40,8,120,28,14),[100,22,"age = "+AGE]);
+    s+=node("d1",dia(100,92,66,30),[100,92,"age < 18 ?"]);
+    s+=node("b1",rect(200,77,110,30,8),[255,92,"price = 22.50"]);
+    s+=node("d2",dia(100,190,66,30),[100,190,"age < 65 ?"]);
+    s+=node("b2",rect(200,175,110,30,8),[255,190,"price = 30.50"]);
+    s+=node("b3",rect(40,258,120,30,8),[100,273,"price = 25.00"]);
+    s+='<text class="cap" x="168" y="277">else</text>';
+    s+=node("end",rect(80,353,190,30,15),[175,368,"print the price"]);
+    return s+'</svg>';
+  }
+  function ternSvg(){
+    var s='<svg viewBox="0 0 320 400" role="img" aria-label="Flowchart of the conditional operator">'+markers();
+    s+=ed("e0","M160,36 V62");
+    s+=ed("ty","M86,96 H60 V158")+el("ty",54,130,"true ?","end");
+    s+=ed("tn","M234,96 H260 V158")+el("tn",266,130,"false :");
+    s+=ed("m1","M60,190 V234 H150 V260");
+    s+=ed("m2","M260,190 V234 H170 V260");
+    s+=ed("m3","M160,292 V351");
+    s+=node("start",rect(100,8,120,28,14),[160,22,"age = "+AGE]);
+    s+=node("d1",dia(160,96,74,32),[160,96,"age < 18 ?"]);
+    s+=node("vt",rect(15,160,90,30,8),[60,175,"22.50"]);
+    s+=node("vf",rect(215,160,90,30,8),[260,175,"25.00"]);
+    s+=node("pr",rect(85,262,150,30,8),[160,277,"price = ?"]);
+    s+='<text class="cap" x="160" y="215" text-anchor="middle">one value comes out</text>';
+    s+=node("end",rect(65,353,190,30,15),[160,368,"print the price"]);
+    return s+'</svg>';
+  }
+
+  /* ---------- steps: each one is a full snapshot, built cumulatively ---------- */
+  var cur;
+  function fresh(){ cur={lines:{},badges:{},segs:{},nodes:{},edges:{},price:null,out:null,msg:"",cls:"",prText:null}; }
+  function snap(o){ for(var k in o) cur[k]=o[k]; return JSON.parse(JSON.stringify(cur)); }
+  function setL(map){ for(var k in map) cur.lines[k]=map[k]; }
+  function setN(map){ for(var k in map) cur.nodes[k]=map[k]; }
+  function setE(map){ for(var k in map) cur.edges[k]=map[k]; }
+  function clearCur(){ for(var k in cur.lines) if(cur.lines[k]==="cur") delete cur.lines[k]; }
+
+  function buildChain(){
+    var S=[], c1=AGE<18, c2=AGE<65, price=c1?22.5:(c2?30.5:25.0);
+    fresh();
+    setL({1:"cur",2:"cur"}); setN({start:"lit"});
+    S.push(snap({msg:'The user typed <b class="a">'+AGE+'</b>, so <code>age</code> holds '+AGE+'. <code>price</code> has no value yet: one of three blocks below will give it one.'}));
+
+    clearCur(); setN({start:"",d1:c1?"ok":"no"}); setE({e0:"go",e1y:c1?"ok":"dim",e1n:c1?"dim":"no"});
+    setL({4:c1?"ok":"no"}); cur.badges[4]=c1?"t":"f";
+    S.push(snap({cls:c1?"ok":"no",msg:'Java checks the first condition: <code>'+AGE+' < 18</code> is '+(c1?'<b class="g">true</b>. The path to its block lights up.':'<b class="w">false</b>. Its block is passed over and Java moves down to the next condition.')}));
+
+    if(c1){
+      setL({5:"ok",6:"dim",7:"dim",8:"dim",9:"dim",10:"dim"}); cur.badges[6]="s"; cur.badges[8]="s";
+      setN({b1:"ok",d2:"dim",b2:"dim",b3:"dim"}); setE({e1n:"dim",e2y:"dim",e2n:"dim",m2:"dim",m3:"dim"});
+      S.push(snap({cls:"ok",price:price,msg:'The first true condition wins: <b class="g">price = 22.50</b> runs. The rest of the chain is skipped. <code>'+AGE+' < 65</code> is also true, but Java never even checks it.'}));
+    } else {
+      setN({d2:c2?"ok":"no"}); setE({e2y:c2?"ok":"dim",e2n:c2?"dim":"no"});
+      setL({6:c2?"ok":"no",5:"dim"}); cur.badges[6]=c2?"t":"f"; setN({b1:"dim"}); setE({m1:"dim"});
+      S.push(snap({cls:c2?"ok":"no",msg:'Next condition: <code>'+AGE+' < 65</code> is '+(c2?'<b class="g">true</b>. This is the first true one, so its path lights up.':'<b class="w">false</b> too. No condition has been true so far.')}));
+      if(c2){
+        setL({7:"ok",8:"dim",9:"dim",10:"dim"}); cur.badges[8]="s";
+        setN({b2:"ok",b3:"dim"}); setE({m3:"dim"});
+        S.push(snap({cls:"ok",price:price,msg:'Its block runs: <b class="g">price = 30.50</b>. The <code>else</code> below is skipped. One block per chain, never two.'}));
+      } else {
+        setL({8:"ok",9:"ok",7:"dim"});
+        setN({b2:"dim",b3:"ok"}); setE({m2:"dim"});
+        S.push(snap({cls:"ok",price:price,msg:'<code>else</code> has no condition: it catches every case that got this far. <b class="g">price = 25.00</b> runs.'}));
+      }
+    }
+    clearCur(); setL({12:"cur",13:"cur"}); setN({end:"ok"});
+    setE(c1?{m1:"ok"}:(c2?{m2:"ok"}:{m3:"ok"}));
+    S.push(snap({cls:"",out:'The price is: '+jd(price),msg:'The chain is over. Java continues after the closing brace and prints <b class="a">'+jd(price)+'</b>. Every path ends here.'}));
+    return S;
+  }
+
+  function buildTern(){
+    var S=[], c=AGE<18, price=c?22.5:25.0;
+    fresh();
+    setL({1:"cur"}); setN({start:"lit"});
+    S.push(snap({prText:"price = ?",msg:'Same choice, two branches only: under 18 or not. <code>age</code> holds <b class="a">'+AGE+'</b>. Line 2 makes the choice and stores the result in one statement.'}));
+
+    clearCur(); setL({2:"cur"}); cur.segs={c:c?"ok":"no"}; setN({start:"",d1:c?"ok":"no"}); setE({e0:"go"});
+    S.push(snap({cls:c?"ok":"no",msg:'First, the condition before <code>?</code> is checked: <code>'+AGE+' < 18</code> is '+(c?'<b class="g">true</b>.':'<b class="w">false</b>.')}));
+
+    cur.segs={c:c?"ok":"no",t:c?"ok":"dim",f:c?"dim":"ok"}; setN({vt:c?"ok":"dim",vf:c?"dim":"ok"});
+    setE({ty:c?"ok":"dim",tn:c?"dim":"ok",m1:c?"ok":"dim",m2:c?"dim":"ok"});
+    S.push(snap({cls:"ok",msg:(c?'true picks the value after <code>?</code>':'false picks the value after <code>:</code>')+'. The whole expression <b class="g">becomes one value: '+(c?'22.50':'25.00')+'</b>. The other value is never used.'}));
+
+    setL({2:"ok"}); setN({pr:"ok"});
+    S.push(snap({cls:"ok",price:price,prText:"price = "+jd(price),msg:'That value is stored, just like any other assignment: <b class="g">price = '+jd(price)+'</b>. Same result as a two-branch if / else, in one line.'}));
+
+    setL({4:"cur",5:"cur"}); setN({end:"ok"}); setE({m3:"ok"});
+    S.push(snap({cls:"",out:'The price is: '+jd(price),msg:'println shows <b class="a">'+jd(price)+'</b>.'}));
+    return S;
+  }
+
+  /* ---------- render ---------- */
+  var steps=[],at=-1;
+  var codeEl=$("#code"),picEl=$("#pic"),consEl=$("#console"),statusEl=$("#status");
+  var BADGE={t:"true",f:"false",s:"skipped"};
+
+  function renderCode(s){
+    var L=TERN?ternLines(s?s.segs:null):chainLines();
+    codeEl.innerHTML=L.map(function(t,i){
+      var n=i+1,c="ln";
+      if(s&&s.lines[n]) c+=" "+s.lines[n];
+      var b=s&&s.badges[n]?'<span class="badge '+s.badges[n]+'">'+BADGE[s.badges[n]]+'</span>':'';
+      return '<div class="'+c+'"><span class="n">'+n+'</span><span>'+(t||" ")+'</span>'+b+'</div>';
+    }).join("");
+  }
+  function renderPic(s){
+    var svg=picEl.querySelector("svg");
+    Array.prototype.forEach.call(svg.querySelectorAll(".nd"),function(g){
+      var id=g.id.slice(2); g.setAttribute("class","nd "+((s&&s.nodes[id])||""));
+    });
+    Array.prototype.forEach.call(svg.querySelectorAll(".ed"),function(p){
+      var id=p.id.slice(2), c=(s&&s.edges[id])||"";
+      p.setAttribute("class","ed "+c);
+      var lab=svg.querySelector("#l-"+id); if(lab) lab.setAttribute("class","el "+c);
+      if(c==="ok"||c==="go"||c==="no") p.parentNode.insertBefore(p,svg.querySelector(".nd")); /* lit paths drawn over the grey ones */
+    });
+    var pr=svg.querySelector("#t-pr"); if(pr) pr.textContent=(s&&s.prText)||"price = ?";
+  }
+
+  function show(i){
+    at=i;
+    var s=i<0?null:steps[i];
+    $("#stepno").innerHTML="Step <b>"+(i+1)+"</b> of "+steps.length;
+    renderCode(s); renderPic(s);
+    var outs=[]; for(var k=0;k<=i;k++) if(steps[k].out) outs.push(steps[k].out);
+    consEl.innerHTML=outs.map(function(o){return '<div class="out">'+o+'</div>';}).join("")||'<span style="color:rgba(132,150,182,.5)">(nothing printed yet)</span>';
+    if(!s){
+      statusEl.className="status";
+      statusEl.innerHTML=TERN?'The conditional operator view. Press <b class="a">Next</b> to watch <code>? :</code> pick a value.':'Press <b class="a">Next</b> to start. Each step checks one condition, top to bottom.';
+    } else { statusEl.className="status "+s.cls; statusEl.innerHTML=s.msg; }
+    setStat("#stAge",s?AGE:null,"hot");
+    setStat("#stPrice",s&&s.price!==null?jd(s.price):null,"good");
+    $("#bNext").disabled=at>=steps.length-1; $("#bBack").disabled=at<0;
+  }
+  function setStat(id,v,c){ var e=$(id); if(v===null){e.textContent="?";e.className="v dim";} else {e.textContent=v;e.className="v "+c;} }
+  function next(){ if(at<steps.length-1) show(at+1); }
+  function back(){ if(at>=0) show(at-1); }
+  function reset(){ steps=TERN?buildTern():buildChain(); picEl.innerHTML=TERN?ternSvg():chainSvg(); show(-1); }
+
+  function drawChips(){
+    $("#chips").innerHTML=AGES.map(function(a){return '<button class="chip'+(a===AGE?' on':'')+'" data-age="'+a+'">age '+a+'</button>';}).join("")+
+      '<button class="chip sw'+(TERN?' on':'')+'" data-sw="1" aria-pressed="'+TERN+'">show as ?:</button>';
+  }
+  $("#chips").addEventListener("click",function(e){
+    var b=e.target.closest(".chip"); if(!b) return;
+    if(b.getAttribute("data-sw")) TERN=!TERN; else AGE=+b.getAttribute("data-age");
+    drawChips(); reset();
+    if(document.activeElement&&document.activeElement.blur) document.activeElement.blur();
+  });
+  $("#bNext").addEventListener("click",next);
+  $("#bBack").addEventListener("click",back);
+  $("#bReset").addEventListener("click",reset);
+  document.addEventListener("keydown",function(e){ if(e.code==="Space"&&!/INPUT|BUTTON/.test(e.target.tagName)){e.preventDefault();next();} });
+
+  /* ---------- ambient canvas ---------- */
+  var cv=$("#amb"),ctx=cv.getContext&&cv.getContext("2d"),parts=[];
+  function sizeC(){if(!ctx)return;cv.width=innerWidth;cv.height=innerHeight;}
+  function initParts(){parts=[];for(var i=0;i<46;i++)parts.push({x:Math.random(),y:Math.random(),
+    r:Math.random()*1.6+.3,s:Math.random()*.02+.004,o:Math.random()*.4+.1});}
+  function drawC(){if(!ctx)return;ctx.clearRect(0,0,cv.width,cv.height);
+    parts.forEach(function(p){p.y-=p.s/60;if(p.y<-.02)p.y=1.02;
+      ctx.beginPath();ctx.arc(p.x*cv.width,p.y*cv.height,p.r,0,7);
+      ctx.fillStyle="rgba(140,170,255,"+p.o+")";ctx.fill();});
+    requestAnimationFrame(drawC);}
+  if(ctx&&!reduce){sizeC();initParts();drawC();addEventListener("resize",sizeC);}
+
+  drawChips(); reset();
+})();
+</script>
+<script src="../manifest.js"></script>
+<script src="../../assets/rail.js"></script>
+<script>Rail.render(document.getElementById("rail"),{kind:"visuals",current:"17-if-else-path"});</script>
+</body>
+</html>

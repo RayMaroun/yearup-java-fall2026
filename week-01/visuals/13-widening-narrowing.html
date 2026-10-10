@@ -1,0 +1,481 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Widening, Narrowing, Casting | Week 1 Visual Hub</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Sora:wght@500;700&family=Inter:wght@400;500&family=JetBrains+Mono:wght@400;500&display=swap">
+<style>
+  :root{
+    --bg:#080c17; --bg2:#0c1428; --surface:rgba(255,255,255,.045); --line:rgba(255,255,255,.09);
+    --ink:#eef2fb; --muted:#8496b6; --accent:#6ea0ff; --accent2:#8b7bff; --good:#46d98a; --warn:#ff6a6a;
+    --gold:#ffc862; --disp:'Sora',system-ui,sans-serif; --body:'Inter',system-ui,sans-serif;
+    --mono:'JetBrains Mono',ui-monospace,monospace;
+  }
+  *{box-sizing:border-box}
+  body{margin:0;min-height:100vh;color:var(--ink);font-family:var(--body);
+    background:radial-gradient(1200px 700px at 70% -10%,#141d38 0%,transparent 55%),
+               radial-gradient(900px 600px at 10% 110%,#161233 0%,transparent 50%),#080c17;
+    overflow-x:hidden}
+  #amb{position:fixed;inset:0;z-index:0;pointer-events:none;opacity:.6}
+  .back{position:relative;z-index:2;display:block;max-width:1120px;margin:0 auto;padding:26px 24px 0;
+    width:100%;font-family:var(--mono);font-size:.8rem;letter-spacing:.04em;color:var(--muted);
+    text-decoration:none;transition:color .15s}
+  .back:hover{color:var(--accent)}
+  .wrap{position:relative;z-index:1;max-width:1120px;margin:0 auto;padding:22px 24px 70px}
+  .tag{font-family:var(--mono);font-size:.72rem;letter-spacing:.22em;text-transform:uppercase;color:var(--accent);margin:0 0 14px}
+  h1{font-family:var(--disp);font-weight:700;font-size:clamp(2.3rem,6vw,3.6rem);line-height:1;margin:0 0 12px;
+    letter-spacing:-.03em;background:linear-gradient(180deg,#fff,#b9c6e6);-webkit-background-clip:text;
+    background-clip:text;color:transparent}
+  .lede{color:var(--muted);max-width:64ch;font-size:1.05rem;margin:0 0 30px;line-height:1.5}
+  .lede b{color:var(--ink)}
+  .lede code,.take code,.status code{font-family:var(--mono);font-size:.92em;color:#bcd0ff}
+  .stage{position:relative;background:linear-gradient(180deg,rgba(255,255,255,.03),rgba(255,255,255,.01));
+    border:1px solid var(--line);border-radius:24px;padding:8px;
+    box-shadow:0 1px 0 rgba(255,255,255,.06) inset,0 30px 80px -30px rgba(0,0,0,.8)}
+  .grid{display:grid;grid-template-columns:340px 1fr;gap:8px}
+  @media (max-width:860px){.grid{grid-template-columns:1fr}}
+  .panelL,.panelR{border-radius:18px;padding:22px;min-width:0}
+  .panelL{background:linear-gradient(180deg,rgba(110,160,255,.06),rgba(139,123,255,.03));border:1px solid var(--line)}
+  .panelR{background:rgba(6,10,20,.5);border:1px solid var(--line);position:relative;overflow:hidden}
+  .lab{font-family:var(--mono);font-size:.7rem;letter-spacing:.12em;text-transform:uppercase;color:var(--muted);margin:0 0 12px}
+  /* example chips */
+  .chips{display:flex;flex-wrap:wrap;gap:6px;margin-bottom:16px}
+  .chip{font-family:var(--mono);font-size:.74rem;padding:5px 11px;border-radius:999px;cursor:pointer;
+    border:1px solid var(--line);background:rgba(0,0,0,.25);color:var(--muted);transition:.15s}
+  .chip:hover{border-color:var(--accent);color:var(--accent)}
+  .chip.on{border-color:rgba(110,160,255,.6);background:rgba(110,160,255,.14);color:var(--ink)}
+  .chip:focus-visible{outline:2px solid var(--accent);outline-offset:2px}
+  /* readout */
+  .readout{display:grid;grid-template-columns:1fr;gap:8px;margin:0 0 14px}
+  .stat{background:rgba(255,255,255,.03);border:1px solid var(--line);border-radius:12px;padding:9px 13px;
+    display:flex;align-items:baseline;justify-content:space-between;gap:10px}
+  .stat .k{font-family:var(--mono);font-size:.62rem;letter-spacing:.1em;text-transform:uppercase;color:var(--muted);white-space:nowrap}
+  .stat .v{font-family:var(--disp);font-weight:700;font-size:1.25rem;font-variant-numeric:tabular-nums;transition:color .3s;
+    min-height:1.5em;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+  .v.hot{color:var(--accent)} .v.gold{color:var(--gold)} .v.bad{color:var(--warn)} .v.ok{color:var(--good)} .v.dim{color:rgba(132,150,182,.5)}
+  .stepno{font-family:var(--mono);font-size:.64rem;letter-spacing:.14em;text-transform:uppercase;color:var(--muted);margin:0 0 8px}
+  .stepno b{color:var(--accent);font-weight:500}
+  .status{font-family:var(--mono);font-size:.82rem;line-height:1.55;color:var(--ink);min-height:150px;
+    padding:12px 14px;border-radius:12px;background:rgba(0,0,0,.25);border:1px solid var(--line);
+    border-left:3px solid var(--accent);transition:border-color .3s}
+  .status.cut{border-left-color:var(--warn)}
+  .status.left{border-left-color:var(--gold)}
+  .status.ok{border-left-color:var(--good)}
+  .status b.g{color:var(--good)} .status b.w{color:var(--warn)} .status b.a{color:var(--accent)} .status b.y{color:var(--gold)}
+  .actions{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-top:16px}
+  .btn{font-family:var(--body);font-weight:500;font-size:.84rem;padding:9px 12px;border-radius:11px;cursor:pointer;
+    border:1px solid var(--line);background:var(--surface);color:var(--ink);transition:.15s;text-align:center}
+  .btn:hover{border-color:var(--accent);color:var(--accent)}
+  .btn.primary{border-color:rgba(110,160,255,.5);background:rgba(110,160,255,.12);grid-column:1 / -1}
+  .btn.gold:hover{border-color:var(--gold);color:var(--gold)}
+  .btn:disabled{opacity:.35;cursor:not-allowed}
+  .btn:focus-visible{outline:2px solid var(--accent);outline-offset:2px}
+  .hint{font-family:var(--mono);font-size:.7rem;color:var(--muted);margin:14px 0 0;line-height:1.5}
+  .hint b{color:var(--accent)}
+  /* right: code + console, then the cups */
+  .rgrid{display:grid;grid-template-columns:minmax(0,1.35fr) minmax(0,1fr);gap:16px;margin-bottom:16px}
+  @media (max-width:1000px){.rgrid{grid-template-columns:1fr}}
+  .code{min-width:0;font-family:var(--mono);font-size:.76rem;line-height:1.8;background:rgba(0,0,0,.35);border:1px solid var(--line);
+    border-radius:14px;padding:12px 0;overflow-x:auto}
+  .ln{display:flex;gap:12px;padding:0 14px;white-space:pre;color:#c9d4ea;transition:background .2s,opacity .3s}
+  .ln .n{width:20px;text-align:right;color:rgba(132,150,182,.55);user-select:none;flex-shrink:0}
+  .ln.cur{background:rgba(110,160,255,.14);box-shadow:inset 3px 0 0 var(--accent)}
+  .ln.cur .n{color:var(--accent)}
+  .ln.cut{background:rgba(255,106,106,.12);box-shadow:inset 3px 0 0 var(--warn)}
+  .ln.left{background:rgba(255,200,98,.12);box-shadow:inset 3px 0 0 var(--gold)}
+  .ln.ok{background:rgba(70,217,138,.1);box-shadow:inset 3px 0 0 var(--good)}
+  .kw{color:#c792ea} .ty{color:#82aaff} .st{color:#c3e88d} .nm{color:#f78c6c} .cm{color:#5f6b85;font-style:italic} .ca{color:var(--gold)}
+  .console{font-family:var(--mono);font-size:.76rem;line-height:1.6;background:#05070e;border:1px solid var(--line);
+    border-radius:12px;padding:10px 14px;min-height:64px;color:#9fe3b6}
+  .console .cl{font-size:.6rem;letter-spacing:.14em;text-transform:uppercase;color:rgba(132,150,182,.6);margin-bottom:4px}
+  .console .out{animation:pop .3s}
+  @keyframes pop{from{transform:scale(.6);opacity:0}to{transform:scale(1);opacity:1}}
+  /* the picture: six cups */
+  .pic{position:relative;height:300px;border:1px dashed rgba(132,150,182,.3);border-radius:14px;background:rgba(0,0,0,.18);overflow:hidden}
+  .banner{position:absolute;left:16px;top:12px;font-family:var(--mono);font-size:.62rem;letter-spacing:.14em;text-transform:uppercase;
+    color:rgba(132,150,182,.6);transition:color .3s}
+  .banner.ok{color:var(--good)} .banner.no{color:var(--warn)} .banner.cast{color:var(--gold)}
+  .size{position:absolute;right:16px;top:12px;font-family:var(--mono);font-size:.6rem;color:rgba(132,150,182,.5)}
+  .chain{position:absolute;left:16px;right:16px;top:36px;height:210px;display:flex;align-items:flex-end;gap:10px}
+  .cw{display:flex;flex-direction:column;justify-content:flex-end;min-width:0;transition:opacity .3s}
+  .cw.dim{opacity:.32}
+  .cup{position:relative;border:2px solid rgba(132,150,182,.45);border-top:none;border-radius:0 0 12px 12px;
+    background:rgba(255,255,255,.02);overflow:hidden;transition:border-color .3s,box-shadow .3s}
+  .cw.lit .cup{border-color:rgba(110,160,255,.8)}
+  .cw.ok .cup{border-color:var(--good);box-shadow:0 0 18px -6px rgba(70,217,138,.6)}
+  .cw.err .cup{border-color:var(--warn);box-shadow:0 0 18px -6px rgba(255,106,106,.6)}
+  .cw.cast .cup{border-color:var(--gold);box-shadow:0 0 18px -6px rgba(255,200,98,.7)}
+  .liq{position:absolute;left:0;right:0;bottom:0;height:0;background:rgba(110,160,255,.32);transition:height .6s cubic-bezier(.2,.9,.3,1) .25s,background .4s}
+  .liq.gold{background:rgba(255,200,98,.34)} .liq.red{background:rgba(255,106,106,.34)}
+  .cname{font-family:var(--mono);font-size:.68rem;color:var(--muted);text-align:center;margin-top:6px;height:16px}
+  .cw.lit .cname{color:var(--accent)} .cw.ok .cname{color:var(--good)} .cw.err .cname{color:var(--warn)} .cw.cast .cname{color:var(--gold)}
+  .pill{position:absolute;z-index:3;font-family:var(--mono);font-size:.68rem;padding:2px 8px;border-radius:999px;white-space:nowrap;
+    background:#101a33;border:1px solid rgba(110,160,255,.8);color:#dce6ff;
+    transition:left .7s cubic-bezier(.2,.9,.3,1),top .7s cubic-bezier(.2,.9,.3,1)}
+  .pill.gold{border-color:var(--gold);color:#ffe6b0} .pill.red{border-color:var(--warn);color:#ffc4c4} .pill.ok{border-color:var(--good);color:#c8f5dc}
+  .arc{position:absolute;inset:0;pointer-events:none;z-index:2}
+  .drop{position:absolute;z-index:2;width:6px;height:9px;border-radius:50% 50% 50% 50% / 60% 60% 40% 40%;background:var(--warn);
+    opacity:0;animation:drip 1.1s ease-in forwards}
+  @keyframes drip{0%{opacity:1;transform:translateY(0)}100%{opacity:0;transform:translateY(80px)}}
+  .lost{position:absolute;top:262px;z-index:3;font-family:var(--mono);font-size:.68rem;color:var(--warn);padding:3px 10px;border-radius:999px;
+    border:1px solid rgba(255,106,106,.6);background:rgba(255,106,106,.1);white-space:nowrap;opacity:0;transition:opacity .4s}
+  .lost.show{opacity:1}
+  .lost s{color:var(--warn);text-decoration-thickness:2px} .lost i{font-style:normal;color:var(--ink)}
+  .take{margin-top:22px;background:linear-gradient(180deg,rgba(110,160,255,.08),rgba(139,123,255,.04));
+    border:1px solid var(--line);border-left:3px solid var(--accent);border-radius:12px;padding:16px 18px}
+  .take .tk{font-family:var(--mono);font-size:.66rem;letter-spacing:.14em;text-transform:uppercase;color:var(--accent);margin:0 0 8px}
+  .take p{margin:0;font-size:.95rem;color:var(--ink);line-height:1.55}
+  .take b{color:#fff}
+  @media (prefers-reduced-motion:reduce){*{animation-duration:.01ms!important;transition-duration:.01ms!important;transition-delay:0s!important}#amb{display:none}}
+</style>
+</head>
+<body>
+
+<a class="back" href="../index.html#13-widening-narrowing">&#8592; Week 1 index</a>
+
+<canvas id="amb"></canvas>
+<div class="wrap">
+  <p class="tag">Workbook 1c &middot; Section 3-2 &middot; Literals are typed, widening, narrowing, casting</p>
+  <h1>Widening, Narrowing, Casting</h1>
+  <p class="lede">Every literal has a type: <code>10</code> is an int, <code>10.5</code> a double, <code>2.2f</code> a float, <code>3000000000L</code> a long.
+  <b>A value moves into a bigger type on its own, but into a smaller one only with a cast, and whatever does not fit is lost.</b>
+  Pick an example and step through it.</p>
+
+  <div class="stage">
+    <div class="grid">
+      <div class="panelL">
+        <p class="lab">Pick an example</p>
+        <div class="chips" id="chips"></div>
+
+        <div class="readout">
+          <div class="stat"><div class="k" id="k1">from</div><div class="v dim" id="v1">?</div></div>
+          <div class="stat"><div class="k" id="k2">to</div><div class="v dim" id="v2">?</div></div>
+        </div>
+
+        <p class="stepno" id="stepno">Step <b>0</b> of 6</p>
+        <div class="status" id="status">Press <b class="a">Next</b> to start.</div>
+
+        <div class="actions">
+          <button class="btn primary" id="bNext">Next &rarr;</button>
+          <button class="btn gold" id="bBack">&larr; Back</button>
+          <button class="btn" id="bReset">Reset</button>
+        </div>
+        <p class="hint">space = next &middot; the first two examples are from the operators demo. <b>(byte) 1000</b> and <b>(int) 9.99</b> are extras.</p>
+      </div>
+
+      <div class="panelR">
+        <div class="rgrid">
+          <div>
+            <p class="lab">Main.java</p>
+            <div class="code" id="code"></div>
+          </div>
+          <div>
+            <p class="lab">Output</p>
+            <div class="console"><div class="cl">console</div><div id="console"></div></div>
+          </div>
+        </div>
+        <p class="lab">Each type is a cup. Bigger cup, wider range of values</p>
+        <div class="pic" id="pic">
+          <span class="banner" id="banner"></span>
+          <svg class="arc" id="arc"></svg>
+          <div class="chain" id="chain"></div>
+          <div id="pills"></div>
+          <div id="drops"></div>
+          <span class="lost" id="lost"></span>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="take">
+    <p class="tk">The one idea</p>
+    <p><b>Java widens for free; narrowing needs a cast and you own whatever is lost.</b>
+    Along byte, short, int, long, float, double, moving right is automatic. Moving left does not compile until you write the cast,
+    and then Java drops digits (<code>123.4567890123</code> becomes <code>123.45679</code>), cuts decimals (<code>(int) 9.99</code> is 9)
+    or wraps around (<code>(byte) 1000</code> is -24), with no error and no warning.</p>
+  </div>
+
+  <div id="rail"></div>
+</div>
+
+<script>
+(function(){
+  "use strict";
+  var $=function(s){return document.querySelector(s);};
+  var reduce=matchMedia("(prefers-reduced-motion: reduce)").matches;
+
+  /* ---------- the chain: cup height grows with the range of values the type holds ---------- */
+  var CUPS=["byte","short","int","long","float","double"];
+  var CUPH=[40,56,74,92,110,128], CUPG=[3,3.5,4,4.5,5,5.5];
+
+  function ty(t){return '<span class="ty">'+t+'</span>';}
+  function nm(t){return '<span class="nm">'+t+'</span>';}
+  function cm(t){return '<span class="cm">'+t+'</span>';}
+  function ca(t){return '<span class="ca">('+ty(t)+')</span>';}
+
+  /* ---------- the four walks ---------- */
+  /* examples 1 and 2: the operators demo; examples 3 and 4: invented */
+  var PRESETS=[
+    {chip:"widening: int → long",
+     code:[ty("long")+' firstNumber = '+nm("3000000000L")+';', ty("float")+' secondNumber = '+nm("3.45f")+';', '',
+           ty("int")+' myInt = '+nm("9")+';', ty("long")+' myLong;', 'myLong = myInt;', '',
+           ty("float")+' myFloat = '+nm("3.8f")+';', ty("double")+' myDouble;', 'myDouble = myFloat;'],
+     steps:[
+      {line:[1],cups:{long:"lit"},fill:{long:[.5]},pills:[{c:"long",t:"3000000000L"}],banner:["literals have types",""],
+       k:["firstNumber · long","(none yet)"],v:["3000000000","hot"],v2:null,
+       msg:'Literals have types. <code>3000000000</code> is too big for an int, so the <b class="a">L</b> makes it a <b class="a">long</b> literal. It lands in the long cup.'},
+      {line:[2],cups:{float:"lit"},fill:{float:[.45]},pills:[{c:"float",t:"3.45f"}],banner:["literals have types",""],
+       k:["secondNumber · float","(none yet)"],v:["3.45","hot"],v2:null,
+       msg:'A number with a decimal point is a <b class="a">double</b> by default. The <b class="a">f</b> makes <code>3.45f</code> a float literal, so it goes into a float with no complaint.'},
+      {line:[4,5],cups:{"int":"lit",long:"lit"},fill:{"int":[.7]},pills:[{c:"int",t:"9"}],banner:["",""],
+       k:["myInt · int","myLong · long"],v:["9","hot"],v2:null,
+       msg:'<code>9</code> is an int literal, so the int cup holds 9. <code>myLong</code> is an empty long cup: a bigger one.'},
+      {line:[6],cls:"ok",cups:{"int":"lit",long:"ok"},fill:{"int":[.7],long:[.38]},pills:[{c:"int",t:"9"},{c:"long",t:"9",from:"int",k:"ok"}],
+       arc:["int","long","ok"],banner:["int → long: widening, automatic","ok"],
+       k:["myInt · int","myLong · long"],v:["9",""],v2:["9","ok"],
+       msg:'<b class="g">Widening.</b> Every value an int can hold fits in a long, so Java copies the 9 across for you. No cast, nothing lost.'},
+      {line:[8,9,10],cls:"ok",cups:{"float":"lit","double":"ok"},fill:{"float":[.6],"double":[.36]},pills:[{c:"float",t:"3.8f"},{c:"double",t:"3.8f",from:"float",k:"ok"}],
+       arc:["float","double","ok"],banner:["float → double: widening, automatic","ok"],
+       k:["myFloat · float","myDouble · double"],v:["3.8",""],v2:["= myFloat","ok"],
+       msg:'Same rule further up the chain: any float fits in a double, so <code>myDouble = myFloat;</code> compiles with no cast.'},
+      {line:[],cls:"ok",cups:{"byte":"ok",short:"ok","int":"ok",long:"ok","float":"ok","double":"ok"},
+       arc:["byte","double","ok"],banner:["left to right: widening, always automatic","ok"],
+       k:["myInt · int","myLong · long"],v:["9",""],v2:["9","ok"],
+       msg:'Left to right along the chain is <b class="g">widening</b>: always automatic, always safe. Right to left is narrowing. The other three examples go that way.'}
+     ]},
+    {chip:"narrowing: double → float",
+     code:[ty("float")+' myFloat;', ty("double")+' myDouble = '+nm("123.4567890123")+';', 'System.out.println(myDouble);', '',
+           'myFloat = '+ca("float")+' myDouble;', 'System.out.println(myFloat);'],
+     steps:[
+      {line:[1,2],cups:{"double":"lit","float":"lit"},fill:{"double":[.7]},pills:[{c:"double",t:"123.4567890123"}],banner:["",""],
+       k:["myDouble · double","myFloat · float"],v:["123.4567890123","hot"],v2:null,
+       msg:'A decimal point and no suffix: <code>123.4567890123</code> is a <b class="a">double</b> literal. <code>myFloat</code> is an empty float cup, one size smaller.'},
+      {line:[3],cups:{"double":"lit","float":"lit"},fill:{"double":[.7]},pills:[{c:"double",t:"123.4567890123"}],banner:["",""],out:"123.4567890123",
+       k:["myDouble · double","myFloat · float"],v:["123.4567890123","hot"],v2:null,
+       msg:'A double keeps about 15 significant digits, so println shows every digit: <b class="a">123.4567890123</b>.'},
+      {line:[5],cls:"cut",alt:{5:'myFloat = myDouble;  '+cm("// without the cast")},cups:{"double":"lit","float":"err"},fill:{"double":[.7]},
+       pills:[{c:"double",t:"123.4567890123"}],arc:["double","float","no"],banner:["double → float: narrowing, will not compile","no"],
+       k:["myDouble · double","myFloat · float"],v:["123.4567890123",""],v2:["error","bad"],
+       msg:'Without <code>(float)</code> this line does not compile: <b class="w">possible lossy conversion from double to float</b>. Java will not pour into a smaller cup on its own.'},
+      {line:[5],cls:"left",cups:{"double":"lit","float":"cast"},fill:{"double":[.7],"float":[1,"gold"]},
+       pills:[{c:"double",t:"123.4567890123"},{c:"float",t:"123.45679",from:"double",k:"gold"}],arc:["double","float","cast"],drip:"float",
+       lost:["float",'123.4567<s>890123</s> → <i>123.45679</i>'],banner:["double → float: narrowing with a cast","cast"],
+       k:["myDouble · double","myFloat · float"],v:["123.4567890123",""],v2:["123.45679","gold"],
+       msg:'The <b class="y">(float)</b> cast says: I accept the loss. A float holds only about 7 significant digits, so the rest spills out and the last digit is rounded.'},
+      {line:[6],cls:"left",cups:{"double":"lit","float":"cast"},fill:{"double":[.7],"float":[1,"gold"]},
+       pills:[{c:"double",t:"123.4567890123"},{c:"float",t:"123.45679",k:"gold"}],out:"123.45679",
+       lost:["float",'123.4567<s>890123</s> → <i>123.45679</i>'],banner:["double → float: narrowing with a cast","cast"],
+       k:["myDouble · double","myFloat · float"],v:["123.4567890123",""],v2:["123.45679","gold"],
+       msg:'println shows <b class="y">123.45679</b>. The extra digits are gone for good, and Java gave no error and no warning.'}
+     ]},
+    {chip:"(byte) 1000",
+     code:[ty("int")+' big = '+nm("1000")+';', ty("byte")+' small = '+ca("byte")+' big;', 'System.out.println(small);'],
+     steps:[
+      {line:[1],cups:{"int":"lit","byte":"lit"},fill:{"int":[.6]},pills:[{c:"int",t:"1000"}],banner:["",""],
+       k:["big · int","small · byte"],v:["1000","hot"],v2:null,
+       msg:'<code>1000</code> is an int literal and fits easily in the int cup. A <b class="a">byte</b> is the smallest cup: it holds only -128 to 127.'},
+      {line:[2],cls:"cut",alt:{2:ty("byte")+' small = big;  '+cm("// without the cast")},cups:{"int":"lit","byte":"err"},fill:{"int":[.6]},
+       pills:[{c:"int",t:"1000"}],arc:["int","byte","no"],banner:["int → byte: narrowing, will not compile","no"],
+       k:["big · int","small · byte"],v:["1000",""],v2:["error","bad"],
+       msg:'Without <code>(byte)</code>: <b class="w">possible lossy conversion from int to byte</b>. 1000 cannot fit in a cup that stops at 127.'},
+      {line:[2],cls:"left",cups:{"int":"lit","byte":"cast"},fill:{"int":[.6],"byte":[1,"gold"]},
+       pills:[{c:"int",t:"1000"},{c:"byte",t:"11101000",from:"int",k:"gold"}],arc:["int","byte","cast"],drip:"byte",
+       lost:["byte",'1000 in bits: <s>11</s><i>11101000</i>'],banner:["int → byte: narrowing with a cast","cast"],
+       k:["big · int","small · byte (bits)"],v:["1000",""],v2:["11101000","gold"],
+       msg:'With the cast, Java keeps only the <b class="y">last 8 bits</b> of 1000, because a byte is 8 bits. The higher bits spill out.'},
+      {line:[2],cls:"cut",cups:{"int":"lit","byte":"err"},fill:{"int":[.6],"byte":[1,"red"]},
+       pills:[{c:"int",t:"1000"},{c:"byte",t:"-24",k:"red"}],
+       lost:["byte",'<i>11101000</i> read as a byte = -24'],banner:["int → byte: the value wrapped around","no"],
+       k:["big · int","small · byte"],v:["1000",""],v2:["-24","bad"],
+       msg:'Read as a byte, 11101000 means <b class="w">-24</b>: a leading 1 makes a byte negative. Not 127, not an error. A different number.'},
+      {line:[3],cls:"cut",cups:{"int":"lit","byte":"err"},fill:{"int":[.6],"byte":[1,"red"]},
+       pills:[{c:"int",t:"1000"},{c:"byte",t:"-24",k:"red"}],out:"-24",
+       lost:["byte",'<i>11101000</i> read as a byte = -24'],banner:["int → byte: the value wrapped around","no"],
+       k:["big · int","small · byte"],v:["1000",""],v2:["-24","bad"],
+       msg:'println shows <b class="w">-24</b>. The cast silenced the compiler, so the program runs with a wrong value and nothing warns you.'}
+     ]},
+    {chip:"(int) 9.99",
+     code:[ty("double")+' price = '+nm("9.99")+';', ty("int")+' whole = '+ca("int")+' price;', 'System.out.println(whole);'],
+     steps:[
+      {line:[1],cups:{"double":"lit","int":"lit"},fill:{"double":[.55]},pills:[{c:"double",t:"9.99"}],banner:["",""],
+       k:["price · double","whole · int"],v:["9.99","hot"],v2:null,
+       msg:'<code>9.99</code> has a decimal point and no f, so it is a <b class="a">double</b> literal. An int has no room for a decimal part.'},
+      {line:[2],cls:"cut",alt:{2:ty("int")+' whole = price;  '+cm("// without the cast")},cups:{"double":"lit","int":"err"},fill:{"double":[.55]},
+       pills:[{c:"double",t:"9.99"}],arc:["double","int","no"],banner:["double → int: narrowing, will not compile","no"],
+       k:["price · double","whole · int"],v:["9.99",""],v2:["error","bad"],
+       msg:'Without <code>(int)</code>: <b class="w">possible lossy conversion from double to int</b>. Java will not throw away the .99 unless you ask.'},
+      {line:[2],cls:"left",cups:{"double":"lit","int":"cast"},fill:{"double":[.55],"int":[.8,"gold"]},
+       pills:[{c:"double",t:"9.99"},{c:"int",t:"9",from:"double",k:"gold"}],arc:["double","int","cast"],drip:"int",
+       lost:["int",'<i>9</i><s>.99</s> cut off'],banner:["double → int: narrowing with a cast","cast"],
+       k:["price · double","whole · int"],v:["9.99",""],v2:["9","gold"],
+       msg:'The <b class="y">(int)</b> cast keeps the whole part and drops the decimal part. It <b class="y">cuts, it does not round</b>: the .99 spills out.'},
+      {line:[3],cls:"left",cups:{"double":"lit","int":"cast"},fill:{"double":[.55],"int":[.8,"gold"]},
+       pills:[{c:"double",t:"9.99"},{c:"int",t:"9",k:"gold"}],out:"9",
+       lost:["int",'<i>9</i><s>.99</s> cut off'],banner:["double → int: narrowing with a cast","cast"],
+       k:["price · double","whole · int"],v:["9.99",""],v2:["9","gold"],
+       msg:'println shows <b class="y">9</b>, not 10. Almost a whole unit is lost, and Java said nothing.'}
+     ]}
+  ];
+
+  /* ---------- state ---------- */
+  var P=0, steps=PRESETS[0].steps, at=-1;
+  var codeEl=$("#code"),picEl=$("#pic"),consEl=$("#console"),statusEl=$("#status");
+  var chainEl=$("#chain"),pillsEl=$("#pills"),dropsEl=$("#drops"),arcEl=$("#arc"),lostEl=$("#lost"),bannerEl=$("#banner");
+  var cw={},liq={},cup={};
+
+  function buildChain(){
+    chainEl.innerHTML=CUPS.map(function(n,i){
+      return '<div class="cw dim" id="cw-'+n+'" style="flex:'+CUPG[i]+' 1 0"><div class="cup" id="cup-'+n+'" style="height:'+CUPH[i]+'px"><div class="liq" id="liq-'+n+'"></div></div><div class="cname">'+n+'</div></div>';
+    }).join("");
+    CUPS.forEach(function(n){ cw[n]=$("#cw-"+n); liq[n]=$("#liq-"+n); cup[n]=$("#cup-"+n); });
+  }
+
+  function renderCode(s){
+    var L=PRESETS[P].code;
+    codeEl.innerHTML=L.map(function(t,i){
+      var n=i+1,c="ln";
+      if(s&&s.alt&&s.alt[n]) t=s.alt[n];
+      if(s&&s.line.indexOf(n)>=0) c+=" "+(s.cls==="cut"?"cut":s.cls==="left"?"left":s.cls==="ok"?"ok":"cur");
+      return '<div class="'+c+'"><span class="n">'+n+'</span><span>'+(t||" ")+'</span></div>';
+    }).join("");
+  }
+
+  function rect(n){
+    var r=cup[n].getBoundingClientRect(), p=picEl.getBoundingClientRect();
+    return {x:r.left-p.left,y:r.top-p.top,w:r.width,h:r.height};
+  }
+  function pillPos(el,n){
+    var r=rect(n), W=picEl.clientWidth, w=el.offsetWidth;
+    var x=Math.max(4,Math.min(W-w-4,r.x+r.w/2-w/2));
+    return {x:x,y:r.y+r.h-28};
+  }
+
+  function renderPic(s,animate){
+    s=s||{};
+    CUPS.forEach(function(n){
+      cw[n].className="cw "+((s.cups&&s.cups[n])||"dim");
+      var f=s.fill&&s.fill[n];
+      liq[n].style.height=f?(f[0]*100)+"%":"0";
+      liq[n].className="liq"+(f&&f[1]?" "+f[1]:"");
+    });
+    bannerEl.textContent=s.banner?s.banner[0]:"";
+    bannerEl.className="banner"+(s.banner&&s.banner[1]?" "+s.banner[1]:"");
+
+    /* value pills: a moving pill is a copy, the source keeps its value */
+    pillsEl.innerHTML="";
+    (s.pills||[]).forEach(function(p){
+      var el=document.createElement("span");
+      el.className="pill"+(p.k?" "+p.k:"");
+      el.textContent=p.t;
+      pillsEl.appendChild(el);
+      var to=pillPos(el,p.c);
+      if(animate&&p.from&&!reduce){
+        var fr=pillPos(el,p.from);
+        el.style.transition="none"; el.style.left=fr.x+"px"; el.style.top=fr.y+"px";
+        void el.offsetWidth; el.style.transition="";
+      }
+      el.style.left=to.x+"px"; el.style.top=to.y+"px";
+    });
+
+    /* arc arrow from source cup to target cup */
+    var W=picEl.clientWidth,H=picEl.clientHeight;
+    arcEl.setAttribute("width",W); arcEl.setAttribute("height",H); arcEl.setAttribute("viewBox","0 0 "+W+" "+H);
+    var svg="";
+    if(s.arc){
+      var a=rect(s.arc[0]),b=rect(s.arc[1]),k=s.arc[2];
+      var col=k==="ok"?"#46d98a":k==="no"?"#ff6a6a":"#ffc862";
+      var x1=a.x+a.w/2,y1=a.y-6,x2=b.x+b.w/2,y2=b.y-6,cy=Math.max(26,Math.min(y1,y2)-(Math.abs(x2-x1)>200?95:70));
+      var mx=(x1+x2)/2,my=(y1+2*cy+y2)/4;
+      var ang=Math.atan2(y2-cy,x2-mx), hl=9;
+      var hx1=x2-hl*Math.cos(ang-0.45),hy1=y2-hl*Math.sin(ang-0.45),hx2=x2-hl*Math.cos(ang+0.45),hy2=y2-hl*Math.sin(ang+0.45);
+      svg+='<path d="M'+x1+' '+y1+' Q'+mx+' '+cy+' '+x2+' '+y2+'" fill="none" stroke="'+col+'" stroke-width="2"'+(k==="no"?' stroke-dasharray="5 5"':'')+' opacity=".9"/>';
+      svg+='<path d="M'+hx1+' '+hy1+' L'+x2+' '+y2+' L'+hx2+' '+hy2+'" fill="none" stroke="'+col+'" stroke-width="2"/>';
+      if(k==="no") svg+='<circle cx="'+mx+'" cy="'+my+'" r="10" fill="#1a0d14" stroke="'+col+'" stroke-width="1.5"/>'+
+        '<path d="M'+(mx-4)+' '+(my-4)+' L'+(mx+4)+' '+(my+4)+' M'+(mx+4)+' '+(my-4)+' L'+(mx-4)+' '+(my+4)+'" stroke="'+col+'" stroke-width="2"/>';
+      if(k==="cast") svg+='<text x="'+mx+'" y="'+(my-8)+'" text-anchor="middle" fill="'+col+'" font-family="JetBrains Mono, monospace" font-size="11">('+s.arc[1]+')</text>';
+    }
+    arcEl.innerHTML=svg;
+
+    /* what spilled */
+    dropsEl.innerHTML="";
+    if(s.drip&&animate&&!reduce){
+      var d=rect(s.drip);
+      for(var i=0;i<3;i++){
+        var dr=document.createElement("span"); dr.className="drop";
+        dr.style.left=(i%2?d.x-8:d.x+d.w+2)+"px"; dr.style.top=(d.y+2)+"px"; dr.style.animationDelay=(.55+i*.25)+"s";
+        dropsEl.appendChild(dr);
+      }
+    }
+    if(s.lost){
+      lostEl.innerHTML=s.lost[1];
+      var lr=rect(s.lost[0]), lw=lostEl.offsetWidth;
+      lostEl.style.left=Math.max(6,Math.min(W-lw-6,lr.x+lr.w/2-lw/2))+"px";
+      lostEl.className="lost show";
+    } else lostEl.className="lost";
+  }
+
+  function setStat(i,k,v){
+    $("#k"+i).textContent=k;
+    var e=$("#v"+i);
+    if(!v){e.textContent="?";e.className="v dim";} else {e.textContent=v[0];e.className="v "+(v[1]||"");}
+  }
+
+  function show(i,animate){
+    at=i;
+    $("#stepno").innerHTML="Step <b>"+(i+1)+"</b> of "+steps.length;
+    if(i<0){
+      renderCode(null); renderPic(null,false);
+      consEl.innerHTML='<span style="color:rgba(132,150,182,.5)">(nothing printed yet)</span>';
+      statusEl.className="status"; statusEl.innerHTML='Press <b class="a">Next</b> to start. The cups below change at every step.';
+      var k=steps[0].k; setStat(1,k[0],null); setStat(2,k[1],null); setBtns(); return;
+    }
+    var s=steps[i], out=[];
+    renderCode(s); renderPic(s,animate);
+    for(var j=0;j<=i;j++) if(steps[j].out) out.push(steps[j].out);
+    consEl.innerHTML=out.map(function(o){return '<div class="out">'+o+'</div>';}).join("")||'<span style="color:rgba(132,150,182,.5)">(nothing printed yet)</span>';
+    statusEl.className="status "+(s.cls||""); statusEl.innerHTML=s.msg;
+    setStat(1,s.k[0],s.v); setStat(2,s.k[1],s.v2);
+    setBtns();
+  }
+  function setBtns(){ $("#bNext").disabled=at>=steps.length-1; $("#bBack").disabled=at<0; }
+  function next(){ if(at<steps.length-1) show(at+1,true); }
+  function back(){ if(at>=0) show(at-1,false); }
+  function reset(){ steps=PRESETS[P].steps; show(-1,false); }
+  function pick(idx){
+    P=idx;
+    Array.prototype.forEach.call(document.querySelectorAll(".chip"),function(c,j){c.classList.toggle("on",j===idx);});
+    if(document.activeElement&&document.activeElement.blur) document.activeElement.blur();
+    reset();
+  }
+
+  $("#chips").innerHTML=PRESETS.map(function(p,j){return '<button class="chip'+(j===0?' on':'')+'" data-i="'+j+'">'+p.chip+'</button>';}).join("");
+  $("#chips").addEventListener("click",function(e){ var b=e.target.closest(".chip"); if(b) pick(+b.getAttribute("data-i")); });
+  $("#bNext").addEventListener("click",next);
+  $("#bBack").addEventListener("click",back);
+  $("#bReset").addEventListener("click",reset);
+  document.addEventListener("keydown",function(e){ if(e.code==="Space"&&!/INPUT|BUTTON/.test(e.target.tagName)){e.preventDefault();next();} });
+  addEventListener("resize",function(){ renderPic(at>=0?steps[at]:null,false); });
+
+  /* ---------- ambient canvas ---------- */
+  var cv=$("#amb"),ctx=cv.getContext&&cv.getContext("2d"),parts=[];
+  function sizeC(){if(!ctx)return;cv.width=innerWidth;cv.height=innerHeight;}
+  function initParts(){parts=[];for(var i=0;i<46;i++)parts.push({x:Math.random(),y:Math.random(),
+    r:Math.random()*1.6+.3,s:Math.random()*.02+.004,o:Math.random()*.4+.1});}
+  function drawC(){if(!ctx)return;ctx.clearRect(0,0,cv.width,cv.height);
+    parts.forEach(function(p){p.y-=p.s/60;if(p.y<-.02)p.y=1.02;
+      ctx.beginPath();ctx.arc(p.x*cv.width,p.y*cv.height,p.r,0,7);
+      ctx.fillStyle="rgba(140,170,255,"+p.o+")";ctx.fill();});
+    requestAnimationFrame(drawC);}
+  if(ctx&&!reduce){sizeC();initParts();drawC();addEventListener("resize",sizeC);}
+
+  buildChain();
+  reset();
+})();
+</script>
+<script src="../manifest.js"></script>
+<script src="../../assets/rail.js"></script>
+<script>Rail.render(document.getElementById("rail"),{kind:"visuals",current:"13-widening-narrowing"});</script>
+</body>
+</html>

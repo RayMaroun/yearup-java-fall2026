@@ -1,0 +1,384 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>printf Format Specifiers | Week 1 Visual Hub</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Sora:wght@500;700&family=Inter:wght@400;500&family=JetBrains+Mono:wght@400;500&display=swap">
+<style>
+  :root{
+    --bg:#080c17; --bg2:#0c1428; --surface:rgba(255,255,255,.045); --line:rgba(255,255,255,.09);
+    --ink:#eef2fb; --muted:#8496b6; --accent:#6ea0ff; --accent2:#8b7bff; --good:#46d98a; --warn:#ff6a6a;
+    --gold:#ffc862; --disp:'Sora',system-ui,sans-serif; --body:'Inter',system-ui,sans-serif;
+    --mono:'JetBrains Mono',ui-monospace,monospace;
+  }
+  *{box-sizing:border-box}
+  body{margin:0;min-height:100vh;color:var(--ink);font-family:var(--body);
+    background:radial-gradient(1200px 700px at 70% -10%,#141d38 0%,transparent 55%),
+               radial-gradient(900px 600px at 10% 110%,#161233 0%,transparent 50%),#080c17;
+    overflow-x:hidden}
+  #amb{position:fixed;inset:0;z-index:0;pointer-events:none;opacity:.6}
+  .back{position:relative;z-index:2;display:block;max-width:1120px;margin:0 auto;padding:26px 24px 0;
+    width:100%;font-family:var(--mono);font-size:.8rem;letter-spacing:.04em;color:var(--muted);
+    text-decoration:none;transition:color .15s}
+  .back:hover{color:var(--accent)}
+  .wrap{position:relative;z-index:1;max-width:1120px;margin:0 auto;padding:22px 24px 70px}
+  .tag{font-family:var(--mono);font-size:.72rem;letter-spacing:.22em;text-transform:uppercase;color:var(--accent);margin:0 0 14px}
+  h1{font-family:var(--disp);font-weight:700;font-size:clamp(2.3rem,6vw,3.6rem);line-height:1;margin:0 0 12px;
+    letter-spacing:-.03em;background:linear-gradient(180deg,#fff,#b9c6e6);-webkit-background-clip:text;
+    background-clip:text;color:transparent}
+  .lede{color:var(--muted);max-width:64ch;font-size:1.05rem;margin:0 0 30px;line-height:1.5}
+  .lede b{color:var(--ink)}
+  .lede code,.take code,.status code{font-family:var(--mono);font-size:.92em;color:#bcd0ff}
+  .stage{position:relative;background:linear-gradient(180deg,rgba(255,255,255,.03),rgba(255,255,255,.01));
+    border:1px solid var(--line);border-radius:24px;padding:8px;
+    box-shadow:0 1px 0 rgba(255,255,255,.06) inset,0 30px 80px -30px rgba(0,0,0,.8)}
+  .grid{display:grid;grid-template-columns:340px 1fr;gap:8px}
+  @media (max-width:860px){.grid{grid-template-columns:1fr}}
+  .panelL,.panelR{border-radius:18px;padding:22px}
+  .panelL{background:linear-gradient(180deg,rgba(110,160,255,.06),rgba(139,123,255,.03));border:1px solid var(--line)}
+  .panelR{background:rgba(6,10,20,.5);border:1px solid var(--line);position:relative;overflow:hidden}
+  .lab{font-family:var(--mono);font-size:.7rem;letter-spacing:.12em;text-transform:uppercase;color:var(--muted);margin:0 0 12px}
+  /* example chips */
+  .chips{display:flex;flex-wrap:wrap;gap:6px;margin-bottom:16px}
+  .chip{font-family:var(--mono);font-size:.74rem;padding:5px 11px;border-radius:999px;cursor:pointer;
+    border:1px solid var(--line);background:rgba(0,0,0,.25);color:var(--muted);transition:.15s}
+  .chip:hover{border-color:var(--accent);color:var(--accent)}
+  .chip.on{border-color:rgba(110,160,255,.6);background:rgba(110,160,255,.14);color:var(--ink)}
+  .chip:focus-visible{outline:2px solid var(--accent);outline-offset:2px}
+  /* readout */
+  .readout{display:grid;grid-template-columns:1fr 1.3fr;gap:10px;margin:0 0 14px}
+  .stat{background:rgba(255,255,255,.03);border:1px solid var(--line);border-radius:12px;padding:11px 13px;min-width:0}
+  .stat .k{font-family:var(--mono);font-size:.62rem;letter-spacing:.1em;text-transform:uppercase;color:var(--muted)}
+  .stat .v{font-family:var(--disp);font-weight:700;font-size:1.3rem;font-variant-numeric:tabular-nums;margin-top:2px;transition:color .3s;min-height:1.6em;overflow-wrap:anywhere}
+  .v.hot{color:var(--accent)} .v.gold{color:var(--gold)} .v.dim{color:rgba(132,150,182,.5)}
+  .stepno{font-family:var(--mono);font-size:.64rem;letter-spacing:.14em;text-transform:uppercase;color:var(--muted);margin:0 0 8px}
+  .stepno b{color:var(--accent);font-weight:500}
+  .status{font-family:var(--mono);font-size:.82rem;line-height:1.55;color:var(--ink);min-height:146px;
+    padding:12px 14px;border-radius:12px;background:rgba(0,0,0,.25);border:1px solid var(--line);
+    border-left:3px solid var(--accent);transition:border-color .3s}
+  .status.ok{border-left-color:var(--good)}
+  .status b.g{color:var(--good)} .status b.a{color:var(--accent)} .status b.y{color:var(--gold)}
+  .actions{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-top:16px}
+  .btn{font-family:var(--body);font-weight:500;font-size:.84rem;padding:9px 12px;border-radius:11px;cursor:pointer;
+    border:1px solid var(--line);background:var(--surface);color:var(--ink);transition:.15s;text-align:center}
+  .btn:hover{border-color:var(--accent);color:var(--accent)}
+  .btn.primary{border-color:rgba(110,160,255,.5);background:rgba(110,160,255,.12);grid-column:1 / -1}
+  .btn.gold:hover{border-color:var(--gold);color:var(--gold)}
+  .btn:disabled{opacity:.35;cursor:not-allowed}
+  .btn:focus-visible{outline:2px solid var(--accent);outline-offset:2px}
+  .hint{font-family:var(--mono);font-size:.7rem;color:var(--muted);margin:14px 0 0;line-height:1.5}
+  .hint b{color:var(--accent)}
+  /* right: code, pairing, output, console */
+  .code{min-width:0;font-family:var(--mono);font-size:.78rem;line-height:1.8;background:rgba(0,0,0,.35);border:1px solid var(--line);
+    border-radius:14px;padding:12px 0;overflow-x:auto;margin-bottom:16px}
+  .ln{display:flex;gap:12px;padding:0 14px;white-space:pre;color:#c9d4ea;transition:background .2s}
+  .ln .n{width:20px;text-align:right;color:rgba(132,150,182,.55);user-select:none;flex-shrink:0}
+  .ln.call{background:rgba(110,160,255,.07)}
+  .kw{color:#c792ea} .ty{color:#82aaff} .st{color:#c3e88d} .nm{color:#f78c6c} .fn{color:#ffcb6b}
+  .cph,.carg{border-radius:4px;padding:1px 0;transition:background .25s,box-shadow .25s,color .25s}
+  .cph{color:#c3e88d;font-weight:500}
+  .cph.cur{background:rgba(110,160,255,.25);box-shadow:0 0 0 1px var(--accent);color:#fff}
+  .carg.cur{background:rgba(255,200,98,.2);box-shadow:0 0 0 1px var(--gold);color:#fff}
+  .cph.done,.carg.done{opacity:.55}
+  /* pairing table */
+  .pair{display:grid;grid-template-columns:96px repeat(var(--cols),minmax(0,1fr));gap:6px;margin-bottom:18px}
+  .pair .rh{font-family:var(--mono);font-size:.6rem;letter-spacing:.12em;text-transform:uppercase;color:var(--muted);align-self:center}
+  .cell{position:relative;font-family:var(--mono);font-size:.9rem;text-align:center;padding:9px 6px;border-radius:10px;
+    border:1px solid var(--line);background:rgba(255,255,255,.03);color:var(--ink);transition:all .3s;min-width:0;overflow-wrap:anywhere}
+  .cell small{display:block;font-size:.62rem;color:var(--muted);margin-top:2px}
+  .cell .no{position:absolute;top:-8px;left:-6px;width:18px;height:18px;border-radius:50%;font-size:.6rem;line-height:18px;
+    background:#1a2442;border:1px solid var(--line);color:var(--muted)}
+  .cell.ph.cur{border-color:var(--accent);background:rgba(110,160,255,.16);box-shadow:0 0 18px -6px rgba(110,160,255,.7)}
+  .cell.ph.cur .no{background:var(--accent);color:#0a1020;border-color:var(--accent)}
+  .cell.arg.cur{border-color:var(--gold);background:rgba(255,200,98,.14);box-shadow:0 0 18px -6px rgba(255,200,98,.7)}
+  .cell.arg.cur .no{background:var(--gold);color:#1a1200;border-color:var(--gold)}
+  .cell.done{opacity:.45}
+  .cell.none{border-style:dashed;color:var(--muted);font-size:.72rem}
+  .cell.none.cur{border-color:var(--accent);color:var(--ink)}
+  .arrow{grid-column:auto;text-align:center;font-family:var(--mono);font-size:.8rem;color:transparent;line-height:.6;transition:color .3s}
+  .arrow.cur{color:var(--gold)}
+  /* output being built */
+  .outbox{font-family:var(--mono);font-size:1.02rem;line-height:1;background:rgba(0,0,0,.25);border:1px dashed rgba(132,150,182,.3);
+    border-radius:14px;padding:18px 16px 34px;min-height:78px;white-space:pre;overflow-x:auto}
+  .outbox .empty{color:rgba(132,150,182,.5);font-size:.76rem}
+  .lit{color:var(--muted)}
+  .fld{position:relative;display:inline-block;border:1px solid rgba(110,160,255,.4);border-radius:5px;padding:4px 1px;
+    background:rgba(110,160,255,.06);margin:0 1px}
+  .fld .val{color:var(--gold)}
+  .fld .pad{color:rgba(132,150,182,.55)}
+  .fld .fl{position:absolute;left:0;right:0;top:calc(100% + 5px);font-size:.58rem;color:var(--accent);text-align:center;letter-spacing:.04em}
+  .fld.new{border-color:var(--accent);background:rgba(110,160,255,.16);animation:slide .45s cubic-bezier(.2,.9,.3,1)}
+  .lit.new{animation:fade .45s}
+  .nl{display:inline-block;font-size:.66rem;color:var(--accent);border:1px dashed rgba(110,160,255,.6);border-radius:5px;padding:3px 6px;margin-left:4px;vertical-align:middle}
+  .nl.new{animation:slide .45s cubic-bezier(.2,.9,.3,1)}
+  @keyframes slide{from{transform:translateY(-22px);opacity:0}to{transform:translateY(0);opacity:1}}
+  @keyframes fade{from{opacity:0}to{opacity:1}}
+  .console{margin-top:14px;font-family:var(--mono);font-size:.82rem;line-height:1.6;background:#05070e;border:1px solid var(--line);
+    border-radius:12px;padding:10px 14px;min-height:72px;color:#9fe3b6;overflow-x:auto}
+  .console .cl{font-size:.6rem;letter-spacing:.14em;text-transform:uppercase;color:rgba(132,150,182,.6);margin-bottom:4px}
+  .console pre{margin:0;font:inherit;animation:pop .3s}
+  .caret{display:inline-block;width:8px;height:1em;background:rgba(159,227,182,.5);vertical-align:text-bottom}
+  @keyframes pop{from{transform:scale(.9);opacity:0}to{transform:scale(1);opacity:1}}
+  .take{margin-top:22px;background:linear-gradient(180deg,rgba(110,160,255,.08),rgba(139,123,255,.04));
+    border:1px solid var(--line);border-left:3px solid var(--accent);border-radius:12px;padding:16px 18px}
+  .take .tk{font-family:var(--mono);font-size:.66rem;letter-spacing:.14em;text-transform:uppercase;color:var(--accent);margin:0 0 8px}
+  .take p{margin:0;font-size:.95rem;color:var(--ink);line-height:1.55}
+  .take b{color:#fff}
+  @media (prefers-reduced-motion:reduce){*{animation-duration:.01ms!important;transition-duration:.01ms!important}#amb{display:none}}
+</style>
+</head>
+<body>
+
+<a class="back" href="../index.html#14-printf-format">&#8592; Week 1 index</a>
+
+<canvas id="amb"></canvas>
+<div class="wrap">
+  <p class="tag">Workbook 1c &middot; Section 3-3 &middot; Formatting output</p>
+  <h1>printf Format Specifiers</h1>
+  <p class="lede"><code>printf</code> prints a template with blanks in it.
+  <b>Each % placeholder takes the next argument, in order, and the letters after the % say how that value is written.</b>
+  Step through and watch the line being built.</p>
+
+  <div class="stage">
+    <div class="grid">
+      <div class="panelL">
+        <p class="lab">Pick a printf line</p>
+        <div class="chips" id="chips"></div>
+
+        <div class="readout">
+          <div class="stat"><div class="k">placeholder</div><div class="v dim" id="stPh">?</div></div>
+          <div class="stat"><div class="k">takes argument</div><div class="v dim" id="stArg">?</div></div>
+        </div>
+
+        <p class="stepno" id="stepno">Step <b>0</b> of 6</p>
+        <div class="status" id="status">Press <b class="a">Next</b> to start.</div>
+
+        <div class="actions">
+          <button class="btn primary" id="bNext">Next &rarr;</button>
+          <button class="btn gold" id="bBack">&larr; Back</button>
+          <button class="btn" id="bReset">Reset</button>
+        </div>
+        <p class="hint">space = next &middot; dots in the output are spaces added to reach the width. <b>Try the width line.</b></p>
+      </div>
+
+      <div class="panelR">
+        <p class="lab">Main.java</p>
+        <div class="code" id="code"></div>
+        <p class="lab">Placeholders and arguments, matched in order</p>
+        <div class="pair" id="pair"></div>
+        <p class="lab">The line printf builds</p>
+        <div class="outbox" id="outbox"></div>
+        <div class="console"><div class="cl">console</div><div id="console"></div></div>
+      </div>
+    </div>
+  </div>
+
+  <div class="take">
+    <p class="tk">The one idea</p>
+    <p><b>Placeholders are filled left to right from the arguments:</b> the 1st % takes the 1st argument, the 2nd takes the 2nd.
+    <b>The letter after % says how to format the value:</b> <code>s</code> text, <code>d</code> whole number, <code>f</code> decimal.
+    A number before it sets the width (a minus means left aligned), <code>.2</code> sets two decimals, a comma groups digits,
+    and <code>%n</code> ends the line.</p>
+  </div>
+
+  <div id="rail"></div>
+</div>
+
+<script>
+(function(){
+  "use strict";
+  var $=function(s){return document.querySelector(s);};
+  var reduce=matchMedia("(prefers-reduced-motion: reduce)").matches;
+  var DOT="·";
+
+  /* ---------- presets: 1 and 3 from the java-io demo, 2 invented ---------- */
+  var PRESETS=[
+    {chip:"%s %d %.2f",
+     decl:['<span class="ty">int</span> id = <span class="nm">10135</span>;',
+           '<span class="ty">String</span> name = <span class="st">"Brandon Plyers"</span>;',
+           '<span class="ty">float</span> pay = <span class="nm">5239.779f</span>;'],
+     tpl:"%s (id: %d) $%.2f%n",
+     args:[{name:"name",val:"Brandon Plyers",show:'"Brandon Plyers"'},{name:"id",val:10135,show:"10135"},{name:"pay",val:5239.779,show:"5239.779f"}]},
+    {chip:"19.5 to 19.50",
+     decl:['<span class="ty">String</span> learner = <span class="st">"Maya"</span>;',
+           '<span class="ty">double</span> price = <span class="nm">19.5</span>;'],
+     tpl:"%s paid $%.2f%n",
+     args:[{name:"learner",val:"Maya",show:'"Maya"'},{name:"price",val:19.5,show:"19.5"}]},
+    {chip:"width and alignment",
+     decl:['<span class="ty">String</span> name = <span class="st">"Brandon Plyers"</span>;'],
+     tpl:"|%-20s|%,15d|%n",
+     args:[{name:"name",val:"Brandon Plyers",show:'"Brandon Plyers"'},{name:"",val:100000000,show:"100000000",lit:true}]}
+  ];
+  var P=PRESETS[0];
+
+  /* ---------- parse the template into text and placeholders ---------- */
+  function parse(tpl){
+    var re=/%([-,]*)(\d+)?(?:\.(\d+))?([sdfn])/g, out=[], last=0, m;
+    while((m=re.exec(tpl))){
+      if(m.index>last) out.push({t:"lit",s:tpl.slice(last,m.index)});
+      out.push({t:"ph",spec:m[0],left:m[1].indexOf("-")>=0,comma:m[1].indexOf(",")>=0,
+        width:m[2]?+m[2]:0,prec:m[3]===undefined?null:+m[3],conv:m[4]});
+      last=re.lastIndex;
+    }
+    if(last<tpl.length) out.push({t:"lit",s:tpl.slice(last)});
+    return out;
+  }
+  function group(s){ var p=s.split("."); p[0]=p[0].replace(/\B(?=(\d{3})+(?!\d))/g,","); return p.join("."); }
+  function format(ph,v){
+    var core;
+    if(ph.conv==="s") core=String(v);
+    else if(ph.conv==="d") core=String(Math.trunc(v));
+    else core=Number(v).toFixed(ph.prec===null?6:ph.prec);
+    if(ph.comma&&ph.conv!=="s") core=group(core);
+    var pad=Math.max(0,ph.width-core.length);
+    return {core:core,padL:ph.left?0:pad,padR:ph.left?pad:0};
+  }
+  var ORD=["1st","2nd","3rd","4th","5th"];
+  function sp(n){ return n+" space"+(n===1?"":"s"); }
+
+  /* ---------- the walk: built from the parsed template and the arguments ---------- */
+  function build(){
+    var toks=parse(P.tpl), S=[], pieces=[], ai=0, pi=0, phs=[], i;
+    toks.forEach(function(t){ if(t.t==="ph") phs.push(t); });
+    var nArgs=phs.filter(function(p){return p.conv!=="n";}).length;
+    var lead=toks[0].t==="lit"?toks[0]:null;
+    if(lead) pieces.push({k:"lit",s:lead.s,st:0});
+    S.push({ph:-1,arg:-1,pieces:pieces.slice(),
+      msg:'Two parts: the <b class="a">template</b> in quotes holds '+phs.length+' placeholders, each starting with %, and '+nArgs+' <b class="y">arguments</b> follow it.'+
+        (lead?' Plain text like <code>'+lead.s+'</code> is copied as is.':' printf reads the template left to right.')});
+    for(i=0;i<toks.length;i++){
+      var t=toks[i]; if(t.t!=="ph") continue;
+      var stepNo=S.length, nextLit=(toks[i+1]&&toks[i+1].t==="lit")?toks[i+1]:null, msg;
+      if(t.conv==="n"){
+        pieces.push({k:"nl",st:stepNo});
+        msg='<b class="a">%n</b> takes <b>no argument</b>. It just ends the line, like the ln in println.';
+        S.push({ph:pi,arg:-1,phSpec:t.spec,argName:"none",pieces:pieces.slice(),msg:msg});
+      } else {
+        var a=P.args[ai], f=format(t,a.val), who=a.lit?a.show:a.name;
+        pieces.push({k:"fld",f:f,spec:t.spec,width:t.width,st:stepNo});
+        msg='The '+ORD[pi]+' placeholder <b class="a">'+t.spec+'</b> takes the '+ORD[ai]+' argument, <b class="y">'+who+'</b>. ';
+        if(t.conv==="s") msg+='<b class="a">s</b> is for text: it goes in as is'+(t.width?', in a box '+t.width+' wide. The minus means left aligned, so '+sp(f.padR)+' pad the right.':'.');
+        else if(t.conv==="d") msg+='<b class="a">d</b> is for a whole number'+(t.comma?'; the comma groups the digits, <b class="y">'+f.core+'</b>':'')+(t.width?'. Width '+t.width+' with no minus is right aligned: '+sp(f.padL)+' in front.':', written as digits.');
+        else msg+='<b class="a">f</b> is for a decimal and <b class="a">.'+t.prec+'</b> means exactly '+t.prec+' digits after the point: '+a.show.replace(/f$/,"")+' becomes <b class="y">'+f.core+'</b>'+(String(a.val).split(".")[1]&&String(a.val).split(".")[1].length>t.prec?' (rounded).':'.');
+        if(nextLit) pieces.push({k:"lit",s:nextLit.s,st:stepNo});
+        S.push({ph:pi,arg:ai,phSpec:t.spec,argName:who,pieces:pieces.slice(),msg:msg});
+        ai++;
+      }
+      if(t.conv==="n"&&nextLit) pieces.push({k:"lit",s:nextLit.s,st:stepNo});
+      pi++;
+    }
+    var line="";
+    pieces.forEach(function(p){
+      if(p.k==="lit") line+=p.s;
+      if(p.k==="fld") line+=new Array(p.f.padL+1).join(" ")+p.f.core+new Array(p.f.padR+1).join(" ");
+    });
+    S.push({ph:-1,arg:-1,pieces:pieces.slice(),out:line,done:true,
+      msg:'<b class="g">Done.</b> '+nArgs+' arguments filled '+nArgs+' placeholders, left to right, and printf prints the line.'+(phs.some(function(p){return p.width;})?' The dots are plain spaces on the console.':'')});
+    return {steps:S,phs:phs};
+  }
+
+  /* ---------- state ---------- */
+  var model,steps=[],at=-1;
+  var codeEl=$("#code"),pairEl=$("#pair"),outEl=$("#outbox"),consEl=$("#console"),statusEl=$("#status");
+
+  function esc(s){ var d=document.createElement("div"); d.textContent=s; return d.innerHTML; }
+
+  function renderCode(s){
+    var toks=parse(P.tpl), pi=0, str="";
+    toks.forEach(function(t){
+      if(t.t==="lit") str+=esc(t.s);
+      else { var c="cph"; if(s&&s.ph===pi) c+=" cur"; else if(s&&(s.done||pi<s.ph)) c+=" done"; str+='<span class="'+c+'">'+t.spec+'</span>'; pi++; }
+    });
+    var args=P.args.map(function(a,j){
+      var c="carg"; if(s&&s.arg===j) c+=" cur"; else if(s&&(s.done||(s.arg>j)||(s.arg<0&&s.ph>=0))) c+=" done";
+      return '<span class="'+c+'">'+(a.lit?'<span class="nm">'+a.show+'</span>':a.name)+'</span>';
+    }).join(", ");
+    var L=P.decl.concat(["",'System.out.<span class="fn">printf</span>(<span class="st">"</span>'+str+'<span class="st">"</span>, '+args+');']);
+    codeEl.innerHTML=L.map(function(t,i){
+      return '<div class="ln'+(i===L.length-1?' call':'')+'"><span class="n">'+(i+1)+'</span><span>'+(t||" ")+'</span></div>';
+    }).join("");
+  }
+
+  function renderPair(s){
+    var phs=model.phs, ai=0, top='<span class="rh">placeholder</span>', mid='<span></span>', bot='<span class="rh">argument</span>';
+    phs.forEach(function(p,i){
+      var cur=s&&s.ph===i, done=s&&(s.done||(s.ph>i));
+      var st=cur?" cur":done?" done":"";
+      top+='<div class="cell ph'+st+'"><span class="no">'+(i+1)+'</span>'+p.spec+'</div>';
+      mid+='<div class="arrow'+(cur&&p.conv!=="n"?" cur":"")+'">\u2191</div>';
+      if(p.conv==="n") bot+='<div class="cell none'+st+'">no argument</div>';
+      else { var a=P.args[ai]; bot+='<div class="cell arg'+st+'"><span class="no">'+(ai+1)+'</span>'+(a.lit?a.show:a.name)+(a.lit?'':'<small>'+a.show+'</small>')+'</div>'; ai++; }
+    });
+    pairEl.style.setProperty("--cols",phs.length);
+    pairEl.innerHTML=top+mid+bot;
+  }
+
+  function rep(ch,n){ return new Array(n+1).join(ch); }
+  function renderOut(s){
+    if(!s||!s.pieces.length){ outEl.innerHTML='<span class="empty">(nothing built yet)</span>'; return; }
+    outEl.innerHTML=s.pieces.map(function(p){
+      var nw=(!s.done&&p.st===at)?" new":"";
+      if(p.k==="lit") return '<span class="lit'+nw+'">'+esc(p.s)+'</span>';
+      if(p.k==="nl") return '<span class="nl'+nw+'">%n ↵ new line</span>';
+      var lab=p.spec+(p.width?" · "+p.width+" wide":"");
+      return '<span class="fld'+nw+'"><span class="pad">'+rep(DOT,p.f.padL)+'</span><span class="val">'+esc(p.f.core)+'</span><span class="pad">'+rep(DOT,p.f.padR)+'</span><span class="fl">'+lab+'</span></span>';
+    }).join("");
+  }
+
+  function setStat(id,v,c){ var e=$(id); if(v===null||v===undefined){e.textContent="?";e.className="v dim";} else {e.textContent=v;e.className="v "+(c||"");} }
+
+  function show(i){
+    at=i;
+    $("#stepno").innerHTML="Step <b>"+(i+1)+"</b> of "+steps.length;
+    var s=i<0?null:steps[i];
+    renderCode(s); renderPair(s); renderOut(s);
+    if(!s){
+      statusEl.className="status"; statusEl.innerHTML='Press <b class="a">Next</b> to start. Each step fills one placeholder.';
+      consEl.innerHTML='<span style="color:rgba(132,150,182,.5)">(nothing printed yet)</span>';
+      setStat("#stPh",null); setStat("#stArg",null); setBtns(); return;
+    }
+    statusEl.className="status"+(s.done?" ok":""); statusEl.innerHTML=s.msg;
+    consEl.innerHTML=s.out!==undefined?'<pre>'+esc(s.out)+'\n<span class="caret"></span></pre>':'<span style="color:rgba(132,150,182,.5)">(nothing printed yet)</span>';
+    setStat("#stPh",s.phSpec,"hot"); setStat("#stArg",s.argName,s.argName==="none"?"dim":"gold");
+    setBtns();
+  }
+  function setBtns(){ $("#bNext").disabled=at>=steps.length-1; $("#bBack").disabled=at<0; }
+  function next(){ if(at<steps.length-1) show(at+1); }
+  function back(){ if(at>=0) show(at-1); }
+  function reset(){ model=build(); steps=model.steps; show(-1); }
+  function pick(idx){
+    P=PRESETS[idx];
+    Array.prototype.forEach.call(document.querySelectorAll(".chip"),function(c,j){c.classList.toggle("on",j===idx);});
+    if(document.activeElement&&document.activeElement.blur) document.activeElement.blur();
+    reset();
+  }
+
+  $("#chips").innerHTML=PRESETS.map(function(p,j){return '<button class="chip'+(j===0?' on':'')+'" data-i="'+j+'">'+p.chip+'</button>';}).join("");
+  $("#chips").addEventListener("click",function(e){ var b=e.target.closest(".chip"); if(b) pick(+b.getAttribute("data-i")); });
+  $("#bNext").addEventListener("click",next);
+  $("#bBack").addEventListener("click",back);
+  $("#bReset").addEventListener("click",reset);
+  document.addEventListener("keydown",function(e){ if(e.code==="Space"&&!/INPUT|BUTTON/.test(e.target.tagName)){e.preventDefault();next();} });
+
+  /* ---------- ambient canvas ---------- */
+  var cv=$("#amb"),ctx=cv.getContext&&cv.getContext("2d"),parts=[];
+  function sizeC(){if(!ctx)return;cv.width=innerWidth;cv.height=innerHeight;}
+  function initParts(){parts=[];for(var i=0;i<46;i++)parts.push({x:Math.random(),y:Math.random(),
+    r:Math.random()*1.6+.3,s:Math.random()*.02+.004,o:Math.random()*.4+.1});}
+  function drawC(){if(!ctx)return;ctx.clearRect(0,0,cv.width,cv.height);
+    parts.forEach(function(p){p.y-=p.s/60;if(p.y<-.02)p.y=1.02;
+      ctx.beginPath();ctx.arc(p.x*cv.width,p.y*cv.height,p.r,0,7);
+      ctx.fillStyle="rgba(140,170,255,"+p.o+")";ctx.fill();});
+    requestAnimationFrame(drawC);}
+  if(ctx&&!reduce){sizeC();initParts();drawC();addEventListener("resize",sizeC);}
+
+  reset();
+})();
+</script>
+<script src="../manifest.js"></script>
+<script src="../../assets/rail.js"></script>
+<script>Rail.render(document.getElementById("rail"),{kind:"visuals",current:"14-printf-format"});</script>
+</body>
+</html>

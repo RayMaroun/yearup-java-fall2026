@@ -1,0 +1,398 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Scanner Methods | Week 1 Visual Hub</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Sora:wght@500;700&family=Inter:wght@400;500&family=JetBrains+Mono:wght@400;500&display=swap">
+<style>
+  :root{
+    --bg:#080c17; --bg2:#0c1428; --surface:rgba(255,255,255,.045); --line:rgba(255,255,255,.09);
+    --ink:#eef2fb; --muted:#8496b6; --accent:#6ea0ff; --accent2:#8b7bff; --good:#46d98a; --warn:#ff6a6a;
+    --gold:#ffc862; --disp:'Sora',system-ui,sans-serif; --body:'Inter',system-ui,sans-serif;
+    --mono:'JetBrains Mono',ui-monospace,monospace;
+  }
+  *{box-sizing:border-box}
+  body{margin:0;min-height:100vh;color:var(--ink);font-family:var(--body);
+    background:radial-gradient(1200px 700px at 70% -10%,#141d38 0%,transparent 55%),
+               radial-gradient(900px 600px at 10% 110%,#161233 0%,transparent 50%),#080c17;
+    overflow-x:hidden}
+  #amb{position:fixed;inset:0;z-index:0;pointer-events:none;opacity:.6}
+  .back{position:relative;z-index:2;display:block;max-width:1120px;margin:0 auto;padding:26px 24px 0;
+    width:100%;font-family:var(--mono);font-size:.8rem;letter-spacing:.04em;color:var(--muted);
+    text-decoration:none;transition:color .15s}
+  .back:hover{color:var(--accent)}
+  .wrap{position:relative;z-index:1;max-width:1120px;margin:0 auto;padding:22px 24px 70px}
+  .tag{font-family:var(--mono);font-size:.72rem;letter-spacing:.22em;text-transform:uppercase;color:var(--accent);margin:0 0 14px}
+  h1{font-family:var(--disp);font-weight:700;font-size:clamp(2.3rem,6vw,3.6rem);line-height:1;margin:0 0 12px;
+    letter-spacing:-.03em;background:linear-gradient(180deg,#fff,#b9c6e6);-webkit-background-clip:text;
+    background-clip:text;color:transparent}
+  .lede{color:var(--muted);max-width:64ch;font-size:1.05rem;margin:0 0 30px;line-height:1.5}
+  .lede b{color:var(--ink)}
+  .lede code,.take code,.status code{font-family:var(--mono);font-size:.92em;color:#bcd0ff}
+  .stage{position:relative;background:linear-gradient(180deg,rgba(255,255,255,.03),rgba(255,255,255,.01));
+    border:1px solid var(--line);border-radius:24px;padding:8px;
+    box-shadow:0 1px 0 rgba(255,255,255,.06) inset,0 30px 80px -30px rgba(0,0,0,.8)}
+  .grid{display:grid;grid-template-columns:340px 1fr;gap:8px}
+  @media (max-width:860px){.grid{grid-template-columns:1fr}}
+  .panelL,.panelR{border-radius:18px;padding:22px}
+  .panelL{background:linear-gradient(180deg,rgba(110,160,255,.06),rgba(139,123,255,.03));border:1px solid var(--line)}
+  .panelR{background:rgba(6,10,20,.5);border:1px solid var(--line);position:relative;overflow:hidden;min-width:0}
+  .lab{font-family:var(--mono);font-size:.7rem;letter-spacing:.12em;text-transform:uppercase;color:var(--muted);margin:0 0 12px}
+  /* example chips */
+  .chips{display:flex;flex-wrap:wrap;gap:6px;margin-bottom:16px}
+  .chip{font-family:var(--mono);font-size:.74rem;padding:5px 11px;border-radius:999px;cursor:pointer;
+    border:1px solid var(--line);background:rgba(0,0,0,.25);color:var(--muted);transition:.15s}
+  .chip:hover{border-color:var(--accent);color:var(--accent)}
+  .chip.on{border-color:rgba(110,160,255,.6);background:rgba(110,160,255,.14);color:var(--ink)}
+  .chip:focus-visible{outline:2px solid var(--accent);outline-offset:2px}
+  /* readout */
+  .readout{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin:0 0 14px}
+  .stat{background:rgba(255,255,255,.03);border:1px solid var(--line);border-radius:12px;padding:11px 13px;min-width:0}
+  .stat .k{font-family:var(--mono);font-size:.62rem;letter-spacing:.1em;text-transform:uppercase;color:var(--muted)}
+  .stat .v{font-family:var(--disp);font-weight:700;font-size:1.2rem;font-variant-numeric:tabular-nums;margin-top:2px;transition:color .3s;
+    min-height:1.6em;white-space:pre;overflow:hidden;text-overflow:ellipsis}
+  .v.good{color:var(--good)} .v.warn{color:var(--warn)} .v.dim{color:rgba(132,150,182,.5)}
+  .stepno{font-family:var(--mono);font-size:.64rem;letter-spacing:.14em;text-transform:uppercase;color:var(--muted);margin:0 0 8px}
+  .stepno b{color:var(--accent);font-weight:500}
+  .status{font-family:var(--mono);font-size:.82rem;line-height:1.55;color:var(--ink);min-height:122px;
+    padding:12px 14px;border-radius:12px;background:rgba(0,0,0,.25);border:1px solid var(--line);
+    border-left:3px solid var(--accent);transition:border-color .3s}
+  .status.acting{border-left-color:var(--good)}
+  .status.trouble{border-left-color:var(--warn)}
+  .status b.g{color:var(--good)} .status b.w{color:var(--warn)} .status b.a{color:var(--accent)} .status b.y{color:var(--gold)}
+  .actions{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-top:16px}
+  .btn{font-family:var(--body);font-weight:500;font-size:.84rem;padding:9px 12px;border-radius:11px;cursor:pointer;
+    border:1px solid var(--line);background:var(--surface);color:var(--ink);transition:.15s;text-align:center}
+  .btn:hover{border-color:var(--accent);color:var(--accent)}
+  .btn.primary{border-color:rgba(110,160,255,.5);background:rgba(110,160,255,.12);grid-column:1 / -1}
+  .btn.gold:hover{border-color:var(--gold);color:var(--gold)}
+  .btn:disabled{opacity:.35;cursor:not-allowed}
+  .btn:focus-visible{outline:2px solid var(--accent);outline-offset:2px}
+  .hint{font-family:var(--mono);font-size:.7rem;color:var(--muted);margin:14px 0 0;line-height:1.5}
+  .hint b{color:var(--accent)}
+  /* right: code, line cells, variable, console */
+  .code{min-width:0;font-family:var(--mono);font-size:.76rem;line-height:1.8;background:rgba(0,0,0,.35);border:1px solid var(--line);
+    border-radius:14px;padding:10px 0;overflow-x:auto;margin-bottom:14px}
+  .ln{display:flex;gap:12px;padding:0 14px;white-space:pre;color:#c9d4ea;transition:background .2s,opacity .3s}
+  .ln .n{width:20px;text-align:right;color:rgba(132,150,182,.55);user-select:none;flex-shrink:0}
+  .ln.cur{background:rgba(110,160,255,.14);box-shadow:inset 3px 0 0 var(--accent)}
+  .ln.cur .n{color:var(--accent)}
+  .ln.bad{background:rgba(255,106,106,.12);box-shadow:inset 3px 0 0 var(--warn)}
+  .ln.dim{opacity:.4}
+  .kw{color:#c792ea} .ty{color:#82aaff} .st{color:#c3e88d} .nm{color:#f78c6c} .cm{color:#5f6b85;font-style:italic} .fn{color:#ffcb6b}
+  .pic{position:relative;min-height:228px;border:1px dashed rgba(132,150,182,.3);border-radius:14px;background:rgba(0,0,0,.18);
+    padding:16px 16px 18px;overflow:hidden}
+  .zone{font-family:var(--mono);font-size:.6rem;letter-spacing:.14em;text-transform:uppercase;color:rgba(132,150,182,.6);margin:0 0 8px}
+  .zone b{color:var(--accent);font-weight:500}
+  .cells{display:flex;flex-wrap:wrap;gap:4px;margin-bottom:22px}
+  .cell{position:relative;width:28px;height:38px;border-radius:8px;display:flex;align-items:center;justify-content:center;
+    font-family:var(--mono);font-size:1rem;color:var(--ink);background:rgba(110,160,255,.07);border:1px solid rgba(110,160,255,.3);
+    transition:background .3s,border-color .3s,opacity .4s,transform .3s,color .3s}
+  .cell.sp{color:rgba(132,150,182,.55)}
+  .cell.nl{width:40px;font-size:.62rem;color:var(--muted)}
+  .cell.lit{background:rgba(70,217,138,.2);border-color:var(--good);color:#d9ffe9;transform:translateY(-3px)}
+  .cell.gone{opacity:.18;border-style:dashed;transform:none}
+  .cell.bad{background:rgba(255,106,106,.16);border-color:var(--warn);color:#ffd0d0}
+  .cell.drop{opacity:.25;border-style:dashed;text-decoration:line-through}
+  .cell.left{border-color:rgba(255,200,98,.6);background:rgba(255,200,98,.08)}
+  .var{display:inline-flex;align-items:center;gap:10px;font-family:var(--mono);font-size:.82rem;padding:10px 12px;border-radius:12px;
+    border:1px solid var(--line);background:rgba(255,255,255,.03);max-width:100%}
+  .var .slot{min-width:110px;min-height:34px;padding:6px 10px;border-radius:9px;border:2px dashed rgba(132,150,182,.35);
+    font-family:var(--mono);font-size:.95rem;display:flex;align-items:center;white-space:pre;transition:border-color .3s,background .3s,color .3s}
+  .var .slot.good{border-style:solid;border-color:var(--good);background:rgba(70,217,138,.1);color:#d9ffe9}
+  .var .slot.warn{border-color:var(--warn);color:var(--warn);font-size:.72rem}
+  .ghost{position:absolute;z-index:3;font-family:var(--mono);font-size:1rem;color:#d9ffe9;padding:6px 10px;border-radius:9px;
+    background:rgba(70,217,138,.25);border:1px solid var(--good);white-space:pre;pointer-events:none;
+    transition:left .6s cubic-bezier(.2,.9,.3,1),top .6s cubic-bezier(.2,.9,.3,1),opacity .3s}
+  .note{font-family:var(--mono);font-size:.66rem;color:var(--muted);margin:10px 0 0}
+  .note .y{color:var(--gold)} .note .g{color:var(--good)} .note .w{color:var(--warn)}
+  /* side by side */
+  .sum{display:grid;grid-template-columns:auto 1fr;gap:8px 14px;font-family:var(--mono);font-size:.8rem;align-items:center}
+  .sum .m{color:#ffcb6b}
+  .sum .r{display:flex;flex-wrap:wrap;gap:3px;align-items:center}
+  .sum .r .cell{width:22px;height:30px;font-size:.82rem;border-radius:6px}
+  .sum .r .cell.nl{width:32px;font-size:.55rem}
+  .sum .r .cell.lit{transform:none}
+  .sum .r .arrow{color:var(--muted);margin:0 6px}
+  .sum .r .got{color:var(--good)} .sum .r .err{color:var(--warn);font-size:.72rem}
+  .console{margin-top:14px;font-family:var(--mono);font-size:.76rem;line-height:1.6;background:#05070e;border:1px solid var(--line);
+    border-radius:12px;padding:10px 14px;min-height:82px;color:#9fe3b6;overflow-x:auto}
+  .console .cl{font-size:.6rem;letter-spacing:.14em;text-transform:uppercase;color:rgba(132,150,182,.6);margin-bottom:4px}
+  .console .in{color:var(--ink)}
+  .console .ex{color:var(--warn);white-space:pre}
+  .console .out{animation:pop .3s}
+  @keyframes pop{from{transform:scale(.6);opacity:0}to{transform:scale(1);opacity:1}}
+  .take{margin-top:22px;background:linear-gradient(180deg,rgba(110,160,255,.08),rgba(139,123,255,.04));
+    border:1px solid var(--line);border-left:3px solid var(--accent);border-radius:12px;padding:16px 18px}
+  .take .tk{font-family:var(--mono);font-size:.66rem;letter-spacing:.14em;text-transform:uppercase;color:var(--accent);margin:0 0 8px}
+  .take p{margin:0;font-size:.95rem;color:var(--ink);line-height:1.55}
+  .take b{color:#fff}
+  @media (prefers-reduced-motion:reduce){*{animation-duration:.01ms!important;transition-duration:.01ms!important}#amb{display:none}}
+</style>
+</head>
+<body>
+
+<a class="back" href="../index.html#16-scanner-methods">&#8592; Week 1 index</a>
+
+<canvas id="amb"></canvas>
+<div class="wrap">
+  <p class="tag">Workbook 1c &middot; Section 3-3 &middot; Reading input with Scanner</p>
+  <h1>Scanner Methods</h1>
+  <p class="lede">The learner types one line and presses Enter. <b>Each Scanner method takes a different piece of that line:
+  one word, the whole line, or one number.</b> Step through four runs on the same typed line.</p>
+
+  <div class="stage">
+    <div class="grid">
+      <div class="panelL">
+        <p class="lab">What the learner types</p>
+        <div class="chips" id="chips"></div>
+
+        <div class="readout">
+          <div class="stat"><div class="k">taken</div><div class="v dim" id="stTook">?</div></div>
+          <div class="stat"><div class="k">still in the line</div><div class="v dim" id="stLeft">?</div></div>
+        </div>
+
+        <p class="stepno" id="stepno">Step <b>0</b> of 6</p>
+        <div class="status" id="status"></div>
+
+        <div class="actions">
+          <button class="btn primary" id="bNext">Next &rarr;</button>
+          <button class="btn gold" id="bBack">&larr; Back</button>
+          <button class="btn" id="bReset">Reset</button>
+        </div>
+        <p class="hint">space = next &middot; each step is a fresh run on the same line. <b>Try 42 apples.</b></p>
+      </div>
+
+      <div class="panelR">
+        <p class="lab">Main.java</p>
+        <div class="code" id="code"></div>
+        <div class="pic" id="pic"></div>
+        <div class="console"><div class="cl">console</div><div id="console"></div></div>
+      </div>
+    </div>
+  </div>
+
+  <div class="take">
+    <p class="tk">The one idea</p>
+    <p><b><code>next()</code> stops at a space</b>, so it takes one word. <b><code>nextLine()</code> takes everything to the end of the line</b>,
+    spaces included. <b><code>nextInt()</code> only accepts a whole number</b> and throws InputMismatchException otherwise;
+    <code>nextDouble()</code> takes a number with or without a decimal point.</p>
+  </div>
+
+  <div id="rail"></div>
+</div>
+
+<script>
+(function(){
+  "use strict";
+  var $=function(s){return document.querySelector(s);};
+  var reduce=matchMedia("(prefers-reduced-motion: reduce)").matches;
+
+  /* ---------- typed lines: invented ---------- */
+  var PRESETS=["Ada Lovelace","42 apples","3.5"];
+  var LINE=PRESETS[0];
+
+  /* ---------- the code: Scanner lines and prompts from the java-io demo, salary from the workbook ---------- */
+  var CODE=[
+    '<span class="ty">Scanner</span> myScanner = <span class="kw">new</span> <span class="ty">Scanner</span>(System.in);',
+    '',
+    '<span class="cm">// each call below runs on a freshly typed line</span>',
+    '<span class="ty">String</span> word = myScanner.<span class="fn">next</span>();',
+    '<span class="ty">String</span> name = myScanner.<span class="fn">nextLine</span>();',
+    '<span class="ty">int</span> firstNumber = myScanner.<span class="fn">nextInt</span>();',
+    '<span class="ty">double</span> salary = myScanner.<span class="fn">nextDouble</span>();'
+  ];
+  var PROMPTS={next:"Please enter your Name: ",nextLine:"Please enter your Name: ",nextInt:"Enter the first number: ",nextDouble:"What is your salary? "};
+
+  /* ---------- what each method really takes, computed from the line ---------- */
+  function firstToken(s){ var m=/^(\s*)(\S+)/.exec(s); return m?{start:m[1].length,end:m[1].length+m[2].length,text:m[2]}:null; }
+  function javaDouble(t){ var x=parseFloat(t); var s=String(x); return /[.eE]/.test(s)?s:s+".0"; }
+  function run(method){
+    var t=firstToken(LINE), n=LINE.length;
+    if(method==="nextLine") return {ok:true,from:0,to:n,value:'"'+LINE+'"',raw:LINE,dropNl:true};
+    if(!t) return {ok:false,from:0,to:0};
+    if(method==="next") return {ok:true,from:t.start,to:t.end,value:'"'+t.text+'"',raw:t.text};
+    if(method==="nextInt"){
+      if(/^[+-]?\d+$/.test(t.text)) return {ok:true,from:t.start,to:t.end,value:String(parseInt(t.text,10)),raw:t.text};
+      return {ok:false,from:t.start,to:t.end,raw:t.text};
+    }
+    if(/^[+-]?(\d+\.?\d*|\.\d+)$/.test(t.text)) return {ok:true,from:t.start,to:t.end,value:javaDouble(t.text),raw:t.text};
+    return {ok:false,from:t.start,to:t.end,raw:t.text};
+  }
+
+  var RUNS=[
+    {m:"next",line:4,type:"String",name:"word"},
+    {m:"nextLine",line:5,type:"String",name:"name"},
+    {m:"nextInt",line:6,type:"int",name:"firstNumber"},
+    {m:"nextDouble",line:7,type:"double",name:"salary"}
+  ];
+
+  function build(){
+    var S=[];
+    S.push({kind:"typed",line:[1],cls:"",msg:'The learner types <b class="a">'+LINE+'</b> and presses Enter. Scanner now holds the line, character by character, ending with the Enter key.'});
+    RUNS.forEach(function(r){
+      var res=run(r.m), msg, cls;
+      if(r.m==="next"){ cls="acting"; msg='<code>next()</code> skips leading spaces and takes characters <b class="g">until it reaches a space</b>: '+res.value+'.'+(res.to<LINE.length?' The rest stays in the line.':' Here there is no space, so it takes the one word.'); }
+      else if(r.m==="nextLine"){ cls="acting"; msg='<code>nextLine()</code> takes <b class="g">everything up to the Enter key</b>, spaces included: '+res.value+'. The Enter itself is thrown away.'; }
+      else if(res.ok){ cls="acting"; msg='<code>'+r.m+'()</code> reads one token, <b class="g">'+res.raw+'</b>, and turns it into '+(r.m==="nextInt"?'the int ':'the double ')+'<b class="g">'+res.value+'</b>.'+(r.m==="nextDouble"&&res.raw.indexOf(".")<0?' A whole number is fine for a double.':'')+(res.to<LINE.length?' The rest stays in the line.':''); }
+      else { cls="trouble"; msg='<code>'+r.m+'()</code> reads the token <b class="w">'+res.raw+'</b>. '+(r.m==="nextInt"&&/^[+-]?(\d+\.?\d*|\.\d+)$/.test(res.raw)?'It has a decimal point, so it is not an int. ':'That is not a number. ')+'Scanner <b class="w">throws InputMismatchException</b> and the program stops.'; }
+      S.push({kind:"run",run:r,res:res,line:[r.line],cls:cls,msg:msg});
+    });
+    S.push({kind:"sum",line:[4,5,6,7],cls:"",msg:'Side by side, same typed line: <b class="a">next</b> stops at a space, <b class="a">nextLine</b> goes to the end, <b class="a">nextInt</b> and <b class="a">nextDouble</b> only accept a number.'});
+    return S;
+  }
+
+  /* ---------- rendering ---------- */
+  var steps=[],at=-1,timer=null;
+  var codeEl=$("#code"),picEl=$("#pic"),consEl=$("#console"),statusEl=$("#status");
+  function esc(s){ var d=document.createElement("div"); d.textContent=s; return d.innerHTML; }
+
+  function renderCode(cur,bad){
+    codeEl.innerHTML=CODE.map(function(t,i){
+      var n=i+1,c="ln";
+      if(cur&&cur.indexOf(n)>=0) c+=bad?" bad":" cur";
+      else if(cur&&n>=4) c+=" dim";
+      return '<div class="'+c+'"><span class="n">'+n+'</span><span>'+(t||" ")+'</span></div>';
+    }).join("");
+  }
+
+  /* one row of cells for the typed line; state: how each cell looks after the call */
+  function cellsHtml(res,phase){
+    var h="",i,ch,c;
+    for(i=0;i<LINE.length;i++){
+      ch=LINE.charAt(i); c="cell"+(ch===" "?" sp":"");
+      if(res){
+        var inTok=i>=res.from&&i<res.to;
+        if(inTok) c+=res.ok?(phase==="moved"?" gone":" lit"):" bad";
+        else if(res.ok&&i>=res.to) c+=" left";
+        else if(res.ok&&i<res.from) c+=phase==="moved"?" gone":"";
+      }
+      h+='<span class="'+c+'" data-i="'+i+'">'+(ch===" "?"\u00b7":esc(ch))+'</span>';
+    }
+    c="cell nl";
+    if(res&&res.ok) c+=res.dropNl?" drop":" left";
+    h+='<span class="'+c+'">Enter</span>';
+    return h;
+  }
+
+  function renderPic(s,phase){
+    if(!s){ picEl.innerHTML='<p class="zone">the typed line</p><div class="note">Nothing typed yet.</div>'; return; }
+    if(s.kind==="sum"){ renderSum(); return; }
+    var h='<p class="zone">the typed line'+(s.run?' \u00b7 <b>'+s.run.m+'()</b> runs on it':'')+'</p>';
+    h+='<div class="cells" id="cells">'+cellsHtml(s.res,phase)+'</div>';
+    if(s.run){
+      var r=s.run,res=s.res,slot;
+      if(!res.ok) slot='<span class="slot warn">no value</span>';
+      else if(phase==="moved") slot='<span class="slot good" id="slot">'+esc(res.value)+'</span>';
+      else slot='<span class="slot" id="slot"></span>';
+      h+='<div class="var"><span><span class="ty">'+r.type+'</span> '+r.name+' =</span>'+slot+'</div>';
+      if(res.ok) h+='<p class="note"><span class="g">green</span> = taken \u00b7 <span class="y">gold</span> = still in the line'+(res.dropNl?' \u00b7 the Enter is thrown away':'')+'</p>';
+      else h+='<p class="note"><span class="w">red</span> = the token Scanner tried to read</p>';
+    }
+    picEl.innerHTML=h;
+  }
+
+  function renderSum(){
+    var h='<p class="zone">four runs on <b>'+esc(LINE)+'</b></p><div class="sum">';
+    RUNS.forEach(function(r){
+      var res=run(r.m);
+      h+='<span class="m">'+r.m+'()</span><span class="r">'+cellsHtml(res,"lit")+'<span class="arrow">\u2192</span>'+
+        (res.ok?'<span class="got">'+esc(res.value)+'</span>':'<span class="err">InputMismatchException</span>')+'</span>';
+    });
+    picEl.innerHTML=h+'</div>';
+  }
+
+  /* the taken text lifts out of the cells and lands in the variable */
+  function fly(s){
+    var cells=document.querySelectorAll("#cells .cell"), slot=$("#slot");
+    if(!slot||s.res.from>=s.res.to) return;
+    var first=cells[s.res.from], pr=picEl.getBoundingClientRect(), fr=first.getBoundingClientRect(), sr=slot.getBoundingClientRect();
+    var g=document.createElement("div"); g.className="ghost"; g.textContent=s.res.value;
+    g.style.left=(fr.left-pr.left)+"px"; g.style.top=(fr.top-pr.top)+"px";
+    picEl.appendChild(g);
+    void g.offsetWidth;
+    g.style.left=(sr.left-pr.left)+"px"; g.style.top=(sr.top-pr.top)+"px";
+    timer=setTimeout(function(){ renderPic(s,"moved"); },650);
+  }
+
+  function renderConsole(s){
+    if(!s||s.kind==="sum"){ consEl.innerHTML='<span style="color:rgba(132,150,182,.5)">'+(s?'(four separate runs)':'(waiting for input)')+'</span>'; return; }
+    var p=s.run?PROMPTS[s.run.m]:"Please enter your Name: ";
+    var h='<div>'+esc(p)+'</div><div class="in">'+esc(LINE)+'</div>';
+    if(s.run&&!s.res.ok) h+='<div class="ex out">Exception in thread "main" java.util.InputMismatchException\n    ...\n    at com.pluralsight.Main.main(Main.java:'+s.run.line+')</div>';
+    consEl.innerHTML=h;
+  }
+
+  function setStat(id,v,c){ var e=$(id); if(v===null){e.textContent="?";e.className="v dim";} else {e.textContent=v;e.className="v "+(c||"");} }
+
+  function show(i){
+    clearTimeout(timer); at=i;
+    if(i<0){
+      renderCode(null); renderPic(null); renderConsole(null);
+      statusEl.className="status"; statusEl.innerHTML='Press <b class="a">Next</b> to start. Each step runs one Scanner call on the line <b class="a">'+esc(LINE)+'</b>.';
+      setStat("#stTook",null); setStat("#stLeft",null);
+      $("#stepno").innerHTML="Step <b>0</b> of "+steps.length; setBtns(); return;
+    }
+    var s=steps[i];
+    $("#stepno").innerHTML="Step <b>"+(i+1)+"</b> of "+steps.length;
+    renderCode(s.line,s.cls==="trouble");
+    statusEl.className="status "+s.cls; statusEl.innerHTML=s.msg;
+    renderConsole(s);
+    if(s.kind==="run"){
+      var res=s.res;
+      if(res.ok){
+        setStat("#stTook",res.value,"good");
+        var rest=LINE.slice(res.to)+(res.dropNl?"":" + Enter");
+        setStat("#stLeft",res.dropNl?"nothing":rest.replace(/^ /,"·"),"");
+        if(reduce){ renderPic(s,"moved"); } else { renderPic(s,"lit"); fly(s); }
+      } else {
+        setStat("#stTook","nothing","warn"); setStat("#stLeft",LINE.slice(res.from)+" + Enter","");
+        renderPic(s,"lit");
+      }
+    } else if(s.kind==="typed"){
+      renderPic(s,""); setStat("#stTook",null); setStat("#stLeft",LINE+" + Enter","");
+    } else {
+      renderPic(s,""); setStat("#stTook",null); setStat("#stLeft",null);
+    }
+    setBtns();
+  }
+  function setBtns(){ $("#bNext").disabled=at>=steps.length-1; $("#bBack").disabled=at<0; }
+  function next(){ if(at<steps.length-1) show(at+1); }
+  function back(){ if(at>=0) show(at-1); }
+  function reset(){ steps=build(); show(-1); }
+  function pick(idx){
+    LINE=PRESETS[idx];
+    Array.prototype.forEach.call(document.querySelectorAll(".chip"),function(c,j){c.classList.toggle("on",j===idx);});
+    if(document.activeElement&&document.activeElement.blur) document.activeElement.blur();
+    reset();
+  }
+
+  $("#chips").innerHTML=PRESETS.map(function(p,j){return '<button class="chip'+(j===0?' on':'')+'" data-i="'+j+'">'+esc(p)+'</button>';}).join("");
+  $("#chips").addEventListener("click",function(e){ var b=e.target.closest(".chip"); if(b) pick(+b.getAttribute("data-i")); });
+  $("#bNext").addEventListener("click",next);
+  $("#bBack").addEventListener("click",back);
+  $("#bReset").addEventListener("click",reset);
+  document.addEventListener("keydown",function(e){ if(e.code==="Space"&&!/INPUT|BUTTON/.test(e.target.tagName)){e.preventDefault();next();} });
+
+  /* ---------- ambient canvas ---------- */
+  var cv=$("#amb"),ctx=cv.getContext&&cv.getContext("2d"),parts=[];
+  function sizeC(){if(!ctx)return;cv.width=innerWidth;cv.height=innerHeight;}
+  function initParts(){parts=[];for(var i=0;i<46;i++)parts.push({x:Math.random(),y:Math.random(),
+    r:Math.random()*1.6+.3,s:Math.random()*.02+.004,o:Math.random()*.4+.1});}
+  function drawC(){if(!ctx)return;ctx.clearRect(0,0,cv.width,cv.height);
+    parts.forEach(function(p){p.y-=p.s/60;if(p.y<-.02)p.y=1.02;
+      ctx.beginPath();ctx.arc(p.x*cv.width,p.y*cv.height,p.r,0,7);
+      ctx.fillStyle="rgba(140,170,255,"+p.o+")";ctx.fill();});
+    requestAnimationFrame(drawC);}
+  if(ctx&&!reduce){sizeC();initParts();drawC();addEventListener("resize",sizeC);}
+
+  reset();
+})();
+</script>
+<script src="../manifest.js"></script>
+<script src="../../assets/rail.js"></script>
+<script>Rail.render(document.getElementById("rail"),{kind:"visuals",current:"16-scanner-methods"});</script>
+</body>
+</html>
