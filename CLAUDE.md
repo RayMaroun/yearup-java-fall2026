@@ -85,12 +85,15 @@ a browser; the gate is idea by idea from the workbook's learning objectives, not
 visual exists only when something is hidden, too big, or too abstract to see, or when the mental model
 itself is the invisible thing (foundations exception, which applies often with beginners).
 
-**Three sizes. Pick the smallest that shows the idea. The idea list names the size for every page.**
-- **Glance** (the default, most pages): one animated picture with ONE control, a toggle, a slider, a click
+**Three sizes. The size is a floor, not a ceiling: pick the size that makes the idea clear to someone meeting it
+for the first time. Anything with a "how it works" gets a Walk at least. Glance is only for ideas that are a
+labeled picture. The idea list names the size for every page.**
+- **Glance** (reference-like ideas only): one animated picture with ONE control, a toggle, a slider, a click
   that changes the picture. No steps, no inputs, no state to manage. Readable in five seconds while the
   instructor is talking. Examples: data types and sizes, naming conventions, integer division, JDK/JRE/JVM.
-- **Walk**: a short step-through, 4 to 8 steps, Next and Reset only, one sentence per step, the picture
-  changes at each step. For processes with a few states: compilation flow, an if/else path, a loop running.
+- **Walk** (the default): a step-through that shows what happens behind the scenes, 4 to 10 steps, Next and
+  Reset, one sentence per step, the picture changes at each step. Evaluation order, truncation, what == compares,
+  the string printf builds, the path through if/else, a loop running.
 - **Model**: the full simulator with editable inputs, computed outcomes, and an experiment that lets the
   learner break the rule and see the consequence. Only where the mechanism is the whole point and the
   instructor wants to play with it in class: the call stack, the Scanner buffer. Few per week.
@@ -105,6 +108,10 @@ A Glance page may drop the left/right split and put its one control under the pi
 - Both `switch` forms are taught in Workbook 1c: traditional first, then arrow. Show both where switch appears.
 - Terminology: learners, not students; the instructor is Raymond; no grades talk, no internal names.
 - US spelling. No emoji. No em dashes. No HTML entities inside `<script>`.
+
+## Skipped content rule
+If the instructor skips a module or section (see `04.Weeks/Week NN/review.md` and the Notion Teaching Checklist),
+it gets no visual, no game, no reference entry. Week 1: 1c Module 1 was skipped in spring (confirm each run).
 
 ## Examples rule (set 2026-10-11 with the instructor)
 - Visuals and games use the examples from the instructor's demos of that week (`04.Weeks/Week NN/demos/`)
