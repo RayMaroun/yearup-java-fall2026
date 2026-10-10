@@ -43,17 +43,13 @@
     border-radius:999px;border:1px solid var(--line);background:rgba(0,0,0,.25);color:var(--muted);cursor:pointer;transition:.15s}
   .focus:hover{border-color:var(--accent);color:var(--accent)}
   .focus:focus-visible{outline:2px solid var(--accent);outline-offset:2px}
-  body.solo .focus{border-color:rgba(255,200,98,.6);color:var(--gold);background:rgba(255,200,98,.1)}
 
   /* hero picture: the code, the variable box and the output, scaled up */
   .pic{position:relative;height:390px;border:1px solid var(--line);border-radius:18px;background:rgba(6,10,20,.5);overflow:hidden;
     display:flex;align-items:center;justify-content:center;padding:22px 28px}
-  body.solo .pic{height:480px}
   .duo{display:grid;grid-template-columns:minmax(0,1.5fr) minmax(0,1fr);gap:22px;width:100%;max-width:1000px;align-items:center}
-  @media (max-width:860px){.duo{grid-template-columns:1fr}.pic{height:auto;min-height:390px}body.solo .pic{height:auto;min-height:480px}}
   .code{font-family:var(--mono);font-size:1.12rem;line-height:1.55;background:rgba(0,0,0,.35);border:1px solid var(--line);
     border-radius:14px;padding:18px 0;overflow-x:auto}
-  body.solo .code{font-size:1.26rem}
   .ln{display:flex;gap:14px;padding:5px 20px;white-space:pre;border-left:3px solid transparent;transition:background .25s,border-color .25s}
   .ln .no{color:#4b5a78;min-width:1.2em;text-align:right;user-select:none}
   .kw{color:#c9a7ff} .ty{color:#7fd6ff} .st{color:#b9e88a} .nm{color:var(--ink)}
@@ -72,7 +68,6 @@
   .bname{font-family:var(--mono);font-size:.98rem;color:var(--muted)}
   .bname b{color:#7fd6ff;font-weight:400}
   .bval{font-family:var(--disp);font-weight:700;font-size:1.8rem;margin-top:8px;color:#b9e88a;min-height:2.3rem}
-  body.solo .bval{font-size:2.05rem}
   .lock{position:absolute;right:14px;top:14px;font-family:var(--mono);font-size:.72rem;letter-spacing:.14em;text-transform:uppercase;
     padding:5px 11px;border-radius:999px;border:1px solid var(--line);color:var(--muted);transition:.3s}
   .box.locked .lock{color:var(--gold);border-color:rgba(255,200,98,.55)}
@@ -87,7 +82,6 @@
   .caption .n small{display:block;font-family:var(--mono);font-weight:400;font-size:.58rem;letter-spacing:.14em;text-transform:uppercase;color:var(--muted)}
   .caption.locked .n{color:var(--gold)}
   .caption .t{font-size:1.02rem;line-height:1.55;color:var(--ink);padding-left:16px;border-left:3px solid var(--accent);transition:border-color .3s}
-  body.solo .caption .t{font-size:1.18rem}
   .caption.locked .t{border-left-color:var(--gold)}
   .caption b.g{color:var(--good)} .caption b.a{color:var(--accent)} .caption b.y{color:var(--gold)}
 
@@ -103,7 +97,6 @@
   .hint{font-family:var(--mono);font-size:.68rem;color:var(--muted);margin:10px 4px 0;line-height:1.5}
   .hint b{color:var(--accent)}
   .hint code{font-family:var(--mono);color:#bcd0ff}
-  body.solo .take,body.solo .hint{display:none}
 
   .take{margin-top:22px;background:linear-gradient(180deg,rgba(110,160,255,.08),rgba(139,123,255,.04));
     border:1px solid var(--line);border-left:3px solid var(--accent);border-radius:12px;padding:16px 18px}
@@ -126,7 +119,6 @@
   <div class="stage">
     <div class="topbar">
       <span class="lab">Main.java</span>
-      <button class="focus" id="bFocus" title="Hide the notes, enlarge the picture">Focus</button>
     </div>
 
     <div class="pic" id="pic">
@@ -210,11 +202,6 @@
 
   /* focus: picture and caption only. Remembered per browser. */
   var cur="off";
-  function setFocus(on){ document.body.classList.toggle("solo",on); $("#bFocus").textContent=on?"Focus on":"Focus";
-    try{localStorage.setItem("hub-focus",on?"1":"0");}catch(e){} set(cur); }
-  $("#bFocus").addEventListener("click",function(){ setFocus(!document.body.classList.contains("solo")); this.blur(); });
-  try{ if(localStorage.getItem("hub-focus")==="1") document.body.classList.add("solo"); }catch(e){}
-  if(document.body.classList.contains("solo")) $("#bFocus").textContent="Focus on";
 
   /* ---------- ambient canvas ---------- */
   var cv=$("#amb"),ctx=cv.getContext&&cv.getContext("2d"),parts=[];

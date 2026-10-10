@@ -43,12 +43,10 @@
     border-radius:999px;border:1px solid var(--line);background:rgba(0,0,0,.25);color:var(--muted);cursor:pointer;transition:.15s}
   .focus:hover{border-color:var(--accent);color:var(--accent)}
   .focus:focus-visible{outline:2px solid var(--accent);outline-offset:2px}
-  body.solo .focus{border-color:rgba(255,200,98,.6);color:var(--gold);background:rgba(255,200,98,.1)}
 
   /* hero picture: the three places. Sizes are in em so Focus scales the whole diagram */
   .pic{position:relative;min-height:390px;border:1px solid var(--line);border-radius:18px;background:rgba(6,10,20,.5);
     overflow:hidden;padding:14px;display:flex;align-items:center;font-size:15px}
-  body.solo .pic{min-height:480px;font-size:18px}
   .places{width:100%;max-width:1040px;margin:0 auto;display:grid;grid-template-columns:1.25fr 6em 1fr 6em 1fr;align-items:stretch}
   .place{border-radius:14px;border:1px solid var(--line);background:rgba(255,255,255,.02);padding:.95em .95em .8em;
     display:flex;flex-direction:column;gap:.6em;transition:border-color .3s,background .3s,box-shadow .3s}
@@ -97,7 +95,6 @@
     line-height:1.2;min-width:3.2rem}
   .caption .n small{display:block;font-family:var(--mono);font-weight:400;font-size:.58rem;letter-spacing:.14em;text-transform:uppercase;color:var(--muted)}
   .caption .t{font-size:1.02rem;line-height:1.55;color:var(--ink);padding-left:16px;border-left:3px solid var(--accent);transition:border-color .3s}
-  body.solo .caption .t{font-size:1.18rem}
   .caption.left .t{border-left-color:var(--gold)} .caption.ok .t{border-left-color:var(--good)}
   .caption b.g{color:var(--good)} .caption b.a{color:var(--accent)} .caption b.y{color:var(--gold)}
 
@@ -112,7 +109,6 @@
   .seg button:focus-visible{outline:2px solid var(--accent);outline-offset:-2px}
   .hint{font-family:var(--mono);font-size:.68rem;color:var(--muted);margin:10px 4px 0;line-height:1.5}
   .hint b{color:var(--accent)}
-  body.solo .take,body.solo .hint{display:none}
 
   .take{margin-top:22px;background:linear-gradient(180deg,rgba(110,160,255,.08),rgba(139,123,255,.04));
     border:1px solid var(--line);border-left:3px solid var(--accent);border-radius:12px;padding:16px 18px}
@@ -135,7 +131,6 @@
   <div class="stage">
     <div class="topbar">
       <span class="lab">Where is the commit "Print Hello"?</span>
-      <button class="focus" id="bFocus" title="Hide the notes, enlarge the picture">Focus</button>
     </div>
 
     <div class="pic" id="pic">
@@ -253,11 +248,6 @@
   var ORDER=["edit","commit","push","pull"], CAP={edit:"left",push:"ok",pull:"ok"}, cur="commit";
 
   /* focus: picture and caption only. Remembered per browser. */
-  function setFocus(on){ document.body.classList.toggle("solo",on); $("#bFocus").textContent=on?"Focus on":"Focus";
-    try{localStorage.setItem("hub-focus",on?"1":"0");}catch(e){} set(cur); }
-  $("#bFocus").addEventListener("click",function(){ setFocus(!document.body.classList.contains("solo")); this.blur(); });
-  try{ if(localStorage.getItem("hub-focus")==="1") document.body.classList.add("solo"); }catch(e){}
-  if(document.body.classList.contains("solo")) $("#bFocus").textContent="Focus on";
 
   $("#seg").addEventListener("click",function(e){ var b=e.target.closest("button"); if(b) set(b.getAttribute("data-m")); });
   /* ---------- ambient canvas ---------- */

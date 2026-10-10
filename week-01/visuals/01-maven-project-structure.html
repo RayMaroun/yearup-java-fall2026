@@ -43,16 +43,13 @@
     border-radius:999px;border:1px solid var(--line);background:rgba(0,0,0,.25);color:var(--muted);cursor:pointer;transition:.15s}
   .focus:hover{border-color:var(--accent);color:var(--accent)}
   .focus:focus-visible{outline:2px solid var(--accent);outline-offset:2px}
-  body.solo .focus{border-color:rgba(255,200,98,.6);color:var(--gold);background:rgba(255,200,98,.1)}
 
   /* hero picture: the tree (the one control) beside the detail */
   .pic{position:relative;height:390px;border:1px solid var(--line);border-radius:18px;background:rgba(6,10,20,.5);overflow:hidden;
     display:grid;grid-template-columns:minmax(0,400px) minmax(0,1fr)}
-  body.solo .pic{height:480px;grid-template-columns:minmax(0,470px) minmax(0,1fr)}
   .pic .pl{padding:18px 20px;border-right:1px solid var(--line);
     background:linear-gradient(180deg,rgba(110,160,255,.07),rgba(139,123,255,.03));display:flex;align-items:center}
   .pic .pr{padding:22px 26px;min-width:0;display:flex;flex-direction:column;justify-content:center}
-  @media (max-width:860px){.pic,body.solo .pic{height:auto;grid-template-columns:1fr}.pic .pl{border-right:0;border-bottom:1px solid var(--line)}}
 
   /* the tree: the one control */
   .tree,.tree ul{list-style:none;margin:0;padding:0}
@@ -62,7 +59,6 @@
   .node{display:flex;align-items:center;gap:9px;width:100%;text-align:left;font-family:var(--mono);font-size:.94rem;line-height:1.2;
     color:var(--muted);background:transparent;border:1px solid transparent;border-radius:9px;padding:4px 10px;margin:0;
     cursor:pointer;transition:color .2s,background .2s,border-color .2s}
-  body.solo .node{font-size:1.06rem;padding:7px 12px}
   .node:hover{color:var(--ink);background:rgba(255,255,255,.04)}
   .node:focus-visible{outline:2px solid var(--accent);outline-offset:1px}
   .node .ic{flex:0 0 auto;width:15px;height:13px;border-radius:2px;border:1.5px solid currentColor;opacity:.75}
@@ -80,7 +76,6 @@
   .crumb span{color:var(--accent)} .crumb span.end{color:var(--ink)}
   .dhead{display:flex;align-items:center;gap:12px;flex-wrap:wrap;margin:0 0 16px}
   .dname{font-family:var(--disp);font-weight:700;font-size:1.8rem;letter-spacing:-.01em;margin:0}
-  body.solo .dname{font-size:2.1rem}
   .badge{font-family:var(--mono);font-size:.62rem;letter-spacing:.14em;text-transform:uppercase;padding:4px 9px;border-radius:999px;border:1px solid}
   .badge.you{color:var(--good);border-color:rgba(70,217,138,.5);background:rgba(70,217,138,.08)}
   .badge.cfg{color:var(--gold);border-color:rgba(255,200,98,.5);background:rgba(255,200,98,.08)}
@@ -90,7 +85,6 @@
   .ex .exh{font-family:var(--mono);font-size:.66rem;letter-spacing:.12em;text-transform:uppercase;color:var(--muted);
     padding:9px 14px;border-bottom:1px solid var(--line)}
   .ex pre{margin:0;padding:12px 0;font-family:var(--mono);font-size:.86rem;line-height:1.6;overflow-x:auto;min-height:166px}
-  body.solo .ex pre{font-size:.96rem;min-height:200px}
   .ex .ln{display:block;padding:0 14px;color:#a9b8d6;white-space:pre}
   .ex .ln.hot{color:#fff;background:rgba(110,160,255,.14);box-shadow:inset 3px 0 0 var(--accent)}
   .ex .ln.dim{color:var(--muted);font-style:italic}
@@ -98,12 +92,10 @@
   /* caption: the selected node's one sentence, right under the picture */
   .caption{display:flex;gap:16px;align-items:flex-start;margin:14px 4px 0;min-height:56px}
   .caption .t{font-size:1.02rem;line-height:1.55;color:var(--ink);padding-left:16px;border-left:3px solid var(--accent);transition:border-color .3s}
-  body.solo .caption .t{font-size:1.18rem}
   .caption .t b{color:#fff;font-weight:600}
   .caption.you .t{border-left-color:var(--good)} .caption.cfg .t{border-left-color:var(--gold)} .caption.gen .t{border-left-color:var(--warn)}
   .hint{font-family:var(--mono);font-size:.68rem;color:var(--muted);margin:10px 4px 0;line-height:1.5}
   .hint b{color:var(--accent)}
-  body.solo .take,body.solo .hint{display:none}
 
   .take{margin-top:22px;background:linear-gradient(180deg,rgba(110,160,255,.08),rgba(139,123,255,.04));
     border:1px solid var(--line);border-left:3px solid var(--accent);border-radius:12px;padding:16px 18px}
@@ -127,7 +119,6 @@
   <div class="stage">
     <div class="topbar">
       <span class="lab">first-maven-project, as IntelliJ shows it</span>
-      <button class="focus" id="bFocus" title="Hide the notes, enlarge the picture">Focus</button>
     </div>
 
     <div class="pic" id="pic">
@@ -278,11 +269,6 @@
   $("#tree").addEventListener("click",function(e){var b=e.target.closest(".node"); if(b){cur=b.getAttribute("data-id"); select(cur);}});
 
   /* focus: picture and caption only. Remembered per browser. */
-  function setFocus(on){ document.body.classList.toggle("solo",on); $("#bFocus").textContent=on?"Focus on":"Focus";
-    try{localStorage.setItem("hub-focus",on?"1":"0");}catch(e){} select(cur); }
-  $("#bFocus").addEventListener("click",function(){ setFocus(!document.body.classList.contains("solo")); this.blur(); });
-  try{ if(localStorage.getItem("hub-focus")==="1") document.body.classList.add("solo"); }catch(e){}
-  if(document.body.classList.contains("solo")) $("#bFocus").textContent="Focus on";
 
   /* ---------- ambient canvas ---------- */
   var cv=$("#amb"),ctx=cv.getContext&&cv.getContext("2d"),parts=[];

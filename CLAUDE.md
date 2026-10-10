@@ -78,7 +78,7 @@ The picture is the page. Everything else supports it and sits below it. Order, t
      `.console`. Readouts carry class `empty` (faded) until they hold a value. Model inputs go here too, above the readouts.
 4. Exactly one `.take` (hidden in Focus).
 5. `<div id="rail"></div>` + manifest + rail scripts, exactly as before.
-- **Focus** (`body.solo`): hides `.support`, `.take`, `.hint`; enlarges `.pic` and the caption text. Toggled by `#bFocus`,
+- **Focus** (`body.solo`): hides `.support`, `.take`, `.hint`; enlarges `.pic` and the caption text. Only on pages that HAVE a `.support` area (instructor, 2026-10-12): a Focus button that visibly does nothing is worse than none. Glance pages without support get no button. Toggled by `#bFocus`,
   stored in `localStorage["hub-focus"]`, read on load. Full view is the default. The button label flips "Focus" / "Focus on".
   Never name the body class `focus` (it collides with the button class).
 - Nothing appears before it has a value; no "?" tiles in the eye line. One accent color per step state, not several.

@@ -43,17 +43,13 @@
     border-radius:999px;border:1px solid var(--line);background:rgba(0,0,0,.25);color:var(--muted);cursor:pointer;transition:.15s}
   .focus:hover{border-color:var(--accent);color:var(--accent)}
   .focus:focus-visible{outline:2px solid var(--accent);outline-offset:2px}
-  body.solo .focus{border-color:rgba(255,200,98,.6);color:var(--gold);background:rgba(255,200,98,.1)}
 
   /* hero picture: the snippet (the one control) beside the five rule cards.
      The snippet is 23 lines, so the picture grows past 390px rather than shrinking the code. */
   .pic{position:relative;min-height:390px;border:1px solid var(--line);border-radius:18px;background:rgba(6,10,20,.5);overflow:hidden;
     display:grid;grid-template-columns:minmax(0,1fr) 250px;gap:18px;padding:18px 20px;align-items:center}
-  body.solo .pic{min-height:480px;grid-template-columns:minmax(0,1fr) 270px}
-  @media (max-width:1000px){.pic,body.solo .pic{grid-template-columns:1fr}.cards{flex-direction:row;flex-wrap:wrap}.card{flex:1 1 150px}}
   .code{margin:0;font-family:var(--mono);font-size:.86rem;line-height:1.62;color:#9fb0cf;background:rgba(0,0,0,.32);
     border:1px solid var(--line);border-radius:14px;padding:16px 18px;overflow-x:auto;white-space:pre}
-  body.solo .code{font-size:.94rem;line-height:1.66}
   .code .kw{color:#7f8db0}
   .code .str{color:#c9b98a}
   .nm{color:var(--ink);cursor:pointer;border-radius:5px;padding:1px 2px;margin:0 -2px;outline:none;
@@ -79,11 +75,9 @@
   /* caption: the picked name's sentence, right under the picture; border takes the kind's color */
   .caption{display:flex;gap:16px;align-items:flex-start;margin:14px 4px 0;min-height:56px}
   .caption .t{font-size:1.02rem;line-height:1.55;color:var(--ink);padding-left:16px;border-left:3px solid var(--kc,var(--accent));transition:border-color .3s}
-  body.solo .caption .t{font-size:1.18rem}
   .caption b.g{color:var(--good)} .caption b.a{color:var(--accent)} .caption b.y{color:var(--gold)}
   .hint{font-family:var(--mono);font-size:.68rem;color:var(--muted);margin:10px 4px 0;line-height:1.5}
   .hint b{color:var(--accent)}
-  body.solo .take,body.solo .hint{display:none}
 
   .take{margin-top:22px;background:linear-gradient(180deg,rgba(110,160,255,.08),rgba(139,123,255,.04));
     border:1px solid var(--line);border-left:3px solid var(--accent);border-radius:12px;padding:16px 18px}
@@ -106,7 +100,6 @@
   <div class="stage">
     <div class="topbar">
       <span class="lab">Names</span>
-      <button class="focus" id="bFocus" title="Hide the notes, enlarge the picture">Focus</button>
     </div>
 
     <div class="pic" id="pic">
@@ -223,11 +216,6 @@
   });
 
   /* focus: picture and caption only. Remembered per browser. */
-  function setFocus(on){ document.body.classList.toggle("solo",on); $("#bFocus").textContent=on?"Focus on":"Focus";
-    try{localStorage.setItem("hub-focus",on?"1":"0");}catch(e){} pick(cur); }
-  $("#bFocus").addEventListener("click",function(){ setFocus(!document.body.classList.contains("solo")); this.blur(); });
-  try{ if(localStorage.getItem("hub-focus")==="1") document.body.classList.add("solo"); }catch(e){}
-  if(document.body.classList.contains("solo")) $("#bFocus").textContent="Focus on";
 
   /* ---------- ambient canvas ---------- */
   var cv=$("#amb"),ctx=cv.getContext&&cv.getContext("2d"),parts=[];
