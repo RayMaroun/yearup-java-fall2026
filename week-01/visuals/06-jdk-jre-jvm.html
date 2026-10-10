@@ -44,8 +44,9 @@
   .layer+.layer{margin-top:0}
   .layer .layer{margin-top:14px}
   .layer.on{border-color:rgba(110,160,255,.6);background:rgba(110,160,255,.07);box-shadow:0 0 30px -10px rgba(110,160,255,.5)}
-  .layer.off{opacity:.38}
-  .layer.off .layer{opacity:1}
+  .layer.off{border-color:rgba(255,255,255,.06);background:transparent}
+  .layer.off>.lhead,.layer.off>.ljob,.layer.off>.tools{opacity:.3}
+  .lhead,.ljob,.tools{transition:opacity .45s}
   .lhead{display:flex;align-items:baseline;gap:12px;flex-wrap:wrap}
   .lname{font-family:var(--disp);font-weight:700;font-size:1.15rem;letter-spacing:-.01em;color:var(--ink);transition:color .4s}
   .layer.on>.lhead .lname{color:var(--accent)}

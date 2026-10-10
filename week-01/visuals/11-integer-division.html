@@ -97,8 +97,10 @@
   .grp .gl{position:absolute;right:8px;top:50%;transform:translateY(-50%);font-family:var(--mono);font-size:.62rem;color:var(--accent);
     opacity:0;transition:opacity .3s}
   .grp.lit .gl{opacity:1}
-  .grp.part.show{border-style:dashed;border-color:rgba(70,217,138,.55);background:rgba(70,217,138,.07)}
-  .grp.part .gl{color:var(--good);opacity:1;font-size:.6rem}
+  .grp.part.show{border-style:dashed;border-color:rgba(70,217,138,.55);background:rgba(70,217,138,.05)}
+  .grp.part .gl{color:var(--good);opacity:1;font-size:.62rem;right:auto;left:calc(100% + 10px);white-space:nowrap}
+  .grp.part .slot{position:absolute;top:8px;width:26px;height:26px;border-radius:50%;border:2px dashed rgba(70,217,138,.4)}
+  .dot.part{background:#bff3d6;border-color:var(--good);box-shadow:none;transform:scale(1)}
   .dot{position:absolute;width:26px;height:26px;border-radius:50%;background:#bcd0ff;border:2px solid rgba(110,160,255,.9);
     box-shadow:0 0 14px -4px rgba(110,160,255,.8);transition:left .6s cubic-bezier(.2,.9,.3,1),top .6s cubic-bezier(.2,.9,.3,1),
     opacity .4s,transform .4s,background .4s,border-color .4s,box-shadow .4s;opacity:0;transform:scale(.4)}
@@ -267,7 +269,9 @@
     html+='<span class="zone" id="zg" style="left:20px;top:16px">groups of '+B+'</span>';
     html+='<span class="zone" id="zl" style="right:14px;top:16px;opacity:0">left over</span>';
     for(var g=0;g<q;g++) html+='<div class="grp" id="g'+g+'" style="left:'+LEFTX+'px;top:'+(TOPY+g*ROWH)+'px;width:'+(B*GAPX+22)+'px;height:'+(DOT+16)+'px"><span class="gl">'+(g+1)+'</span><span class="add"></span></div>';
-    if(r>0) html+='<div class="grp part" id="gpart" style="left:'+LEFTX+'px;top:'+(TOPY+q*ROWH)+'px;width:'+(B*GAPX+22)+'px;height:'+(DOT+16)+'px"><span class="gl" id="gpartl"></span></div>';
+    if(r>0){ html+='<div class="grp part" id="gpart" style="left:'+LEFTX+'px;top:'+(TOPY+q*ROWH)+'px;width:'+(B*GAPX+22)+'px;height:'+(DOT+16)+'px">';
+      for(var k=0;k<B;k++) html+='<span class="slot" style="left:'+(14+k*GAPX)+'px"></span>';
+      html+='<span class="gl" id="gpartl"></span></div>'; }
     for(var i=0;i<A;i++){ var p=loosePos(i); html+='<div class="dot" id="d'+i+'" style="left:'+p.x+'px;top:'+p.y+'px"></div>'; }
     html+='<span class="cut-tag" id="cutTag">cut off</span>';
     html+='<div class="answer" id="ans"></div>';
@@ -286,7 +290,7 @@
       if(mode==="cut"&&isLeft) d.className+=" cut";
       if((mode==="left")&&!isLeft) d.className+=" dim";
       if((mode==="left")&&isLeft) d.className+=" left";
-      if(mode==="frac"&&isLeft) d.className+=" left";
+      if(mode==="frac"&&isLeft) d.className+=" part";
     }
     for(g=0;g<q;g++){
       var ge=$("#g"+g); ge.className="grp"+(grouped?" show":"");
