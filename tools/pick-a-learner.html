@@ -111,17 +111,17 @@
 <div class="wrap">
   <p class="tag">Tools &middot; In class</p>
   <h1>Pick a Learner</h1>
-  <p class="lede"><b>Spin the wheel and let it choose who answers next.</b> Names stay in this browser only; nothing is uploaded.</p>
+  <p class="lede"><b>Spin the wheel and let it choose who answers next.</b> The class roster is built in; edits in the box stay in this browser only.</p>
 
   <div class="stage">
     <div class="grid">
       <div class="panelL">
         <p class="lab">Roster &middot; one name per line</p>
         <textarea id="roster" placeholder="Paste names here, one per line"></textarea>
-        <p class="note">Saved in this browser when you press <b>Save</b>. First names are enough.</p>
+        <p class="note">The class list loads by itself. Edit here for today (absent, guest) and press <b>Save</b>; <b>Class roster</b> brings the full list back.</p>
         <div class="row">
           <button class="btn primary" id="bSave">Save roster</button>
-          <button class="btn" id="bSample">Sample names</button>
+          <button class="btn" id="bSample">Class roster</button>
         </div>
         <div class="stats">
           <div class="stat"><div class="k">on the wheel</div><div class="v" id="stLeft">0</div></div>
@@ -164,6 +164,7 @@
   </div>
 </div>
 
+<script src="roster.js"></script>
 <script>
 (function(){
   "use strict";
@@ -174,8 +175,11 @@
   var names=[], picked=[], angle=0, spinning=false, lastWinner=null, pairMode=false, pairFirst=null;
 
   /* ---------- storage ---------- */
+  var CLASS=(window.HUB_ROSTER&&window.HUB_ROSTER.length)?window.HUB_ROSTER.slice():SAMPLE.slice();
   function load(){
     try{ names=JSON.parse(localStorage.getItem("hub-roster")||"[]"); picked=JSON.parse(localStorage.getItem("hub-picked")||"[]"); }catch(e){ names=[]; picked=[]; }
+    if(!names.length) names=CLASS.slice();
+    picked=picked.filter(function(p){return names.indexOf(p)>=0;});
     $("#roster").value=names.join("\n");
   }
   function save(){
@@ -275,7 +279,7 @@
   function closeCard(){ $("#card").classList.remove("show"); }
 
   $("#bSave").addEventListener("click",parseRoster);
-  $("#bSample").addEventListener("click",function(){ $("#roster").value=SAMPLE.join("\n"); parseRoster(); });
+  $("#bSample").addEventListener("click",function(){ $("#roster").value=CLASS.join("\n"); parseRoster(); });
   $("#bReset").addEventListener("click",function(){ picked=[]; save(); refresh(); closeCard(); });
   $("#optOnce").addEventListener("change",refresh);
   $("#bSpin").addEventListener("click",function(){ closeCard(); spin(); });
