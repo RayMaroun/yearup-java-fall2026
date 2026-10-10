@@ -5,3 +5,6 @@ New repo for the fall cohort; design from Expeditors week 9 + capstone rail; doc
 
 ## 2026-10-12 — Theme A, list confirmed, calibration pages
 Instructor kept the Expeditors tokens as they are (THEME-B variant deleted) and confirmed the week 1 idea list. The plan summary said 21 visuals; the confirmed table holds 25 (Glance 6, Walk 17, Model 2), so 25 are built. File numbers follow the manifest order, which keeps the call stack at 21. Calibration pages: Walk = 11-integer-division (10 and 3 from the operators demo), Glance = 06-jdk-jre-jvm.
+
+## 2026-10-12 — Calibration feedback
+Instructor: no animation for its own sake (JDK page: travelling file removed, the switch that lights the needed layer stays). Walk page step 9: the per-group "+ .5" chips were wrong; the leftover now moves into a dashed partial group labeled ".5 of a group" and the readout shows 3 + .5 = 3.5. The Walk page was approved in form ("looks great, the animation really helps").

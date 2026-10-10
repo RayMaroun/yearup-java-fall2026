@@ -97,10 +97,8 @@
   .grp .gl{position:absolute;right:8px;top:50%;transform:translateY(-50%);font-family:var(--mono);font-size:.62rem;color:var(--accent);
     opacity:0;transition:opacity .3s}
   .grp.lit .gl{opacity:1}
-  .grp .add{position:absolute;right:-2px;top:50%;transform:translate(100%,-50%);font-family:var(--mono);font-size:.64rem;color:var(--good);
-    padding:2px 7px;border-radius:999px;border:1px solid rgba(70,217,138,.5);background:rgba(70,217,138,.1);white-space:nowrap;
-    opacity:0;transition:opacity .4s .3s}
-  .grp.frac .add{opacity:1}
+  .grp.part.show{border-style:dashed;border-color:rgba(70,217,138,.55);background:rgba(70,217,138,.07)}
+  .grp.part .gl{color:var(--good);opacity:1;font-size:.6rem}
   .dot{position:absolute;width:26px;height:26px;border-radius:50%;background:#bcd0ff;border:2px solid rgba(110,160,255,.9);
     box-shadow:0 0 14px -4px rgba(110,160,255,.8);transition:left .6s cubic-bezier(.2,.9,.3,1),top .6s cubic-bezier(.2,.9,.3,1),
     opacity .4s,transform .4s,background .4s,border-color .4s,box-shadow .4s;opacity:0;transform:scale(.4)}
@@ -108,9 +106,6 @@
   .dot.left{background:#ffe6b0;border-color:var(--gold);box-shadow:0 0 18px -4px rgba(255,200,98,.9);transform:scale(1.12)}
   .dot.cut{background:rgba(255,106,106,.25);border-color:rgba(255,106,106,.8);box-shadow:none;opacity:.55;transform:scale(.9)}
   .dot.dim{opacity:.35;box-shadow:none}
-  .dot.pie{background:conic-gradient(var(--c) 0 var(--s),rgba(255,230,176,.15) var(--s) 100%);transform:scale(1.25)}
-  .dot.pie::after{content:"";position:absolute;inset:-2px;border-radius:50%;
-    background:repeating-conic-gradient(from 0deg,transparent 0 calc(var(--s) - 2deg),rgba(8,12,23,.9) calc(var(--s) - 2deg) var(--s))}
   .cut-tag{position:absolute;font-family:var(--mono);font-size:.64rem;color:var(--warn);padding:3px 8px;border-radius:999px;
     border:1px solid rgba(255,106,106,.6);background:rgba(255,106,106,.1);opacity:0;transition:opacity .4s,top .5s;white-space:nowrap}
   .cut-tag.show{opacity:1}
@@ -187,7 +182,7 @@
     <p class="tk">The one idea</p>
     <p><b>int divided by int gives an int.</b> Java keeps the whole groups and throws the leftover away. It cuts, it never rounds,
     so <code>10 / 3</code> is 3 and <code>1 / 2</code> is 0. <b><code>%</code> gives you the leftover</b> that <code>/</code> dropped:
-    <code>10 % 3</code> is 1. Make one side a double and the leftover is shared out as a decimal instead.</p>
+    <code>10 % 3</code> is 1. Make both sides double and the leftover counts as a fraction of a group instead.</p>
   </div>
 
   <div id="rail"></div>
@@ -235,7 +230,7 @@
     S.push({line:[8],pic:"left",cls:"left",msg:'<code>a % b</code> asks the opposite question: <b class="y">after the whole groups are taken out, what is left over?</b>'+(r>0?' The dot'+(r>1?'s':'')+' outside the groups '+(r>1?'are':'is')+' the answer.':' Here nothing, so the answer is 0.'),div:q,mod:r});
     S.push({line:[9],pic:"left",cls:"ok",msg:'println shows the leftover: <b class="y">'+r+'</b>. Check it: '+q+' groups of '+B+' is '+(q*B)+', plus '+r+' left over, makes '+A+'. <b class="g">/ gives the groups, % gives the leftover.</b>',div:q,mod:r,out:String(r)});
     S.push({line:[11,12],pic:"left",cls:"",msg:'Same two numbers, now stored as <b class="a">double</b>. A double has room for a decimal part, so the rule changes.',div:q,mod:r});
-    S.push({line:[13],pic:"frac",cls:"ok",msg:(r>0?'Nothing is cut off. The leftover is <b class="g">shared out</b> as a fraction across the groups: ':'There was nothing to share, so the answer is the same number with a decimal point: ')+'<b class="a">'+d+'</b>.',div:q,mod:r,out:d,dbl:d});
+    S.push({line:[13],pic:"frac",cls:"ok",msg:(r>0?'Nothing is cut off. The leftover now <b class="g">counts as part of a group</b>: '+r+' of '+B+' is '+(r/B).toFixed(3).replace(/\.?0+$/,"").replace(/^0\./,".")+' of a group, so '+q+' groups plus that piece is ':'There was no leftover, so the answer is the same number with a decimal point: ')+'<b class="a">'+d+'</b>.',div:q,mod:r,out:d,dbl:d});
     return S;
   }
 
@@ -261,9 +256,9 @@
     var x=24+(i%cols)*((w-70)/cols)+((i*37)%13), y=40+Math.floor(i/cols)*52+((i*53)%17);
     return {x:Math.min(x,w-DOT-10),y:Math.min(y,h-DOT-10)};
   }
-  function groupedPos(i){
+  function groupedPos(i,frac){
     var q=Math.floor(A/B), g=Math.floor(i/B), k=i%B;
-    if(g<q) return {x:LEFTX+14+k*GAPX,y:TOPY+g*ROWH+8};
+    if(g<q||frac) return {x:LEFTX+14+k*GAPX,y:TOPY+g*ROWH+8};
     var w=picEl.clientWidth||400; var leftIdx=i-q*B;
     return {x:Math.max(LEFTX+14+B*GAPX+70, w-120)+ (leftIdx%2)*GAPX, y:TOPY+8+Math.floor(leftIdx/2)*ROWH};
   }
@@ -272,6 +267,7 @@
     html+='<span class="zone" id="zg" style="left:20px;top:16px">groups of '+B+'</span>';
     html+='<span class="zone" id="zl" style="right:14px;top:16px;opacity:0">left over</span>';
     for(var g=0;g<q;g++) html+='<div class="grp" id="g'+g+'" style="left:'+LEFTX+'px;top:'+(TOPY+g*ROWH)+'px;width:'+(B*GAPX+22)+'px;height:'+(DOT+16)+'px"><span class="gl">'+(g+1)+'</span><span class="add"></span></div>';
+    if(r>0) html+='<div class="grp part" id="gpart" style="left:'+LEFTX+'px;top:'+(TOPY+q*ROWH)+'px;width:'+(B*GAPX+22)+'px;height:'+(DOT+16)+'px"><span class="gl" id="gpartl"></span></div>';
     for(var i=0;i<A;i++){ var p=loosePos(i); html+='<div class="dot" id="d'+i+'" style="left:'+p.x+'px;top:'+p.y+'px"></div>'; }
     html+='<span class="cut-tag" id="cutTag">cut off</span>';
     html+='<div class="answer" id="ans"></div>';
@@ -282,7 +278,7 @@
     var zl=$("#zl"), zg=$("#zg"), ans=$("#ans"), cut=$("#cutTag");
     var grouped=mode!=="loose"&&mode!=="none";
     for(i=0;i<A;i++){
-      d=$("#d"+i); var p=grouped?groupedPos(i):loosePos(i);
+      d=$("#d"+i); var p=grouped?groupedPos(i,mode==="frac"):loosePos(i);
       d.style.left=p.x+"px"; d.style.top=p.y+"px";
       var isLeft=i>=q*B;
       d.className="dot"+(mode==="none"?"":" in");
@@ -290,22 +286,24 @@
       if(mode==="cut"&&isLeft) d.className+=" cut";
       if((mode==="left")&&!isLeft) d.className+=" dim";
       if((mode==="left")&&isLeft) d.className+=" left";
-      if(mode==="frac"&&isLeft){ d.className+=" pie"; d.style.setProperty("--s",(360/B)+"deg"); d.style.setProperty("--c","#ffe6b0"); }
+      if(mode==="frac"&&isLeft) d.className+=" left";
     }
     for(g=0;g<q;g++){
       var ge=$("#g"+g); ge.className="grp"+(grouped?" show":"");
       if(mode==="packed"||mode==="cut") ge.className+=" lit";
       if(mode==="left") ge.className+=" dim";
-      if(mode==="frac"){ ge.className+=" lit frac"; ge.querySelector(".add").textContent="+ "+(r/B).toFixed(3).replace(/\.?0+$/,"").replace(/^0\./,"."); if(r===0) ge.className=ge.className.replace(" frac",""); }
+      if(mode==="frac") ge.className+=" lit";
     }
+    var fr=(r/B).toFixed(3).replace(/\.?0+$/,"").replace(/^0\./,".");
+    var gp=$("#gpart"); if(gp){ gp.className="grp part"+(mode==="frac"?" show":""); $("#gpartl").textContent=fr+" of a group"; }
     zg.style.opacity=grouped?1:0;
-    zl.style.opacity=(grouped&&r>0)?1:0; zl.className="zone"+((mode==="left"||mode==="packed")?" on":"");
+    zl.style.opacity=(grouped&&r>0&&mode!=="frac")?1:0; zl.className="zone"+((mode==="left"||mode==="packed")?" on":"");
     if(mode==="cut"&&r>0){ var lp=groupedPos(q*B); cut.style.left=lp.x-6+"px"; cut.style.top=lp.y+Math.ceil(r/2)*ROWH+2+"px"; cut.className="cut-tag show"; }
     else cut.className="cut-tag";
     var ideal=(A/B).toFixed(3).replace(/\.?0+$/,"");
     if(mode==="cut") ans.innerHTML='<small>a / b</small>'+(r>0?'<s>'+ideal+'</s> ':'')+'<span class="k">'+q+'</span>';
     else if(mode==="left") ans.innerHTML='<small>a % b</small><span class="y">'+r+'</span>';
-    else if(mode==="frac") ans.innerHTML='<small>x / y</small><span class="g">'+s.dbl+'</span>';
+    else if(mode==="frac") ans.innerHTML='<small>x / y</small>'+(r>0?q+' + '+fr+' = ':'')+'<span class="g">'+s.dbl+'</span>';
     else if(mode==="packed") ans.innerHTML='<small>groups</small><span class="k">'+q+'</span>';
     else ans.innerHTML="";
     ans.className="answer"+(ans.innerHTML?" show":"");

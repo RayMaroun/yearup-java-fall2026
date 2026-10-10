@@ -88,10 +88,13 @@ itself is the invisible thing (foundations exception, which applies often with b
 **Three sizes. The size is a floor, not a ceiling: pick the size that makes the idea clear to someone meeting it
 for the first time. Anything with a "how it works" gets a Walk at least. Glance is only for ideas with no process
 in them. The idea list names the size for every page. NOTHING on this hub is a static picture: every page,
-Glance included, is animated and interactive. That is what makes it a visual hub.**
-- **Glance** (ideas with no process in them): one animation with ONE control, a toggle, a slider, a hover,
-  a click, and the diagram moves in response: boxes resize, layers light up, a value slides into its slot.
+Glance included, is interactive. Motion is used where it carries the idea, not as decoration.**
+- **Glance** (ideas with no process in them): a diagram with ONE control, a toggle, a slider, a hover,
+  a click, and the diagram responds: boxes resize, layers light up, a value slides into its slot.
   No steps, no inputs, no state to manage. Examples: data types and sizes, naming conventions, JDK/JRE/JVM.
+  **Motion only when it shows something (instructor, 2026-10-12): never animation for its own sake.** A
+  layer lighting up answers a question; a token flying around a static diagram does not. If nothing in the
+  idea moves, the page responds to its control and otherwise stays still.
 - **Walk** (the default): a step-through that shows what happens behind the scenes, 4 to 10 steps, Next and
   Reset, one sentence per step, the picture changes at each step. Evaluation order, truncation, what == compares,
   the string printf builds, the path through if/else, a loop running.

@@ -52,7 +52,7 @@
   .lfull{font-family:var(--mono);font-size:.66rem;letter-spacing:.12em;text-transform:uppercase;color:var(--muted)}
   .ljob{font-size:.86rem;color:var(--muted);margin:4px 0 0;line-height:1.45}
   .ljob b{color:var(--ink);font-weight:500}
-  .tools{display:flex;flex-wrap:wrap;gap:6px;margin-top:34px;min-height:28px}
+  .tools{display:flex;flex-wrap:wrap;gap:6px;margin-top:10px;min-height:28px}
   .tool{font-family:var(--mono);font-size:.7rem;padding:4px 9px;border-radius:999px;border:1px solid var(--line);
     background:rgba(0,0,0,.3);color:#bcd0ff;transition:border-color .4s,color .4s,background .4s,transform .4s,opacity .4s}
   .layer.on>.tools .tool{border-color:rgba(110,160,255,.45)}
@@ -63,14 +63,6 @@
   .need.show{opacity:1;transform:none}
   .need.yes{color:var(--good);border-color:rgba(70,217,138,.5);background:rgba(70,217,138,.08)}
   .need.no{color:var(--muted);border-color:var(--line);background:rgba(0,0,0,.25)}
-  /* the travelling file */
-  .tok{position:absolute;z-index:3;left:0;top:0;font-family:var(--mono);font-size:.72rem;padding:5px 10px;border-radius:9px;
-    border:1px solid rgba(255,200,98,.7);background:rgba(20,22,40,.96);color:#ffe6b0;box-shadow:0 8px 24px -8px rgba(0,0,0,.8);
-    opacity:0;pointer-events:none;white-space:nowrap;transition:left .7s cubic-bezier(.2,.9,.3,1),top .7s cubic-bezier(.2,.9,.3,1),opacity .35s,
-    border-color .35s,color .35s,transform .35s}
-  .tok.show{opacity:1}
-  .tok.cls{border-color:rgba(110,160,255,.8);color:#bcd0ff}
-  .tok.run{border-color:var(--good);color:#bff3d6;transform:scale(1.08)}
 
   /* the one control, under the animation */
   .ctl{margin-top:20px;display:grid;grid-template-columns:1fr auto;gap:14px;align-items:start}
@@ -130,7 +122,6 @@
             </div>
           </div>
         </div>
-        <div class="tok" id="tok">Main.java</div>
       </div>
 
       <div class="ctl">
@@ -162,28 +153,16 @@
 
   var MODES={
     write:{on:["jdk","jre","jvm"],need:{jdk:"yes",jre:"inside",jvm:"inside"},
-      msg:'You need the <b class="a">JDK</b>. <b class="y">javac</b> turns Main.java into Main.class, then the JRE inside the JDK runs it. That is what IntelliJ does when you press Run.',
-      anim:[["Main.java","Tjavac",""],["Main.class","Tload","cls"],["running","Texec","cls run"]]},
+      msg:'You need the <b class="a">JDK</b>: javac to compile, the debugger, and a JRE inside it to test and run. That is what IntelliJ uses when you press Run.'},
     run:{on:["jre","jvm"],need:{jdk:"no",jre:"yes",jvm:"inside"},
-      msg:'You need the <b class="a">JRE</b> only. The program is already bytecode, so no compiler. The class libraries plus the JVM are enough to run it.',
-      anim:[["Main.class","Tlib","cls"],["Main.class","Tload","cls"],["running","Texec","cls run"]]},
+      msg:'You need the <b class="a">JRE</b> only. The program is already bytecode, so no compiler. The class libraries plus the JVM are enough to run it.'},
     exec:{on:["jvm"],need:{jdk:"no",jre:"no",jvm:"yes"},
-      msg:'The <b class="a">JVM</b> is the engine. It loads the .class file and executes the bytecode instruction by instruction. Different JVMs exist per computer: that is why Java is <b class="g">write once, run anywhere</b>.',
-      anim:[["Main.class","Tload","cls"],["running","Texec","cls run"]]}
+      msg:'The <b class="a">JVM</b> is the engine. It loads the .class file and executes the bytecode instruction by instruction. Different JVMs exist per computer: that is why Java is <b class="g">write once, run anywhere</b>.'}
   };
   var NEED={yes:["yes","needed"],no:["no","not needed"],inside:["yes","comes inside"]};
-  var tok=$("#tok"), rings=$("#rings"), timers=[];
-
-  function moveTo(id){
-    var r=rings.getBoundingClientRect(), t=document.getElementById(id).getBoundingClientRect();
-    tok.style.left=(t.left-r.left)+"px";
-    tok.style.top=(t.top-r.top-tok.offsetHeight-5)+"px";
-  }
-  function clearTimers(){ timers.forEach(clearTimeout); timers=[]; Array.prototype.forEach.call(document.querySelectorAll(".tool"),function(t){t.className="tool";}); }
 
   function set(mode){
     var M=MODES[mode];
-    clearTimers();
     ["jdk","jre","jvm"].forEach(function(k){
       var L=document.getElementById("L"+k), n=document.getElementById("N"+k), nd=NEED[M.need[k]];
       L.className="layer "+(M.on.indexOf(k)>=0?"on":"off");
@@ -191,20 +170,9 @@
     });
     Array.prototype.forEach.call(document.querySelectorAll("#seg button"),function(b){b.classList.toggle("on",b.getAttribute("data-m")===mode);});
     $("#status").innerHTML=M.msg;
-    /* the travelling file */
-    tok.className="tok"; tok.textContent=M.anim[0][0];
-    var step=reduce?150:900;
-    M.anim.forEach(function(a,i){
-      timers.push(setTimeout(function(){
-        tok.textContent=a[0]; tok.className="tok show "+a[2]; moveTo(a[1]);
-        var el=document.getElementById(a[1]); el.className="tool "+(a[2].indexOf("run")>=0?"good":"hot");
-        if(i>0){ var prev=document.getElementById(M.anim[i-1][1]); if(prev!==el) prev.className="tool"; }
-      }, 250+i*step));
-    });
   }
 
   $("#seg").addEventListener("click",function(e){ var b=e.target.closest("button"); if(b) set(b.getAttribute("data-m")); });
-  addEventListener("resize",function(){ var on=$("#seg button.on"); if(on) set(on.getAttribute("data-m")); });
 
   /* ---------- ambient canvas ---------- */
   var cv=$("#amb"),ctx=cv.getContext&&cv.getContext("2d"),parts=[];
