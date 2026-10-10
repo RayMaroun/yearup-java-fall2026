@@ -248,5 +248,45 @@
     "group": "Workbook 1c · Module 4",
     "url": "week-01/visuals/25-problem-to-code.html",
     "text": "← Week 1 index Workbook 1c · Module 4 · From a problem statement to a program From Problem to Code Mark the data and the steps first; then every line of the plan becomes a few lines of Java. The problem input output decision fixed value verb = step Focus A print shop charges $0.10 per page for black and white and $0.25 per page for color . Ask the customer whether they want color and how many pages they need. Print the total cost, with two decimals . Data (the nouns) Plan (the verbs, in order) step 0 / 9 Press Next to start. ← Back Next → Reset space = next · the print shop is an invented problem Main.java console The one idea Before you type, underline the nouns and the verbs. The nouns are your data: inputs become Scanner reads, outputs become printf, fixed values become numbers in the code. The verbs are your steps, in order; a step that depends on an answer is an if/else, and a calculation with a name is a method. The code follows the plan."
+  },
+  {
+    "week": 1,
+    "weekLabel": "Week 1",
+    "section": "Reference",
+    "title": "Week 1 Cheat Sheet",
+    "desc": "The syntax of the week on one page: types, operators, Scanner, printf, if, switch, methods.",
+    "group": "Reference",
+    "url": "week-01/reference/cheat-sheet.html",
+    "text": "← Week 1 index Week 1 · Reference Week 1 Cheat Sheet The syntax of the week, one line per idea. Pick a topic to see only that card; every card links to the page that shows it moving. Topic All Variables and types Operators Strings Scanner printf if and logical operators switch Methods Git in IntelliJ Variables and types 1c · 3-1 declare and assign int count = 5; whole numbers byte short int long long needs L long big = 100L; decimal (default) double unitPrice = 19.99; float needs f float num = 2.2f; one character char grade = 'A'; true or false boolean done = false; text (a class) String name = \"Dana\"; constant final double TAX_RATE = 0.0825; naming firstName MathApp MAX_SIZE com.pluralsight widening, automatic double d = 42; // 42.0 narrowing, cast int x = (int) 3.99; // 3, truncated cast a Math result float result = (float) Math.pow(num, 2); See it: Data Types and Sizes final Constants Naming Conventions Widening, Narrowing, Casting Operators 1c · 3-2 arithmetic + - * / % int / int is int 10 / 3 // 3 remainder 10 % 3 // 1 get the decimal (double) num1 / num2 compound total += price; count -= 1; pre increment int a = ++x; // x goes up first, a gets new x post increment int b = y++; // b gets old y, then y goes up formula totalCost = (count * unitPrice) * (1 + taxRate); bigger of two int mostKids = Math.max(natKidCount, brittKidCount); degrees in double answer = Math.sin(Math.toRadians(degrees)); round to int int wholeNumber = Math.round(1234.567f); // 1235 See it: Integer Di"
+  },
+  {
+    "week": 1,
+    "weekLabel": "Week 1",
+    "section": "Reference",
+    "title": "Glossary",
+    "desc": "The words of the week, each in one sentence, with the page that shows it.",
+    "group": "Reference",
+    "url": "week-01/reference/glossary.html",
+    "text": "← Week 1 index Week 1 · Reference Glossary The words of the week, one sentence each. Type a word and the list narrows as you go. Filter / All Java platform Types and variables Operators Input and output Decisions Methods Git and GitHub Maven project Java platform JDK The Java Development Kit : the compiler and tools for writing programs, with a JRE inside so you can run them. See it: JDK, JRE, JVM JRE The Java Runtime Environment : the JVM plus the class libraries, enough to run a program but not to compile one. See it: JDK, JRE, JVM JVM The Java Virtual Machine : the engine that loads a .class file and runs its bytecode, one per kind of computer. See it: JDK, JRE, JVM Source code The human-readable Java you write, saved in a .java file whose name matches its public class. HelloWorld.java See it: Compile, Bytecode, JVM Compiler (javac) The tool that checks your source code for syntax errors and turns it into bytecode. javac HelloWorld.java See it: Compile, Bytecode, JVM Bytecode The compiled form of your program, stored in a .class file: not machine code, the JVM runs it. HelloWorld.java -> javac -> HelloWorld.class See it: Compile, Bytecode, JVM Class The container every piece of Java code lives in; the file name must match the public class name. public class HelloWorld { } main method The entry point of a program: the JVM starts running here, so the signature must be exact. public static void main(String[] args) Package A folder-like grouping of classes, lowercase with dots"
+  },
+  {
+    "week": 1,
+    "weekLabel": "Week 1",
+    "section": "Reference",
+    "title": "Common Errors",
+    "desc": "What the compiler says, what it means, how to fix it.",
+    "group": "Reference",
+    "url": "week-01/reference/common-errors.html",
+    "text": "← Week 1 index Week 1 · Reference Common Errors The messages you will meet this week, word for word. Read the first line of the message: it usually names the fix. Show All Compile Runtime IntelliJ and Maven Git Compile Missing semicolon See it java: ';' expected Every statement ends with a semicolon, and javac stops at the first line that does not. Fix Add ; at the end of the line the message points to. Before System.out.println(\"Hello\") After System.out.println(\"Hello\"); Compile Misspelled method name java: cannot find symbol symbol: method pintln(java.lang.String) location: variable out of type java.io.PrintStream Java is exact: there is no method called pintln , so the compiler cannot find it. Fix Correct the spelling; let IntelliJ autocomplete names as you type. Before System.out.pintln(\"Hi\"); After System.out.println(\"Hi\"); Compile Misspelled or undeclared variable java: cannot find symbol symbol: variable nmae location: class Main You used a variable name that was never declared, often a typo or a wrong capital letter. Fix Use the exact name from the declaration ( name and Name are different). Before String name = \"Dana\"; System.out.println(nmae); After String name = \"Dana\"; System.out.println(name); Compile Missing closing brace java: reached end of file while parsing The file ended while a { was still open; here the method is closed but the class is not. Fix Add the missing } ; click a brace and IntelliJ highlights its partner. Before public class Main { public static"
+  },
+  {
+    "week": 1,
+    "weekLabel": "Week 1",
+    "section": "Reference",
+    "title": "IntelliJ Shortcuts",
+    "desc": "The keys worth knowing in week 1, Mac and Windows side by side.",
+    "group": "Reference",
+    "url": "week-01/reference/intellij-shortcuts.html",
+    "text": "← Week 1 index Week 1 · Reference IntelliJ Shortcuts The keys used in class this week, Mac and Windows side by side. Pick your computer and its column lights up. My computer Mac Windows Action Mac Windows Run and build Run the program Reruns the last run configuration what Run does Ctrl+R Shift+F10 Run the file you are in Same as the green arrow next to main Ctrl+Shift+R Ctrl+Shift+F10 Stop the running program Cmd+F2 Ctrl+F2 Build the project Compiles without running Cmd+F9 Ctrl+F9 Debug the program Ctrl+D Shift+F9 Run Anything Run a class or a Maven goal by name Ctrl Ctrl Ctrl Ctrl Editing sout then Tab Types System.out.println(); for you sout Tab sout Tab main then Tab Types public static void main(String[] args) ; psvm works too the signature main Tab main Tab Reformat code Fixes spacing and indents; do it before every commit Cmd+Alt+L Ctrl+Alt+L Show quick fixes The lightbulb: imports, missing pieces, fixes Alt+Enter Alt+Enter Code completion Ctrl+Space Ctrl+Space Comment or uncomment the line Toggles // Cmd+/ Ctrl+/ Duplicate the line Cmd+D Ctrl+D Delete the line Cmd+Backspace Ctrl+Y Move the line up or down Alt+Shift+Up/Down Alt+Shift+Up/Down Rename everywhere Variable, method or class, every use updated Shift+F6 Shift+F6 Undo / Redo Cmd+Z Cmd+Shift+Z Ctrl+Z Ctrl+Shift+Z Navigation Search everywhere Files, classes, settings, anything Shift Shift Shift Shift Find an action by name Use it when you forget a shortcut Cmd+Shift+A Ctrl+Shift+A Project window The file tree: sr"
   }
 ]

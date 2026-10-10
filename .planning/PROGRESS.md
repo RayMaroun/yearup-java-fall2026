@@ -8,9 +8,12 @@
   the Chrome tools, read console errors, run the static sweep (scratchpad sweep.sh: node --check, div balance, one style, title, take, rail, fonts, no em dash, no entity in script, back link, char count), then commit.
 - Fixes applied by the lead so far: 02 code lines wrap; 07 wording "Here y is declared only".
 
+## Done 2026-10-13 (early hours, while Ray was away)
+- [x] Reference (4): cheat-sheet, glossary, common-errors, intellij-shortcuts. Verified in Chrome. Note: IntelliJ dialog wording on common-errors written from memory; confirm on a real machine.
+- [x] week-01/index.html (tabs, grouped, hash lands on the item), index.html landing (12 weeks, Tools), search.js restyled, build-search-index.js reads manifests, search-index.json built (29 items).
+
 ## Still to do for week 1
-- [ ] Reference (4): cheat-sheet, glossary, common-errors, intellij-shortcuts
 - [ ] Exercise companions (10), spoiler-free
 - [ ] Games (13); three need a spoiler check
-- [ ] week-01/index.html (tabs), index.html landing, build-search-index.js run, manifest reference/exercises/games arrays
+- [ ] manifest exercises/games arrays (after Ray's review decisions)
 - [ ] GitHub Pages publish when Ray says

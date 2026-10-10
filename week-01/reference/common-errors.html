@@ -1,0 +1,521 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Common Errors | Week 1 Visual Hub</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Sora:wght@500;700&family=Inter:wght@400;500&family=JetBrains+Mono:wght@400;500&display=swap">
+<style>
+  :root{
+    --bg:#080c17; --bg2:#0c1428; --surface:rgba(255,255,255,.045); --line:rgba(255,255,255,.09);
+    --ink:#eef2fb; --muted:#8496b6; --accent:#6ea0ff; --accent2:#8b7bff; --good:#46d98a; --warn:#ff6a6a;
+    --gold:#ffc862; --disp:'Sora',system-ui,sans-serif; --body:'Inter',system-ui,sans-serif;
+    --mono:'JetBrains Mono',ui-monospace,monospace;
+  }
+  *{box-sizing:border-box}
+  body{margin:0;min-height:100vh;color:var(--ink);font-family:var(--body);
+    background:radial-gradient(1200px 700px at 70% -10%,#141d38 0%,transparent 55%),
+               radial-gradient(900px 600px at 10% 110%,#161233 0%,transparent 50%),#080c17;
+    overflow-x:hidden}
+  #amb{position:fixed;inset:0;z-index:0;pointer-events:none;opacity:.6}
+  .back{position:relative;z-index:2;display:block;max-width:1120px;margin:0 auto;padding:26px 24px 0;
+    width:100%;font-family:var(--mono);font-size:.8rem;letter-spacing:.04em;color:var(--muted);
+    text-decoration:none;transition:color .15s}
+  .back:hover{color:var(--accent)}
+  .wrap{position:relative;z-index:1;max-width:1120px;margin:0 auto;padding:22px 24px 70px}
+  .tag{font-family:var(--mono);font-size:.72rem;letter-spacing:.22em;text-transform:uppercase;color:var(--accent);margin:0 0 14px}
+  h1{font-family:var(--disp);font-weight:700;font-size:clamp(2.3rem,6vw,3.6rem);line-height:1;margin:0 0 12px;
+    letter-spacing:-.03em;background:linear-gradient(180deg,#fff,#b9c6e6);-webkit-background-clip:text;
+    background-clip:text;color:transparent}
+  .lede{color:var(--muted);max-width:64ch;font-size:1.05rem;margin:0 0 26px;line-height:1.5}
+  .lede b{color:var(--ink)}
+
+  /* ---------- stage ---------- */
+  .stage{position:relative;background:linear-gradient(180deg,rgba(255,255,255,.03),rgba(255,255,255,.01));
+    border:1px solid var(--line);border-radius:24px;padding:18px 18px 14px;
+    box-shadow:0 1px 0 rgba(255,255,255,.06) inset,0 30px 80px -30px rgba(0,0,0,.8)}
+  .topbar{display:flex;align-items:center;gap:10px;margin:0 0 14px;flex-wrap:wrap}
+  .topbar .lab{margin:0 4px 0 0}
+  .lab{font-family:var(--mono);font-size:.7rem;letter-spacing:.12em;text-transform:uppercase;color:var(--muted);margin:0 0 10px}
+  .chips{display:flex;flex-wrap:wrap;gap:7px}
+  .chip{font-family:var(--body);font-weight:500;font-size:.84rem;padding:7px 14px;border-radius:999px;border:1px solid var(--line);
+    background:rgba(0,0,0,.25);color:var(--muted);cursor:pointer;transition:.15s;display:inline-flex;align-items:center;gap:7px}
+  .chip:hover{color:var(--accent);border-color:rgba(110,160,255,.4)}
+  .chip.on{background:rgba(110,160,255,.16);border-color:rgba(110,160,255,.55);color:var(--ink)}
+  .chip:focus-visible{outline:2px solid var(--accent);outline-offset:2px}
+  .chip .ct{font-family:var(--mono);font-size:.68rem;color:var(--muted)}
+  .chip .dot{width:7px;height:7px;border-radius:50%}
+  .count{margin-left:auto;font-family:var(--mono);font-size:.72rem;color:var(--muted)}
+  .count b{color:var(--ink);font-weight:500}
+
+  .pic{position:relative;min-height:390px;border:1px solid var(--line);border-radius:18px;background:rgba(6,10,20,.5);padding:14px}
+  .cards{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:12px;align-items:start}
+  @media (max-width:900px){.cards{grid-template-columns:minmax(0,1fr)}}
+  .card{border:1px solid var(--line);border-radius:14px;background:rgba(255,255,255,.02);padding:14px 16px 15px;
+    border-left:3px solid var(--cc);transition:opacity .2s,border-color .2s}
+  .card[hidden]{display:none}
+  .card[data-cat="compile"]{--cc:var(--warn)}
+  .card[data-cat="runtime"]{--cc:var(--gold)}
+  .card[data-cat="ide"]{--cc:var(--accent)}
+  .card[data-cat="git"]{--cc:var(--accent2)}
+  .ch{display:flex;align-items:baseline;gap:10px;flex-wrap:wrap;margin:0 0 9px}
+  .ch h2{font-family:var(--disp);font-weight:700;font-size:1.02rem;letter-spacing:-.01em;margin:0;color:var(--ink);flex:1 1 auto;min-width:0}
+  .cat{font-family:var(--mono);font-size:.6rem;letter-spacing:.14em;text-transform:uppercase;color:var(--cc)}
+  .see{font-family:var(--mono);font-size:.7rem;color:var(--accent);text-decoration:none;border-bottom:1px dashed rgba(110,160,255,.4)}
+  .see:hover{color:#fff;border-bottom-color:#fff}
+  pre{margin:0;font-family:var(--mono);font-size:.76rem;line-height:1.55;white-space:pre-wrap;overflow-wrap:anywhere}
+  .msg{background:rgba(0,0,0,.35);border:1px solid var(--line);border-radius:10px;padding:9px 11px;color:#ffb3b3}
+  .card[data-cat="runtime"] .msg{color:#ffe0a3}
+  .card[data-cat="ide"] .msg{color:#cfdcff}
+  .card[data-cat="git"] .msg{color:#d6ceff}
+  .msg.out{color:var(--ink)!important}
+  .mk{font-family:var(--mono);font-size:.6rem;letter-spacing:.12em;text-transform:uppercase;color:var(--muted);margin:0 0 5px}
+  .means{margin:10px 0 4px;font-size:.9rem;line-height:1.5;color:var(--muted)}
+  .fix{margin:0 0 10px;font-size:.9rem;line-height:1.5;color:var(--ink)}
+  .fix b{font-family:var(--mono);font-size:.66rem;letter-spacing:.12em;text-transform:uppercase;color:var(--good);margin-right:6px}
+  .means code,.fix code{font-family:var(--mono);font-size:.88em;color:#bcd0ff}
+  .ba{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr);gap:8px}
+  @media (max-width:560px){.ba{grid-template-columns:minmax(0,1fr)}}
+  .ba>div{border-radius:10px;padding:8px 10px;border:1px solid}
+  .ba .bad{background:rgba(255,106,106,.06);border-color:rgba(255,106,106,.25)}
+  .ba .good{background:rgba(70,217,138,.06);border-color:rgba(70,217,138,.25)}
+  .ba span{display:block;font-family:var(--mono);font-size:.58rem;letter-spacing:.14em;text-transform:uppercase;margin:0 0 4px}
+  .ba .bad span{color:var(--warn)} .ba .good span{color:var(--good)}
+  .ba pre{color:#dbe4f7;font-size:.74rem}
+  .hint{font-family:var(--mono);font-size:.68rem;color:var(--muted);margin:10px 4px 0;line-height:1.5}
+  .hint b{color:var(--accent)}
+  @media (max-width:600px){.back{padding:20px 16px 0}.wrap{padding:18px 16px 60px}.stage{padding:12px}.pic{padding:8px}.count{margin-left:0}}
+  @media (prefers-reduced-motion:reduce){*{animation-duration:.01ms!important;transition-duration:.01ms!important}#amb{display:none}}
+</style>
+</head>
+<body>
+
+<a class="back" href="../index.html#common-errors">&#8592; Week 1 index</a>
+
+<canvas id="amb"></canvas>
+<div class="wrap">
+  <p class="tag">Week 1 &middot; Reference</p>
+  <h1>Common Errors</h1>
+  <p class="lede">The messages you will meet this week, word for word. <b>Read the first line of the message: it usually names the fix.</b></p>
+
+  <div class="stage">
+    <div class="topbar">
+      <span class="lab">Show</span>
+      <div class="chips" id="chips" role="group" aria-label="Filter errors by kind">
+        <button class="chip on" data-f="all" aria-pressed="true">All <span class="ct" data-c="all"></span></button>
+        <button class="chip" data-f="compile" aria-pressed="false"><span class="dot" style="background:var(--warn)"></span>Compile <span class="ct" data-c="compile"></span></button>
+        <button class="chip" data-f="runtime" aria-pressed="false"><span class="dot" style="background:var(--gold)"></span>Runtime <span class="ct" data-c="runtime"></span></button>
+        <button class="chip" data-f="ide" aria-pressed="false"><span class="dot" style="background:var(--accent)"></span>IntelliJ and Maven <span class="ct" data-c="ide"></span></button>
+        <button class="chip" data-f="git" aria-pressed="false"><span class="dot" style="background:var(--accent2)"></span>Git <span class="ct" data-c="git"></span></button>
+      </div>
+      <span class="count" id="count"></span>
+    </div>
+
+    <div class="pic">
+      <div class="cards" id="cards">
+
+        <!-- ================= COMPILE ================= -->
+        <article class="card" data-cat="compile">
+          <div class="ch"><span class="cat">Compile</span><h2>Missing semicolon</h2><a class="see" href="../visuals/05-java-compilation.html">See it</a></div>
+          <pre class="msg">java: ';' expected</pre>
+          <p class="means">Every statement ends with a semicolon, and javac stops at the first line that does not.</p>
+          <p class="fix"><b>Fix</b>Add <code>;</code> at the end of the line the message points to.</p>
+          <div class="ba"><div class="bad"><span>Before</span><pre>System.out.println("Hello")</pre></div><div class="good"><span>After</span><pre>System.out.println("Hello");</pre></div></div>
+        </article>
+
+        <article class="card" data-cat="compile">
+          <div class="ch"><span class="cat">Compile</span><h2>Misspelled method name</h2></div>
+          <pre class="msg">java: cannot find symbol
+  symbol:   method pintln(java.lang.String)
+  location: variable out of type java.io.PrintStream</pre>
+          <p class="means">Java is exact: there is no method called <code>pintln</code>, so the compiler cannot find it.</p>
+          <p class="fix"><b>Fix</b>Correct the spelling; let IntelliJ autocomplete names as you type.</p>
+          <div class="ba"><div class="bad"><span>Before</span><pre>System.out.pintln("Hi");</pre></div><div class="good"><span>After</span><pre>System.out.println("Hi");</pre></div></div>
+        </article>
+
+        <article class="card" data-cat="compile">
+          <div class="ch"><span class="cat">Compile</span><h2>Misspelled or undeclared variable</h2></div>
+          <pre class="msg">java: cannot find symbol
+  symbol:   variable nmae
+  location: class Main</pre>
+          <p class="means">You used a variable name that was never declared, often a typo or a wrong capital letter.</p>
+          <p class="fix"><b>Fix</b>Use the exact name from the declaration (<code>name</code> and <code>Name</code> are different).</p>
+          <div class="ba"><div class="bad"><span>Before</span><pre>String name = "Dana";
+System.out.println(nmae);</pre></div><div class="good"><span>After</span><pre>String name = "Dana";
+System.out.println(name);</pre></div></div>
+        </article>
+
+        <article class="card" data-cat="compile">
+          <div class="ch"><span class="cat">Compile</span><h2>Missing closing brace</h2></div>
+          <pre class="msg">java: reached end of file while parsing</pre>
+          <p class="means">The file ended while a <code>{</code> was still open; here the method is closed but the class is not.</p>
+          <p class="fix"><b>Fix</b>Add the missing <code>}</code>; click a brace and IntelliJ highlights its partner.</p>
+          <div class="ba"><div class="bad"><span>Before</span><pre>public class Main {
+    public static void main(String[] args) {
+        System.out.println("Hi");
+    }</pre></div><div class="good"><span>After</span><pre>public class Main {
+    public static void main(String[] args) {
+        System.out.println("Hi");
+    }
+}</pre></div></div>
+        </article>
+
+        <article class="card" data-cat="compile">
+          <div class="ch"><span class="cat">Compile</span><h2>Text in single quotes</h2></div>
+          <pre class="msg">java: unclosed character literal</pre>
+          <p class="means">Single quotes hold one <code>char</code>; a String needs double quotes.</p>
+          <p class="fix"><b>Fix</b>Use <code>"..."</code> for text, <code>'x'</code> only for a single character.</p>
+          <div class="ba"><div class="bad"><span>Before</span><pre>String name = 'Dana';</pre></div><div class="good"><span>After</span><pre>String name = "Dana";</pre></div></div>
+        </article>
+
+        <article class="card" data-cat="compile">
+          <div class="ch"><span class="cat">Compile</span><h2>Assigning to a final constant</h2><a class="see" href="../visuals/08-final-constants.html">See it</a></div>
+          <pre class="msg">java: cannot assign a value to final variable DAYS_IN_WEEK</pre>
+          <p class="means">A <code>final</code> variable gets its value once and can never be changed.</p>
+          <p class="fix"><b>Fix</b>Remove the reassignment, or drop <code>final</code> if the value really must change.</p>
+          <div class="ba"><div class="bad"><span>Before</span><pre>final int DAYS_IN_WEEK = 7;
+DAYS_IN_WEEK = 8;</pre></div><div class="good"><span>After</span><pre>final int DAYS_IN_WEEK = 7;
+int daysOff = 2;</pre></div></div>
+        </article>
+
+        <article class="card" data-cat="compile">
+          <div class="ch"><span class="cat">Compile</span><h2>double into an int</h2><a class="see" href="../visuals/13-widening-narrowing.html">See it</a></div>
+          <pre class="msg">java: incompatible types: possible lossy conversion from double to int</pre>
+          <p class="means">An <code>int</code> cannot hold the decimal part, so Java refuses to narrow without being told.</p>
+          <p class="fix"><b>Fix</b>Cast on purpose with <code>(int)</code>, or store the result in a <code>double</code>.</p>
+          <div class="ba"><div class="bad"><span>Before</span><pre>double price = 19.99;
+int dollars = price;</pre></div><div class="good"><span>After</span><pre>double price = 19.99;
+int dollars = (int) price;</pre></div></div>
+        </article>
+
+        <article class="card" data-cat="compile">
+          <div class="ch"><span class="cat">Compile</span><h2>float literal without f</h2><a class="see" href="../visuals/07-data-types.html">See it</a></div>
+          <pre class="msg">java: incompatible types: possible lossy conversion from double to float</pre>
+          <p class="means">A decimal literal like <code>2.2</code> is a <code>double</code> by default, which is bigger than a <code>float</code>.</p>
+          <p class="fix"><b>Fix</b>Add <code>f</code> to the literal: <code>2.2f</code>.</p>
+          <div class="ba"><div class="bad"><span>Before</span><pre>float weight = 2.2;</pre></div><div class="good"><span>After</span><pre>float weight = 2.2f;</pre></div></div>
+        </article>
+
+        <article class="card" data-cat="compile">
+          <div class="ch"><span class="cat">Compile</span><h2>String into an int</h2><a class="see" href="../visuals/16-scanner-methods.html">See it</a></div>
+          <pre class="msg">java: incompatible types: java.lang.String cannot be converted to int</pre>
+          <p class="means"><code>nextLine()</code> returns a String, and a String does not fit in an <code>int</code> variable.</p>
+          <p class="fix"><b>Fix</b>Use the Scanner method that returns the type you want: <code>nextInt()</code>.</p>
+          <div class="ba"><div class="bad"><span>Before</span><pre>int age = scanner.nextLine();</pre></div><div class="good"><span>After</span><pre>int age = scanner.nextInt();</pre></div></div>
+        </article>
+
+        <article class="card" data-cat="compile">
+          <div class="ch"><span class="cat">Compile</span><h2>Scanner without the import</h2><a class="see" href="../visuals/16-scanner-methods.html">See it</a></div>
+          <pre class="msg">java: cannot find symbol
+  symbol:   class Scanner
+  location: class Main</pre>
+          <p class="means">Scanner lives in <code>java.util</code>, and the file never imported it.</p>
+          <p class="fix"><b>Fix</b>Add <code>import java.util.Scanner;</code> under the package line (or Alt+Enter in IntelliJ).</p>
+          <div class="ba"><div class="bad"><span>Before</span><pre>package com.pluralsight;
+
+public class Main {</pre></div><div class="good"><span>After</span><pre>package com.pluralsight;
+
+import java.util.Scanner;
+
+public class Main {</pre></div></div>
+        </article>
+
+        <article class="card" data-cat="compile">
+          <div class="ch"><span class="cat">Compile</span><h2>Variable used before it has a value</h2></div>
+          <pre class="msg">java: variable total might not have been initialized</pre>
+          <p class="means">A local variable was declared but not given a value before it was read.</p>
+          <p class="fix"><b>Fix</b>Give it a starting value when you declare it.</p>
+          <div class="ba"><div class="bad"><span>Before</span><pre>int total;
+System.out.println(total);</pre></div><div class="good"><span>After</span><pre>int total = 0;
+System.out.println(total);</pre></div></div>
+        </article>
+
+        <article class="card" data-cat="compile">
+          <div class="ch"><span class="cat">Compile</span><h2>Method that forgets to return</h2><a class="see" href="../visuals/20-method-signature.html">See it</a></div>
+          <pre class="msg">java: missing return statement</pre>
+          <p class="means">The signature promises an <code>int</code> back, but the body never returns one.</p>
+          <p class="fix"><b>Fix</b>End with <code>return</code>, or make the return type <code>void</code> if nothing comes back.</p>
+          <div class="ba"><div class="bad"><span>Before</span><pre>public static int add(int a, int b) {
+    int sum = a + b;
+}</pre></div><div class="good"><span>After</span><pre>public static int add(int a, int b) {
+    int sum = a + b;
+    return sum;
+}</pre></div></div>
+        </article>
+
+        <article class="card" data-cat="compile">
+          <div class="ch"><span class="cat">Compile</span><h2>Calling a method without its argument</h2><a class="see" href="../visuals/23-one-scanner.html">See it</a></div>
+          <pre class="msg">java: method displayMenu in class Main cannot be applied to given types;
+  required: java.util.Scanner
+  found:    no arguments
+  reason: actual and formal argument lists differ in length</pre>
+          <p class="means">The method's parameter list asks for a Scanner and the call passed nothing.</p>
+          <p class="fix"><b>Fix</b>Pass what the signature requires, in the same order.</p>
+          <div class="ba"><div class="bad"><span>Before</span><pre>displayMenu();</pre></div><div class="good"><span>After</span><pre>displayMenu(scanner);</pre></div></div>
+        </article>
+
+        <article class="card" data-cat="compile">
+          <div class="ch"><span class="cat">Compile</span><h2>Class name does not match the file</h2></div>
+          <pre class="msg">java: class HelloWorld is public, should be declared in a file named HelloWorld.java</pre>
+          <p class="means">A public class must live in a .java file with exactly the same name.</p>
+          <p class="fix"><b>Fix</b>Rename the file or the class with Shift+F6 so they match.</p>
+          <div class="ba"><div class="bad"><span>Before</span><pre>// Hello.java
+public class HelloWorld {</pre></div><div class="good"><span>After</span><pre>// HelloWorld.java
+public class HelloWorld {</pre></div></div>
+        </article>
+
+        <!-- ================= RUNTIME ================= -->
+        <article class="card" data-cat="runtime">
+          <div class="ch"><span class="cat">Runtime</span><h2>Wrong input type for Scanner</h2><a class="see" href="../visuals/16-scanner-methods.html">See it</a></div>
+          <pre class="msg">Exception in thread "main" java.util.InputMismatchException
+	at java.base/java.util.Scanner.throwFor(Scanner.java:939)
+	...
+	at com.pluralsight.Main.main(Main.java:9)</pre>
+          <p class="means"><code>nextInt()</code> got text it cannot read as a whole number, like <code>25.5</code> or <code>hello</code>.</p>
+          <p class="fix"><b>Fix</b>Match the method to the input: <code>nextDouble()</code> for decimals, and say the format in the prompt.</p>
+          <div class="ba"><div class="bad"><span>Before</span><pre>System.out.print("Price: ");
+int price = scanner.nextInt();</pre></div><div class="good"><span>After</span><pre>System.out.print("Price: ");
+double price = scanner.nextDouble();</pre></div></div>
+        </article>
+
+        <article class="card" data-cat="runtime">
+          <div class="ch"><span class="cat">Runtime</span><h2>nextLine() skipped after nextInt()</h2><a class="see" href="../visuals/15-scanner-buffer.html">See it</a></div>
+          <p class="mk">No error. Console:</p>
+          <pre class="msg out">Enter your age: 25
+Enter your name: Hello, !</pre>
+          <p class="means"><code>nextInt()</code> leaves the Enter key in the buffer, and <code>nextLine()</code> reads that empty line at once.</p>
+          <p class="fix"><b>Fix</b>Call <code>scanner.nextLine();</code> once after <code>nextInt()</code> to clear the leftover line.</p>
+          <div class="ba"><div class="bad"><span>Before</span><pre>int age = scanner.nextInt();
+String name = scanner.nextLine();</pre></div><div class="good"><span>After</span><pre>int age = scanner.nextInt();
+scanner.nextLine();
+String name = scanner.nextLine();</pre></div></div>
+        </article>
+
+        <article class="card" data-cat="runtime">
+          <div class="ch"><span class="cat">Runtime</span><h2>== on Strings</h2><a class="see" href="../visuals/19-string-comparison.html">See it</a></div>
+          <p class="mk">No error. The user typed Dana, console:</p>
+          <pre class="msg out">(nothing printed)</pre>
+          <p class="means"><code>==</code> asks whether two variables are the same object, not whether the text matches.</p>
+          <p class="fix"><b>Fix</b>Compare text with <code>.equals()</code> or <code>.equalsIgnoreCase()</code>.</p>
+          <div class="ba"><div class="bad"><span>Before</span><pre>if (name == "Dana") {</pre></div><div class="good"><span>After</span><pre>if (name.equals("Dana")) {</pre></div></div>
+        </article>
+
+        <article class="card" data-cat="runtime">
+          <div class="ch"><span class="cat">Runtime</span><h2>Integer division drops the decimals</h2><a class="see" href="../visuals/11-integer-division.html">See it</a></div>
+          <p class="mk">No error. Console:</p>
+          <pre class="msg out">3.0</pre>
+          <p class="means">Both operands are <code>int</code>, so <code>10 / 3</code> is <code>3</code> before it ever reaches the double.</p>
+          <p class="fix"><b>Fix</b>Make one operand a double: <code>10.0 / 3</code> or <code>(double) a / b</code>.</p>
+          <div class="ba"><div class="bad"><span>Before</span><pre>double result = 10 / 3;</pre></div><div class="good"><span>After</span><pre>double result = 10.0 / 3;</pre></div></div>
+        </article>
+
+        <article class="card" data-cat="runtime">
+          <div class="ch"><span class="cat">Runtime</span><h2>Dividing an int by zero</h2><a class="see" href="../visuals/11-integer-division.html">See it</a></div>
+          <pre class="msg">Exception in thread "main" java.lang.ArithmeticException: / by zero
+	at com.pluralsight.Main.main(Main.java:12)</pre>
+          <p class="means">Integer division by 0 has no answer, so the program stops at that line.</p>
+          <p class="fix"><b>Fix</b>Check the divisor before dividing.</p>
+          <div class="ba"><div class="bad"><span>Before</span><pre>int each = total / people;</pre></div><div class="good"><span>After</span><pre>if (people != 0) {
+    int each = total / people;
+}</pre></div></div>
+        </article>
+
+        <article class="card" data-cat="runtime">
+          <div class="ch"><span class="cat">Runtime</span><h2>Numbers glued instead of added</h2><a class="see" href="../visuals/10-concat-vs-addition.html">See it</a></div>
+          <p class="mk">No error. Console:</p>
+          <pre class="msg out">Score: 1020</pre>
+          <p class="means"><code>+</code> runs left to right; once a String is on the left, every <code>+</code> joins text.</p>
+          <p class="fix"><b>Fix</b>Put the math in parentheses so it runs first.</p>
+          <div class="ba"><div class="bad"><span>Before</span><pre>System.out.println("Score: " + a + b);</pre></div><div class="good"><span>After</span><pre>System.out.println("Score: " + (a + b));</pre></div></div>
+        </article>
+
+        <article class="card" data-cat="runtime">
+          <div class="ch"><span class="cat">Runtime</span><h2>switch without break</h2><a class="see" href="../visuals/24-switch-flow.html">See it</a></div>
+          <p class="mk">No error. day is 1, console:</p>
+          <pre class="msg out">Monday
+Tuesday</pre>
+          <p class="means">In the traditional form, a matching case keeps running into the next one until a <code>break</code>.</p>
+          <p class="fix"><b>Fix</b>End each case with <code>break;</code>, or use the arrow form, which never falls through.</p>
+          <div class="ba"><div class="bad"><span>Before</span><pre>case 1:
+    System.out.println("Monday");
+case 2:
+    System.out.println("Tuesday");</pre></div><div class="good"><span>After</span><pre>case 1:
+    System.out.println("Monday");
+    break;
+case 2:
+    System.out.println("Tuesday");
+    break;</pre></div></div>
+        </article>
+
+        <article class="card" data-cat="runtime">
+          <div class="ch"><span class="cat">Runtime</span><h2>print instead of println</h2></div>
+          <p class="mk">No error. Console:</p>
+          <pre class="msg out">HelloWorldJava</pre>
+          <p class="means"><code>print</code> adds no line break, so each output starts where the last one ended.</p>
+          <p class="fix"><b>Fix</b>Use <code>println</code> when each value should be on its own line.</p>
+          <div class="ba"><div class="bad"><span>Before</span><pre>System.out.print("Hello");
+System.out.print("World");</pre></div><div class="good"><span>After</span><pre>System.out.println("Hello");
+System.out.println("World");</pre></div></div>
+        </article>
+
+        <article class="card" data-cat="runtime">
+          <div class="ch"><span class="cat">Runtime</span><h2>Scanner closed, or a new Scanner per method</h2><a class="see" href="../visuals/23-one-scanner.html">See it</a></div>
+          <pre class="msg">Exception in thread "main" java.lang.IllegalStateException: Scanner closed</pre>
+          <p class="means">A method closed the Scanner on <code>System.in</code>, and every later read fails.</p>
+          <p class="fix"><b>Fix</b>Create one Scanner in <code>main</code>, pass it to methods, never create or close it inside them.</p>
+          <div class="ba"><div class="bad"><span>Before</span><pre>static int getAge() {
+    Scanner s = new Scanner(System.in);
+    int age = s.nextInt();
+    s.close();
+    return age;
+}</pre></div><div class="good"><span>After</span><pre>static int getAge(Scanner scanner) {
+    return scanner.nextInt();
+}</pre></div></div>
+        </article>
+
+        <article class="card" data-cat="runtime">
+          <div class="ch"><span class="cat">Runtime</span><h2>main written wrong</h2></div>
+          <pre class="msg">Error: Main method not found in class com.pluralsight.Main, please define the main method as:
+   public static void main(String[] args)
+or a JavaFX application class must extend javafx.application.Application</pre>
+          <p class="means">The JVM only starts at the exact signature <code>main(String[] args)</code>; no green Run arrow appears without it.</p>
+          <p class="fix"><b>Fix</b>Type <code>psvm</code> + Tab in IntelliJ to get the correct line.</p>
+          <div class="ba"><div class="bad"><span>Before</span><pre>public static void main(String args) {</pre></div><div class="good"><span>After</span><pre>public static void main(String[] args) {</pre></div></div>
+        </article>
+
+        <!-- ================= INTELLIJ AND MAVEN ================= -->
+        <article class="card" data-cat="ide">
+          <div class="ch"><span class="cat">IntelliJ and Maven</span><h2>Red underline, nothing runs</h2></div>
+          <p class="mk">Hover the red squiggle:</p>
+          <pre class="msg">Cannot resolve symbol 'scanner'</pre>
+          <p class="means">IntelliJ found the problem before you ran; the tooltip and the Problems tab say what it is.</p>
+          <p class="fix"><b>Fix</b>Hover the red line or open the Problems tab at the bottom, then fix the first entry.</p>
+          <div class="ba"><div class="bad"><span>Before</span><pre>int age = scanner.nextInt();</pre></div><div class="good"><span>After</span><pre>Scanner scanner = new Scanner(System.in);
+int age = scanner.nextInt();</pre></div></div>
+        </article>
+
+        <article class="card" data-cat="ide">
+          <div class="ch"><span class="cat">IntelliJ and Maven</span><h2>No JDK set for the project</h2><a class="see" href="../visuals/06-jdk-jre-jvm.html">See it</a></div>
+          <p class="mk">Yellow bar above the editor:</p>
+          <pre class="msg">Project JDK is not defined   Setup SDK</pre>
+          <p class="means">IntelliJ has no JDK for this project, so even <code>String</code> shows in red.</p>
+          <p class="fix"><b>Fix</b>Click Setup SDK, or File &gt; Project Structure &gt; Project, and pick corretto-17.</p>
+          <div class="ba"><div class="bad"><span>Before</span><pre>SDK: &lt;No SDK&gt;</pre></div><div class="good"><span>After</span><pre>SDK: corretto-17 Amazon Corretto 17</pre></div></div>
+        </article>
+
+        <article class="card" data-cat="ide">
+          <div class="ch"><span class="cat">IntelliJ and Maven</span><h2>Project on an older JDK</h2><a class="see" href="../visuals/06-jdk-jre-jvm.html">See it</a></div>
+          <pre class="msg">java: error: release version 17 not supported</pre>
+          <p class="means">The pom asks for Java 17 but the project is set to an older JDK.</p>
+          <p class="fix"><b>Fix</b>File &gt; Project Structure &gt; Project: set SDK to corretto-17.</p>
+          <div class="ba"><div class="bad"><span>Before</span><pre>SDK: 11</pre></div><div class="good"><span>After</span><pre>SDK: corretto-17</pre></div></div>
+        </article>
+
+        <article class="card" data-cat="ide">
+          <div class="ch"><span class="cat">IntelliJ and Maven</span><h2>Maven project not loaded</h2><a class="see" href="../visuals/01-maven-project-structure.html">See it</a></div>
+          <p class="mk">Notification:</p>
+          <pre class="msg">Maven build scripts found   Load</pre>
+          <p class="means">IntelliJ has not read the <code>pom.xml</code>, so <code>src/main/java</code> is not blue and Run is missing.</p>
+          <p class="fix"><b>Fix</b>Click Load, or right-click <code>pom.xml</code> and choose Add as Maven Project.</p>
+          <div class="ba"><div class="bad"><span>Before</span><pre>src/main/java   (plain folder)</pre></div><div class="good"><span>After</span><pre>src/main/java   (blue source root)</pre></div></div>
+        </article>
+
+        <article class="card" data-cat="ide">
+          <div class="ch"><span class="cat">IntelliJ and Maven</span><h2>File in the wrong folder for its package</h2><a class="see" href="../visuals/01-maven-project-structure.html">See it</a></div>
+          <pre class="msg">Package name 'com.pluralsight' does not correspond to the file path ''</pre>
+          <p class="means">The <code>package</code> line must match the folders under <code>src/main/java</code>.</p>
+          <p class="fix"><b>Fix</b>Move the file into <code>com/pluralsight</code> (Alt+Enter offers to do it).</p>
+          <div class="ba"><div class="bad"><span>Before</span><pre>src/main/java/Main.java</pre></div><div class="good"><span>After</span><pre>src/main/java/com/pluralsight/Main.java</pre></div></div>
+        </article>
+
+        <!-- ================= GIT ================= -->
+        <article class="card" data-cat="git">
+          <div class="ch"><span class="cat">Git</span><h2>Push rejected</h2><a class="see" href="../visuals/03-local-vs-remote.html">See it</a></div>
+          <pre class="msg">Push Rejected
+Push of current branch main was rejected.
+Remote changes need to be merged before pushing.</pre>
+          <p class="means">GitHub has commits your local repository does not have yet.</p>
+          <p class="fix"><b>Fix</b>Click Merge in the dialog (or Git &gt; Pull), then Push again.</p>
+          <div class="ba"><div class="bad"><span>Before</span><pre>Commit and Push</pre></div><div class="good"><span>After</span><pre>Git &gt; Pull
+Git &gt; Push</pre></div></div>
+        </article>
+
+        <article class="card" data-cat="git">
+          <div class="ch"><span class="cat">Git</span><h2>Name and email not set</h2><a class="see" href="../visuals/04-git-intellij-workflow.html">See it</a></div>
+          <p class="mk">Dialog on your first commit:</p>
+          <pre class="msg">Git User Name Is Not Defined</pre>
+          <p class="means">Every commit records who made it, and Git does not know you yet.</p>
+          <p class="fix"><b>Fix</b>Fill in Name and Email, tick Set properties globally, then commit.</p>
+          <div class="ba"><div class="bad"><span>Before</span><pre>Name:  (empty)
+Email: (empty)</pre></div><div class="good"><span>After</span><pre>Name:  Your Name
+Email: the one on your GitHub account</pre></div></div>
+        </article>
+
+        <article class="card" data-cat="git">
+          <div class="ch"><span class="cat">Git</span><h2>GitHub login failed</h2><a class="see" href="../visuals/04-git-intellij-workflow.html">See it</a></div>
+          <pre class="msg">fatal: Authentication failed for 'https://github.com/your-name/hello-java.git/'</pre>
+          <p class="means">IntelliJ is not logged in to GitHub, or the saved login expired.</p>
+          <p class="fix"><b>Fix</b>Settings &gt; Version Control &gt; GitHub &gt; + &gt; Log In via GitHub, then push again.</p>
+          <div class="ba"><div class="bad"><span>Before</span><pre>GitHub: no accounts</pre></div><div class="good"><span>After</span><pre>GitHub: your-name  (github.com)</pre></div></div>
+        </article>
+
+        <article class="card" data-cat="git">
+          <div class="ch"><span class="cat">Git</span><h2>Unregistered Git folder</h2><a class="see" href="../visuals/04-git-intellij-workflow.html">See it</a></div>
+          <pre class="msg">Unregistered VCS root detected
+The directory ... is under Git, but is not registered in the Settings.</pre>
+          <p class="means">IntelliJ found a Git repository it is not tracking yet, so commits may miss it.</p>
+          <p class="fix"><b>Fix</b>Click Add root; one project folder should be one repository.</p>
+          <div class="ba"><div class="bad"><span>Before</span><pre>Commit panel: no changes shown</pre></div><div class="good"><span>After</span><pre>Commit panel: your changed files</pre></div></div>
+        </article>
+
+      </div>
+    </div>
+    <p class="hint">Compile messages appear in the <b>Build</b> window, runtime ones in the <b>Run</b> window. Line numbers will differ in your code.</p>
+  </div>
+
+  <div id="rail"></div>
+</div>
+
+<script>
+(function(){
+  "use strict";
+  var $=function(s){return document.querySelector(s);};
+  var reduce=matchMedia("(prefers-reduced-motion: reduce)").matches;
+  var cards=Array.prototype.slice.call(document.querySelectorAll("#cards .card"));
+  var chips=Array.prototype.slice.call(document.querySelectorAll("#chips .chip"));
+  var NAMES={all:"errors",compile:"compile errors",runtime:"runtime errors",ide:"IntelliJ and Maven errors",git:"Git errors"};
+
+  /* counts per chip */
+  var counts={all:cards.length};
+  cards.forEach(function(c){var k=c.getAttribute("data-cat");counts[k]=(counts[k]||0)+1;});
+  Array.prototype.forEach.call(document.querySelectorAll(".ct"),function(s){s.textContent=counts[s.getAttribute("data-c")]||0;});
+
+  function show(f){
+    var n=0;
+    cards.forEach(function(c){var on=f==="all"||c.getAttribute("data-cat")===f;c.hidden=!on;if(on)n++;});
+    chips.forEach(function(b){var on=b.getAttribute("data-f")===f;b.classList.toggle("on",on);b.setAttribute("aria-pressed",on?"true":"false");});
+    $("#count").innerHTML="<b>"+n+"</b> "+NAMES[f];
+  }
+  $("#chips").addEventListener("click",function(e){var b=e.target.closest(".chip");if(b)show(b.getAttribute("data-f"));});
+
+  /* ---------- ambient canvas ---------- */
+  var cv=$("#amb"),ctx=cv.getContext&&cv.getContext("2d"),parts=[];
+  function sizeC(){if(!ctx)return;cv.width=innerWidth;cv.height=innerHeight;}
+  function initParts(){parts=[];for(var i=0;i<46;i++)parts.push({x:Math.random(),y:Math.random(),
+    r:Math.random()*1.6+.3,s:Math.random()*.02+.004,o:Math.random()*.4+.1});}
+  function drawC(){if(!ctx)return;ctx.clearRect(0,0,cv.width,cv.height);
+    parts.forEach(function(p){p.y-=p.s/60;if(p.y<-.02)p.y=1.02;
+      ctx.beginPath();ctx.arc(p.x*cv.width,p.y*cv.height,p.r,0,7);
+      ctx.fillStyle="rgba(140,170,255,"+p.o+")";ctx.fill();});
+    requestAnimationFrame(drawC);}
+  if(ctx&&!reduce){sizeC();initParts();drawC();addEventListener("resize",sizeC);}
+
+  show("all");
+})();
+</script>
+<script src="../manifest.js"></script>
+<script src="../../assets/rail.js"></script>
+<script>Rail.render(document.getElementById("rail"),{kind:"reference",current:"common-errors"});</script>
+</body>
+</html>
