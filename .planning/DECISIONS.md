@@ -14,3 +14,6 @@ Instructor: stepping "line by line" through four Scanner calls read like one pro
 
 ## 2026-10-13 · Pick a Learner is a teacher tool, not a hub page
 Dropped the Tools card from the landing page and the link from the week 1 footer. The page stays at tools/pick-a-learner.html (first names only) and Ray opens it from a bookmark. Reason: students gain nothing from it, and spinning it in class invites chatter.
+
+## 2026-10-13 · Workbooks 1a and 1b merged into "Workbook 1a - IntelliJ and Git"
+Ray's day 1 order: Git and GitHub (talk), IntelliJ and the first project, Share on GitHub, Shopping List exercise. Visuals renumbered to follow it: 01 version-control-timeline (1a · 1-1), 02 local-vs-remote (1-2), 03 maven-project-structure (1-3), 04 git-intellij-workflow (1-4). Pages 01, 02 and 04 now show first-maven-project / HelloWorld.java (the demo Ray builds live); the testing-git demo is retired. 1c pages untouched. Search index rebuilt.

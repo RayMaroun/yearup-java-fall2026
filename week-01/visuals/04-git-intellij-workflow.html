@@ -183,13 +183,13 @@
 
 <canvas id="amb"></canvas>
 <div class="wrap">
-  <p class="tag">Workbook 1b &middot; Section 1-3 &middot; GitHub</p>
+  <p class="tag">Workbook 1a &middot; Section 1-4 &middot; Share your project on GitHub</p>
   <h1>Git Through IntelliJ</h1>
   <p class="lede"><b>Commit saves a snapshot on your computer; only Push puts it on GitHub.</b></p>
 
   <div class="stage">
     <div class="topbar">
-      <span class="lab">One change to Main.java</span>
+      <span class="lab">One change to HelloWorld.java</span>
       <button class="focus" id="bFocus" title="Hide the notes, enlarge the picture">Focus</button>
     </div>
 
@@ -199,7 +199,7 @@
           <p class="lab">IntelliJ</p>
           <div class="ide" id="ide">
             <div class="bar">
-              <span class="proj">testing-git</span>
+              <span class="proj">first-maven-project</span>
               <span class="menu" id="git">Git
                 <span class="drop">
                   <span class="mi" id="miCommit">Commit...<span>Ctrl+K</span></span>
@@ -213,22 +213,22 @@
               <div class="iside">
                 <div class="tabs"><span id="tProj">Project</span><span id="tCommit">Commit</span></div>
                 <div class="pane" id="pProj">
-                  <div class="tr">testing-git</div>
+                  <div class="tr">first-maven-project</div>
                   <div class="tr">&nbsp;&nbsp;src/main/java</div>
                   <div class="tr">&nbsp;&nbsp;&nbsp;&nbsp;com.pluralsight</div>
-                  <div class="tr f" id="treeMain">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Main.java</div>
+                  <div class="tr f" id="treeMain">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;HelloWorld.java</div>
                   <div class="tr f">&nbsp;&nbsp;pom.xml</div>
                 </div>
                 <div class="pane" id="pCommit">
                   <div class="grp" id="chgHead">Changes &middot; 1 file</div>
-                  <div class="row" id="row"><span class="cb" id="cb"></span><span class="mod">Main.java</span></div>
+                  <div class="row" id="row"><span class="cb" id="cb"></span><span class="mod">HelloWorld.java</span></div>
                   <div class="nochg" id="nochg">No changes</div>
                   <div class="msgbox" id="msg">Commit Message</div>
                   <div class="cbtns"><span class="ib" id="bCommit">Commit</span><span class="ib">Commit and Push...</span></div>
                 </div>
               </div>
               <div class="ed">
-                <div class="etab" id="etab">Main.java</div>
+                <div class="etab" id="etab">HelloWorld.java</div>
                 <div class="code" id="code"></div>
               </div>
             </div>
@@ -239,7 +239,7 @@
             </div>
             <div class="sbar"><span class="note" id="note"></span><span>main</span></div>
             <div class="dlg" id="dlg">
-              <div class="dt1">Push Commits to testing-git</div>
+              <div class="dt1">Push Commits to first-maven-project</div>
               <div class="route">main &rarr; <b>origin : main</b></div>
               <div class="one">Change greeting</div>
               <div class="db"><span class="ib">Cancel</span><span class="ib ready" id="bPush">Push</span></div>
@@ -249,13 +249,13 @@
         <div class="rcol">
           <p class="lab">GitHub</p>
           <div class="gh" id="gh">
-            <div class="url">github.com/your-name/testing-git</div>
-            <div class="rn">testing-git <span class="pub">Public</span></div>
+            <div class="url">github.com/your-name/first-maven-project</div>
+            <div class="rn">first-maven-project <span class="pub">Public</span></div>
             <div class="sec">Commits</div>
             <div class="cm new" id="ghNew"><span class="dt"></span>Change greeting</div>
             <div class="cm"><span class="dt"></span>Initial Commit</div>
             <div class="empty" id="ghEmpty">nothing new</div>
-            <div class="sec">Main.java, line 5</div>
+            <div class="sec">HelloWorld.java, line 5</div>
             <div class="preview" id="ghLine"></div>
           </div>
         </div>
@@ -300,13 +300,13 @@
   var $=function(s){return document.querySelector(s);};
   var reduce=matchMedia("(prefers-reduced-motion: reduce)").matches;
 
-  /* Main.java from the testing-git demo; the edit (Hello to Hello, Git!) is invented */
+  /* HelloWorld.java from the first-maven-project demo; the edit (the greeting to Hello, Git!) is invented */
   function codeLines(edited){
-    var msg=edited?"Hello, Git!":"Hello";
+    var msg=edited?"Hello, Git!":"Hello I am Raymond!";
     return [
       '<span class="kw">package</span> com.pluralsight;',
       '',
-      '<span class="kw">public class</span> Main {',
+      '<span class="kw">public class</span> HelloWorld {',
       '  <span class="kw">public static void</span> main(String[] args) {',
       '    System.out.println(<span class="st">"'+msg+'"</span>);',
       '  }',
@@ -317,14 +317,14 @@
   /* one snapshot per step: what IntelliJ and GitHub look like after it */
   var BASE={menu:null,side:"proj",edited:false,tick:false,msg:false,committed:false,dlg:false,pushed:false,note:"",cls:"",cue:null};
   var STEPS=[
-    {cue:"#code",msg:'The <code>testing-git</code> project was put on GitHub with <b class="a">Git > GitHub > Share Project on GitHub</b>. Your computer and GitHub hold the same one commit, <b class="g">Initial Commit</b>. Main.java prints "Hello".'},
-    {edited:true,cue:"#git",msg:'You edit line 5 to print "Hello, Git!". IntelliJ marks Main.java <b class="a">blue: modified</b>, in the Project tree, on the editor tab and in the gutter. GitHub still shows "Hello".'},
-    {edited:true,menu:"commit",side:"commit",cue:"#cb",msg:'Open <b class="a">Git > Commit...</b> (Ctrl+K). The <b class="a">Commit</b> tool window opens on the left and lists Main.java under Changes.'},
-    {edited:true,side:"commit",tick:true,cue:"#msg",msg:'Tick the checkbox next to Main.java. <b class="a">Only ticked files go into the commit.</b>'},
+    {cue:"#code",msg:'The <code>first-maven-project</code> project was put on GitHub with <b class="a">Git > GitHub > Share Project on GitHub</b>. Your computer and GitHub hold the same one commit, <b class="g">Initial Commit</b>. HelloWorld.java prints "Hello I am Raymond!".'},
+    {edited:true,cue:"#git",msg:'You edit line 5 to print "Hello, Git!". IntelliJ marks HelloWorld.java <b class="a">blue: modified</b>, in the Project tree, on the editor tab and in the gutter. GitHub still shows "Hello I am Raymond!".'},
+    {edited:true,menu:"commit",side:"commit",cue:"#cb",msg:'Open <b class="a">Git > Commit...</b> (Ctrl+K). The <b class="a">Commit</b> tool window opens on the left and lists HelloWorld.java under Changes.'},
+    {edited:true,side:"commit",tick:true,cue:"#msg",msg:'Tick the checkbox next to HelloWorld.java. <b class="a">Only ticked files go into the commit.</b>'},
     {edited:true,side:"commit",tick:true,msg:true,cue:"#bCommit",msg:'Type a short message in the <b class="a">Commit Message</b> box that says what changed: <code>Change greeting</code>. The <b class="a">Commit</b> button is ready.'},
-    {edited:true,side:"commit",committed:true,cue:"#git",cls:"left",note:"1 file committed: Change greeting",msg:'Click <b class="a">Commit</b>. Git saves a snapshot <b class="y">on your computer</b>: a new entry in the Git log, and Main.java turns back to normal. GitHub has not heard about it yet.'},
+    {edited:true,side:"commit",committed:true,cue:"#git",cls:"left",note:"1 file committed: Change greeting",msg:'Click <b class="a">Commit</b>. Git saves a snapshot <b class="y">on your computer</b>: a new entry in the Git log, and HelloWorld.java turns back to normal. GitHub has not heard about it yet.'},
     {edited:true,side:"commit",committed:true,menu:"push",dlg:true,cue:"#bPush",cls:"left",msg:'Open <b class="a">Git > Push...</b> (Ctrl+Shift+K). The Push dialog lists the commit GitHub is missing, going from <code>main</code> to <code>origin : main</code>.'},
-    {edited:true,side:"commit",committed:true,pushed:true,cls:"ok",note:"Pushed 1 commit to origin/main",msg:'Click <b class="a">Push</b>. The commit travels to GitHub: it shows in the repo\'s commit list and Main.java there prints "Hello, Git!". <b class="g">Both sides match again.</b>'}
+    {edited:true,side:"commit",committed:true,pushed:true,cls:"ok",note:"Pushed 1 commit to origin/main",msg:'Click <b class="a">Push</b>. The commit travels to GitHub: it shows in the repo\'s commit list and HelloWorld.java there prints "Hello, Git!". <b class="g">Both sides match again.</b>'}
   ];
   STEPS=STEPS.map(function(s){var o={},k;for(k in BASE)o[k]=BASE[k];for(k in s)o[k]=s[k];return o;});
 
@@ -362,7 +362,7 @@
     /* GitHub only changes on Push */
     cls("#ghNew","show",s.pushed); $("#ghEmpty").style.display=s.pushed?"none":"";
     $("#ghEmpty").textContent=s.committed&&!s.pushed?"Change greeting is not here yet":"nothing new";
-    $("#ghLine").innerHTML='System.out.println(<span class="st">"'+(s.pushed?"Hello, Git!":"Hello")+'"</span>);';
+    $("#ghLine").innerHTML='System.out.println(<span class="st">"'+(s.pushed?"Hello, Git!":"Hello I am Raymond!")+'"</span>);';
     cls("#gh","lit",s.pushed);
     /* readout */
     var loc=s.committed?2:1, rem=s.pushed?2:1;

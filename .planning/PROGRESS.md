@@ -10,6 +10,7 @@
 
 ## Done 2026-10-13 (early hours, while Ray was away)
 - [x] Reference (4): cheat-sheet, glossary, common-errors, intellij-shortcuts. Verified in Chrome. Note: IntelliJ dialog wording on common-errors written from memory; confirm on a real machine.
+- [x] 2026-10-13: 1a+1b merged workbook; visuals 01-04 renumbered to its section order, relabelled, first-maven-project. See DECISIONS.
 - [x] week-01/index.html (tabs, grouped, hash lands on the item), index.html landing (12 weeks, no Tools card), search.js restyled, build-search-index.js reads manifests, search-index.json built (29 items).
 
 ## Still to do for week 1

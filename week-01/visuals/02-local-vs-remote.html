@@ -120,26 +120,26 @@
 </head>
 <body>
 
-<a class="back" href="../index.html#03-local-vs-remote">&#8592; Week 1 index</a>
+<a class="back" href="../index.html#02-local-vs-remote">&#8592; Week 1 index</a>
 
 <canvas id="amb"></canvas>
 <div class="wrap">
-  <p class="tag">Workbook 1b &middot; Section 1-2 &middot; Local repository and GitHub</p>
+  <p class="tag">Workbook 1a &middot; Section 1-2 &middot; GitHub, local and remote</p>
   <h1>Local vs Remote Repository</h1>
   <p class="lede"><b>A commit saves on your computer only. Nobody else sees it until you push.</b></p>
 
   <div class="stage">
     <div class="topbar">
-      <span class="lab">Where is the commit "Print Hello"?</span>
+      <span class="lab">Where is the commit "Print greeting"?</span>
     </div>
 
     <div class="pic" id="pic">
       <div class="places">
         <div class="place" id="Pme">
-          <div class="phead"><span class="pname">Your computer</span><span class="pwhere">~/pluralsight/testing-git</span></div>
+          <div class="phead"><span class="pname">Your computer</span><span class="pwhere">pluralsight/java-development/workbook-1/first-maven-project</span></div>
           <div class="box">
             <p class="bt">Working folder: the files you edit</p>
-            <div class="file" id="Fmain"><span>src/.../Main.java</span><span class="st" id="Smain"></span></div>
+            <div class="file" id="Fmain"><span>src/.../HelloWorld.java</span><span class="st" id="Smain"></span></div>
             <div class="file"><span>pom.xml</span><span class="st">saved</span></div>
           </div>
           <div class="down" id="Acommit">&#8595; commit</div>
@@ -153,7 +153,7 @@
         <div class="place" id="Pgh">
           <div class="phead"><span class="pname">GitHub</span><span class="pwhere">remote repository &middot; public</span></div>
           <div class="box">
-            <p class="bt">github.com/you/testing-git</p>
+            <p class="bt">github.com/you/first-maven-project</p>
             <div class="commits" id="Cgh"></div>
           </div>
           <div class="seen" id="Vgh"></div>
@@ -204,7 +204,7 @@
   /* which places hold the new commit in each moment */
   var MODES={
     edit:{me:false,gh:false,mate:false,mod:true,arrow:"",
-      msg:'You changed <code>Main.java</code> and saved it. The change is only in the working folder. <b class="y">No commit yet</b>, so no copy holds it.'},
+      msg:'You changed <code>HelloWorld.java</code> and saved it. The change is only in the working folder. <b class="y">No commit yet</b>, so no copy holds it.'},
     commit:{me:true,gh:false,mate:false,mod:false,arrow:"commit",
       msg:'The commit is in your <b class="a">local repository</b>. GitHub still shows only Initial Commit. If Raymond opens your repo now, he does not see it.'},
     push:{me:true,gh:true,mate:false,mod:false,arrow:"push",
@@ -220,8 +220,8 @@
 
   function commits(has){
     return '<div class="cm"><span class="h">a1f3</span><span>Initial Commit</span></div>'+
-      (has?'<div class="cm new"><span class="h">7c2e</span><span>Print Hello</span></div>'
-          :'<div class="cm miss"><span class="h">----</span><span>Print Hello: not here</span></div>');
+      (has?'<div class="cm new"><span class="h">7c2e</span><span>Print greeting</span></div>'
+          :'<div class="cm miss"><span class="h">----</span><span>Print greeting: not here</span></div>');
   }
 
   function set(mode){
@@ -267,6 +267,6 @@
 </script>
 <script src="../manifest.js"></script>
 <script src="../../assets/rail.js"></script>
-<script>Rail.render(document.getElementById("rail"),{kind:"visuals",current:"03-local-vs-remote"});</script>
+<script>Rail.render(document.getElementById("rail"),{kind:"visuals",current:"02-local-vs-remote"});</script>
 </body>
 </html>

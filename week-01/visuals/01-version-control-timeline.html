@@ -163,11 +163,11 @@
 </head>
 <body>
 
-<a class="back" href="../index.html#02-version-control-timeline">&#8592; Week 1 index</a>
+<a class="back" href="../index.html#01-version-control-timeline">&#8592; Week 1 index</a>
 
 <canvas id="amb"></canvas>
 <div class="wrap">
-  <p class="tag">Workbook 1b &middot; Section 1-1 &middot; Git</p>
+  <p class="tag">Workbook 1a &middot; Section 1-1 &middot; Version control and Git</p>
   <h1>Version Control Timeline</h1>
   <p class="lede"><b>Each commit is a saved snapshot of the project, with a message that says what changed and why.</b></p>
 
@@ -200,7 +200,7 @@
 
     <div class="support">
       <div>
-        <div class="fhead"><p class="lab">Main.java</p><span class="badge" id="badge"></span></div>
+        <div class="fhead"><p class="lab">HelloWorld.java</p><span class="badge" id="badge"></span></div>
         <div class="code" id="code"></div>
       </div>
       <div class="side">
@@ -211,7 +211,7 @@
         </div>
         <p class="lab">Commit details</p>
         <div class="card" id="card"></div>
-        <div class="console"><div class="cl">run Main</div><div id="console"></div></div>
+        <div class="console"><div class="cl">run HelloWorld</div><div id="console"></div></div>
       </div>
     </div>
   </div>
@@ -232,18 +232,18 @@
   var $=function(s){return document.querySelector(s);};
   var reduce=matchMedia("(prefers-reduced-motion: reduce)").matches;
 
-  /* ---------- the file: Main.java from the testing-git demo, then invented edits ---------- */
-  var HEAD_LINES=["package com.pluralsight;","","public class Main {","    public static void main(String[] args) {"];
+  /* ---------- the file: HelloWorld.java from the first-maven-project demo, then invented edits ---------- */
+  var HEAD_LINES=["package com.pluralsight;","","public class HelloWorld {","    public static void main(String[] args) {"];
   var TAIL=["    }","}"];
   var V=[
-    HEAD_LINES.concat(['        System.out.println("Hello");'],TAIL),
-    HEAD_LINES.concat(['        System.out.println("Hello");','        System.out.println("Welcome to Java");'],TAIL),
+    HEAD_LINES.concat(['        System.out.println("Hello I am Raymond!");'],TAIL),
+    HEAD_LINES.concat(['        System.out.println("Hello I am Raymond!");','        System.out.println("Welcome to Java");'],TAIL),
     HEAD_LINES.concat(['        String name = "Maya";','        System.out.println("Hello, " + name);','        System.out.println("Welcome to Java");'],TAIL),
     HEAD_LINES.concat(['        String learner = "Maya";','        System.out.println("Hello, " + name);','        System.out.println("Welcome to Java");'],TAIL)
   ];
   var RUN=[
-    ["Hello"],
-    ["Hello","Welcome to Java"],
+    ["Hello I am Raymond!"],
+    ["Hello I am Raymond!","Welcome to Java"],
     ["Hello, Maya","Welcome to Java"],
     null
   ];
@@ -251,7 +251,7 @@
 
   /* commit i holds file version i; marks = lines that commit changed vs the one before */
   var COMMITS=[
-    {hash:"a1f3c09",msg:"Initial commit",time:"Oct 12, 09:05",chg:'<i>+ Main.java</i> (new file)',marks:{}},
+    {hash:"a1f3c09",msg:"Initial commit",time:"Oct 12, 09:05",chg:'<i>+ HelloWorld.java</i> (new file)',marks:{}},
     {hash:"4be71d2",msg:"Add welcome message",time:"Oct 12, 09:40",chg:'<i>+ 1 line added</i>',marks:{5:"add"}},
     {hash:"9c02e5a",msg:"Store the name in a variable",time:"Oct 12, 10:15",chg:'<i>+ 1 line added</i><br><u>~ 1 line changed</u>',marks:{4:"add",5:"chg"}},
     {hash:"e7d4b18",msg:"Rename name to learner",time:"Oct 12, 11:20",chg:'<u>~ 1 line changed</u>',marks:{4:"chg",5:"bad"}}
@@ -263,7 +263,7 @@
     {n:1,head:0,file:0,marks:{},card:0,cls:"ok",
      msg:'Commit 1 saves a snapshot of the project as it is now, with a message and a time: <b class="a">"Initial commit"</b>.'},
     {n:1,head:0,pend:true,file:1,marks:{5:"add"},card:"pend",cls:"look",
-     msg:'You add a line to Main.java. The file changed, but the history did not: the change is <b class="y">not committed yet</b>.'},
+     msg:'You add a line to HelloWorld.java. The file changed, but the history did not: the change is <b class="y">not committed yet</b>.'},
     {n:2,head:1,file:1,marks:{5:"add"},card:1,cls:"ok",
      msg:'Commit 2 saves the new snapshot. Its message says why: <b class="a">"Add welcome message"</b>.'},
     {n:3,head:2,file:2,marks:{4:"add",5:"chg"},card:2,cls:"ok",
@@ -320,7 +320,7 @@
     if(c==="pend"){ card.className="card pend";
       card.innerHTML='<div class="row"><span>not committed</span><span>no message yet</span></div>'+
         '<div class="msg" style="color:var(--gold)">(working changes)</div><div class="chg"><i>+ 1 line added</i>, not in history yet</div>'; return; }
-    if(c===null||c===undefined){ card.className="card"; card.innerHTML='<div class="none">No commit yet. Main.java exists on disk, but no snapshot of it has been saved.</div>'; return; }
+    if(c===null||c===undefined){ card.className="card"; card.innerHTML='<div class="none">No commit yet. HelloWorld.java exists on disk, but no snapshot of it has been saved.</div>'; return; }
     var k=COMMITS[c]; card.className="card"+(look?" look":"");
     card.innerHTML='<div class="row"><span>commit '+(c+1)+' \u00b7 '+k.hash+'</span><span>'+k.time+'</span></div>'+
       '<div class="msg">"'+esc(k.msg)+'"</div><div class="chg">'+k.chg+'</div>';
@@ -362,7 +362,7 @@
       $("#stepno").innerHTML="<small>step</small>0 / "+steps.length;
       renderTl(null); renderFile(0,{}); renderCard(null);
       $("#badge").className="badge"; $("#badge").textContent="on disk, not saved in history";
-      capEl.className="caption"; statusEl.innerHTML='This is Main.java from the testing-git demo. Press <b class="a">Next</b> to save its first snapshot.';
+      capEl.className="caption"; statusEl.innerHTML='This is HelloWorld.java from the first-maven-project demo. Press <b class="a">Next</b> to save its first snapshot.';
       setStat("#stCount","0","dim"); setStat("#stAt","none","dim"); setBtns(); return;
     }
     var s=steps[i];
@@ -422,6 +422,6 @@
 </script>
 <script src="../manifest.js"></script>
 <script src="../../assets/rail.js"></script>
-<script>Rail.render(document.getElementById("rail"),{kind:"visuals",current:"02-version-control-timeline"});</script>
+<script>Rail.render(document.getElementById("rail"),{kind:"visuals",current:"01-version-control-timeline"});</script>
 </body>
 </html>
