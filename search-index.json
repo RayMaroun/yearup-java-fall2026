@@ -3,10 +3,20 @@
     "week": 1,
     "weekLabel": "Week 1",
     "section": "Visuals",
+    "title": "Your Folder Structure",
+    "desc": "",
+    "group": "Workbook 1a · Day 1 setup",
+    "url": "week-01/visuals/01-folder-structure.html",
+    "text": "← Week 1 index Workbook 1a · Day 1 setup · Where every project lives Your Folder Structure One folder per project. Each project is its own Git repository and its own GitHub repository. One tree on your machine dashed outline = one repository Your computer GitHub Desktop/ pluralsight/ no .git java-development/ no .git workbook-1/ no .git first-maven-project/ .git repo first-maven-project shopping-list/ .git repo shopping-list workbook-2/ later no .git workshops/ no .git one folder per workshop .git repo same name capstones/ no .git one folder per capstone .git repo same name pluralsight java-development workbook-1 a project workshops capstones Click a folder in the tree or use the switch. In IntelliJ, check Create Git repository when you create each project. The one idea The repository is the project folder, never the folders above it. pluralsight, java-development and workbook-1 only hold projects. Mac: ~/Desktop/pluralsight/java-development/workbook-1 . Windows: C:\\Users\\[username]\\Desktop\\pluralsight\\java-development\\workbook-1 ."
+  },
+  {
+    "week": 1,
+    "weekLabel": "Week 1",
+    "section": "Visuals",
     "title": "Version Control Timeline",
     "desc": "",
     "group": "Workbook 1a · Section 1-1",
-    "url": "week-01/visuals/01-version-control-timeline.html",
+    "url": "week-01/visuals/02-version-control-timeline.html",
     "text": "← Week 1 index Workbook 1a · Section 1-1 · Version control and Git Version Control Timeline Each commit is a saved snapshot of the project, with a message that says what changed and why. History: the timeline of commits Focus no commits yet you are here step 0 / 7 Press Next to start. ← Back Next → Reset space = next · click any commit dot to look at that snapshot. HelloWorld.java Where the project stands Commits saved 0 File matches none Commit details run HelloWorld The one idea A commit is a saved snapshot of your project with a message. The history is the line of those snapshots, oldest to newest. Version control lets you look at any of them, compare them, and roll back to one when a change breaks something. Commit each time you have something that works."
   },
   {
@@ -16,18 +26,8 @@
     "title": "Local vs Remote Repository",
     "desc": "",
     "group": "Workbook 1a · Section 1-2",
-    "url": "week-01/visuals/02-local-vs-remote.html",
+    "url": "week-01/visuals/03-local-vs-remote.html",
     "text": "← Week 1 index Workbook 1a · Section 1-2 · GitHub, local and remote Local vs Remote Repository Share creates the GitHub repository once. After that, a commit stays on your computer until you push. Where is the commit \"Print greeting\"? Your computer pluralsight/java-development/workbook-1/first-maven-project Working folder: the files you edit src/.../HelloWorld.java pom.xml saved ↓ commit Local repository (.git folder) push origin GitHub remote repository · public github.com/you/first-maven-project clone / pull Another computer a teammate's copy Their local repository moment 3 / 5 Share on GitHub Edited Committed Pushed Pulled In IntelliJ: Git > GitHub > Share Project on GitHub once, then Commit and Commit and Push in the Commit tool window. The one idea Share creates the remote once. Commit saves on your machine only; nothing new reaches GitHub until you push. Your repositories are public, so once you push, Raymond can open GitHub and see your work."
-  },
-  {
-    "week": 1,
-    "weekLabel": "Week 1",
-    "section": "Visuals",
-    "title": "Your Folder Structure",
-    "desc": "",
-    "group": "Workbook 1a · Section 1-3",
-    "url": "week-01/visuals/03-folder-structure.html",
-    "text": "← Week 1 index Workbook 1a · Section 1-3 · Where every project lives Your Folder Structure One folder per project. Each project is its own Git repository and its own GitHub repository. One tree on your machine dashed outline = one repository Your computer GitHub Desktop/ pluralsight/ no .git java-development/ no .git workbook-1/ no .git first-maven-project/ .git repo first-maven-project shopping-list/ .git repo shopping-list workbook-2/ later no .git workshops/ no .git one folder per workshop .git repo same name capstones/ no .git one folder per capstone .git repo same name pluralsight java-development workbook-1 a project workshops capstones Click a folder in the tree or use the switch. In IntelliJ, check Create Git repository when you create each project. The one idea The repository is the project folder, never the folders above it. pluralsight, java-development and workbook-1 only hold projects. Mac: ~/Desktop/pluralsight/java-development/workbook-1 . Windows: C:\\Users\\[username]\\Desktop\\pluralsight\\java-development\\workbook-1 ."
   },
   {
     "week": 1,

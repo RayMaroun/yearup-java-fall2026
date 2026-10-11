@@ -8,7 +8,7 @@ NEW = no spring page. NONE = idea covered by the workbook text/image, no page. S
 | # | Idea (workbook) | Spring page | Verdict | Size | Note |
 |---|---|---|---|---|---|
 | 01 | Maven project folder structure (1a) | 05-maven-project-structure | KEEP | Glance | click a folder, see what goes there |
-| 02 | What version control is: timeline, roll back (1b 1-1) | 01-version-control-timeline | KEEP | Walk | |
+| 02 | What version control is: timeline, roll back (1b 1-1) | 02-version-control-timeline | KEEP | Walk | |
 | 03 | Local vs remote repository (1b 1-2, 1-3) | 03-distributed-vcs | KEEP | Glance | |
 | 04 | Git through IntelliJ: change → commit → push → GitHub (1b) | 06-git-intellij-workflow | KEEP | Walk | matches v7.2: public repo |
 | 05 | Binary counter (1c 1-2) | 05-binary-counter | DROP | | 1c Module 1 skipped in spring (Notion checklist, Tue); re-add only if the fall review changes that |

@@ -4,9 +4,9 @@ window.HUB_MANIFEST = {
   week: 1,
   title: "Introduction to Java",
   visuals: [
-    { file: "01-version-control-timeline.html", title: "Version Control Timeline", group: "Workbook 1a · Section 1-1", size: "walk" },
-    { file: "02-local-vs-remote.html", title: "Local vs Remote Repository", group: "Workbook 1a · Section 1-2", size: "glance" },
-    { file: "03-folder-structure.html", title: "Your Folder Structure", group: "Workbook 1a · Section 1-3", size: "glance" },
+    { file: "01-folder-structure.html", title: "Your Folder Structure", group: "Workbook 1a · Day 1 setup", size: "glance" },
+    { file: "02-version-control-timeline.html", title: "Version Control Timeline", group: "Workbook 1a · Section 1-1", size: "walk" },
+    { file: "03-local-vs-remote.html", title: "Local vs Remote Repository", group: "Workbook 1a · Section 1-2", size: "glance" },
     { file: "04-new-project-dialog.html", title: "The New Project Dialog", group: "Workbook 1a · Section 1-3", size: "glance" },
     { file: "05-maven-project-structure.html", title: "Maven Project Structure", group: "Workbook 1a · Section 1-3", size: "glance" },
     { file: "06-git-intellij-workflow.html", title: "Git Through IntelliJ", group: "Workbook 1a · Section 1-4", size: "walk" },

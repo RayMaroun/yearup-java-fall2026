@@ -20,3 +20,6 @@ Ray's day 1 order: Git and GitHub (talk), IntelliJ and the first project, Share 
 
 ## 2026-10-13 · Two new Glance pages for the merged 1a, visuals renumbered
 Ray approved: 03 Your Folder Structure (Desktop/pluralsight tree, repository boundary = project folder), 04 The New Project Dialog (six fields plus sample code, click a field), and a "Share on GitHub" moment added first in 02 Local vs Remote. Inserted at manifest positions 03 and 04, so 03-25 became 05-27 (call stack is now 23). Week 1 now has 27 visuals. All three verified in Chrome.
+
+## 2026-10-13 · Folder structure is page 01; Local vs Remote starts at "Local only"
+Ray: the folder tree is the first thing he does on day 1, so it is visual 01 (group "Workbook 1a · Day 1 setup"); timeline 02, local-vs-remote 03, dialog 04. Local vs Remote reworked: opens at moment 1 "Local only" (GitHub and teammate columns are dashed placeholders), "Share on GitHub" creates the GitHub block (short reveal, motion that shows the mechanism), then Edited, Committed, Pushed, Pulled. Six moments, same hash on both sides.

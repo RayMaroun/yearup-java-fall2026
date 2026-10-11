@@ -83,11 +83,15 @@
   .arrow.on .ln::after{border-left-color:var(--gold)}
   .org{font-size:.92em;padding:.15em .6em;border-radius:999px;border:1px solid var(--line);color:var(--muted);text-transform:none;letter-spacing:0;transition:color .3s,border-color .3s}
   .org.on{color:var(--gold);border-color:var(--gold)}
-  .repo{display:flex;flex-direction:column;gap:.35em}
-  .repo:not(:empty){margin:0 0 .45em}
-  .rp{font-family:var(--mono);font-size:.8em;padding:.3em .7em;border-radius:9px;border:1px dashed var(--line);color:var(--muted)}
-  .rp.gone{text-decoration:line-through;opacity:.6}
-  .rp.made{border:1px solid var(--gold);color:#ffe6b0;background:rgba(255,200,98,.12)}
+  .org.off{visibility:hidden}
+  /* a place that does not exist yet: dashed outline, one muted line */
+  .ph{display:none}
+  .place.ghost{border-style:dashed;background:transparent;box-shadow:none}
+  .place.ghost>*{display:none}
+  .place.ghost>.ph{display:flex;flex:1;align-items:center;justify-content:center;text-align:center;
+    font-family:var(--mono);font-size:.8em;letter-spacing:.08em;color:var(--muted);opacity:.75}
+  .place.reveal>*{animation:rise .4s ease-out both}
+  @keyframes rise{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:none}}
   @media (max-width:860px){
     .places{grid-template-columns:1fr}
     .arrow{flex-direction:row;padding:10px 0}
@@ -127,17 +131,17 @@
 </head>
 <body>
 
-<a class="back" href="../index.html#02-local-vs-remote">&#8592; Week 1 index</a>
+<a class="back" href="../index.html#03-local-vs-remote">&#8592; Week 1 index</a>
 
 <canvas id="amb"></canvas>
 <div class="wrap">
   <p class="tag">Workbook 1a &middot; Section 1-2 &middot; GitHub, local and remote</p>
   <h1>Local vs Remote Repository</h1>
-  <p class="lede"><b>Share creates the GitHub repository once. After that, a commit stays on your computer until you push.</b></p>
+  <p class="lede"><b>Your repository lives on your computer until Share creates a copy on GitHub. After that, commits stay local until you push.</b></p>
 
   <div class="stage">
     <div class="topbar">
-      <span class="lab">Where is the commit "Print greeting"?</span>
+      <span class="lab">Who has which commit?</span>
     </div>
 
     <div class="pic" id="pic">
@@ -158,16 +162,17 @@
         </div>
         <div class="arrow" id="Apush"><span class="ln"></span><span id="Lpush">push</span><span class="org" id="Org">origin</span></div>
         <div class="place" id="Pgh">
+          <div class="ph" id="Xgh"></div>
           <div class="phead"><span class="pname">GitHub</span><span class="pwhere">remote repository &middot; public</span></div>
           <div class="box">
             <p class="bt">github.com/you/first-maven-project</p>
-            <div class="repo" id="Rgh"></div>
             <div class="commits" id="Cgh"></div>
           </div>
           <div class="seen" id="Vgh"></div>
         </div>
         <div class="arrow" id="Apull"><span class="ln"></span><span>clone / pull</span></div>
         <div class="place" id="Pmate">
+          <div class="ph" id="Xmate"></div>
           <div class="phead"><span class="pname">Another computer</span><span class="pwhere">a teammate's copy</span></div>
           <div class="box">
             <p class="bt">Their local repository</p>
@@ -179,15 +184,16 @@
     </div>
 
     <div class="caption" id="caption">
-      <div class="n" id="stepno"><small>moment</small>3 / 5</div>
+      <div class="n" id="stepno"><small>moment</small>1 / 6</div>
       <div class="t" id="status"></div>
     </div>
 
     <div class="toolbar">
       <div class="seg" id="seg" role="group" aria-label="Pick a moment">
+        <button data-m="local" class="on">Local only</button>
         <button data-m="share">Share on GitHub</button>
         <button data-m="edit">Edited</button>
-        <button data-m="commit" class="on">Committed</button>
+        <button data-m="commit">Committed</button>
         <button data-m="push">Pushed</button>
         <button data-m="pull">Pulled</button>
       </div>
@@ -197,8 +203,8 @@
 
   <div class="take">
     <p class="tk">The one idea</p>
-    <p><b>Share creates the remote once. Commit saves on your machine only; nothing new reaches GitHub until you push.</b>
-    Your repositories are public, so once you push, Raymond can open GitHub and see your work.</p>
+    <p><b>Share creates the GitHub copy once. Commit saves on your machine only; nothing new reaches GitHub until you push.</b>
+    Your repositories are public, so once you push, Raymond can see your work.</p>
   </div>
 
   <div id="rail"></div>
@@ -210,58 +216,66 @@
   var $=function(s){return document.querySelector(s);};
   var reduce=matchMedia("(prefers-reduced-motion: reduce)").matches;
 
-  /* which places hold the new commit in each moment */
+  /* per moment: which commits each place holds (i = a1f3, g = 7c2e, "" = place does not exist yet),
+     which hash just moved (gold), which arrow is on */
   var MODES={
-    share:{me:false,gh:false,mate:false,mod:false,arrow:"push",
-      msg:'Before Share, <b class="y">GitHub has no repository</b>. One click creates <code>first-maven-project</code> (Public, empty), links it as <b class="a">origin</b> and pushes Initial Commit: same hash <code>a1f3</code> on both sides.'},
-    edit:{me:false,gh:false,mate:false,mod:true,arrow:"",
-      msg:'You changed <code>HelloWorld.java</code> and saved it. The change is only in the working folder. <b class="y">No commit yet</b>, so no copy holds it.'},
-    commit:{me:true,gh:false,mate:false,mod:false,arrow:"commit",
-      msg:'The commit is in your <b class="a">local repository</b>. GitHub still shows only Initial Commit. If Raymond opens your repo now, he does not see it.'},
-    push:{me:true,gh:true,mate:false,mod:false,arrow:"push",
-      msg:'Push copied the commit up to <b class="a">GitHub</b>. The repo is public, so <b class="g">Raymond can see it</b>. A teammate\'s copy is still old until they pull.'},
-    pull:{me:true,gh:true,mate:true,mod:false,arrow:"pull",
-      msg:'Pull (or clone, the first time) copied the commit down. Now <b class="g">all three repositories</b> hold the same history.'}
+    local:{me:"i",gh:"",mate:"",hot:"",mod:false,arrow:"",
+      msg:'Your project has a <b class="a">local repository</b> with Initial Commit. <b class="y">GitHub has no repository yet</b>, so nobody else can get your code.'},
+    share:{me:"i",gh:"i",mate:"",hot:"a1f3",mod:false,arrow:"share",
+      msg:'Share on GitHub creates <code>first-maven-project</code> (Public), links it as <b class="a">origin</b> and pushes Initial Commit: the same hash on both sides.'},
+    edit:{me:"i",gh:"i",mate:"",hot:"",mod:true,arrow:"",
+      msg:'You changed <code>HelloWorld.java</code> and saved it. The change is only in the working folder. <b class="y">No commit yet</b>, so no repository holds it.'},
+    commit:{me:"ig",gh:"i",mate:"",hot:"7c2e",mod:false,arrow:"commit",
+      msg:'The commit is in your <b class="a">local repository</b> only. GitHub still shows Initial Commit alone, so Raymond does not see it.'},
+    push:{me:"ig",gh:"ig",mate:"",hot:"7c2e",mod:false,arrow:"push",
+      msg:'Push copied the commit up to <b class="a">GitHub</b> with the same hash. The repo is public, so <b class="g">Raymond can see it</b>.'},
+    pull:{me:"ig",gh:"ig",mate:"ig",hot:"7c2e",mod:false,arrow:"pull",
+      msg:'A teammate clones (or pulls) and gets the same commits. Now <b class="g">all three repositories</b> hold the same history.'}
   };
-  var SEEN={
-    me:["Only you can see this","Only you can see this"],
-    gh:["Raymond cannot see the new commit","Raymond can see it in the browser"],
-    mate:["Teammate does not have it","Teammate has it"]
-  };
+  var GHOST={gh:"no repository yet",mate:["nobody else can get it","not cloned yet"]};
 
-  function commits(has,init){
-    return '<div class="cm'+(init?' new':'')+'"><span class="h">a1f3</span><span>Initial Commit</span></div>'+
-      (has?'<div class="cm new"><span class="h">7c2e</span><span>Print greeting</span></div>'
-          :'<div class="cm miss"><span class="h">----</span><span>Print greeting: not here</span></div>');
+  function commits(has,hot,started){
+    var h='<div class="cm'+(hot==="a1f3"?' new':'')+'"><span class="h">a1f3</span><span>Initial Commit</span></div>';
+    if(has.indexOf("g")>=0) h+='<div class="cm'+(hot==="7c2e"?' new':'')+'"><span class="h">7c2e</span><span>Print greeting</span></div>';
+    else if(started) h+='<div class="cm miss"><span class="h">----</span><span>Print greeting: not here</span></div>';
+    return h;
+  }
+  function seen(k,mode,has){
+    if(k==="me") return ["seen","Only you can see this"];
+    if(k==="gh") return mode==="share"?["seen yes","Raymond can open the repository"]:
+      has.indexOf("g")>=0?["seen yes","Raymond can see it in the browser"]:["seen no","Raymond sees Initial Commit only"];
+    return ["seen yes","Teammate has both commits"];
   }
 
   function set(mode){
-    var M=MODES[mode];
+    var M=MODES[mode], started=ORDER.indexOf(mode)>=ORDER.indexOf("edit");
     ["me","gh","mate"].forEach(function(k){
-      var has=M[k];
-      var sh=mode==="share"&&k!=="mate";
-      document.getElementById("P"+k).classList.toggle("has",has||sh);
-      document.getElementById("C"+k).innerHTML=commits(has,sh);
-      var v=document.getElementById("V"+k);
-      if(k==="me"){v.className="seen";v.textContent=SEEN.me[0];}
-      else if(mode==="share"){v.className="seen "+(k==="gh"?"yes":"no");v.textContent=k==="gh"?"Raymond can open the repository":"Teammate can clone it now";}
-      else{v.className="seen "+(has?"yes":"no");v.textContent=SEEN[k][has?1:0];}
+      var has=M[k], P=document.getElementById("P"+k), was=P.classList.contains("ghost");
+      P.classList.toggle("ghost",!has);
+      if(!has){ document.getElementById("X"+k).textContent=k==="gh"?GHOST.gh:GHOST.mate[mode==="local"?0:1]; P.classList.remove("has","reveal"); return; }
+      if(was&&!reduce){ P.classList.remove("reveal"); void P.offsetWidth; P.classList.add("reveal"); }
+      var hot=M.hot&&(M.hot==="a1f3"||has.indexOf("g")>=0)?M.hot:"";
+      if(mode==="pull"&&k!=="mate") hot="";
+      if(mode==="push"&&k==="me") hot="";
+      P.classList.toggle("has",!!hot);
+      document.getElementById("C"+k).innerHTML=commits(has,hot,started);
+      var v=document.getElementById("V"+k), sv=seen(k,mode,has);
+      v.className=sv[0]; v.textContent=sv[1];
     });
-    $("#Rgh").innerHTML=mode==="share"?'<div class="rp gone">no repository</div><div class="rp made">first-maven-project \u00b7 Public \u00b7 created empty</div>':"";
-    $("#Lpush").textContent=mode==="share"?"share":"push";
-    $("#Org").classList.toggle("on",mode==="share");
     $("#Fmain").classList.toggle("mod",M.mod);
     $("#Smain").textContent=M.mod?"modified":"committed";
     $("#Acommit").classList.toggle("on",M.arrow==="commit");
-    $("#Apush").classList.toggle("on",M.arrow==="push");
+    $("#Apush").classList.toggle("on",M.arrow==="push"||M.arrow==="share");
+    $("#Lpush").textContent=M.arrow==="share"?"share":"push";
+    $("#Org").classList.toggle("off",!M.gh);
+    $("#Org").classList.toggle("on",mode==="share");
     $("#Apull").classList.toggle("on",M.arrow==="pull");
     Array.prototype.forEach.call(document.querySelectorAll("#seg button"),function(b){b.classList.toggle("on",b.getAttribute("data-m")===mode);});
     $("#status").innerHTML=M.msg;
-    cur=mode;
     $("#caption").className="caption "+(CAP[mode]||"");
     $("#stepno").innerHTML="<small>moment</small>"+(ORDER.indexOf(mode)+1)+" / "+ORDER.length;
   }
-  var ORDER=["share","edit","commit","push","pull"], CAP={share:"left",edit:"left",push:"ok",pull:"ok"}, cur="commit";
+  var ORDER=["local","share","edit","commit","push","pull"], CAP={local:"left",share:"ok",edit:"left",push:"ok",pull:"ok"};
 
   /* focus: picture and caption only. Remembered per browser. */
 
@@ -278,11 +292,11 @@
     requestAnimationFrame(drawC);}
   if(ctx&&!reduce){sizeC();initParts();drawC();addEventListener("resize",sizeC);}
 
-  set("commit");
+  set("local");
 })();
 </script>
 <script src="../manifest.js"></script>
 <script src="../../assets/rail.js"></script>
-<script>Rail.render(document.getElementById("rail"),{kind:"visuals",current:"02-local-vs-remote"});</script>
+<script>Rail.render(document.getElementById("rail"),{kind:"visuals",current:"03-local-vs-remote"});</script>
 </body>
 </html>
