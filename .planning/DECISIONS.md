@@ -32,3 +32,5 @@ Ray: learners pick "Build system: Maven" in the dialog without knowing what it i
 
 ## 2026-10-13 · "Variables, Named Boxes" Walk as visual 12
 Ray noticed Section 3-1 "Variables" had no page. Built as a Walk: declare creates the box, initialize fills, assign replaces, read copies, reading an unfilled local is a compile error. Placed after Data Types and Sizes (workbook order p.46 then p.47); 12-29 became 13-30. Week 1: 30 visuals.
+
+- 2026-10-13: exercise companions are checklist pages, not Walk visuals (Ray: the first three, built as Walks, were more confusing than the workbook for a struggling learner). Shopping List rebuilt as the calibration; string-application and math-application to be redone in the same shape after Ray approves it. No solution code or in-words solution anywhere on them.

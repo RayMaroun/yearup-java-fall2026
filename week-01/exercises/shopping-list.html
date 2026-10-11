@@ -32,125 +32,62 @@
   .lede b{color:var(--ink)}
   .lede code,.take code,.caption code{font-family:var(--mono);font-size:.92em;color:#bcd0ff}
 
-  /* ---------- stage: picture first, one toolbar, support below ---------- */
+  /* ---------- companion: everything visible, a checklist you tick ---------- */
   .stage{position:relative;background:linear-gradient(180deg,rgba(255,255,255,.03),rgba(255,255,255,.01));
-    border:1px solid var(--line);border-radius:24px;padding:18px 18px 14px;
+    border:1px solid var(--line);border-radius:24px;padding:18px;
     box-shadow:0 1px 0 rgba(255,255,255,.06) inset,0 30px 80px -30px rgba(0,0,0,.8)}
-  .topbar{display:flex;align-items:center;gap:10px;margin:0 0 14px;flex-wrap:wrap}
-  .topbar .lab{margin:0 4px 0 0}
   .lab{font-family:var(--mono);font-size:.7rem;letter-spacing:.12em;text-transform:uppercase;color:var(--muted);margin:0 0 10px}
-  .chips{display:flex;flex-wrap:wrap;gap:6px}
-  .chip{font-family:var(--mono);font-size:.74rem;padding:5px 11px;border-radius:999px;cursor:pointer;
-    border:1px solid var(--line);background:rgba(0,0,0,.25);color:var(--muted);transition:.15s}
-  .chip:hover{border-color:var(--accent);color:var(--accent)}
-  .chip.on{border-color:rgba(110,160,255,.6);background:rgba(110,160,255,.14);color:var(--ink)}
-  .chip:focus-visible,.btn:focus-visible,.focus:focus-visible{outline:2px solid var(--accent);outline-offset:2px}
-  .focus{margin-left:auto;font-family:var(--mono);font-size:.68rem;letter-spacing:.1em;text-transform:uppercase;padding:6px 12px;
-    border-radius:999px;border:1px solid var(--line);background:rgba(0,0,0,.25);color:var(--muted);cursor:pointer;transition:.15s}
-  .focus:hover{border-color:var(--accent);color:var(--accent)}
-  body.solo .focus{border-color:rgba(255,200,98,.6);color:var(--gold);background:rgba(255,200,98,.1)}
-
-  /* hero picture: the project tree on the left, the run on the right */
-  .pic{position:relative;height:390px;border:1px solid var(--line);border-radius:18px;background:rgba(6,10,20,.5);overflow:hidden;
-    display:grid;grid-template-columns:1.15fr 1fr}
-  body.solo .pic{height:480px}
-  .pic .zone{position:absolute;left:18px;top:14px;font-family:var(--mono);font-size:.62rem;letter-spacing:.14em;text-transform:uppercase;
-    color:rgba(132,150,182,.55)}
-  .tree{position:relative;padding:40px 18px 14px 22px;font-family:var(--mono);font-size:.78rem;line-height:1.95;overflow:hidden}
-  .tree .row{display:flex;align-items:center;gap:8px;white-space:nowrap;opacity:.28;transition:opacity .4s,color .3s,transform .4s;color:var(--muted)}
-  .tree .row.show{opacity:1;color:#c9d4ea}
-  .tree .row.new{color:var(--ink)}
-  .tree .row.lit{color:var(--accent)}
-  .tree .row.hide{opacity:0;transform:translateX(-8px);height:0;line-height:0;overflow:hidden}
-  .tree .row i{display:inline-block;width:10px;height:10px;border-radius:3px;border:1px solid rgba(132,150,182,.5);flex-shrink:0}
-  .tree .row.file i{border-radius:2px;width:9px;height:11px}
-  .tree .row.new i,.tree .row.lit i{border-color:var(--accent);background:rgba(110,160,255,.25)}
-  .tree .row .gl{margin-left:8px;font-size:.62rem;color:var(--accent);opacity:0;transition:opacity .3s}
-  .tree .row.lit .gl{opacity:1}
-  .runp{position:relative;border-left:1px solid var(--line);padding:40px 18px 14px;display:flex;flex-direction:column;gap:10px}
-  .runp .zone{left:18px}
-  .term{flex:1;background:#05070e;border:1px solid var(--line);border-radius:12px;padding:10px 14px;font-family:var(--mono);font-size:.76rem;
-    line-height:1.6;color:#9fe3b6;overflow:hidden;opacity:.35;transition:opacity .4s}
-  .term.show{opacity:1}
-  .term .cl{font-size:.6rem;letter-spacing:.14em;text-transform:uppercase;color:rgba(132,150,182,.6);margin-bottom:4px}
-  .term .l{opacity:0;transform:translateY(4px);transition:opacity .25s,transform .25s}
-  .term .l.in{opacity:1;transform:none}
-  .term .l.err{color:var(--warn)}
-  .term .l.mu{color:rgba(132,150,182,.6)}
-  .card{border:1px solid var(--line);border-radius:12px;padding:10px 14px;font-family:var(--mono);font-size:.72rem;color:var(--muted);
-    background:rgba(255,255,255,.03);opacity:.35;transition:opacity .4s,border-color .4s}
-  .card.show{opacity:1}
-  .card.lit{border-color:rgba(70,217,138,.6);color:var(--ink);background:rgba(70,217,138,.06)}
-  .card b{color:var(--good);font-weight:500}
-  .card .sub{display:block;font-size:.64rem;color:var(--muted);margin-top:2px}
-  .pic .start{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;font-family:var(--mono);
-    font-size:.8rem;color:var(--muted);pointer-events:none;transition:opacity .3s;background:rgba(6,10,20,.55)}
-  .pic .start b{color:var(--accent);font-weight:500}
-  /* caption: the one sentence, right under the picture */
-  .caption{display:flex;gap:16px;align-items:flex-start;margin:14px 4px 0;min-height:56px}
-  .caption .n{flex-shrink:0;font-family:var(--disp);font-weight:700;font-size:1.35rem;color:var(--accent);font-variant-numeric:tabular-nums;
-    line-height:1.2;min-width:3.2rem}
-  .caption .n small{display:block;font-family:var(--mono);font-weight:400;font-size:.58rem;letter-spacing:.14em;text-transform:uppercase;color:var(--muted)}
-  .caption .t{font-size:1.02rem;line-height:1.55;color:var(--ink);padding-left:16px;border-left:3px solid var(--accent);transition:border-color .3s}
-  body.solo .caption .t{font-size:1.18rem}
-  .caption.cut .t{border-left-color:var(--warn)} .caption.left .t{border-left-color:var(--gold)} .caption.ok .t{border-left-color:var(--good)}
-  .caption b.g{color:var(--good)} .caption b.w{color:var(--warn)} .caption b.a{color:var(--accent)} .caption b.y{color:var(--gold)}
-
-  /* toolbar: same on every page */
-  .toolbar{display:flex;align-items:center;gap:10px;margin:16px 0 0;padding-top:14px;border-top:1px solid var(--line)}
-  .btn{font-family:var(--body);font-weight:500;font-size:.86rem;padding:9px 16px;border-radius:11px;cursor:pointer;
-    border:1px solid var(--line);background:var(--surface);color:var(--ink);transition:.15s}
-  .btn:hover{border-color:var(--accent);color:var(--accent)}
-  .btn.primary{border-color:rgba(110,160,255,.5);background:rgba(110,160,255,.12);padding:9px 22px}
-  .btn:disabled{opacity:.35;cursor:not-allowed}
-  .btn.ghost{background:transparent;color:var(--muted);margin-left:auto}
-  .dots{display:flex;gap:5px;align-items:center;margin:0 6px}
-  .dots i{display:block;width:8px;height:8px;border-radius:50%;background:rgba(255,255,255,.12);transition:.2s}
-  .dots i.done{background:rgba(110,160,255,.45)}
-  .dots i.now{background:var(--accent);transform:scale(1.35);box-shadow:0 0 10px rgba(110,160,255,.7)}
-  .hint{font-family:var(--mono);font-size:.68rem;color:var(--muted);margin:10px 4px 0;line-height:1.5}
-  .hint b{color:var(--accent)}
-
-  /* support: code, console, readouts. Below the picture, hidden in focus */
-  .support{display:grid;grid-template-columns:minmax(0,1.3fr) minmax(0,1fr);gap:14px;margin-top:18px}
-  @media (max-width:860px){.support{grid-template-columns:1fr}}
-  body.solo .support,body.solo .take,body.solo .hint{display:none}
-  .code{min-width:0;font-family:var(--mono);font-size:.76rem;line-height:1.8;background:rgba(0,0,0,.35);border:1px solid var(--line);
-    border-radius:14px;padding:12px 0;overflow-x:auto}
-  .ln{display:flex;gap:12px;padding:0 14px;white-space:pre;color:#c9d4ea;transition:background .2s,opacity .3s}
-  .ln .n{width:20px;text-align:right;color:rgba(132,150,182,.55);user-select:none;flex-shrink:0}
-  .ln.cur{background:rgba(110,160,255,.14);box-shadow:inset 3px 0 0 var(--accent)}
-  .ln.cur .n{color:var(--accent)}
-  .ln.cut{background:rgba(255,106,106,.12);box-shadow:inset 3px 0 0 var(--warn)}
-  .ln.left{background:rgba(255,200,98,.12);box-shadow:inset 3px 0 0 var(--gold)}
-  .ln.dim{opacity:.4}
-  .kw{color:#c792ea} .ty{color:#82aaff} .st{color:#c3e88d} .nm{color:#f78c6c} .cm{color:#5f6b85;font-style:italic} .fn{color:#ffcb6b}
-  .side{display:flex;flex-direction:column;gap:12px}
-  .readout{display:grid;grid-template-columns:1fr 1fr;gap:10px}
-  .stat{background:rgba(255,255,255,.03);border:1px solid var(--line);border-radius:12px;padding:11px 13px;transition:opacity .3s}
-  .stat.empty{opacity:.3}
-  .stat .k{font-family:var(--mono);font-size:.62rem;letter-spacing:.1em;text-transform:uppercase;color:var(--muted)}
-  .stat .v{font-family:var(--disp);font-weight:700;font-size:1.45rem;font-variant-numeric:tabular-nums;margin-top:2px;transition:color .3s;min-height:1.6em}
-  .v.hot{color:var(--accent)} .v.gold{color:var(--gold)} .v.dim{color:rgba(132,150,182,.5)}
-  .console{font-family:var(--mono);font-size:.76rem;line-height:1.6;background:#05070e;border:1px solid var(--line);
-    border-radius:12px;padding:10px 14px;min-height:64px;color:#9fe3b6;flex:1}
-  .console .cl{font-size:.6rem;letter-spacing:.14em;text-transform:uppercase;color:rgba(132,150,182,.6);margin-bottom:4px}
-  .console .out{animation:pop .3s}
-  @keyframes pop{from{transform:scale(.6);opacity:0}to{transform:scale(1);opacity:1}}
+  .cols{display:grid;grid-template-columns:minmax(0,1.35fr) minmax(0,1fr);gap:16px}
+  @media (max-width:860px){.cols{grid-template-columns:1fr}}
+  .box{background:rgba(6,10,20,.5);border:1px solid var(--line);border-radius:18px;padding:16px 18px}
+  .brief p{margin:0 0 10px;font-size:1rem;line-height:1.6;color:var(--ink)} .brief p:last-child{margin:0}
+  .brief b{color:#fff} .brief code,.step code,.stuck code{font-family:var(--mono);font-size:.9em;color:#bcd0ff}
+  .brief .no{color:var(--muted)}
+  /* steps */
+  .steps{display:flex;flex-direction:column;gap:8px;margin-top:4px}
+  .step{border:1px solid var(--line);border-radius:14px;background:rgba(255,255,255,.025);transition:border-color .2s,background .2s}
+  .step.done{border-color:rgba(70,217,138,.45);background:rgba(70,217,138,.05)}
+  .step .hd{display:flex;align-items:center;gap:12px;padding:11px 14px;cursor:pointer;user-select:none}
+  .step .tick{flex-shrink:0;width:22px;height:22px;border-radius:7px;border:1.5px solid rgba(132,150,182,.6);display:grid;place-items:center;
+    background:rgba(0,0,0,.25);transition:.15s;font-size:.8rem;color:transparent}
+  .step.done .tick{border-color:var(--good);background:rgba(70,217,138,.2);color:var(--good)}
+  .step .num{font-family:var(--mono);font-size:.68rem;color:var(--accent);min-width:1.4rem}
+  .step .txt{flex:1;font-size:.98rem;line-height:1.45;color:var(--ink)}
+  .step.done .txt{color:var(--muted);text-decoration:line-through;text-decoration-color:rgba(132,150,182,.5)}
+  .step .more{flex-shrink:0;font-family:var(--mono);font-size:.64rem;letter-spacing:.08em;text-transform:uppercase;color:var(--muted);
+    padding:4px 9px;border-radius:999px;border:1px solid var(--line);transition:.15s}
+  .step .hd:hover .more{color:var(--accent);border-color:var(--accent)}
+  .step .dt{display:none;padding:0 14px 13px 62px;font-size:.9rem;line-height:1.55;color:var(--muted)}
+  .step.open .dt{display:block}
+  .step .dt b{color:var(--ink);font-weight:500}
+  .step .dt .ok{display:block;margin-top:6px;font-family:var(--mono);font-size:.74rem;color:var(--good)}
+  .step .dt .ok:before{content:"done when  ";color:rgba(70,217,138,.6);letter-spacing:.08em;text-transform:uppercase;font-size:.62rem}
+  .prog{display:flex;align-items:center;gap:12px;margin-top:12px;font-family:var(--mono);font-size:.72rem;color:var(--muted)}
+  .prog .bar{flex:1;height:6px;border-radius:999px;background:rgba(255,255,255,.08);overflow:hidden}
+  .prog .bar i{display:block;height:100%;width:0;background:var(--good);transition:width .3s}
+  .prog button{font-family:var(--mono);font-size:.66rem;letter-spacing:.08em;text-transform:uppercase;color:var(--muted);background:transparent;
+    border:1px solid var(--line);border-radius:999px;padding:4px 10px;cursor:pointer}
+  .prog button:hover{color:var(--accent);border-color:var(--accent)}
+  /* right column */
+  .side{display:flex;flex-direction:column;gap:14px}
+  .console{font-family:var(--mono);font-size:.78rem;line-height:1.65;background:#05070e;border:1px solid var(--line);
+    border-radius:12px;padding:10px 14px;color:#9fe3b6;white-space:pre}
+  .console .cl{font-size:.6rem;letter-spacing:.14em;text-transform:uppercase;color:rgba(132,150,182,.6);margin-bottom:4px;white-space:normal}
+  .console .mu{color:rgba(132,150,182,.6)}
+  .note{font-size:.84rem;color:var(--muted);line-height:1.5;margin:8px 0 0}
+  .stuck{margin:0;padding:0;list-style:none;display:flex;flex-direction:column;gap:8px}
+  .stuck li{font-size:.9rem;line-height:1.5;color:var(--ink);padding-left:14px;border-left:2px solid rgba(255,106,106,.5)}
+  .stuck li b{color:var(--warn);font-weight:500}
+  .links{display:flex;flex-wrap:wrap;gap:6px}
+  .links a{font-family:var(--mono);font-size:.72rem;padding:5px 11px;border-radius:999px;border:1px solid var(--line);
+    color:var(--accent);text-decoration:none;background:rgba(110,160,255,.06);transition:.15s}
+  .links a:hover{border-color:var(--accent);background:rgba(110,160,255,.14)}
   .take{margin-top:22px;background:linear-gradient(180deg,rgba(110,160,255,.08),rgba(139,123,255,.04));
     border:1px solid var(--line);border-left:3px solid var(--accent);border-radius:12px;padding:16px 18px}
   .take .tk{font-family:var(--mono);font-size:.66rem;letter-spacing:.14em;text-transform:uppercase;color:var(--accent);margin:0 0 8px}
   .take p{margin:0;font-size:.95rem;color:var(--ink);line-height:1.55}
   .take b{color:#fff}
   @media (prefers-reduced-motion:reduce){*{animation-duration:.01ms!important;transition-duration:.01ms!important}#amb{display:none}}
-  .support{grid-template-columns:minmax(0,1fr) minmax(0,1fr)}
-  .brief{background:rgba(255,255,255,.03);border:1px solid var(--line);border-radius:14px;padding:14px 16px;font-size:.92rem;line-height:1.6;color:var(--ink)}
-  .brief p{margin:0 0 8px} .brief p:last-child{margin:0}
-  .brief b{color:#fff}
-  .links{display:flex;flex-wrap:wrap;gap:6px;margin-top:10px}
-  .links a{font-family:var(--mono);font-size:.72rem;padding:5px 11px;border-radius:999px;border:1px solid var(--line);
-    color:var(--accent);text-decoration:none;background:rgba(110,160,255,.06);transition:.15s}
-  .links a:hover{border-color:var(--accent);background:rgba(110,160,255,.14)}
 </style>
 </head>
 <body>
@@ -161,67 +98,64 @@
 <div class="wrap">
   <p class="tag">Workbook 1a &middot; Section 1-5 &middot; Exercise 1</p>
   <h1>Shopping List</h1>
-  <p class="lede"><b>Build a project from nothing, print a list of at least ten items, and put it on GitHub.</b></p>
+  <p class="lede"><b>Your first program: a new project that prints a list of at least ten items, then shared on GitHub.</b></p>
 
   <div class="stage">
-    <div class="topbar">
-      <span class="lab">The exercise, step by step</span>
-      <button class="focus" id="bFocus" title="Hide the notes, enlarge the picture">Focus</button>
-    </div>
-
-    <div class="pic" id="pic">
-      <div class="tree" id="tree"><span class="zone">your computer</span></div>
-      <div class="runp">
-        <span class="zone">what you see</span>
-        <div class="term" id="term"><div class="cl">run</div><div id="termOut"></div></div>
-        <div class="card" id="gh"><b>GitHub</b> &middot; shopping-list<span class="sub" id="ghSub">not shared yet</span></div>
-      </div>
-      <div class="start" id="start">7 steps &middot; press&nbsp;<b>Next</b></div>
-    </div>
-
-    <div class="caption" id="caption">
-      <div class="n" id="stepno"><small>step</small>0 / 7</div>
-      <div class="t" id="status">Press <b class="a">Next</b>. Each step is one thing to do in IntelliJ.</div>
-    </div>
-
-    <div class="toolbar">
-      <button class="btn" id="bBack">&larr; Back</button>
-      <div class="dots" id="dots"></div>
-      <button class="btn primary" id="bNext">Next &rarr;</button>
-      <button class="btn ghost" id="bReset">Reset</button>
-    </div>
-    <p class="hint">space = next &middot; the items in the run are an example, yours will differ</p>
-
-    <div class="support">
+    <div class="cols">
       <div>
-        <p class="lab">In plain English</p>
-        <div class="brief">
-          <p>Make a new Java project named <b>shopping-list</b>, in your <b>workbook-1</b> folder, with Git turned on. Inside it, one class named <b>ShoppingList</b> with a <b>main</b> method.</p>
-          <p>The program takes no input and does no math. It prints your shopping list, <b>one item per line, at least ten items</b>. Any items you like.</p>
-          <p>Then share the project on GitHub, make one more change, and commit and push it.</p>
+        <p class="lab">What you are building</p>
+        <div class="box brief">
+          <p>A small Java program that prints <b>your shopping list</b>, one item on each line. Any ten or more items you like.</p>
+          <p class="no">It asks the user nothing and calculates nothing. It only prints. The point of the exercise is the routine around it: new project, package, class, run, GitHub.</p>
+        </div>
+
+        <p class="lab" style="margin-top:18px">Do these in order</p>
+        <div class="steps" id="steps"></div>
+        <div class="prog"><span id="progTxt">0 of 7 done</span><div class="bar"><i id="progBar"></i></div><button id="bClear">Clear ticks</button></div>
+      </div>
+
+      <div class="side">
+        <div>
+          <p class="lab">What a finished run looks like</p>
+          <div class="console"><div class="cl">run</div>apricot
+bananas
+bread
+milk
+eggs
+rice
+chicken
+pasta
+tomatoes
+orange juice
+<span class="mu">Process finished with exit code 0</span></div>
+          <p class="note">These items are an example. Yours will be different, and that is fine: one item per line is what matters.</p>
+        </div>
+        <div>
+          <p class="lab">Where people get stuck</p>
+          <ul class="stuck">
+            <li><b>Wrong folder.</b> The Location in the New Project dialog must end in <code>java-development/workbook-1</code>, not Desktop or Downloads.</li>
+            <li><b>Red class name.</b> The file is <code>ShoppingList.java</code> and the class inside is <code>ShoppingList</code>: same spelling, same capitals.</li>
+            <li><b>Nothing prints.</b> The lines must be inside <code>main</code>, between its braces. Code outside it never runs.</li>
+            <li><b>Red line in the editor.</b> Hover it. Most of the time a quote, a parenthesis or a semicolon is missing at the end of that line.</li>
+          </ul>
+        </div>
+        <div>
+          <p class="lab">Pages that help</p>
           <div class="links">
-            <a href="../visuals/05-new-project-dialog.html">New Project dialog</a>
+            <a href="../visuals/01-folder-structure.html">Your folder structure</a>
+            <a href="../visuals/05-new-project-dialog.html">The New Project dialog</a>
             <a href="../visuals/07-maven-project-structure.html">Where the class goes</a>
             <a href="../visuals/08-git-intellij-workflow.html">Share, commit, push</a>
-            <a href="../reference/common-errors.html">If it does not compile</a>
+            <a href="../reference/common-errors.html">What the red text means</a>
           </div>
         </div>
-      </div>
-      <div class="side">
-        <div class="readout">
-          <div class="stat" id="sProj"><div class="k">project</div><div class="v hot" style="font-size:1.05rem">shopping-list</div></div>
-          <div class="stat" id="sClass"><div class="k">class</div><div class="v hot" style="font-size:1.05rem">ShoppingList</div></div>
-          <div class="stat"><div class="k">input</div><div class="v dim" style="font-size:1.05rem">none</div></div>
-          <div class="stat"><div class="k">output</div><div class="v" style="font-size:1.05rem">10+ lines</div></div>
-        </div>
-        <div class="console"><div class="cl">done when</div><div id="console">The program runs without errors, prints at least ten lines, and the repository on GitHub shows two commits.</div></div>
       </div>
     </div>
   </div>
 
   <div class="take">
     <p class="tk">The one idea</p>
-    <p><b>Every Java project you write this year starts the same way:</b> project, package, class, main, run, share. The list is the excuse; the routine is the lesson. Do it slowly this once and it becomes automatic.</p>
+    <p><b>Every project this year starts the same way:</b> project, package, class, main, run, share. The list is the excuse; the routine is the lesson. Do it slowly this once and it becomes automatic.</p>
   </div>
 
   <div id="rail"></div>
@@ -232,74 +166,53 @@
   "use strict";
   var $=function(s){return document.querySelector(s);};
   var reduce=matchMedia("(prefers-reduced-motion: reduce)").matches;
+  var KEY="hub-ex-shopping-list";
 
-  /* the tree: id, depth, label, kind, the step it appears at (-1 = always) */
-  var ROWS=[
-    ["desk",0,"Desktop","d",-1],["pl",1,"pluralsight","d",-1],["jd",2,"java-development","d",-1],["wb",3,"workbook-1","d",-1],
-    ["proj",4,"shopping-list","d",1],["git",5,".git","d",1],["pom",5,"pom.xml","f",1],
-    ["src",5,"src","d",1],["main",6,"main","d",1],["java",7,"java","d",1],
-    ["pkg",8,"com.pluralsight","d",2],["cls",9,"ShoppingList.java","f",3]
-  ];
-  var ITEMS=["apricot","bananas","bread","milk","eggs","rice","chicken","pasta","tomatoes","orange juice"];
-
+  /* each step: what to do (the workbook's words, plain), what it means, how you know it worked */
   var STEPS=[
-    {lit:["proj"],cls:"",term:null,gh:0,
-     msg:'<b class="a">New Project</b>: name <code>shopping-list</code>, Location your <code>workbook-1</code> folder, Java, Maven, JDK 17, and the <b class="a">Create Git repository</b> box ticked. IntelliJ builds the folders for you.'},
-    {lit:["pkg"],cls:"",term:null,gh:0,
-     msg:'Inside <code>src/main/java</code>, a new package named <code>com.pluralsight</code>. Every class this week lives in it.'},
-    {lit:["cls"],cls:"",term:null,gh:0,
-     msg:'In that package, a new Java class named <code>ShoppingList</code>. The file is <code>ShoppingList.java</code>: same name, same capitals.'},
-    {lit:["cls"],cls:"",term:null,gh:0,
-     msg:'Inside the class, a <code>main</code> method. That is the door Java walks through when the program starts; without it, nothing runs.'},
-    {lit:["cls"],cls:"ok",term:"items",gh:0,
-     msg:'In <code>main</code>, one <b class="g">println</b> per item, at least ten of them. Each println is one line of output.'},
-    {lit:["cls"],cls:"ok",term:"run",gh:0,
-     msg:'<b class="g">Run</b> it. A red message means a typo somewhere: read the line it names, fix it, run again until the list prints cleanly.'},
-    {lit:["git"],cls:"ok",term:"run",gh:2,
-     msg:'<b class="g">Share Project on GitHub</b>, then make one more change (another item), <b class="g">Commit and Push</b>. GitHub should show two commits.'}
+    {t:'Create a new project named <code>shopping-list</code>, with the Location set to your <code>workbook-1</code> folder.',
+     d:'File > New > Project. Name <b>shopping-list</b>, all lowercase with a dash. Location: browse to Desktop > pluralsight > java-development > workbook-1. Language Java, build system Maven, JDK 17. Tick <b>Create Git repository</b>.',
+     ok:'the project opens and the left panel shows shopping-list with a src folder inside'},
+    {t:'Create a new package named <code>com.pluralsight</code>.',
+     d:'Open src > main > java. Right-click <b>java</b> > New > Package, type <b>com.pluralsight</b> exactly: lowercase, with the dot.',
+     ok:'com.pluralsight appears under java'},
+    {t:'In that package, create a Java class named <code>ShoppingList</code>.',
+     d:'Right-click <b>com.pluralsight</b> > New > Java Class, name <b>ShoppingList</b>: capital S, capital L, no space. IntelliJ creates the file <b>ShoppingList.java</b> with the class already inside.',
+     ok:'the file ShoppingList.java is open and shows the class with empty braces'},
+    {t:'Inside the class, add a <code>main</code> method.',
+     d:'The main method is the starting point of every Java program; without it there is nothing to run. Type <b>main</b> inside the class braces and press Enter to let IntelliJ complete it, or copy its shape from the workbook page.',
+     ok:'a green run arrow appears in the margin next to the class name'},
+    {t:'In <code>main</code>, print your shopping list with <code>System.out.println()</code>, at least ten items.',
+     d:'One println per item, each between the braces of main. The item text goes inside double quotes, and each line ends with a semicolon. The workbook shows one such line as an example.',
+     ok:'you count at least ten println lines and none of them is underlined in red'},
+    {t:'Run the program. If there are errors, fix them and run again.',
+     d:'Click the green arrow, or Shift+F10 on Windows, Ctrl+R on Mac. Red text in the Run window names the line with the problem: go to it, read it slowly, fix, run again.',
+     ok:'the Run window shows your items, one per line, then "Process finished with exit code 0"'},
+    {t:'Share the project on GitHub, then make one more change, commit and push it.',
+     d:'Git > GitHub > Share Project on GitHub, keep the name shopping-list, tick all files, Share. Then add one more item, open Git > Commit, write a short message, and choose <b>Commit and Push</b>.',
+     ok:'the repository page on github.com shows your files and two commits'}
   ];
-
-  var treeEl=$("#tree"),termOut=$("#termOut"),termEl=$("#term"),gh=$("#gh"),ghSub=$("#ghSub"),statusEl=$("#status");
-  function buildTree(){
-    var h='<span class="zone">your computer</span>';
-    ROWS.forEach(function(r){ h+='<div class="row '+(r[3]==="f"?"file":"")+'" id="r_'+r[0]+'" style="padding-left:'+(r[1]*14)+'px"><i></i>'+r[2]+'<span class="gl">\u2190 this step</span></div>'; });
-    treeEl.innerHTML=h;
+  var done=[]; try{ done=JSON.parse(localStorage.getItem(KEY)||"[]"); }catch(e){ done=[]; }
+  var stepsEl=$("#steps");
+  function render(){
+    stepsEl.innerHTML=STEPS.map(function(s,i){
+      return '<div class="step'+(done.indexOf(i)>=0?" done":"")+'" data-i="'+i+'">'+
+        '<div class="hd"><span class="tick">✓</span><span class="num">'+(i+1)+'</span><span class="txt">'+s.t+'</span><span class="more">how</span></div>'+
+        '<div class="dt">'+s.d+'<span class="ok">'+s.ok+'</span></div></div>';
+    }).join("");
+    var n=done.length; $("#progTxt").textContent=n+" of "+STEPS.length+" done"; $("#progBar").style.width=(100*n/STEPS.length)+"%";
   }
-  function renderTerm(kind){
-    termEl.classList.toggle("show",!!kind);
-    if(!kind){ termOut.innerHTML=""; return; }
-    var lines=ITEMS.map(function(t){return '<div class="l">'+t+'</div>';});
-    if(kind==="run") lines.push('<div class="l mu">Process finished with exit code 0</div>');
-    termOut.innerHTML=lines.join("");
-    var ls=termOut.querySelectorAll(".l");
-    Array.prototype.forEach.call(ls,function(l,i){ setTimeout(function(){l.classList.add("in");},reduce?0:60*i); });
-  }
-  var at=-1;
-  function show(i){
-    at=i; var s=i<0?null:STEPS[i];
-    $("#start").style.opacity=i<0?1:0;
-    ROWS.forEach(function(r){ var el=$("#r_"+r[0]); var vis=r[4]<0||r[4]<=i+1;
-      el.className="row"+(r[3]==="f"?" file":"")+(vis?" show":"")+(s&&s.lit.indexOf(r[0])>=0?" lit":""); });
-    renderTerm(s?s.term:null);
-    gh.className="card"+(i>=0?" show":"")+(s&&s.gh?" lit":"");
-    ghSub.textContent=s&&s.gh?"public repository, 2 commits":"not shared yet";
-    $("#stepno").innerHTML="<small>step</small>"+(i+1)+" / "+STEPS.length;
-    $("#caption").className="caption "+(s?s.cls:"");
-    statusEl.innerHTML=s?s.msg:'Press <b class="a">Next</b>. Each step is one thing to do in IntelliJ.';
-    $("#bNext").disabled=at>=STEPS.length-1; $("#bBack").disabled=at<0;
-    var d=""; for(var k=0;k<STEPS.length;k++) d+='<i class="'+(k===at?"now":k<at?"done":"")+'"></i>'; $("#dots").innerHTML=d;
-  }
-  function next(){ if(at<STEPS.length-1) show(at+1); }
-  function back(){ if(at>=0) show(at-1); }
-  function reset(){ show(-1); }
-  $("#bNext").addEventListener("click",next); $("#bBack").addEventListener("click",back); $("#bReset").addEventListener("click",reset);
-  document.addEventListener("keydown",function(e){ if(e.code==="Space"&&!/INPUT|BUTTON/.test(e.target.tagName)){e.preventDefault();next();} });
-
-  function setFocus(on){ document.body.classList.toggle("solo",on); $("#bFocus").textContent=on?"Focus on":"Focus";
-    try{localStorage.setItem("hub-focus",on?"1":"0");}catch(e){} }
-  $("#bFocus").addEventListener("click",function(){ setFocus(!document.body.classList.contains("solo")); this.blur(); });
-  try{ if(localStorage.getItem("hub-focus")==="1") document.body.classList.add("solo"); }catch(e){}
-  if(document.body.classList.contains("solo")) $("#bFocus").textContent="Focus on";
+  stepsEl.addEventListener("click",function(e){
+    var st=e.target.closest(".step"); if(!st) return; var i=+st.getAttribute("data-i");
+    if(e.target.closest(".tick")){
+      var k=done.indexOf(i); if(k>=0) done.splice(k,1); else done.push(i);
+      try{localStorage.setItem(KEY,JSON.stringify(done));}catch(err){}
+      var open=[]; Array.prototype.forEach.call(stepsEl.querySelectorAll(".step.open"),function(o){open.push(o.getAttribute("data-i"));});
+      render(); open.forEach(function(o){ var el=stepsEl.querySelector('[data-i="'+o+'"]'); if(el) el.classList.add("open"); });
+    } else if(e.target.closest(".hd")){ st.classList.toggle("open"); }
+  });
+  $("#bClear").addEventListener("click",function(){ done=[]; try{localStorage.removeItem(KEY);}catch(e){} render(); });
+  render();
 
   var cv=$("#amb"),ctx=cv.getContext&&cv.getContext("2d"),parts=[];
   function sizeC(){if(!ctx)return;cv.width=innerWidth;cv.height=innerHeight;}
@@ -308,8 +221,6 @@
     parts.forEach(function(p){p.y-=p.s/60;if(p.y<-.02)p.y=1.02;ctx.beginPath();ctx.arc(p.x*cv.width,p.y*cv.height,p.r,0,7);
       ctx.fillStyle="rgba(140,170,255,"+p.o+")";ctx.fill();});requestAnimationFrame(drawC);}
   if(ctx&&!reduce){sizeC();initParts();drawC();addEventListener("resize",sizeC);}
-
-  buildTree(); reset();
 })();
 </script>
 <script src="../manifest.js"></script>

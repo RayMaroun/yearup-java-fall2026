@@ -134,6 +134,14 @@ it gets no visual, no game, no reference entry. Week 1: 1c Module 1 was skipped 
   or invented ones. **Never an exercise**, so no solution is shown ahead of time.
 - Exercise companions are the only place an exercise appears and they are spoiler-free: plain-English
   restatement, inputs and outputs, a flow diagram, one example run. No solution code.
+- **Companion shape (Ray, 2026-10-13): a checklist, not a visual.** The reader is a learner who did not understand the
+  workbook instructions. Everything is visible at once, nothing behind Next: "What you are building" (2 short
+  paragraphs, what it does and what it does not do), "Do these in order" (the workbook steps as tickable actions,
+  each expanding to "how" in IntelliJ terms and a "done when" line; ticks kept in localStorage), "What a finished run
+  looks like" (output only, with "yours will differ"), "Where people get stuck" (3 to 4 lines), "Pages that help"
+  (chips to visuals and reference). No hero picture, no steps to click through. The "how" text names menus, files and
+  names; it never says what to type inside main. Calibration page: `week-01/exercises/shopping-list.html`.
+  Text budget for companions is about 1300 visible characters (prose is their job).
 
 ## Agents
 Pages are built by subagents, one page per agent, from this file + the calibration page of the size + the
