@@ -42,7 +42,9 @@ window.HUB_MANIFEST = {
     { file: "intellij-shortcuts.html", title: "IntelliJ Shortcuts", group: "Reference", desc: "The keys worth knowing in week 1, Mac and Windows side by side." }
   ],
   exercises: [
-    { file: "shopping-list.html", title: "Shopping List", group: "Workbook 1a · Section 1-5", desc: "Project, package, class, main, ten println lines, share on GitHub." }
+    { file: "shopping-list.html", title: "Shopping List", group: "Workbook 1a · Section 1-5", desc: "Project, package, class, main, ten println lines, share on GitHub." },
+    { file: "string-application.html", title: "String Application", group: "Workbook 1c · Section 3-2", desc: "VariableApp and Receipt: pick the type for each value, print it in a sentence." },
+    { file: "math-application.html", title: "Math Application", group: "Workbook 1c · Section 3-2", desc: "Eight questions answered with the Math class, each with a clear message." }
   ],
   games: []
 };

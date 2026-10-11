@@ -1,0 +1,333 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Math Application | Week 1 Visual Hub</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Sora:wght@500;700&family=Inter:wght@400;500&family=JetBrains+Mono:wght@400;500&display=swap">
+<style>
+  :root{
+    --bg:#080c17; --bg2:#0c1428; --surface:rgba(255,255,255,.045); --line:rgba(255,255,255,.09);
+    --ink:#eef2fb; --muted:#8496b6; --accent:#6ea0ff; --accent2:#8b7bff; --good:#46d98a; --warn:#ff6a6a;
+    --gold:#ffc862; --disp:'Sora',system-ui,sans-serif; --body:'Inter',system-ui,sans-serif;
+    --mono:'JetBrains Mono',ui-monospace,monospace;
+  }
+  *{box-sizing:border-box}
+  body{margin:0;min-height:100vh;color:var(--ink);font-family:var(--body);
+    background:radial-gradient(1200px 700px at 70% -10%,#141d38 0%,transparent 55%),
+               radial-gradient(900px 600px at 10% 110%,#161233 0%,transparent 50%),#080c17;
+    overflow-x:hidden}
+  #amb{position:fixed;inset:0;z-index:0;pointer-events:none;opacity:.6}
+  .back{position:relative;z-index:2;display:block;max-width:1120px;margin:0 auto;padding:26px 24px 0;
+    width:100%;font-family:var(--mono);font-size:.8rem;letter-spacing:.04em;color:var(--muted);
+    text-decoration:none;transition:color .15s}
+  .back:hover{color:var(--accent)}
+  .wrap{position:relative;z-index:1;max-width:1120px;margin:0 auto;padding:22px 24px 70px}
+  .tag{font-family:var(--mono);font-size:.72rem;letter-spacing:.22em;text-transform:uppercase;color:var(--accent);margin:0 0 14px}
+  h1{font-family:var(--disp);font-weight:700;font-size:clamp(2.3rem,6vw,3.6rem);line-height:1;margin:0 0 12px;
+    letter-spacing:-.03em;background:linear-gradient(180deg,#fff,#b9c6e6);-webkit-background-clip:text;
+    background-clip:text;color:transparent}
+  .lede{color:var(--muted);max-width:64ch;font-size:1.05rem;margin:0 0 26px;line-height:1.5}
+  .lede b{color:var(--ink)}
+  .lede code,.take code,.caption code{font-family:var(--mono);font-size:.92em;color:#bcd0ff}
+
+  /* ---------- stage: picture first, one toolbar, support below ---------- */
+  .stage{position:relative;background:linear-gradient(180deg,rgba(255,255,255,.03),rgba(255,255,255,.01));
+    border:1px solid var(--line);border-radius:24px;padding:18px 18px 14px;
+    box-shadow:0 1px 0 rgba(255,255,255,.06) inset,0 30px 80px -30px rgba(0,0,0,.8)}
+  .topbar{display:flex;align-items:center;gap:10px;margin:0 0 14px;flex-wrap:wrap}
+  .topbar .lab{margin:0 4px 0 0}
+  .lab{font-family:var(--mono);font-size:.7rem;letter-spacing:.12em;text-transform:uppercase;color:var(--muted);margin:0 0 10px}
+  .chips{display:flex;flex-wrap:wrap;gap:6px}
+  .chip{font-family:var(--mono);font-size:.74rem;padding:5px 11px;border-radius:999px;cursor:pointer;
+    border:1px solid var(--line);background:rgba(0,0,0,.25);color:var(--muted);transition:.15s}
+  .chip:hover{border-color:var(--accent);color:var(--accent)}
+  .chip.on{border-color:rgba(110,160,255,.6);background:rgba(110,160,255,.14);color:var(--ink)}
+  .chip:focus-visible,.btn:focus-visible,.focus:focus-visible{outline:2px solid var(--accent);outline-offset:2px}
+  .focus{margin-left:auto;font-family:var(--mono);font-size:.68rem;letter-spacing:.1em;text-transform:uppercase;padding:6px 12px;
+    border-radius:999px;border:1px solid var(--line);background:rgba(0,0,0,.25);color:var(--muted);cursor:pointer;transition:.15s}
+  .focus:hover{border-color:var(--accent);color:var(--accent)}
+  body.solo .focus{border-color:rgba(255,200,98,.6);color:var(--gold);background:rgba(255,200,98,.1)}
+
+  /* hero picture: the eight questions on the left, the run on the right */
+  .pic{position:relative;height:390px;border:1px solid var(--line);border-radius:18px;background:rgba(6,10,20,.5);overflow:hidden;
+    display:grid;grid-template-columns:1fr 1.2fr}
+  body.solo .pic{height:480px}
+  .pic .zone{position:absolute;left:18px;top:14px;font-family:var(--mono);font-size:.62rem;letter-spacing:.14em;text-transform:uppercase;
+    color:rgba(132,150,182,.55)}
+  .qs{position:relative;padding:36px 16px 12px 18px;display:flex;flex-direction:column;gap:4px;overflow:hidden}
+  body.solo .qs{gap:9px;padding-top:42px}
+  .q{display:flex;align-items:center;gap:10px;border:1px solid var(--line);border-radius:10px;padding:4px 10px;background:rgba(255,255,255,.02);
+    opacity:.28;transition:opacity .4s,border-color .3s,background .3s,transform .3s}
+  .q.show{opacity:.75}
+  .q.done{opacity:.75}
+  .q.now{opacity:1;border-color:rgba(110,160,255,.7);background:rgba(110,160,255,.12);transform:translateX(4px)}
+  .q .qn{font-family:var(--disp);font-weight:700;font-size:.9rem;color:var(--muted);width:14px;text-align:center;flex-shrink:0}
+  .q.now .qn{color:var(--accent)} .q.done .qn{color:var(--good)}
+  .q .qt{font-family:var(--body);font-weight:500;font-size:.8rem;color:var(--ink);line-height:1.25}
+  .q .qi{display:block;font-family:var(--mono);font-weight:400;font-size:.62rem;color:var(--muted);line-height:1.3}
+  .q .ck{margin-left:auto;font-family:var(--mono);font-size:.62rem;color:var(--good);opacity:0;transition:opacity .3s}
+  .q.done .ck{opacity:1}
+  .runp{position:relative;border-left:1px solid var(--line);padding:36px 18px 12px;display:flex;flex-direction:column;gap:10px;min-width:0}
+  .term{flex:1;background:#05070e;border:1px solid var(--line);border-radius:12px;padding:10px 14px;font-family:var(--mono);font-size:.74rem;
+    line-height:1.6;color:#9fe3b6;overflow:hidden;opacity:.35;transition:opacity .4s}
+  body.solo .term{font-size:.84rem}
+  .term.show{opacity:1}
+  .term .cl{font-size:.6rem;letter-spacing:.14em;text-transform:uppercase;color:rgba(132,150,182,.6);margin-bottom:4px}
+  .term .l{white-space:nowrap;overflow:hidden;text-overflow:ellipsis;color:rgba(159,227,182,.6);transition:color .3s}
+  .term .l.new{color:#c8f5d8;animation:pop .3s}
+  .term .l.mu{color:rgba(132,150,182,.6)}
+  .card{border:1px solid var(--line);border-radius:12px;padding:10px 14px;font-family:var(--mono);font-size:.72rem;color:var(--muted);
+    background:rgba(255,255,255,.03);opacity:.35;transition:opacity .4s,border-color .4s}
+  .card.show{opacity:1}
+  .card.lit{border-color:rgba(70,217,138,.6);color:var(--ink);background:rgba(70,217,138,.06)}
+  .card b{color:var(--good);font-weight:500}
+  .card .sub{display:block;font-size:.64rem;color:var(--muted);margin-top:2px}
+  @media (max-width:700px){.pic{grid-template-columns:1fr;height:auto}body.solo .pic{height:auto}.runp{border-left:0;border-top:1px solid var(--line);min-height:300px}}
+  .pic .start{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;font-family:var(--mono);
+    font-size:.8rem;color:var(--muted);pointer-events:none;transition:opacity .3s;background:rgba(6,10,20,.55)}
+  .pic .start b{color:var(--accent);font-weight:500}
+  /* caption: the one sentence, right under the picture */
+  .caption{display:flex;gap:16px;align-items:flex-start;margin:14px 4px 0;min-height:56px}
+  .caption .n{flex-shrink:0;font-family:var(--disp);font-weight:700;font-size:1.35rem;color:var(--accent);font-variant-numeric:tabular-nums;
+    line-height:1.2;min-width:3.2rem}
+  .caption .n small{display:block;font-family:var(--mono);font-weight:400;font-size:.58rem;letter-spacing:.14em;text-transform:uppercase;color:var(--muted)}
+  .caption .t{font-size:1.02rem;line-height:1.55;color:var(--ink);padding-left:16px;border-left:3px solid var(--accent);transition:border-color .3s}
+  body.solo .caption .t{font-size:1.18rem}
+  .caption.cut .t{border-left-color:var(--warn)} .caption.left .t{border-left-color:var(--gold)} .caption.ok .t{border-left-color:var(--good)}
+  .caption b.g{color:var(--good)} .caption b.w{color:var(--warn)} .caption b.a{color:var(--accent)} .caption b.y{color:var(--gold)}
+
+  /* toolbar: same on every page */
+  .toolbar{display:flex;align-items:center;gap:10px;margin:16px 0 0;padding-top:14px;border-top:1px solid var(--line)}
+  .btn{font-family:var(--body);font-weight:500;font-size:.86rem;padding:9px 16px;border-radius:11px;cursor:pointer;
+    border:1px solid var(--line);background:var(--surface);color:var(--ink);transition:.15s}
+  .btn:hover{border-color:var(--accent);color:var(--accent)}
+  .btn.primary{border-color:rgba(110,160,255,.5);background:rgba(110,160,255,.12);padding:9px 22px}
+  .btn:disabled{opacity:.35;cursor:not-allowed}
+  .btn.ghost{background:transparent;color:var(--muted);margin-left:auto}
+  .dots{display:flex;gap:5px;align-items:center;margin:0 6px}
+  .dots i{display:block;width:8px;height:8px;border-radius:50%;background:rgba(255,255,255,.12);transition:.2s}
+  .dots i.done{background:rgba(110,160,255,.45)}
+  .dots i.now{background:var(--accent);transform:scale(1.35);box-shadow:0 0 10px rgba(110,160,255,.7)}
+  .hint{font-family:var(--mono);font-size:.68rem;color:var(--muted);margin:10px 4px 0;line-height:1.5}
+  .hint b{color:var(--accent)}
+
+  /* support: code, console, readouts. Below the picture, hidden in focus */
+  .support{display:grid;grid-template-columns:minmax(0,1.3fr) minmax(0,1fr);gap:14px;margin-top:18px}
+  @media (max-width:860px){.support{grid-template-columns:1fr}}
+  body.solo .support,body.solo .take,body.solo .hint{display:none}
+  .code{min-width:0;font-family:var(--mono);font-size:.76rem;line-height:1.8;background:rgba(0,0,0,.35);border:1px solid var(--line);
+    border-radius:14px;padding:12px 0;overflow-x:auto}
+  .ln{display:flex;gap:12px;padding:0 14px;white-space:pre;color:#c9d4ea;transition:background .2s,opacity .3s}
+  .ln .n{width:20px;text-align:right;color:rgba(132,150,182,.55);user-select:none;flex-shrink:0}
+  .ln.cur{background:rgba(110,160,255,.14);box-shadow:inset 3px 0 0 var(--accent)}
+  .ln.cur .n{color:var(--accent)}
+  .ln.cut{background:rgba(255,106,106,.12);box-shadow:inset 3px 0 0 var(--warn)}
+  .ln.left{background:rgba(255,200,98,.12);box-shadow:inset 3px 0 0 var(--gold)}
+  .ln.dim{opacity:.4}
+  .kw{color:#c792ea} .ty{color:#82aaff} .st{color:#c3e88d} .nm{color:#f78c6c} .cm{color:#5f6b85;font-style:italic} .fn{color:#ffcb6b}
+  .side{display:flex;flex-direction:column;gap:12px}
+  .readout{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+  .stat{background:rgba(255,255,255,.03);border:1px solid var(--line);border-radius:12px;padding:11px 13px;transition:opacity .3s}
+  .stat.empty{opacity:.3}
+  .stat .k{font-family:var(--mono);font-size:.62rem;letter-spacing:.1em;text-transform:uppercase;color:var(--muted)}
+  .stat .v{font-family:var(--disp);font-weight:700;font-size:1.45rem;font-variant-numeric:tabular-nums;margin-top:2px;transition:color .3s;min-height:1.6em}
+  .v.hot{color:var(--accent)} .v.gold{color:var(--gold)} .v.dim{color:rgba(132,150,182,.5)}
+  .console{font-family:var(--mono);font-size:.76rem;line-height:1.6;background:#05070e;border:1px solid var(--line);
+    border-radius:12px;padding:10px 14px;min-height:64px;color:#9fe3b6;flex:1}
+  .console .cl{font-size:.6rem;letter-spacing:.14em;text-transform:uppercase;color:rgba(132,150,182,.6);margin-bottom:4px}
+  .console .out{animation:pop .3s}
+  @keyframes pop{from{transform:scale(.6);opacity:0}to{transform:scale(1);opacity:1}}
+  .take{margin-top:22px;background:linear-gradient(180deg,rgba(110,160,255,.08),rgba(139,123,255,.04));
+    border:1px solid var(--line);border-left:3px solid var(--accent);border-radius:12px;padding:16px 18px}
+  .take .tk{font-family:var(--mono);font-size:.66rem;letter-spacing:.14em;text-transform:uppercase;color:var(--accent);margin:0 0 8px}
+  .take p{margin:0;font-size:.95rem;color:var(--ink);line-height:1.55}
+  .take b{color:#fff}
+  @media (prefers-reduced-motion:reduce){*{animation-duration:.01ms!important;transition-duration:.01ms!important}#amb{display:none}}
+  .support{grid-template-columns:minmax(0,1fr) minmax(0,1fr)}
+  .brief{background:rgba(255,255,255,.03);border:1px solid var(--line);border-radius:14px;padding:14px 16px;font-size:.92rem;line-height:1.6;color:var(--ink)}
+  .brief p{margin:0 0 8px} .brief p:last-child{margin:0}
+  .brief b{color:#fff}
+  .links{display:flex;flex-wrap:wrap;gap:6px;margin-top:10px}
+  .links a{font-family:var(--mono);font-size:.72rem;padding:5px 11px;border-radius:999px;border:1px solid var(--line);
+    color:var(--accent);text-decoration:none;background:rgba(110,160,255,.06);transition:.15s}
+  .links a:hover{border-color:var(--accent);background:rgba(110,160,255,.14)}
+</style>
+</head>
+<body>
+
+<a class="back" href="../index.html#math-application">&#8592; Week 1 index</a>
+
+<canvas id="amb"></canvas>
+<div class="wrap">
+  <p class="tag">Workbook 1c &middot; Section 3-2 &middot; Exercise 3</p>
+  <h1>Math Application</h1>
+  <p class="lede"><b>Eight small questions in one program, each answered with a method from the Math class and printed with a clear message.</b></p>
+
+  <div class="stage">
+    <div class="topbar">
+      <span class="lab">The exercise, step by step</span>
+      <button class="focus" id="bFocus" title="Hide the notes, enlarge the picture">Focus</button>
+    </div>
+
+    <div class="pic" id="pic">
+      <div class="qs" id="qs"><span class="zone">MathApp.java</span></div>
+      <div class="runp">
+        <span class="zone">what you see</span>
+        <div class="term" id="term"><div class="cl">run</div><div id="termOut"></div></div>
+        <div class="card" id="gh"><b>GitHub</b> &middot; math-application<span class="sub" id="ghSub">not pushed yet</span></div>
+      </div>
+      <div class="start" id="start">10 steps &middot; press&nbsp;<b>Next</b></div>
+    </div>
+
+    <div class="caption" id="caption">
+      <div class="n" id="stepno"><small>step</small>0 / 10</div>
+      <div class="t" id="status">Press <b class="a">Next</b>. One step per question.</div>
+    </div>
+
+    <div class="toolbar">
+      <button class="btn" id="bBack">&larr; Back</button>
+      <div class="dots" id="dots"></div>
+      <button class="btn primary" id="bNext">Next &rarr;</button>
+      <button class="btn ghost" id="bReset">Reset</button>
+    </div>
+    <p class="hint">space = next &middot; the values in the run are an example, yours will differ</p>
+
+    <div class="support">
+      <div>
+        <p class="lab">In plain English</p>
+        <div class="brief">
+          <p>One project, <b>math-application</b>, one class, <b>MathApp</b>, with a <b>main</b> method that answers eight math questions and prints each answer.</p>
+          <p>Readability counts: a comment and a blank line between questions, <b>meaningful names</b> (never num1), and messages that tell the reader what the number means.</p>
+          <p>Each question points at a method of the Math class. Look it up rather than doing the math by hand.</p>
+          <div class="links">
+            <a href="../reference/cheat-sheet.html">The Math class on the cheat sheet</a>
+            <a href="../visuals/12-variables.html">Declare and initialize</a>
+            <a href="../visuals/16-integer-division.html">Whole numbers divide differently</a>
+            <a href="../visuals/18-widening-narrowing.html">When a number is too big for an int</a>
+          </div>
+        </div>
+      </div>
+      <div class="side">
+        <div class="readout">
+          <div class="stat"><div class="k">project</div><div class="v hot" style="font-size:1.05rem">math-application</div></div>
+          <div class="stat"><div class="k">class</div><div class="v hot" style="font-size:1.05rem">MathApp</div></div>
+          <div class="stat"><div class="k">input</div><div class="v dim" style="font-size:1.05rem">none</div></div>
+          <div class="stat"><div class="k">output</div><div class="v" style="font-size:1.05rem">8 answers</div></div>
+        </div>
+        <div class="console"><div class="cl">done when</div><div id="console">It runs, prints all eight answers with clear messages, and the project is on GitHub.</div></div>
+      </div>
+    </div>
+  </div>
+
+  <div class="take">
+    <p class="tk">The one idea</p>
+    <p><b>The Math class does the arithmetic you would otherwise write by hand.</b> Your job is the rest: good names, clear messages, and a program a stranger can read.</p>
+  </div>
+
+  <div id="rail"></div>
+</div>
+
+<script>
+(function(){
+  "use strict";
+  var $=function(s){return document.querySelector(s);};
+  var reduce=matchMedia("(prefers-reduced-motion: reduce)").matches;
+
+  /* the eight questions: label, what goes in */
+  var QS=[
+    ["Highest salary","two salaries"],["Lowest price","two prices"],["Circle area","radius 7.25"],["Square root","the number 5.0"],
+    ["Distance","points (5, 10) and (85, 50)"],["Absolute value","the number -3.8"],["Random number","nothing, Math picks it"],["Minutes in 24 days","24 days, bonus: milliseconds"]
+  ];
+  /* the example run: the lines each question adds */
+  var OUT=[
+    ["The highest salary is 72400.0"],
+    ["The lowest price is 31750.0"],
+    ["The area of the circle is 165.13"],
+    ["The square root of 5.0 is 2.236"],
+    ["The distance between the points is 89.44"],
+    ["The absolute value of -3.8 is 3.8"],
+    ["A random number between 0 and 1: 0.5376"],
+    ["There are 34560 minutes in 24 days","There are 2073600000 milliseconds in 24 days"]
+  ];
+
+  /* q = question lit (-1 none), cls = caption color */
+  var STEPS=[
+    {q:-1,cls:"",
+     msg:'New project <code>math-application</code>, package <code>com.pluralsight</code>, class <code>MathApp</code> with <code>main</code>: eight questions, each in its own commented block with a blank line around it.'},
+    {q:0,cls:"",
+     msg:'Two salaries in <code>bobSalary</code> and <code>garySalary</code>; the Math class has a method for the larger of two numbers, <code>Math.max()</code>, and its answer goes in <code>highestSalary</code>.'},
+    {q:1,cls:"",
+     msg:'Prices in <code>carPrice</code> and <code>truckPrice</code>; the smaller one comes from <code>Math.min()</code>, the twin of max.'},
+    {q:2,cls:"",
+     msg:'The area of a circle with radius 7.25 is pi times the radius squared, and Math has both pi and a power method.'},
+    {q:3,cls:"",
+     msg:'Set a variable to 5.0 and print its square root; Math has a method named after exactly that.'},
+    {q:4,cls:"",
+     msg:'The distance between two points is the square root of the sum of the squared differences, x with x and y with y.'},
+    {q:5,cls:"",
+     msg:'Set a variable to -3.8 and print its absolute value, the number without its minus sign; Math has a short method for it.'},
+    {q:6,cls:"",
+     msg:'Print a random number between 0 and 1; Math has a method that returns one, different on every run.'},
+    {q:7,cls:"left",
+     msg:'A variable for each value and one multiplication at a time; the <b class="y">bonus</b> only just fits in an int, and the Math class has a multiply method that <b class="y">complains instead of overflowing</b> when a result would not fit.'},
+    {q:8,cls:"ok",
+     msg:'<b class="g">Run</b> it and read every line as a stranger would, then <b class="g">commit and push</b> to GitHub.'}
+  ];
+
+  var qsEl=$("#qs"),termOut=$("#termOut"),termEl=$("#term"),gh=$("#gh"),ghSub=$("#ghSub"),statusEl=$("#status");
+  function buildQs(){
+    var h='<span class="zone">MathApp.java</span>';
+    QS.forEach(function(q,i){ h+='<div class="q" id="q'+i+'"><span class="qn">'+(i+1)+'</span><span class="qt">'+q[0]+'<span class="qi">'+q[1]+'</span></span><span class="ck">\u2713</span></div>'; });
+    qsEl.innerHTML=h;
+  }
+  function renderTerm(i,q){
+    termEl.classList.toggle("show",i>=1);
+    var h="",last=Math.min(q,7);
+    for(var k=0;k<=last;k++) OUT[k].forEach(function(t){ h+='<div class="l'+(k===q?" new":"")+'">'+t+'</div>'; });
+    if(q>7) h+='<div class="l mu new">Process finished with exit code 0</div>';
+    termOut.innerHTML=h;
+  }
+  var at=-1;
+  function show(i){
+    at=i; var s=i<0?null:STEPS[i], q=s?s.q:-1;
+    $("#start").style.opacity=i<0?1:0;
+    QS.forEach(function(_,k){ $("#q"+k).className="q"+(i>=0?" show":"")+(k===q?" now":"")+((q>k||q>7)?" done":""); });
+    renderTerm(i,q);
+    gh.className="card"+(i>=0?" show":"")+(q>7?" lit":"");
+    ghSub.textContent=q>7?"pushed, public repository":"not pushed yet";
+    $("#stepno").innerHTML="<small>"+(q>=0&&q<8?"question "+(q+1):"step")+"</small>"+(i+1)+" / "+STEPS.length;
+    $("#caption").className="caption "+(s?s.cls:"");
+    statusEl.innerHTML=s?s.msg:'Press <b class="a">Next</b>. One step per question.';
+    $("#bNext").disabled=at>=STEPS.length-1; $("#bBack").disabled=at<0;
+    var d=""; for(var k=0;k<STEPS.length;k++) d+='<i class="'+(k===at?"now":k<at?"done":"")+'"></i>'; $("#dots").innerHTML=d;
+  }
+  function next(){ if(at<STEPS.length-1) show(at+1); }
+  function back(){ if(at>=0) show(at-1); }
+  function reset(){ show(-1); }
+  $("#bNext").addEventListener("click",next); $("#bBack").addEventListener("click",back); $("#bReset").addEventListener("click",reset);
+  document.addEventListener("keydown",function(e){ if(e.code==="Space"&&!/INPUT|BUTTON/.test(e.target.tagName)){e.preventDefault();next();} });
+
+  function setFocus(on){ document.body.classList.toggle("solo",on); $("#bFocus").textContent=on?"Focus on":"Focus";
+    try{localStorage.setItem("hub-focus",on?"1":"0");}catch(e){} }
+  $("#bFocus").addEventListener("click",function(){ setFocus(!document.body.classList.contains("solo")); this.blur(); });
+  try{ if(localStorage.getItem("hub-focus")==="1") document.body.classList.add("solo"); }catch(e){}
+  if(document.body.classList.contains("solo")) $("#bFocus").textContent="Focus on";
+
+  var cv=$("#amb"),ctx=cv.getContext&&cv.getContext("2d"),parts=[];
+  function sizeC(){if(!ctx)return;cv.width=innerWidth;cv.height=innerHeight;}
+  function initParts(){parts=[];for(var i=0;i<46;i++)parts.push({x:Math.random(),y:Math.random(),r:Math.random()*1.6+.3,s:Math.random()*.02+.004,o:Math.random()*.4+.1});}
+  function drawC(){if(!ctx)return;ctx.clearRect(0,0,cv.width,cv.height);
+    parts.forEach(function(p){p.y-=p.s/60;if(p.y<-.02)p.y=1.02;ctx.beginPath();ctx.arc(p.x*cv.width,p.y*cv.height,p.r,0,7);
+      ctx.fillStyle="rgba(140,170,255,"+p.o+")";ctx.fill();});requestAnimationFrame(drawC);}
+  if(ctx&&!reduce){sizeC();initParts();drawC();addEventListener("resize",sizeC);}
+
+  buildQs(); reset();
+})();
+</script>
+<script src="../manifest.js"></script>
+<script src="../../assets/rail.js"></script>
+<script>Rail.render(document.getElementById("rail"),{kind:"exercises",current:"math-application"});</script>
+</body>
+</html>

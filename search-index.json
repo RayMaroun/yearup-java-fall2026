@@ -177,7 +177,7 @@
     "desc": "",
     "group": "Workbook 1c · Section 3-2",
     "url": "week-01/visuals/18-widening-narrowing.html",
-    "text": "← Week 1 index Workbook 1c · Section 3-2 · Literals are typed, widening, narrowing, casting Widening, Narrowing, Casting A value moves into a bigger type on its own, but into a smaller one only with a cast, and whatever does not fit is lost. Pick an example Focus Each type is a cup. Bigger cup, wider range of values step 0 / 6 Press Next to start. ← Back Next → Reset space = next Main.java from ? to ? Output console The one idea Java widens for free; narrowing needs a cast and you own whatever is lost. Along byte, short, int, long, float, double, moving right is automatic. Moving left does not compile until you write the cast, and then Java drops digits ( 123.4567890123 becomes 123.45679 ), cuts decimals ( (int) 9.99 is 9) or wraps around ( (byte) 1000 is -24), with no error and no warning."
+    "text": "← Week 1 index Workbook 1c · Section 3-2 · Literals are typed, widening, narrowing, casting Widening, Narrowing, Casting A value moves into a bigger type on its own, but into a smaller one only with a cast, and whatever does not fit is lost. Pick an example Focus Each type is a cup. Bigger cup, wider range of values step 0 / 6 Press Next to start. ← Back Next → Reset space = next Main.java from ? to ? Output console The one idea Java widens for free; narrowing needs a cast and you own whatever is lost. Along byte, short, int, long, float, double, moving right is automatic. Moving left does not compile until you write the cast, and then Java drops digits ( 123.4567890123 becomes 123.45679 ), cuts decimals ( (int) 9.99 is 9) or wraps around ( (int) 3000000000L is -1294967296), with no error and no warning."
   },
   {
     "week": 1,
@@ -338,5 +338,35 @@
     "group": "Reference",
     "url": "week-01/reference/intellij-shortcuts.html",
     "text": "← Week 1 index Week 1 · Reference IntelliJ Shortcuts The keys used in class this week, Mac and Windows side by side. Pick your computer and its column lights up. My computer Mac Windows Action Mac Windows Run and build Run the program Reruns the last run configuration what Run does Ctrl+R Shift+F10 Run the file you are in Same as the green arrow next to main Ctrl+Shift+R Ctrl+Shift+F10 Stop the running program Cmd+F2 Ctrl+F2 Build the project Compiles without running Cmd+F9 Ctrl+F9 Debug the program Ctrl+D Shift+F9 Run Anything Run a class or a Maven goal by name Ctrl Ctrl Ctrl Ctrl Editing sout then Tab Types System.out.println(); for you sout Tab sout Tab main then Tab Types public static void main(String[] args) ; psvm works too the signature main Tab main Tab Reformat code Fixes spacing and indents; do it before every commit Cmd+Alt+L Ctrl+Alt+L Show quick fixes The lightbulb: imports, missing pieces, fixes Alt+Enter Alt+Enter Code completion Ctrl+Space Ctrl+Space Comment or uncomment the line Toggles // Cmd+/ Ctrl+/ Duplicate the line Cmd+D Ctrl+D Delete the line Cmd+Backspace Ctrl+Y Move the line up or down Alt+Shift+Up/Down Alt+Shift+Up/Down Rename everywhere Variable, method or class, every use updated Shift+F6 Shift+F6 Undo / Redo Cmd+Z Cmd+Shift+Z Ctrl+Z Ctrl+Shift+Z Navigation Search everywhere Files, classes, settings, anything Shift Shift Shift Shift Find an action by name Use it when you forget a shortcut Cmd+Shift+A Ctrl+Shift+A Project window The file tree: sr"
+  },
+  {
+    "week": 1,
+    "weekLabel": "Week 1",
+    "section": "Exercises",
+    "title": "Shopping List",
+    "desc": "Project, package, class, main, ten println lines, share on GitHub.",
+    "group": "Workbook 1a · Section 1-5",
+    "url": "week-01/exercises/shopping-list.html",
+    "text": "← Week 1 index Workbook 1a · Section 1-5 · Exercise 1 Shopping List Build a project from nothing, print a list of at least ten items, and put it on GitHub. The exercise, step by step Focus your computer what you see run GitHub · shopping-list not shared yet 7 steps · press Next step 0 / 7 Press Next . Each step is one thing to do in IntelliJ. ← Back Next → Reset space = next · the items in the run are an example, yours will differ In plain English Make a new Java project named shopping-list , in your workbook-1 folder, with Git turned on. Inside it, one class named ShoppingList with a main method. The program takes no input and does no math. It prints your shopping list, one item per line, at least ten items . Any items you like. Then share the project on GitHub, make one more change, and commit and push it. New Project dialog Where the class goes Share, commit, push If it does not compile project shopping-list class ShoppingList input none output 10+ lines done when The program runs without errors, prints at least ten lines, and the repository on GitHub shows two commits. The one idea Every Java project you write this year starts the same way: project, package, class, main, run, share. The list is the excuse; the routine is the lesson. Do it slowly this once and it becomes automatic."
+  },
+  {
+    "week": 1,
+    "weekLabel": "Week 1",
+    "section": "Exercises",
+    "title": "String Application",
+    "desc": "VariableApp and Receipt: pick the type for each value, print it in a sentence.",
+    "group": "Workbook 1c · Section 3-2",
+    "url": "week-01/exercises/string-application.html",
+    "text": "← Week 1 index Workbook 1c · Section 3-2 · Exercise 2 String Application Give each piece of data a named box of the right type, then print it inside a complete sentence. The exercise, step by step Focus your files string-application / com.pluralsight VariableApp.java main Step 1 Step 2 Receipt.java main Step 3 GitHub · string-application not shared yet what you see run 8 steps · press Next step 0 / 8 Press Next . ← Back Next → Reset space = next · the values in the run are an example, yours will differ In plain English A project named string-application , package com.pluralsight , with two classes: VariableApp and Receipt , each with its own main . In VariableApp, one variable per question, nine in all, each with the type that fits. Print each inside a sentence. In Receipt, an item name, a price and a quantity, joined into one sentence. Share on GitHub, commit often, push. Which type for what Declare and initialize Building a sentence with + println and String project string-application files VariableApp, Receipt input none output 10 sentences done when Both classes run without errors, print ten sentences between them, and the project is on GitHub. The one idea Pick the type that matches the data, then join words and values with +. Text, whole numbers, money, one letter, yes or no: each has its own type, and + makes any of them part of a sentence."
+  },
+  {
+    "week": 1,
+    "weekLabel": "Week 1",
+    "section": "Exercises",
+    "title": "Math Application",
+    "desc": "Eight questions answered with the Math class, each with a clear message.",
+    "group": "Workbook 1c · Section 3-2",
+    "url": "week-01/exercises/math-application.html",
+    "text": "← Week 1 index Workbook 1c · Section 3-2 · Exercise 3 Math Application Eight small questions in one program, each answered with a method from the Math class and printed with a clear message. The exercise, step by step Focus MathApp.java what you see run GitHub · math-application not pushed yet 10 steps · press Next step 0 / 10 Press Next . One step per question. ← Back Next → Reset space = next · the values in the run are an example, yours will differ In plain English One project, math-application , one class, MathApp , with a main method that answers eight math questions and prints each answer. Readability counts: a comment and a blank line between questions, meaningful names (never num1), and messages that tell the reader what the number means. Each question points at a method of the Math class. Look it up rather than doing the math by hand. The Math class on the cheat sheet Declare and initialize Whole numbers divide differently When a number is too big for an int project math-application class MathApp input none output 8 answers done when It runs, prints all eight answers with clear messages, and the project is on GitHub. The one idea The Math class does the arithmetic you would otherwise write by hand. Your job is the rest: good names, clear messages, and a program a stranger can read."
   }
 ]
