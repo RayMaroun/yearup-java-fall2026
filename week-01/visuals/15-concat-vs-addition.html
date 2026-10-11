@@ -331,7 +331,7 @@
     var html='<div class="legend"><span><i class="ls"></i>String</span><span><i class="lnum"></i>int</span></div>';
     var n=s?s.rows:0;
     if(!n){ var st=document.createElement("span"); st.textContent=PRESETS[cur].label;
-      boardEl.innerHTML=html+'<div class="start">'+st.innerHTML+' \u00b7 press <b>Next</b></div>'; return; }
+      boardEl.innerHTML=html+'<div class="start">'+st.innerHTML+' \u00b7 press&nbsp;<b>Next</b></div>'; return; }
     html+='<div class="rows">';
     for(var r=0;r<n;r++){
       var isCur=(r===n-1);
