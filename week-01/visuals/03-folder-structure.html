@@ -1,0 +1,253 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Your Folder Structure | Week 1 Visual Hub</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Sora:wght@500;700&family=Inter:wght@400;500&family=JetBrains+Mono:wght@400;500&display=swap">
+<style>
+  :root{
+    --bg:#080c17; --bg2:#0c1428; --surface:rgba(255,255,255,.045); --line:rgba(255,255,255,.09);
+    --ink:#eef2fb; --muted:#8496b6; --accent:#6ea0ff; --accent2:#8b7bff; --good:#46d98a; --warn:#ff6a6a;
+    --gold:#ffc862; --disp:'Sora',system-ui,sans-serif; --body:'Inter',system-ui,sans-serif;
+    --mono:'JetBrains Mono',ui-monospace,monospace;
+  }
+  *{box-sizing:border-box}
+  body{margin:0;min-height:100vh;color:var(--ink);font-family:var(--body);
+    background:radial-gradient(1200px 700px at 70% -10%,#141d38 0%,transparent 55%),
+               radial-gradient(900px 600px at 10% 110%,#161233 0%,transparent 50%),#080c17;
+    overflow-x:hidden}
+  #amb{position:fixed;inset:0;z-index:0;pointer-events:none;opacity:.6}
+  .back{position:relative;z-index:2;display:block;max-width:1120px;margin:0 auto;padding:26px 24px 0;
+    width:100%;font-family:var(--mono);font-size:.8rem;letter-spacing:.04em;color:var(--muted);
+    text-decoration:none;transition:color .15s}
+  .back:hover{color:var(--accent)}
+  .wrap{position:relative;z-index:1;max-width:1120px;margin:0 auto;padding:22px 24px 70px}
+  .tag{font-family:var(--mono);font-size:.72rem;letter-spacing:.22em;text-transform:uppercase;color:var(--accent);margin:0 0 14px}
+  h1{font-family:var(--disp);font-weight:700;font-size:clamp(2.3rem,6vw,3.6rem);line-height:1;margin:0 0 12px;
+    letter-spacing:-.03em;background:linear-gradient(180deg,#fff,#b9c6e6);-webkit-background-clip:text;
+    background-clip:text;color:transparent}
+  .lede{color:var(--muted);max-width:64ch;font-size:1.05rem;margin:0 0 26px;line-height:1.5}
+  .lede b{color:var(--ink)}
+  .lede code,.take code,.caption code{font-family:var(--mono);font-size:.92em;color:#bcd0ff}
+
+  /* ---------- stage: picture first, one toolbar ---------- */
+  .stage{position:relative;background:linear-gradient(180deg,rgba(255,255,255,.03),rgba(255,255,255,.01));
+    border:1px solid var(--line);border-radius:24px;padding:18px 18px 14px;
+    box-shadow:0 1px 0 rgba(255,255,255,.06) inset,0 30px 80px -30px rgba(0,0,0,.8)}
+  .topbar{display:flex;align-items:center;gap:10px;margin:0 0 14px;flex-wrap:wrap}
+  .topbar .lab{margin:0 4px 0 0}
+  .lab{font-family:var(--mono);font-size:.7rem;letter-spacing:.12em;text-transform:uppercase;color:var(--muted);margin:0 0 10px}
+  .legend{margin-left:auto;display:inline-flex;align-items:center;gap:8px;font-family:var(--mono);font-size:.68rem;color:var(--muted)}
+  .legend i{display:inline-block;width:26px;height:14px;border:1.5px dashed rgba(70,217,138,.7);border-radius:5px}
+
+  /* hero picture: the tree on the left, GitHub on the right */
+  .pic{position:relative;min-height:390px;border:1px solid var(--line);border-radius:18px;background:rgba(6,10,20,.5);
+    overflow:hidden;padding:16px 20px 18px}
+  .path{font-family:var(--mono);font-size:.78rem;line-height:1.7;color:#bcd0ff;margin:0 0 12px;padding:0 0 10px;
+    border-bottom:1px solid var(--line);overflow-wrap:anywhere}
+  .path span{display:inline-block;min-width:5.4rem;color:var(--muted);font-size:.64rem;letter-spacing:.12em;text-transform:uppercase}
+  .cols{display:flex;justify-content:space-between;font-family:var(--mono);font-size:.62rem;letter-spacing:.14em;
+    text-transform:uppercase;color:var(--muted);margin:0 0 4px;padding:0 2px}
+  .row{display:flex;align-items:center;gap:10px;min-height:31px;transition:opacity .25s}
+  .tree.picked .row{opacity:.38}
+  .tree.picked .row.in{opacity:1}
+  .node{display:inline-flex;align-items:center;gap:9px;margin-left:calc(var(--d)*24px);padding:3px 9px;border-radius:7px;
+    border:1.5px solid transparent;background:transparent;color:var(--ink);font-family:var(--mono);font-size:.86rem;
+    cursor:pointer;transition:background .25s,border-color .25s,color .25s;text-align:left}
+  .node:hover{color:var(--accent)}
+  .node:focus-visible{outline:2px solid var(--accent);outline-offset:2px}
+  .node.root{cursor:default;color:var(--muted)}
+  .node.root:hover{color:var(--muted)}
+  .row.proj .node{border-color:rgba(70,217,138,.55);border-style:dashed}
+  .row.ghost .node{font-style:italic;color:var(--muted)}
+  .row.sel .node{background:rgba(110,160,255,.16);border-color:var(--accent)}
+  .row.proj.sel .node{background:rgba(70,217,138,.12);border-color:var(--good);border-style:dashed}
+  .row.later .node{color:var(--muted)}
+  .ico{flex-shrink:0;position:relative;width:16px;height:11px;margin-top:2px;border-radius:2px;background:rgba(110,160,255,.35)}
+  .ico::before{content:"";position:absolute;left:0;top:-3px;width:7px;height:4px;border-radius:2px 2px 0 0;background:rgba(110,160,255,.35)}
+  .row.proj .ico,.row.proj .ico::before{background:rgba(70,217,138,.4)}
+  .git{font-size:.66rem;padding:1px 7px;border-radius:999px;border:1px solid rgba(70,217,138,.35);color:rgba(70,217,138,.7);transition:.25s}
+  .row.sel .git{color:var(--good);border-color:var(--good);background:rgba(70,217,138,.1)}
+  .nogit{font-size:.66rem;padding:1px 7px;border-radius:999px;border:1px solid var(--line);color:var(--muted);display:none}
+  .row.sel .nogit{display:inline-block}
+  .later-tag{font-size:.66rem;color:var(--muted)}
+  .wire{flex:1;min-width:16px;border-bottom:1px dashed rgba(255,255,255,.08);transition:border-color .25s}
+  .gh{flex-shrink:0;font-family:var(--mono);font-size:.74rem;padding:4px 11px;border-radius:999px;border:1px solid var(--line);
+    background:rgba(0,0,0,.3);color:var(--muted);transition:.25s;white-space:nowrap;max-width:46%;overflow:hidden;text-overflow:ellipsis}
+  .gh b{font-weight:500;color:#bcd0ff}
+  .row.sel .wire{border-color:rgba(70,217,138,.6)}
+  .row.sel .gh{border-color:var(--good);color:var(--ink);background:rgba(70,217,138,.1)}
+  @media (max-width:860px){
+    .node{margin-left:calc(var(--d)*14px);font-size:.8rem}
+    .gh{font-size:.68rem}
+    .legend{margin-left:0}
+  }
+
+  /* caption: the sentence for the current choice, right under the picture */
+  .caption{display:flex;gap:16px;align-items:flex-start;margin:14px 4px 0;min-height:56px}
+  .caption .n{flex-shrink:0;font-family:var(--disp);font-weight:700;font-size:1.35rem;color:var(--accent);line-height:1.2;min-width:3.2rem}
+  .caption .n.yes{color:var(--good)}
+  .caption .n small{display:block;font-family:var(--mono);font-weight:400;font-size:.58rem;letter-spacing:.14em;text-transform:uppercase;color:var(--muted)}
+  .caption .t{font-size:1.02rem;line-height:1.55;color:var(--ink);padding-left:16px;border-left:3px solid var(--accent);transition:border-color .3s}
+  .caption .t.yes{border-left-color:var(--good)}
+  .caption b.g{color:var(--good)} .caption b.a{color:var(--accent)}
+
+  /* toolbar: the one control */
+  .toolbar{display:flex;align-items:center;gap:10px;margin:16px 0 0;padding-top:14px;border-top:1px solid var(--line);flex-wrap:wrap}
+  .seg{display:inline-flex;flex-wrap:wrap;border:1px solid var(--line);border-radius:12px;overflow:hidden;background:rgba(0,0,0,.25)}
+  .seg button{font-family:var(--body);font-weight:500;font-size:.86rem;padding:10px 16px;border:0;background:transparent;color:var(--muted);
+    cursor:pointer;transition:.15s;border-right:1px solid var(--line)}
+  .seg button:last-child{border-right:0}
+  .seg button:hover{color:var(--accent)}
+  .seg button.on{background:rgba(110,160,255,.16);color:var(--ink)}
+  .seg button:focus-visible{outline:2px solid var(--accent);outline-offset:-2px}
+  .hint{font-family:var(--mono);font-size:.68rem;color:var(--muted);margin:10px 4px 0;line-height:1.5}
+  .hint b{color:var(--accent)}
+
+  .take{margin-top:22px;background:linear-gradient(180deg,rgba(110,160,255,.08),rgba(139,123,255,.04));
+    border:1px solid var(--line);border-left:3px solid var(--accent);border-radius:12px;padding:16px 18px}
+  .take .tk{font-family:var(--mono);font-size:.66rem;letter-spacing:.14em;text-transform:uppercase;color:var(--accent);margin:0 0 8px}
+  .take p{margin:0;font-size:.95rem;color:var(--ink);line-height:1.55}
+  .take b{color:#fff}
+  @media (prefers-reduced-motion:reduce){*{animation-duration:.01ms!important;transition-duration:.01ms!important}#amb{display:none}}
+</style>
+</head>
+<body>
+
+<a class="back" href="../index.html#03-folder-structure">&#8592; Week 1 index</a>
+
+<canvas id="amb"></canvas>
+<div class="wrap">
+  <p class="tag">Workbook 1a &middot; Section 1-3 &middot; Where every project lives</p>
+  <h1>Your Folder Structure</h1>
+  <p class="lede"><b>One folder per project. Each project is its own Git repository and its own GitHub repository.</b></p>
+
+  <div class="stage">
+    <div class="topbar">
+      <span class="lab">One tree on your machine</span>
+      <span class="legend"><i></i>dashed outline = one repository</span>
+    </div>
+
+    <div class="pic" id="pic">
+      <div class="path" id="path"></div>
+      <div class="cols"><span>Your computer</span><span>GitHub</span></div>
+      <div class="tree" id="tree">
+        <div class="row" data-id="desk"><span class="node root" style="--d:0"><span class="ico"></span>Desktop/</span></div>
+        <div class="row" data-id="pl"><button class="node" style="--d:1"><span class="ico"></span>pluralsight/<span class="nogit">no .git</span></button></div>
+        <div class="row" data-id="jd"><button class="node" style="--d:2"><span class="ico"></span>java-development/<span class="nogit">no .git</span></button></div>
+        <div class="row" data-id="wb1"><button class="node" style="--d:3"><span class="ico"></span>workbook-1/<span class="nogit">no .git</span></button></div>
+        <div class="row proj" data-id="fmp"><button class="node" style="--d:4"><span class="ico"></span>first-maven-project/<span class="git">.git</span></button><span class="wire"></span><span class="gh">repo <b>first-maven-project</b></span></div>
+        <div class="row proj" data-id="sl"><button class="node" style="--d:4"><span class="ico"></span>shopping-list/<span class="git">.git</span></button><span class="wire"></span><span class="gh">repo <b>shopping-list</b></span></div>
+        <div class="row later" data-id="wb2"><button class="node" style="--d:3"><span class="ico"></span>workbook-2/<span class="later-tag">later</span><span class="nogit">no .git</span></button></div>
+        <div class="row" data-id="ws"><button class="node" style="--d:2"><span class="ico"></span>workshops/<span class="nogit">no .git</span></button></div>
+        <div class="row proj ghost" data-id="wsx"><button class="node" style="--d:3"><span class="ico"></span>one folder per workshop<span class="git">.git</span></button><span class="wire"></span><span class="gh">repo <b>same name</b></span></div>
+        <div class="row" data-id="cs"><button class="node" style="--d:2"><span class="ico"></span>capstones/<span class="nogit">no .git</span></button></div>
+        <div class="row proj ghost" data-id="csx"><button class="node" style="--d:3"><span class="ico"></span>one folder per capstone<span class="git">.git</span></button><span class="wire"></span><span class="gh">repo <b>same name</b></span></div>
+      </div>
+    </div>
+
+    <div class="caption" id="caption">
+      <div class="n" id="isrepo"></div>
+      <div class="t" id="status"></div>
+    </div>
+
+    <div class="toolbar">
+      <div class="seg" id="seg" role="group" aria-label="Pick a folder">
+        <button data-id="pl">pluralsight</button>
+        <button data-id="jd">java-development</button>
+        <button data-id="wb1">workbook-1</button>
+        <button data-id="fmp">a project</button>
+        <button data-id="ws">workshops</button>
+        <button data-id="cs">capstones</button>
+      </div>
+    </div>
+    <p class="hint">Click a folder in the tree or use the switch. In IntelliJ, check <b>Create Git repository</b> when you create each project.</p>
+  </div>
+
+  <div class="take">
+    <p class="tk">The one idea</p>
+    <p><b>The repository is the project folder, never the folders above it.</b> pluralsight, java-development and workbook-1 only hold projects.
+    Mac: <code>~/Desktop/pluralsight/java-development/workbook-1</code>. Windows: <code>C:\Users\[username]\Desktop\pluralsight\java-development\workbook-1</code>.</p>
+  </div>
+
+  <div id="rail"></div>
+</div>
+
+<script>
+(function(){
+  "use strict";
+  var $=function(s){return document.querySelector(s);};
+  var reduce=matchMedia("(prefers-reduced-motion: reduce)").matches;
+
+  /* parent links: the subtree of a folder lights up with it */
+  var PARENT={pl:"desk",jd:"pl",wb1:"jd",fmp:"wb1",sl:"wb1",wb2:"jd",ws:"pl",wsx:"ws",cs:"pl",csx:"cs"};
+  var SEG={fmp:"fmp",sl:"fmp"};
+  var NODES={
+    pl:{repo:false,mac:"~/Desktop/pluralsight",win:"C:\\Users\\[username]\\Desktop\\pluralsight",
+      msg:'<b class="a">pluralsight</b> is your one home for the course. A plain folder: no .git, nothing on GitHub.'},
+    jd:{repo:false,mac:"~/Desktop/pluralsight/java-development",win:"C:\\Users\\[username]\\Desktop\\pluralsight\\java-development",
+      msg:'<b class="a">java-development</b> holds one folder per workbook. Still a plain folder, not a repository.'},
+    wb1:{repo:false,mac:"~/Desktop/pluralsight/java-development/workbook-1",win:"C:\\Users\\[username]\\Desktop\\pluralsight\\java-development\\workbook-1",
+      msg:'<b class="a">workbook-1</b> groups this workbook\'s projects. It is not a repository: each project inside it is.'},
+    fmp:{repo:true,mac:"~/Desktop/pluralsight/java-development/workbook-1/first-maven-project",win:"C:\\Users\\[username]\\Desktop\\pluralsight\\java-development\\workbook-1\\first-maven-project",
+      msg:'A project. Its <b class="g">.git</b> sits inside this folder, so it is its own repository, with a GitHub repository of the same name.'},
+    sl:{repo:true,mac:"~/Desktop/pluralsight/java-development/workbook-1/shopping-list",win:"C:\\Users\\[username]\\Desktop\\pluralsight\\java-development\\workbook-1\\shopping-list",
+      msg:'Every exercise is a new project folder next to the others, with its own <b class="g">.git</b> and its own GitHub repository.'},
+    wb2:{repo:false,mac:"~/Desktop/pluralsight/java-development/workbook-2",win:"C:\\Users\\[username]\\Desktop\\pluralsight\\java-development\\workbook-2",
+      msg:'<b class="a">workbook-2</b> comes later. Same pattern: a plain folder with one project folder per exercise.'},
+    ws:{repo:false,mac:"~/Desktop/pluralsight/workshops",win:"C:\\Users\\[username]\\Desktop\\pluralsight\\workshops",
+      msg:'<b class="a">workshops</b> holds one folder per workshop. The folder is plain; each workshop inside it is its own repository.'},
+    wsx:{repo:true,mac:"~/Desktop/pluralsight/workshops/<workshop>",win:"C:\\Users\\[username]\\Desktop\\pluralsight\\workshops\\<workshop>",
+      msg:'Each workshop is a project folder with its own <b class="g">.git</b> and a GitHub repository of the same name.'},
+    cs:{repo:false,mac:"~/Desktop/pluralsight/capstones",win:"C:\\Users\\[username]\\Desktop\\pluralsight\\capstones",
+      msg:'<b class="a">capstones</b> holds one folder per capstone. Plain folder; each capstone inside it is its own repository.'},
+    csx:{repo:true,mac:"~/Desktop/pluralsight/capstones/<capstone>",win:"C:\\Users\\[username]\\Desktop\\pluralsight\\capstones\\<capstone>",
+      msg:'Each capstone is a project folder with its own <b class="g">.git</b> and a GitHub repository of the same name.'}
+  };
+
+  function within(id,anc){ while(id){ if(id===anc) return true; id=PARENT[id]; } return false; }
+  function line(label,text){ var d=document.createElement("div"),l=document.createElement("span");
+    l.textContent=label; d.appendChild(l); d.appendChild(document.createTextNode(text)); return d; }
+
+  function set(id){
+    var N=NODES[id]; if(!N) return;
+    $("#tree").classList.add("picked");
+    Array.prototype.forEach.call(document.querySelectorAll("#tree .row"),function(r){
+      var rid=r.getAttribute("data-id");
+      r.classList.toggle("sel",rid===id);
+      r.classList.toggle("in",within(rid,id)||within(id,rid));
+    });
+    var segId=SEG[id]||id;
+    Array.prototype.forEach.call(document.querySelectorAll("#seg button"),function(b){b.classList.toggle("on",b.getAttribute("data-id")===segId);});
+    var P=$("#path"); P.textContent=""; P.appendChild(line("Mac",N.mac)); P.appendChild(line("Windows",N.win));
+    $("#status").innerHTML=N.msg;
+    $("#status").className="t"+(N.repo?" yes":"");
+    $("#isrepo").className="n"+(N.repo?" yes":"");
+    $("#isrepo").innerHTML="<small>repository?</small>"+(N.repo?"Yes":"No");
+  }
+
+  $("#seg").addEventListener("click",function(e){ var b=e.target.closest("button"); if(b) set(b.getAttribute("data-id")); });
+  $("#tree").addEventListener("click",function(e){ var b=e.target.closest("button.node"); if(b) set(b.parentNode.getAttribute("data-id")); });
+
+  /* ---------- ambient canvas ---------- */
+  var cv=$("#amb"),ctx=cv.getContext&&cv.getContext("2d"),parts=[];
+  function sizeC(){if(!ctx)return;cv.width=innerWidth;cv.height=innerHeight;}
+  function initParts(){parts=[];for(var i=0;i<46;i++)parts.push({x:Math.random(),y:Math.random(),
+    r:Math.random()*1.6+.3,s:Math.random()*.02+.004,o:Math.random()*.4+.1});}
+  function drawC(){if(!ctx)return;ctx.clearRect(0,0,cv.width,cv.height);
+    parts.forEach(function(p){p.y-=p.s/60;if(p.y<-.02)p.y=1.02;
+      ctx.beginPath();ctx.arc(p.x*cv.width,p.y*cv.height,p.r,0,7);
+      ctx.fillStyle="rgba(140,170,255,"+p.o+")";ctx.fill();});
+    requestAnimationFrame(drawC);}
+  if(ctx&&!reduce){sizeC();initParts();drawC();addEventListener("resize",sizeC);}
+
+  set("fmp");
+})();
+</script>
+<script src="../manifest.js"></script>
+<script src="../../assets/rail.js"></script>
+<script>Rail.render(document.getElementById("rail"),{kind:"visuals",current:"03-folder-structure"});</script>
+</body>
+</html>

@@ -81,6 +81,13 @@
   .arrow.on{color:var(--gold)}
   .arrow.on .ln{background:var(--gold)}
   .arrow.on .ln::after{border-left-color:var(--gold)}
+  .org{font-size:.92em;padding:.15em .6em;border-radius:999px;border:1px solid var(--line);color:var(--muted);text-transform:none;letter-spacing:0;transition:color .3s,border-color .3s}
+  .org.on{color:var(--gold);border-color:var(--gold)}
+  .repo{display:flex;flex-direction:column;gap:.35em}
+  .repo:not(:empty){margin:0 0 .45em}
+  .rp{font-family:var(--mono);font-size:.8em;padding:.3em .7em;border-radius:9px;border:1px dashed var(--line);color:var(--muted)}
+  .rp.gone{text-decoration:line-through;opacity:.6}
+  .rp.made{border:1px solid var(--gold);color:#ffe6b0;background:rgba(255,200,98,.12)}
   @media (max-width:860px){
     .places{grid-template-columns:1fr}
     .arrow{flex-direction:row;padding:10px 0}
@@ -126,7 +133,7 @@
 <div class="wrap">
   <p class="tag">Workbook 1a &middot; Section 1-2 &middot; GitHub, local and remote</p>
   <h1>Local vs Remote Repository</h1>
-  <p class="lede"><b>A commit saves on your computer only. Nobody else sees it until you push.</b></p>
+  <p class="lede"><b>Share creates the GitHub repository once. After that, a commit stays on your computer until you push.</b></p>
 
   <div class="stage">
     <div class="topbar">
@@ -149,11 +156,12 @@
           </div>
           <div class="seen" id="Vme"></div>
         </div>
-        <div class="arrow" id="Apush"><span class="ln"></span><span>push</span></div>
+        <div class="arrow" id="Apush"><span class="ln"></span><span id="Lpush">push</span><span class="org" id="Org">origin</span></div>
         <div class="place" id="Pgh">
           <div class="phead"><span class="pname">GitHub</span><span class="pwhere">remote repository &middot; public</span></div>
           <div class="box">
             <p class="bt">github.com/you/first-maven-project</p>
+            <div class="repo" id="Rgh"></div>
             <div class="commits" id="Cgh"></div>
           </div>
           <div class="seen" id="Vgh"></div>
@@ -171,24 +179,25 @@
     </div>
 
     <div class="caption" id="caption">
-      <div class="n" id="stepno"><small>moment</small>2 / 4</div>
+      <div class="n" id="stepno"><small>moment</small>3 / 5</div>
       <div class="t" id="status"></div>
     </div>
 
     <div class="toolbar">
       <div class="seg" id="seg" role="group" aria-label="Pick a moment">
+        <button data-m="share">Share on GitHub</button>
         <button data-m="edit">Edited</button>
         <button data-m="commit" class="on">Committed</button>
         <button data-m="push">Pushed</button>
         <button data-m="pull">Pulled</button>
       </div>
     </div>
-    <p class="hint">In IntelliJ: <b>Commit</b> and <b>Commit and Push</b> in the Commit tool window. Share Project on GitHub does the first push for you.</p>
+    <p class="hint">In IntelliJ: <b>Git &gt; GitHub &gt; Share Project on GitHub</b> once, then <b>Commit</b> and <b>Commit and Push</b> in the Commit tool window.</p>
   </div>
 
   <div class="take">
     <p class="tk">The one idea</p>
-    <p><b>Commit saves on your machine only. Nothing exists on GitHub until you push.</b>
+    <p><b>Share creates the remote once. Commit saves on your machine only; nothing new reaches GitHub until you push.</b>
     Your repositories are public, so once you push, Raymond can open GitHub and see your work.</p>
   </div>
 
@@ -203,6 +212,8 @@
 
   /* which places hold the new commit in each moment */
   var MODES={
+    share:{me:false,gh:false,mate:false,mod:false,arrow:"push",
+      msg:'Before Share, <b class="y">GitHub has no repository</b>. One click creates <code>first-maven-project</code> (Public, empty), links it as <b class="a">origin</b> and pushes Initial Commit: same hash <code>a1f3</code> on both sides.'},
     edit:{me:false,gh:false,mate:false,mod:true,arrow:"",
       msg:'You changed <code>HelloWorld.java</code> and saved it. The change is only in the working folder. <b class="y">No commit yet</b>, so no copy holds it.'},
     commit:{me:true,gh:false,mate:false,mod:false,arrow:"commit",
@@ -218,8 +229,8 @@
     mate:["Teammate does not have it","Teammate has it"]
   };
 
-  function commits(has){
-    return '<div class="cm"><span class="h">a1f3</span><span>Initial Commit</span></div>'+
+  function commits(has,init){
+    return '<div class="cm'+(init?' new':'')+'"><span class="h">a1f3</span><span>Initial Commit</span></div>'+
       (has?'<div class="cm new"><span class="h">7c2e</span><span>Print greeting</span></div>'
           :'<div class="cm miss"><span class="h">----</span><span>Print greeting: not here</span></div>');
   }
@@ -228,12 +239,17 @@
     var M=MODES[mode];
     ["me","gh","mate"].forEach(function(k){
       var has=M[k];
-      document.getElementById("P"+k).classList.toggle("has",has);
-      document.getElementById("C"+k).innerHTML=commits(has);
+      var sh=mode==="share"&&k!=="mate";
+      document.getElementById("P"+k).classList.toggle("has",has||sh);
+      document.getElementById("C"+k).innerHTML=commits(has,sh);
       var v=document.getElementById("V"+k);
       if(k==="me"){v.className="seen";v.textContent=SEEN.me[0];}
+      else if(mode==="share"){v.className="seen "+(k==="gh"?"yes":"no");v.textContent=k==="gh"?"Raymond can open the repository":"Teammate can clone it now";}
       else{v.className="seen "+(has?"yes":"no");v.textContent=SEEN[k][has?1:0];}
     });
+    $("#Rgh").innerHTML=mode==="share"?'<div class="rp gone">no repository</div><div class="rp made">first-maven-project \u00b7 Public \u00b7 created empty</div>':"";
+    $("#Lpush").textContent=mode==="share"?"share":"push";
+    $("#Org").classList.toggle("on",mode==="share");
     $("#Fmain").classList.toggle("mod",M.mod);
     $("#Smain").textContent=M.mod?"modified":"committed";
     $("#Acommit").classList.toggle("on",M.arrow==="commit");
@@ -245,7 +261,7 @@
     $("#caption").className="caption "+(CAP[mode]||"");
     $("#stepno").innerHTML="<small>moment</small>"+(ORDER.indexOf(mode)+1)+" / "+ORDER.length;
   }
-  var ORDER=["edit","commit","push","pull"], CAP={edit:"left",push:"ok",pull:"ok"}, cur="commit";
+  var ORDER=["share","edit","commit","push","pull"], CAP={share:"left",edit:"left",push:"ok",pull:"ok"}, cur="commit";
 
   /* focus: picture and caption only. Remembered per browser. */
 

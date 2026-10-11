@@ -7,10 +7,10 @@ NEW = no spring page. NONE = idea covered by the workbook text/image, no page. S
 ## Visuals (25 → 23 if Module 1 pages are dropped: 15 keep, 4 rebuild, 2 new, 2 fold, 2 drop?) — revised 2026-10-11: Walk is the default, Glance only for labeled pictures
 | # | Idea (workbook) | Spring page | Verdict | Size | Note |
 |---|---|---|---|---|---|
-| 01 | Maven project folder structure (1a) | 03-maven-project-structure | KEEP | Glance | click a folder, see what goes there |
+| 01 | Maven project folder structure (1a) | 05-maven-project-structure | KEEP | Glance | click a folder, see what goes there |
 | 02 | What version control is: timeline, roll back (1b 1-1) | 01-version-control-timeline | KEEP | Walk | |
 | 03 | Local vs remote repository (1b 1-2, 1-3) | 03-distributed-vcs | KEEP | Glance | |
-| 04 | Git through IntelliJ: change → commit → push → GitHub (1b) | 04-git-intellij-workflow | KEEP | Walk | matches v7.2: public repo |
+| 04 | Git through IntelliJ: change → commit → push → GitHub (1b) | 06-git-intellij-workflow | KEEP | Walk | matches v7.2: public repo |
 | 05 | Binary counter (1c 1-2) | 05-binary-counter | DROP | | 1c Module 1 skipped in spring (Notion checklist, Tue); re-add only if the fall review changes that |
 | 06 | Bytes and storage scale (1c 1-2) | 06-bytes-storage | DROP | | same |
 | 08 | Compile → bytecode → JVM (1c 2-1) | 07-java-compilation | KEEP | Walk | |
@@ -26,13 +26,13 @@ NEW = no spring page. NONE = idea covered by the workbook text/image, no page. S
 | 18 | Scanner buffer: nextInt then nextLine (1c 3-3) | 16-scanner-buffer | KEEP | Model | the mechanism is the lesson; instructor plays it in class |
 | 19 | Scanner methods: next / nextLine / nextInt (1c 3-3) | 23-scanner-methods | KEEP | Walk | |
 | 20 | if / else if / else path (1c 4-1) + conditional operator (4-3) | 17-if-else-flowchart | KEEP | Walk | add the ?: form as a toggle (folds the conditional operator) |
-| 21 | Logical operators && || ! (1c 4-1) | 18-logical-operators | KEEP | Walk | |
-| 22 | == vs .equals on Strings (1c 4-1) | 19-string-comparison | KEEP | Walk | |
-| 23 | Method signature anatomy (1c 4-2) | 20-method-signature | KEEP | Walk | |
-| 24 | Method call stack, parameters are copies (1c 4-2) | 21-method-call-stack | BUILT | Model | approved as the Model reference |
-| 25 | Repeated code → one method (1c 4-2) | 22-method-decomposition | REBUILD | Walk | before/after toggle on the rectangle demo (demo-methods-java), not an exercise |
+| 21 | Logical operators && || ! (1c 4-1) | 20-logical-operators | KEEP | Walk | |
+| 22 | == vs .equals on Strings (1c 4-1) | 21-string-comparison | KEEP | Walk | |
+| 23 | Method signature anatomy (1c 4-2) | 22-method-signature | KEEP | Walk | |
+| 24 | Method call stack, parameters are copies (1c 4-2) | 23-method-call-stack | BUILT | Model | approved as the Model reference |
+| 25 | Repeated code → one method (1c 4-2) | 24-method-decomposition | REBUILD | Walk | before/after toggle on the rectangle demo (demo-methods-java), not an exercise |
 | 26 | One Scanner passed between methods (1c 4-2) | none | NEW | Walk | from InputApp demo (potatoScanner / tomatoScanner); workbook pp. 113-116 (three choices, re-declaring, passing). BUILT as 23. REVIEW with Ray: the trap chip shows the swallowing risk via type-ahead; the workbook's own trace shows line-by-line typing looks fine. Decide keep / soften / drop the trap chip. |
-| 27 | switch: traditional with break, fall-through, arrow form (1c 4-3) | 24-switch-flow | REBUILD | Walk | both forms side by side, v7.2 teaches both |
+| 27 | switch: traditional with break, fall-through, arrow form (1c 4-3) | 26-switch-flow | REBUILD | Walk | both forms side by side, v7.2 teaches both |
 | 28 | From problem to code: read, identify, plan, translate | 25-problem-decomposition | REBUILD | Walk | BUILT as 25 with an invented print-shop problem. EXTRA: not a workbook topic (instructor note 2026-10-12). Keep, redo, or drop at Ray's review. |
 NONE: IntelliJ new-project dialog (workbook screenshots), Math class (a table), Section 3-4 AI (instructor's call), Module 5 debugging (Week 2 covers the debugger).
 
