@@ -167,8 +167,8 @@
     {n:"short",k:"whole",b:2,range:"-32,768 to 32,767",ex:"short year = 2026;",note:"invented",def:"0"},
     {n:"int",k:"whole",b:4,range:"-2,147,483,648 to 2,147,483,647 (about 2.1 billion each way)",ex:"int firstNumber = 26;",def:"0",decl:"int x = 5, y, z = 50;",dv:"y"},
     {n:"long",k:"whole",b:8,range:"-9,223,372,036,854,775,808 to 9,223,372,036,854,775,807 (about 9.2 quintillion each way)",ex:"long views = 8000000000L;",note:"invented",def:"0"},
-    {n:"float",k:"decimal",b:4,c:"flt",range:"precise to about 7 digits; anything beyond that gets rounded. Use double unless told otherwise",ex:"float rate = 4.5f;",note:"invented",def:"0.0"},
-    {n:"double",k:"decimal",b:8,c:"flt",range:"precise to about 15 digits; the default for decimals",ex:"double price = 19.99;",note:"invented",def:"0.0"},
+    {n:"float",k:"decimal",b:4,c:"flt",range:"precise to about 7 digits, counting before and after the decimal point together; beyond that it gets rounded. Use double unless told otherwise",ex:"float rate = 4.5f;",note:"invented",def:"0.0"},
+    {n:"double",k:"decimal",b:8,c:"flt",range:"precise to about 15 digits, before and after the decimal point together; the default for decimals",ex:"double price = 19.99;",note:"invented",def:"0.0"},
     {n:"char",k:"character",b:2,range:"one character, stored as a number: 'A' is 65, 'a' is 97 (Unicode numbers every character, 0 to 65,535)",ex:"char letter = 'C';",def:"'\\u0000' (empty character)"},
     {n:"boolean",k:"true/false",b:1,range:"true or false only",ex:"boolean isStudent = true;",def:"false",field:"public static boolean newVariable;"},
     {n:"String",k:"text, a class",b:8,c:"ref",range:"any text; the variable points to a String object",ex:"String name;  name = \"Raymond\";",def:"null"}
