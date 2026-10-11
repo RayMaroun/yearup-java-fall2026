@@ -237,7 +237,7 @@
       <button class="btn primary" id="bNext">Next &rarr;</button>
       <button class="btn ghost" id="bReset">Reset</button>
     </div>
-    <p class="hint">space = next &middot; the source is HelloWorld.java from the first Maven project demo. <b>Try missing semicolon.</b></p>
+    <p class="hint">space = next &middot; the source is HelloWorld.java. <b>Try missing semicolon.</b></p>
 
     <div class="support">
       <div>
@@ -268,7 +268,7 @@
   var $=function(s){return document.querySelector(s);};
   var reduce=matchMedia("(prefers-reduced-motion: reduce)").matches;
 
-  /* ---------- the source: HelloWorld.java from the first-maven-project demo ---------- */
+  /* ---------- the source: HelloWorld.java ---------- */
   function lines(broken,fixing){
     var end=broken?(fixing?'<span class="gap">;</span>':'<span class="gap"></span>'):';';
     return [

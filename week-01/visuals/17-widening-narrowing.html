@@ -183,7 +183,7 @@
       <button class="btn primary" id="bNext">Next &rarr;</button>
       <button class="btn ghost" id="bReset">Reset</button>
     </div>
-    <p class="hint">space = next &middot; the first two examples are from the operators demo. <b>(byte) 1000</b> and <b>(int) 9.99</b> are extras.</p>
+    <p class="hint">space = next</p>
 
     <div class="support">
       <div>
@@ -228,7 +228,6 @@
   function ca(t){return '<span class="ca">('+ty(t)+')</span>';}
 
   /* ---------- the four walks ---------- */
-  /* examples 1 and 2: the operators demo; examples 3 and 4: invented */
   var PRESETS=[
     {chip:"widening: int → long",
      code:[ty("long")+' firstNumber = '+nm("3000000000L")+';', ty("float")+' secondNumber = '+nm("3.45f")+';', '',

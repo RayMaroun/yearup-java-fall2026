@@ -199,7 +199,7 @@
       <button class="btn primary" id="bNext">Next &rarr;</button>
       <button class="btn ghost" id="bReset">Reset</button>
     </div>
-    <p class="hint">space = next &middot; "raymond" and equalsIgnoreCase come from the conditionals demo. <b>Try two literals.</b></p>
+    <p class="hint">space = next &middot; <b>Try two literals.</b></p>
 
     <div class="support">
       <div>
@@ -233,7 +233,7 @@
   var $=function(s){return document.querySelector(s);};
   var reduce=matchMedia("(prefers-reduced-motion: reduce)").matches;
 
-  /* presets: "raymond" and equalsIgnoreCase come from the conditionals demo */
+  /* presets */
   var PRESETS=[
     {label:"typed vs literal",typed:true,name:"raymond"},
     {label:"two literals",typed:false,name:"raymond"},
@@ -282,7 +282,7 @@
                  :'<b class="w">'+P.name.charAt(mis)+'</b> and <b class="w">'+LIT.charAt(mis)+'</b> are different characters, so <b class="w">false</b>. Case matters.') });
     S.push({line:[7],pic:5,cls:R.ic?"ok":"cut",eq:R.eq,equals:R.equals,out:[String(R.eq),String(R.equals),String(R.ic)],
       msg:'<code>.equalsIgnoreCase</code> compares characters too, but <b class="y">R and r count as the same letter</b>: <b class="g">'+R.ic+'</b>. '+
-        (P.name!==LIT?'That is why the demo checks <code>name.equalsIgnoreCase("raymond")</code>.':'Here nothing differs, so it agrees with <code>.equals</code>.') });
+        (P.name!==LIT?'That is why the code checks <code>name.equalsIgnoreCase("raymond")</code>.':'Here nothing differs, so it agrees with <code>.equals</code>.') });
     return S;
   }
 

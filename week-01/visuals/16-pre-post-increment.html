@@ -184,7 +184,7 @@
       <button class="btn primary" id="bNext">Next &rarr;</button>
       <button class="btn ghost" id="bReset">Reset</button>
     </div>
-    <p class="hint">space = next &middot; the code and comments are from the operators demo. <b>Run one, then the other.</b></p>
+    <p class="hint">space = next &middot; <b>Run one, then the other.</b></p>
 
     <div class="support">
       <div>
@@ -217,7 +217,7 @@
   var $=function(s){return document.querySelector(s);};
   var reduce=matchMedia("(prefers-reduced-motion: reduce)").matches;
 
-  /* ---------- the two versions, exactly as in the operators demo ---------- */
+  /* ---------- the two versions ---------- */
   var MODES={
     post:{label:"y = x++",stmt:'y = x<span class="op">++</span>;',
       comments:["// 1- Take the value of x, which = 5;","// 2- Take value from x and give to y so y = 5","// 3- Add +1 to the value of x, so now x = 6"]},

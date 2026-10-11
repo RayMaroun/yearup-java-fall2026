@@ -189,7 +189,7 @@
       <button class="btn primary" id="bNext">Next &rarr;</button>
       <button class="btn ghost" id="bReset">Reset</button>
     </div>
-    <p class="hint">space = next &middot; the same + builds <code>greeting = firstWord + " " + secondWord</code> in the operators demo. <b>Try all three.</b></p>
+    <p class="hint">space = next &middot; <b>Try all three.</b></p>
 
     <div class="support">
       <div>
@@ -222,7 +222,7 @@
   var $=function(s){return document.querySelector(s);};
   var reduce=matchMedia("(prefers-reduced-motion: reduce)").matches;
 
-  /* ---------- presets: invented numeric examples (k: s = String, n = int, op = +, ( and ) ) ---------- */
+  /* ---------- presets: numeric examples (k: s = String, n = int, op = +, ( and ) ) ---------- */
   function S(v){return {k:"s",v:v};}
   function N(v){return {k:"n",v:v};}
   var P={k:"op"}, L={k:"("}, R={k:")"};

@@ -138,7 +138,7 @@
 
   <div class="stage">
     <div class="topbar">
-      <span class="lab">Pick a method from the demo</span>
+      <span class="lab">Pick a method</span>
       <div class="chips" id="chips"></div>
       <button class="focus" id="bFocus" title="Hide the notes, enlarge the picture">Focus</button>
     </div>
@@ -159,7 +159,7 @@
       <button class="btn primary" id="bNext">Next &rarr;</button>
       <button class="btn ghost" id="bReset">Reset</button>
     </div>
-    <p class="hint">space = next &middot; all three methods are in the methods demo. <b>Try greetUser for void.</b></p>
+    <p class="hint">space = next &middot; <b>Try greetUser for void.</b></p>
 
     <div class="support">
       <div class="readout">
@@ -191,7 +191,7 @@
   function F(t,id){return S(t,id,"fn");} function X(t,id){return S(t,id);}
   function lit(v){ return v.charAt(0)==='"'?S(v,null,"st"):S(v,null,"nm"); }
 
-  /* ---------- the three methods from demo-methods-java-2 (values invented) ---------- */
+  /* ---------- the three methods ---------- */
   var PRESETS=[
     {chip:"addNumbers", name:"addNumbers", ret:"int", store:"result", retVar:"sum", retVal:"20",
      params:[{t:"int",n:"num1",arg:"firstNumber",v:"17"},{t:"int",n:"num2",arg:"secondNumber",v:"3"}],

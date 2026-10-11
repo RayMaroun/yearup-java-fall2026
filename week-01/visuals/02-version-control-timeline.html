@@ -232,7 +232,7 @@
   var $=function(s){return document.querySelector(s);};
   var reduce=matchMedia("(prefers-reduced-motion: reduce)").matches;
 
-  /* ---------- the file: HelloWorld.java from the first-maven-project demo, then invented edits ---------- */
+  /* ---------- the file: HelloWorld.java, then edits ---------- */
   var HEAD_LINES=["package com.pluralsight;","","public class HelloWorld {","    public static void main(String[] args) {"];
   var TAIL=["    }","}"];
   var V=[
@@ -362,7 +362,7 @@
       $("#stepno").innerHTML="<small>step</small>0 / "+steps.length;
       renderTl(null); renderFile(0,{}); renderCard(null);
       $("#badge").className="badge"; $("#badge").textContent="on disk, not saved in history";
-      capEl.className="caption"; statusEl.innerHTML='This is HelloWorld.java from the first-maven-project demo. Press <b class="a">Next</b> to save its first snapshot.';
+      capEl.className="caption"; statusEl.innerHTML='This is HelloWorld.java. Press <b class="a">Next</b> to save its first snapshot.';
       setStat("#stCount","0","dim"); setStat("#stAt","none","dim"); setBtns(); return;
     }
     var s=steps[i];

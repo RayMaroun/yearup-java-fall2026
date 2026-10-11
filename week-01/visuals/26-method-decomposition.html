@@ -164,7 +164,7 @@
       <button class="btn primary" id="bNext">Next &rarr;</button>
       <button class="btn ghost" id="bReset">Reset</button>
     </div>
-    <p class="hint">space = next &middot; the rectangle comes from the <b>methods demo</b>, with fixed sizes instead of Scanner input.</p>
+    <p class="hint">space = next &middot; fixed sizes instead of Scanner input.</p>
 
     <div class="support">
       <div class="readout">
@@ -190,7 +190,7 @@
   var $=function(s){return document.querySelector(s);};
   var reduce=matchMedia("(prefers-reduced-motion: reduce)").matches;
 
-  /* three rectangles, invented sizes; the shape of the code follows the methods demo */
+  /* three rectangles */
   var R=[[4,3],[6,2],[5,5]];
 
   /* ---------- the walk: each step is a state of the program, the code and output are computed from it ---------- */

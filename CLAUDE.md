@@ -154,3 +154,7 @@ Use Sonnet for mechanical work: diffs, link checks, compile checks. The lead ver
 ## Pre-commit sweep
 Div balance; every href resolves; `<title>` set; one style, one script; no console errors on load;
 fonts link present; rail present on every content page; no exercise solution anywhere outside companions.
+
+
+## Demos are a source, never a subject (Ray, 2026-10-13)
+Examples come from the week's demos (`04.Weeks/Week NN/demos/`), never from exercises. But the page never says so: no "from the X demo", no "(invented)", no "names from Raymond's demo". Labels say "Example", not "Example from the demo". The learner sees code, not its provenance.
