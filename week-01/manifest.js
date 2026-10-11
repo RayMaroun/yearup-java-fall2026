@@ -41,6 +41,8 @@ window.HUB_MANIFEST = {
     { file: "common-errors.html", title: "Common Errors", group: "Reference", desc: "What the compiler says, what it means, how to fix it." },
     { file: "intellij-shortcuts.html", title: "IntelliJ Shortcuts", group: "Reference", desc: "The keys worth knowing in week 1, Mac and Windows side by side." }
   ],
-  exercises: [],
+  exercises: [
+    { file: "shopping-list.html", title: "Shopping List", group: "Workbook 1a · Section 1-5", desc: "Project, package, class, main, ten println lines, share on GitHub." }
+  ],
   games: []
 };
