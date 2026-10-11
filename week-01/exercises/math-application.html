@@ -32,127 +32,62 @@
   .lede b{color:var(--ink)}
   .lede code,.take code,.caption code{font-family:var(--mono);font-size:.92em;color:#bcd0ff}
 
-  /* ---------- stage: picture first, one toolbar, support below ---------- */
+  /* ---------- companion: everything visible, a checklist you tick ---------- */
   .stage{position:relative;background:linear-gradient(180deg,rgba(255,255,255,.03),rgba(255,255,255,.01));
-    border:1px solid var(--line);border-radius:24px;padding:18px 18px 14px;
+    border:1px solid var(--line);border-radius:24px;padding:18px;
     box-shadow:0 1px 0 rgba(255,255,255,.06) inset,0 30px 80px -30px rgba(0,0,0,.8)}
-  .topbar{display:flex;align-items:center;gap:10px;margin:0 0 14px;flex-wrap:wrap}
-  .topbar .lab{margin:0 4px 0 0}
   .lab{font-family:var(--mono);font-size:.7rem;letter-spacing:.12em;text-transform:uppercase;color:var(--muted);margin:0 0 10px}
-  .chips{display:flex;flex-wrap:wrap;gap:6px}
-  .chip{font-family:var(--mono);font-size:.74rem;padding:5px 11px;border-radius:999px;cursor:pointer;
-    border:1px solid var(--line);background:rgba(0,0,0,.25);color:var(--muted);transition:.15s}
-  .chip:hover{border-color:var(--accent);color:var(--accent)}
-  .chip.on{border-color:rgba(110,160,255,.6);background:rgba(110,160,255,.14);color:var(--ink)}
-  .chip:focus-visible,.btn:focus-visible,.focus:focus-visible{outline:2px solid var(--accent);outline-offset:2px}
-  .focus{margin-left:auto;font-family:var(--mono);font-size:.68rem;letter-spacing:.1em;text-transform:uppercase;padding:6px 12px;
-    border-radius:999px;border:1px solid var(--line);background:rgba(0,0,0,.25);color:var(--muted);cursor:pointer;transition:.15s}
-  .focus:hover{border-color:var(--accent);color:var(--accent)}
-  body.solo .focus{border-color:rgba(255,200,98,.6);color:var(--gold);background:rgba(255,200,98,.1)}
-
-  /* hero picture: the eight questions on the left, the run on the right */
-  .pic{position:relative;height:390px;border:1px solid var(--line);border-radius:18px;background:rgba(6,10,20,.5);overflow:hidden;
-    display:grid;grid-template-columns:1fr 1.2fr}
-  body.solo .pic{height:480px}
-  .pic .zone{position:absolute;left:18px;top:14px;font-family:var(--mono);font-size:.62rem;letter-spacing:.14em;text-transform:uppercase;
-    color:rgba(132,150,182,.55)}
-  .qs{position:relative;padding:36px 16px 12px 18px;display:flex;flex-direction:column;gap:4px;overflow:hidden}
-  body.solo .qs{gap:9px;padding-top:42px}
-  .q{display:flex;align-items:center;gap:10px;border:1px solid var(--line);border-radius:10px;padding:4px 10px;background:rgba(255,255,255,.02);
-    opacity:.28;transition:opacity .4s,border-color .3s,background .3s,transform .3s}
-  .q.show{opacity:.75}
-  .q.done{opacity:.75}
-  .q.now{opacity:1;border-color:rgba(110,160,255,.7);background:rgba(110,160,255,.12);transform:translateX(4px)}
-  .q .qn{font-family:var(--disp);font-weight:700;font-size:.9rem;color:var(--muted);width:14px;text-align:center;flex-shrink:0}
-  .q.now .qn{color:var(--accent)} .q.done .qn{color:var(--good)}
-  .q .qt{font-family:var(--body);font-weight:500;font-size:.8rem;color:var(--ink);line-height:1.25}
-  .q .qi{display:block;font-family:var(--mono);font-weight:400;font-size:.62rem;color:var(--muted);line-height:1.3}
-  .q .ck{margin-left:auto;font-family:var(--mono);font-size:.62rem;color:var(--good);opacity:0;transition:opacity .3s}
-  .q.done .ck{opacity:1}
-  .runp{position:relative;border-left:1px solid var(--line);padding:36px 18px 12px;display:flex;flex-direction:column;gap:10px;min-width:0}
-  .term{flex:1;background:#05070e;border:1px solid var(--line);border-radius:12px;padding:10px 14px;font-family:var(--mono);font-size:.74rem;
-    line-height:1.6;color:#9fe3b6;overflow:hidden;opacity:.35;transition:opacity .4s}
-  body.solo .term{font-size:.84rem}
-  .term.show{opacity:1}
-  .term .cl{font-size:.6rem;letter-spacing:.14em;text-transform:uppercase;color:rgba(132,150,182,.6);margin-bottom:4px}
-  .term .l{white-space:nowrap;overflow:hidden;text-overflow:ellipsis;color:rgba(159,227,182,.6);transition:color .3s}
-  .term .l.new{color:#c8f5d8;animation:pop .3s}
-  .term .l.mu{color:rgba(132,150,182,.6)}
-  .card{border:1px solid var(--line);border-radius:12px;padding:10px 14px;font-family:var(--mono);font-size:.72rem;color:var(--muted);
-    background:rgba(255,255,255,.03);opacity:.35;transition:opacity .4s,border-color .4s}
-  .card.show{opacity:1}
-  .card.lit{border-color:rgba(70,217,138,.6);color:var(--ink);background:rgba(70,217,138,.06)}
-  .card b{color:var(--good);font-weight:500}
-  .card .sub{display:block;font-size:.64rem;color:var(--muted);margin-top:2px}
-  @media (max-width:700px){.pic{grid-template-columns:1fr;height:auto}body.solo .pic{height:auto}.runp{border-left:0;border-top:1px solid var(--line);min-height:300px}}
-  .pic .start{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;font-family:var(--mono);
-    font-size:.8rem;color:var(--muted);pointer-events:none;transition:opacity .3s;background:rgba(6,10,20,.55)}
-  .pic .start b{color:var(--accent);font-weight:500}
-  /* caption: the one sentence, right under the picture */
-  .caption{display:flex;gap:16px;align-items:flex-start;margin:14px 4px 0;min-height:56px}
-  .caption .n{flex-shrink:0;font-family:var(--disp);font-weight:700;font-size:1.35rem;color:var(--accent);font-variant-numeric:tabular-nums;
-    line-height:1.2;min-width:3.2rem}
-  .caption .n small{display:block;font-family:var(--mono);font-weight:400;font-size:.58rem;letter-spacing:.14em;text-transform:uppercase;color:var(--muted)}
-  .caption .t{font-size:1.02rem;line-height:1.55;color:var(--ink);padding-left:16px;border-left:3px solid var(--accent);transition:border-color .3s}
-  body.solo .caption .t{font-size:1.18rem}
-  .caption.cut .t{border-left-color:var(--warn)} .caption.left .t{border-left-color:var(--gold)} .caption.ok .t{border-left-color:var(--good)}
-  .caption b.g{color:var(--good)} .caption b.w{color:var(--warn)} .caption b.a{color:var(--accent)} .caption b.y{color:var(--gold)}
-
-  /* toolbar: same on every page */
-  .toolbar{display:flex;align-items:center;gap:10px;margin:16px 0 0;padding-top:14px;border-top:1px solid var(--line)}
-  .btn{font-family:var(--body);font-weight:500;font-size:.86rem;padding:9px 16px;border-radius:11px;cursor:pointer;
-    border:1px solid var(--line);background:var(--surface);color:var(--ink);transition:.15s}
-  .btn:hover{border-color:var(--accent);color:var(--accent)}
-  .btn.primary{border-color:rgba(110,160,255,.5);background:rgba(110,160,255,.12);padding:9px 22px}
-  .btn:disabled{opacity:.35;cursor:not-allowed}
-  .btn.ghost{background:transparent;color:var(--muted);margin-left:auto}
-  .dots{display:flex;gap:5px;align-items:center;margin:0 6px}
-  .dots i{display:block;width:8px;height:8px;border-radius:50%;background:rgba(255,255,255,.12);transition:.2s}
-  .dots i.done{background:rgba(110,160,255,.45)}
-  .dots i.now{background:var(--accent);transform:scale(1.35);box-shadow:0 0 10px rgba(110,160,255,.7)}
-  .hint{font-family:var(--mono);font-size:.68rem;color:var(--muted);margin:10px 4px 0;line-height:1.5}
-  .hint b{color:var(--accent)}
-
-  /* support: code, console, readouts. Below the picture, hidden in focus */
-  .support{display:grid;grid-template-columns:minmax(0,1.3fr) minmax(0,1fr);gap:14px;margin-top:18px}
-  @media (max-width:860px){.support{grid-template-columns:1fr}}
-  body.solo .support,body.solo .take,body.solo .hint{display:none}
-  .code{min-width:0;font-family:var(--mono);font-size:.76rem;line-height:1.8;background:rgba(0,0,0,.35);border:1px solid var(--line);
-    border-radius:14px;padding:12px 0;overflow-x:auto}
-  .ln{display:flex;gap:12px;padding:0 14px;white-space:pre;color:#c9d4ea;transition:background .2s,opacity .3s}
-  .ln .n{width:20px;text-align:right;color:rgba(132,150,182,.55);user-select:none;flex-shrink:0}
-  .ln.cur{background:rgba(110,160,255,.14);box-shadow:inset 3px 0 0 var(--accent)}
-  .ln.cur .n{color:var(--accent)}
-  .ln.cut{background:rgba(255,106,106,.12);box-shadow:inset 3px 0 0 var(--warn)}
-  .ln.left{background:rgba(255,200,98,.12);box-shadow:inset 3px 0 0 var(--gold)}
-  .ln.dim{opacity:.4}
-  .kw{color:#c792ea} .ty{color:#82aaff} .st{color:#c3e88d} .nm{color:#f78c6c} .cm{color:#5f6b85;font-style:italic} .fn{color:#ffcb6b}
-  .side{display:flex;flex-direction:column;gap:12px}
-  .readout{display:grid;grid-template-columns:1fr 1fr;gap:10px}
-  .stat{background:rgba(255,255,255,.03);border:1px solid var(--line);border-radius:12px;padding:11px 13px;transition:opacity .3s}
-  .stat.empty{opacity:.3}
-  .stat .k{font-family:var(--mono);font-size:.62rem;letter-spacing:.1em;text-transform:uppercase;color:var(--muted)}
-  .stat .v{font-family:var(--disp);font-weight:700;font-size:1.45rem;font-variant-numeric:tabular-nums;margin-top:2px;transition:color .3s;min-height:1.6em}
-  .v.hot{color:var(--accent)} .v.gold{color:var(--gold)} .v.dim{color:rgba(132,150,182,.5)}
-  .console{font-family:var(--mono);font-size:.76rem;line-height:1.6;background:#05070e;border:1px solid var(--line);
-    border-radius:12px;padding:10px 14px;min-height:64px;color:#9fe3b6;flex:1}
-  .console .cl{font-size:.6rem;letter-spacing:.14em;text-transform:uppercase;color:rgba(132,150,182,.6);margin-bottom:4px}
-  .console .out{animation:pop .3s}
-  @keyframes pop{from{transform:scale(.6);opacity:0}to{transform:scale(1);opacity:1}}
+  .cols{display:grid;grid-template-columns:minmax(0,1.35fr) minmax(0,1fr);gap:16px}
+  @media (max-width:860px){.cols{grid-template-columns:1fr}}
+  .box{background:rgba(6,10,20,.5);border:1px solid var(--line);border-radius:18px;padding:16px 18px}
+  .brief p{margin:0 0 10px;font-size:1rem;line-height:1.6;color:var(--ink)} .brief p:last-child{margin:0}
+  .brief b{color:#fff} .brief code,.step code,.stuck code{font-family:var(--mono);font-size:.9em;color:#bcd0ff}
+  .brief .no{color:var(--muted)}
+  /* steps */
+  .steps{display:flex;flex-direction:column;gap:8px;margin-top:4px}
+  .step{border:1px solid var(--line);border-radius:14px;background:rgba(255,255,255,.025);transition:border-color .2s,background .2s}
+  .step.done{border-color:rgba(70,217,138,.45);background:rgba(70,217,138,.05)}
+  .step .hd{display:flex;align-items:center;gap:12px;padding:11px 14px;cursor:pointer;user-select:none}
+  .step .tick{flex-shrink:0;width:22px;height:22px;border-radius:7px;border:1.5px solid rgba(132,150,182,.6);display:grid;place-items:center;
+    background:rgba(0,0,0,.25);transition:.15s;font-size:.8rem;color:transparent}
+  .step.done .tick{border-color:var(--good);background:rgba(70,217,138,.2);color:var(--good)}
+  .step .num{font-family:var(--mono);font-size:.68rem;color:var(--accent);min-width:1.4rem}
+  .step .txt{flex:1;font-size:.98rem;line-height:1.45;color:var(--ink)}
+  .step.done .txt{color:var(--muted);text-decoration:line-through;text-decoration-color:rgba(132,150,182,.5)}
+  .step .more{flex-shrink:0;font-family:var(--mono);font-size:.64rem;letter-spacing:.08em;text-transform:uppercase;color:var(--muted);
+    padding:4px 9px;border-radius:999px;border:1px solid var(--line);transition:.15s}
+  .step .hd:hover .more{color:var(--accent);border-color:var(--accent)}
+  .step .dt{display:none;padding:0 14px 13px 62px;font-size:.9rem;line-height:1.55;color:var(--muted)}
+  .step.open .dt{display:block}
+  .step .dt b{color:var(--ink);font-weight:500}
+  .step .dt .ok{display:block;margin-top:6px;font-family:var(--mono);font-size:.74rem;color:var(--good)}
+  .step .dt .ok:before{content:"done when  ";color:rgba(70,217,138,.6);letter-spacing:.08em;text-transform:uppercase;font-size:.62rem}
+  .prog{display:flex;align-items:center;gap:12px;margin-top:12px;font-family:var(--mono);font-size:.72rem;color:var(--muted)}
+  .prog .bar{flex:1;height:6px;border-radius:999px;background:rgba(255,255,255,.08);overflow:hidden}
+  .prog .bar i{display:block;height:100%;width:0;background:var(--good);transition:width .3s}
+  .prog button{font-family:var(--mono);font-size:.66rem;letter-spacing:.08em;text-transform:uppercase;color:var(--muted);background:transparent;
+    border:1px solid var(--line);border-radius:999px;padding:4px 10px;cursor:pointer}
+  .prog button:hover{color:var(--accent);border-color:var(--accent)}
+  /* right column */
+  .side{display:flex;flex-direction:column;gap:14px}
+  .console{font-family:var(--mono);font-size:.78rem;line-height:1.65;background:#05070e;border:1px solid var(--line);
+    border-radius:12px;padding:10px 14px;color:#9fe3b6;white-space:pre}
+  .console .cl{font-size:.6rem;letter-spacing:.14em;text-transform:uppercase;color:rgba(132,150,182,.6);margin-bottom:4px;white-space:normal}
+  .console .mu{color:rgba(132,150,182,.6)}
+  .note{font-size:.84rem;color:var(--muted);line-height:1.5;margin:8px 0 0}
+  .stuck{margin:0;padding:0;list-style:none;display:flex;flex-direction:column;gap:8px}
+  .stuck li{font-size:.9rem;line-height:1.5;color:var(--ink);padding-left:14px;border-left:2px solid rgba(255,106,106,.5)}
+  .stuck li b{color:var(--warn);font-weight:500}
+  .links{display:flex;flex-wrap:wrap;gap:6px}
+  .links a{font-family:var(--mono);font-size:.72rem;padding:5px 11px;border-radius:999px;border:1px solid var(--line);
+    color:var(--accent);text-decoration:none;background:rgba(110,160,255,.06);transition:.15s}
+  .links a:hover{border-color:var(--accent);background:rgba(110,160,255,.14)}
   .take{margin-top:22px;background:linear-gradient(180deg,rgba(110,160,255,.08),rgba(139,123,255,.04));
     border:1px solid var(--line);border-left:3px solid var(--accent);border-radius:12px;padding:16px 18px}
   .take .tk{font-family:var(--mono);font-size:.66rem;letter-spacing:.14em;text-transform:uppercase;color:var(--accent);margin:0 0 8px}
   .take p{margin:0;font-size:.95rem;color:var(--ink);line-height:1.55}
   .take b{color:#fff}
   @media (prefers-reduced-motion:reduce){*{animation-duration:.01ms!important;transition-duration:.01ms!important}#amb{display:none}}
-  .support{grid-template-columns:minmax(0,1fr) minmax(0,1fr)}
-  .brief{background:rgba(255,255,255,.03);border:1px solid var(--line);border-radius:14px;padding:14px 16px;font-size:.92rem;line-height:1.6;color:var(--ink)}
-  .brief p{margin:0 0 8px} .brief p:last-child{margin:0}
-  .brief b{color:#fff}
-  .links{display:flex;flex-wrap:wrap;gap:6px;margin-top:10px}
-  .links a{font-family:var(--mono);font-size:.72rem;padding:5px 11px;border-radius:999px;border:1px solid var(--line);
-    color:var(--accent);text-decoration:none;background:rgba(110,160,255,.06);transition:.15s}
-  .links a:hover{border-color:var(--accent);background:rgba(110,160,255,.14)}
 </style>
 </head>
 <body>
@@ -163,67 +98,63 @@
 <div class="wrap">
   <p class="tag">Workbook 1c &middot; Section 3-2 &middot; Exercise 3</p>
   <h1>Math Application</h1>
-  <p class="lede"><b>Eight small questions in one program, each answered with a method from the Math class and printed with a clear message.</b></p>
+  <p class="lede"><b>Eight small math questions, each answered by the Math class and printed with a clear message.</b></p>
 
   <div class="stage">
-    <div class="topbar">
-      <span class="lab">The exercise, step by step</span>
-      <button class="focus" id="bFocus" title="Hide the notes, enlarge the picture">Focus</button>
-    </div>
-
-    <div class="pic" id="pic">
-      <div class="qs" id="qs"><span class="zone">MathApp.java</span></div>
-      <div class="runp">
-        <span class="zone">what you see</span>
-        <div class="term" id="term"><div class="cl">run</div><div id="termOut"></div></div>
-        <div class="card" id="gh"><b>GitHub</b> &middot; math-application<span class="sub" id="ghSub">not pushed yet</span></div>
-      </div>
-      <div class="start" id="start">10 steps &middot; press&nbsp;<b>Next</b></div>
-    </div>
-
-    <div class="caption" id="caption">
-      <div class="n" id="stepno"><small>step</small>0 / 10</div>
-      <div class="t" id="status">Press <b class="a">Next</b>. One step per question.</div>
-    </div>
-
-    <div class="toolbar">
-      <button class="btn" id="bBack">&larr; Back</button>
-      <div class="dots" id="dots"></div>
-      <button class="btn primary" id="bNext">Next &rarr;</button>
-      <button class="btn ghost" id="bReset">Reset</button>
-    </div>
-    <p class="hint">space = next &middot; the values in the run are an example, yours will differ</p>
-
-    <div class="support">
+    <div class="cols">
       <div>
-        <p class="lab">In plain English</p>
-        <div class="brief">
-          <p>One project, <b>math-application</b>, one class, <b>MathApp</b>, with a <b>main</b> method that answers eight math questions and prints each answer.</p>
-          <p>Readability counts: a comment and a blank line between questions, <b>meaningful names</b> (never num1), and messages that tell the reader what the number means.</p>
-          <p>Each question points at a method of the Math class. Look it up rather than doing the math by hand.</p>
+        <p class="lab">What you are building</p>
+        <div class="box brief">
+          <p>A Java class, <code>MathApp</code>, that answers <b>eight small math questions</b> one after the other and prints each answer with a message.</p>
+          <p class="no">It asks the user nothing. The Math class does the arithmetic; your job is the names and the messages, so a reader understands every line without seeing the code.</p>
+        </div>
+
+        <p class="lab" style="margin-top:18px">Do these in order</p>
+        <div class="steps" id="steps"></div>
+        <div class="prog"><span id="progTxt">0 of 11 done</span><div class="bar"><i id="progBar"></i></div><button id="bClear">Clear ticks</button></div>
+      </div>
+
+      <div class="side">
+        <div>
+          <p class="lab">What a finished run looks like</p>
+          <div class="console"><div class="cl">run</div>The highest salary is 72400.0
+The lowest price is 31750.0
+The area of the circle is <span class="mu">your result</span>
+The square root of 5.0 is <span class="mu">your result</span>
+The distance between the points is <span class="mu">your result</span>
+The absolute value of -3.8 is <span class="mu">your result</span>
+A random number between 0 and 1: 0.5376
+There are <span class="mu">your result</span> minutes in 24 days
+There are <span class="mu">your result</span> milliseconds in 24 days
+<span class="mu">Process finished with exit code 0</span></div>
+          <p class="note">Your messages and values may differ, and the random line changes on every run.</p>
+        </div>
+        <div>
+          <p class="lab">Where people get stuck</p>
+          <ul class="stuck">
+            <li><b>Decimals vanish.</b> Dividing or multiplying whole numbers gives a whole number. Use <code>double</code> where decimals matter.</li>
+            <li><b>Names that say nothing.</b> A name like <code>num1</code> tells the reader nothing. Say what the value is.</li>
+            <li><b>A bare number.</b> Every answer needs a message; a number alone is not an answer.</li>
+            <li><b>Which method?</b> The Math class is documented: search "Java Math class" to see every method and what it returns.</li>
+          </ul>
+        </div>
+        <div>
+          <p class="lab">Pages that help</p>
           <div class="links">
             <a href="../reference/cheat-sheet.html">The Math class on the cheat sheet</a>
             <a href="../visuals/12-variables.html">Declare and initialize</a>
             <a href="../visuals/16-integer-division.html">Whole numbers divide differently</a>
             <a href="../visuals/18-widening-narrowing.html">When a number is too big for an int</a>
+            <a href="../reference/common-errors.html">What the red text means</a>
           </div>
         </div>
-      </div>
-      <div class="side">
-        <div class="readout">
-          <div class="stat"><div class="k">project</div><div class="v hot" style="font-size:1.05rem">math-application</div></div>
-          <div class="stat"><div class="k">class</div><div class="v hot" style="font-size:1.05rem">MathApp</div></div>
-          <div class="stat"><div class="k">input</div><div class="v dim" style="font-size:1.05rem">none</div></div>
-          <div class="stat"><div class="k">output</div><div class="v" style="font-size:1.05rem">8 answers</div></div>
-        </div>
-        <div class="console"><div class="cl">done when</div><div id="console">It runs, prints all eight answers with clear messages, and the project is on GitHub.</div></div>
       </div>
     </div>
   </div>
 
   <div class="take">
     <p class="tk">The one idea</p>
-    <p><b>The Math class does the arithmetic you would otherwise write by hand.</b> Your job is the rest: good names, clear messages, and a program a stranger can read.</p>
+    <p><b>The Math class does the arithmetic you would otherwise write by hand.</b> Your job is good names and clear messages.</p>
   </div>
 
   <div id="rail"></div>
@@ -234,86 +165,65 @@
   "use strict";
   var $=function(s){return document.querySelector(s);};
   var reduce=matchMedia("(prefers-reduced-motion: reduce)").matches;
+  var KEY="hub-ex-math-application";
 
-  /* the eight questions: label, what goes in */
-  var QS=[
-    ["Highest salary","two salaries"],["Lowest price","two prices"],["Circle area","radius 7.25"],["Square root","the number 5.0"],
-    ["Distance","points (5, 10) and (85, 50)"],["Absolute value","the number -3.8"],["Random number","nothing, Math picks it"],["Minutes in 24 days","24 days, bonus: milliseconds"]
-  ];
-  /* the example run: the lines each question adds */
-  var OUT=[
-    ["The highest salary is 72400.0"],
-    ["The lowest price is 31750.0"],
-    ["The area of the circle is 165.13"],
-    ["The square root of 5.0 is 2.236"],
-    ["The distance between the points is 89.44"],
-    ["The absolute value of -3.8 is 3.8"],
-    ["A random number between 0 and 1: 0.5376"],
-    ["There are 34560 minutes in 24 days","There are 2073600000 milliseconds in 24 days"]
-  ];
-
-  /* q = question lit (-1 none), cls = caption color */
+  /* each step: what to do (the workbook's words, plain), what it means, how you know it worked */
   var STEPS=[
-    {q:-1,cls:"",
-     msg:'New project <code>math-application</code>, package <code>com.pluralsight</code>, class <code>MathApp</code> with <code>main</code>: eight questions, each in its own commented block with a blank line around it.'},
-    {q:0,cls:"",
-     msg:'Two salaries in <code>bobSalary</code> and <code>garySalary</code>; the Math class has a method for the larger of two numbers, <code>Math.max()</code>, and its answer goes in <code>highestSalary</code>.'},
-    {q:1,cls:"",
-     msg:'Prices in <code>carPrice</code> and <code>truckPrice</code>; the smaller one comes from <code>Math.min()</code>, the twin of max.'},
-    {q:2,cls:"",
-     msg:'The area of a circle with radius 7.25 is pi times the radius squared, and Math has both pi and a power method.'},
-    {q:3,cls:"",
-     msg:'Set a variable to 5.0 and print its square root; Math has a method named after exactly that.'},
-    {q:4,cls:"",
-     msg:'The distance between two points is the square root of the sum of the squared differences, x with x and y with y.'},
-    {q:5,cls:"",
-     msg:'Set a variable to -3.8 and print its absolute value, the number without its minus sign; Math has a short method for it.'},
-    {q:6,cls:"",
-     msg:'Print a random number between 0 and 1; Math has a method that returns one, different on every run.'},
-    {q:7,cls:"left",
-     msg:'A variable for each value and one multiplication at a time; the <b class="y">bonus</b> only just fits in an int, and the Math class has a multiply method that <b class="y">complains instead of overflowing</b> when a result would not fit.'},
-    {q:8,cls:"ok",
-     msg:'<b class="g">Run</b> it and read every line as a stranger would, then <b class="g">commit and push</b> to GitHub.'}
+    {t:'Create a new project named <code>math-application</code> in your <code>workbook-1</code> folder, with Git.',
+     d:'File > New > Project. Name <b>math-application</b>, Location Desktop > pluralsight > java-development > workbook-1. Java, Maven, JDK 17. Tick <b>Create Git repository</b>.',
+     ok:'the project opens and shows a src folder inside'},
+    {t:'Create the package <code>com.pluralsight</code>, and in it a class <code>MathApp</code> with a <code>main</code> method.',
+     d:'Right-click src > main > java > New > Package, <b>com.pluralsight</b>. Right-click the package > New > Java Class, <b>MathApp</b>. Type <b>main</b> inside the class braces and press Enter.',
+     ok:'MathApp.java is open and a green run arrow shows next to the class'},
+    {t:'Question 1: the higher of two salaries, using <code>bobSalary</code>, <code>garySalary</code> and <code>highestSalary</code>.',
+     d:'Give each salary a value you choose. The Math class has a method that returns the larger of two numbers: <code>Math.max()</code>. Keep its result in highestSalary and print it after a message such as "The highest salary is". Start each question with a comment and leave a blank line before the next one.',
+     ok:'the larger salary prints after a clear message'},
+    {t:'Question 2: the smaller of <code>carPrice</code> and <code>truckPrice</code>.',
+     d:'Same shape as question 1, the other way round: <code>Math.min()</code> returns the smaller of two numbers. Name the result after what it holds.',
+     ok:'the lower price prints with a message'},
+    {t:'Question 3: the area of a circle with a radius of 7.25.',
+     d:'Area is pi times the radius squared. The Math class has a constant for pi and a method for powers; look both up in its documentation. Keep the radius and the area in variables named for what they are.',
+     ok:'a message about the area prints, followed by a decimal'},
+    {t:'Question 4: the square root of a variable set to 5.0.',
+     d:'The Math class has a method that returns the square root of a number. Put 5.0 in a variable with a meaningful name first, then hand that variable to the method.',
+     ok:'the message names the number and its square root'},
+    {t:'Question 5: the distance between the points (5, 10) and (85, 50).',
+     d:'One variable per coordinate, an x and a y for each point. Work out the difference between the two x values and between the two y values. The distance is the square root of the sum of the two squared differences: the power and square root ideas from questions 3 and 4.',
+     ok:'one message prints the distance as a decimal'},
+    {t:'Question 6: the absolute (positive) value of a variable set to -3.8.',
+     d:'The absolute value drops the minus sign. The Math class has a method for exactly that; find it in the documentation.',
+     ok:'the message shows -3.8 and its positive value'},
+    {t:'Question 7: a random number between 0 and 1.',
+     d:'The Math class has a method that returns a random decimal from 0 up to, but not including, 1. It needs nothing between its parentheses.',
+     ok:'a decimal prints, and it changes each time you run'},
+    {t:'Question 8: how many minutes are in 24 days. Bonus: how many milliseconds.',
+     d:'One variable per value: days, hours per day, minutes per hour, seconds per minute, milliseconds per second. Multiply one step at a time and keep each result in its own variable. The bonus only just fits in an <code>int</code>; the Math class has a multiply method that complains instead of overflowing when a result would not fit, and a <code>long</code> gives you room to spare.',
+     ok:'the two totals print, each with a message'},
+    {t:'Run it, read every message as a stranger would, then commit and push.',
+     d:'Click the green arrow. For each line ask: would someone who never saw the code know what this number is? Fix the ones that need the code to make sense. Then Git > GitHub > Share Project on GitHub, or Git > Commit and choose <b>Commit and Push</b>.',
+     ok:'every answer prints with a message and github.com shows your files'}
   ];
-
-  var qsEl=$("#qs"),termOut=$("#termOut"),termEl=$("#term"),gh=$("#gh"),ghSub=$("#ghSub"),statusEl=$("#status");
-  function buildQs(){
-    var h='<span class="zone">MathApp.java</span>';
-    QS.forEach(function(q,i){ h+='<div class="q" id="q'+i+'"><span class="qn">'+(i+1)+'</span><span class="qt">'+q[0]+'<span class="qi">'+q[1]+'</span></span><span class="ck">\u2713</span></div>'; });
-    qsEl.innerHTML=h;
+  var done=[]; try{ done=JSON.parse(localStorage.getItem(KEY)||"[]"); }catch(e){ done=[]; }
+  var stepsEl=$("#steps");
+  function render(){
+    stepsEl.innerHTML=STEPS.map(function(s,i){
+      return '<div class="step'+(done.indexOf(i)>=0?" done":"")+'" data-i="'+i+'">'+
+        '<div class="hd"><span class="tick">✓</span><span class="num">'+(i+1)+'</span><span class="txt">'+s.t+'</span><span class="more">how</span></div>'+
+        '<div class="dt">'+s.d+'<span class="ok">'+s.ok+'</span></div></div>';
+    }).join("");
+    var n=done.length; $("#progTxt").textContent=n+" of "+STEPS.length+" done"; $("#progBar").style.width=(100*n/STEPS.length)+"%";
   }
-  function renderTerm(i,q){
-    termEl.classList.toggle("show",i>=1);
-    var h="",last=Math.min(q,7);
-    for(var k=0;k<=last;k++) OUT[k].forEach(function(t){ h+='<div class="l'+(k===q?" new":"")+'">'+t+'</div>'; });
-    if(q>7) h+='<div class="l mu new">Process finished with exit code 0</div>';
-    termOut.innerHTML=h;
-  }
-  var at=-1;
-  function show(i){
-    at=i; var s=i<0?null:STEPS[i], q=s?s.q:-1;
-    $("#start").style.opacity=i<0?1:0;
-    QS.forEach(function(_,k){ $("#q"+k).className="q"+(i>=0?" show":"")+(k===q?" now":"")+((q>k||q>7)?" done":""); });
-    renderTerm(i,q);
-    gh.className="card"+(i>=0?" show":"")+(q>7?" lit":"");
-    ghSub.textContent=q>7?"pushed, public repository":"not pushed yet";
-    $("#stepno").innerHTML="<small>"+(q>=0&&q<8?"question "+(q+1):"step")+"</small>"+(i+1)+" / "+STEPS.length;
-    $("#caption").className="caption "+(s?s.cls:"");
-    statusEl.innerHTML=s?s.msg:'Press <b class="a">Next</b>. One step per question.';
-    $("#bNext").disabled=at>=STEPS.length-1; $("#bBack").disabled=at<0;
-    var d=""; for(var k=0;k<STEPS.length;k++) d+='<i class="'+(k===at?"now":k<at?"done":"")+'"></i>'; $("#dots").innerHTML=d;
-  }
-  function next(){ if(at<STEPS.length-1) show(at+1); }
-  function back(){ if(at>=0) show(at-1); }
-  function reset(){ show(-1); }
-  $("#bNext").addEventListener("click",next); $("#bBack").addEventListener("click",back); $("#bReset").addEventListener("click",reset);
-  document.addEventListener("keydown",function(e){ if(e.code==="Space"&&!/INPUT|BUTTON/.test(e.target.tagName)){e.preventDefault();next();} });
-
-  function setFocus(on){ document.body.classList.toggle("solo",on); $("#bFocus").textContent=on?"Focus on":"Focus";
-    try{localStorage.setItem("hub-focus",on?"1":"0");}catch(e){} }
-  $("#bFocus").addEventListener("click",function(){ setFocus(!document.body.classList.contains("solo")); this.blur(); });
-  try{ if(localStorage.getItem("hub-focus")==="1") document.body.classList.add("solo"); }catch(e){}
-  if(document.body.classList.contains("solo")) $("#bFocus").textContent="Focus on";
+  stepsEl.addEventListener("click",function(e){
+    var st=e.target.closest(".step"); if(!st) return; var i=+st.getAttribute("data-i");
+    if(e.target.closest(".tick")){
+      var k=done.indexOf(i); if(k>=0) done.splice(k,1); else done.push(i);
+      try{localStorage.setItem(KEY,JSON.stringify(done));}catch(err){}
+      var open=[]; Array.prototype.forEach.call(stepsEl.querySelectorAll(".step.open"),function(o){open.push(o.getAttribute("data-i"));});
+      render(); open.forEach(function(o){ var el=stepsEl.querySelector('[data-i="'+o+'"]'); if(el) el.classList.add("open"); });
+    } else if(e.target.closest(".hd")){ st.classList.toggle("open"); }
+  });
+  $("#bClear").addEventListener("click",function(){ done=[]; try{localStorage.removeItem(KEY);}catch(e){} render(); });
+  render();
 
   var cv=$("#amb"),ctx=cv.getContext&&cv.getContext("2d"),parts=[];
   function sizeC(){if(!ctx)return;cv.width=innerWidth;cv.height=innerHeight;}
@@ -322,8 +232,6 @@
     parts.forEach(function(p){p.y-=p.s/60;if(p.y<-.02)p.y=1.02;ctx.beginPath();ctx.arc(p.x*cv.width,p.y*cv.height,p.r,0,7);
       ctx.fillStyle="rgba(140,170,255,"+p.o+")";ctx.fill();});requestAnimationFrame(drawC);}
   if(ctx&&!reduce){sizeC();initParts();drawC();addEventListener("resize",sizeC);}
-
-  buildQs(); reset();
 })();
 </script>
 <script src="../manifest.js"></script>

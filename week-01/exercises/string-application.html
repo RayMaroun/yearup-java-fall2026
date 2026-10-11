@@ -32,119 +32,62 @@
   .lede b{color:var(--ink)}
   .lede code,.take code,.caption code{font-family:var(--mono);font-size:.92em;color:#bcd0ff}
 
-  /* ---------- stage: picture first, one toolbar, support below ---------- */
+  /* ---------- companion: everything visible, a checklist you tick ---------- */
   .stage{position:relative;background:linear-gradient(180deg,rgba(255,255,255,.03),rgba(255,255,255,.01));
-    border:1px solid var(--line);border-radius:24px;padding:18px 18px 14px;
+    border:1px solid var(--line);border-radius:24px;padding:18px;
     box-shadow:0 1px 0 rgba(255,255,255,.06) inset,0 30px 80px -30px rgba(0,0,0,.8)}
-  .topbar{display:flex;align-items:center;gap:10px;margin:0 0 14px;flex-wrap:wrap}
-  .topbar .lab{margin:0 4px 0 0}
   .lab{font-family:var(--mono);font-size:.7rem;letter-spacing:.12em;text-transform:uppercase;color:var(--muted);margin:0 0 10px}
-  .chip:focus-visible,.btn:focus-visible,.focus:focus-visible{outline:2px solid var(--accent);outline-offset:2px}
-  .focus{margin-left:auto;font-family:var(--mono);font-size:.68rem;letter-spacing:.1em;text-transform:uppercase;padding:6px 12px;
-    border-radius:999px;border:1px solid var(--line);background:rgba(0,0,0,.25);color:var(--muted);cursor:pointer;transition:.15s}
-  .focus:hover{border-color:var(--accent);color:var(--accent)}
-  body.solo .focus{border-color:rgba(255,200,98,.6);color:var(--gold);background:rgba(255,200,98,.1)}
-
-  /* hero picture: the two files and their named boxes on the left, the run on the right */
-  .pic{position:relative;height:390px;border:1px solid var(--line);border-radius:18px;background:rgba(6,10,20,.5);overflow:hidden;
-    display:grid;grid-template-columns:1.25fr 1fr}
-  body.solo .pic{height:480px}
-  .pic .zone{position:absolute;left:18px;top:14px;font-family:var(--mono);font-size:.62rem;letter-spacing:.14em;text-transform:uppercase;
-    color:rgba(132,150,182,.55)}
-  .files{position:relative;padding:40px 16px 14px 18px;display:grid;grid-template-columns:1.2fr 1fr;gap:12px;align-items:start;min-width:0}
-  .proj{position:absolute;right:16px;top:12px;font-family:var(--mono);font-size:.66rem;color:var(--muted);opacity:.3;transition:opacity .4s,color .3s}
-  .proj.show{opacity:1} .proj.lit{color:var(--accent)}
-  .col{display:flex;flex-direction:column;gap:10px;min-width:0}
-  .fcard{border:1px solid var(--line);border-radius:14px;padding:9px 10px 8px;background:rgba(255,255,255,.025);opacity:.28;
-    transition:opacity .4s,border-color .4s,background .4s;min-width:0}
-  .fcard.show{opacity:1}
-  .fcard.lit{border-color:rgba(110,160,255,.55);background:rgba(110,160,255,.06)}
-  .fcard.ok{border-color:rgba(70,217,138,.55);background:rgba(70,217,138,.05)}
-  .fh{font-family:var(--mono);font-size:.74rem;color:var(--ink);display:flex;align-items:center;gap:6px}
-  .fh i{display:inline-block;width:9px;height:11px;border-radius:2px;border:1px solid var(--accent);background:rgba(110,160,255,.25)}
-  .fh .mn{margin-left:auto;font-size:.6rem;color:var(--muted);opacity:0;transition:opacity .3s}
-  .fh .mn.show{opacity:1}
-  .grp{font-family:var(--mono);font-size:.56rem;letter-spacing:.14em;text-transform:uppercase;color:rgba(132,150,182,.6);margin:7px 0 3px;
-    opacity:0;transition:opacity .3s}
-  .grp.show{opacity:1}
-  .box{display:flex;align-items:center;gap:6px;font-family:var(--mono);font-size:.68rem;line-height:1;padding:4px 6px;margin:2px 0;
-    border:1px dashed transparent;border-radius:7px;opacity:0;transform:translateX(-6px);transition:opacity .35s,transform .35s,border-color .3s,background .3s;
-    white-space:nowrap;overflow:hidden}
-  .box.show{opacity:1;transform:none;border-color:rgba(255,255,255,.12);border-style:solid}
-  .box.lit{border-color:rgba(110,160,255,.6);background:rgba(110,160,255,.1)}
-  .box.used{border-color:rgba(70,217,138,.6);background:rgba(70,217,138,.08)}
-  .box .nm{color:var(--ink)}
-  .box .ty{font-size:.58rem;padding:2px 6px;border-radius:999px;border:1px solid rgba(110,160,255,.45);color:var(--accent);background:rgba(110,160,255,.08)}
-  .box .me{margin-left:auto;color:var(--muted);font-size:.6rem;overflow:hidden;text-overflow:ellipsis}
-  .card{border:1px solid var(--line);border-radius:12px;padding:9px 12px;font-family:var(--mono);font-size:.7rem;color:var(--muted);
-    background:rgba(255,255,255,.03);opacity:.28;transition:opacity .4s,border-color .4s}
-  .card.show{opacity:1}
-  .card.lit{border-color:rgba(70,217,138,.6);color:var(--ink);background:rgba(70,217,138,.06)}
-  .card b{color:var(--good);font-weight:500}
-  .card .sub{display:block;font-size:.62rem;color:var(--muted);margin-top:2px}
-  .runp{position:relative;border-left:1px solid var(--line);padding:40px 18px 14px;display:flex;flex-direction:column;min-width:0}
-  .term{flex:1;background:#05070e;border:1px solid var(--line);border-radius:12px;padding:10px 14px;font-family:var(--mono);font-size:.74rem;
-    line-height:1.6;color:#9fe3b6;overflow:hidden;opacity:.35;transition:opacity .4s}
-  .term.show{opacity:1}
-  .term .cl{font-size:.6rem;letter-spacing:.14em;text-transform:uppercase;color:rgba(132,150,182,.6);margin-bottom:4px}
-  .term .l{opacity:0;transform:translateY(4px);transition:opacity .25s,transform .25s;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
-  .term .l.in{opacity:1;transform:none}
-  .term .l.mu{color:rgba(132,150,182,.6);font-size:.62rem;letter-spacing:.1em;text-transform:uppercase;margin-top:4px}
-  .term .l.new{color:#d4ffe4}
-  .pic .start{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;font-family:var(--mono);
-    font-size:.8rem;color:var(--muted);pointer-events:none;transition:opacity .3s;background:rgba(6,10,20,.55)}
-  .pic .start b{color:var(--accent);font-weight:500}
-  /* caption: the one sentence, right under the picture */
-  .caption{display:flex;gap:16px;align-items:flex-start;margin:14px 4px 0;min-height:56px}
-  .caption .n{flex-shrink:0;font-family:var(--disp);font-weight:700;font-size:1.35rem;color:var(--accent);font-variant-numeric:tabular-nums;
-    line-height:1.2;min-width:3.2rem}
-  .caption .n small{display:block;font-family:var(--mono);font-weight:400;font-size:.58rem;letter-spacing:.14em;text-transform:uppercase;color:var(--muted)}
-  .caption .t{font-size:1.02rem;line-height:1.55;color:var(--ink);padding-left:16px;border-left:3px solid var(--accent);transition:border-color .3s}
-  body.solo .caption .t{font-size:1.18rem}
-  .caption.ok .t{border-left-color:var(--good)}
-  .caption b.g{color:var(--good)} .caption b.a{color:var(--accent)}
-
-  /* toolbar: same on every page */
-  .toolbar{display:flex;align-items:center;gap:10px;margin:16px 0 0;padding-top:14px;border-top:1px solid var(--line)}
-  .btn{font-family:var(--body);font-weight:500;font-size:.86rem;padding:9px 16px;border-radius:11px;cursor:pointer;
-    border:1px solid var(--line);background:var(--surface);color:var(--ink);transition:.15s}
-  .btn:hover{border-color:var(--accent);color:var(--accent)}
-  .btn.primary{border-color:rgba(110,160,255,.5);background:rgba(110,160,255,.12);padding:9px 22px}
-  .btn:disabled{opacity:.35;cursor:not-allowed}
-  .btn.ghost{background:transparent;color:var(--muted);margin-left:auto}
-  .dots{display:flex;gap:5px;align-items:center;margin:0 6px}
-  .dots i{display:block;width:8px;height:8px;border-radius:50%;background:rgba(255,255,255,.12);transition:.2s}
-  .dots i.done{background:rgba(110,160,255,.45)}
-  .dots i.now{background:var(--accent);transform:scale(1.35);box-shadow:0 0 10px rgba(110,160,255,.7)}
-  .hint{font-family:var(--mono);font-size:.68rem;color:var(--muted);margin:10px 4px 0;line-height:1.5}
-  .hint b{color:var(--accent)}
-
-  /* support: brief, readouts, done-when. Below the picture, hidden in focus */
-  .support{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr);gap:14px;margin-top:18px}
-  @media (max-width:860px){.support{grid-template-columns:1fr}.pic{grid-template-columns:1fr;height:auto}.runp{border-left:0;border-top:1px solid var(--line);min-height:300px}}
-  body.solo .support,body.solo .take,body.solo .hint{display:none}
-  .side{display:flex;flex-direction:column;gap:12px}
-  .readout{display:grid;grid-template-columns:1fr 1fr;gap:10px}
-  .stat{background:rgba(255,255,255,.03);border:1px solid var(--line);border-radius:12px;padding:11px 13px;transition:opacity .3s}
-  .stat .k{font-family:var(--mono);font-size:.62rem;letter-spacing:.1em;text-transform:uppercase;color:var(--muted)}
-  .stat .v{font-family:var(--disp);font-weight:700;font-size:1.45rem;font-variant-numeric:tabular-nums;margin-top:2px;transition:color .3s;min-height:1.6em}
-  .v.hot{color:var(--accent)} .v.dim{color:rgba(132,150,182,.5)}
-  .console{font-family:var(--mono);font-size:.76rem;line-height:1.6;background:#05070e;border:1px solid var(--line);
-    border-radius:12px;padding:10px 14px;min-height:64px;color:#9fe3b6;flex:1}
-  .console .cl{font-size:.6rem;letter-spacing:.14em;text-transform:uppercase;color:rgba(132,150,182,.6);margin-bottom:4px}
+  .cols{display:grid;grid-template-columns:minmax(0,1.35fr) minmax(0,1fr);gap:16px}
+  @media (max-width:860px){.cols{grid-template-columns:1fr}}
+  .box{background:rgba(6,10,20,.5);border:1px solid var(--line);border-radius:18px;padding:16px 18px}
+  .brief p{margin:0 0 10px;font-size:1rem;line-height:1.6;color:var(--ink)} .brief p:last-child{margin:0}
+  .brief b{color:#fff} .brief code,.step code,.stuck code{font-family:var(--mono);font-size:.9em;color:#bcd0ff}
+  .brief .no{color:var(--muted)}
+  /* steps */
+  .steps{display:flex;flex-direction:column;gap:8px;margin-top:4px}
+  .step{border:1px solid var(--line);border-radius:14px;background:rgba(255,255,255,.025);transition:border-color .2s,background .2s}
+  .step.done{border-color:rgba(70,217,138,.45);background:rgba(70,217,138,.05)}
+  .step .hd{display:flex;align-items:center;gap:12px;padding:11px 14px;cursor:pointer;user-select:none}
+  .step .tick{flex-shrink:0;width:22px;height:22px;border-radius:7px;border:1.5px solid rgba(132,150,182,.6);display:grid;place-items:center;
+    background:rgba(0,0,0,.25);transition:.15s;font-size:.8rem;color:transparent}
+  .step.done .tick{border-color:var(--good);background:rgba(70,217,138,.2);color:var(--good)}
+  .step .num{font-family:var(--mono);font-size:.68rem;color:var(--accent);min-width:1.4rem}
+  .step .txt{flex:1;font-size:.98rem;line-height:1.45;color:var(--ink)}
+  .step.done .txt{color:var(--muted);text-decoration:line-through;text-decoration-color:rgba(132,150,182,.5)}
+  .step .more{flex-shrink:0;font-family:var(--mono);font-size:.64rem;letter-spacing:.08em;text-transform:uppercase;color:var(--muted);
+    padding:4px 9px;border-radius:999px;border:1px solid var(--line);transition:.15s}
+  .step .hd:hover .more{color:var(--accent);border-color:var(--accent)}
+  .step .dt{display:none;padding:0 14px 13px 62px;font-size:.9rem;line-height:1.55;color:var(--muted)}
+  .step.open .dt{display:block}
+  .step .dt b{color:var(--ink);font-weight:500}
+  .step .dt .ok{display:block;margin-top:6px;font-family:var(--mono);font-size:.74rem;color:var(--good)}
+  .step .dt .ok:before{content:"done when  ";color:rgba(70,217,138,.6);letter-spacing:.08em;text-transform:uppercase;font-size:.62rem}
+  .prog{display:flex;align-items:center;gap:12px;margin-top:12px;font-family:var(--mono);font-size:.72rem;color:var(--muted)}
+  .prog .bar{flex:1;height:6px;border-radius:999px;background:rgba(255,255,255,.08);overflow:hidden}
+  .prog .bar i{display:block;height:100%;width:0;background:var(--good);transition:width .3s}
+  .prog button{font-family:var(--mono);font-size:.66rem;letter-spacing:.08em;text-transform:uppercase;color:var(--muted);background:transparent;
+    border:1px solid var(--line);border-radius:999px;padding:4px 10px;cursor:pointer}
+  .prog button:hover{color:var(--accent);border-color:var(--accent)}
+  /* right column */
+  .side{display:flex;flex-direction:column;gap:14px}
+  .console{font-family:var(--mono);font-size:.78rem;line-height:1.65;background:#05070e;border:1px solid var(--line);
+    border-radius:12px;padding:10px 14px;color:#9fe3b6;white-space:pre}
+  .console .cl{font-size:.6rem;letter-spacing:.14em;text-transform:uppercase;color:rgba(132,150,182,.6);margin-bottom:4px;white-space:normal}
+  .console .mu{color:rgba(132,150,182,.6)}
+  .note{font-size:.84rem;color:var(--muted);line-height:1.5;margin:8px 0 0}
+  .stuck{margin:0;padding:0;list-style:none;display:flex;flex-direction:column;gap:8px}
+  .stuck li{font-size:.9rem;line-height:1.5;color:var(--ink);padding-left:14px;border-left:2px solid rgba(255,106,106,.5)}
+  .stuck li b{color:var(--warn);font-weight:500}
+  .links{display:flex;flex-wrap:wrap;gap:6px}
+  .links a{font-family:var(--mono);font-size:.72rem;padding:5px 11px;border-radius:999px;border:1px solid var(--line);
+    color:var(--accent);text-decoration:none;background:rgba(110,160,255,.06);transition:.15s}
+  .links a:hover{border-color:var(--accent);background:rgba(110,160,255,.14)}
   .take{margin-top:22px;background:linear-gradient(180deg,rgba(110,160,255,.08),rgba(139,123,255,.04));
     border:1px solid var(--line);border-left:3px solid var(--accent);border-radius:12px;padding:16px 18px}
   .take .tk{font-family:var(--mono);font-size:.66rem;letter-spacing:.14em;text-transform:uppercase;color:var(--accent);margin:0 0 8px}
   .take p{margin:0;font-size:.95rem;color:var(--ink);line-height:1.55}
   .take b{color:#fff}
   @media (prefers-reduced-motion:reduce){*{animation-duration:.01ms!important;transition-duration:.01ms!important}#amb{display:none}}
-  .brief{background:rgba(255,255,255,.03);border:1px solid var(--line);border-radius:14px;padding:14px 16px;font-size:.92rem;line-height:1.6;color:var(--ink)}
-  .brief p{margin:0 0 8px} .brief p:last-child{margin:0}
-  .brief b{color:#fff}
-  .links{display:flex;flex-wrap:wrap;gap:6px;margin-top:10px}
-  .links a{font-family:var(--mono);font-size:.72rem;padding:5px 11px;border-radius:999px;border:1px solid var(--line);
-    color:var(--accent);text-decoration:none;background:rgba(110,160,255,.06);transition:.15s}
-  .links a:hover{border-color:var(--accent);background:rgba(110,160,255,.14)}
 </style>
 </head>
 <body>
@@ -155,83 +98,65 @@
 <div class="wrap">
   <p class="tag">Workbook 1c &middot; Section 3-2 &middot; Exercise 2</p>
   <h1>String Application</h1>
-  <p class="lede"><b>Give each piece of data a named box of the right type, then print it inside a complete sentence.</b></p>
+  <p class="lede"><b>Two small classes that store values in variables of the right type and print them inside sentences.</b></p>
 
   <div class="stage">
-    <div class="topbar">
-      <span class="lab">The exercise, step by step</span>
-      <button class="focus" id="bFocus" title="Hide the notes, enlarge the picture">Focus</button>
-    </div>
-
-    <div class="pic" id="pic">
-      <div class="files" id="files">
-        <span class="zone">your files</span>
-        <span class="proj" id="proj">string-application / com.pluralsight</span>
-        <div class="col">
-          <div class="fcard" id="fVar">
-            <div class="fh"><i></i>VariableApp.java<span class="mn" id="mnVar">main</span></div>
-            <div class="grp" id="g1">Step 1</div><div id="b1"></div>
-            <div class="grp" id="g2">Step 2</div><div id="b2"></div>
-          </div>
-        </div>
-        <div class="col">
-          <div class="fcard" id="fRec">
-            <div class="fh"><i></i>Receipt.java<span class="mn" id="mnRec">main</span></div>
-            <div class="grp" id="g3">Step 3</div><div id="b3"></div>
-          </div>
-          <div class="card" id="gh"><b>GitHub</b> &middot; string-application<span class="sub" id="ghSub">not shared yet</span></div>
-        </div>
-      </div>
-      <div class="runp">
-        <span class="zone">what you see</span>
-        <div class="term" id="term"><div class="cl">run</div><div id="termOut"></div></div>
-      </div>
-      <div class="start" id="start">8 steps &middot; press&nbsp;<b>Next</b></div>
-    </div>
-
-    <div class="caption" id="caption">
-      <div class="n" id="stepno"><small>step</small>0 / 8</div>
-      <div class="t" id="status">Press <b class="a">Next</b>.</div>
-    </div>
-
-    <div class="toolbar">
-      <button class="btn" id="bBack">&larr; Back</button>
-      <div class="dots" id="dots"></div>
-      <button class="btn primary" id="bNext">Next &rarr;</button>
-      <button class="btn ghost" id="bReset">Reset</button>
-    </div>
-    <p class="hint">space = next &middot; the values in the run are an example, yours will differ</p>
-
-    <div class="support">
+    <div class="cols">
       <div>
-        <p class="lab">In plain English</p>
-        <div class="brief">
-          <p>A project named <b>string-application</b>, package <b>com.pluralsight</b>, with two classes: <b>VariableApp</b> and <b>Receipt</b>, each with its own <b>main</b>.</p>
-          <p>In VariableApp, one variable per question, nine in all, each with the type that fits. Print each inside a sentence.</p>
-          <p>In Receipt, an item name, a price and a quantity, joined into one sentence. Share on GitHub, commit often, push.</p>
+        <p class="lab">What you are building</p>
+        <div class="box brief">
+          <p>A program with <b>two classes</b>, <code>VariableApp</code> and <code>Receipt</code>, that prints ten sentences built from variables: your answers, a few facts, and one receipt line.</p>
+          <p class="no">It asks the user nothing, and the only math is one multiplication in Receipt. The point is choosing the right type for each value and joining text with values.</p>
+        </div>
+
+        <p class="lab" style="margin-top:18px">Do these in order</p>
+        <div class="steps" id="steps"></div>
+        <div class="prog"><span id="progTxt">0 of 9 done</span><div class="bar"><i id="progBar"></i></div><button id="bClear">Clear ticks</button></div>
+      </div>
+
+      <div class="side">
+        <div>
+          <p class="lab">What a finished run looks like</p>
+          <div class="console"><div class="cl">VariableApp</div>My favorite color is Green
+I started this class in 2026
+My middle initial is J
+I have pets: true
+My saying: One line at a time
+There are 7 days in a week
+A coffee costs $4.99
+My favorite letter is K
+Is it raining? false
+<span class="mu">Process finished with exit code 0</span></div>
+          <div class="console" style="margin-top:8px"><div class="cl">Receipt</div>You bought 4 bananas for $1.96
+<span class="mu">Process finished with exit code 0</span></div>
+          <p class="note">An example. Yours will differ: your own answers, your own item.</p>
+        </div>
+        <div>
+          <p class="lab">Where people get stuck</p>
+          <ul class="stuck">
+            <li><b>Quotes.</b> A single letter goes in single quotes, text in double quotes.</li>
+            <li><b>Yes or no.</b> That is a <code>boolean</code>: true or false, not the word yes.</li>
+            <li><b>Words run together.</b> Text and a value are joined with +; put the spaces inside the quotes.</li>
+            <li><b>Wrong program runs.</b> Each class has its own <code>main</code>: run the one you want with its own green arrow.</li>
+          </ul>
+        </div>
+        <div>
+          <p class="lab">Pages that help</p>
           <div class="links">
-            <a href="../visuals/11-data-types.html">Which type for what</a>
+            <a href="../visuals/11-data-types.html">Which type for which value</a>
             <a href="../visuals/12-variables.html">Declare and initialize</a>
-            <a href="../visuals/15-concat-vs-addition.html">Building a sentence with +</a>
+            <a href="../visuals/15-concat-vs-addition.html">Joining text and numbers with +</a>
             <a href="../reference/cheat-sheet.html">println and String</a>
+            <a href="../reference/common-errors.html">What the red text means</a>
           </div>
         </div>
-      </div>
-      <div class="side">
-        <div class="readout">
-          <div class="stat"><div class="k">project</div><div class="v hot" style="font-size:1.05rem">string-application</div></div>
-          <div class="stat"><div class="k">files</div><div class="v hot" style="font-size:1.05rem">VariableApp, Receipt</div></div>
-          <div class="stat"><div class="k">input</div><div class="v dim" style="font-size:1.05rem">none</div></div>
-          <div class="stat"><div class="k">output</div><div class="v" style="font-size:1.05rem">10 sentences</div></div>
-        </div>
-        <div class="console"><div class="cl">done when</div><div>Both classes run without errors, print ten sentences between them, and the project is on GitHub.</div></div>
       </div>
     </div>
   </div>
 
   <div class="take">
     <p class="tk">The one idea</p>
-    <p><b>Pick the type that matches the data, then join words and values with +.</b> Text, whole numbers, money, one letter, yes or no: each has its own type, and + makes any of them part of a sentence.</p>
+    <p><b>Pick the type that matches the data,</b> then let + join words and values into a sentence.</p>
   </div>
 
   <div id="rail"></div>
@@ -242,97 +167,59 @@
   "use strict";
   var $=function(s){return document.querySelector(s);};
   var reduce=matchMedia("(prefers-reduced-motion: reduce)").matches;
+  var KEY="hub-ex-string-application";
 
-  /* named boxes: id, group, name, type, short meaning, step it appears at */
-  var BOXES=[
-    ["color",1,"favoriteColor","String","a word",2],
-    ["year",1,"startYear","int","a year",2],
-    ["init",1,"middleInitial","char","one letter",2],
-    ["pets",1,"hasPets","boolean","yes or no",2],
-    ["say",1,"saying","String","a message",2],
-    ["days",2,"daysInWeek","int","7",4],
-    ["coffee",2,"coffeePrice","double","4.99",4],
-    ["letter",2,"favoriteLetter","char","K",4],
-    ["rain",2,"isRaining","boolean","false",4],
-    ["item",3,"itemName","String","bananas",6],
-    ["price",3,"itemPrice","double","0.49",6],
-    ["qty",3,"quantity","int","4",6]
-  ];
-  /* the example run: text, step it appears at, kind */
-  var RUN=[
-    ["VariableApp",3,"mu"],
-    ["My favorite color is Green",3],["I started this class in 2026",3],["My middle initial is J",3],
-    ["I have pets: true",3],["My saying: One line at a time",3],
-    ["There are 7 days in a week",5],["A coffee costs $4.99",5],["My favorite letter is K",5],["Is it raining? false",5],
-    ["Receipt",6,"mu"],["You bought 4 bananas for $1.96",6]
-  ];
-
+  /* each step: what to do (the workbook's words, plain), what it means, how you know it worked */
   var STEPS=[
-    {cls:"",lit:[],used:[],card:"",
-     msg:'Create the project <code>string-application</code> and the package <code>com.pluralsight</code>: <b class="a">every file in this exercise</b> lives there.'},
-    {cls:"",lit:[],used:[],card:"fVar",
-     msg:'Add <code>VariableApp.java</code> with a class <code>VariableApp</code> and a <code>main</code> method, the <b class="a">starting point</b> when it runs.'},
-    {cls:"",lit:["color","year","init","pets","say"],used:[],card:"fVar",
-     msg:'Step 1: five named boxes, each with the <b class="a">type that fits</b>: text is String, a year is int, one letter is char, yes or no is boolean.'},
-    {cls:"ok",lit:[],used:["color","year","init","pets","say"],card:"fVar",
-     msg:'Print each one with <code>System.out.println()</code>, <b class="g">words + value</b>, so the output reads as a sentence, not a bare value.'},
-    {cls:"",lit:["days","coffee","letter","rain"],used:[],card:"fVar",
-     msg:'Step 2: four more, each <b class="a">declared and given its value in one line</b>; 4.99 has a decimal point, so it is a double.'},
-    {cls:"ok",lit:[],used:["days","coffee","letter","rain"],card:"fVar",
-     msg:'Print all four in <b class="g">complete sentences</b>: a reader who never saw the code should understand every line.'},
-    {cls:"ok",lit:[],used:["item","price","qty"],card:"fRec",
-     msg:'New file <code>Receipt.java</code>: a name, a price per item and a quantity; quantity times price gives the total, <b class="g">joined into one sentence</b> shown as money.'},
-    {cls:"ok",lit:[],used:[],card:"",gh:1,
-     msg:'<b class="g">Share Project on GitHub</b>, commit after each step, and push, so your history shows the work grow.'}
+    {t:'Create a new project named <code>string-application</code> in your <code>workbook-1</code> folder, with Git.',
+     d:'File > New > Project. Name <b>string-application</b>, all lowercase with a dash. Location: Desktop > pluralsight > java-development > workbook-1. Java, Maven, JDK 17. Tick <b>Create Git repository</b>.',
+     ok:'the project opens and the left panel shows string-application with a src folder'},
+    {t:'Create the package <code>com.pluralsight</code>.',
+     d:'Open src > main > java. Right-click <b>java</b> > New > Package, type <b>com.pluralsight</b>: lowercase, with the dot.',
+     ok:'com.pluralsight appears under java'},
+    {t:'Create the class <code>VariableApp</code> with a <code>main</code> method.',
+     d:'Right-click <b>com.pluralsight</b> > New > Java Class, name <b>VariableApp</b>. Inside the class braces type <b>main</b> and press Enter to let IntelliJ complete it.',
+     ok:'VariableApp.java is open and a green run arrow shows next to the class'},
+    {t:'Step 1: declare five variables, one per question, each with the type that fits the data.',
+     d:'All inside <code>main</code>. For each question ask what kind of value it is: text, a whole number, one letter, or yes/no. The Data Types page lists the type for each kind. Give each variable a name that says what it holds.',
+     ok:'five variables, five fitting types, no red underline'},
+    {t:'Step 1: print each one inside a short sentence.',
+     d:'One <code>System.out.println()</code> per variable, below the declarations. The sentence is made of quoted words joined to the variable with +, the way the Concatenation page shows.',
+     ok:'running VariableApp prints five sentences, each with your value in it'},
+    {t:'Step 2: declare four more variables, each given its value on the same line it is declared.',
+     d:'Still in <code>main</code> of <b>VariableApp.java</b>. Same question for each value: whole number, number with cents, one letter, or true/false. This time the value goes on the same line as the declaration, the way the Variables page shows.',
+     ok:'each of the four lines has a type, a name and a value'},
+    {t:'Step 2: print all four in complete sentences.',
+     d:'Below them, one <code>System.out.println()</code> each. A full sentence means words before the value, and after it when needed. Add a dollar sign in the text for the price.',
+     ok:'the run shows nine sentences in total, all reading naturally'},
+    {t:'Step 3: create a second class <code>Receipt</code> with <code>main</code>, and print one receipt sentence.',
+     d:'Right-click <b>com.pluralsight</b> > New > Java Class, name <b>Receipt</b>, add <b>main</b>. Three variables: an item name (<code>String</code>), a price per item (<code>double</code>) and a quantity (<code>int</code>). One sentence uses all three; the money part is quantity times price.',
+     ok:'running Receipt prints one sentence like the example, with a total that matches your numbers'},
+    {t:'Share the project on GitHub, commit often, and push.',
+     d:'Git > GitHub > Share Project on GitHub, keep the name string-application, Share. After each step: Git > Commit, a short message, <b>Commit and Push</b>.',
+     ok:'the repository on github.com shows both files and several commits'}
   ];
-
-  function buildBoxes(){
-    var h={1:"",2:"",3:""};
-    BOXES.forEach(function(b){ h[b[1]]+='<div class="box" id="x_'+b[0]+'"><span class="nm">'+b[2]+'</span><span class="ty">'+b[3]+'</span><span class="me">'+b[4]+'</span></div>'; });
-    $("#b1").innerHTML=h[1]; $("#b2").innerHTML=h[2]; $("#b3").innerHTML=h[3];
-  }
-  var termOut=$("#termOut"),termEl=$("#term"),statusEl=$("#status");
-  function renderTerm(i){
-    var step=i+1,lines=RUN.filter(function(r){return r[1]<=step;});
-    termEl.classList.toggle("show",lines.length>0);
-    termOut.innerHTML=lines.map(function(r){
-      return '<div class="l'+(r[2]?" "+r[2]:"")+(r[1]===step&&!r[2]?" new":"")+(r[1]<step?" in":"")+'">'+r[0]+'</div>';
+  var done=[]; try{ done=JSON.parse(localStorage.getItem(KEY)||"[]"); }catch(e){ done=[]; }
+  var stepsEl=$("#steps");
+  function render(){
+    stepsEl.innerHTML=STEPS.map(function(s,i){
+      return '<div class="step'+(done.indexOf(i)>=0?" done":"")+'" data-i="'+i+'">'+
+        '<div class="hd"><span class="tick">✓</span><span class="num">'+(i+1)+'</span><span class="txt">'+s.t+'</span><span class="more">how</span></div>'+
+        '<div class="dt">'+s.d+'<span class="ok">'+s.ok+'</span></div></div>';
     }).join("");
-    var fresh=termOut.querySelectorAll(".l:not(.in)");
-    Array.prototype.forEach.call(fresh,function(l,k){ setTimeout(function(){l.classList.add("in");},reduce?0:90*k); });
+    var n=done.length; $("#progTxt").textContent=n+" of "+STEPS.length+" done"; $("#progBar").style.width=(100*n/STEPS.length)+"%";
   }
-  var at=-1;
-  function show(i){
-    at=i; var s=i<0?null:STEPS[i], step=i+1;
-    $("#start").style.opacity=i<0?1:0;
-    $("#proj").className="proj"+(step>=1?" show":"")+(step===1?" lit":"");
-    $("#fVar").className="fcard"+(step>=2?" show":"")+(s&&s.card==="fVar"?(s.cls==="ok"?" ok":" lit"):"");
-    $("#fRec").className="fcard"+(step>=7?" show":"")+(s&&s.card==="fRec"?" ok":"");
-    $("#mnVar").classList.toggle("show",step>=2); $("#mnRec").classList.toggle("show",step>=7);
-    $("#g1").classList.toggle("show",step>=3); $("#g2").classList.toggle("show",step>=5); $("#g3").classList.toggle("show",step>=7);
-    BOXES.forEach(function(b){
-      $("#x_"+b[0]).className="box"+(step>=b[5]+1?" show":"")+(s&&s.lit.indexOf(b[0])>=0?" lit":"")+(s&&s.used.indexOf(b[0])>=0?" used":"");
-    });
-    renderTerm(i);
-    $("#gh").className="card"+(step>=1?" show":"")+(s&&s.gh?" lit":"");
-    $("#ghSub").textContent=s&&s.gh?"public repository, several commits":"not shared yet";
-    $("#stepno").innerHTML="<small>step</small>"+step+" / "+STEPS.length;
-    $("#caption").className="caption "+(s?s.cls:"");
-    statusEl.innerHTML=s?s.msg:'Press <b class="a">Next</b>.';
-    $("#bNext").disabled=at>=STEPS.length-1; $("#bBack").disabled=at<0;
-    var d=""; for(var k=0;k<STEPS.length;k++) d+='<i class="'+(k===at?"now":k<at?"done":"")+'"></i>'; $("#dots").innerHTML=d;
-  }
-  function next(){ if(at<STEPS.length-1) show(at+1); }
-  function back(){ if(at>=0) show(at-1); }
-  function reset(){ show(-1); }
-  $("#bNext").addEventListener("click",next); $("#bBack").addEventListener("click",back); $("#bReset").addEventListener("click",reset);
-  document.addEventListener("keydown",function(e){ if(e.code==="Space"&&!/INPUT|BUTTON/.test(e.target.tagName)){e.preventDefault();next();} });
-
-  function setFocus(on){ document.body.classList.toggle("solo",on); $("#bFocus").textContent=on?"Focus on":"Focus";
-    try{localStorage.setItem("hub-focus",on?"1":"0");}catch(e){} }
-  $("#bFocus").addEventListener("click",function(){ setFocus(!document.body.classList.contains("solo")); this.blur(); });
-  try{ if(localStorage.getItem("hub-focus")==="1") document.body.classList.add("solo"); }catch(e){}
-  if(document.body.classList.contains("solo")) $("#bFocus").textContent="Focus on";
+  stepsEl.addEventListener("click",function(e){
+    var st=e.target.closest(".step"); if(!st) return; var i=+st.getAttribute("data-i");
+    if(e.target.closest(".tick")){
+      var k=done.indexOf(i); if(k>=0) done.splice(k,1); else done.push(i);
+      try{localStorage.setItem(KEY,JSON.stringify(done));}catch(err){}
+      var open=[]; Array.prototype.forEach.call(stepsEl.querySelectorAll(".step.open"),function(o){open.push(o.getAttribute("data-i"));});
+      render(); open.forEach(function(o){ var el=stepsEl.querySelector('[data-i="'+o+'"]'); if(el) el.classList.add("open"); });
+    } else if(e.target.closest(".hd")){ st.classList.toggle("open"); }
+  });
+  $("#bClear").addEventListener("click",function(){ done=[]; try{localStorage.removeItem(KEY);}catch(e){} render(); });
+  render();
 
   var cv=$("#amb"),ctx=cv.getContext&&cv.getContext("2d"),parts=[];
   function sizeC(){if(!ctx)return;cv.width=innerWidth;cv.height=innerHeight;}
@@ -341,8 +228,6 @@
     parts.forEach(function(p){p.y-=p.s/60;if(p.y<-.02)p.y=1.02;ctx.beginPath();ctx.arc(p.x*cv.width,p.y*cv.height,p.r,0,7);
       ctx.fillStyle="rgba(140,170,255,"+p.o+")";ctx.fill();});requestAnimationFrame(drawC);}
   if(ctx&&!reduce){sizeC();initParts();drawC();addEventListener("resize",sizeC);}
-
-  buildBoxes(); reset();
 })();
 </script>
 <script src="../manifest.js"></script>
