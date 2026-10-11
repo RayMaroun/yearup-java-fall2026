@@ -313,7 +313,10 @@
   var timers=[];
   function later(fn,ms){ timers.push(setTimeout(fn,reduce?0:ms)); }
   function setWell(id,v,animate,bad){
-    var w=$("#w_"+id),old=w.querySelector(".val"),oldTxt=old?old.getAttribute("data-v"):undefined,nv=v===null?"":v;
+    var w=$("#w_"+id),nv=v===null?"":v;
+    /* a chip still fading out from the previous press is dropped at once, so quick presses never stack chips */
+    Array.prototype.forEach.call(w.querySelectorAll(".val.leave"),function(e){ e.parentNode.removeChild(e); });
+    var old=w.querySelector(".val"),oldTxt=old?old.getAttribute("data-v"):undefined;
     w.classList.toggle("empty",v===null&&!bad);
     if(old&&oldTxt===nv&&!bad&&!old.classList.contains("bad")) return;
     var tmp=document.createElement("div"); tmp.innerHTML=valHtml(v,false,bad); var el=tmp.firstChild; el.setAttribute("data-v",nv);
