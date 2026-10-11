@@ -51,3 +51,8 @@ type-matcher, cast-or-crash, name-that-convention, output-predictor*, format-fix
 ## Later candidates (not week 1)
 - (2026-10-13: Ray wanted "what Maven is and does" in week 1 after all: built as 06-maven-build-system. The pom anatomy page below is still later.)
 - "What is in the pom.xml" Glance: coordinates, properties (Java 17), dependencies, what Maven does with each. Build in the week that adds the first dependency (Ray, 2026-10-13: not needed in week 1; page 06 covers the folders).
+
+## Gap audit, workbook pages vs visuals (2026-10-13, after 30 visuals)
+Covered: all of 1a; 1c 2-1, 3-1 (types, variables, final, naming), 3-2 (concat, integer division, pre/post, widening/narrowing), 3-3 (printf, Scanner methods, buffer), 4-1 (if/else, logical, equals), 4-2 (signature, call stack, decomposition, one Scanner), 4-3 (switch).
+Not covered, Ray decides at each page during his 1c review (fold before build): (1) 3-1 p.43 Java Syntax anatomy: standalone or nothing, Ray unsure; (2) 3-2 p.68 assignment operators: fold into 17 Pre/Post as a chip; (3) 4-3 p.127 conditional operator: fold into 22 if/else as a last step (Ray teaches it at the end of conditionals); (4) 3-3 p.74 print vs println: one cheat-sheet line.
+Deliberately none: Javadoc (p.44-45), Math class (a table), 3-4 AI, Module 5 debugging (week 2).
