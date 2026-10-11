@@ -30,7 +30,7 @@ NEW = no spring page. NONE = idea covered by the workbook text/image, no page. S
 | 22 | == vs .equals on Strings (1c 4-1) | 24-string-comparison | KEEP | Walk | |
 | 23 | Method signature anatomy (1c 4-2) | 25-method-signature | KEEP | Walk | |
 | 24 | Method call stack, parameters are copies (1c 4-2) | 26-method-call-stack | BUILT | Model | approved as the Model reference |
-| 25 | Repeated code → one method (1c 4-2) | 27-method-decomposition | REBUILD | Walk | before/after toggle on the rectangle demo (demo-06-methods), not an exercise |
+| 25 | Repeated code → one method (1c 4-2) | 27-method-decomposition | REBUILD | Walk | before/after toggle on the rectangle demo (demo-05-methods), not an exercise |
 | 26 | One Scanner passed between methods (1c 4-2) | none | NEW | Walk | from InputApp demo (potatoScanner / tomatoScanner); workbook pp. 113-116 (three choices, re-declaring, passing). BUILT as 23. REVIEW with Ray: the trap chip shows the swallowing risk via type-ahead; the workbook's own trace shows line-by-line typing looks fine. Decide keep / soften / drop the trap chip. |
 | 27 | switch: traditional with break, fall-through, arrow form (1c 4-3) | 29-switch-flow | REBUILD | Walk | both forms side by side, v7.2 teaches both |
 | 28 | From problem to code: read, identify, plan, translate | 25-problem-decomposition | REBUILD | Walk | BUILT as 25 with an invented print-shop problem. EXTRA: not a workbook topic (instructor note 2026-10-12). Keep, redo, or drop at Ray's review. |
