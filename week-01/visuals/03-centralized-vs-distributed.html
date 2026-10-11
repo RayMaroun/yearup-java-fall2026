@@ -1,0 +1,247 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Centralized vs Distributed | Week 1 Visual Hub</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Sora:wght@500;700&family=Inter:wght@400;500&family=JetBrains+Mono:wght@400;500&display=swap">
+<style>
+  :root{
+    --bg:#080c17; --bg2:#0c1428; --surface:rgba(255,255,255,.045); --line:rgba(255,255,255,.09);
+    --ink:#eef2fb; --muted:#8496b6; --accent:#6ea0ff; --accent2:#8b7bff; --good:#46d98a; --warn:#ff6a6a;
+    --gold:#ffc862; --disp:'Sora',system-ui,sans-serif; --body:'Inter',system-ui,sans-serif;
+    --mono:'JetBrains Mono',ui-monospace,monospace;
+  }
+  *{box-sizing:border-box}
+  body{margin:0;min-height:100vh;color:var(--ink);font-family:var(--body);
+    background:radial-gradient(1200px 700px at 70% -10%,#141d38 0%,transparent 55%),
+               radial-gradient(900px 600px at 10% 110%,#161233 0%,transparent 50%),#080c17;
+    overflow-x:hidden}
+  #amb{position:fixed;inset:0;z-index:0;pointer-events:none;opacity:.6}
+  .back{position:relative;z-index:2;display:block;max-width:1120px;margin:0 auto;padding:26px 24px 0;
+    width:100%;font-family:var(--mono);font-size:.8rem;letter-spacing:.04em;color:var(--muted);
+    text-decoration:none;transition:color .15s}
+  .back:hover{color:var(--accent)}
+  .wrap{position:relative;z-index:1;max-width:1120px;margin:0 auto;padding:22px 24px 70px}
+  .tag{font-family:var(--mono);font-size:.72rem;letter-spacing:.22em;text-transform:uppercase;color:var(--accent);margin:0 0 14px}
+  h1{font-family:var(--disp);font-weight:700;font-size:clamp(2.3rem,6vw,3.6rem);line-height:1;margin:0 0 12px;
+    letter-spacing:-.03em;background:linear-gradient(180deg,#fff,#b9c6e6);-webkit-background-clip:text;
+    background-clip:text;color:transparent}
+  .lede{color:var(--muted);max-width:64ch;font-size:1.05rem;margin:0 0 26px;line-height:1.5}
+  .lede b{color:var(--ink)}
+  .lede code,.take code,.caption code{font-family:var(--mono);font-size:.92em;color:#bcd0ff}
+
+  /* ---------- stage: picture first, one toolbar ---------- */
+  .stage{position:relative;background:linear-gradient(180deg,rgba(255,255,255,.03),rgba(255,255,255,.01));
+    border:1px solid var(--line);border-radius:24px;padding:18px 18px 14px;
+    box-shadow:0 1px 0 rgba(255,255,255,.06) inset,0 30px 80px -30px rgba(0,0,0,.8)}
+  .topbar{display:flex;align-items:center;gap:10px;margin:0 0 14px;flex-wrap:wrap}
+  .topbar .lab{margin:0 4px 0 0}
+  .lab{font-family:var(--mono);font-size:.7rem;letter-spacing:.12em;text-transform:uppercase;color:var(--muted);margin:0 0 10px}
+
+  /* hero picture: one server on top, three computers below. Sizes in em so the diagram scales as one */
+  .pic{position:relative;min-height:390px;border:1px solid var(--line);border-radius:18px;background:rgba(6,10,20,.5);
+    overflow:hidden;padding:16px 14px;display:flex;align-items:center;font-size:15px}
+  .net{width:100%;max-width:1000px;margin:0 auto;display:flex;flex-direction:column;align-items:center}
+  .commits{display:flex;flex-direction:column;gap:.35em}
+  .cm{font-family:var(--mono);font-size:.86em;padding:.32em .7em;border-radius:9px;border:1px solid rgba(255,200,98,.45);
+    background:rgba(255,200,98,.07);color:var(--ink);display:flex;gap:8px}
+  .cm .h{color:var(--gold)}
+
+  .server{width:100%;max-width:370px;text-align:left;font:inherit;color:inherit;cursor:pointer;border-radius:14px;
+    border:1px solid rgba(255,200,98,.55);background:rgba(255,200,98,.05);box-shadow:0 0 30px -12px rgba(255,200,98,.5);
+    padding:.8em .95em;display:flex;flex-direction:column;gap:.55em;transition:border-color .3s,background .3s,box-shadow .3s,opacity .3s}
+  .server:hover{border-color:var(--gold)}
+  .server:focus-visible{outline:2px solid var(--accent);outline-offset:3px}
+  .shead{display:flex;align-items:baseline;justify-content:space-between;gap:10px}
+  .pname{font-family:var(--disp);font-weight:700;font-size:1.3em;letter-spacing:-.01em;line-height:1.2}
+  .pwhere{font-family:var(--mono);font-size:.68em;letter-spacing:.12em;text-transform:uppercase;color:var(--muted)}
+  .badge{font-family:var(--mono);font-size:.66em;letter-spacing:.12em;text-transform:uppercase;padding:.25em .7em;border-radius:999px;
+    border:1px solid rgba(70,217,138,.5);color:var(--good);background:rgba(70,217,138,.08);white-space:nowrap;transition:.3s}
+  .server.off{opacity:.45;border-color:var(--line);background:transparent;box-shadow:none;border-style:dashed}
+  .server.off .badge{color:var(--warn);border-color:rgba(255,106,106,.5);background:rgba(255,106,106,.08)}
+
+  .cols{width:100%;display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:1.1em}
+  .col{display:flex;flex-direction:column;align-items:stretch}
+  .link{height:4.4em;display:flex;align-items:center;justify-content:center;gap:.7em;color:var(--accent);
+    font-family:var(--mono);font-size:.72em;letter-spacing:.1em;text-transform:uppercase;transition:color .3s}
+  .link .ln{width:2px;align-self:stretch;margin:.3em 0;background:var(--accent);position:relative;transition:background .3s}
+  .link .ln::before,.link .ln::after{content:"";position:absolute;left:-4px;border:5px solid transparent;transition:border-color .3s}
+  .link .ln::before{top:-2px;border-bottom:7px solid var(--accent);border-top:0}
+  .link .ln::after{bottom:-2px;border-top:7px solid var(--accent);border-bottom:0;display:none}
+  .net.dist .link .ln::after{display:block}
+  .net.down .link{color:var(--muted)}
+  .net.down .link .ln{background:repeating-linear-gradient(180deg,var(--muted) 0 4px,transparent 4px 8px)}
+  .net.down .link .ln::before{border-bottom-color:var(--muted)}
+  .net.down .link .ln::after{border-top-color:var(--muted)}
+
+  .place{flex:1;border-radius:14px;border:1px solid var(--line);background:rgba(255,255,255,.02);padding:.8em .9em;
+    display:flex;flex-direction:column;gap:.55em;transition:border-color .3s,background .3s}
+  .net.dist .place{border-color:rgba(255,200,98,.4);background:rgba(255,200,98,.03)}
+  .box{border-radius:12px;border:1px solid var(--line);background:rgba(0,0,0,.25);padding:.6em .75em}
+  .bt{font-family:var(--mono);font-size:.66em;letter-spacing:.12em;text-transform:uppercase;color:var(--muted);margin:0 0 .5em;
+    display:flex;justify-content:space-between;gap:8px}
+  .bt .loc{color:var(--good)}
+  .bare{font-family:var(--mono);font-size:.84em;color:var(--muted);border:1px dashed var(--line);border-radius:9px;padding:.9em .7em;text-align:center}
+  .note{font-family:var(--mono);font-size:.74em;line-height:1.4;padding:.4em .7em;border-radius:9px;border:1px solid transparent;visibility:hidden}
+  .note.bad{visibility:visible;color:var(--warn);border-color:rgba(255,106,106,.45);background:rgba(255,106,106,.07)}
+  .note.ok{visibility:visible;color:var(--good);border-color:rgba(70,217,138,.5);background:rgba(70,217,138,.08)}
+  @media (max-width:860px){
+    .cols{grid-template-columns:1fr;gap:0}
+    .link{height:3.6em}
+  }
+
+  /* caption: the sentence for the current state, right under the picture */
+  .caption{display:flex;gap:16px;align-items:flex-start;margin:14px 4px 0;min-height:56px}
+  .caption .n{flex-shrink:0;font-family:var(--disp);font-weight:700;font-size:1.35rem;color:var(--accent);font-variant-numeric:tabular-nums;
+    line-height:1.2;min-width:4.6rem}
+  .caption .n small{display:block;font-family:var(--mono);font-weight:400;font-size:.58rem;letter-spacing:.14em;text-transform:uppercase;color:var(--muted)}
+  .caption .t{font-size:1.02rem;line-height:1.55;color:var(--ink);padding-left:16px;border-left:3px solid var(--accent);transition:border-color .3s}
+  .caption.bad .t{border-left-color:var(--warn)} .caption.ok .t{border-left-color:var(--good)}
+
+  /* toolbar: the one control */
+  .toolbar{display:flex;align-items:center;gap:10px;margin:16px 0 0;padding-top:14px;border-top:1px solid var(--line);flex-wrap:wrap}
+  .seg{display:inline-flex;border:1px solid var(--line);border-radius:12px;overflow:hidden;background:rgba(0,0,0,.25)}
+  .seg button{font-family:var(--body);font-weight:500;font-size:.86rem;padding:9px 18px;border:0;background:transparent;color:var(--muted);
+    cursor:pointer;transition:.15s;border-right:1px solid var(--line)}
+  .seg button:last-child{border-right:0}
+  .seg button:hover{color:var(--accent)}
+  .seg button.on{background:rgba(110,160,255,.16);color:var(--ink)}
+  .seg button:focus-visible{outline:2px solid var(--accent);outline-offset:-2px}
+  .hint{font-family:var(--mono);font-size:.68rem;color:var(--muted);margin:10px 4px 0;line-height:1.5}
+  .hint b{color:var(--accent)}
+
+  .take{margin-top:22px;background:linear-gradient(180deg,rgba(110,160,255,.08),rgba(139,123,255,.04));
+    border:1px solid var(--line);border-left:3px solid var(--accent);border-radius:12px;padding:16px 18px}
+  .take .tk{font-family:var(--mono);font-size:.66rem;letter-spacing:.14em;text-transform:uppercase;color:var(--accent);margin:0 0 8px}
+  .take p{margin:0;font-size:.95rem;color:var(--ink);line-height:1.55}
+  .take b{color:#fff}
+  @media (prefers-reduced-motion:reduce){*{animation-duration:.01ms!important;transition-duration:.01ms!important}#amb{display:none}}
+</style>
+</head>
+<body>
+
+<a class="back" href="../index.html#03-centralized-vs-distributed">&#8592; Week 1 index</a>
+
+<canvas id="amb"></canvas>
+<div class="wrap">
+  <p class="tag">Workbook 1a &middot; Section 1-1 &middot; Version control systems</p>
+  <h1>Centralized vs Distributed</h1>
+  <p class="lede"><b>With Git, every computer holds the whole history. GitHub is a copy you share, not the only copy.</b></p>
+
+  <div class="stage">
+    <div class="topbar">
+      <span class="lab">Where does the history live?</span>
+    </div>
+
+    <div class="pic" id="pic">
+      <div class="net" id="net">
+        <button class="server" id="server" type="button" aria-pressed="false">
+          <span class="shead"><span class="pname" id="Sname"></span><span class="badge" id="Sbadge">online</span></span>
+          <span class="pwhere" id="Swhere"></span>
+          <span class="commits" id="Ssrv"></span>
+        </button>
+        <div class="cols" id="cols"></div>
+      </div>
+    </div>
+
+    <div class="caption" id="caption">
+      <div class="n" id="copies"></div>
+      <div class="t" id="status"></div>
+    </div>
+
+    <div class="toolbar">
+      <div class="seg" id="seg" role="group" aria-label="Kind of version control">
+        <button data-m="cent" class="on">Centralized</button>
+        <button data-m="dist">Distributed (Git)</button>
+      </div>
+    </div>
+    <p class="hint">Switch the mode, then <b>click the server</b> to take it offline.</p>
+  </div>
+
+  <div class="take">
+    <p class="tk">The one idea</p>
+    <p><b>Centralized: one copy of the history, so when the server is down nobody commits. Distributed: a full copy on every computer.</b>
+    Git is distributed. GitHub is the copy you share; commits work offline and you push when you are back. That is why you commit on your machine first and push second.</p>
+  </div>
+
+  <div id="rail"></div>
+</div>
+
+<script>
+(function(){
+  "use strict";
+  var $=function(s){return document.querySelector(s);};
+  var reduce=matchMedia("(prefers-reduced-motion: reduce)").matches;
+
+  var HIST=[["9b10","Fix typo"],["7c2e","Add greeting"],["a1f3","Create project"]];
+  var PEOPLE=["Raymond","Maya","You"];
+  var MODES={
+    cent:{name:"Central server",where:"the only copy of the history",link:"commit goes to the server",copies:1,
+      on:"One copy of the history, on the server. Every commit needs the server.",
+      off:"The server is offline and it held the only history. Nobody can commit until it is back.",
+      note:"cannot commit, no history here"},
+    dist:{name:"GitHub, a shared copy",where:"one more full copy",link:"push / pull",copies:4,
+      on:"Every computer holds the whole history. GitHub is a copy you share, not the only copy.",
+      off:"GitHub is offline, yet every computer still has the whole history. Commit now, push later.",
+      note:"commit still works; push when GitHub is back"}
+  };
+  var mode="cent", offline=false;
+
+  function stack(){
+    return HIST.map(function(c){return '<span class="cm"><span class="h">'+c[0]+'</span><span>'+c[1]+'</span></span>';}).join("");
+  }
+
+  function render(){
+    var M=MODES[mode], dist=mode==="dist";
+    $("#net").className="net"+(dist?" dist":"")+(offline?" down":"");
+    var s=$("#server");
+    s.classList.toggle("off",offline);
+    s.setAttribute("aria-pressed",String(offline));
+    s.setAttribute("aria-label",M.name+", "+(offline?"offline, click to bring it back":"online, click to take it offline"));
+    $("#Sname").textContent=M.name;
+    $("#Swhere").textContent=M.where;
+    $("#Sbadge").textContent=offline?"offline":"online";
+    $("#Ssrv").innerHTML=stack();
+
+    var h="";
+    PEOPLE.forEach(function(p){
+      h+='<div class="col"><div class="link"><span class="ln"></span><span>'+M.link+'</span></div>'+
+        '<div class="place"><span class="pname">'+p+'</span>'+
+        (dist
+          ? '<div class="box"><p class="bt"><span>full history</span><span class="loc">commit stays local</span></p><div class="commits">'+stack()+'</div></div>'
+          : '<div class="box"><p class="bt"><span>this computer</span></p><div class="bare">working files only</div></div>')+
+        '<div class="note'+(offline?(dist?" ok":" bad"):"")+'">'+(offline?M.note:"\u00a0")+'</div></div></div>';
+    });
+    $("#cols").innerHTML=h;
+
+    $("#caption").className="caption"+(offline?(dist?" ok":" bad"):"");
+    $("#status").textContent=offline?M.off:M.on;
+    $("#copies").innerHTML="<small>full copies</small>"+M.copies;
+    Array.prototype.forEach.call(document.querySelectorAll("#seg button"),function(b){b.classList.toggle("on",b.getAttribute("data-m")===mode);});
+  }
+
+  $("#seg").addEventListener("click",function(e){var b=e.target.closest("button"); if(b){mode=b.getAttribute("data-m"); render();}});
+  $("#server").addEventListener("click",function(){offline=!offline; render();});
+
+  /* ---------- ambient canvas ---------- */
+  var cv=$("#amb"),ctx=cv.getContext&&cv.getContext("2d"),parts=[];
+  function sizeC(){if(!ctx)return;cv.width=innerWidth;cv.height=innerHeight;}
+  function initParts(){parts=[];for(var i=0;i<46;i++)parts.push({x:Math.random(),y:Math.random(),
+    r:Math.random()*1.6+.3,s:Math.random()*.02+.004,o:Math.random()*.4+.1});}
+  function drawC(){if(!ctx)return;ctx.clearRect(0,0,cv.width,cv.height);
+    parts.forEach(function(p){p.y-=p.s/60;if(p.y<-.02)p.y=1.02;
+      ctx.beginPath();ctx.arc(p.x*cv.width,p.y*cv.height,p.r,0,7);
+      ctx.fillStyle="rgba(140,170,255,"+p.o+")";ctx.fill();});
+    requestAnimationFrame(drawC);}
+  if(ctx&&!reduce){sizeC();initParts();drawC();addEventListener("resize",sizeC);}
+
+  render();
+})();
+</script>
+<script src="../manifest.js"></script>
+<script src="../../assets/rail.js"></script>
+<script>Rail.render(document.getElementById("rail"),{kind:"visuals",current:"03-centralized-vs-distributed"});</script>
+</body>
+</html>

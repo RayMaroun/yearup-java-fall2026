@@ -3,9 +3,9 @@
 You build exactly ONE page. Read, in this order, before writing anything:
 1. `CLAUDE.md` in this repo (design tokens, doctrine, sizes, conventions). Every rule there is binding.
 2. The calibration page for your size, copy its structure, CSS base, header, stage, takeaway, rail, ambient canvas:
-   - Glance: `week-01/visuals/08-jdk-jre-jvm.html`
-   - Walk:   `week-01/visuals/13-integer-division.html`
-   - Model:  `week-01/visuals/23-method-call-stack.html`
+   - Glance: `week-01/visuals/09-jdk-jre-jvm.html`
+   - Walk:   `week-01/visuals/14-integer-division.html`
+   - Model:  `week-01/visuals/24-method-call-stack.html`
 3. The workbook text for your section: `.planning/workbook-text/wb1a.txt`, `wb1b.txt`, `wb1c.txt` (pdftotext output of the v7.2Y PDFs). Grep for your section heading and read the pages around it. The workbook is the source of truth for terminology and the v7.2 details.
 4. The instructor demo named in your task, under `../../04.Weeks/Week 01/demos/<name>/src/main/java/com/pluralsight/`. Examples on the page come from there or are invented. NEVER from an exercise.
 5. The spring page named in your task (under `/Users/ray/Desktop/Training/Pluralsight/YearUp/yearup-java-visuals/week-01/visuals/`), for the idea and any good example. Its design and code are NOT reused; the design is the calibration page.

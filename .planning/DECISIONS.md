@@ -4,7 +4,7 @@
 New repo for the fall cohort; design from Expeditors week 9 + capstone rail; doctrine carried over; examples rule (demos only, never exercises).
 
 ## 2026-10-12 — Theme A, list confirmed, calibration pages
-Instructor kept the Expeditors tokens as they are (THEME-B variant deleted) and confirmed the week 1 idea list. The plan summary said 21 visuals; the confirmed table holds 25 (Glance 6, Walk 17, Model 2), so 25 are built. File numbers follow the manifest order, which keeps the call stack at 21. Calibration pages: Walk = 13-integer-division (10 and 3 from the operators demo), Glance = 08-jdk-jre-jvm.
+Instructor kept the Expeditors tokens as they are (THEME-B variant deleted) and confirmed the week 1 idea list. The plan summary said 21 visuals; the confirmed table holds 25 (Glance 6, Walk 17, Model 2), so 25 are built. File numbers follow the manifest order, which keeps the call stack at 21. Calibration pages: Walk = 14-integer-division (10 and 3 from the operators demo), Glance = 09-jdk-jre-jvm.
 
 ## 2026-10-12 — Calibration feedback
 Instructor: no animation for its own sake (JDK page: travelling file removed, the switch that lights the needed layer stays). Walk page step 9: the per-group "+ .5" chips were wrong; the leftover now moves into a dashed partial group labeled ".5 of a group" and the readout shows 3 + .5 = 3.5. The Walk page was approved in form ("looks great, the animation really helps").
@@ -23,3 +23,6 @@ Ray approved: 03 Your Folder Structure (Desktop/pluralsight tree, repository bou
 
 ## 2026-10-13 · Folder structure is page 01; Local vs Remote starts at "Local only"
 Ray: the folder tree is the first thing he does on day 1, so it is visual 01 (group "Workbook 1a · Day 1 setup"); timeline 02, local-vs-remote 03, dialog 04. Local vs Remote reworked: opens at moment 1 "Local only" (GitHub and teammate columns are dashed placeholders), "Share on GitHub" creates the GitHub block (short reveal, motion that shows the mechanism), then Edited, Committed, Pushed, Pulled. Six moments, same hash on both sides.
+
+## 2026-10-13 · Centralized vs Distributed Glance added as visual 03
+Ray: the difference must be clear briefly. One switch (Centralized / Distributed), same three computers and one server; clicking the server takes it offline and shows the consequence (nobody commits vs commits keep working, push later). Inserted in Section 1-1 after the timeline; 03-27 became 04-28 (call stack 24). Week 1: 28 visuals.
