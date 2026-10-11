@@ -1,0 +1,435 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Variables, Named Boxes | Week 1 Visual Hub</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Sora:wght@500;700&family=Inter:wght@400;500&family=JetBrains+Mono:wght@400;500&display=swap">
+<style>
+  :root{
+    --bg:#080c17; --bg2:#0c1428; --surface:rgba(255,255,255,.045); --line:rgba(255,255,255,.09);
+    --ink:#eef2fb; --muted:#8496b6; --accent:#6ea0ff; --accent2:#8b7bff; --good:#46d98a; --warn:#ff6a6a;
+    --gold:#ffc862; --disp:'Sora',system-ui,sans-serif; --body:'Inter',system-ui,sans-serif;
+    --mono:'JetBrains Mono',ui-monospace,monospace;
+  }
+  *{box-sizing:border-box}
+  body{margin:0;min-height:100vh;color:var(--ink);font-family:var(--body);
+    background:radial-gradient(1200px 700px at 70% -10%,#141d38 0%,transparent 55%),
+               radial-gradient(900px 600px at 10% 110%,#161233 0%,transparent 50%),#080c17;
+    overflow-x:hidden}
+  #amb{position:fixed;inset:0;z-index:0;pointer-events:none;opacity:.6}
+  .back{position:relative;z-index:2;display:block;max-width:1120px;margin:0 auto;padding:26px 24px 0;
+    width:100%;font-family:var(--mono);font-size:.8rem;letter-spacing:.04em;color:var(--muted);
+    text-decoration:none;transition:color .15s}
+  .back:hover{color:var(--accent)}
+  .wrap{position:relative;z-index:1;max-width:1120px;margin:0 auto;padding:22px 24px 70px}
+  .tag{font-family:var(--mono);font-size:.72rem;letter-spacing:.22em;text-transform:uppercase;color:var(--accent);margin:0 0 14px}
+  h1{font-family:var(--disp);font-weight:700;font-size:clamp(2.3rem,6vw,3.6rem);line-height:1;margin:0 0 12px;
+    letter-spacing:-.03em;background:linear-gradient(180deg,#fff,#b9c6e6);-webkit-background-clip:text;
+    background-clip:text;color:transparent}
+  .lede{color:var(--muted);max-width:64ch;font-size:1.05rem;margin:0 0 26px;line-height:1.5}
+  .lede b{color:var(--ink)}
+  .lede code,.take code,.caption code{font-family:var(--mono);font-size:.92em;color:#bcd0ff}
+
+  /* ---------- stage: picture first, one toolbar, support below ---------- */
+  .stage{position:relative;background:linear-gradient(180deg,rgba(255,255,255,.03),rgba(255,255,255,.01));
+    border:1px solid var(--line);border-radius:24px;padding:18px 18px 14px;
+    box-shadow:0 1px 0 rgba(255,255,255,.06) inset,0 30px 80px -30px rgba(0,0,0,.8)}
+  .topbar{display:flex;align-items:center;gap:10px;margin:0 0 14px;flex-wrap:wrap}
+  .topbar .lab{margin:0 4px 0 0}
+  .lab{font-family:var(--mono);font-size:.7rem;letter-spacing:.12em;text-transform:uppercase;color:var(--muted);margin:0 0 10px}
+  .chips{display:flex;flex-wrap:wrap;gap:6px}
+  .chip{font-family:var(--mono);font-size:.74rem;padding:5px 11px;border-radius:999px;cursor:pointer;
+    border:1px solid var(--line);background:rgba(0,0,0,.25);color:var(--muted);transition:.15s}
+  .chip:hover{border-color:var(--accent);color:var(--accent)}
+  .chip.on{border-color:rgba(110,160,255,.6);background:rgba(110,160,255,.14);color:var(--ink)}
+  .chip:focus-visible,.btn:focus-visible,.focus:focus-visible{outline:2px solid var(--accent);outline-offset:2px}
+  .focus{margin-left:auto;font-family:var(--mono);font-size:.68rem;letter-spacing:.1em;text-transform:uppercase;padding:6px 12px;
+    border-radius:999px;border:1px solid var(--line);background:rgba(0,0,0,.25);color:var(--muted);cursor:pointer;transition:.15s}
+  .focus:hover{border-color:var(--accent);color:var(--accent)}
+  body.solo .focus{border-color:rgba(255,200,98,.6);color:var(--gold);background:rgba(255,200,98,.1)}
+
+  /* hero picture */
+  .pic{position:relative;height:390px;border:1px solid var(--line);border-radius:18px;background:rgba(6,10,20,.5);overflow:hidden}
+  body.solo .pic{height:480px}
+  .pic .zone{position:absolute;font-family:var(--mono);font-size:.62rem;letter-spacing:.14em;text-transform:uppercase;color:rgba(132,150,182,.55)}
+  .slot{position:absolute;border:1px dashed rgba(255,255,255,.06);border-radius:12px;transition:left .3s,top .3s,width .3s}
+  .shelf{position:absolute;height:2px;border-radius:2px;background:linear-gradient(90deg,transparent,rgba(110,160,255,.25),transparent)}
+  .box{position:absolute;display:flex;flex-direction:column;align-items:stretch;gap:6px;opacity:0;transform:translateY(-14px) scale(.92);
+    transition:opacity .4s,transform .4s cubic-bezier(.2,.9,.3,1),left .3s,top .3s,width .3s}
+  .box.show{opacity:1;transform:none}
+  .box.dim{opacity:.32}
+  .box .nm{font-family:var(--mono);font-size:.78rem;color:var(--ink);text-align:center;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+  .box .ty{font-family:var(--mono);font-size:.66rem;color:#82aaff;text-align:center;letter-spacing:.06em}
+  .well{position:relative;height:74px;border-radius:12px;border:1.5px solid rgba(110,160,255,.55);background:rgba(110,160,255,.08);
+    transition:border-color .3s,background .3s,box-shadow .3s;overflow:hidden}
+  .well.empty{border-style:dashed;border-color:rgba(132,150,182,.45);background:transparent}
+  .well.lit{border-color:var(--accent);box-shadow:0 0 22px -6px rgba(110,160,255,.8)}
+  .well.new{border-color:var(--good);box-shadow:0 0 22px -6px rgba(70,217,138,.7)}
+  .well.swap{border-color:var(--gold);box-shadow:0 0 22px -6px rgba(255,200,98,.8)}
+  .well.bad{border-color:var(--warn);background:rgba(255,106,106,.08);box-shadow:0 0 22px -6px rgba(255,106,106,.8)}
+  .val{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;font-family:var(--disp);font-weight:700;
+    font-size:1.5rem;font-variant-numeric:tabular-nums;color:var(--ink);transition:opacity .45s,transform .45s}
+  .val.str{font-family:var(--mono);font-weight:500;font-size:.95rem;color:#c3e88d}
+  .val.none{font-family:var(--mono);font-weight:400;font-size:.72rem;color:var(--muted)}
+  .val.bad{color:var(--warn)}
+  .val.enter{opacity:0;transform:translateY(16px)}
+  .val.leave{opacity:0;transform:translateY(-18px) scale(.8)}
+  .tok{position:absolute;z-index:3;padding:4px 10px;border-radius:999px;font-family:var(--disp);font-weight:700;font-size:1rem;color:#05070e;
+    background:var(--good);box-shadow:0 0 16px -2px rgba(70,217,138,.8);transform:translate(-50%,-50%);
+    transition:left .7s cubic-bezier(.4,0,.2,1),top .7s cubic-bezier(.4,0,.2,1),opacity .3s;pointer-events:none}
+  .tok.gone{opacity:0}
+  .cline{position:absolute;left:20px;right:20px;bottom:16px;height:62px;border-radius:12px;background:#05070e;border:1px solid var(--line);
+    padding:8px 14px;font-family:var(--mono);font-size:.84rem;color:#9fe3b6;overflow:hidden;transition:border-color .3s}
+  .cline .cl{font-size:.58rem;letter-spacing:.14em;text-transform:uppercase;color:rgba(132,150,182,.6);margin-bottom:4px}
+  .cline.bad{border-color:rgba(255,106,106,.6)}
+  .cline .err,.console .err{color:var(--warn)}
+  .pic .start{position:absolute;left:0;right:0;top:0;bottom:90px;display:flex;align-items:center;justify-content:center;font-family:var(--mono);
+    font-size:.8rem;color:var(--muted);pointer-events:none;transition:opacity .3s}
+  .pic .start b{color:var(--accent);font-weight:500}
+  /* caption: the one sentence, right under the picture */
+  .caption{display:flex;gap:16px;align-items:flex-start;margin:14px 4px 0;min-height:56px}
+  .caption .n{flex-shrink:0;font-family:var(--disp);font-weight:700;font-size:1.35rem;color:var(--accent);font-variant-numeric:tabular-nums;
+    line-height:1.2;min-width:3.2rem}
+  .caption .n small{display:block;font-family:var(--mono);font-weight:400;font-size:.58rem;letter-spacing:.14em;text-transform:uppercase;color:var(--muted)}
+  .caption .t{font-size:1.02rem;line-height:1.55;color:var(--ink);padding-left:16px;border-left:3px solid var(--accent);transition:border-color .3s}
+  body.solo .caption .t{font-size:1.18rem}
+  .caption.cut .t{border-left-color:var(--warn)} .caption.left .t{border-left-color:var(--gold)} .caption.ok .t{border-left-color:var(--good)}
+  .caption b.g{color:var(--good)} .caption b.w{color:var(--warn)} .caption b.a{color:var(--accent)} .caption b.y{color:var(--gold)}
+
+  /* toolbar: same on every page */
+  .toolbar{display:flex;align-items:center;gap:10px;margin:16px 0 0;padding-top:14px;border-top:1px solid var(--line)}
+  .btn{font-family:var(--body);font-weight:500;font-size:.86rem;padding:9px 16px;border-radius:11px;cursor:pointer;
+    border:1px solid var(--line);background:var(--surface);color:var(--ink);transition:.15s}
+  .btn:hover{border-color:var(--accent);color:var(--accent)}
+  .btn.primary{border-color:rgba(110,160,255,.5);background:rgba(110,160,255,.12);padding:9px 22px}
+  .btn:disabled{opacity:.35;cursor:not-allowed}
+  .btn.ghost{background:transparent;color:var(--muted);margin-left:auto}
+  .dots{display:flex;gap:5px;align-items:center;margin:0 6px}
+  .dots i{display:block;width:8px;height:8px;border-radius:50%;background:rgba(255,255,255,.12);transition:.2s}
+  .dots i.done{background:rgba(110,160,255,.45)}
+  .dots i.now{background:var(--accent);transform:scale(1.35);box-shadow:0 0 10px rgba(110,160,255,.7)}
+  .hint{font-family:var(--mono);font-size:.68rem;color:var(--muted);margin:10px 4px 0;line-height:1.5}
+  .hint b{color:var(--accent)}
+
+  /* support: code, console, readouts. Below the picture, hidden in focus */
+  .support{display:grid;grid-template-columns:minmax(0,1.3fr) minmax(0,1fr);gap:14px;margin-top:18px}
+  @media (max-width:860px){.support{grid-template-columns:1fr}}
+  body.solo .support,body.solo .take,body.solo .hint{display:none}
+  .code{min-width:0;font-family:var(--mono);font-size:.76rem;line-height:1.8;background:rgba(0,0,0,.35);border:1px solid var(--line);
+    border-radius:14px;padding:12px 0;overflow-x:auto}
+  .ln{display:flex;gap:12px;padding:0 14px;white-space:pre;color:#c9d4ea;transition:background .2s,opacity .3s}
+  .ln .n{width:20px;text-align:right;color:rgba(132,150,182,.55);user-select:none;flex-shrink:0}
+  .ln.cur{background:rgba(110,160,255,.14);box-shadow:inset 3px 0 0 var(--accent)}
+  .ln.cur .n{color:var(--accent)}
+  .ln.cut{background:rgba(255,106,106,.12);box-shadow:inset 3px 0 0 var(--warn)}
+  .ln.left{background:rgba(255,200,98,.12);box-shadow:inset 3px 0 0 var(--gold)}
+  .ln.dim{opacity:.4}
+  .kw{color:#c792ea} .ty{color:#82aaff} .st{color:#c3e88d} .nm{color:#f78c6c} .cm{color:#5f6b85;font-style:italic} .fn{color:#ffcb6b}
+  .side{display:flex;flex-direction:column;gap:12px}
+  .readout{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+  .stat{background:rgba(255,255,255,.03);border:1px solid var(--line);border-radius:12px;padding:11px 13px;transition:opacity .3s}
+  .stat.empty{opacity:.3}
+  .stat .k{font-family:var(--mono);font-size:.62rem;letter-spacing:.1em;text-transform:uppercase;color:var(--muted)}
+  .stat .v{font-family:var(--disp);font-weight:700;font-size:1.45rem;font-variant-numeric:tabular-nums;margin-top:2px;transition:color .3s;min-height:1.6em}
+  .v.hot{color:var(--accent)} .v.gold{color:var(--gold)} .v.dim{color:rgba(132,150,182,.5)}
+  .console{font-family:var(--mono);font-size:.76rem;line-height:1.6;background:#05070e;border:1px solid var(--line);
+    border-radius:12px;padding:10px 14px;min-height:64px;color:#9fe3b6;flex:1}
+  .console .cl{font-size:.6rem;letter-spacing:.14em;text-transform:uppercase;color:rgba(132,150,182,.6);margin-bottom:4px}
+  .console .out{animation:pop .3s}
+  @keyframes pop{from{transform:scale(.6);opacity:0}to{transform:scale(1);opacity:1}}
+  .take{margin-top:22px;background:linear-gradient(180deg,rgba(110,160,255,.08),rgba(139,123,255,.04));
+    border:1px solid var(--line);border-left:3px solid var(--accent);border-radius:12px;padding:16px 18px}
+  .take .tk{font-family:var(--mono);font-size:.66rem;letter-spacing:.14em;text-transform:uppercase;color:var(--accent);margin:0 0 8px}
+  .take p{margin:0;font-size:.95rem;color:var(--ink);line-height:1.55}
+  .take b{color:#fff}
+  @media (prefers-reduced-motion:reduce){*{animation-duration:.01ms!important;transition-duration:.01ms!important}#amb{display:none}}
+  .stat .v.txt{font-size:1.02rem;line-height:1.55em}
+  .v.good{color:var(--good)} .v.warn{color:var(--warn)}
+</style>
+</head>
+<body>
+
+<a class="back" href="../index.html#12-variables">&#8592; Week 1 index</a>
+
+<canvas id="amb"></canvas>
+<div class="wrap">
+  <p class="tag">Workbook 1c &middot; Section 3-1 &middot; Variables</p>
+  <h1>Variables, Named Boxes</h1>
+  <p class="lede"><b>A variable is a named box: declare it, fill it, replace or read what is inside.</b></p>
+
+  <div class="stage">
+    <div class="topbar">
+      <span class="lab">Memory</span>
+      <button class="focus" id="bFocus" title="Hide the code and notes, enlarge the picture">Focus</button>
+    </div>
+
+    <div class="pic" id="pic"></div>
+
+    <div class="caption" id="caption">
+      <div class="n" id="stepno"><small>step</small>0 / 8</div>
+      <div class="t" id="status">Press <b class="a">Next</b>. Each statement changes the shelf.</div>
+    </div>
+
+    <div class="toolbar">
+      <button class="btn" id="bBack">&larr; Back</button>
+      <div class="dots" id="dots"></div>
+      <button class="btn primary" id="bNext">Next &rarr;</button>
+      <button class="btn ghost" id="bReset">Reset</button>
+    </div>
+    <p class="hint">space = next &middot; <b>watch y</b>: declared, never filled</p>
+
+    <div class="support">
+      <div>
+        <p class="lab">Main.java</p>
+        <div class="code" id="code"></div>
+      </div>
+      <div class="side">
+        <div class="readout">
+          <div class="stat empty" id="sBox"><div class="k">boxes</div><div class="v" id="stBox"></div></div>
+          <div class="stat empty" id="sAct"><div class="k">last action</div><div class="v txt" id="stAct"></div></div>
+        </div>
+        <div class="console"><div class="cl">console</div><div id="console"></div></div>
+      </div>
+    </div>
+  </div>
+
+  <div class="take">
+    <p class="tk">The one idea</p>
+    <p><b>Declare creates the box, initialize fills it, assign replaces what is inside, read copies it out.</b>
+    A local variable has no default, so fill it before you read it. Fields get a default
+    (0, false, null), see Data Types and Sizes.</p>
+  </div>
+
+  <div id="rail"></div>
+</div>
+
+<script>
+(function(){
+  "use strict";
+  var $=function(s){return document.querySelector(s);};
+  var reduce=matchMedia("(prefers-reduced-motion: reduce)").matches;
+
+  /* ---------- the boxes, in shelf order ---------- */
+  var VARS=[
+    {id:"firstNumber",type:"int"},{id:"name",type:"String"},{id:"x",type:"int"},
+    {id:"y",type:"int"},{id:"z",type:"int"},{id:"sum",type:"int"}
+  ];
+
+  /* ---------- the statements: one per step. ops are applied in order to build the state ---------- */
+  var STEPS=[
+    {code:'<span class="ty">int</span> firstNumber;',cls:"",act:"declare",
+      ops:[["decl","firstNumber",null]],
+      msg:'Declaring <b class="a">creates the box</b>: an int named firstNumber, with nothing in it yet.'},
+    {code:'firstNumber = <span class="nm">26</span>;',cls:"ok",act:"initialize",
+      ops:[["set","firstNumber","26"]],
+      msg:'Initializing <b class="g">fills it the first time</b>: 26 goes into firstNumber.'},
+    {code:'<span class="ty">String</span> name = <span class="st">"Raymond"</span>;',cls:"ok",act:"declare + initialize",
+      ops:[["decl","name",'"Raymond"']],
+      msg:'Declare and initialize <b class="a">in one line</b>: the box is created and filled at once.'},
+    {code:'<span class="ty">int</span> x = <span class="nm">5</span>, y, z = <span class="nm">50</span>;',cls:"",act:"declare 3 boxes",
+      ops:[["decl","x","5"],["decl","y",null],["decl","z","50"]],
+      msg:'<b class="a">Three boxes in one statement.</b> x gets 5, z gets 50, and y is still empty.'},
+    {code:'firstNumber = <span class="nm">30</span>;',cls:"left",act:"assign",
+      ops:[["set","firstNumber","30"]],
+      msg:'Assigning <b class="y">replaces the value</b>. The 26 is gone: a box holds one value at a time.'},
+    {code:'System.out.<span class="fn">println</span>(firstNumber);',cls:"ok",act:"read",
+      ops:[["print","firstNumber"]],
+      msg:'Reading <b class="g">copies the value out</b>. The console shows 30; firstNumber still holds it.'},
+    {code:'<span class="ty">int</span> sum = x + z;',cls:"ok",act:"read 2, fill 1",
+      ops:[["sum"]],
+      msg:'An expression reads x and z, and the result <b class="g">fills a new box</b>: sum holds 55.'},
+    {code:'System.out.<span class="fn">println</span>(y);',cls:"cut",act:"compile error",
+      ops:[["error","y"]],
+      msg:'A local box you never filled <b class="w">cannot be read</b>. Java stops you at compile time; nothing runs.'}
+  ];
+  var ERR="error: variable y might not have been initialized";
+
+  function stateAt(i){
+    var st={boxes:{},out:[],err:false,count:0},k,j,o;
+    for(k=0;k<=i;k++) for(j=0;j<STEPS[k].ops.length;j++){
+      o=STEPS[k].ops[j];
+      if(o[0]==="decl"){ st.boxes[o[1]]={val:o[2]}; st.count++; }
+      else if(o[0]==="set") st.boxes[o[1]].val=o[2];
+      else if(o[0]==="print") st.out.push(st.boxes[o[1]].val);
+      else if(o[0]==="sum"){ st.boxes.sum={val:String(+st.boxes.x.val + +st.boxes.z.val)}; st.count++; }
+      else if(o[0]==="error") st.err=true;
+    }
+    return st;
+  }
+
+  /* ---------- code panel ---------- */
+  var codeEl=$("#code"),picEl=$("#pic"),consEl=$("#console"),statusEl=$("#status");
+  function renderCode(cur,cls){
+    var L=['<span class="kw">public static void</span> <span class="fn">main</span>(<span class="ty">String</span>[] args) {'];
+    STEPS.forEach(function(s){ L.push("    "+s.code); });
+    L.push("}");
+    codeEl.innerHTML=L.map(function(t,i){
+      var c="ln";
+      if(cur!==null&&i===cur+1) c+=" "+(cls==="cut"?"cut":cls==="left"?"left":"cur");
+      else if(cur!==null&&i>cur+1&&i<=STEPS.length) c+=" dim";
+      else if(cur===null&&i>0&&i<=STEPS.length) c+=" dim";
+      return '<div class="'+c+'"><span class="n">'+(i+1)+'</span><span>'+t+'</span></div>';
+    }).join("");
+  }
+
+  /* ---------- the picture: a shelf of slots, one box per variable ---------- */
+  var geo=[],boxH=126;
+  function layout(){
+    var W=picEl.clientWidth||900,H=picEl.clientHeight||390,cols=W<640?3:6,rows=6/cols,pad=20,gap=W<640?10:14;
+    var bw=Math.floor((W-pad*2-gap*(cols-1))/cols),rowGap=16;
+    var top=Math.max(40,Math.round((H-96-rows*boxH-(rows-1)*rowGap)/2)+6);
+    geo=VARS.map(function(v,i){ var c=i%cols,r=Math.floor(i/cols);
+      return {x:pad+c*(bw+gap),y:top+r*(boxH+rowGap),w:bw}; });
+    return {rows:rows,top:top,pad:pad,W:W,rowGap:rowGap};
+  }
+  function buildPic(){
+    var L=layout(),html='<span class="zone" style="left:20px;top:14px">memory</span>',r;
+    VARS.forEach(function(v,i){ var g=geo[i];
+      html+='<div class="slot" id="sl'+i+'" style="left:'+g.x+'px;top:'+(g.y+24)+'px;width:'+g.w+'px;height:76px"></div>'; });
+    for(r=0;r<L.rows;r++) html+='<div class="shelf" id="sh'+r+'" style="left:'+L.pad+'px;right:'+L.pad+'px;top:'+(L.top+r*(boxH+L.rowGap)+boxH+6)+'px"></div>';
+    VARS.forEach(function(v,i){ var g=geo[i];
+      html+='<div class="box" id="b_'+v.id+'" style="left:'+g.x+'px;top:'+g.y+'px;width:'+g.w+'px">'+
+        '<div class="nm">'+v.id+'</div><div class="well empty" id="w_'+v.id+'"></div><div class="ty">'+v.type+'</div></div>'; });
+    html+='<div class="start" id="start">8 statements · press <b>Next</b></div>';
+    html+='<div class="cline" id="cline"><div class="cl">console</div><div id="clineOut"></div></div>';
+    picEl.innerHTML=html;
+  }
+  function relayout(){
+    var L=layout(),r;
+    VARS.forEach(function(v,i){ var g=geo[i],b=$("#b_"+v.id),s=$("#sl"+i);
+      b.style.left=g.x+"px"; b.style.top=g.y+"px"; b.style.width=g.w+"px";
+      s.style.left=g.x+"px"; s.style.top=(g.y+24)+"px"; s.style.width=g.w+"px"; });
+    for(r=0;r<2;r++){ var sh=$("#sh"+r); if(sh) sh.style.display=r<L.rows?"":"none";
+      if(sh&&r<L.rows) sh.style.top=(L.top+r*(boxH+L.rowGap)+boxH+6)+"px"; }
+  }
+  function valHtml(v,isY,bad){
+    if(v===null) return '<div class="val none'+(bad?' bad':'')+'">'+(bad?"no value to read":"no value")+'</div>';
+    var str=v.charAt(0)==='"';
+    return '<div class="val'+(str?' str':'')+'">'+v+'</div>';
+  }
+  /* animate: when moving forward one step, values fade in and replaced values fade out */
+  var timers=[];
+  function later(fn,ms){ timers.push(setTimeout(fn,reduce?0:ms)); }
+  function setWell(id,v,animate,bad){
+    var w=$("#w_"+id),old=w.querySelector(".val"),oldTxt=old?old.getAttribute("data-v"):undefined,nv=v===null?"":v;
+    w.classList.toggle("empty",v===null&&!bad);
+    if(old&&oldTxt===nv&&!bad&&!old.classList.contains("bad")) return;
+    var tmp=document.createElement("div"); tmp.innerHTML=valHtml(v,false,bad); var el=tmp.firstChild; el.setAttribute("data-v",nv);
+    if(animate&&!reduce){
+      el.classList.add("enter"); w.appendChild(el);
+      if(old){ old.classList.add("leave"); setTimeout(function(){ if(old.parentNode) old.parentNode.removeChild(old); },460); }
+      void el.offsetWidth; el.classList.remove("enter");
+    } else { w.innerHTML=""; w.appendChild(el); }
+  }
+  function center(id){ var i=VARS.findIndex(function(v){return v.id===id;}),g=geo[i]; return {x:g.x+g.w/2,y:g.y+24+37}; }
+  function travel(txt,from,to,ms){
+    var t=document.createElement("div"); t.className="tok"; t.textContent=txt;
+    t.style.left=from.x+"px"; t.style.top=from.y+"px"; picEl.appendChild(t);
+    void t.offsetWidth; t.style.left=to.x+"px"; t.style.top=to.y+"px";
+    setTimeout(function(){ t.classList.add("gone"); },ms||700);
+    setTimeout(function(){ if(t.parentNode) t.parentNode.removeChild(t); },(ms||700)+320);
+  }
+  function consTarget(){ var c=$("#cline"); return {x:c.offsetLeft+60,y:c.offsetTop+38}; }
+
+  function renderPic(i,animate){
+    timers.forEach(clearTimeout); timers=[];
+    Array.prototype.forEach.call(picEl.querySelectorAll(".tok"),function(t){t.parentNode.removeChild(t);});
+    var st=i<0?{boxes:{},out:[],err:false}:stateAt(i),s=i<0?null:STEPS[i];
+    $("#start").style.opacity=i<0?1:0;
+    VARS.forEach(function(v){
+      var b=$("#b_"+v.id),w=$("#w_"+v.id),has=!!st.boxes[v.id];
+      b.className="box"+(has?" show":"")+(st.err&&v.id!=="y"&&has?" dim":"");
+      w.className="well"+(has&&st.boxes[v.id].val===null?" empty":"");
+      if(!has){ w.innerHTML=""; return; }
+      var val=st.boxes[v.id].val;
+      if(v.id==="sum"&&animate&&s.ops[0][0]==="sum"&&!reduce){ setWell("sum",null,false); later(function(){ setWell("sum",val,true); w.classList.remove("empty"); w.classList.add("new"); },700); }
+      else setWell(v.id,val,animate,st.err&&v.id==="y");
+    });
+    /* glow the box this statement touched */
+    if(s){ var o=s.ops[0],tgt;
+      if(o[0]==="decl"&&s.ops.length===1) tgt=[[o[1],o[2]===null?"lit":"new"]];
+      else if(o[0]==="decl") tgt=[["x","new"],["y","lit"],["z","new"]];
+      else if(o[0]==="set") tgt=[[o[1],s.cls==="left"?"swap":"new"]];
+      else if(o[0]==="print") tgt=[[o[1],"new"]];
+      else if(o[0]==="sum") tgt=[["x","lit"],["z","lit"]].concat(animate&&!reduce?[]:[["sum","new"]]);
+      else if(o[0]==="error") tgt=[["y","bad"]];
+      tgt.forEach(function(t){ $("#w_"+t[0]).classList.add(t[1]); if(t[1]==="bad") $("#w_y").classList.remove("empty"); });
+    }
+    /* copies travel: a read sends a copy, the box keeps its value */
+    var shown=st.err?[]:st.out.slice(),cl=$("#cline"),co=$("#clineOut");
+    cl.className="cline"+(st.err?" bad":"");
+    function paintCons(){ co.innerHTML=st.err?'<span class="err">'+ERR+'</span>':(shown.length?shown[shown.length-1]:""); }
+    if(animate&&!reduce&&s&&s.ops[0][0]==="print"){
+      co.innerHTML=""; travel(st.boxes.firstNumber.val,center("firstNumber"),consTarget()); later(paintCons,720);
+    } else paintCons();
+    if(animate&&!reduce&&s&&s.ops[0][0]==="sum"){
+      travel(st.boxes.x.val,center("x"),center("sum")); travel(st.boxes.z.val,center("z"),center("sum"));
+    }
+  }
+
+  function setStat(id,v,c){ var e=$(id),box=e.parentNode;
+    if(v===null){ e.textContent=""; e.className="v"+(id==="#stAct"?" txt":""); box.classList.add("empty"); }
+    else { e.textContent=v; e.className="v "+(id==="#stAct"?"txt ":"")+(c||""); box.classList.remove("empty"); } }
+
+  var at=-1;
+  function show(i,animate){
+    at=i;
+    var n=STEPS.length;
+    if(i<0){
+      renderCode(null); renderPic(-1,false);
+      consEl.innerHTML='<span style="color:rgba(132,150,182,.5)">(nothing printed yet)</span>';
+      $("#caption").className="caption"; statusEl.innerHTML='Press <b class="a">Next</b>. Each statement changes the shelf.';
+      setStat("#stBox",null); setStat("#stAct",null); $("#stepno").innerHTML="<small>step</small>0 / "+n; setBtns(); return;
+    }
+    var s=STEPS[i],st=stateAt(i);
+    $("#stepno").innerHTML="<small>step</small>"+(i+1)+" / "+n;
+    renderCode(i,s.cls); renderPic(i,animate);
+    if(st.err) consEl.innerHTML='<div class="out err">'+ERR+'</div><div style="color:rgba(132,150,182,.6)">nothing runs</div>';
+    else consEl.innerHTML=st.out.map(function(o){return '<div class="out">'+o+'</div>';}).join("")||'<span style="color:rgba(132,150,182,.5)">(nothing printed yet)</span>';
+    $("#caption").className="caption "+s.cls; statusEl.innerHTML=s.msg;
+    setStat("#stBox",String(st.count),"hot");
+    setStat("#stAct",s.act,s.cls==="cut"?"warn":s.cls==="left"?"gold":s.cls==="ok"?"good":"hot");
+    setBtns();
+  }
+  function setBtns(){ $("#bNext").disabled=at>=STEPS.length-1; $("#bBack").disabled=at<0;
+    var d=""; for(var k=0;k<STEPS.length;k++) d+='<i class="'+(k===at?"now":k<at?"done":"")+'"></i>'; $("#dots").innerHTML=d; }
+
+  /* focus: picture and caption only. Remembered per browser. */
+  function setFocus(on){ document.body.classList.toggle("solo",on); $("#bFocus").textContent=on?"Focus on":"Focus";
+    try{localStorage.setItem("hub-focus",on?"1":"0");}catch(e){} relayout(); renderPic(at,false); }
+  $("#bFocus").addEventListener("click",function(){ setFocus(!document.body.classList.contains("solo")); this.blur(); });
+  try{ if(localStorage.getItem("hub-focus")==="1") document.body.classList.add("solo"); }catch(e){}
+  if(document.body.classList.contains("solo")) $("#bFocus").textContent="Focus on";
+
+  function next(){ if(at<STEPS.length-1) show(at+1,true); }
+  function back(){ if(at>=0) show(at-1,false); }
+  function reset(){ show(-1,false); }
+  $("#bNext").addEventListener("click",next);
+  $("#bBack").addEventListener("click",back);
+  $("#bReset").addEventListener("click",reset);
+  document.addEventListener("keydown",function(e){ if(e.code==="Space"&&!/INPUT|BUTTON/.test(e.target.tagName)){e.preventDefault();next();} });
+  addEventListener("resize",function(){ relayout(); renderPic(at,false); });
+
+  /* ---------- ambient canvas ---------- */
+  var cv=$("#amb"),ctx=cv.getContext&&cv.getContext("2d"),parts=[];
+  function sizeC(){if(!ctx)return;cv.width=innerWidth;cv.height=innerHeight;}
+  function initParts(){parts=[];for(var i=0;i<46;i++)parts.push({x:Math.random(),y:Math.random(),
+    r:Math.random()*1.6+.3,s:Math.random()*.02+.004,o:Math.random()*.4+.1});}
+  function drawC(){if(!ctx)return;ctx.clearRect(0,0,cv.width,cv.height);
+    parts.forEach(function(p){p.y-=p.s/60;if(p.y<-.02)p.y=1.02;
+      ctx.beginPath();ctx.arc(p.x*cv.width,p.y*cv.height,p.r,0,7);
+      ctx.fillStyle="rgba(140,170,255,"+p.o+")";ctx.fill();});
+    requestAnimationFrame(drawC);}
+  if(ctx&&!reduce){sizeC();initParts();drawC();addEventListener("resize",sizeC);}
+
+  buildPic();
+  reset();
+})();
+</script>
+<script src="../manifest.js"></script>
+<script src="../../assets/rail.js"></script>
+<script>Rail.render(document.getElementById("rail"),{kind:"visuals",current:"12-variables"});</script>
+</body>
+</html>

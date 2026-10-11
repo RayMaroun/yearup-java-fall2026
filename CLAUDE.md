@@ -59,7 +59,7 @@ search.js, build-search-index.js, search-index.json
   `week-09/index.html`, `capstone/08-the-pipeline.html` (header + rail), `capstone/assets/rail.js`.
 - NOT taken from the capstone set: the SVG system map. It was capstone-specific.
 
-## Every visual page: the HERO LAYOUT (approved by the instructor 2026-10-12; reference `week-01/visuals/15-integer-division.html`)
+## Every visual page: the HERO LAYOUT (approved by the instructor 2026-10-12; reference `week-01/visuals/16-integer-division.html`)
 The picture is the page. Everything else supports it and sits below it. Order, top to bottom:
 1. `<a class="back" href="../index.html#NN-slug">← Week N index</a>`
 2. `.tag` eyebrow (workbook section), `h1`, `.lede` = ONE line, the bold claim only (under ~140 characters).
@@ -113,7 +113,7 @@ Glance included, is interactive. Motion is used where it carries the idea, not a
 - **Model**: the full simulator with editable inputs, computed outcomes, and an experiment that lets the
   learner break the rule and see the consequence. Only where the mechanism is the whole point and the
   instructor wants to play with it in class: the call stack, the Scanner buffer. Few per week.
-  `week-01/visuals/25-method-call-stack.html` is the reference for this size, not the template for all.
+  `week-01/visuals/26-method-call-stack.html` is the reference for this size, not the template for all.
 
 **Design is the same for all three sizes** (header, stage, panels where they make sense, takeaway, rail).
 A Glance page may drop the left/right split and put its one control under the animation.
@@ -146,7 +146,7 @@ Use Sonnet for mechanical work: diffs, link checks, compile checks. The lead ver
 3. Produce the idea list: for each idea, keep-and-reskin / rebuild / new / drop, with a one-line reason;
    same for reference pages, exercise companions, games. Instructor confirms before building.
 4. Build: one page per task, at the size named in the idea list, against the approved reference page for
-   that size (Model: `week-01/visuals/25-method-call-stack.html`; Glance and Walk: the first approved page of each). Verify every page in a browser: interaction works, text budget, links resolve,
+   that size (Model: `week-01/visuals/26-method-call-stack.html`; Glance and Walk: the first approved page of each). Verify every page in a browser: interaction works, text budget, links resolve,
    rail renders, `node --check` on the inline script.
 5. Update `week-NN/manifest.js`, the week index, the landing page, and run `build-search-index.js`.
 6. Record progress in `.planning/PROGRESS.md`; plan changes in `.planning/DECISIONS.md`.

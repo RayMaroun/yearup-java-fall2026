@@ -1,7 +1,7 @@
 # Restyle brief: move ONE existing visual page to the hero layout (content untouched)
 
 Read, in order: `CLAUDE.md` (section "Every visual page: the HERO LAYOUT"), then the reference page
-`week-01/visuals/15-integer-division.html` (read the WHOLE file: its CSS and HTML are the pattern, and its script shows
+`week-01/visuals/16-integer-division.html` (read the WHOLE file: its CSS and HTML are the pattern, and its script shows
 how the caption, dots, empty readouts and Focus are wired). Then your page.
 
 ## What stays exactly the same

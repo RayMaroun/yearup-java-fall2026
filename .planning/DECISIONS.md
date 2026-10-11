@@ -4,7 +4,7 @@
 New repo for the fall cohort; design from Expeditors week 9 + capstone rail; doctrine carried over; examples rule (demos only, never exercises).
 
 ## 2026-10-12 — Theme A, list confirmed, calibration pages
-Instructor kept the Expeditors tokens as they are (THEME-B variant deleted) and confirmed the week 1 idea list. The plan summary said 21 visuals; the confirmed table holds 25 (Glance 6, Walk 17, Model 2), so 25 are built. File numbers follow the manifest order, which keeps the call stack at 21. Calibration pages: Walk = 15-integer-division (10 and 3 from the operators demo), Glance = 10-jdk-jre-jvm.
+Instructor kept the Expeditors tokens as they are (THEME-B variant deleted) and confirmed the week 1 idea list. The plan summary said 21 visuals; the confirmed table holds 25 (Glance 6, Walk 17, Model 2), so 25 are built. File numbers follow the manifest order, which keeps the call stack at 21. Calibration pages: Walk = 16-integer-division (10 and 3 from the operators demo), Glance = 10-jdk-jre-jvm.
 
 ## 2026-10-12 — Calibration feedback
 Instructor: no animation for its own sake (JDK page: travelling file removed, the switch that lights the needed layer stays). Walk page step 9: the per-group "+ .5" chips were wrong; the leftover now moves into a dashed partial group labeled ".5 of a group" and the readout shows 3 + .5 = 3.5. The Walk page was approved in form ("looks great, the animation really helps").
@@ -29,3 +29,6 @@ Ray: the difference must be clear briefly. One switch (Centralized / Distributed
 
 ## 2026-10-13 · "Maven, the Build System" Glance as visual 06, before Maven Project Structure
 Ray: learners pick "Build system: Maven" in the dialog without knowing what it is, and target/ appears after the first Run. Page shows what Maven reads (pom, src) and makes (target, jars) across Compile / Run / Package / Clean. Placed before the folder-structure page ("what" before "where"). 06-28 became 07-29; call stack 25. Week 1: 29 visuals.
+
+## 2026-10-13 · "Variables, Named Boxes" Walk as visual 12
+Ray noticed Section 3-1 "Variables" had no page. Built as a Walk: declare creates the box, initialize fills, assign replaces, read copies, reading an unfilled local is a compile error. Placed after Data Types and Sizes (workbook order p.46 then p.47); 12-29 became 13-30. Week 1: 30 visuals.

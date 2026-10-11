@@ -170,7 +170,7 @@ System.out.println(name);</pre></div></div>
         </article>
 
         <article class="card" data-cat="compile">
-          <div class="ch"><span class="cat">Compile</span><h2>Assigning to a final constant</h2><a class="see" href="../visuals/12-final-constants.html">See it</a></div>
+          <div class="ch"><span class="cat">Compile</span><h2>Assigning to a final constant</h2><a class="see" href="../visuals/13-final-constants.html">See it</a></div>
           <pre class="msg">java: cannot assign a value to final variable DAYS_IN_WEEK</pre>
           <p class="means">A <code>final</code> variable gets its value once and can never be changed.</p>
           <p class="fix"><b>Fix</b>Remove the reassignment, or drop <code>final</code> if the value really must change.</p>
@@ -180,7 +180,7 @@ int daysOff = 2;</pre></div></div>
         </article>
 
         <article class="card" data-cat="compile">
-          <div class="ch"><span class="cat">Compile</span><h2>double into an int</h2><a class="see" href="../visuals/17-widening-narrowing.html">See it</a></div>
+          <div class="ch"><span class="cat">Compile</span><h2>double into an int</h2><a class="see" href="../visuals/18-widening-narrowing.html">See it</a></div>
           <pre class="msg">java: incompatible types: possible lossy conversion from double to int</pre>
           <p class="means">An <code>int</code> cannot hold the decimal part, so Java refuses to narrow without being told.</p>
           <p class="fix"><b>Fix</b>Cast on purpose with <code>(int)</code>, or store the result in a <code>double</code>.</p>
@@ -198,7 +198,7 @@ int dollars = (int) price;</pre></div></div>
         </article>
 
         <article class="card" data-cat="compile">
-          <div class="ch"><span class="cat">Compile</span><h2>String into an int</h2><a class="see" href="../visuals/20-scanner-methods.html">See it</a></div>
+          <div class="ch"><span class="cat">Compile</span><h2>String into an int</h2><a class="see" href="../visuals/21-scanner-methods.html">See it</a></div>
           <pre class="msg">java: incompatible types: java.lang.String cannot be converted to int</pre>
           <p class="means"><code>nextLine()</code> returns a String, and a String does not fit in an <code>int</code> variable.</p>
           <p class="fix"><b>Fix</b>Use the Scanner method that returns the type you want: <code>nextInt()</code>.</p>
@@ -206,7 +206,7 @@ int dollars = (int) price;</pre></div></div>
         </article>
 
         <article class="card" data-cat="compile">
-          <div class="ch"><span class="cat">Compile</span><h2>Scanner without the import</h2><a class="see" href="../visuals/20-scanner-methods.html">See it</a></div>
+          <div class="ch"><span class="cat">Compile</span><h2>Scanner without the import</h2><a class="see" href="../visuals/21-scanner-methods.html">See it</a></div>
           <pre class="msg">java: cannot find symbol
   symbol:   class Scanner
   location: class Main</pre>
@@ -232,7 +232,7 @@ System.out.println(total);</pre></div></div>
         </article>
 
         <article class="card" data-cat="compile">
-          <div class="ch"><span class="cat">Compile</span><h2>Method that forgets to return</h2><a class="see" href="../visuals/24-method-signature.html">See it</a></div>
+          <div class="ch"><span class="cat">Compile</span><h2>Method that forgets to return</h2><a class="see" href="../visuals/25-method-signature.html">See it</a></div>
           <pre class="msg">java: missing return statement</pre>
           <p class="means">The signature promises an <code>int</code> back, but the body never returns one.</p>
           <p class="fix"><b>Fix</b>End with <code>return</code>, or make the return type <code>void</code> if nothing comes back.</p>
@@ -245,7 +245,7 @@ System.out.println(total);</pre></div></div>
         </article>
 
         <article class="card" data-cat="compile">
-          <div class="ch"><span class="cat">Compile</span><h2>Calling a method without its argument</h2><a class="see" href="../visuals/27-one-scanner.html">See it</a></div>
+          <div class="ch"><span class="cat">Compile</span><h2>Calling a method without its argument</h2><a class="see" href="../visuals/28-one-scanner.html">See it</a></div>
           <pre class="msg">java: method displayMenu in class Main cannot be applied to given types;
   required: java.util.Scanner
   found:    no arguments
@@ -267,7 +267,7 @@ public class HelloWorld {</pre></div></div>
 
         <!-- ================= RUNTIME ================= -->
         <article class="card" data-cat="runtime">
-          <div class="ch"><span class="cat">Runtime</span><h2>Wrong input type for Scanner</h2><a class="see" href="../visuals/20-scanner-methods.html">See it</a></div>
+          <div class="ch"><span class="cat">Runtime</span><h2>Wrong input type for Scanner</h2><a class="see" href="../visuals/21-scanner-methods.html">See it</a></div>
           <pre class="msg">Exception in thread "main" java.util.InputMismatchException
 	at java.base/java.util.Scanner.throwFor(Scanner.java:939)
 	...
@@ -280,7 +280,7 @@ double price = scanner.nextDouble();</pre></div></div>
         </article>
 
         <article class="card" data-cat="runtime">
-          <div class="ch"><span class="cat">Runtime</span><h2>nextLine() skipped after nextInt()</h2><a class="see" href="../visuals/19-scanner-buffer.html">See it</a></div>
+          <div class="ch"><span class="cat">Runtime</span><h2>nextLine() skipped after nextInt()</h2><a class="see" href="../visuals/20-scanner-buffer.html">See it</a></div>
           <p class="mk">No error. Console:</p>
           <pre class="msg out">Enter your age: 25
 Enter your name: Hello, !</pre>
@@ -293,7 +293,7 @@ String name = scanner.nextLine();</pre></div></div>
         </article>
 
         <article class="card" data-cat="runtime">
-          <div class="ch"><span class="cat">Runtime</span><h2>== on Strings</h2><a class="see" href="../visuals/23-string-comparison.html">See it</a></div>
+          <div class="ch"><span class="cat">Runtime</span><h2>== on Strings</h2><a class="see" href="../visuals/24-string-comparison.html">See it</a></div>
           <p class="mk">No error. The user typed Dana, console:</p>
           <pre class="msg out">(nothing printed)</pre>
           <p class="means"><code>==</code> asks whether two variables are the same object, not whether the text matches.</p>
@@ -302,7 +302,7 @@ String name = scanner.nextLine();</pre></div></div>
         </article>
 
         <article class="card" data-cat="runtime">
-          <div class="ch"><span class="cat">Runtime</span><h2>Integer division drops the decimals</h2><a class="see" href="../visuals/15-integer-division.html">See it</a></div>
+          <div class="ch"><span class="cat">Runtime</span><h2>Integer division drops the decimals</h2><a class="see" href="../visuals/16-integer-division.html">See it</a></div>
           <p class="mk">No error. Console:</p>
           <pre class="msg out">3.0</pre>
           <p class="means">Both operands are <code>int</code>, so <code>10 / 3</code> is <code>3</code> before it ever reaches the double.</p>
@@ -311,7 +311,7 @@ String name = scanner.nextLine();</pre></div></div>
         </article>
 
         <article class="card" data-cat="runtime">
-          <div class="ch"><span class="cat">Runtime</span><h2>Dividing an int by zero</h2><a class="see" href="../visuals/15-integer-division.html">See it</a></div>
+          <div class="ch"><span class="cat">Runtime</span><h2>Dividing an int by zero</h2><a class="see" href="../visuals/16-integer-division.html">See it</a></div>
           <pre class="msg">Exception in thread "main" java.lang.ArithmeticException: / by zero
 	at com.pluralsight.Main.main(Main.java:12)</pre>
           <p class="means">Integer division by 0 has no answer, so the program stops at that line.</p>
@@ -322,7 +322,7 @@ String name = scanner.nextLine();</pre></div></div>
         </article>
 
         <article class="card" data-cat="runtime">
-          <div class="ch"><span class="cat">Runtime</span><h2>Numbers glued instead of added</h2><a class="see" href="../visuals/14-concat-vs-addition.html">See it</a></div>
+          <div class="ch"><span class="cat">Runtime</span><h2>Numbers glued instead of added</h2><a class="see" href="../visuals/15-concat-vs-addition.html">See it</a></div>
           <p class="mk">No error. Console:</p>
           <pre class="msg out">Score: 1020</pre>
           <p class="means"><code>+</code> runs left to right; once a String is on the left, every <code>+</code> joins text.</p>
@@ -331,7 +331,7 @@ String name = scanner.nextLine();</pre></div></div>
         </article>
 
         <article class="card" data-cat="runtime">
-          <div class="ch"><span class="cat">Runtime</span><h2>switch without break</h2><a class="see" href="../visuals/28-switch-flow.html">See it</a></div>
+          <div class="ch"><span class="cat">Runtime</span><h2>switch without break</h2><a class="see" href="../visuals/29-switch-flow.html">See it</a></div>
           <p class="mk">No error. day is 1, console:</p>
           <pre class="msg out">Monday
 Tuesday</pre>
@@ -360,7 +360,7 @@ System.out.println("World");</pre></div></div>
         </article>
 
         <article class="card" data-cat="runtime">
-          <div class="ch"><span class="cat">Runtime</span><h2>Scanner closed, or a new Scanner per method</h2><a class="see" href="../visuals/27-one-scanner.html">See it</a></div>
+          <div class="ch"><span class="cat">Runtime</span><h2>Scanner closed, or a new Scanner per method</h2><a class="see" href="../visuals/28-one-scanner.html">See it</a></div>
           <pre class="msg">Exception in thread "main" java.lang.IllegalStateException: Scanner closed</pre>
           <p class="means">A method closed the Scanner on <code>System.in</code>, and every later read fails.</p>
           <p class="fix"><b>Fix</b>Create one Scanner in <code>main</code>, pass it to methods, never create or close it inside them.</p>

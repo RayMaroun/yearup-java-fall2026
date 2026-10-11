@@ -16,8 +16,8 @@ NEW = no spring page. NONE = idea covered by the workbook text/image, no page. S
 | 08 | Compile → bytecode → JVM (1c 2-1) | 09-java-compilation | KEEP | Walk | |
 | 09 | JDK ⊃ JRE ⊃ JVM (1c 2-1) | 10-jdk-jre-jvm | KEEP | Glance | |
 | 10 | Data types and sizes (1c 3-1) | 11-data-types | KEEP | Glance | add "declared vs initialized / default values" as the control (folds the Variables idea) |
-| 11 | final constants (1c 3-1) | 12-final-constants | KEEP | Glance | |
-| 12 | Naming conventions (1c 3-1) | 13-naming-conventions | KEEP | Glance | |
+| 11 | final constants (1c 3-1) | 13-final-constants | KEEP | Glance | |
+| 12 | Naming conventions (1c 3-1) | 14-naming-conventions | KEEP | Glance | |
 | 13 | Concatenation vs addition: "1" + 2 + 3 (1c 3-2) | none | NEW | Walk | a classic beginner trap, one slider over the expression |
 | 14 | Integer division and modulo (1c 3-2) | 12-integer-division | KEEP | Walk | |
 | 15 | Pre/post increment (1c 3-2) | 13-pre-post-increment | KEEP | Walk | |
@@ -26,13 +26,13 @@ NEW = no spring page. NONE = idea covered by the workbook text/image, no page. S
 | 18 | Scanner buffer: nextInt then nextLine (1c 3-3) | 16-scanner-buffer | KEEP | Model | the mechanism is the lesson; instructor plays it in class |
 | 19 | Scanner methods: next / nextLine / nextInt (1c 3-3) | 23-scanner-methods | KEEP | Walk | |
 | 20 | if / else if / else path (1c 4-1) + conditional operator (4-3) | 17-if-else-flowchart | KEEP | Walk | add the ?: form as a toggle (folds the conditional operator) |
-| 21 | Logical operators && || ! (1c 4-1) | 22-logical-operators | KEEP | Walk | |
-| 22 | == vs .equals on Strings (1c 4-1) | 23-string-comparison | KEEP | Walk | |
-| 23 | Method signature anatomy (1c 4-2) | 24-method-signature | KEEP | Walk | |
-| 24 | Method call stack, parameters are copies (1c 4-2) | 25-method-call-stack | BUILT | Model | approved as the Model reference |
-| 25 | Repeated code → one method (1c 4-2) | 26-method-decomposition | REBUILD | Walk | before/after toggle on the rectangle demo (demo-06-methods), not an exercise |
+| 21 | Logical operators && || ! (1c 4-1) | 23-logical-operators | KEEP | Walk | |
+| 22 | == vs .equals on Strings (1c 4-1) | 24-string-comparison | KEEP | Walk | |
+| 23 | Method signature anatomy (1c 4-2) | 25-method-signature | KEEP | Walk | |
+| 24 | Method call stack, parameters are copies (1c 4-2) | 26-method-call-stack | BUILT | Model | approved as the Model reference |
+| 25 | Repeated code → one method (1c 4-2) | 27-method-decomposition | REBUILD | Walk | before/after toggle on the rectangle demo (demo-06-methods), not an exercise |
 | 26 | One Scanner passed between methods (1c 4-2) | none | NEW | Walk | from InputApp demo (potatoScanner / tomatoScanner); workbook pp. 113-116 (three choices, re-declaring, passing). BUILT as 23. REVIEW with Ray: the trap chip shows the swallowing risk via type-ahead; the workbook's own trace shows line-by-line typing looks fine. Decide keep / soften / drop the trap chip. |
-| 27 | switch: traditional with break, fall-through, arrow form (1c 4-3) | 28-switch-flow | REBUILD | Walk | both forms side by side, v7.2 teaches both |
+| 27 | switch: traditional with break, fall-through, arrow form (1c 4-3) | 29-switch-flow | REBUILD | Walk | both forms side by side, v7.2 teaches both |
 | 28 | From problem to code: read, identify, plan, translate | 25-problem-decomposition | REBUILD | Walk | BUILT as 25 with an invented print-shop problem. EXTRA: not a workbook topic (instructor note 2026-10-12). Keep, redo, or drop at Ray's review. |
 NONE: IntelliJ new-project dialog (workbook screenshots), Math class (a table), Section 3-4 AI (instructor's call), Module 5 debugging (Week 2 covers the debugger).
 
