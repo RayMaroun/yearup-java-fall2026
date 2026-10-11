@@ -1,0 +1,310 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Maven, the Build System | Week 1 Visual Hub</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Sora:wght@500;700&family=Inter:wght@400;500&family=JetBrains+Mono:wght@400;500&display=swap">
+<style>
+  :root{
+    --bg:#080c17; --bg2:#0c1428; --surface:rgba(255,255,255,.045); --line:rgba(255,255,255,.09);
+    --ink:#eef2fb; --muted:#8496b6; --accent:#6ea0ff; --accent2:#8b7bff; --good:#46d98a; --warn:#ff6a6a;
+    --gold:#ffc862; --disp:'Sora',system-ui,sans-serif; --body:'Inter',system-ui,sans-serif;
+    --mono:'JetBrains Mono',ui-monospace,monospace;
+  }
+  *{box-sizing:border-box}
+  body{margin:0;min-height:100vh;color:var(--ink);font-family:var(--body);
+    background:radial-gradient(1200px 700px at 70% -10%,#141d38 0%,transparent 55%),
+               radial-gradient(900px 600px at 10% 110%,#161233 0%,transparent 50%),#080c17;
+    overflow-x:hidden}
+  #amb{position:fixed;inset:0;z-index:0;pointer-events:none;opacity:.6}
+  .back{position:relative;z-index:2;display:block;max-width:1120px;margin:0 auto;padding:26px 24px 0;
+    width:100%;font-family:var(--mono);font-size:.8rem;letter-spacing:.04em;color:var(--muted);
+    text-decoration:none;transition:color .15s}
+  .back:hover{color:var(--accent)}
+  .wrap{position:relative;z-index:1;max-width:1120px;margin:0 auto;padding:22px 24px 70px}
+  .tag{font-family:var(--mono);font-size:.72rem;letter-spacing:.22em;text-transform:uppercase;color:var(--accent);margin:0 0 14px}
+  h1{font-family:var(--disp);font-weight:700;font-size:clamp(2.3rem,6vw,3.6rem);line-height:1;margin:0 0 12px;
+    letter-spacing:-.03em;background:linear-gradient(180deg,#fff,#b9c6e6);-webkit-background-clip:text;
+    background-clip:text;color:transparent}
+  .lede{color:var(--muted);max-width:64ch;font-size:1.05rem;margin:0 0 26px;line-height:1.5}
+  .lede b{color:var(--ink)}
+  .lede code,.take code,.caption code{font-family:var(--mono);font-size:.92em;color:#bcd0ff}
+
+  /* ---------- stage: picture first, one toolbar ---------- */
+  .stage{position:relative;background:linear-gradient(180deg,rgba(255,255,255,.03),rgba(255,255,255,.01));
+    border:1px solid var(--line);border-radius:24px;padding:18px 18px 14px;
+    box-shadow:0 1px 0 rgba(255,255,255,.06) inset,0 30px 80px -30px rgba(0,0,0,.8)}
+  .topbar{display:flex;align-items:center;gap:10px;margin:0 0 14px;flex-wrap:wrap}
+  .topbar .lab{margin:0 4px 0 0}
+  .lab{font-family:var(--mono);font-size:.7rem;letter-spacing:.12em;text-transform:uppercase;color:var(--muted);margin:0 0 10px}
+
+  /* hero picture: what you write, Maven, what Maven makes */
+  .pic{position:relative;min-height:390px;border:1px solid var(--line);border-radius:18px;background:rgba(6,10,20,.5);overflow:hidden;
+    display:grid;grid-template-columns:minmax(0,1fr) 180px minmax(0,1fr);column-gap:64px;padding:18px 22px;align-items:center}
+  #wires{position:absolute;inset:0;width:100%;height:100%;pointer-events:none;z-index:0}
+  #wires path{fill:none;stroke-width:2;transition:opacity .3s}
+  .col{position:relative;z-index:1;min-width:0;display:flex;flex-direction:column;gap:12px}
+  .col>.lab{margin:0 0 2px}
+
+  .box{border:1px solid var(--line);border-radius:14px;background:rgba(255,255,255,.02);padding:12px 14px;
+    transition:border-color .3s,background .3s,opacity .3s}
+  .fname{display:flex;align-items:center;gap:9px;font-family:var(--mono);font-size:.92rem;color:var(--ink);transition:color .3s}
+  .ic{flex:0 0 auto;width:15px;height:13px;border-radius:2px;border:1.5px solid currentColor;opacity:.75}
+  .ic.dir{border-top-width:3px}
+  .ic.file{width:12px;height:14px;border-radius:1px 4px 1px 1px}
+  .path{font-family:var(--mono);font-size:.7rem;color:var(--muted);margin:0 0 6px;word-break:break-all}
+  .chips{display:flex;flex-wrap:wrap;gap:7px;margin-top:10px}
+  .chip{font-family:var(--mono);font-size:.76rem;padding:5px 11px;border-radius:999px;border:1px solid var(--line);
+    background:rgba(0,0,0,.3);color:var(--muted);transition:border-color .3s,color .3s,background .3s,opacity .3s}
+  .chip.dash{border-style:dashed}
+  .lit{border-color:rgba(110,160,255,.6);background:rgba(110,160,255,.08)}
+  .chip.lit{color:var(--ink);background:rgba(110,160,255,.14)}
+  .box.lit .fname{color:#fff}
+
+  /* Maven, the middle */
+  .mvn{position:relative;z-index:1;border-radius:16px;border:1px solid rgba(139,123,255,.55);
+    background:linear-gradient(180deg,rgba(139,123,255,.14),rgba(110,160,255,.06));padding:18px 16px;text-align:center;
+    box-shadow:0 0 34px -12px rgba(139,123,255,.6)}
+  .mvn .mname{font-family:var(--disp);font-weight:700;font-size:1.5rem;letter-spacing:-.01em}
+  .mvn .msub{font-family:var(--mono);font-size:.64rem;letter-spacing:.12em;text-transform:uppercase;color:var(--muted);margin:4px 0 12px}
+  .mvn ol{list-style:none;margin:0;padding:0;display:flex;flex-direction:column;gap:6px;min-height:62px}
+  .mvn li{font-family:var(--mono);font-size:.78rem;padding:6px 8px;border-radius:9px;background:rgba(0,0,0,.3);border:1px solid var(--line);color:#bcd0ff}
+  .mvn li.del{color:var(--warn);border-color:rgba(255,106,106,.45)}
+
+  /* right column */
+  .shelf{border-style:dashed;padding:10px 14px}
+  .shelf .none{font-family:var(--mono);font-size:.74rem;color:var(--muted);margin-top:6px}
+  .tbox .thead{display:flex;align-items:center;gap:10px}
+  .badge{margin-left:auto;font-family:var(--mono);font-size:.6rem;letter-spacing:.14em;text-transform:uppercase;padding:3px 9px;border-radius:999px;
+    border:1px solid rgba(110,160,255,.45);color:var(--accent);background:rgba(110,160,255,.08);transition:.3s}
+  .trow{display:flex;align-items:center;gap:9px;font-family:var(--mono);font-size:.84rem;color:var(--muted);margin:10px 0 0 14px;
+    padding:5px 10px;border-radius:9px;border:1px solid transparent;transition:opacity .3s,color .3s,background .3s,border-color .3s}
+  .trow .p{color:var(--muted);font-size:.7rem}
+  .trow.lit{color:#fff}
+  .trow.new{color:#fff;border-color:rgba(70,217,138,.55);background:rgba(70,217,138,.09)}
+  .trow.hide{opacity:0}
+  .tbox.gone{border-style:dashed;border-color:rgba(255,106,106,.55);background:rgba(255,106,106,.04)}
+  .tbox.gone .fname,.tbox.gone .trow{text-decoration:line-through;opacity:.35}
+  .tbox.gone .badge{color:var(--warn);border-color:rgba(255,106,106,.5);background:rgba(255,106,106,.08)}
+  .con{background:rgba(0,0,0,.45);transition:opacity .3s,border-color .3s}
+  .con .ln{font-family:var(--mono);font-size:.9rem;color:var(--good);margin-top:6px}
+  .con.hide{opacity:0}
+
+  @media (max-width:860px){
+    .pic{grid-template-columns:1fr;row-gap:18px;padding:16px}
+    #wires{display:none}
+  }
+
+  /* caption: the sentence for the current choice, right under the picture */
+  .caption{display:flex;gap:16px;align-items:flex-start;margin:14px 4px 0;min-height:56px}
+  .caption .n{flex-shrink:0;font-family:var(--disp);font-weight:700;font-size:1.35rem;color:var(--accent);line-height:1.2;min-width:5.4rem}
+  .caption .n small{display:block;font-family:var(--mono);font-weight:400;font-size:.58rem;letter-spacing:.14em;text-transform:uppercase;color:var(--muted)}
+  .caption .t{font-size:1.02rem;line-height:1.55;color:var(--ink);padding-left:16px;border-left:3px solid var(--accent);transition:border-color .3s}
+  .caption.clean .n{color:var(--warn)} .caption.clean .t{border-left-color:var(--warn)}
+  .caption b{color:#fff;font-weight:600}
+
+  /* toolbar: the one control */
+  .toolbar{display:flex;align-items:center;gap:10px;margin:16px 0 0;padding-top:14px;border-top:1px solid var(--line);flex-wrap:wrap}
+  .seg{display:inline-flex;flex-wrap:wrap;border:1px solid var(--line);border-radius:12px;overflow:hidden;background:rgba(0,0,0,.25)}
+  .seg button{font-family:var(--body);font-weight:500;font-size:.86rem;padding:10px 18px;border:0;background:transparent;color:var(--muted);
+    cursor:pointer;transition:.15s;border-right:1px solid var(--line)}
+  .seg button:last-child{border-right:0}
+  .seg button:hover{color:var(--accent)}
+  .seg button.on{background:rgba(110,160,255,.16);color:var(--ink)}
+  .seg button:focus-visible{outline:2px solid var(--accent);outline-offset:-2px}
+  .hint{font-family:var(--mono);font-size:.68rem;color:var(--muted);margin:10px 4px 0;line-height:1.5}
+  .hint b{color:var(--accent)}
+
+  .take{margin-top:22px;background:linear-gradient(180deg,rgba(110,160,255,.08),rgba(139,123,255,.04));
+    border:1px solid var(--line);border-left:3px solid var(--accent);border-radius:12px;padding:16px 18px}
+  .take .tk{font-family:var(--mono);font-size:.66rem;letter-spacing:.14em;text-transform:uppercase;color:var(--accent);margin:0 0 8px}
+  .take p{margin:0;font-size:.95rem;color:var(--ink);line-height:1.55}
+  .take b{color:#fff}
+  @media (prefers-reduced-motion:reduce){*{animation-duration:.01ms!important;transition-duration:.01ms!important}#amb{display:none}}
+</style>
+</head>
+<body>
+
+<a class="back" href="../index.html#06-maven-build-system">&#8592; Week 1 index</a>
+
+<canvas id="amb"></canvas>
+<div class="wrap">
+  <p class="tag">Workbook 1a &middot; Section 1-3 &middot; What the build system does</p>
+  <h1>Maven, the Build System</h1>
+  <p class="lede"><b>Maven reads your pom.xml, compiles src into target, and fetches what you depend on. You never type a javac command.</b></p>
+
+  <div class="stage">
+    <div class="topbar">
+      <span class="lab">first-maven-project, built by Maven</span>
+    </div>
+
+    <div class="pic" id="pic">
+      <svg id="wires" aria-hidden="true">
+        <defs>
+          <marker id="ah" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="#6ea0ff"/></marker>
+          <marker id="ahg" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="#46d98a"/></marker>
+          <marker id="ahw" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="#ff6a6a"/></marker>
+        </defs>
+        <g id="wg"></g>
+      </svg>
+
+      <div class="col">
+        <p class="lab">What you write</p>
+        <div class="box" id="Bpom">
+          <div class="fname"><span class="ic file"></span>pom.xml</div>
+          <div class="chips">
+            <span class="chip" id="Cjava">Java 17</span>
+            <span class="chip dash" id="Cdeps">dependencies: none yet</span>
+          </div>
+        </div>
+        <div class="box" id="Bsrc">
+          <p class="path">src/main/java/com/pluralsight/</p>
+          <div class="fname"><span class="ic file"></span>HelloWorld.java</div>
+        </div>
+      </div>
+
+      <div class="mvn" id="mvn">
+        <div class="mname">Maven</div>
+        <div class="msub">reads pom.xml</div>
+        <ol id="acts"></ol>
+      </div>
+
+      <div class="col">
+        <p class="lab">What Maven makes</p>
+        <div class="box shelf" id="Bshelf">
+          <div class="fname"><span class="ic dir"></span>jars from the internet</div>
+          <div class="none">none yet</div>
+        </div>
+        <div class="box tbox" id="Btarget">
+          <div class="thead"><div class="fname"><span class="ic dir"></span>target/</div><span class="badge" id="tbadge">generated</span></div>
+          <div class="trow" id="Rclass"><span class="ic file"></span><span><span class="p">classes/com/pluralsight/</span><br>HelloWorld.class</span></div>
+          <div class="trow" id="Rjar"><span class="ic file"></span>first-maven-project-1.0-SNAPSHOT.jar</div>
+        </div>
+        <div class="box con" id="Bcon">
+          <div class="lab" style="margin:0">Console</div>
+          <div class="ln">Hello I am Raymond!</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="caption" id="caption">
+      <div class="n" id="mode"><small>maven</small>Compile</div>
+      <div class="t" id="status"></div>
+    </div>
+
+    <div class="toolbar">
+      <div class="seg" id="seg" role="group" aria-label="What should Maven do?">
+        <button data-m="compile" class="on">Compile</button>
+        <button data-m="run">Run</button>
+        <button data-m="package">Package</button>
+        <button data-m="clean">Clean</button>
+      </div>
+    </div>
+    <p class="hint">Run is the <b>green arrow</b> in IntelliJ. Names from Raymond's <b>first-maven-project</b> demo.</p>
+  </div>
+
+  <div class="take">
+    <p class="tk">The one idea</p>
+    <p><b>Maven decides three things for you: the folder layout, the Java version (from the pom), and your dependencies.</b>
+    The rule: <code>target</code> is generated. Never edit it, never commit it. IntelliJ's <code>.gitignore</code> already leaves it out.</p>
+  </div>
+
+  <div id="rail"></div>
+</div>
+
+<script>
+(function(){
+  "use strict";
+  var $=function(s){return document.querySelector(s);};
+  var reduce=matchMedia("(prefers-reduced-motion: reduce)").matches;
+
+  /* in: what Maven reads. out: what it produces. wires: [from, to, color] */
+  var MODES={
+    compile:{label:"Compile",acts:["javac every .java"],
+      lit:["Cjava","Bpom","Bsrc"],rows:{Rclass:"new",Rjar:"hide"},target:"on",con:false,
+      wires:[["Cjava","mvn","a"],["Bsrc","mvn","a"],["mvn","Rclass","g"]],
+      msg:"javac runs for you: every <code>.java</code> under <b>src</b> becomes a <code>.class</code> under <b>target</b>."},
+    run:{label:"Run",acts:["1. compile","2. java HelloWorld"],
+      lit:["Cjava","Bpom","Bsrc"],rows:{Rclass:"lit",Rjar:"hide"},target:"on",con:true,
+      wires:[["Cjava","mvn","a"],["Bsrc","mvn","a"],["mvn","Rclass","a"],["Rclass","Bcon","g"]],
+      msg:"The green arrow compiles first, then starts the JVM on <code>HelloWorld.class</code>, and its output lands in the <b>console</b>."},
+    package:{label:"Package",acts:["1. compile","2. jar the classes"],
+      lit:["Cjava","Bpom","Bsrc"],rows:{Rclass:"lit",Rjar:"new"},target:"on",con:false,
+      wires:[["Cjava","mvn","a"],["Bsrc","mvn","a"],["mvn","Rjar","g"]],
+      msg:"One <code>.jar</code> file that holds all the <code>.class</code> files: <b>the thing you ship</b>."},
+    clean:{label:"Clean",acts:["delete target/"],
+      lit:["Bpom"],rows:{Rclass:"",Rjar:"hide"},target:"gone",con:false,
+      wires:[["Bpom","mvn","a"],["mvn","Btarget","w"]],
+      msg:"<b>target is gone.</b> Nothing you wrote was touched: target is generated, and the next Compile rebuilds it."}
+  };
+  var LITABLE=["Cjava","Bpom","Bsrc"];
+  var cur="compile";
+
+  function rel(el){
+    var p=$("#pic").getBoundingClientRect(), r=el.getBoundingClientRect();
+    return {l:r.left-p.left,r:r.right-p.left,y:r.top-p.top+r.height/2,t:r.top-p.top,b:r.bottom-p.top,cx:r.left-p.left+r.width/2};
+  }
+  function wire(a,b,c){
+    var A=rel(document.getElementById(a)), B=rel(document.getElementById(b)), d;
+    if(b==="Bcon"){ /* down from the class row to the console */
+      var x=Math.min(A.l+40,B.r-20);
+      d="M"+x+","+A.b+" L"+x+","+(B.t-3);
+    }else{
+      var x1=(a==="Cjava"?rel(document.getElementById("Bpom")).r:A.r)+4, x2=B.l-5, mx=(x1+x2)/2;
+      d="M"+x1+","+A.y+" C"+mx+","+A.y+" "+mx+","+B.y+" "+x2+","+B.y;
+    }
+    var col={a:"#6ea0ff",g:"#46d98a",w:"#ff6a6a"}[c], mk={a:"ah",g:"ahg",w:"ahw"}[c];
+    var p=document.createElementNS("http://www.w3.org/2000/svg","path");
+    p.setAttribute("d",d); p.setAttribute("stroke",col); p.setAttribute("marker-end","url(#"+mk+")");
+    if(c==="w")p.setAttribute("stroke-dasharray","6 5");
+    return p;
+  }
+  function drawWires(){
+    var g=$("#wg"); while(g.firstChild)g.removeChild(g.firstChild);
+    if(getComputedStyle($("#wires")).display==="none")return;
+    MODES[cur].wires.forEach(function(w){g.appendChild(wire(w[0],w[1],w[2]));});
+  }
+
+  function set(mode){
+    var M=MODES[mode]; cur=mode;
+    LITABLE.forEach(function(id){document.getElementById(id).classList.toggle("lit",M.lit.indexOf(id)>=0);});
+    ["Rclass","Rjar"].forEach(function(id){document.getElementById(id).className="trow "+M.rows[id];});
+    var T=$("#Btarget"); T.classList.toggle("gone",M.target==="gone");
+    $("#tbadge").textContent=M.target==="gone"?"deleted":"generated";
+    $("#Bcon").classList.toggle("hide",!M.con);
+    var ol=$("#acts"); ol.textContent="";
+    M.acts.forEach(function(a){var li=document.createElement("li"); li.textContent=a; if(mode==="clean")li.className="del"; ol.appendChild(li);});
+    Array.prototype.forEach.call(document.querySelectorAll("#seg button"),function(b){
+      var on=b.getAttribute("data-m")===mode; b.classList.toggle("on",on); b.setAttribute("aria-pressed",on?"true":"false");});
+    $("#mode").innerHTML="<small>maven</small>"+M.label;
+    $("#caption").className="caption "+mode;
+    $("#status").innerHTML=M.msg;
+    drawWires();
+  }
+
+  $("#seg").addEventListener("click",function(e){ var b=e.target.closest("button"); if(b) set(b.getAttribute("data-m")); });
+  addEventListener("resize",drawWires);
+  if(document.fonts&&document.fonts.ready)document.fonts.ready.then(drawWires);
+
+  /* ---------- ambient canvas ---------- */
+  var cv=$("#amb"),ctx=cv.getContext&&cv.getContext("2d"),parts=[];
+  function sizeC(){if(!ctx)return;cv.width=innerWidth;cv.height=innerHeight;}
+  function initParts(){parts=[];for(var i=0;i<46;i++)parts.push({x:Math.random(),y:Math.random(),
+    r:Math.random()*1.6+.3,s:Math.random()*.02+.004,o:Math.random()*.4+.1});}
+  function drawC(){if(!ctx)return;ctx.clearRect(0,0,cv.width,cv.height);
+    parts.forEach(function(p){p.y-=p.s/60;if(p.y<-.02)p.y=1.02;
+      ctx.beginPath();ctx.arc(p.x*cv.width,p.y*cv.height,p.r,0,7);
+      ctx.fillStyle="rgba(140,170,255,"+p.o+")";ctx.fill();});
+    requestAnimationFrame(drawC);}
+  if(ctx&&!reduce){sizeC();initParts();drawC();addEventListener("resize",sizeC);}
+
+  set("compile");
+})();
+</script>
+<script src="../manifest.js"></script>
+<script src="../../assets/rail.js"></script>
+<script>Rail.render(document.getElementById("rail"),{kind:"visuals",current:"06-maven-build-system"});</script>
+</body>
+</html>

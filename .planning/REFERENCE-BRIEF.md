@@ -1,6 +1,6 @@
 # Reference page brief (Week 1)
 
-Read `CLAUDE.md` (design tokens, "Every visual page: the HERO LAYOUT", conventions) and `week-01/visuals/09-jdk-jre-jvm.html`
+Read `CLAUDE.md` (design tokens, "Every visual page: the HERO LAYOUT", conventions) and `week-01/visuals/10-jdk-jre-jvm.html`
 (a Glance page: copy its CSS base, header, stage, caption, takeaway, rail, ambient canvas). Then read the spring page named in your
 task (under `/Users/ray/Desktop/Training/Pluralsight/YearUp/yearup-java-visuals/week-01/reference/`) for CONTENT only; its design is not reused.
 Workbook text for accuracy: `.planning/workbook-text/wb1a.txt`, `wb1b.txt`, `wb1c.txt` (v7.2Y). Demos: `../../04.Weeks/Week 01/demos/`.
