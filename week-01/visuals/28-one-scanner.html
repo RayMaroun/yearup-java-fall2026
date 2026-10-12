@@ -234,7 +234,7 @@
     <p><b>One Scanner per program, created in main, handed to methods as a parameter.</b>
     <code>myScanner</code>, <code>potatoScanner</code> and <code>tomatoScanner</code> are different names for one object:
     Java passes a reference to the Scanner, not a copy of the keyboard. A second <code>new Scanner(System.in)</code> inside a method
-    costs duplicate code, swallowed input and a leaked resource.</p>
+    costs duplicate code, swallowed input and a leaked resource. A static field works, but hides who reads input and one close() cuts off everyone.</p>
   </div>
 
   <div id="rail"></div>
@@ -248,12 +248,13 @@
 
   /* ---------- runs ---------- */
   var RUNS=[
-    {label:"doAdd(myScanner)",m:"doAdd",p:"potatoScanner",cmd:1,op:"+",rv:"sum",res:"30.500000"},
-    {label:"doSubtract(myScanner)",m:"doSubtract",p:"tomatoScanner",cmd:2,op:"-",rv:"difference",res:"20.000000"},
+    {label:"doAdd(myScanner)",m:"doAdd",p:"potatoScanner",cmd:1,op:"+",rv:"sum",res:"30.50"},
+    {label:"doSubtract(myScanner)",m:"doSubtract",p:"tomatoScanner",cmd:2,op:"-",rv:"difference",res:"20.00"},
+    {label:"Static field: works, but",m:"doAdd",p:"myScanner",cmd:1,op:"+",rv:"sum",res:"30.50",stat:true},
     {label:"Trap: a second Scanner",m:"doAdd",p:"potatoScanner",cmd:1,op:"+",rv:"sum",res:"",trap:true}
   ];
   var R=RUNS[0];
-  var ASK="What do you want to do (1-add, 2= subtract) ?";
+  var ASK="What do you want to do (1 = add, 2 = subtract)? ";
 
   function hl(t){
     return t.split(/("[^"]*")/).map(function(part,i){
@@ -267,10 +268,12 @@
   }
 
   function lines(){
-    var arg=R.trap?"":"myScanner";
-    var L=[
-      ["mainH","public static void main(String[] args) {"],
-      ["new","  Scanner myScanner = new Scanner(System.in);"],
+    var arg=(R.trap||R.stat)?"":"myScanner";
+    var L=[];
+    if(R.stat) L.push(["new","static Scanner myScanner = new Scanner(System.in);"],["",""]);
+    L.push(["mainH","public static void main(String[] args) {"]);
+    if(!R.stat) L.push(["new","  Scanner myScanner = new Scanner(System.in);"]);
+    L=L.concat([
       ["ask",'  System.out.print("'+ASK+'");'],
       ["cmd","  int command = myScanner.nextInt();"],
       ["if","  if (command == 1) {"],
@@ -281,8 +284,8 @@
       ["close","  myScanner.close();"],
       ["mainE","}"],
       ["",""],
-      ["mH","public static void "+R.m+"("+(R.trap?"":"Scanner "+R.p)+") {"]
-    ];
+      ["mH","public static void "+R.m+"("+((R.trap||R.stat)?"":"Scanner "+R.p)+") {"]
+    ]);
     if(R.trap) L.push(["new2","  Scanner "+R.p+" = new Scanner(System.in);"]);
     return L.concat([
       ["p1",'  System.out.print("Enter 1st number: ");'],
@@ -290,7 +293,7 @@
       ["p2",'  System.out.print("Enter 2nd number: ");'],
       ["r2","  double num2 = "+R.p+".nextDouble();"],
       ["calc","  double "+R.rv+" = num1 "+R.op+" num2;"],
-      ["out",'  System.out.printf("%f '+R.op+' %f = %f", num1, num2, '+R.rv+');'],
+      ["out",'  System.out.printf("%.2f '+R.op+' %.2f = %.2f%n", num1, num2, '+R.rv+');'],
       ["mE","}"]
     ]);
   }
@@ -308,8 +311,21 @@
     var S=[];
     S.push({line:["new"],cls:"",objs:1,read:null,con:[],
       pic:pic({tMain:"lit",lit1:1}),
-      msg:'<code>new Scanner(System.in)</code> builds <b class="a">one Scanner object</b> that reads the keyboard stream, and the variable <code>myScanner</code> points to it.'});
-    if(!R.trap){
+      msg:R.stat?'A <b class="a">static field</b>: one Scanner built before main runs, visible to every method. One object, fine so far.'
+              :'<code>new Scanner(System.in)</code> builds <b class="a">one Scanner object</b> that reads the keyboard stream, and the variable <code>myScanner</code> points to it.'});
+    if(R.stat){
+      var sc1=[[ASK,c]], sc2=sc1.concat([["Enter 1st number: ","25.25"]]), sc3=sc2.concat([["Enter 2nd number: ","5.25"]]), scr=sc3.concat([["25.25 "+R.op+" 5.25 = "+R.res,""]]);
+      S.push({line:["ask","cmd"],cls:"",objs:1,read:c,con:sc1,pic:pic({tMain:"lit",lit1:1,typed:c,b1:[[c,"taken"]]}),
+        msg:'The user types <b class="a">'+c+'</b>. main reads it through the field.'});
+      S.push({line:call,cls:"left",objs:1,read:c,con:sc1,pic:pic({tMeth:"lit"}),
+        msg:'<code>doAdd()</code> is called with <b class="y">nothing</b>. Its header says it needs nothing. It reads the keyboard anyway.'});
+      S.push({line:["p1","r1"],cls:"left",objs:1,read:"25.25",con:sc2,pic:pic({tMeth:"lit",lit1:1,typed:"25.25",b1:[["25.25","taken"]]}),
+        msg:'<code>myScanner.nextDouble()</code> reads <b class="a">25.25</b> straight from the field. Same object, nothing swallowed: it works.'});
+      S.push({line:["calc","out","mE"],cls:"left",objs:1,read:"5.25",con:scr,pic:pic({}),
+        msg:'Result printed. The cost: <b class="y">nothing at the call shows that doAdd reads input</b>, so you cannot test it with other input or reuse it elsewhere.'});
+      S.push({line:["close"],cls:"left",objs:1,read:"5.25",con:scr,pic:pic({tMain:"lit",c1:1}),
+        msg:'Every method shares the field, so <code>close()</code> <b class="y">anywhere closes input everywhere</b>. Pass it as a parameter instead: same one object, said out loud.'});
+    } else if(!R.trap){
       var con1=[[ASK,c]], con2=con1.concat([["Enter 1st number: ","25.25"]]), con3=con2.concat([["Enter 2nd number: ","5.25"]]);
       S.push({line:["ask","cmd"],cls:"",objs:1,read:c,con:con1,
         pic:pic({tMain:"lit",lit1:1,typed:c,b1:[[c,"taken"]]}),
@@ -323,10 +339,10 @@
       S.push({line:["p2","r2"],cls:"",objs:1,read:"5.25",con:con3,
         pic:pic({tMeth:"lit",lit1:1,typed:"5.25",b1:[["5.25","taken"]]}),
         msg:'It reads <b class="a">5.25</b> the same way. Still only <b class="g">one object</b> stands between the program and the keyboard.'});
-      S.push({line:["calc","out","mE"],cls:"ok",objs:1,read:"5.25",con:con3.concat([["25.250000 "+R.op+" 5.250000 = "+R.res,""]]),
+      S.push({line:["calc","out","mE"],cls:"ok",objs:1,read:"5.25",con:con3.concat([["25.25 "+R.op+" 5.25 = "+R.res,""]]),
         pic:pic({}),
         msg:'<code>'+R.m+'</code> prints the result and ends. The name <code>'+R.p+'</code> goes away with it, but <b class="g">the Scanner object stays</b>.'});
-      S.push({line:["close"],cls:"",objs:1,read:"5.25",con:con3.concat([["25.250000 "+R.op+" 5.250000 = "+R.res,""]]),
+      S.push({line:["close"],cls:"",objs:1,read:"5.25",con:con3.concat([["25.25 "+R.op+" 5.25 = "+R.res,""]]),
         pic:pic({tMain:"lit",c1:1}),
         msg:'Back in main, <code>myScanner</code> still points to that same Scanner, which kept working the whole time. main <b class="a">closes it once</b>, at the end.'});
     } else {
@@ -408,6 +424,7 @@
   function renderPic(p){
     var kbd=$("#kbd"), o1=$("#o1"), o2=$("#o2"), tm=$("#tMain"), tt=$("#tMeth");
     $("#tMethIn").textContent="in "+R.m; $("#tMethNm").textContent=R.p;
+    $("#tMain .in").textContent=R.stat?"static field":"in main";
     if(!p){
       $("#start").style.opacity=1;
       kbd.className="kbd"; $("#typed").innerHTML=""; $("#kbdS").textContent="the one keyboard stream";
