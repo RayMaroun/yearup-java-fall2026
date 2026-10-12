@@ -213,9 +213,9 @@
           <p class="lab">Inputs &middot; what you type</p>
           <div class="inputs">
             <p class="ititle">typed at each prompt, then ENTER</p>
-            <div class="irow"><span class="kk">first number</span><input id="inA" type="text" value="13" maxlength="9" spellcheck="false"></div>
-            <div class="irow"><span class="kk">second number</span><input id="inB" type="text" value="145" maxlength="9" spellcheck="false"></div>
-            <div class="irow"><span class="kk">operation</span><input id="inO" type="text" value="add" maxlength="12" spellcheck="false"></div>
+            <div class="irow"><span class="kk">age</span><input id="inA" type="text" value="26" maxlength="9" spellcheck="false"></div>
+            <div class="irow"><span class="kk">pets</span><input id="inB" type="text" value="2" maxlength="9" spellcheck="false"></div>
+            <div class="irow"><span class="kk">name</span><input id="inO" type="text" value="Dana" maxlength="14" spellcheck="false"></div>
             <p class="inote">Edit while stopped. The run is computed from these. Try a word for a number too.</p>
           </div>
         </div>
@@ -249,16 +249,14 @@
   function lines(fix){
     return [
       '<span class="ty">Scanner</span> myScanner = <span class="kw">new</span> <span class="ty">Scanner</span>(System.in);',
-      'System.out.println(<span class="st">"Enter the first number: "</span>);',
-      '<span class="ty">int</span> firstNumber = myScanner.<span class="fn">nextInt</span>();',
-      'System.out.println(<span class="st">"Enter the second number: "</span>);',
-      '<span class="ty">int</span> secondNumber = myScanner.<span class="fn">nextInt</span>();',
-      fix?'myScanner.<span class="fn">nextLine</span>();   <span class="cm">// eat the leftover \\n</span>':'<span class="cm">// (experiment off: nothing here)</span>',
-      '<span class="ty">int</span> result = firstNumber + secondNumber;',
-      'System.out.println(<span class="st">"The result is: "</span> + result);',
-      'System.out.println(<span class="st">"Which operation you would like to do next?"</span>);',
-      '<span class="ty">String</span> operation = myScanner.<span class="fn">nextLine</span>();',
-      'System.out.println(<span class="st">"The new operation is: "</span> + operation);'
+      'System.out.print(<span class="st">"How old are you? "</span>);',
+      '<span class="ty">int</span> age = myScanner.<span class="fn">nextInt</span>();',
+      'System.out.print(<span class="st">"How many pets do you have? "</span>);',
+      '<span class="ty">int</span> pets = myScanner.<span class="fn">nextInt</span>();',
+      fix?'myScanner.<span class="fn">nextLine</span>();   <span class="cm">// eats the Enter left after the last number</span>':'<span class="cm">// (experiment off: nothing here)</span>',
+      'System.out.print(<span class="st">"What is your name? "</span>);',
+      '<span class="ty">String</span> fullName = myScanner.<span class="fn">nextLine</span>();',
+      'System.out.println(<span class="st">"Hello "</span> + fullName + <span class="st">", "</span> + age + <span class="st">" years old, "</span> + pets + <span class="st">" pets."</span>);'
     ];
   }
 
@@ -331,33 +329,29 @@
       cells[j].hl=empty?"eat":"eatok";
       setVar(name,'"'+esc(txt)+'"',empty?"bad":"new");
       if(empty){
-        snap(line,'nextLine() reads up to the next \\n. The <b class="w">leftover \\n</b> is right there, so it returns "" at once. It <b class="w">never waited</b>: operation is empty.',"trouble",{mark:"mut"});
+        snap(line,'nextLine() reads up to the next \\n. The <b class="w">leftover \\n</b> is right there, so it returns "" at once. It <b class="w">never waited</b>: fullName is empty.',"trouble",{mark:"mut"});
       }else{
-        snap(line,'nextLine() reads <b class="a">"'+esc(txt)+'"</b> up to the \\n and consumes the \\n too. operation = "'+esc(txt)+'".',"pop",{mark:"ret"});
+        snap(line,'nextLine() reads <b class="a">"'+esc(txt)+'"</b> up to the \\n and consumes the \\n too. fullName = "'+esc(txt)+'".',"pop",{mark:"ret"});
       }
       return {txt:txt,empty:empty};
     }
 
     snap(1,'A Scanner is created on System.in. Its <b class="a">buffer is empty</b>: nothing has been typed yet.');
-    out.push({t:"Enter the first number: ",c:""});
+    out.push({t:"How old are you? ",c:""});
     snap(2,'The first question is printed.');
-    var a=nextInt(3,"firstNumber"); if(dead) return S;
-    out.push({t:"Enter the second number: ",c:""});
+    var a=nextInt(3,"age"); if(dead) return S;
+    out.push({t:"How many pets do you have? ",c:""});
     snap(4,'The second question is printed. Look at the buffer: the <b class="y">\\n</b> from your first ENTER is still unread.');
-    var b=nextInt(5,"secondNumber"); if(dead) return S;
+    var b=nextInt(5,"pets"); if(dead) return S;
     if(fix) nextLine(6,null);
-    setVar("result",a+b);
-    snap(7,'result = '+a+' + '+b+' = <b class="a">'+(a+b)+'</b>. The buffer is not touched.');
-    out.push({t:"The result is: "+(a+b),c:""});
-    snap(8,'The result is printed.');
-    out.push({t:"Which operation you would like to do next?",c:""});
-    snap(9,fix?'The third question is printed. The buffer is empty, as it should be.':'The third question is printed. The buffer still holds <b class="y">one \\n</b>, left behind by the second nextInt().');
-    var r=nextLine(10,"operation");
-    out.push({t:"The new operation is: "+esc(r.txt),c:""});
+    out.push({t:"What is your name? ",c:""});
+    snap(7,fix?'The third question is printed. The buffer is empty, as it should be.':'The third question is printed. Two numbers in a row were fine. But the buffer still holds <b class="y">one \\n</b>, left behind by the second nextInt().');
+    var r=nextLine(8,"fullName");
+    out.push({t:"Hello "+esc(r.txt)+", "+a+" years old, "+b+" pets.",c:""});
     if(r.empty){
-      snap(11,'The program prints an empty operation and ends. <b class="w">It skipped your answer</b>: "'+esc(inp.O)+'" was never asked for. Turn on the experiment.',"trouble");
+      snap(9,'The program prints "Hello ," with no name and ends. <b class="w">It skipped your answer</b>: "'+esc(inp.O)+'" was never asked for. Turn on the experiment.',"trouble");
     }else{
-      snap(11,'The program printed your answer. <b class="g">Every question waited for you.</b>',"pop");
+      snap(9,'The program printed your name. <b class="g">Every question waited for you.</b>',"pop");
     }
     return S;
   }
