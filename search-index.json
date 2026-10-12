@@ -295,9 +295,9 @@
     "section": "Visuals",
     "title": "From Problem to Code",
     "desc": "",
-    "group": "Workbook 1c · Module 4",
+    "group": "How to tackle an exercise",
     "url": "week-01/visuals/30-problem-to-code.html",
-    "text": "← Week 1 index Workbook 1c · Module 4 · From a problem statement to a program From Problem to Code Mark the data and the steps first; then every line of the plan becomes a few lines of Java. The problem input output decision fixed value verb = step Focus A print shop charges $0.10 per page for black and white and $0.25 per page for color . Ask the customer whether they want color and how many pages they need. Print the total cost, with two decimals . Data (the nouns) Plan (the verbs, in order) step 0 / 9 Press Next to start. ← Back Next → Reset space = next Main.java console The one idea Before you type, underline the nouns and the verbs. The nouns are your data: inputs become Scanner reads, outputs become printf, fixed values become numbers in the code. The verbs are your steps, in order; a step that depends on an answer is an if/else, and a calculation with a name is a method. The code follows the plan."
+    "text": "← Week 1 index How to tackle an exercise Workbook 1c · Module 4 · From a problem statement to a program middot; From a problem statement to a program From Problem to Code Mark the data and the steps first; then every line of the plan becomes a few lines of Java. The problem input output decision fixed value verb = step Focus A print shop charges $0.10 per page for black and white and $0.25 per page for color . Ask the customer whether they want color and how many pages they need. Print the total cost, with two decimals . Data (the nouns) Plan (the verbs, in order) step 0 / 9 Press Next to start. ← Back Next → Reset space = next Main.java console The one idea Before you type, underline the nouns and the verbs. The nouns are your data: inputs become Scanner reads, outputs become printf, fixed values become numbers in the code. The verbs are your steps, in order; a step that depends on an answer is an if/else, and a calculation with a name is a method. The code follows the plan."
   },
   {
     "week": 1,

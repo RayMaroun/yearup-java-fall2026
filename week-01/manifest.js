@@ -33,7 +33,7 @@ window.HUB_MANIFEST = {
     { file: "27-method-decomposition.html", title: "Repeated Code to One Method", group: "Workbook 1c · Section 4-2", size: "walk" },
     { file: "28-one-scanner.html", title: "One Scanner, Three Ways", group: "Workbook 1c · Section 4-2", size: "glance" },
     { file: "29-switch-flow.html", title: "switch, Both Forms", group: "Workbook 1c · Section 4-3", size: "walk" },
-    { file: "30-problem-to-code.html", title: "From Problem to Code", group: "Workbook 1c · Module 4", size: "walk" }
+    { file: "30-problem-to-code.html", title: "From Problem to Code", group: "How to tackle an exercise", size: "walk" }
   ],
   reference: [
     { file: "cheat-sheet.html", title: "Week 1 Cheat Sheet", group: "Reference", desc: "The syntax of the week on one page: types, operators, Scanner, printf, if, switch, methods." },
