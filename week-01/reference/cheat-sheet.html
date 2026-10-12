@@ -140,6 +140,7 @@
           <div class="row"><span class="k">bigger of two</span><code>int mostKids = Math.max(natKidCount, brittKidCount);</code></div>
           <div class="row"><span class="k">degrees in</span><code>double answer = Math.sin(Math.toRadians(degrees));</code></div>
           <div class="row"><span class="k">round to int</span><code>int wholeNumber = Math.round(1234.567f);  <span class="c">// 1235</span></code></div>
+          <div class="row"><span class="k">overflow check</span><code>int seconds = Math.multiplyExact(minutes, 60);  <span class="c">// throws instead of overflowing silently</span></code></div>
           <p class="see">See it:
             <a href="../visuals/16-integer-division.html">Integer Division and Modulo</a>
             <a href="../visuals/17-pre-post-increment.html">Pre and Post Increment</a>
@@ -156,7 +157,6 @@
           <div class="row"><span class="k">same text?</span><code>homeState.equals("Texas")</code></div>
           <div class="row"><span class="k">ignore case</span><code>name.equalsIgnoreCase("Lara")</code></div>
           <div class="row"><span class="k">not ==</span><code><span class="w">a == b</span>   <span class="c">// same object? not same text</span></code></div>
-          <div class="row"><span class="k">lower case copy</span><code>name.toLowerCase()</code></div>
           <div class="row"><span class="k">format to String</span><code>String.format("%.2f", totalDue)</code></div>
           <p class="see">See it:
             <a href="../visuals/15-concat-vs-addition.html">Concatenation vs Addition</a>
@@ -170,14 +170,13 @@
           <div class="row"><span class="k">create once</span><code>Scanner scanner = new Scanner(System.in);</code></div>
           <div class="row"><span class="k">prompt, same line</span><code>System.out.print("How old are you? ");</code></div>
           <div class="row"><span class="k">whole line</span><code>String name = scanner.nextLine();</code></div>
-          <div class="row"><span class="k">one word</span><code>String city = scanner.next();</code></div>
           <div class="row"><span class="k">whole number</span><code>int age = scanner.nextInt();</code></div>
           <div class="row"><span class="k">decimal</span><code>double salary = scanner.nextDouble();</code></div>
-          <div class="row"><span class="k">eat the newline</span><code>scanner.nextLine();  <span class="c">// after nextInt or nextDouble</span></code></div>
+          <div class="row"><span class="k">eat the newline</span><code>scanner.nextLine();  <span class="c">// after nextInt or nextDouble, only when a nextLine comes next</span></code></div>
           <p class="see">See it:
             <a href="../visuals/21-scanner-buffer.html">Scanner Buffer</a>
             <a href="../visuals/20-scanner-methods.html">Scanner Methods</a>
-            <a href="../visuals/28-one-scanner.html">One Scanner, Many Methods</a>
+            <a href="../visuals/28-one-scanner.html">One Scanner, Three Ways</a>
           </p>
         </section>
 
@@ -188,8 +187,10 @@
           <div class="row"><span class="k">decimal</span><code>%f      %.2f  <span class="c">// 2 places</span></code></div>
           <div class="row"><span class="k">text, char</span><code>%s      %c</code></div>
           <div class="row"><span class="k">new line</span><code>%n</code></div>
-          <div class="row"><span class="k">in order</span><code>System.out.printf("%s (id: %d) $%.2f", name, id, pay);</code></div>
+          <div class="row"><span class="k">in order</span><code>System.out.printf("%s (id: %d) $%.2f%n", name, id, pay);</code></div>
           <div class="row"><span class="k">with new line</span><code>System.out.printf("%d + %d = %d%n", num1, num2, sum);</code></div>
+          <div class="row"><span class="k">thousands separators</span><code>System.out.printf("%,d%n", 100000000);  <span class="c">// 100,000,000</span></code></div>
+          <div class="row"><span class="k">width and alignment</span><code>System.out.printf("|%-20s|%n", name);  <span class="c">// width 20, left aligned; without the minus: right aligned</span></code></div>
           <div class="row"><span class="k">tax example</span><code>float tax = subtotal * 0.0825f;</code></div>
           <div class="row"><span class="k">print vs println</span><code>print  <span class="c">// stays on line</span>   println  <span class="c">// adds new line</span></code></div>
           <p class="see">See it:
@@ -205,7 +206,7 @@
           <div class="row"><span class="k">AND, both true</span><code>name.equalsIgnoreCase("Bob") &amp;&amp; age &gt;= 21</code></div>
           <div class="row"><span class="k">OR, one true</span><code>homeState.equals("Texas") || homeState.equals("Kansas")</code></div>
           <div class="row"><span class="k">NOT</span><code>if (!done) { ... }</code></div>
-          <div class="row"><span class="k">ternary</span><code>double price = (age &lt; 18) ? 22.50 : 25.00;</code></div>
+          <div class="row"><span class="k">conditional operator</span><code>double price = (age &lt; 18) ? 22.50 : 25.00;</code></div>
           <div class="row"><span class="k">braces</span><code>always use { }, even for one line</code></div>
           <p class="see">See it:
             <a href="../visuals/22-if-else-path.html">if / else Path</a>
@@ -218,12 +219,12 @@
           <h2>switch, both forms <span class="wb">1c &middot; 4-3</span></h2>
           <div class="row"><span class="k">traditional</span><code>switch (dayNumber) { case 1: dayName = "Monday"; break; }</code></div>
           <div class="row"><span class="k">forgot break</span><code><span class="w">falls through</span> into the next case</code></div>
-          <div class="row"><span class="k">share a block</span><code>case 0: case 6: description = "Weekend"; break;</code></div>
-          <div class="row"><span class="k">no match</span><code>default: description = "Invalid day";</code></div>
+          <div class="row"><span class="k">share a block</span><code>case 0: case 6: dayType = "Weekend"; break;</code></div>
+          <div class="row"><span class="k">no match</span><code>default: dayType = "Invalid day";</code></div>
           <div class="row"><span class="k">arrow form</span><code>case 1 -&gt; dayName = "Monday";  <span class="c">// no break needed</span></code></div>
           <div class="row"><span class="k">several values</span><code>case 0, 6 -&gt; "Weekend";</code></div>
-          <div class="row"><span class="k">as a value</span><code>String description = switch (dayNumber) { ... };</code></div>
-          <div class="row"><span class="k">on a String</span><code>switch (name.toLowerCase()) { case "alice" -&gt; ... }</code></div>
+          <div class="row"><span class="k">as a value</span><code>String dayType = switch (dayNumber) { ... };</code></div>
+          <div class="row"><span class="k">one value per case</span><code>switch (dayNumber) { case 0 -&gt; "Sunday"; case 1 -&gt; "Monday"; ... }</code></div>
           <p class="see">See it:
             <a href="../visuals/29-switch-flow.html">switch, Both Forms</a>
           </p>
@@ -234,21 +235,21 @@
           <div class="row"><span class="k">entry point</span><code>public static void main(String[] args)</code></div>
           <div class="row"><span class="k">signature</span><code>public static double calcTax(double amount)</code></div>
           <div class="row"><span class="k">send back</span><code>return amount * TAX_RATE;</code></div>
-          <div class="row"><span class="k">returns nothing</span><code>public static void displayMenu(Scanner scanner)</code></div>
+          <div class="row"><span class="k">returns nothing</span><code>public static void showOptions(Scanner scanner)</code></div>
           <div class="row"><span class="k">call, keep result</span><code>double tax = calcTax(subtotal);</code></div>
-          <div class="row"><span class="k">call, no result</span><code>displayMenu(scanner);</code></div>
+          <div class="row"><span class="k">call, no result</span><code>showOptions(scanner);</code></div>
           <div class="row"><span class="k">param vs arg</span><code>amount <span class="c">// parameter</span>   subtotal <span class="c">// argument</span></code></div>
-          <div class="row"><span class="k">one Scanner</span><code>create it in main, pass it to each method</code></div>
+          <div class="row"><span class="k">Scanner in several methods</span><code>three ways: a static field, a new Scanner per method, or one Scanner passed from main as a parameter; use the third  <a href="../visuals/28-one-scanner.html" style="color:var(--accent)">One Scanner, Three Ways</a></code></div>
           <p class="see">See it:
             <a href="../visuals/25-method-signature.html">Method Signature</a>
             <a href="../visuals/26-method-call-stack.html">Method Call Stack</a>
             <a href="../visuals/27-method-decomposition.html">Repeated Code to One Method</a>
-            <a href="../visuals/28-one-scanner.html">One Scanner, Many Methods</a>
+            <a href="../visuals/28-one-scanner.html">One Scanner, Three Ways</a>
           </p>
         </section>
 
         <section class="card" data-t="git">
-          <h2>Git in IntelliJ <span class="wb">1b &middot; 1-1 to 1-3</span></h2>
+          <h2>Git in IntelliJ <span class="wb">1a &middot; 1-1 to 1-4</span></h2>
           <div class="row"><span class="k">new project</span><code>tick Create Git repository  <span class="c">// Maven, corretto-17</span></code></div>
           <div class="row"><span class="k">first push</span><code>Git &gt; GitHub &gt; Share Project on GitHub</code></div>
           <div class="row"><span class="k">first commit</span><code>select all files, message "Initial Commit", Add</code></div>

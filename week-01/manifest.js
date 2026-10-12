@@ -54,6 +54,10 @@ window.HUB_MANIFEST = {
     { file: "rental-car-calculator.html", title: "Rental Car Company", group: "Workbook 1c · Section 4-3", desc: "Six questions in, four amounts out: plan it on paper, then make the program agree." }
   ],
   games: [
-    { file: "type-matcher.html", title: "Type Matcher", group: "Workbook 1c · Section 3-1", desc: "A literal flashes up: pick the type that holds it. Twenty rounds against the clock." }
+    { file: "binary-challenge.html", title: "Binary Challenge", group: "Workbook 1c · Module 2", desc: "Flip eight bits to build a number, or read the bits back as decimal. Ten rounds against the clock." },
+    { file: "type-matcher.html", title: "Type Matcher", group: "Workbook 1c · Section 3-1", desc: "A literal flashes up: pick the type that holds it. Twenty rounds against the clock." },
+    { file: "name-that-convention.html", title: "Name That Convention", group: "Workbook 1c · Section 3-1", desc: "Pick the right name for each job: camelCase, UPPER_SNAKE_CASE, PascalCase, project dashes or package dots." },
+    { file: "cast-or-crash.html", title: "Cast or Crash", group: "Workbook 1c · Section 3-2", desc: "A line of Java appears: compiles, needs a cast, or crash? Twelve rounds against the clock." },
+    { file: "method-builder.html", title: "Method Builder", group: "Workbook 1c · Section 4-2", desc: "A job or a header appears: pick the header that fits, or the one call that compiles." }
   ]
 };

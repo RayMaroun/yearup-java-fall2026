@@ -190,6 +190,22 @@ int dollars = (int) price;</pre></div></div>
         </article>
 
         <article class="card" data-cat="compile">
+          <div class="ch"><span class="cat">Compile</span><h2>long into an int</h2><a class="see" href="../visuals/18-widening-narrowing.html">See it</a></div>
+          <pre class="msg">java: incompatible types: possible lossy conversion from long to int</pre>
+          <p class="means">A <code>long</code> can hold numbers far bigger than an <code>int</code>, so Java refuses to narrow without being told.</p>
+          <p class="fix"><b>Fix</b>Cast with <code>(int)</code> only when you know the value fits; a value too big for an int comes out damaged, a different number.</p>
+          <div class="ba"><div class="bad"><span>Before</span><pre>int smallNumber = bigNumber;</pre></div><div class="good"><span>After</span><pre>int smallNumber = (int) bigNumber;</pre></div></div>
+        </article>
+
+        <article class="card" data-cat="compile">
+          <div class="ch"><span class="cat">Compile</span><h2>Whole number too big for an int</h2><a class="see" href="../visuals/18-widening-narrowing.html">See it</a></div>
+          <pre class="msg">java: integer number too large</pre>
+          <p class="means">A whole-number literal is an <code>int</code> by default, and 8000000000 is past the int limit of about 2.1 billion.</p>
+          <p class="fix"><b>Fix</b>Store it in a <code>long</code> and add <code>L</code> to the literal.</p>
+          <div class="ba"><div class="bad"><span>Before</span><pre>int tooBig = 8000000000;</pre></div><div class="good"><span>After</span><pre>long worldPopulation = 8000000000L;</pre></div></div>
+        </article>
+
+        <article class="card" data-cat="compile">
           <div class="ch"><span class="cat">Compile</span><h2>float literal without f</h2><a class="see" href="../visuals/11-data-types.html">See it</a></div>
           <pre class="msg">java: incompatible types: possible lossy conversion from double to float</pre>
           <p class="means">A decimal literal like <code>2.2</code> is a <code>double</code> by default, which is bigger than a <code>float</code>.</p>
@@ -232,6 +248,26 @@ System.out.println(total);</pre></div></div>
         </article>
 
         <article class="card" data-cat="compile">
+          <div class="ch"><span class="cat">Compile</span><h2>if / else if with no else</h2><a class="see" href="../visuals/22-if-else-path.html">See it</a></div>
+          <pre class="msg">java: variable basePrice might not have been initialized</pre>
+          <p class="means">The compiler does not check that your two conditions cover every case, so it sees a path where no branch sets the variable.</p>
+          <p class="fix"><b>Fix</b>Make the last branch a plain <code>else</code>, or give the variable a starting value when you declare it.</p>
+          <div class="ba"><div class="bad"><span>Before</span><pre>double basePrice;
+if (age &lt; 18) {
+    basePrice = 22.50;
+} else if (age &gt;= 18) {
+    basePrice = 25.00;
+}
+System.out.println(basePrice);</pre></div><div class="good"><span>After</span><pre>double basePrice;
+if (age &lt; 18) {
+    basePrice = 22.50;
+} else {
+    basePrice = 25.00;
+}
+System.out.println(basePrice);</pre></div></div>
+        </article>
+
+        <article class="card" data-cat="compile">
           <div class="ch"><span class="cat">Compile</span><h2>Method that forgets to return</h2><a class="see" href="../visuals/25-method-signature.html">See it</a></div>
           <pre class="msg">java: missing return statement</pre>
           <p class="means">The signature promises an <code>int</code> back, but the body never returns one.</p>
@@ -246,13 +282,13 @@ System.out.println(total);</pre></div></div>
 
         <article class="card" data-cat="compile">
           <div class="ch"><span class="cat">Compile</span><h2>Calling a method without its argument</h2><a class="see" href="../visuals/28-one-scanner.html">See it</a></div>
-          <pre class="msg">java: method displayMenu in class Main cannot be applied to given types;
+          <pre class="msg">java: method showOptions in class Main cannot be applied to given types;
   required: java.util.Scanner
   found:    no arguments
   reason: actual and formal argument lists differ in length</pre>
           <p class="means">The method's parameter list asks for a Scanner and the call passed nothing.</p>
           <p class="fix"><b>Fix</b>Pass what the signature requires, in the same order.</p>
-          <div class="ba"><div class="bad"><span>Before</span><pre>displayMenu();</pre></div><div class="good"><span>After</span><pre>displayMenu(scanner);</pre></div></div>
+          <div class="ba"><div class="bad"><span>Before</span><pre>showOptions();</pre></div><div class="good"><span>After</span><pre>showOptions(scanner);</pre></div></div>
         </article>
 
         <article class="card" data-cat="compile">
@@ -322,6 +358,18 @@ String name = scanner.nextLine();</pre></div></div>
         </article>
 
         <article class="card" data-cat="runtime">
+          <div class="ch"><span class="cat">Runtime</span><h2>Result too big for an int</h2><a class="see" href="../visuals/18-widening-narrowing.html">See it</a></div>
+          <pre class="msg">Exception in thread "main" java.lang.ArithmeticException: integer overflow
+	at java.base/java.lang.Math.multiplyExact(Math.java:964)
+	at com.pluralsight.Main.main(Main.java:6)</pre>
+          <p class="means"><code>Math.multiplyExact</code> stops the program when the answer does not fit in an <code>int</code>, instead of giving a wrong number silently.</p>
+          <p class="fix"><b>Fix</b>Use <code>long</code> for the values and the result.</p>
+          <div class="ba"><div class="bad"><span>Before</span><pre>int minutes = 50000000;
+int seconds = Math.multiplyExact(minutes, 60);</pre></div><div class="good"><span>After</span><pre>long minutes = 50000000;
+long seconds = Math.multiplyExact(minutes, 60);</pre></div></div>
+        </article>
+
+        <article class="card" data-cat="runtime">
           <div class="ch"><span class="cat">Runtime</span><h2>Numbers glued instead of added</h2><a class="see" href="../visuals/15-concat-vs-addition.html">See it</a></div>
           <p class="mk">No error. Console:</p>
           <pre class="msg out">Score: 1020</pre>
@@ -360,9 +408,9 @@ System.out.println("World");</pre></div></div>
         </article>
 
         <article class="card" data-cat="runtime">
-          <div class="ch"><span class="cat">Runtime</span><h2>Scanner closed, or a new Scanner per method</h2><a class="see" href="../visuals/28-one-scanner.html">See it</a></div>
-          <pre class="msg">Exception in thread "main" java.lang.IllegalStateException: Scanner closed</pre>
-          <p class="means">A method closed the Scanner on <code>System.in</code>, and every later read fails.</p>
+          <div class="ch"><span class="cat">Runtime</span><h2>A method closed System.in</h2><a class="see" href="../visuals/28-one-scanner.html">See it</a></div>
+          <pre class="msg">Exception in thread "main" java.util.NoSuchElementException</pre>
+          <p class="means">Closing a Scanner also closes <code>System.in</code>; the next call makes a new Scanner, but there is nothing left to read. (Reading again from the Scanner you closed gives <code>IllegalStateException: Scanner closed</code>.)</p>
           <p class="fix"><b>Fix</b>Create one Scanner in <code>main</code>, pass it to methods, never create or close it inside them.</p>
           <div class="ba"><div class="bad"><span>Before</span><pre>static int getAge() {
     Scanner s = new Scanner(System.in);
@@ -370,6 +418,19 @@ System.out.println("World");</pre></div></div>
     s.close();
     return age;
 }</pre></div><div class="good"><span>After</span><pre>static int getAge(Scanner scanner) {
+    return scanner.nextInt();
+}</pre></div></div>
+        </article>
+
+        <article class="card" data-cat="runtime">
+          <div class="ch"><span class="cat">Runtime</span><h2>A second Scanner on System.in</h2><a class="see" href="../visuals/28-one-scanner.html">See it</a></div>
+          <pre class="msg">Exception in thread "main" java.util.NoSuchElementException</pre>
+          <p class="means">The first Scanner already took the waiting input into its own buffer, so the second Scanner finds nothing to read.</p>
+          <p class="fix"><b>Fix</b>One Scanner, created in <code>main</code> and passed to each method as a parameter.</p>
+          <div class="ba"><div class="bad"><span>Before</span><pre>static int readAge() {
+    Scanner input = new Scanner(System.in);
+    return input.nextInt();
+}</pre></div><div class="good"><span>After</span><pre>static int readAge(Scanner scanner) {
     return scanner.nextInt();
 }</pre></div></div>
         </article>

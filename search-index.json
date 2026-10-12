@@ -307,7 +307,7 @@
     "desc": "The syntax of the week on one page: types, operators, Scanner, printf, if, switch, methods.",
     "group": "Reference",
     "url": "week-01/reference/cheat-sheet.html",
-    "text": "← Week 1 index Week 1 · Reference Week 1 Cheat Sheet The syntax of the week, one line per idea. Pick a topic to see only that card; every card links to the page that shows it moving. Topic All Variables and types Operators Strings Scanner printf if and logical operators switch Methods Git in IntelliJ Variables and types 1c · 3-1 declare and assign int count = 5; whole numbers byte short int long long needs L long big = 100L; decimal (default) double unitPrice = 19.99; float needs f float num = 2.2f; one character char grade = 'A'; true or false boolean done = false; text (a class) String name = \"Dana\"; constant final double TAX_RATE = 0.0825; naming firstName MathApp MAX_SIZE com.pluralsight widening, automatic double d = 42; // 42.0 narrowing, cast int x = (int) 3.99; // 3, truncated cast a Math result float result = (float) Math.pow(num, 2); See it: Data Types and Sizes final Constants Naming Conventions Widening, Narrowing, Casting Operators 1c · 3-2 arithmetic + - * / % int / int is int 10 / 3 // 3 remainder 10 % 3 // 1 get the decimal (double) num1 / num2 compound total += price; count -= 1; pre increment int a = ++x; // x goes up first, a gets new x post increment int b = y++; // b gets old y, then y goes up formula totalCost = (count * unitPrice) * (1 + taxRate); bigger of two int mostKids = Math.max(natKidCount, brittKidCount); degrees in double answer = Math.sin(Math.toRadians(degrees)); round to int int wholeNumber = Math.round(1234.567f); // 1235 See it: Integer Di"
+    "text": "← Week 1 index Week 1 · Reference Week 1 Cheat Sheet The syntax of the week, one line per idea. Pick a topic to see only that card; every card links to the page that shows it moving. Topic All Variables and types Operators Strings Scanner printf if and logical operators switch Methods Git in IntelliJ Variables and types 1c · 3-1 declare and assign int count = 5; whole numbers byte short int long long needs L long big = 100L; decimal (default) double unitPrice = 19.99; float needs f float num = 2.2f; one character char grade = 'A'; true or false boolean done = false; text (a class) String name = \"Dana\"; constant final double TAX_RATE = 0.0825; naming firstName MathApp MAX_SIZE com.pluralsight widening, automatic double d = 42; // 42.0 narrowing, cast int x = (int) 3.99; // 3, truncated cast a Math result float result = (float) Math.pow(num, 2); See it: Data Types and Sizes final Constants Naming Conventions Widening, Narrowing, Casting Operators 1c · 3-2 arithmetic + - * / % int / int is int 10 / 3 // 3 remainder 10 % 3 // 1 get the decimal (double) num1 / num2 compound total += price; count -= 1; pre increment int a = ++x; // x goes up first, a gets new x post increment int b = y++; // b gets old y, then y goes up formula totalCost = (count * unitPrice) * (1 + taxRate); bigger of two int mostKids = Math.max(natKidCount, brittKidCount); degrees in double answer = Math.sin(Math.toRadians(degrees)); round to int int wholeNumber = Math.round(1234.567f); // 1235 overflow check int"
   },
   {
     "week": 1,
@@ -337,7 +337,7 @@
     "desc": "The keys worth knowing in week 1, Mac and Windows side by side.",
     "group": "Reference",
     "url": "week-01/reference/intellij-shortcuts.html",
-    "text": "← Week 1 index Week 1 · Reference IntelliJ Shortcuts The keys used in class this week, Mac and Windows side by side. Pick your computer and its column lights up. My computer Mac Windows Action Mac Windows Run and build Run the program Reruns the last run configuration what Run does Ctrl+R Shift+F10 Run the file you are in Same as the green arrow next to main Ctrl+Shift+R Ctrl+Shift+F10 Stop the running program Cmd+F2 Ctrl+F2 Build the project Compiles without running Cmd+F9 Ctrl+F9 Debug the program Ctrl+D Shift+F9 Run Anything Run a class or a Maven goal by name Ctrl Ctrl Ctrl Ctrl Editing sout then Tab Types System.out.println(); for you sout Tab sout Tab main then Tab Types public static void main(String[] args) ; psvm works too the signature main Tab main Tab Reformat code Fixes spacing and indents; do it before every commit Cmd+Alt+L Ctrl+Alt+L Show quick fixes The lightbulb: imports, missing pieces, fixes Alt+Enter Alt+Enter Code completion Ctrl+Space Ctrl+Space Comment or uncomment the line Toggles // Cmd+/ Ctrl+/ Duplicate the line Cmd+D Ctrl+D Delete the line Cmd+Backspace Ctrl+Y Move the line up or down Alt+Shift+Up/Down Alt+Shift+Up/Down Rename everywhere Variable, method or class, every use updated Shift+F6 Shift+F6 Undo / Redo Cmd+Z Cmd+Shift+Z Ctrl+Z Ctrl+Shift+Z Navigation Search everywhere Files, classes, settings, anything Shift Shift Shift Shift Find an action by name Use it when you forget a shortcut Cmd+Shift+A Ctrl+Shift+A Project window The file tree: sr"
+    "text": "← Week 1 index Week 1 · Reference IntelliJ Shortcuts The keys used in class this week, Mac and Windows side by side. Pick your computer and its column lights up. My computer Mac Windows Action Mac Windows Run and build Run the program Reruns the last run configuration what Run does Ctrl+R Shift+F10 Run the file you are in Same as the green arrow next to main Ctrl+Shift+R Ctrl+Shift+F10 Stop the running program Cmd+F2 Ctrl+F2 Build the project Compiles without running Cmd+F9 Ctrl+F9 Debug the program Ctrl+D Shift+F9 Run Anything Run a class or a Maven goal by name Ctrl Ctrl Ctrl Ctrl Editing sout then Tab Types System.out.println(); for you sout Tab sout Tab main then Tab Types public static void main(String[] args) ; psvm works too the signature main Tab main Tab Reformat code Fixes spacing and indents; do it before every commit Cmd+Alt+L Ctrl+Alt+L Show quick fixes The lightbulb: imports, missing pieces, fixes Alt+Enter Alt+Enter Code completion Ctrl+Space Ctrl+Space Comment or uncomment the line Toggles // Cmd+/ Ctrl+/ Block comment Wraps the selection in /* */ Cmd+Alt+/ Ctrl+Shift+/ Duplicate the line Cmd+D Ctrl+D Delete the line Cmd+Backspace Ctrl+Y Move the line up or down Alt+Shift+Up/Down Alt+Shift+Up/Down Rename everywhere Variable, method or class, every use updated Shift+F6 Shift+F6 Extract Method Select lines, turn them into a new method repeated code to one method Cmd+Alt+M Ctrl+Alt+M Undo / Redo Cmd+Z Cmd+Shift+Z Ctrl+Z Ctrl+Shift+Z Navigation Search everywhere F"
   },
   {
     "week": 1,
@@ -443,10 +443,50 @@
     "week": 1,
     "weekLabel": "Week 1",
     "section": "Games",
+    "title": "Binary Challenge",
+    "desc": "Flip eight bits to build a number, or read the bits back as decimal. Ten rounds against the clock.",
+    "group": "Workbook 1c · Module 2",
+    "url": "week-01/games/binary-challenge.html",
+    "text": "← Week 1 index Workbook 1c · Module 2 · Game Binary Challenge Eight bits, eight place values. Build the number, or read it back. Ten rounds, the clock is running. Game build this number score 0 time 0.0s Check Binary Challenge Some rounds give you a number: switch on the bits that add up to it. Others show the bits: type the number they make. Start Round over Play again round 0 / 10 Press Start . Keys 1 to 8 flip the bits, Enter checks. each bit is worth double the one to its right · add the place values of the 1s · 8 bits hold 0 to 255 The one idea A binary number is a sum of place values. Every 1 switches its place value on, every 0 leaves it out. Add the ones that are on and you have the decimal number."
+  },
+  {
+    "week": 1,
+    "weekLabel": "Week 1",
+    "section": "Games",
     "title": "Type Matcher",
     "desc": "A literal flashes up: pick the type that holds it. Twenty rounds against the clock.",
     "group": "Workbook 1c · Section 3-1",
     "url": "week-01/games/type-matcher.html",
     "text": "← Week 1 index Workbook 1c · Section 3-1 · Game Type Matcher A value appears. Pick the type that holds it, as fast as you can. Twenty rounds, the clock is running. Game which type? score 0 time 0.0s Type Matcher A literal flashes up. Click the type that can hold it, or press its number key. The quotes and the suffix letters are the clues. Start Round over Play again round 0 / 20 Press Start . Keys 1 to 7 pick a type. single quotes = char · double quotes = String · L = long · f = float · a decimal point with no letter = double The one idea The literal tells you its type before the variable does. Quotes make text or a char, a decimal point makes a double, and the letters L and f change the size. Read the value, and the type follows."
+  },
+  {
+    "week": 1,
+    "weekLabel": "Week 1",
+    "section": "Games",
+    "title": "Name That Convention",
+    "desc": "Pick the right name for each job: camelCase, UPPER_SNAKE_CASE, PascalCase, project dashes or package dots.",
+    "group": "Workbook 1c · Section 3-1",
+    "url": "week-01/games/name-that-convention.html",
+    "text": "← Week 1 index Workbook 1c · Section 3-1 · Game Name That Convention A job appears. Three names compete for it. Pick the one Java would accept and a teammate would read. Game which name? score 0 time 0.0s Name That Convention Each round names a job: a variable, a method, a constant, a class, a project or a package. Click the right name, or press 1, 2 or 3. Start Round over Play again round 0 / 12 Press Start or space. Keys 1 to 3 pick a name. variable, method = camelCase · constant = UPPER_SNAKE_CASE · class = PascalCase · project = lower-dashes · package = lower.dots The one idea The shape of a name tells you what it is. PascalCase is a class, ALL_CAPS is a constant, camelCase is a variable or a method. No leading digit, no keyword, no spaces, and the name says what it holds."
+  },
+  {
+    "week": 1,
+    "weekLabel": "Week 1",
+    "section": "Games",
+    "title": "Cast or Crash",
+    "desc": "A line of Java appears: compiles, needs a cast, or crash? Twelve rounds against the clock.",
+    "group": "Workbook 1c · Section 3-2",
+    "url": "week-01/games/cast-or-crash.html",
+    "text": "← Week 1 index Workbook 1c · Section 3-2 · Game Cast or Crash A line of Java appears. Does it compile as is, need a cast, or not compile at all? Twelve rounds, the clock is running. Game will it compile? score 0 time 0.0s Cast or Crash Read the line, then press 1, 2 or 3. A cast you can see counts as compiling, even when it changes the value. Start Round over Play again round 0 / 12 Press Start . Keys 1 to 3 answer. small to big = automatic · big to small = needs a cast · too big for an int = add L · text and numbers never mix The one idea Widening is free, narrowing costs you. Java moves a value to a bigger type on its own. Going smaller needs a cast, and the cast is you accepting the loss: cut decimals, lost digits, or a damaged number."
+  },
+  {
+    "week": 1,
+    "weekLabel": "Week 1",
+    "section": "Games",
+    "title": "Method Builder",
+    "desc": "A job or a header appears: pick the header that fits, or the one call that compiles.",
+    "group": "Workbook 1c · Section 4-2",
+    "url": "week-01/games/method-builder.html",
+    "text": "← Week 1 index Workbook 1c · Section 4-2 · Game Method Builder Match a job to its header, and a header to the call that fits it. Twelve rounds, the clock is running. Game method builder score 0 time 0.0s Method Builder Some rounds describe a job: pick the header that does it. Others show a header: pick the one call that compiles. Click, or press 1 to 4. Start Round over Play again round 0 / 12 Press Start . Keys 1 to 4 pick an answer. header = return type · name · (parameters) · void gives nothing back · arguments fill parameters in order The one idea The header is a promise, and every call must keep it. The return type says what comes back, so void has nothing to print or store. The parameters say how many arguments, of which types, in which order."
   }
 ]
