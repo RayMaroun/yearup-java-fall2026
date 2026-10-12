@@ -53,5 +53,7 @@ window.HUB_MANIFEST = {
     { file: "payroll-calculator-2.html", title: "Payroll Calculator, Refactored", group: "Workbook 1c · Section 4-2", desc: "Same program, same output, split into methods you plan first." },
     { file: "rental-car-calculator.html", title: "Rental Car Company", group: "Workbook 1c · Section 4-3", desc: "Six questions in, four amounts out: plan it on paper, then make the program agree." }
   ],
-  games: []
+  games: [
+    { file: "type-matcher.html", title: "Type Matcher", group: "Workbook 1c · Section 3-1", desc: "A literal flashes up: pick the type that holds it. Twenty rounds against the clock." }
+  ]
 };

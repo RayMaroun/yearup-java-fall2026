@@ -438,5 +438,15 @@
     "group": "Workbook 1c · Section 4-3",
     "url": "week-01/exercises/rental-car-calculator.html",
     "text": "← Week 1 index Workbook 1c · Section 4-3 · Exercise 1 Rental Car Company A program that asks six questions about a car rental and prints four amounts: rental, options, surcharge, total. What you are building The biggest program of the week: it asks six questions about a rental and prints four amounts . Nothing in it is new. It is everything from the week together: Scanner , if , boolean , arithmetic, printf . The hard part is the order and the plan, which is why the workbook makes you do it on paper first. Do these in order 0 of 9 done Clear ticks What a finished run looks like run Enter pickup date (mm/dd/yyyy): 10/20/2026 Enter number of rental days: 3 Do you want an electronic toll tag (y/n)? y Do you want a GPS (y/n)? n Do you want roadside assistance (y/n)? y Enter your age: 22 Rental Summary Basic car rental: $89.97 Options cost: $23.70 Underage driver surcharge: $26.99 Total cost: $140.66 Process finished with exit code 0 The wording is yours and will differ; the four amounts are what to check. Where people get stuck The yes/no question after the days gets skipped. The leftover Enter again, after nextInt() . Surcharge on the wrong amount. It is 30 percent of the basic rental only, not of the total. Options charged once. They are per day: multiply by the days. 140.66000000000003. The raw double . Format it to two decimals. Pages that help One if per decision The leftover Enter Comparing a yes/no answer Two decimals with printf From the problem to the code What the red t"
+  },
+  {
+    "week": 1,
+    "weekLabel": "Week 1",
+    "section": "Games",
+    "title": "Type Matcher",
+    "desc": "A literal flashes up: pick the type that holds it. Twenty rounds against the clock.",
+    "group": "Workbook 1c · Section 3-1",
+    "url": "week-01/games/type-matcher.html",
+    "text": "← Week 1 index Workbook 1c · Section 3-1 · Game Type Matcher A value appears. Pick the type that holds it, as fast as you can. Twenty rounds, the clock is running. Game which type? score 0 time 0.0s Type Matcher A literal flashes up. Click the type that can hold it, or press its number key. The quotes and the suffix letters are the clues. Start Round over Play again round 0 / 20 Press Start . Keys 1 to 7 pick a type. single quotes = char · double quotes = String · L = long · f = float · a decimal point with no letter = double The one idea The literal tells you its type before the variable does. Quotes make text or a char, a decimal point makes a double, and the letters L and f change the size. Read the value, and the type follows."
   }
 ]
