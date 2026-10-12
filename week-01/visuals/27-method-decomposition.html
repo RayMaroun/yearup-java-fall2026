@@ -200,11 +200,11 @@
     {calls:0,method:0,fixed:false,mark:"rep",cls:"rep",
      msg:'Look closer: the <b class="y">same four lines</b> appear three times. Only the two numbers change. Everything else was copied and pasted.'},
     {calls:0,method:1,fixed:false,mark:"method",cls:"",
-     msg:'Copy one block into its own method and give it a name that says what the block does: <b class="a">printRectangle</b>. Nothing calls it yet, so the output has not changed.'},
+     msg:'Copy one block into its own method and give it a name that says what the block does: <b class="a">displayRectangleInfo</b>. Nothing calls it yet, so the output has not changed.'},
     {calls:0,method:2,fixed:false,mark:"params",cls:"",
      msg:'The numbers were the only difference between the copies, so they become <b class="a">parameters</b>: <code>int length, int width</code>. Now the method works for any rectangle.'},
     {calls:1,method:2,fixed:false,mark:"call1",cls:"ok",
-     msg:'Replace the first copy with one call: <code>printRectangle(4, 3)</code>. 4 goes into length, 3 into width, and the method prints the <b class="g">same two lines</b> as before.'},
+     msg:'Replace the first copy with one call: <code>displayRectangleInfo(4, 3)</code>. 4 goes into length, 3 into width, and the method prints the <b class="g">same two lines</b> as before.'},
     {calls:3,method:2,fixed:false,mark:"calls",cls:"ok",
      msg:'Do the same for the other two copies. main drops from 14 lines to 3, the output is <b class="g">exactly the same</b>, and main now reads like a list of what happens.'},
     {calls:3,method:2,fixed:false,mark:"bug",cls:"bad",
@@ -227,7 +227,7 @@
     for(i=0;i<3;i++){
       l=R[i][0]; w=R[i][1]; n=i+1;
       if(i<s.calls){
-        L.push({t:IND+fn("printRectangle")+"("+nm(l)+", "+nm(w)+");",key:"call"+i,
+        L.push({t:IND+fn("displayRectangleInfo")+"("+nm(l)+", "+nm(w)+");",key:"call"+i,
           c:(s.mark==="call1"&&i===0)||(s.mark==="calls")?"cur":"",nw:(s.mark==="call1"&&i===0)||(s.mark==="calls"&&i>0)});
       } else {
         if(i>0) L.push({t:"",key:"gap"+i});
@@ -236,8 +236,8 @@
         var c=d?"rep":"";
         L.push({t:IND+ty("int")+" area"+n+" = "+A+" * "+B+";",c:c,key:"b"+i+"a"});
         L.push({t:IND+ty("int")+" perimeter"+n+" = "+A+" + "+B+";",c:c,key:"b"+i+"p"});
-        L.push({t:IND+"System.out.println("+st('"Area: "')+" + area"+n+");",c:c,key:"b"+i+"x"});
-        L.push({t:IND+"System.out.println("+st('"Perimeter: "')+" + perimeter"+n+");",c:c,key:"b"+i+"y"});
+        L.push({t:IND+"System.out.println("+st('"The area is: "')+" + area"+n+");",c:c,key:"b"+i+"x"});
+        L.push({t:IND+"System.out.println("+st('"The perimeter is: "')+" + perimeter"+n+");",c:c,key:"b"+i+"y"});
       }
     }
     L.push({t:"}",key:"me"});
@@ -248,13 +248,13 @@
       var sig=p?(mk==="params"?'<span class="par">'+ty("int")+' length, '+ty("int")+' width</span>':ty("int")+" length, "+ty("int")+" width"):"";
       var newM=mk==="method", hiM=mk==="method"||mk==="calls"||mk==="call1";
       L.push({t:"",key:"gm"});
-      L.push({t:kw("public static void")+" "+fn("printRectangle")+"("+sig+") {",key:"sig",c:hiM||mk==="params"?"cur":"",nw:newM});
+      L.push({t:kw("public static void")+" "+fn("displayRectangleInfo")+"("+sig+") {",key:"sig",c:hiM||mk==="params"?"cur":"",nw:newM});
       L.push({t:IND+ty("int")+" area = "+LL+" * "+WW+";",key:"ma",c:newM||mk==="params"?"cur":"",nw:newM});
       var per=s.fixed?nm(2)+" * ("+LL+" + "+WW+")":LL+" + "+WW;
       L.push({t:IND+ty("int")+" perimeter = "+per+";",key:"mp",
         c:mk==="bug"?"bad":mk==="fix"?"good":(newM||mk==="params"?"cur":""),nw:newM||mk==="fix"});
-      L.push({t:IND+"System.out.println("+st('"Area: "')+" + area);",key:"mx",c:newM?"cur":"",nw:newM});
-      L.push({t:IND+"System.out.println("+st('"Perimeter: "')+" + perimeter);",key:"my",c:newM?"cur":"",nw:newM});
+      L.push({t:IND+"System.out.println("+st('"The area is: "')+" + area);",key:"mx",c:newM?"cur":"",nw:newM});
+      L.push({t:IND+"System.out.println("+st('"The perimeter is: "')+" + perimeter);",key:"my",c:newM?"cur":"",nw:newM});
       L.push({t:"}",key:"mz",c:newM?"cur":"",nw:newM});
     }
     return L;
@@ -287,12 +287,12 @@
       if((s.mark==="call1"&&i===0)||s.mark==="calls"||s.mark==="fix"||s.mark==="bug") gc+=" cur";
       var popAll=s.mark==="run"&&prev!=="run";
       var popGrp=popAll||(s.mark==="call1"&&i===0)||(s.mark==="calls"&&i>0);
-      var src='<span class="src">'+l+' by '+w+' \u00b7 '+(viaM?'<i>printRectangle('+l+', '+w+')</i>':'copy '+(i+1))+'</span>';
+      var src='<span class="src">'+l+' by '+w+' \u00b7 '+(viaM?'<i>displayRectangleInfo('+l+', '+w+')</i>':'copy '+(i+1))+'</span>';
       var perLine;
-      if(s.mark==="bug") perLine='<span class="bad">Perimeter: '+per+'</span><span class="why">should be '+(2*(l+w))+'</span>';
-      else if(s.mark==="fix") perLine='<span class="good pop">Perimeter: '+per+'</span><s>'+perOld+'</s>';
-      else perLine='Perimeter: '+per;
-      html+='<div class="'+gc+'">'+src+'<div'+(popGrp?' class="pop"':'')+'>Area: '+area+'</div><div'+(popGrp?' class="pop"':'')+'>'+perLine+'</div></div>';
+      if(s.mark==="bug") perLine='<span class="bad">The perimeter is: '+per+'</span><span class="why">should be '+(2*(l+w))+'</span>';
+      else if(s.mark==="fix") perLine='<span class="good pop">The perimeter is: '+per+'</span><s>'+perOld+'</s>';
+      else perLine='The perimeter is: '+per;
+      html+='<div class="'+gc+'">'+src+'<div'+(popGrp?' class="pop"':'')+'>The area is: '+area+'</div><div'+(popGrp?' class="pop"':'')+'>'+perLine+'</div></div>';
     }
     consEl.innerHTML=html;
   }
