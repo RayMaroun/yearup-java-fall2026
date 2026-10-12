@@ -23,8 +23,8 @@ NEW = no spring page. NONE = idea covered by the workbook text/image, no page. S
 | 15 | Pre/post increment (1c 3-2) | 13-pre-post-increment | KEEP | Walk | |
 | 16 | Widening, narrowing, casting, literals are typed (1c 3-2) | 14-widening-narrowing | REBUILD | Walk | cup/size picture + the (byte)1000 overflow + 2.2f; v7.2 removed char from the chain |
 | 17 | printf format specifiers (1c 3-3) | 15-printf-format | KEEP | Walk | v7.2 specifiers |
-| 18 | Scanner buffer: nextInt then nextLine (1c 3-3) | 16-scanner-buffer | KEEP | Model | the mechanism is the lesson; instructor plays it in class |
-| 19 | Scanner methods: next / nextLine / nextInt (1c 3-3) | 23-scanner-methods | KEEP | Walk | |
+| 18 | Scanner buffer: nextInt then nextLine (1c 3-3) | 21-scanner-buffer (after 20 methods, workbook order, 2026-10-13) | KEEP | Model | the mechanism is the lesson; instructor plays it in class |
+| 19 | Scanner methods: next / nextLine / nextInt (1c 3-3) | 20-scanner-methods | KEEP | Walk | |
 | 20 | if / else if / else path (1c 4-1) + conditional operator (4-3) | 17-if-else-flowchart | KEEP | Walk | add the ?: form as a toggle (folds the conditional operator) |
 | 21 | Logical operators && || ! (1c 4-1) | 23-logical-operators | KEEP | Walk | |
 | 22 | == vs .equals on Strings (1c 4-1) | 24-string-comparison | KEEP | Walk | |

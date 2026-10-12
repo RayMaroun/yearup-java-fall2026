@@ -198,7 +198,7 @@ int dollars = (int) price;</pre></div></div>
         </article>
 
         <article class="card" data-cat="compile">
-          <div class="ch"><span class="cat">Compile</span><h2>String into an int</h2><a class="see" href="../visuals/21-scanner-methods.html">See it</a></div>
+          <div class="ch"><span class="cat">Compile</span><h2>String into an int</h2><a class="see" href="../visuals/20-scanner-methods.html">See it</a></div>
           <pre class="msg">java: incompatible types: java.lang.String cannot be converted to int</pre>
           <p class="means"><code>nextLine()</code> returns a String, and a String does not fit in an <code>int</code> variable.</p>
           <p class="fix"><b>Fix</b>Use the Scanner method that returns the type you want: <code>nextInt()</code>.</p>
@@ -206,7 +206,7 @@ int dollars = (int) price;</pre></div></div>
         </article>
 
         <article class="card" data-cat="compile">
-          <div class="ch"><span class="cat">Compile</span><h2>Scanner without the import</h2><a class="see" href="../visuals/21-scanner-methods.html">See it</a></div>
+          <div class="ch"><span class="cat">Compile</span><h2>Scanner without the import</h2><a class="see" href="../visuals/20-scanner-methods.html">See it</a></div>
           <pre class="msg">java: cannot find symbol
   symbol:   class Scanner
   location: class Main</pre>
@@ -267,7 +267,7 @@ public class HelloWorld {</pre></div></div>
 
         <!-- ================= RUNTIME ================= -->
         <article class="card" data-cat="runtime">
-          <div class="ch"><span class="cat">Runtime</span><h2>Wrong input type for Scanner</h2><a class="see" href="../visuals/21-scanner-methods.html">See it</a></div>
+          <div class="ch"><span class="cat">Runtime</span><h2>Wrong input type for Scanner</h2><a class="see" href="../visuals/20-scanner-methods.html">See it</a></div>
           <pre class="msg">Exception in thread "main" java.util.InputMismatchException
 	at java.base/java.util.Scanner.throwFor(Scanner.java:939)
 	...
@@ -280,7 +280,7 @@ double price = scanner.nextDouble();</pre></div></div>
         </article>
 
         <article class="card" data-cat="runtime">
-          <div class="ch"><span class="cat">Runtime</span><h2>nextLine() skipped after nextInt()</h2><a class="see" href="../visuals/20-scanner-buffer.html">See it</a></div>
+          <div class="ch"><span class="cat">Runtime</span><h2>nextLine() skipped after nextInt()</h2><a class="see" href="../visuals/21-scanner-buffer.html">See it</a></div>
           <p class="mk">No error. Console:</p>
           <pre class="msg out">Enter your age: 25
 Enter your name: Hello, !</pre>
