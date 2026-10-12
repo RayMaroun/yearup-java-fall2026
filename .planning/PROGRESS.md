@@ -15,6 +15,6 @@
 
 ## Still to do for week 1
 - [x] Exercise companions (10), spoiler-free: 10 done, 2026-10-13, checklist shape; the rest follow Ray's section reviews
-- [x] Games (13), all built 2026-10-13 in the fall design on the Type Matcher calibration page; spoiler check done on output-predictor, bug-hunter, your-first-day
+- [x] Games (12, binary-challenge dropped: Module 1 is skipped), all built 2026-10-13 in the fall design on the Type Matcher calibration page; spoiler check done on output-predictor, bug-hunter, your-first-day
 - [x] manifest exercises/games arrays (2026-10-13)
 - [x] GitHub Pages live 2026-10-13: https://raymaroun.github.io/yearup-java-fall2026/

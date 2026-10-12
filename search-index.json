@@ -443,16 +443,6 @@
     "week": 1,
     "weekLabel": "Week 1",
     "section": "Games",
-    "title": "Binary Challenge",
-    "desc": "Flip eight bits to build a number, or read the bits back as decimal. Ten rounds against the clock.",
-    "group": "Workbook 1c · Module 2",
-    "url": "week-01/games/binary-challenge.html",
-    "text": "← Week 1 index Workbook 1c · Module 2 · Game Binary Challenge Eight bits, eight place values. Build the number, or read it back. Ten rounds, the clock is running. Game build this number score 0 time 0.0s Check Binary Challenge Some rounds give you a number: switch on the bits that add up to it. Others show the bits: type the number they make. Start Round over Play again round 0 / 10 Press Start . Keys 1 to 8 flip the bits, Enter checks. each bit is worth double the one to its right · add the place values of the 1s · 8 bits hold 0 to 255 The one idea A binary number is a sum of place values. Every 1 switches its place value on, every 0 leaves it out. Add the ones that are on and you have the decimal number."
-  },
-  {
-    "week": 1,
-    "weekLabel": "Week 1",
-    "section": "Games",
     "title": "Type Matcher",
     "desc": "A literal flashes up: pick the type that holds it. Twenty rounds against the clock.",
     "group": "Workbook 1c · Section 3-1",
