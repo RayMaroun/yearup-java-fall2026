@@ -105,8 +105,8 @@
       <div>
         <p class="lab">What you are building</p>
         <div class="box brief">
-          <p>The <b>same program</b> as the last exercise, with one more question between the size and the age: <b>loaded?</b> A yes adds $1.00 to a Regular or $1.75 to a Large, before the discount.</p>
-          <p class="no">The lesson is adding a feature to working code without breaking what already works, plus the two traps that come with it: reading a word right after a number, and comparing words.</p>
+          <p>Your exercise 1 program, in a <b>new project</b>, with one more question between the size and the age: <b>loaded?</b> A yes adds $1.00 to a Regular or $1.75 to a Large, before the discount.</p>
+          <p class="no">The lesson is adding a feature to working code without breaking what already works, plus the two traps that come with it: reading a word right after a number, and comparing words. One exercise, one project, one repository: always.</p>
         </div>
 
         <p class="lab" style="margin-top:18px">Do these in order</p>
@@ -143,7 +143,7 @@ Cost of sandwich: $7.16</div>
             <a href="../visuals/21-scanner-buffer.html">The leftover Enter</a>
             <a href="../visuals/24-string-comparison.html">== vs .equals</a>
             <a href="../visuals/22-if-else-path.html">if / else if / else, which branch runs</a>
-            <a href="../visuals/08-git-intellij-workflow.html">Commit before you change working code</a>
+            <a href="../visuals/08-git-intellij-workflow.html">Share the new project on GitHub</a>
             <a href="../reference/common-errors.html">What the red text means</a>
           </div>
         </div>
@@ -153,7 +153,7 @@ Cost of sandwich: $7.16</div>
 
   <div class="take">
     <p class="tk">The one idea</p>
-    <p><b>Change working code one question at a time.</b> Commit before and after, so the version that worked is always one click away, and compare words with equals, never ==.</p>
+    <p><b>Change working code one question at a time, in a project of its own,</b> run it before and after, and compare words with equals, never ==.</p>
   </div>
 
   <div id="rail"></div>
@@ -168,9 +168,9 @@ Cost of sandwich: $7.16</div>
 
   /* each step: what to do (the workbook's words, plain), what it means, how you know it worked */
   var STEPS=[
-    {t:'Open your finished <code>sandwich-shop</code> project and commit it first.',
-     d:'Same project, same <b>SandwichShop</b> class: this exercise changes it, it does not start a new one. Before you touch anything, Git > Commit and push, so the working exercise 1 is saved in the history.',
-     ok:'the last commit on github.com holds your exercise 1 program'},
+    {t:'Create a new project named <code>sandwich-shop-2</code>, with Git, and copy your finished exercise 1 code into it.',
+     d:'In this class every exercise is its own project and its own repository, even when the workbook says "modify". New Project, name <b>sandwich-shop-2</b>, Location workbook-1, Git ticked. Package <b>com.pluralsight</b>, class <b>SandwichShop</b>, then paste the whole class body from exercise 1. Run it once: it must behave exactly like exercise 1 before you change anything. Share it on GitHub.',
+     ok:'sandwich-shop-2 runs like exercise 1 and has its own repository on github.com'},
     {t:'Right after the size is read, ask "loaded? (yes/no)" and read the answer as text.',
      d:'The answer is a word, so it is read with <code>nextLine()</code>. A number was read just before it, so one extra <code>nextLine()</code> is needed first to eat the leftover Enter. The Scanner Buffer page shows why.',
      ok:'the program waits for your yes or no instead of skipping it'},
