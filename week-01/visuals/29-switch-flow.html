@@ -225,7 +225,7 @@
       else L.push('        '+k("break")+';');
     }
     L.push('    '+k("default")+':');
-    L.push('        '+SOUT+'('+s("Invalid Input!")+');');
+    L.push('        '+SOUT+'('+s("Invalid day")+');');
     L.push('        '+k("return")+';');
     L.push('}');
     return L;
@@ -238,7 +238,7 @@
     L.push('    }');
     for(var d=1;d<7;d++) L.push('    '+k("case")+' '+n(d)+' -> dayName = '+s(DAYS[d])+';');
     L.push('    '+k("default")+' -> {');
-    L.push('        '+SOUT+'('+s("Invalid Input!")+');');
+    L.push('        '+SOUT+'('+s("Invalid day")+');');
     L.push('        '+k("return")+';');
     L.push('    }');
     L.push('}');
