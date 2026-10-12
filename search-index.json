@@ -388,5 +388,25 @@
     "group": "Workbook 1c · Section 3-3",
     "url": "week-01/exercises/payroll-calculator.html",
     "text": "← Week 1 index Workbook 1c · Section 3-3 · Exercise 5 Payroll Calculator A program that asks for a name, hours and a pay rate, then prints the gross pay as money. What you are building A program that asks three questions (name, hours worked, pay rate) and prints two lines : the name and the gross pay. New compared to Basic Calculator: reading decimal numbers and printing money with two decimals. The overtime part is optional and uses something not taught yet. Do these in order 0 of 9 done Clear ticks What a finished run looks like run Enter your name: Dana Enter hours worked: 38.5 Enter pay rate: 20 Name: Dana Gross Pay: $770.00 Process finished with exit code 0 Your wording may differ. The two decimals are the point. Where people get stuck Odd digits. A plain double prints many decimals or none. Format it to two. Crash on 38,5. nextDouble() wants a dot, not a comma. Half a name. Read the name with nextLine() , or only the first word is kept. Stuck on overtime. It is optional. A working required version pushed to GitHub is the goal. Pages that help Two decimals with printf Which Scanner method reads what double for decimals printf on the cheat sheet What the red text means The one idea Read each value with the method that matches its type, then format money before you print it."
+  },
+  {
+    "week": 1,
+    "weekLabel": "Week 1",
+    "section": "Exercises",
+    "title": "Sandwich Shop",
+    "desc": "Size and age in, one price out: if / else if / else twice.",
+    "group": "Workbook 1c · Section 4-1",
+    "url": "week-01/exercises/sandwich-shop.html",
+    "text": "← Week 1 index Workbook 1c · Section 4-1 · Exercise 1 Sandwich Shop A point-of-sale program that asks for a size and an age, then prints what the sandwich costs. What you are building A point-of-sale program that asks two questions , the sandwich size and the customer's age, and prints one price . The new thing is choosing between paths with if / else if / else , twice: once for the size, once for the age. The only arithmetic is a percentage. Do these in order 0 of 8 done Clear ticks What a finished run looks like run Enter sandwich size (1 for Regular, 2 for Large): 1 Enter age: 16 Cost of sandwich: $4.91 Enter sandwich size (1 for Regular, 2 for Large): 2 Enter age: 70 Cost of sandwich: $7.16 Enter sandwich size (1 for Regular, 2 for Large): 1 Enter age: 30 Cost of sandwich: $5.45 Three separate runs. Your prompts may be worded differently; the amounts are what to check. Where people get stuck Forgetting \"everyone else\". A discount that starts at zero already covers it. 10 instead of 0.10. Or subtracting 0.10 dollars instead of 10 percent of the price. \"Variable might not have been initialized\". A double declared before the if needs a value in every branch; the else makes it complete. 4.905 or 7.160000000000001. The raw double . Format it to two decimals. Pages that help if / else if / else, which branch runs Combining conditions Two decimals with printf Percentages and whole numbers What the red text means The one idea A condition is a question with a yes or no answer, and"
+  },
+  {
+    "week": 1,
+    "weekLabel": "Week 1",
+    "section": "Exercises",
+    "title": "Sandwich Shop, Loaded",
+    "desc": "Add one yes/no question to working code without breaking it.",
+    "group": "Workbook 1c · Section 4-1",
+    "url": "week-01/exercises/sandwich-shop-2.html",
+    "text": "← Week 1 index Workbook 1c · Section 4-1 · Exercise 2 Sandwich Shop, Loaded Your finished sandwich shop, with one more question: would you like it loaded? What you are building The same program as the last exercise, with one more question between the size and the age: loaded? A yes adds $1.00 to a Regular or $1.75 to a Large, before the discount. The lesson is adding a feature to working code without breaking what already works, plus the two traps that come with it: reading a word right after a number, and comparing words. Do these in order 0 of 6 done Clear ticks What a finished run looks like run Enter sandwich size (1 for Regular, 2 for Large): 1 Would you like it loaded? (yes/no): yes Enter age: 16 Cost of sandwich: $5.81 Enter sandwich size (1 for Regular, 2 for Large): 2 Would you like it loaded? (yes/no): no Enter age: 70 Cost of sandwich: $7.16 Your prompts may be worded differently. The amounts are what to check. Where people get stuck The loaded question is skipped. That is the leftover Enter after the size. One extra nextLine() before the real one eats it. Yes never matches. Comparing the answer with == never matches typed text. Use equalsIgnoreCase() . Total is off. The loaded cost was added after the discount. It is part of the price that gets discounted, so add it before. \"No\" or \"YES\" breaks it. A capital letter must still work, and ignoring case is what gives you that. Pages that help The leftover Enter == vs .equals if / else if / else, which branch runs Comm"
   }
 ]

@@ -46,7 +46,9 @@ window.HUB_MANIFEST = {
     { file: "string-application.html", title: "String Application", group: "Workbook 1c · Section 3-2", desc: "VariableApp and Receipt: pick the type for each value, print it in a sentence." },
     { file: "math-application.html", title: "Math Application", group: "Workbook 1c · Section 3-2", desc: "Eight questions answered with the Math class, each with a clear message." },
     { file: "basic-calculator.html", title: "Basic Calculator", group: "Workbook 1c · Section 3-3", desc: "Two numbers and a menu from the keyboard, one equation printed." },
-    { file: "payroll-calculator.html", title: "Payroll Calculator", group: "Workbook 1c · Section 3-3", desc: "Name, hours and rate from the keyboard, gross pay printed with two decimals." }
+    { file: "payroll-calculator.html", title: "Payroll Calculator", group: "Workbook 1c · Section 3-3", desc: "Name, hours and rate from the keyboard, gross pay printed with two decimals." },
+    { file: "sandwich-shop.html", title: "Sandwich Shop", group: "Workbook 1c · Section 4-1", desc: "Size and age in, one price out: if / else if / else twice." },
+    { file: "sandwich-shop-2.html", title: "Sandwich Shop, Loaded", group: "Workbook 1c · Section 4-1", desc: "Add one yes/no question to working code without breaking it." }
   ],
   games: []
 };
