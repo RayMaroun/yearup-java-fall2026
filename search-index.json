@@ -483,10 +483,70 @@
     "week": 1,
     "weekLabel": "Week 1",
     "section": "Games",
+    "title": "Git Mission",
+    "desc": "Put the IntelliJ Git steps in order, from New Project to Commit and Push, then say where each commit travels.",
+    "group": "Workbook 1a · Sections 1-1 to 1-4",
+    "url": "week-01/games/git-mission.html",
+    "text": "← Week 1 index Workbook 1a · Sections 1-1 to 1-4 · Game Git Mission Put the IntelliJ steps in order, then say where each commit travels. Game mission score 0 time 0.0s Working copy files you edit commit → Local repository on your machine push → ← pull Remote repository github.com Git Mission Two missions in IntelliJ: click the next step, or press its number. Between them, questions on where your code goes. Start Missions over Play again round 0 / 8 Press Start . Number keys pick a step. project first-maven-project · folder workbook-1 · commit = local · push = GitHub The one idea A commit is saved on your machine; a push sends it to GitHub. Share Project on GitHub happens once per project. After that, every change is Commit, message, Commit and Push."
+  },
+  {
+    "week": 1,
+    "weekLabel": "Week 1",
+    "section": "Games",
+    "title": "Output Predictor",
+    "desc": "Read a short snippet and pick the exact line Java prints: joins, int division, casts, ++, switch, == vs equals.",
+    "group": "Workbook 1c · Modules 3 and 4",
+    "url": "week-01/games/output-predictor.html",
+    "text": "← Week 1 index Workbook 1c · Modules 3 and 4 · Game Output Predictor Read the code, predict the exact line it prints. Twelve rounds, the clock is running. Game what does it print? score 0 time 0.0s Output Predictor A short snippet appears with four possible outputs. Click the one Java really prints, or press its number key. Start Round over Play again round 0 / 12 Press Start . Keys 1 to 4 pick an output. left to right · int / int stays int · a cast cuts, it never rounds · == compares objects, equals compares text The one idea Java does exactly what the line says, in order. Types decide the math, left to right decides the joins, and the output follows from both."
+  },
+  {
+    "week": 1,
+    "weekLabel": "Week 1",
+    "section": "Games",
+    "title": "Bug Hunter",
+    "desc": "Ten snippets, one bug each: find the line before the compiler does.",
+    "group": "Workbook 1c · Modules 3 and 4",
+    "url": "week-01/games/bug-hunter.html",
+    "text": "← Week 1 index Workbook 1c · Modules 3 and 4 · Game Bug Hunter Every snippet hides exactly one bug. Find the line before the compiler does. Ten rounds, the clock is running. Game which line? score 0 time 0.0s Bug Hunter A short piece of Java appears. One line is wrong. Click it, or press its number. Start Round over Play again round 0 / 10 Press Start . Keys 1 to 8 pick a line. look for: a missing ; · the wrong quotes · a missing L or f · == on Strings · a missing break · int / int · arguments in the wrong order The one idea Read code one line at a time and ask what Java sees, not what you meant. Most first-week bugs are one character: a semicolon, a quote, a suffix, a break."
+  },
+  {
+    "week": 1,
+    "weekLabel": "Week 1",
+    "section": "Games",
+    "title": "Condition Crafter",
+    "desc": "Read a rule in plain English, pick the Java condition that says exactly that.",
+    "group": "Workbook 1c · Section 4-1",
+    "url": "week-01/games/condition-crafter.html",
+    "text": "← Week 1 index Workbook 1c · Section 4-1 · Game Condition Crafter A rule in plain English appears. Pick the Java condition that says exactly that. Twelve rounds, the clock is running. Game which condition? score 0 time 0.0s Condition Crafter Read the rule, then click the condition that matches it, or press 1 to 4. Watch the edges: \"or more\", \"any capitals\", \"not\". Start Round over Play again round 0 / 12 Press Start . Keys 1 to 4 pick a condition. and = && · or = || · not = ! · or more = >= · text = .equals · any capitals = .equalsIgnoreCase The one idea Translate the sentence word by word, then check the edges. \"And\" becomes &&, \"or\" becomes ||, \"not\" is ! in front of parentheses, text compares with .equals, and \"or more\" means the number itself counts."
+  },
+  {
+    "week": 1,
+    "weekLabel": "Week 1",
+    "section": "Games",
     "title": "Method Builder",
     "desc": "A job or a header appears: pick the header that fits, or the one call that compiles.",
     "group": "Workbook 1c · Section 4-2",
     "url": "week-01/games/method-builder.html",
     "text": "← Week 1 index Workbook 1c · Section 4-2 · Game Method Builder Match a job to its header, and a header to the call that fits it. Twelve rounds, the clock is running. Game method builder score 0 time 0.0s Method Builder Some rounds describe a job: pick the header that does it. Others show a header: pick the one call that compiles. Click, or press 1 to 4. Start Round over Play again round 0 / 12 Press Start . Keys 1 to 4 pick an answer. header = return type · name · (parameters) · void gives nothing back · arguments fill parameters in order The one idea The header is a promise, and every call must keep it. The return type says what comes back, so void has nothing to print or store. The parameters say how many arguments, of which types, in which order."
+  },
+  {
+    "week": 1,
+    "weekLabel": "Week 1",
+    "section": "Games",
+    "title": "Switch Tracer",
+    "desc": "Read a switch and a value, pick what prints: break, fall-through, arrow cases, default and the switch expression.",
+    "group": "Workbook 1c · Section 4-3",
+    "url": "week-01/games/switch-tracer.html",
+    "text": "← Week 1 index Workbook 1c · Section 4-3 · Game Switch Tracer A switch and a value. Trace it and pick what prints, before the clock runs away. Game trace the switch score 0 time 0.0s What prints? Switch Tracer Find the matching case, then follow the code. Colon cases keep going until a break; arrow cases never do. Start Round over Play again round 0 / 12 Press Start . Keys 1 to 4 pick an answer. case 1: · runs down until break · case 1 -> · runs one case, then leaves · no match · default The one idea A colon case only marks where to start. Execution runs down through the cases below until it meets a break: that is fall-through. An arrow case runs its own code and leaves."
+  },
+  {
+    "week": 1,
+    "weekLabel": "Week 1",
+    "section": "Games",
+    "title": "Your First Day",
+    "desc": "Ten situations from a new Java developer's first day: pick the action a pro takes, and see why.",
+    "group": "Week 1",
+    "url": "week-01/games/your-first-day.html",
+    "text": "← Week 1 index Week 1 · Game Your First Day Your first day as a Java developer. Ten situations, four actions each: pick the one a pro takes. Game 9:00 AM score 0 time 0.0s Your First Day Something happens at your desk. Read it, then click the right action or press its number key. Start the day Day done Play again round 0 / 10 Press Start the day . Keys 1 to 4 pick an action. keys 1 to 4 answer · space starts · read the message before you act The one idea Most first-day problems name their own fix. The red underline, the console and the error message are the first place to look, before you change anything."
   }
 ]

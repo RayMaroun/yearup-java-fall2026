@@ -51,8 +51,8 @@
   body.solo .focus{border-color:rgba(255,200,98,.6);color:var(--gold);background:rgba(255,200,98,.1)}
 
   /* ---------- game board ---------- */
-  .pic{position:relative;height:440px;border:1px solid var(--line);border-radius:18px;background:rgba(6,10,20,.5);overflow:hidden;
-    display:flex;flex-direction:column;align-items:center;justify-content:center;gap:18px;padding:44px 20px 24px}
+  .pic{position:relative;height:460px;border:1px solid var(--line);border-radius:18px;background:rgba(6,10,20,.5);overflow:hidden;
+    display:flex;flex-direction:column;align-items:center;justify-content:center;gap:18px;padding:44px 20px 64px}
   .pic .zone{position:absolute;left:18px;top:14px;font-family:var(--mono);font-size:.62rem;letter-spacing:.14em;text-transform:uppercase;color:rgba(132,150,182,.55)}
   .hud{position:absolute;right:18px;top:12px;display:flex;gap:14px;font-family:var(--mono);font-size:.72rem;color:var(--muted)}
   .hud b{color:var(--ink);font-weight:500}
@@ -174,3 +174,168 @@
   <div id="rail"></div>
 </div>
 
+<script>
+(function(){
+  "use strict";
+  var $=function(s){return document.querySelector(s);};
+  var reduce=matchMedia("(prefers-reduced-motion: reduce)").matches;
+
+  var TOPICS=[["all","All"],["git","Git and IntelliJ"],["types","Types and variables"],["ops","Operators"],["io","Input and output"],["cond","Conditionals"],["meth","Methods"],["sw","switch"]];
+  // each card: topic, question, code (or ""), answers (the first one is right), why
+  var POOL=[
+    ["git","What does a commit do?","",["Saves a snapshot of your changes in the local repository","Uploads your code to GitHub","Downloads the latest changes from GitHub","Deletes the old versions of your files"],"A commit records a snapshot on your machine; nothing leaves it until you push."],
+    ["git","You committed, but GitHub does not show the change. What is missing?","",["A push","Another commit","A new repository","Restarting IntelliJ"],"Commits stay in the local repository until a push sends them to the remote one."],
+    ["git","What is a repository?","",["A project folder Git tracks, with the history of every commit","A single Java file","A list of Maven libraries","The part of memory the JVM uses"],"A repository is the project plus its whole commit history."],
+    ["git","Local repository versus remote repository: which is true?","",["The local one is on your computer, the remote one is on GitHub","The local one is on GitHub, the remote one is on your computer","They are two names for the same folder","The remote one only holds the .class files"],"You work and commit locally, then push to the remote copy on GitHub."],
+    ["git","In IntelliJ, what does Share Project on GitHub do?","",["Creates a GitHub repository and pushes your project to it","Sends the project by email to the instructor","Compiles the project on GitHub","Makes a copy of the project on your desktop"],"It creates the remote repository for you and pushes your commits there."],
+    ["git","Which file describes a Maven project: its Java version and its libraries?","",["pom.xml","Main.java",".gitignore","README.md"],"Maven reads pom.xml to know how to build the project."],
+    ["git","In a Maven project, where does your Java source code go?","",["src/main/java","target","src/main/resources",".idea"],"Maven looks for source code under src/main/java; target holds what it builds."],
+    ["git","What is a package such as com.pluralsight?","",["A named folder that groups related classes","A library you download from the internet","A compiled .class file","A kind of variable"],"Packages organize classes, and each part of the name is a folder."],
+    ["git","Which method does Java run first when a program starts?","",["public static void main(String[] args)","public void start()","static int run()","public static void Main()"],"The JVM looks for main with exactly that signature, lowercase m included."],
+    ["git","A public class is named Greeter. What must its file be named?","",["Greeter.java","greeter.java","Main.java","Greeter.class"],"A public class lives in a file with exactly its name, capitals included, plus .java."],
+
+    ["types","What does the compiler (javac) make from your .java file?","",["Bytecode in a .class file","A Maven project","A GitHub repository","Machine code for one kind of computer only"],"javac turns source code into bytecode, which the JVM then runs."],
+    ["types","What runs the bytecode in a .class file?","",["The JVM","The compiler","Maven","Git"],"The Java Virtual Machine runs bytecode, which is why the same .class runs on any system."],
+    ["types","Which of these is a primitive type?","",["int","String","Scanner","System"],"int is built into the language; String, Scanner and System are classes."],
+    ["types","What happens here?","char letter = \"A\";",["Compile error: double quotes make a String, not a char","letter holds A","letter holds 65","It compiles but prints nothing"],"A char literal uses single quotes, like 'A'."],
+    ["types","What happens here?","final int MAX_SEATS = 40;\nMAX_SEATS = 45;",["Compile error: a final variable cannot be changed","MAX_SEATS becomes 45","MAX_SEATS stays 40 without an error","It crashes when the program runs"],"final means the value is set once and the compiler blocks any later assignment."],
+    ["types","Which name follows the Java convention for a variable?","",["firstName","FirstName","first-name","1stName"],"Variables use camelCase starting lowercase; first-name and 1stName are not even legal."],
+    ["types","Which name follows the Java convention for a constant?","",["MAX_SEATS","maxSeats","MaxSeats","max-seats"],"Constants are all capitals with underscores between the words."],
+    ["types","What happens here, inside main?","int count;\nSystem.out.println(count);",["Compile error: count has no value yet","It prints 0","It prints null","It prints count"],"A local variable must be given a value before you read it."],
+    ["types","Which type holds a value like 19.99 when there is no letter after it?","",["double","float","int","long"],"A decimal literal with no suffix is a double; float needs an f."],
+
+    ["ops","What does this print?","System.out.println(7 / 2);",["3","3.5","4","3.0"],"Two ints give integer division, so the decimal part is dropped."],
+    ["ops","What does this print?","System.out.println(7 % 3);",["1","2","2.33","0"],"% gives the remainder: 7 is 3 times 2 with 1 left over."],
+    ["ops","What does this print?","System.out.println(7.0 / 2);",["3.5","3","3.0","4"],"One double in the division makes the whole result a double."],
+    ["ops","What does this print?","System.out.println((int) 9.99);",["9","10","9.99","Compile error"],"Casting to int cuts off the decimal part; it never rounds."],
+    ["ops","What does this print?","System.out.println((double) 7 / 2);",["3.5","3.0","3","Compile error"],"The cast turns 7 into 7.0 first, so the division is done with decimals."],
+    ["ops","What happens here?","int n = 3.7;",["Compile error: a double does not fit in an int without a cast","n holds 3","n holds 4","n holds 3.7"],"Going from double to int can lose data, so Java requires an explicit cast."],
+    ["ops","What does this print?","double d = 10;\nSystem.out.println(d);",["10.0","10","Compile error","10.00"],"An int fits in a double, so Java widens it automatically and prints 10.0."],
+    ["ops","What does this print?","System.out.println(2 + 3 * 4);",["14","20","24","9"],"Multiplication happens before addition, so it is 2 + 12."],
+    ["ops","What is x after these lines?","int x = 5;\nx += 3;\nx++;",["9","8","6","15"],"x += 3 makes 8, and x++ adds one more."],
+    ["ops","What does this print?","System.out.println(\"Total: \" + 1 + 2);",["Total: 12","Total: 3","Total: 1 + 2","Compile error"],"Once the left side is a String, each + joins text instead of adding."],
+
+    ["io","What does this print?","System.out.printf(\"%.2f\", 3.14159);",["3.14","3.14159","3.1","3"],"%.2f shows a decimal number with exactly two digits after the point."],
+    ["io","Which format specifier prints an int?","",["%d","%f","%s","%c"],"%d is for whole numbers, %f for decimals, %s for text."],
+    ["io","What does this print?","System.out.printf(\"%s is %d%n\", \"Ana\", 20);",["Ana is 20","%s is %d","Ana is %d","Ana is 20.0"],"Each specifier is replaced by the next value in order, and %n ends the line."],
+    ["io","What is the difference between print and println?","",["println moves to a new line after printing, print does not","print is faster","println only prints numbers","There is no difference"],"println adds a line break at the end; print leaves the cursor where it is."],
+    ["io","How do you create a Scanner that reads the keyboard?","",["new Scanner(System.in)","new Scanner(System.out)","Scanner.read()","new Scanner()"],"System.in is the keyboard input stream that the Scanner reads from."],
+    ["io","Which Scanner method reads a whole line, spaces included?","",["nextLine()","next()","nextInt()","read()"],"nextLine reads everything up to the Enter."],
+    ["io","The user types Ana Maria and presses Enter. What does next() return?","String name = scanner.next();",["Ana","Ana Maria","Maria","An empty String"],"next() stops at the first space; Maria waits in the buffer."],
+    ["io","The user types 20 and presses Enter. What does name hold?","int age = scanner.nextInt();\nString name = scanner.nextLine();",["An empty String","20","The next line the user types","null"],"nextInt reads 20 but leaves the Enter behind, and nextLine reads up to that Enter at once."],
+    ["io","How do you fix the empty nextLine() right after a nextInt()?","",["Call scanner.nextLine() once after nextInt() to use up the Enter","Create a second Scanner","Call nextInt() twice","Print an empty line first"],"One extra nextLine() consumes the leftover Enter, so the next one waits for real input."],
+    ["io","Which Scanner method reads a number like 4.5?","",["nextDouble()","nextInt()","nextLine()","next()"],"nextDouble reads a decimal number; nextInt would fail on 4.5."],
+
+    ["cond","Which condition compares the text of two Strings?","",["name.equals(\"Ana\")","name == \"Ana\"","name = \"Ana\"","name.equal(\"Ana\")"],"== checks whether two references are the same object; equals compares the characters."],
+    ["cond","What does this print?","int temp = 75;\nif (temp > 85) System.out.println(\"hot\");\nelse if (temp > 60) System.out.println(\"warm\");\nelse System.out.println(\"cold\");",["warm","hot","cold","warm and cold"],"The first true condition wins and the rest of the chain is skipped."],
+    ["cond","What is the value of this condition when age is 20?","age >= 13 && age <= 19",["false","true","20","Compile error"],"&& needs both sides true, and 20 <= 19 is false."],
+    ["cond","What is the value of this condition when day is \"Sat\"?","day.equals(\"Sat\") || day.equals(\"Sun\")",["true","false","Sat","Compile error"],"|| is true when at least one side is true."],
+    ["cond","What does this evaluate to?","!(5 > 3)",["false","true","2","Compile error"],"5 > 3 is true, and ! flips it to false."],
+    ["cond","What happens here, with int x?","if (x = 5) { System.out.println(\"five\"); }",["Compile error: = assigns, == compares","It prints five","It prints nothing","x becomes 5 and the condition is true"],"An if needs a boolean, and x = 5 is an int assignment, not a comparison."],
+    ["cond","What does s hold?","int a = 4;\nString s = (a % 2 == 0) ? \"even\" : \"odd\";",["even","odd","true","0"],"The conditional operator picks the first value when the condition is true."],
+    ["cond","What does max hold?","int a = 3, b = 8;\nint max = (a > b) ? a : b;",["8","3","true","11"],"3 > 8 is false, so the value after the colon is chosen."],
+    ["cond","What does this print?","System.out.println(\"YES\".equalsIgnoreCase(\"yes\"));",["true","false","YES","Compile error"],"equalsIgnoreCase compares the letters and ignores capitals."],
+
+    ["meth","In square(4), with the method static int square(int n), what is 4?","",["An argument","A parameter","A return type","A local constant"],"The value you pass in a call is the argument; the variable that receives it is the parameter."],
+    ["meth","In static int square(int n), what is n?","",["A parameter","An argument","The return value","A field"],"A parameter is the variable in the method header that receives the argument."],
+    ["meth","What does void mean in a method header?","",["The method gives no value back","The method takes no parameters","The method is empty","The method cannot be called"],"void is the return type that says nothing comes back."],
+    ["meth","What does this print?","static int doubleIt(int n) { return n * 2; }\n\nSystem.out.println(doubleIt(doubleIt(3)));",["12","6","9","3"],"The inner call returns 6 and the outer call doubles that to 12."],
+    ["meth","What does return do?","",["Sends a value back to the caller and ends the method","Prints the value","Restarts the method","Saves the value in a file"],"return hands the value to the line that called the method, and the method stops there."],
+    ["meth","What happens here?","static int half(int n) {\n    int h = n / 2;\n}",["Compile error: missing return statement","It returns 0","It returns h automatically","It returns nothing, like void"],"A method that promises an int must return one on every path."],
+    ["meth","The method is static void greet(String name, int times). What does greet(3, \"Ana\") do?","",["Compile error: the arguments are in the wrong order","Greets Ana 3 times","Java swaps them for you","It runs and prints 3"],"Arguments must match the parameters in number, type and order."],
+    ["meth","Why create one Scanner in main and pass it to the other methods as a parameter?","static int readAge(Scanner scanner) { ... }",["Every method reads from the same keyboard input through one Scanner","A method is not allowed to create objects","Parameters make the program run faster","Java allows only one variable per method"],"One Scanner on System.in, passed where it is needed, keeps all input in one place."],
+
+    ["sw","What does this print? (traditional switch)","int day = 1;\nswitch (day) {\n    case 1: System.out.print(\"Mon\");\n    case 2: System.out.print(\"Tue\"); break;\n}",["MonTue","Mon","Tue","Nothing"],"Without a break after case 1, it falls through into case 2."],
+    ["sw","What does break do inside a traditional switch?","",["Leaves the switch","Ends the whole program","Skips to the next case","Restarts the switch"],"break jumps out of the switch so the next case does not run."],
+    ["sw","What does this print? (arrow switch)","int day = 1;\nswitch (day) {\n    case 1 -> System.out.print(\"Mon\");\n    case 2 -> System.out.print(\"Tue\");\n}",["Mon","MonTue","Tue","Nothing"],"Arrow cases never fall through, so no break is needed."],
+    ["sw","When does the default branch of a switch run?","",["When no case matches","Always, after the matching case","Only when the value is 0","Before any case is checked"],"default catches every value that no case names."],
+    ["sw","In the arrow form, how do you send 6 and 7 to the same branch?","",["case 6, 7 ->","case 6 || 7 ->","case 6 && 7 ->","case 6 to 7 ->"],"A comma lists several labels for one arrow case."],
+    ["sw","Which type can a switch NOT use?","",["double","int","String","char"],"switch works on exact values like int, char and String, but not on double."],
+    ["sw","What does size hold when n is 2?","String size = switch (n) {\n    case 1 -> \"S\";\n    case 2 -> \"M\";\n    default -> \"L\";\n};",["M","S","L","Compile error"],"A switch expression gives back the value of the arrow case that matches."],
+    ["sw","day is 9 and this switch has only case 1 and case 2, no default. What runs?","",["Nothing in the switch","case 1","case 2","The program crashes"],"With no match and no default, the switch does nothing and the program continues."]
+  ];
+  var N=15, topic="all", round=[], at=0, score=0, misses=[], t0=0, timer=null, answered=true, playing=false, shown=[];
+
+  function shuffle(a){ a=a.slice(); for(var i=a.length-1;i>0;i--){ var j=Math.floor(Math.random()*(i+1)); var t=a[i]; a[i]=a[j]; a[j]=t; } return a; }
+  function el(tag,cls,text){ var e=document.createElement(tag); if(cls) e.className=cls; if(text!=null) e.textContent=text; return e; }
+  function pool(){ return topic==="all"?POOL:POOL.filter(function(c){return c[0]===topic;}); }
+  function total(){ return Math.min(N,pool().length); }
+  function say(cls,parts){ $("#caption").className="caption"+(cls?" "+cls:""); var s=$("#status"); s.textContent="";
+    parts.forEach(function(p){ s.appendChild(typeof p==="string"?document.createTextNode(p):el("b",p[0],p[1])); }); }
+  function setNo(n){ $("#stepno").innerHTML="<small>card</small>"+n+" / "+total(); }
+  function tick(){ $("#hTime").textContent=((performance.now()-t0)/1000).toFixed(1)+"s"; }
+
+  function buildChips(){ var box=$("#chips"); box.textContent="";
+    TOPICS.forEach(function(t){ var b=el("button","chip"+(t[0]===topic?" on":""),t[1]); b.setAttribute("data-k",t[0]); box.appendChild(b); }); }
+  function pickTopic(k){
+    topic=k; buildChips(); clearInterval(timer); playing=false; answered=true;
+    $("#zone").textContent=k==="all"?"all topics":TOPICS.filter(function(t){return t[0]===k;})[0][1];
+    $("#endScr").classList.add("off"); $("#startScr").classList.remove("off"); $("#bNext").classList.add("off");
+    $("#hScore").textContent="0"; $("#hTime").textContent="0.0s"; $("#bar").style.width="0"; setNo(0);
+    say("",["Press ",["a","Start"],". "+total()+" cards in this topic."]);
+  }
+
+  function show(){
+    var c=round[at]; answered=false;
+    $("#q").textContent=c[1]; $("#code").textContent=c[2]; $("#card").className="card"; $("#bNext").classList.add("off");
+    shown=shuffle(c[3]); var box=$("#opts"); box.textContent="";
+    shown.forEach(function(a,i){ var b=el("button","opt"); b.appendChild(el("span","key",String(i+1))); b.appendChild(el("span","",a)); b.setAttribute("data-i",i); box.appendChild(b); });
+    setNo(at+1); $("#bar").style.width=(100*at/round.length)+"%";
+    say("",["Read the card. ",["a","Which answer is right?"]]);
+  }
+  function start(){
+    round=shuffle(pool()).slice(0,total()); at=0; score=0; misses=[]; playing=true;
+    $("#hScore").textContent="0"; $("#startScr").classList.add("off"); $("#endScr").classList.add("off");
+    show(); t0=performance.now(); if(timer) clearInterval(timer); timer=setInterval(tick,100);
+  }
+  function answer(i){
+    if(!playing||answered||i<0||i>3) return; answered=true;
+    var c=round[at], right=c[3][0], pick=shown[i], ok=pick===right;
+    Array.prototype.forEach.call(document.querySelectorAll(".opt"),function(b,j){ b.disabled=true;
+      b.classList.add(shown[j]===right?"hit":j===i?"miss":"dim"); });
+    $("#card").className="card "+(ok?"good":"bad");
+    if(ok){ score++; $("#hScore").textContent=String(score); say("ok",[["g","Right."]," "+c[4]]); }
+    else { misses.push(c); say("cut",[["w","Not quite."]," Right answer: ",["g",right],". "+c[4]]); }
+    $("#bNext").textContent=at+1>=round.length?"See results":"Next"; $("#bNext").classList.remove("off");
+  }
+  function next(){ if(!playing||!answered) return; at++; if(at>=round.length) end(); else show(); }
+  function end(){
+    playing=false; clearInterval(timer); tick(); $("#bar").style.width="100%"; $("#bNext").classList.add("off");
+    var n=round.length, secs=((performance.now()-t0)/1000).toFixed(1);
+    $("#endScore").textContent=score+" / "+n; $("#endScore").className="big "+(score===n?"good":score>=n*0.75?"":"gold");
+    $("#endMsg").textContent=(score===n?"Perfect. ":score>=n*0.75?"Solid. ":"Keep going. ")+secs+" seconds."+(misses.length?" Your misses:":"");
+    var box=$("#endMiss"); box.textContent="";
+    misses.forEach(function(c){ var d=el("div"); d.appendChild(el("b","",c[1]+(c[2]?" "+c[2].replace(/\s*\n\s*/g," "):""))); d.appendChild(document.createTextNode(" ")); d.appendChild(el("i","",c[3][0])); d.appendChild(document.createTextNode(". "+c[4])); box.appendChild(d); });
+    $("#endScr").classList.remove("off");
+    setNo(n); say("",["Round over. ",["a","Play again"]," deals a new set of cards."]);
+  }
+
+  $("#opts").addEventListener("click",function(e){ var b=e.target.closest(".opt"); if(b) answer(parseInt(b.getAttribute("data-i"),10)); });
+  $("#chips").addEventListener("click",function(e){ var b=e.target.closest(".chip"); if(b) pickTopic(b.getAttribute("data-k")); });
+  $("#bStart").addEventListener("click",start); $("#bAgain").addEventListener("click",start); $("#bNext").addEventListener("click",next);
+  document.addEventListener("keydown",function(e){
+    if(/INPUT|TEXTAREA/.test(e.target.tagName)||e.ctrlKey||e.metaKey||e.altKey) return;
+    var k=parseInt(e.key,10);
+    if(k>=1&&k<=4&&playing&&!answered){ e.preventDefault(); answer(k-1); return; }
+    if(e.key==="Enter"||e.code==="Space"){
+      if(e.target.tagName==="BUTTON") return;
+      if(playing&&answered){ e.preventDefault(); next(); }
+      else if(!playing){ e.preventDefault(); start(); }
+    } });
+
+  var cv=$("#amb"),ctx=cv.getContext&&cv.getContext("2d"),parts=[];
+  function sizeC(){if(!ctx)return;cv.width=innerWidth;cv.height=innerHeight;}
+  function initParts(){parts=[];for(var i=0;i<46;i++)parts.push({x:Math.random(),y:Math.random(),r:Math.random()*1.6+.3,s:Math.random()*.02+.004,o:Math.random()*.4+.1});}
+  function drawC(){if(!ctx)return;ctx.clearRect(0,0,cv.width,cv.height);
+    parts.forEach(function(p){p.y-=p.s/60;if(p.y<-.02)p.y=1.02;ctx.beginPath();ctx.arc(p.x*cv.width,p.y*cv.height,p.r,0,7);
+      ctx.fillStyle="rgba(140,170,255,"+p.o+")";ctx.fill();});requestAnimationFrame(drawC);}
+  if(ctx&&!reduce){sizeC();initParts();drawC();addEventListener("resize",sizeC);}
+
+  buildChips(); pickTopic("all");
+})();
+</script>
+<script src="../manifest.js"></script>
+<script src="../../assets/rail.js"></script>
+<script>Rail.render(document.getElementById("rail"),{kind:"games",current:"flashcard-quiz"});</script>
+</body>
+</html>

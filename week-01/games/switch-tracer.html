@@ -1,0 +1,305 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Switch Tracer | Week 1 Visual Hub</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Sora:wght@500;700&family=Inter:wght@400;500&family=JetBrains+Mono:wght@400;500&display=swap">
+<style>
+  :root{
+    --bg:#080c17; --bg2:#0c1428; --surface:rgba(255,255,255,.045); --line:rgba(255,255,255,.09);
+    --ink:#eef2fb; --muted:#8496b6; --accent:#6ea0ff; --accent2:#8b7bff; --good:#46d98a; --warn:#ff6a6a;
+    --gold:#ffc862; --disp:'Sora',system-ui,sans-serif; --body:'Inter',system-ui,sans-serif;
+    --mono:'JetBrains Mono',ui-monospace,monospace;
+  }
+  *{box-sizing:border-box}
+  body{margin:0;min-height:100vh;color:var(--ink);font-family:var(--body);
+    background:radial-gradient(1200px 700px at 70% -10%,#141d38 0%,transparent 55%),
+               radial-gradient(900px 600px at 10% 110%,#161233 0%,transparent 50%),#080c17;
+    overflow-x:hidden}
+  #amb{position:fixed;inset:0;z-index:0;pointer-events:none;opacity:.6}
+  .back{position:relative;z-index:2;display:block;max-width:1120px;margin:0 auto;padding:26px 24px 0;
+    width:100%;font-family:var(--mono);font-size:.8rem;letter-spacing:.04em;color:var(--muted);
+    text-decoration:none;transition:color .15s}
+  .back:hover{color:var(--accent)}
+  .wrap{position:relative;z-index:1;max-width:1120px;margin:0 auto;padding:22px 24px 70px}
+  .tag{font-family:var(--mono);font-size:.72rem;letter-spacing:.22em;text-transform:uppercase;color:var(--accent);margin:0 0 14px}
+  h1{font-family:var(--disp);font-weight:700;font-size:clamp(2.3rem,6vw,3.6rem);line-height:1;margin:0 0 12px;
+    letter-spacing:-.03em;background:linear-gradient(180deg,#fff,#b9c6e6);-webkit-background-clip:text;
+    background-clip:text;color:transparent}
+  .lede{color:var(--muted);max-width:64ch;font-size:1.05rem;margin:0 0 26px;line-height:1.5}
+  .lede b{color:var(--ink)}
+  .lede code,.take code,.caption code{font-family:var(--mono);font-size:.92em;color:#bcd0ff}
+
+  /* ---------- stage: picture first, one toolbar, support below ---------- */
+  .stage{position:relative;background:linear-gradient(180deg,rgba(255,255,255,.03),rgba(255,255,255,.01));
+    border:1px solid var(--line);border-radius:24px;padding:18px 18px 14px;
+    box-shadow:0 1px 0 rgba(255,255,255,.06) inset,0 30px 80px -30px rgba(0,0,0,.8)}
+  .topbar{display:flex;align-items:center;gap:10px;margin:0 0 14px;flex-wrap:wrap}
+  .topbar .lab{margin:0 4px 0 0}
+  .lab{font-family:var(--mono);font-size:.7rem;letter-spacing:.12em;text-transform:uppercase;color:var(--muted);margin:0 0 10px}
+  .chips{display:flex;flex-wrap:wrap;gap:6px}
+  .chip{font-family:var(--mono);font-size:.74rem;padding:5px 11px;border-radius:999px;cursor:pointer;
+    border:1px solid var(--line);background:rgba(0,0,0,.25);color:var(--muted);transition:.15s}
+  .chip:hover{border-color:var(--accent);color:var(--accent)}
+  .chip.on{border-color:rgba(110,160,255,.6);background:rgba(110,160,255,.14);color:var(--ink)}
+  .chip:focus-visible,.btn:focus-visible,.focus:focus-visible{outline:2px solid var(--accent);outline-offset:2px}
+  .focus{margin-left:auto;font-family:var(--mono);font-size:.68rem;letter-spacing:.1em;text-transform:uppercase;padding:6px 12px;
+    border-radius:999px;border:1px solid var(--line);background:rgba(0,0,0,.25);color:var(--muted);cursor:pointer;transition:.15s}
+  .focus:hover{border-color:var(--accent);color:var(--accent)}
+  body.solo .focus{border-color:rgba(255,200,98,.6);color:var(--gold);background:rgba(255,200,98,.1)}
+
+  /* ---------- game board ---------- */
+  .pic{position:relative;height:420px;border:1px solid var(--line);border-radius:18px;background:rgba(6,10,20,.5);overflow:hidden;
+    display:grid;grid-template-columns:1.25fr 1fr;gap:22px;align-items:center;padding:40px 22px 22px}
+  .pic .zone{position:absolute;left:18px;top:14px;font-family:var(--mono);font-size:.62rem;letter-spacing:.14em;text-transform:uppercase;color:rgba(132,150,182,.55)}
+  .hud{position:absolute;right:18px;top:12px;display:flex;gap:14px;font-family:var(--mono);font-size:.72rem;color:var(--muted)}
+  .hud b{color:var(--ink);font-weight:500}
+  .code{margin:0;font-family:var(--mono);font-size:.8rem;line-height:1.55;color:var(--ink);white-space:pre;overflow-x:auto;
+    padding:14px 16px;border:1px solid var(--line);border-radius:14px;background:rgba(0,0,0,.3);transition:border-color .2s,box-shadow .2s}
+  .code .ln{display:block;min-height:1.55em}
+  .code .ln.in{color:var(--muted);border-bottom:1px dashed var(--line);margin-bottom:6px;padding-bottom:6px}
+  .code .ln.in .nm{color:var(--gold);font-weight:500}
+  .code .kw{color:#c792ea} .code .ty{color:#82aaff} .code .st{color:#c3e88d} .code .nm{color:#f78c6c} .code .fn{color:#ffcb6b}
+  .code.good{border-color:rgba(70,217,138,.7);box-shadow:0 0 28px -8px rgba(70,217,138,.8)}
+  .code.bad{border-color:rgba(255,106,106,.7);box-shadow:0 0 28px -8px rgba(255,106,106,.8);animation:shake .3s}
+  @keyframes shake{25%{transform:translateX(-6px)}75%{transform:translateX(6px)}}
+  .ask{display:flex;flex-direction:column;gap:10px}
+  .ask .lab{margin:0}
+  .opts{display:grid;grid-template-columns:1fr 1fr;gap:8px}
+  .opt{position:relative;text-align:left;font-family:var(--mono);font-size:.84rem;line-height:1.5;padding:10px 26px 10px 14px;border-radius:11px;cursor:pointer;
+    border:1px solid var(--line);background:var(--surface);color:var(--ink);transition:.15s;min-height:64px}
+  .opt:hover{border-color:var(--accent);color:var(--accent)}
+  .opt:disabled{cursor:default}
+  .opt .none{font-style:italic;color:var(--muted)}
+  .opt.hit{border-color:rgba(70,217,138,.7);background:rgba(70,217,138,.14);color:var(--good)}
+  .opt.miss{border-color:rgba(255,106,106,.7);background:rgba(255,106,106,.12);color:var(--warn)}
+  .opt.dim{opacity:.4}
+  .key{position:absolute;right:9px;top:8px;font-size:.62rem;color:var(--muted)}
+  .screen{position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:12px;background:rgba(6,10,20,.92);transition:opacity .25s;padding:20px}
+  .screen.off{opacity:0;pointer-events:none}
+  .screen h2{font-family:var(--disp);font-weight:700;font-size:1.6rem;margin:0;color:var(--ink)}
+  .screen p{margin:0;color:var(--muted);font-size:.95rem;text-align:center;max-width:46ch;line-height:1.5}
+  .screen .big{font-family:var(--disp);font-weight:700;font-size:2.6rem;color:var(--accent)}
+  .screen .big.gold{color:var(--gold)} .screen .big.good{color:var(--good)}
+  .bar{position:absolute;left:0;right:0;bottom:0;height:4px;background:rgba(255,255,255,.06)}
+  .bar i{display:block;height:100%;width:0;background:var(--accent);transition:width .25s}
+  .misses{font-family:var(--mono);font-size:.74rem;color:var(--muted);line-height:1.7;text-align:left;max-height:150px;overflow-y:auto;max-width:640px}
+  .misses b{color:var(--warn);font-weight:500} .misses i{font-style:normal;color:var(--good)}
+  @media (max-width:760px){.pic{height:auto;min-height:420px;grid-template-columns:1fr;padding-top:44px}.opts{grid-template-columns:1fr 1fr}}
+  /* caption: the one sentence, right under the picture */
+  .caption{display:flex;gap:16px;align-items:flex-start;margin:14px 4px 0;min-height:56px}
+  .caption .n{flex-shrink:0;font-family:var(--disp);font-weight:700;font-size:1.35rem;color:var(--accent);font-variant-numeric:tabular-nums;
+    line-height:1.2;min-width:3.2rem}
+  .caption .n small{display:block;font-family:var(--mono);font-weight:400;font-size:.58rem;letter-spacing:.14em;text-transform:uppercase;color:var(--muted)}
+  .caption .t{font-size:1.02rem;line-height:1.55;color:var(--ink);padding-left:16px;border-left:3px solid var(--accent);transition:border-color .3s}
+  body.solo .caption .t{font-size:1.18rem}
+  .caption.cut .t{border-left-color:var(--warn)} .caption.left .t{border-left-color:var(--gold)} .caption.ok .t{border-left-color:var(--good)}
+  .caption b.g{color:var(--good)} .caption b.w{color:var(--warn)} .caption b.a{color:var(--accent)} .caption b.y{color:var(--gold)}
+
+  /* toolbar: same on every page */
+  .toolbar{display:flex;align-items:center;gap:10px;margin:16px 0 0;padding-top:14px;border-top:1px solid var(--line)}
+  .btn{font-family:var(--body);font-weight:500;font-size:.86rem;padding:9px 16px;border-radius:11px;cursor:pointer;
+    border:1px solid var(--line);background:var(--surface);color:var(--ink);transition:.15s}
+  .btn:hover{border-color:var(--accent);color:var(--accent)}
+  .btn.primary{border-color:rgba(110,160,255,.5);background:rgba(110,160,255,.12);padding:9px 22px}
+  .btn:disabled{opacity:.35;cursor:not-allowed}
+  .btn.ghost{background:transparent;color:var(--muted);margin-left:auto}
+  .dots{display:flex;gap:5px;align-items:center;margin:0 6px}
+  .dots i{display:block;width:8px;height:8px;border-radius:50%;background:rgba(255,255,255,.12);transition:.2s}
+  .dots i.done{background:rgba(110,160,255,.45)}
+  .dots i.now{background:var(--accent);transform:scale(1.35);box-shadow:0 0 10px rgba(110,160,255,.7)}
+  .hint{font-family:var(--mono);font-size:.68rem;color:var(--muted);margin:10px 4px 0;line-height:1.5}
+  .hint b{color:var(--accent)}
+
+  .toolbar .btn.primary{min-width:120px}
+  .take{margin-top:22px;background:linear-gradient(180deg,rgba(110,160,255,.08),rgba(139,123,255,.04));
+    border:1px solid var(--line);border-left:3px solid var(--accent);border-radius:12px;padding:16px 18px}
+  .take .tk{font-family:var(--mono);font-size:.66rem;letter-spacing:.14em;text-transform:uppercase;color:var(--accent);margin:0 0 8px}
+  .take p{margin:0;font-size:.95rem;color:var(--ink);line-height:1.55}
+  .take b{color:#fff}
+  @media (prefers-reduced-motion:reduce){*{animation-duration:.01ms!important;transition-duration:.01ms!important}#amb{display:none}}
+</style>
+</head>
+<body>
+
+<a class="back" href="../index.html#switch-tracer">&#8592; Week 1 index</a>
+
+<canvas id="amb"></canvas>
+<div class="wrap">
+  <p class="tag">Workbook 1c &middot; Section 4-3 &middot; Game</p>
+  <h1>Switch Tracer</h1>
+  <p class="lede"><b>A switch and a value. Trace it and pick what prints, before the clock runs away.</b></p>
+
+  <div class="stage">
+    <div class="topbar">
+      <span class="lab">Game</span>
+    </div>
+
+    <div class="pic" id="pic">
+      <span class="zone">trace the switch</span>
+      <div class="hud"><span>score <b id="hScore">0</b></span><span>time <b id="hTime">0.0s</b></span></div>
+      <pre class="code" id="code"></pre>
+      <div class="ask">
+        <p class="lab">What prints?</p>
+        <div class="opts" id="opts"></div>
+      </div>
+      <div class="bar"><i id="bar"></i></div>
+      <div class="screen" id="startScr">
+        <h2>Switch Tracer</h2>
+        <p>Find the matching case, then follow the code. Colon cases keep going until a break; arrow cases never do.</p>
+        <button class="btn primary" id="bStart">Start</button>
+      </div>
+      <div class="screen off" id="endScr">
+        <h2>Round over</h2>
+        <div class="big" id="endScore"></div>
+        <p id="endMsg"></p>
+        <div class="misses" id="endMiss"></div>
+        <button class="btn primary" id="bAgain">Play again</button>
+      </div>
+    </div>
+
+    <div class="caption" id="caption">
+      <div class="n" id="stepno"><small>round</small>0 / 12</div>
+      <div class="t" id="status">Press <b class="a">Start</b>. Keys 1 to 4 pick an answer.</div>
+    </div>
+    <p class="hint">case 1: &middot; runs down until <b>break</b> &middot; case 1 -&gt; &middot; runs one case, then leaves &middot; no match &middot; <b>default</b></p>
+  </div>
+
+  <div class="take">
+    <p class="tk">The one idea</p>
+    <p><b>A colon case only marks where to start.</b> Execution runs down through the cases below until it meets a break: that is fall-through. An arrow case runs its own code and leaves.</p>
+  </div>
+
+  <div id="rail"></div>
+</div>
+
+<script>
+(function(){
+  "use strict";
+  var $=function(s){return document.querySelector(s);};
+  var reduce=matchMedia("(prefers-reduced-motion: reduce)").matches;
+  var P="        System.out.println(", Q="    ";
+  function pr(s){ return P+"\""+s+"\");"; }
+
+  var SNIP={
+    week:{v:"dayNumber",l:["switch (dayNumber) {",Q+"case 0: case 6:",pr("Weekend"),"        break;",Q+"case 1: case 2: case 3: case 4: case 5:",pr("Weekday"),"        break;",Q+"default:",pr("Invalid day"),"}"]},
+    late:{v:"dayNumber",l:["switch (dayNumber) {",Q+"case 4:",pr("Thursday"),"        break;",Q+"case 5:",pr("Friday"),"        break;",Q+"case 6:",pr("Saturday"),"        break;","}"]},
+    leak:{v:"dayNumber",l:["switch (dayNumber) {",Q+"case 4:",pr("Thursday"),"        break;",Q+"case 5:",pr("Friday"),Q+"case 6:",pr("Saturday"),"        break;","}"]},
+    deflt:{v:"dayNumber",l:["switch (dayNumber) {",Q+"case 1:",pr("Monday"),"        break;",Q+"case 2:",pr("Tuesday"),Q+"default:",pr("Invalid day"),"}"]},
+    arrow:{v:"dayNumber",l:["switch (dayNumber) {",Q+"case 0, 6 -> System.out.println(\"Weekend\");",Q+"case 1, 2, 3, 4, 5 -> System.out.println(\"Weekday\");",Q+"default -> System.out.println(\"Invalid day\");","}"]},
+    mid:{v:"dayNumber",l:["switch (dayNumber) {",Q+"case 3 -> System.out.println(\"Wednesday\");",Q+"case 4 -> System.out.println(\"Thursday\");",Q+"case 5 -> System.out.println(\"Friday\");","}"]},
+    expr:{v:"dayNumber",l:["String dayType = switch (dayNumber) {",Q+"case 0, 6 -> \"Weekend\";",Q+"case 1, 2, 3, 4, 5 -> \"Weekday\";",Q+"default -> \"Invalid day\";","};","System.out.println(dayType);"]},
+    names:{v:"dayNumber",l:["String dayName = switch (dayNumber) {",Q+"case 0 -> \"Sunday\";",Q+"case 1 -> \"Monday\";",Q+"case 2 -> \"Tuesday\";",Q+"case 3 -> \"Wednesday\";",Q+"case 4 -> \"Thursday\";",Q+"case 5 -> \"Friday\";",Q+"case 6 -> \"Saturday\";",Q+"default -> \"Invalid day\";","};","System.out.println(dayName);"]},
+    menu:{v:"command",l:["switch (command) {",Q+"case 1:",pr("add"),"        break;",Q+"case 2:",pr("subtract"),"        break;",Q+"default:",pr("Invalid command"),"}"]},
+    menuLeak:{v:"command",l:["switch (command) {",Q+"case 1:",pr("add"),Q+"case 2:",pr("subtract"),"        break;",Q+"default:",pr("Invalid command"),"}"]},
+    menuArrow:{v:"command",l:["switch (command) {",Q+"case 1 -> System.out.println(\"add\");",Q+"case 2 -> System.out.println(\"subtract\");",Q+"default -> System.out.println(\"Invalid command\");","}"]}
+  };
+  /* [snippet, input, correct, wrong, wrong, wrong, why]; "|" separates printed lines, "" means nothing prints */
+  var POOL=[
+    ["week",6,"Weekend","Weekday","Invalid day","Weekend|Weekday","6 shares the Weekend line with case 0, and break ends the switch"],
+    ["week",0,"Weekend","Weekday","Weekend|Weekday","Invalid day","case 0 has no code of its own, so it falls through on purpose to the Weekend line, then break stops it"],
+    ["week",3,"Weekday","Weekend","Weekday|Invalid day","Invalid day","3 is one of the weekday cases, and break skips default"],
+    ["week",9,"Invalid day","Weekday","","Weekend|Weekday|Invalid day","no case is 9, so default runs"],
+    ["late",5,"Friday","Friday|Saturday","Thursday|Friday","","case 5 prints Friday, and its break leaves before case 6"],
+    ["late",1,"","Thursday","Invalid day","Thursday|Friday|Saturday","no case is 1 and there is no default, so nothing prints"],
+    ["leak",5,"Friday|Saturday","Friday","Saturday","Thursday|Friday|Saturday","fall-through: case 5 has no break, so it runs on into Saturday until the break"],
+    ["leak",6,"Saturday","Friday|Saturday","Friday","","the switch starts at case 6, never runs the code above it, and break stops after Saturday"],
+    ["leak",4,"Thursday","Thursday|Friday","Thursday|Friday|Saturday","Friday","case 4 has its break, so only Thursday prints"],
+    ["deflt",2,"Tuesday|Invalid day","Tuesday","Invalid day","Monday|Tuesday","fall-through: case 2 is missing its break, so it runs straight into default too"],
+    ["deflt",1,"Monday","Monday|Tuesday","Monday|Tuesday|Invalid day","Invalid day","case 1 ends with break, so nothing below it runs"],
+    ["deflt",8,"Invalid day","","Tuesday|Invalid day","Monday","no case is 8, so the switch jumps straight to default"],
+    ["arrow",0,"Weekend","Weekend|Weekday","Weekend|Weekday|Invalid day","Invalid day","0 is in case 0, 6, and an arrow case runs only its own line: no fall-through"],
+    ["arrow",4,"Weekday","Weekday|Invalid day","Weekend","Invalid day","4 is in the weekday list, and the arrow leaves after that one line"],
+    ["arrow",7,"Invalid day","Weekend","Weekday","","7 is in no list, so default runs"],
+    ["mid",3,"Wednesday","Wednesday|Thursday|Friday","Wednesday|Thursday","","no break needed: an arrow case never falls through"],
+    ["mid",6,"","Friday","Invalid day","Wednesday","no case is 6 and there is no default, so nothing prints"],
+    ["expr",6,"Weekend","Weekday","Weekend|Weekday","dayType","the switch hands back \"Weekend\", dayType holds it, and println prints it once"],
+    ["expr",1,"Weekday","Weekend","Weekday|Invalid day","Invalid day","1 is in the weekday list, so the switch hands back \"Weekday\""],
+    ["expr",10,"Invalid day","","Weekday","Weekend","no list holds 10, so default hands back \"Invalid day\""],
+    ["names",0,"Sunday","Monday","Saturday","Sunday|Monday","the count starts at 0 for Sunday, so case 0 hands back \"Sunday\""],
+    ["names",6,"Saturday","Friday","Sunday","Saturday|Invalid day","case 6 hands back \"Saturday\": Sunday is 0, so Saturday is 6"],
+    ["names",7,"Invalid day","Saturday","Sunday","","only 0 to 6 are days, so 7 lands in default"],
+    ["menu",2,"subtract","add","subtract|Invalid command","add|subtract","case 2 prints subtract, and break skips default"],
+    ["menu",1,"add","add|subtract","subtract","add|subtract|Invalid command","case 1 prints add, and its break stops the switch"],
+    ["menuLeak",1,"add|subtract","add","add|subtract|Invalid command","subtract","fall-through: case 1 has no break, so subtract runs too, then break stops it"],
+    ["menuLeak",2,"subtract","add|subtract","subtract|Invalid command","add","the switch starts at case 2, prints subtract, and break skips default"],
+    ["menuLeak",3,"Invalid command","","add|subtract|Invalid command","subtract","no case is 3, so only default runs"],
+    ["menuArrow",1,"add","add|subtract","add|subtract|Invalid command","subtract","an arrow case runs its one line and leaves: no fall-through"],
+    ["menuArrow",5,"Invalid command","","subtract","add","no case is 5, so default runs"]
+  ];
+  var N=12, round=[], at=0, score=0, misses=[], t0=0, timer=null, busy=false, opts=[];
+
+  function shuffle(a){ a=a.slice(); for(var i=a.length-1;i>0;i--){ var j=Math.floor(Math.random()*(i+1)); var t=a[i]; a[i]=a[j]; a[j]=t; } return a; }
+  function esc(s){ return String(s).replace(/\u0026/g,"\u0026amp;").replace(/</g,"\u0026lt;").replace(/>/g,"\u0026gt;"); }
+  var TOK=/("[^"]*")|(\b(?:switch|case|break|default)\b)|(\b(?:int|String)\b)|(\bprintln\b)|(-?\b\d+\b)/g;
+  function hl(line,cls){
+    var el=document.createElement("span"); el.className="ln"+(cls?" "+cls:""); var last=0, m;
+    TOK.lastIndex=0;
+    while((m=TOK.exec(line))){
+      if(m.index>last) el.appendChild(document.createTextNode(line.slice(last,m.index)));
+      var s=document.createElement("span"); s.className=m[1]?"st":m[2]?"kw":m[3]?"ty":m[4]?"fn":"nm"; s.textContent=m[0]; el.appendChild(s);
+      last=m.index+m[0].length;
+    }
+    if(last<line.length) el.appendChild(document.createTextNode(line.slice(last)));
+    return el;
+  }
+  function outHTML(o){ return o===""?'<span class="none">nothing prints</span>':o.split("|").map(esc).join("<br>"); }
+  function outText(o){ return o===""?"nothing":o.split("|").join(", "); }
+  function tick(){ $("#hTime").textContent=((performance.now()-t0)/1000).toFixed(1)+"s"; }
+  function showVal(){
+    var r=round[at], sn=SNIP[r[0]], code=$("#code");
+    code.innerHTML=""; code.className="code";
+    code.appendChild(hl("int "+sn.v+" = "+r[1]+";","in"));
+    sn.l.forEach(function(l){ code.appendChild(hl(l)); });
+    opts=shuffle([r[2],r[3],r[4],r[5]]);
+    $("#opts").innerHTML=opts.map(function(o,i){ return '<button class="opt" data-i="'+i+'">'+outHTML(o)+'<span class="key">'+(i+1)+'</span></button>'; }).join("");
+    $("#stepno").innerHTML="<small>round</small>"+(at+1)+" / "+N; $("#bar").style.width=(100*at/N)+"%";
+  }
+  function start(){
+    round=shuffle(POOL).slice(0,N); at=0; score=0; misses=[]; busy=false;
+    $("#hScore").textContent="0"; $("#startScr").classList.add("off"); $("#endScr").classList.add("off");
+    $("#caption").className="caption"; $("#status").innerHTML="Find the case that matches. <b class=\"a\">Then follow the code down.</b>";
+    showVal(); t0=performance.now(); if(timer) clearInterval(timer); timer=setInterval(tick,100);
+  }
+  function answer(i){
+    if(busy||at>=round.length||i<0||i>=opts.length) return; busy=true;
+    var r=round[at], pick=opts[i], ok=pick===r[2], why=r[6].charAt(0).toUpperCase()+r[6].slice(1)+".";
+    Array.prototype.forEach.call(document.querySelectorAll(".opt"),function(b){ b.disabled=true; var o=opts[+b.getAttribute("data-i")];
+      if(o===r[2]) b.classList.add("hit"); else if(o===pick) b.classList.add("miss"); else b.classList.add("dim"); });
+    $("#code").className="code "+(ok?"good":"bad");
+    if(ok){ score++; $("#hScore").textContent=String(score); $("#caption").className="caption ok"; $("#status").innerHTML='<b class="g">Right.</b> '+esc(why); }
+    else { misses.push(r); $("#caption").className="caption cut"; $("#status").innerHTML='<b class="w">Prints '+esc(outText(r[2]))+'.</b> '+esc(why); }
+    setTimeout(function(){ at++; busy=false; if(at>=N) end(); else showVal(); }, reduce?300:(ok?900:2600));
+  }
+  function end(){
+    clearInterval(timer); tick(); $("#bar").style.width="100%";
+    var secs=((performance.now()-t0)/1000).toFixed(1);
+    $("#endScore").textContent=score+" / "+N; $("#endScore").className="big "+(score===N?"good":score>=9?"":"gold");
+    $("#endMsg").textContent=(score===N?"Perfect. ":score>=9?"Solid. ":"Keep going. ")+secs+" seconds.";
+    $("#endMiss").innerHTML=misses.map(function(r){ return '<div><b>'+SNIP[r[0]].v+' = '+r[1]+'</b> prints <i>'+esc(outText(r[2]))+'</i>: '+esc(r[6])+'</div>'; }).join("");
+    $("#endScr").classList.remove("off");
+    $("#stepno").innerHTML="<small>round</small>"+N+" / "+N; $("#caption").className="caption"; $("#status").innerHTML="Round over. <b class=\"a\">Play again</b> deals twelve new switches.";
+  }
+  $("#opts").addEventListener("click",function(e){ var b=e.target.closest(".opt"); if(b) answer(+b.getAttribute("data-i")); });
+  $("#bStart").addEventListener("click",start); $("#bAgain").addEventListener("click",start);
+  document.addEventListener("keydown",function(e){ if(/INPUT|TEXTAREA/.test(e.target.tagName)) return;
+    var playing=$("#startScr").classList.contains("off")&&$("#endScr").classList.contains("off");
+    var k=parseInt(e.key,10); if(playing&&k>=1&&k<=4) answer(k-1);
+    if(e.code==="Space"&&!playing&&e.target.tagName!=="BUTTON"){ e.preventDefault(); start(); } });
+
+  var cv=$("#amb"),ctx=cv.getContext&&cv.getContext("2d"),parts=[];
+  function sizeC(){if(!ctx)return;cv.width=innerWidth;cv.height=innerHeight;}
+  function initParts(){parts=[];for(var i=0;i<46;i++)parts.push({x:Math.random(),y:Math.random(),r:Math.random()*1.6+.3,s:Math.random()*.02+.004,o:Math.random()*.4+.1});}
+  function drawC(){if(!ctx)return;ctx.clearRect(0,0,cv.width,cv.height);
+    parts.forEach(function(p){p.y-=p.s/60;if(p.y<-.02)p.y=1.02;ctx.beginPath();ctx.arc(p.x*cv.width,p.y*cv.height,p.r,0,7);
+      ctx.fillStyle="rgba(140,170,255,"+p.o+")";ctx.fill();});requestAnimationFrame(drawC);}
+  if(ctx&&!reduce){sizeC();initParts();drawC();addEventListener("resize",sizeC);}
+})();
+</script>
+<script src="../manifest.js"></script>
+<script src="../../assets/rail.js"></script>
+<script>Rail.render(document.getElementById("rail"),{kind:"games",current:"switch-tracer"});</script>
+</body>
+</html>

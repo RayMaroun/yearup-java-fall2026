@@ -1,0 +1,315 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Format Fixer | Week 1 Visual Hub</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Sora:wght@500;700&family=Inter:wght@400;500&family=JetBrains+Mono:wght@400;500&display=swap">
+<style>
+  :root{
+    --bg:#080c17; --bg2:#0c1428; --surface:rgba(255,255,255,.045); --line:rgba(255,255,255,.09);
+    --ink:#eef2fb; --muted:#8496b6; --accent:#6ea0ff; --accent2:#8b7bff; --good:#46d98a; --warn:#ff6a6a;
+    --gold:#ffc862; --disp:'Sora',system-ui,sans-serif; --body:'Inter',system-ui,sans-serif;
+    --mono:'JetBrains Mono',ui-monospace,monospace;
+  }
+  *{box-sizing:border-box}
+  body{margin:0;min-height:100vh;color:var(--ink);font-family:var(--body);
+    background:radial-gradient(1200px 700px at 70% -10%,#141d38 0%,transparent 55%),
+               radial-gradient(900px 600px at 10% 110%,#161233 0%,transparent 50%),#080c17;
+    overflow-x:hidden}
+  #amb{position:fixed;inset:0;z-index:0;pointer-events:none;opacity:.6}
+  .back{position:relative;z-index:2;display:block;max-width:1120px;margin:0 auto;padding:26px 24px 0;
+    width:100%;font-family:var(--mono);font-size:.8rem;letter-spacing:.04em;color:var(--muted);
+    text-decoration:none;transition:color .15s}
+  .back:hover{color:var(--accent)}
+  .wrap{position:relative;z-index:1;max-width:1120px;margin:0 auto;padding:22px 24px 70px}
+  .tag{font-family:var(--mono);font-size:.72rem;letter-spacing:.22em;text-transform:uppercase;color:var(--accent);margin:0 0 14px}
+  h1{font-family:var(--disp);font-weight:700;font-size:clamp(2.3rem,6vw,3.6rem);line-height:1;margin:0 0 12px;
+    letter-spacing:-.03em;background:linear-gradient(180deg,#fff,#b9c6e6);-webkit-background-clip:text;
+    background-clip:text;color:transparent}
+  .lede{color:var(--muted);max-width:64ch;font-size:1.05rem;margin:0 0 26px;line-height:1.5}
+  .lede b{color:var(--ink)}
+  .lede code,.take code,.caption code{font-family:var(--mono);font-size:.92em;color:#bcd0ff}
+
+  /* ---------- stage ---------- */
+  .stage{position:relative;background:linear-gradient(180deg,rgba(255,255,255,.03),rgba(255,255,255,.01));
+    border:1px solid var(--line);border-radius:24px;padding:18px 18px 14px;
+    box-shadow:0 1px 0 rgba(255,255,255,.06) inset,0 30px 80px -30px rgba(0,0,0,.8)}
+  .topbar{display:flex;align-items:center;gap:10px;margin:0 0 14px;flex-wrap:wrap}
+  .topbar .lab{margin:0 4px 0 0}
+  .lab{font-family:var(--mono);font-size:.7rem;letter-spacing:.12em;text-transform:uppercase;color:var(--muted);margin:0 0 10px}
+  .btn:focus-visible,.opt:focus-visible{outline:2px solid var(--accent);outline-offset:2px}
+
+  /* ---------- game board ---------- */
+  .pic{position:relative;height:390px;border:1px solid var(--line);border-radius:18px;background:rgba(6,10,20,.5);overflow:hidden;
+    display:flex;flex-direction:column;align-items:center;justify-content:center;gap:16px;padding:40px 20px 22px}
+  .pic .zone{position:absolute;left:18px;top:14px;font-family:var(--mono);font-size:.62rem;letter-spacing:.14em;text-transform:uppercase;color:rgba(132,150,182,.55)}
+  .pic .zone.f{color:rgba(255,106,106,.75)} .pic .zone.o{color:rgba(255,200,98,.75)}
+  .hud{position:absolute;right:18px;top:12px;display:flex;gap:14px;font-family:var(--mono);font-size:.72rem;color:var(--muted)}
+  .hud b{color:var(--ink);font-weight:500}
+  .code{font-family:var(--mono);font-size:clamp(.78rem,1.7vw,1rem);line-height:1.7;color:var(--ink);padding:12px 22px;border:1px solid var(--line);
+    border-radius:14px;background:rgba(0,0,0,.3);max-width:100%;overflow-x:auto;white-space:pre;transition:border-color .2s,box-shadow .2s,transform .2s}
+  .code .ctx{color:var(--muted)}
+  .code.good{border-color:rgba(70,217,138,.7);box-shadow:0 0 28px -8px rgba(70,217,138,.8)}
+  .code.bad{border-color:rgba(255,106,106,.7);box-shadow:0 0 28px -8px rgba(255,106,106,.8);animation:shake .3s}
+  @keyframes shake{25%{transform:translateX(-6px)}75%{transform:translateX(6px)}}
+  .blank{display:inline-block;min-width:3ch;padding:0 4px;border-radius:5px;border:1px dashed rgba(255,200,98,.7);color:var(--gold);text-align:center}
+  .blank.fill{border-style:solid;border-color:rgba(70,217,138,.7);color:var(--good);background:rgba(70,217,138,.1)}
+  .broke{padding:0 4px;border-radius:5px;background:rgba(255,106,106,.14);color:var(--warn);text-decoration:underline wavy rgba(255,106,106,.6)}
+  .broke.fill{background:rgba(70,217,138,.1);color:var(--good);text-decoration:none}
+  .want{font-family:var(--mono);font-size:.82rem;color:var(--muted);text-align:center;white-space:pre;max-width:100%;overflow-x:auto}
+  .want b{color:var(--ink);font-weight:500;background:rgba(255,255,255,.05);padding:2px 6px;border-radius:5px}
+  .want.err b{color:var(--warn);background:rgba(255,106,106,.1)}
+  .opts{display:grid;grid-template-columns:repeat(4,auto);gap:8px;justify-content:center;max-width:100%}
+  .opts.wide{grid-template-columns:repeat(2,minmax(0,300px))}
+  .opt{font-family:var(--mono);font-size:.9rem;padding:10px 18px;border-radius:11px;cursor:pointer;border:1px solid var(--line);background:var(--surface);
+    color:var(--ink);transition:.15s;white-space:pre;text-align:left}
+  .opts.wide .opt{font-size:.82rem;padding:10px 14px;overflow:hidden;text-overflow:ellipsis}
+  .opt:hover{border-color:var(--accent);color:var(--accent)}
+  .opt:disabled{cursor:default}
+  .opt.hit{border-color:rgba(70,217,138,.7);background:rgba(70,217,138,.14);color:var(--good)}
+  .opt.miss{border-color:rgba(255,106,106,.7);background:rgba(255,106,106,.12);color:var(--warn)}
+  .opt.dim{opacity:.4}
+  .key{display:inline-block;margin-left:8px;font-size:.62rem;color:var(--muted)}
+  .screen{position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:12px;padding:20px;background:rgba(6,10,20,.94);transition:opacity .25s}
+  .screen.off{opacity:0;pointer-events:none}
+  .screen h2{font-family:var(--disp);font-weight:700;font-size:1.6rem;margin:0;color:var(--ink)}
+  .screen p{margin:0;color:var(--muted);font-size:.95rem;text-align:center;max-width:50ch;line-height:1.5}
+  .screen .big{font-family:var(--disp);font-weight:700;font-size:2.6rem;color:var(--accent)}
+  .screen .big.gold{color:var(--gold)} .screen .big.good{color:var(--good)}
+  .bar{position:absolute;left:0;right:0;bottom:0;height:4px;background:rgba(255,255,255,.06)}
+  .bar i{display:block;height:100%;width:0;background:var(--accent);transition:width .25s}
+  .misses{font-family:var(--mono);font-size:.72rem;color:var(--muted);line-height:1.6;text-align:left;max-height:150px;overflow-y:auto;max-width:720px;width:100%}
+  .misses div{padding:3px 0;border-bottom:1px solid rgba(255,255,255,.05)}
+  .misses code{color:#bcd0ff;white-space:pre}
+  .misses b{color:var(--warn);font-weight:500;white-space:pre} .misses i{font-style:normal;color:var(--good);white-space:pre}
+
+  /* caption: the one sentence, right under the picture */
+  .caption{display:flex;gap:16px;align-items:flex-start;margin:14px 4px 0;min-height:56px}
+  .caption .n{flex-shrink:0;font-family:var(--disp);font-weight:700;font-size:1.35rem;color:var(--accent);font-variant-numeric:tabular-nums;
+    line-height:1.2;min-width:3.2rem}
+  .caption .n small{display:block;font-family:var(--mono);font-weight:400;font-size:.58rem;letter-spacing:.14em;text-transform:uppercase;color:var(--muted)}
+  .caption .t{font-size:1.02rem;line-height:1.55;color:var(--ink);padding-left:16px;border-left:3px solid var(--accent);transition:border-color .3s}
+  .caption.cut .t{border-left-color:var(--warn)} .caption.ok .t{border-left-color:var(--good)}
+  .caption b{font-family:var(--mono);font-weight:500;white-space:pre}
+  .caption b.g{color:var(--good)} .caption b.w{color:var(--warn)} .caption b.a{color:var(--accent);font-family:var(--body)}
+
+  .btn{font-family:var(--body);font-weight:500;font-size:.86rem;padding:9px 16px;border-radius:11px;cursor:pointer;
+    border:1px solid var(--line);background:var(--surface);color:var(--ink);transition:.15s}
+  .btn:hover{border-color:var(--accent);color:var(--accent)}
+  .btn.primary{border-color:rgba(110,160,255,.5);background:rgba(110,160,255,.12);padding:9px 22px;min-width:120px}
+  .hint{font-family:var(--mono);font-size:.68rem;color:var(--muted);margin:10px 4px 0;line-height:1.5}
+  .hint b{color:var(--accent);font-weight:500}
+
+  .take{margin-top:22px;background:linear-gradient(180deg,rgba(110,160,255,.08),rgba(139,123,255,.04));
+    border:1px solid var(--line);border-left:3px solid var(--accent);border-radius:12px;padding:16px 18px}
+  .take .tk{font-family:var(--mono);font-size:.66rem;letter-spacing:.14em;text-transform:uppercase;color:var(--accent);margin:0 0 8px}
+  .take p{margin:0;font-size:.95rem;color:var(--ink);line-height:1.55}
+  .take b{color:#fff}
+  @media (max-width:640px){
+    .back{padding:20px 16px 0} .wrap{padding:18px 16px 60px} .stage{padding:12px}
+    .pic{height:440px;padding:38px 12px 18px;gap:12px}
+    .opts,.opts.wide{grid-template-columns:repeat(2,minmax(0,1fr));width:100%}
+    .opt{padding:9px 10px;font-size:.8rem}
+  }
+  @media (prefers-reduced-motion:reduce){*{animation-duration:.01ms!important;transition-duration:.01ms!important}#amb{display:none}}
+</style>
+</head>
+<body>
+
+<a class="back" href="../index.html#format-fixer">&#8592; Week 1 index</a>
+
+<canvas id="amb"></canvas>
+<div class="wrap">
+  <p class="tag">Workbook 1c &middot; Section 3-3 &middot; Game</p>
+  <h1>Format Fixer</h1>
+  <p class="lede"><b>Pick the specifier, predict what prints, or fix the line that crashes. Twelve rounds, the clock is running.</b></p>
+
+  <div class="stage">
+    <div class="topbar">
+      <span class="lab">Game</span>
+    </div>
+
+    <div class="pic" id="pic">
+      <span class="zone" id="zone">printf</span>
+      <div class="hud"><span>score <b id="hScore">0</b></span><span>time <b id="hTime">0.0s</b></span></div>
+      <div class="code" id="code">&nbsp;</div>
+      <div class="want" id="want">&nbsp;</div>
+      <div class="opts" id="opts"></div>
+      <div class="bar"><i id="bar"></i></div>
+      <div class="screen" id="startScr">
+        <h2>Format Fixer</h2>
+        <p>Each round is one printf line. Fill the blank, pick what it prints, or fix the crash. Click an answer or press 1 to 4.</p>
+        <button class="btn primary" id="bStart">Start</button>
+      </div>
+      <div class="screen off" id="endScr">
+        <h2>Round over</h2>
+        <div class="big" id="endScore"></div>
+        <p id="endMsg"></p>
+        <div class="misses" id="endMiss"></div>
+        <button class="btn primary" id="bAgain">Play again</button>
+      </div>
+    </div>
+
+    <div class="caption" id="caption">
+      <div class="n" id="stepno"><small>round</small>0 / 12</div>
+      <div class="t" id="status">Press <b class="a">Start</b>. Keys 1 to 4 answer.</div>
+    </div>
+    <p class="hint"><b>%d</b> int &middot; <b>%f</b> double &middot; <b>%.2f</b> two decimals &middot; <b>%s</b> String &middot; <b>%,d</b> commas &middot; <b>%-20s</b> left &middot; <b>%20s</b> right &middot; <b>%n</b> new line</p>
+  </div>
+
+  <div class="take">
+    <p class="tk">The one idea</p>
+    <p><b>The letter must match the value: d for whole numbers, f for decimals, s for text.</b> The rest (the comma, the width, the .2) only shapes how it looks. A wrong letter is not a typo the compiler catches; it crashes when the line runs.</p>
+  </div>
+
+  <div id="rail"></div>
+</div>
+
+<script>
+(function(){
+  "use strict";
+  var $=function(s){return document.querySelector(s);};
+  var reduce=matchMedia("(prefers-reduced-motion: reduce)").matches;
+
+  /* k: p = pick the specifier, o = what prints, f = fix the crash.
+     c = declaration shown above, l = the line (___ is the blank, [x] the broken specifier),
+     q = wanted output or the exception, o = options, a = answer index,
+     w = what each wrong option does, y = why the answer is right (follows the answer). */
+  var D="double totalDue = 24.756777;", I="int id = 10135;", S="String name = \"Brandon Plyers\";",
+      F="float pay = 5239.77f;", C="int count = 100000000;",
+      TD="throws IllegalFormatConversionException";
+  var POOL=[
+    {k:"p",c:D,l:"System.out.printf(\"Total: $___%n\", totalDue);",q:"Total: $24.76",o:["%d","%f","%.2f","%,d"],a:2,
+      w:[TD+" on a double","prints all six decimals","",TD+" on a double"],y:"rounds the double to two decimals"},
+    {k:"p",c:D,l:"System.out.printf(\"Total: $___%n\", totalDue);",q:"Total: $24.756777",o:["%.2f","%f","%d","%n"],a:1,
+      w:["rounds it to 24.76","",TD+" on a double","ends the line and never prints the total"],y:"prints six decimals by default"},
+    {k:"p",c:I,l:"System.out.printf(\"ID: ___%n\", id);",q:"ID: 10135",o:["%f","%d","%.2f","%,d"],a:1,
+      w:[TD+" on an int","",TD+" on an int","adds a comma: 10,135"],y:"prints a whole number as it is"},
+    {k:"p",c:S,l:"System.out.printf(\"Name: ___%n\", name);",q:"Name: Brandon Plyers",o:["%d","%s","%f","%c"],a:1,
+      w:[TD+" on a String","",TD+" on a String",TD+" on a String"],y:"is the specifier for a String"},
+    {k:"p",c:C,l:"System.out.printf(\"___%n\", count);",q:"100,000,000",o:["%d","%,d","%s","%.2f"],a:1,
+      w:["prints 100000000 with no commas","","prints 100000000 with no commas",TD+" on an int"],y:"groups the digits in threes with commas"},
+    {k:"p",c:S,l:"System.out.printf(\"[___]%n\", name);",q:"[Brandon Plyers      ]",o:["%s","%20s","%-20s","%d"],a:2,
+      w:["adds no padding at all","puts the spaces first, name on the right","",TD+" on a String"],y:"pads to 20 characters with the name on the left"},
+    {k:"p",c:S,l:"System.out.printf(\"[___]%n\", name);",q:"[      Brandon Plyers]",o:["%-20s","%20s","%s","%c"],a:1,
+      w:["puts the name on the left, spaces after","","adds no padding at all",TD+" on a String"],y:"pads to 20 characters with the name on the right"},
+    {k:"p",c:F,l:"System.out.printf(\"Pay: $___%n\", pay);",q:"Pay: $5239.77",o:["%d","%.2f","%,d","%c"],a:1,
+      w:[TD+" on a float","",TD+" on a float",TD+" on a float"],y:"works on a float too and keeps two decimals"},
+    {k:"p",c:I,l:"System.out.printf(\"ID: %d___\", id);",q:"ID: 10135 and the next print starts on a new line",o:["%n","%s","%d","%,d"],a:0,
+      w:["","throws MissingFormatArgumentException, there is no second value","throws MissingFormatArgumentException, there is no second value","throws MissingFormatArgumentException, there is no second value"],y:"ends the line and needs no value"},
+
+    {k:"o",l:"System.out.printf(\"%.2f%n\", 24.756777);",o:["24.75","24.76","24.756777","24.8"],a:1,
+      w:["would cut the digits off","","is what %f prints","is one decimal, what %.1f prints"],y:"is right because %.2f rounds, it never cuts"},
+    {k:"o",l:"System.out.printf(\"%,d%n\", 100000000);",o:["100000000","100,000,000","100.000.000","1,0000,0000"],a:1,
+      w:["is what %d prints, no commas","","uses dots, not commas","groups in fours"],y:"is right because %,d puts a comma every three digits"},
+    {k:"o",l:"System.out.printf(\"[%-20s]%n\", \"Brandon Plyers\");",o:["[Brandon Plyers]","[Brandon Plyers      ]","[      Brandon Plyers]","[Brandon Plyers%-20s]"],a:1,
+      w:["has no padding, the width 20 is ignored","","is what %20s prints","prints the specifier as text"],y:"is right because the minus puts the name left and the spaces after"},
+    {k:"o",l:"System.out.printf(\"[%20s]%n\", \"Brandon Plyers\");",o:["[Brandon Plyers]","[Brandon Plyers      ]","[      Brandon Plyers]","[Brandon Plyers20]"],a:2,
+      w:["has no padding, the width 20 is ignored","is what %-20s prints","","prints the width as text"],y:"is right because with no minus the spaces go first"},
+    {k:"o",l:"System.out.printf(\"%s has id %d%n\", \"Brandon Plyers\", 10135);",o:["Brandon Plyers has id 10135","10135 has id Brandon Plyers","Brandon Plyers has id 10,135","%s has id %d"],a:0,
+      w:["","swaps the values, but they fill the specifiers in order","adds a comma that only %,d would add","prints the specifiers as text"],y:"is right because the values fill the specifiers in order"},
+    {k:"o",l:"System.out.printf(\"%.2f%n\", 7.0);",o:["7","7.0","7.00","7.000000"],a:2,
+      w:["drops the decimals","shows one decimal","","is what %f prints"],y:"is right because %.2f always shows two decimals, zeros too"},
+    {k:"o",l:"System.out.printf(\"%,d%n\", 10135);",o:["10135","10,135","10.135","10,13"],a:1,
+      w:["is what %d prints, no commas","","uses a dot, not a comma","drops a digit"],y:"is right because %,d groups the thousands"},
+    {k:"o",l:"System.out.printf(\"%f%n\", 24.756777);",o:["24.76","24.756777","24.756777000","24"],a:1,
+      w:["is what %.2f prints","","has nine decimals, %f shows six","is what you get from an int"],y:"is right because %f shows six decimals by default"},
+    {k:"o",c:I,l:"String label = String.format(\"ID: %d\", id);",o:["prints ID: 10135","label holds \"ID: 10135\", nothing prints","label holds the int 10135","does not compile"],a:1,
+      w:["is wrong, format prints nothing","","is wrong, format always returns a String","is wrong, it compiles fine"],y:"is right because String.format builds the String and returns it"},
+    {k:"o",c:D,l:"String label = String.format(\"%.2f\", totalDue);\nSystem.out.println(label);",o:["24.76","24.756777","label","nothing prints"],a:0,
+      w:["","ignores the .2","prints the name, not the value","misses that println prints it"],y:"is right because format returns \"24.76\" and println shows it"},
+
+    {k:"f",c:D,l:"System.out.printf(\"Total: $[%d]%n\", totalDue);",q:"Total: $24.76",o:["%,d","%.2f","%c","%n"],a:1,
+      w:["is still for whole numbers and still throws","","is for a char and still throws","stops the crash but never prints the total"],y:"fits a double and gives two decimals"},
+    {k:"f",c:I,l:"System.out.printf(\"ID: [%f]%n\", id);",q:"ID: 10135",o:["%.2f","%d","%,d","%n"],a:1,
+      w:["is still for decimals and still throws","","runs but prints 10,135","stops the crash but never prints the id"],y:"is the one for an int"},
+    {k:"f",c:S,l:"System.out.printf(\"Name: [%d]%n\", name);",q:"Name: Brandon Plyers",o:["%f","%,d","%s","%c"],a:2,
+      w:["is for decimals and still throws","is for whole numbers and still throws","","is for a char and still throws"],y:"is the one for a String"},
+    {k:"f",c:F,l:"System.out.printf(\"Pay: $[%d]%n\", pay);",q:"Pay: $5239.77",o:["%.2f","%,d","%c","%n"],a:0,
+      w:["","is for whole numbers and still throws","is for a char and still throws","stops the crash but never prints the pay"],y:"fits a float, a decimal too, with two decimals"},
+    {k:"f",c:C,l:"System.out.printf(\"[%.2f]%n\", count);",q:"100,000,000",o:["%f","%,d","%d","%s"],a:1,
+      w:["is for decimals and still throws","","runs but prints 100000000 with no commas","runs but prints 100000000 with no commas"],y:"fits an int and adds the commas"},
+    {k:"f",l:"System.out.printf(\"ID: [%d]%n\", \"10135\");",q:"ID: 10135",o:["%s","%f","%,d","%.2f"],a:0,
+      w:["","is for decimals and still throws","is for whole numbers and still throws","is for decimals and still throws"],y:"fits because the quotes make \"10135\" a String"}
+  ];
+  var EXC={"Total: $[%d]%n":"d != java.lang.Double","ID: [%f]%n":"f != java.lang.Integer","Name: [%d]%n":"d != java.lang.String",
+    "Pay: $[%d]%n":"d != java.lang.Float","[%.2f]%n":"f != java.lang.Integer","ID: [%d]%n":"d != java.lang.String"};
+  var ZONE={p:"fill the blank",o:"what prints?",f:"fix the crash"};
+  var N=12, round=[], at=0, score=0, misses=[], t0=0, timer=null, busy=false, playing=false;
+
+  function shuffle(a){ a=a.slice(); for(var i=a.length-1;i>0;i--){ var j=Math.floor(Math.random()*(i+1)); var t=a[i]; a[i]=a[j]; a[j]=t; } return a; }
+  function esc(s){ return String(s).replace(/&/g,"\u0026amp;").replace(/</g,"\u0026lt;").replace(/>/g,"\u0026gt;").replace(/"/g,"\u0026quot;"); }
+  function plain(v){ return v.k==="f"?v.l.replace("[","").replace("]",""):v.l; }
+  function lineHtml(v,fill){
+    var h=esc(v.l), put=fill?esc(v.o[v.a]):"";
+    h=h.replace("___",'<span class="blank'+(fill?" fill":"")+'">'+(fill?put:" ")+'</span>');
+    if(v.k==="f") h=h.replace(/\[([^\]]+)\]/,function(m,x){ return '<span class="broke'+(fill?" fill":"")+'">'+(fill?put:x)+'</span>'; });
+    return (v.c?'<span class="ctx">'+esc(v.c)+'</span>\n':"")+h;
+  }
+  function tick(){ $("#hTime").textContent=((performance.now()-t0)/1000).toFixed(1)+"s"; }
+  function showVal(){
+    var v=round[at];
+    $("#zone").textContent=ZONE[v.k]; $("#zone").className="zone "+v.k;
+    $("#code").innerHTML=lineHtml(v,false); $("#code").className="code";
+    var w=$("#want");
+    if(v.k==="p"){ w.className="want"; w.innerHTML="wanted output  <b>"+esc(v.q)+"</b>"; }
+    else if(v.k==="f"){ var m=v.l.match(/"([^"]*\[[^\]]+\][^"]*)"/); w.className="want err";
+      w.innerHTML="throws  <b>IllegalFormatConversionException: "+esc(EXC[m[1]])+"</b>\nwanted  "+esc(v.q); }
+    else { w.className="want"; w.innerHTML=/String\.format/.test(v.l)&&!/println/.test(v.l)?"what happens?":"what prints?"; }
+    $("#opts").className="opts"+(v.k==="o"?" wide":"");
+    $("#opts").innerHTML=v.o.map(function(o,i){ return '<button class="opt" data-i="'+i+'">'+esc(o)+'<span class="key">'+(i+1)+'</span></button>'; }).join("");
+    $("#stepno").innerHTML="<small>round</small>"+(at+1)+" / "+N; $("#bar").style.width=(100*at/N)+"%";
+  }
+  function start(){
+    round=shuffle(POOL).slice(0,N); at=0; score=0; misses=[]; busy=false; playing=true;
+    $("#hScore").textContent="0"; $("#startScr").classList.add("off"); $("#endScr").classList.add("off");
+    $("#caption").className="caption"; $("#status").innerHTML="Read the line. <b class=\"a\">Which answer is real Java?</b>";
+    showVal(); t0=performance.now(); if(timer) clearInterval(timer); timer=setInterval(tick,100);
+  }
+  function answer(i){
+    if(!playing||busy||at>=round.length) return; busy=true;
+    var v=round[at], ok=i===v.a, ans=esc(v.o[v.a]);
+    Array.prototype.forEach.call(document.querySelectorAll(".opt"),function(b){ var j=+b.getAttribute("data-i"); b.disabled=true;
+      b.classList.add(j===v.a?"hit":j===i?"miss":"dim"); });
+    $("#code").className="code "+(ok?"good":"bad");
+    if(v.k!=="o") $("#code").innerHTML=lineHtml(v,true);
+    if(ok){ score++; $("#hScore").textContent=String(score); $("#caption").className="caption ok";
+      $("#status").innerHTML='<b class="g">'+ans+'</b> '+v.y+'.'; }
+    else { misses.push([v,i]); $("#caption").className="caption cut";
+      $("#status").innerHTML='<b class="w">'+esc(v.o[i])+'</b> '+v.w[i].trim()+', but <b class="g">'+ans+'</b> '+v.y+'.'; }
+    setTimeout(function(){ at++; busy=false; if(at>=N) end(); else showVal(); }, reduce?400:(ok?1100:2600));
+  }
+  function end(){
+    playing=false; clearInterval(timer); tick(); $("#bar").style.width="100%";
+    var secs=((performance.now()-t0)/1000).toFixed(1);
+    $("#endScore").textContent=score+" / "+N; $("#endScore").className="big "+(score===N?"good":score>=9?"":"gold");
+    $("#endMsg").textContent=(score===N?"Perfect. ":score>=9?"Solid. ":"Keep going. ")+secs+" seconds."+(misses.length?" Your misses:":"");
+    $("#endMiss").innerHTML=misses.map(function(m){ var v=m[0];
+      return '<div><code>'+esc(plain(v).replace("\n"," "))+'</code><br><b>'+esc(v.o[m[1]])+'</b> '+v.w[m[1]].trim()+'; <i>'+esc(v.o[v.a])+'</i> '+v.y+'.</div>'; }).join("");
+    $("#endMiss").style.display=misses.length?"":"none";
+    $("#endScr").classList.remove("off");
+    $("#stepno").innerHTML="<small>round</small>"+N+" / "+N; $("#caption").className="caption";
+    $("#status").innerHTML="Round over. <b class=\"a\">Play again</b> deals twelve new lines.";
+  }
+  $("#opts").addEventListener("click",function(e){ var b=e.target.closest(".opt"); if(b) answer(+b.getAttribute("data-i")); });
+  $("#bStart").addEventListener("click",start); $("#bAgain").addEventListener("click",start);
+  document.addEventListener("keydown",function(e){ if(/INPUT|TEXTAREA/.test(e.target.tagName)) return;
+    var k=parseInt(e.key,10); if(playing&&k>=1&&k<=4) answer(k-1);
+    if(e.code==="Space"&&!playing&&e.target.tagName!=="BUTTON"){ e.preventDefault(); start(); } });
+
+  var cv=$("#amb"),ctx=cv.getContext&&cv.getContext("2d"),parts=[];
+  function sizeC(){if(!ctx)return;cv.width=innerWidth;cv.height=innerHeight;}
+  function initParts(){parts=[];for(var i=0;i<46;i++)parts.push({x:Math.random(),y:Math.random(),r:Math.random()*1.6+.3,s:Math.random()*.02+.004,o:Math.random()*.4+.1});}
+  function drawC(){if(!ctx)return;ctx.clearRect(0,0,cv.width,cv.height);
+    parts.forEach(function(p){p.y-=p.s/60;if(p.y<-.02)p.y=1.02;ctx.beginPath();ctx.arc(p.x*cv.width,p.y*cv.height,p.r,0,7);
+      ctx.fillStyle="rgba(140,170,255,"+p.o+")";ctx.fill();});requestAnimationFrame(drawC);}
+  if(ctx&&!reduce){sizeC();initParts();drawC();addEventListener("resize",sizeC);}
+})();
+</script>
+<script src="../manifest.js"></script>
+<script src="../../assets/rail.js"></script>
+<script>Rail.render(document.getElementById("rail"),{kind:"games",current:"format-fixer"});</script>
+</body>
+</html>
