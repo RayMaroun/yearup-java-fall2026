@@ -31,7 +31,7 @@ window.HUB_MANIFEST = {
     { file: "25-method-signature.html", title: "Method Signature", group: "Workbook 1c · Section 4-2", size: "walk" },
     { file: "26-method-call-stack.html", title: "Method Call Stack", group: "Workbook 1c · Section 4-2", size: "model" },
     { file: "27-method-decomposition.html", title: "Repeated Code to One Method", group: "Workbook 1c · Section 4-2", size: "walk" },
-    { file: "28-one-scanner.html", title: "One Scanner, Many Methods", group: "Workbook 1c · Section 4-2", size: "walk" },
+    { file: "28-one-scanner.html", title: "One Scanner, Three Ways", group: "Workbook 1c · Section 4-2", size: "glance" },
     { file: "29-switch-flow.html", title: "switch, Both Forms", group: "Workbook 1c · Section 4-3", size: "walk" },
     { file: "30-problem-to-code.html", title: "From Problem to Code", group: "Workbook 1c · Module 4", size: "walk" }
   ],

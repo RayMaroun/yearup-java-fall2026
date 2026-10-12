@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>One Scanner, Many Methods | Week 1 Visual Hub</title>
+<title>One Scanner, Three Ways | Week 1 Visual Hub</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Sora:wght@500;700&family=Inter:wght@400;500&family=JetBrains+Mono:wght@400;500&display=swap">
 <style>
@@ -44,69 +44,48 @@
     border:1px solid var(--line);background:rgba(0,0,0,.25);color:var(--muted);transition:.15s}
   .chip:hover{border-color:var(--accent);color:var(--accent)}
   .chip.on{border-color:rgba(110,160,255,.6);background:rgba(110,160,255,.14);color:var(--ink)}
-  .chip.trap:hover{border-color:var(--warn);color:var(--warn)}
-  .chip.trap.on{border-color:rgba(255,106,106,.6);background:rgba(255,106,106,.12);color:var(--ink)}
   .chip:focus-visible,.btn:focus-visible,.focus:focus-visible{outline:2px solid var(--accent);outline-offset:2px}
   .focus{margin-left:auto;font-family:var(--mono);font-size:.68rem;letter-spacing:.1em;text-transform:uppercase;padding:6px 12px;
     border-radius:999px;border:1px solid var(--line);background:rgba(0,0,0,.25);color:var(--muted);cursor:pointer;transition:.15s}
   .focus:hover{border-color:var(--accent);color:var(--accent)}
   body.solo .focus{border-color:rgba(255,200,98,.6);color:var(--gold);background:rgba(255,200,98,.1)}
 
-  /* hero picture: keyboard, Scanner objects, variable names */
-  .pic{position:relative;height:390px;border:1px solid var(--line);border-radius:18px;background:rgba(6,10,20,.5);overflow:hidden}
+  /* hero picture: three ways side by side */
+  .pic{position:relative;height:390px;border:1px solid var(--line);border-radius:18px;background:rgba(6,10,20,.5);overflow:hidden;
+    display:grid;grid-template-columns:1fr 1fr 1fr;gap:10px;padding:12px}
   body.solo .pic{height:480px}
-  .pic svg{position:absolute;inset:0;width:100%;height:100%;pointer-events:none}
-  .pic svg path{fill:none;stroke-width:2.6;transition:opacity .3s}
-  .zone{position:absolute;top:18px;font-family:var(--mono);font-size:.68rem;letter-spacing:.14em;text-transform:uppercase;color:rgba(132,150,182,.55)}
-  .pic .start{position:absolute;left:37%;width:30%;top:0;bottom:0;display:flex;align-items:center;justify-content:center;font-family:var(--mono);
-    font-size:.8rem;color:var(--muted);pointer-events:none;transition:opacity .3s}
-  .pic .start b{color:var(--accent);font-weight:500}
-  .kbd{position:absolute;left:4%;width:23%;top:112px;min-height:168px;border-radius:14px;padding:14px;
-    border:1px solid rgba(255,200,98,.45);background:rgba(255,200,98,.06);transition:border-color .3s,background .3s}
-  body.solo .kbd{top:140px;min-height:200px}
-  .kbd .t{font-family:var(--mono);font-size:1.05rem;color:var(--gold)}
-  .kbd .s{font-family:var(--mono);font-size:.74rem;color:var(--muted);letter-spacing:.06em;margin-top:3px}
-  .kbd .typed{font-family:var(--mono);font-size:1rem;color:var(--ink);margin-top:14px;line-height:1.7;min-height:2.4em;word-break:break-word}
-  .kbd .typed .key{display:inline-block;font-size:.7rem;padding:0 6px;border:1px solid rgba(132,150,182,.5);border-radius:5px;color:var(--muted);margin-left:5px;line-height:1.5}
-  .kbd.closed{border-color:rgba(255,106,106,.7);background:rgba(255,106,106,.08)}
-  .kbd.closed .t{color:var(--warn)}
-  .badge{position:absolute;left:4%;top:72px;font-family:var(--mono);font-size:.74rem;color:var(--warn);padding:4px 10px;border-radius:999px;
-    border:1px solid rgba(255,106,106,.6);background:rgba(255,106,106,.1);opacity:0;transition:opacity .3s;white-space:nowrap}
-  body.solo .badge{top:96px}
-  .badge.show{opacity:1}
-  .obj{position:absolute;left:37%;width:30%;border-radius:14px;padding:13px 15px;opacity:0;
-    border:1px solid rgba(110,160,255,.45);background:rgba(110,160,255,.08);transition:opacity .3s,border-color .3s,background .3s}
-  #o1{top:46px} #o2{top:214px}
-  body.solo #o1{top:62px} body.solo #o2{top:270px}
-  .obj.show{opacity:1}
-  .obj.lit{border-color:rgba(110,160,255,.85);background:rgba(110,160,255,.15);box-shadow:0 0 22px -6px rgba(110,160,255,.6)}
-  .obj.bad{border-color:rgba(255,106,106,.7);background:rgba(255,106,106,.08)}
-  .obj.closed{opacity:.5}
-  .obj .t{font-family:var(--disp);font-weight:500;font-size:1.1rem;color:var(--ink)}
-  .obj.bad .t{color:var(--warn)}
-  .obj .s{font-family:var(--mono);font-size:.74rem;color:var(--muted);letter-spacing:.06em;margin-top:2px}
-  .obj .s .x{color:var(--warn)}
-  .buf{display:flex;flex-wrap:wrap;gap:6px;margin-top:12px;min-height:30px;align-items:center}
-  .buf .bl{font-family:var(--mono);font-size:.66rem;letter-spacing:.1em;text-transform:uppercase;color:rgba(132,150,182,.7);margin-right:3px}
-  .tok{font-family:var(--mono);font-size:.88rem;padding:2px 10px;border-radius:999px;border:1px solid rgba(110,160,255,.5);color:#cfe0ff;background:rgba(110,160,255,.1);transition:.3s}
-  .tok.taken{opacity:.45;text-decoration:line-through}
-  .tok.stuck{border-color:rgba(255,200,98,.7);background:rgba(255,200,98,.14);color:#ffe6b0}
-  .tok.empty{border-style:dashed;border-color:rgba(132,150,182,.4);background:transparent;color:var(--muted)}
-  .tok.wait{border-color:rgba(255,106,106,.6);color:var(--warn);background:transparent}
-  .vtag{position:absolute;left:74%;width:22%;border-radius:12px;padding:11px 13px;opacity:0;
-    border:1px solid var(--line);background:rgba(255,255,255,.04);transition:opacity .35s,border-color .3s,background .3s}
-  #tMain{top:58px} #tMeth{top:226px}
-  body.solo #tMain{top:76px} body.solo #tMeth{top:284px}
-  .vtag.show{opacity:1}
-  .vtag.lit{border-color:rgba(110,160,255,.7);background:rgba(110,160,255,.12)}
-  .vtag.bad{border-color:rgba(255,106,106,.6);background:rgba(255,106,106,.08)}
-  .vtag .in{font-family:var(--mono);font-size:.72rem;letter-spacing:.08em;color:var(--muted)}
-  .vtag .nm2{font-family:var(--mono);font-size:.98rem;color:var(--gold);margin-top:3px;word-break:break-all}
-  .ref{position:absolute;width:18px;height:18px;border-radius:50%;background:#bcd0ff;border:2px solid var(--accent);
-    box-shadow:0 0 16px -2px rgba(110,160,255,.9);opacity:0;pointer-events:none;transition:left .65s cubic-bezier(.2,.9,.3,1),top .65s cubic-bezier(.2,.9,.3,1),opacity .2s}
-  @media (max-width:760px){.kbd .t,.obj .t{font-size:.84rem}.kbd .typed,.vtag .nm2{font-size:.76rem}.tok{font-size:.7rem;padding:1px 7px}
-    .obj .s,.kbd .s,.vtag .in{font-size:.6rem}}
-
+  .way{position:relative;border:1px solid var(--line);border-radius:14px;padding:12px 12px 10px;cursor:pointer;display:flex;flex-direction:column;
+    background:rgba(255,255,255,.02);transition:border-color .2s,background .2s,opacity .2s}
+  .way:hover{border-color:rgba(110,160,255,.5)}
+  .way.on{border-color:rgba(110,160,255,.7);background:rgba(110,160,255,.07);box-shadow:0 0 24px -10px rgba(110,160,255,.7)}
+  .way.best.on{border-color:rgba(70,217,138,.7);background:rgba(70,217,138,.06);box-shadow:0 0 24px -10px rgba(70,217,138,.7)}
+  .way .ttl{font-family:var(--mono);font-size:.74rem;color:var(--ink);margin:0 0 2px}
+  .way .sub{font-family:var(--mono);font-size:.62rem;letter-spacing:.08em;text-transform:uppercase;color:var(--muted);margin:0 0 10px}
+  .way .badge{position:absolute;right:10px;top:10px;font-family:var(--mono);font-size:.6rem;letter-spacing:.1em;text-transform:uppercase;
+    padding:3px 8px;border-radius:999px;border:1px solid rgba(70,217,138,.6);color:var(--good);background:rgba(70,217,138,.1)}
+  .way .badge.warn{border-color:rgba(255,200,98,.6);color:var(--gold);background:rgba(255,200,98,.1)}
+  .way .badge.bad{border-color:rgba(255,106,106,.6);color:var(--warn);background:rgba(255,106,106,.1)}
+  .dia{flex:1;display:grid;grid-template-rows:auto 1fr auto;gap:8px;align-items:center}
+  .kb{font-family:var(--mono);font-size:.68rem;color:var(--gold);border:1px solid rgba(255,200,98,.45);border-radius:9px;padding:6px 9px;text-align:center;
+    background:rgba(255,200,98,.06)}
+  .objs{display:flex;gap:6px;justify-content:center;flex-wrap:wrap;align-content:center;min-height:54px}
+  .sc{font-family:var(--mono);font-size:.64rem;color:#bcd0ff;border:1px solid rgba(110,160,255,.55);border-radius:9px;padding:6px 8px;text-align:center;
+    background:rgba(110,160,255,.08);line-height:1.3}
+  .sc small{display:block;font-size:.56rem;color:var(--muted)}
+  .sc.bad{border-color:rgba(255,106,106,.55);background:rgba(255,106,106,.07);color:#ffc9c9}
+  .meths{display:grid;grid-template-columns:1fr 1fr 1fr;gap:5px}
+  .m{font-family:var(--mono);font-size:.6rem;color:var(--ink);border:1px solid var(--line);border-radius:8px;padding:6px 4px;text-align:center;
+    background:rgba(0,0,0,.25);line-height:1.35}
+  .m i{display:block;font-style:normal;font-size:.56rem;color:var(--muted)}
+  .m.lit{border-color:rgba(110,160,255,.5)}
+  .m.lit i{color:var(--accent)}
+  .m.badi i{color:var(--warn)}
+  .m.goodi i{color:var(--good)}
+  .way .cost{margin:10px 0 0;font-family:var(--mono);font-size:.64rem;line-height:1.45;color:var(--muted);min-height:2.9em}
+  .way.on .cost{color:var(--ink)}
+  .way .cost b{font-weight:500}
+  .way .cost b.w{color:var(--warn)} .way .cost b.y{color:var(--gold)} .way .cost b.g{color:var(--good)}
+  @media (max-width:860px){.pic{height:auto;grid-template-columns:1fr}}
   /* caption: the one sentence, right under the picture */
   .caption{display:flex;gap:16px;align-items:flex-start;margin:14px 4px 0;min-height:56px}
   .caption .n{flex-shrink:0;font-family:var(--disp);font-weight:700;font-size:1.35rem;color:var(--accent);font-variant-numeric:tabular-nums;
@@ -132,35 +111,27 @@
   .hint{font-family:var(--mono);font-size:.68rem;color:var(--muted);margin:10px 4px 0;line-height:1.5}
   .hint b{color:var(--accent)}
 
-  /* support: code, readouts, console. Below the picture, hidden in focus */
-  .support{display:grid;grid-template-columns:minmax(0,1.5fr) minmax(0,1fr);gap:14px;margin-top:18px}
+  .support{display:grid;grid-template-columns:minmax(0,1.3fr) minmax(0,1fr);gap:14px;margin-top:18px}
   @media (max-width:860px){.support{grid-template-columns:1fr}}
   body.solo .support,body.solo .take,body.solo .hint{display:none}
-  .code{min-width:0;font-family:var(--mono);font-size:.74rem;line-height:1.75;background:rgba(0,0,0,.35);border:1px solid var(--line);
+  .code{min-width:0;font-family:var(--mono);font-size:.76rem;line-height:1.8;background:rgba(0,0,0,.35);border:1px solid var(--line);
     border-radius:14px;padding:12px 0;overflow-x:auto}
-  .ln{display:flex;gap:12px;padding:0 14px;white-space:pre;color:#c9d4ea;transition:background .2s,opacity .3s}
+  .ln{display:flex;gap:12px;padding:0 14px;white-space:pre;color:#c9d4ea}
   .ln .n{width:20px;text-align:right;color:rgba(132,150,182,.55);user-select:none;flex-shrink:0}
   .ln.cur{background:rgba(110,160,255,.14);box-shadow:inset 3px 0 0 var(--accent)}
-  .ln.cur .n{color:var(--accent)}
   .ln.cut{background:rgba(255,106,106,.12);box-shadow:inset 3px 0 0 var(--warn)}
+  .ln.ok{background:rgba(70,217,138,.12);box-shadow:inset 3px 0 0 var(--good)}
   .ln.left{background:rgba(255,200,98,.12);box-shadow:inset 3px 0 0 var(--gold)}
-  .ln.ok{background:rgba(70,217,138,.1);box-shadow:inset 3px 0 0 var(--good)}
-  .kw{color:#c792ea} .ty{color:#82aaff} .st{color:#c3e88d} .nm{color:#f78c6c} .vr{color:#ffcb6b}
-  .side{display:flex;flex-direction:column;gap:12px;min-width:0}
+  .kw{color:#c792ea} .ty{color:#82aaff} .st{color:#c3e88d} .nm{color:#f78c6c} .cm{color:#5f6b85;font-style:italic} .fn{color:#ffcb6b}
+  .side{display:flex;flex-direction:column;gap:12px}
   .readout{display:grid;grid-template-columns:1fr 1fr;gap:10px}
-  .stat{background:rgba(255,255,255,.03);border:1px solid var(--line);border-radius:12px;padding:11px 13px;transition:opacity .3s}
-  .stat.empty{opacity:.3}
+  .stat{background:rgba(255,255,255,.03);border:1px solid var(--line);border-radius:12px;padding:11px 13px}
   .stat .k{font-family:var(--mono);font-size:.62rem;letter-spacing:.1em;text-transform:uppercase;color:var(--muted)}
-  .stat .v{font-family:var(--disp);font-weight:700;font-size:1.45rem;font-variant-numeric:tabular-nums;margin-top:2px;transition:color .3s;min-height:1.6em}
-  .v.hot{color:var(--accent)} .v.bad{color:var(--warn)} .v.dim{color:rgba(132,150,182,.5)} .v.ok{color:var(--good)}
-  .console{font-family:var(--mono);font-size:.74rem;line-height:1.6;background:#05070e;border:1px solid var(--line);
-    border-radius:12px;padding:10px 14px;min-height:120px;color:#9fe3b6;word-break:break-word;flex:1}
-  .console .cl{font-size:.6rem;letter-spacing:.14em;text-transform:uppercase;color:rgba(132,150,182,.6);margin-bottom:4px}
-  .console .out{animation:pop .3s}
-  .console .in2{color:#ffe6b0}
-  .console .caret{display:inline-block;width:7px;height:1em;background:var(--warn);vertical-align:-2px;animation:blink 1s steps(1) infinite}
-  @keyframes pop{from{transform:scale(.9);opacity:0}to{transform:scale(1);opacity:1}}
-  @keyframes blink{50%{opacity:0}}
+  .stat .v{font-family:var(--disp);font-weight:700;font-size:1.45rem;font-variant-numeric:tabular-nums;margin-top:2px;min-height:1.6em}
+  .v.hot{color:var(--accent)} .v.gold{color:var(--gold)} .v.bad{color:var(--warn)} .v.ok{color:var(--good)}
+  .verd{font-family:var(--body);font-size:.92rem;line-height:1.55;background:rgba(255,255,255,.03);border:1px solid var(--line);border-radius:12px;padding:12px 14px;flex:1}
+  .verd .cl{font-family:var(--mono);font-size:.6rem;letter-spacing:.14em;text-transform:uppercase;color:rgba(132,150,182,.6);margin-bottom:6px}
+  .verd b.w{color:var(--warn)} .verd b.y{color:var(--gold)} .verd b.g{color:var(--good)}
   .take{margin-top:22px;background:linear-gradient(180deg,rgba(110,160,255,.08),rgba(139,123,255,.04));
     border:1px solid var(--line);border-left:3px solid var(--accent);border-radius:12px;padding:16px 18px}
   .take .tk{font-family:var(--mono);font-size:.66rem;letter-spacing:.14em;text-transform:uppercase;color:var(--accent);margin:0 0 8px}
@@ -175,44 +146,23 @@
 
 <canvas id="amb"></canvas>
 <div class="wrap">
-  <p class="tag">Workbook 1c &middot; Section 4-2 &middot; Passing a Scanner to a method</p>
-  <h1>One Scanner, Many Methods</h1>
-  <p class="lede"><b>Create the Scanner once in main and pass it to every method that needs input: the parameter name can change, the object stays the same.</b></p>
+  <p class="tag">Workbook 1c &middot; Section 4-2 &middot; Using a Scanner in multiple methods</p>
+  <h1>One Scanner, Three Ways</h1>
+  <p class="lede"><b>Three ways to let methods read the keyboard. Same program, same output; only where the Scanner lives changes. The third wins.</b></p>
 
   <div class="stage">
     <div class="topbar">
-      <span class="lab">Pick a run</span>
-      <div class="chips" id="chips"></div>
+      <span class="lab">Pick a way</span>
       <button class="focus" id="bFocus" title="Hide the code and notes, enlarge the picture">Focus</button>
     </div>
 
-    <div class="pic" id="pic">
-      <svg id="arrows" aria-hidden="true"></svg>
-      <span class="zone" style="left:4%">keyboard</span>
-      <span class="zone" style="left:37%">objects</span>
-      <span class="zone" style="left:74%">variables</span>
-      <span class="badge" id="badge">2 readers, 1 keyboard</span>
-      <div class="start" id="start">press&nbsp;<b>Next</b></div>
-      <div class="kbd" id="kbd"><div class="t">System.in</div><div class="s" id="kbdS">the one keyboard stream</div><div class="typed" id="typed"></div></div>
-      <div class="obj" id="o1"><div class="t">Scanner object</div><div class="s" id="o1s">reads System.in</div><div class="buf" id="b1"></div></div>
-      <div class="obj" id="o2"><div class="t">second Scanner object</div><div class="s" id="o2s">also reads System.in</div><div class="buf" id="b2"></div></div>
-      <div class="vtag" id="tMain"><div class="in">in main</div><div class="nm2">myScanner</div></div>
-      <div class="vtag" id="tMeth"><div class="in" id="tMethIn">in doAdd</div><div class="nm2" id="tMethNm">potatoScanner</div></div>
-      <div class="ref" id="ref"></div>
-    </div>
+    <div class="pic" id="pic"></div>
 
     <div class="caption" id="caption">
-      <div class="n" id="stepno"><small>step</small>0 / 7</div>
-      <div class="t" id="status">Press <b class="a">Next</b> to start.</div>
+      <div class="n" id="stepno"><small>way</small>3 / 3</div>
+      <div class="t" id="status"></div>
     </div>
-
-    <div class="toolbar">
-      <button class="btn" id="bBack">&larr; Back</button>
-      <div class="dots" id="dots"></div>
-      <button class="btn primary" id="bNext">Next &rarr;</button>
-      <button class="btn ghost" id="bReset">Reset</button>
-    </div>
-    <p class="hint">space = next &middot; <b>Try the trap.</b></p>
+    <p class="hint">click a column &middot; 1, 2, 3 on the keyboard</p>
 
     <div class="support">
       <div>
@@ -221,20 +171,17 @@
       </div>
       <div class="side">
         <div class="readout">
-          <div class="stat empty"><div class="k">Scanner objects</div><div class="v dim" id="stObj">0</div></div>
-          <div class="stat empty"><div class="k">Last value read</div><div class="v dim" id="stRead">?</div></div>
+          <div class="stat"><div class="k">Scanner objects</div><div class="v" id="stObj"></div></div>
+          <div class="stat"><div class="k">doAdd says it reads input</div><div class="v" id="stSay"></div></div>
         </div>
-        <div class="console" id="console"></div>
+        <div class="verd"><div class="cl">verdict</div><div id="verd"></div></div>
       </div>
     </div>
   </div>
 
   <div class="take">
     <p class="tk">The one idea</p>
-    <p><b>One Scanner per program, created in main, handed to methods as a parameter.</b>
-    <code>myScanner</code>, <code>potatoScanner</code> and <code>tomatoScanner</code> are different names for one object:
-    Java passes a reference to the Scanner, not a copy of the keyboard. A second <code>new Scanner(System.in)</code> inside a method
-    costs duplicate code, swallowed input and a leaked resource. A static field works, but hides who reads input and one close() cuts off everyone.</p>
+    <p><b>One Scanner per program, created in main, handed to each method as a parameter.</b> A static field also gives one object, but hides who reads input and lets one close() cut everyone off. A Scanner per method gives several objects on one keyboard, and what one reads ahead the others never see.</p>
   </div>
 
   <div id="rail"></div>
@@ -245,282 +192,85 @@
   "use strict";
   var $=function(s){return document.querySelector(s);};
   var reduce=matchMedia("(prefers-reduced-motion: reduce)").matches;
+  function kw(t){return '<span class="kw">'+t+'</span>';} function ty(t){return '<span class="ty">'+t+'</span>';}
+  function fn(t){return '<span class="fn">'+t+'</span>';} function cm(t){return '<span class="cm">'+t+'</span>';}
 
-  /* ---------- runs ---------- */
-  var RUNS=[
-    {label:"doAdd(myScanner)",m:"doAdd",p:"potatoScanner",cmd:1,op:"+",rv:"sum",res:"30.50"},
-    {label:"doSubtract(myScanner)",m:"doSubtract",p:"tomatoScanner",cmd:2,op:"-",rv:"difference",res:"20.00"},
-    {label:"Static field: works, but",m:"doAdd",p:"myScanner",cmd:1,op:"+",rv:"sum",res:"30.50",stat:true},
-    {label:"Trap: a second Scanner",m:"doAdd",p:"potatoScanner",cmd:1,op:"+",rv:"sum",res:"",trap:true}
+  var WAYS=[
+    {file:"ScannerStatic.java",ttl:"ScannerStatic",sub:"one static field",badge:["works, but","warn"],
+     objs:[["Scanner","static field"]],
+     meths:[["main","reads the field","lit"],["doAdd()","reads the field","badi"],["doSubtract()","reads the field","badi"]],
+     cost:'<b class="y">Hidden:</b> the headers say nothing about input. One close() cuts off every method.',
+     obj:"1",say:["no","bad"],
+     cap:'<b class="y">A static field.</b> One object, and it works. But <code>doAdd()</code> reads the keyboard without saying so in its header, and one <code>close()</code> anywhere closes input everywhere.',
+     verd:'It runs fine today. The cost shows later: a method whose needs are hidden cannot be tested with other input or reused, and every method is tied to one global.',
+     code:[kw("static")+' '+ty("Scanner")+' myScanner = '+kw("new")+' '+ty("Scanner")+'(System.in);','',
+           kw("public static void")+' '+fn("main")+'('+ty("String")+'[] args) {','    '+ty("int")+' command = myScanner.'+fn("nextInt")+'();','    '+fn("doAdd")+'();   '+cm("// passes nothing"),'}','',
+           kw("public static void")+' '+fn("doAdd")+'() {   '+cm("// needs nothing?"),'    '+ty("double")+' num1 = myScanner.'+fn("nextDouble")+'();','}'],
+     mark:{0:"left",7:"left"}},
+    {file:"ScannerPerMethod.java",ttl:"ScannerPerMethod",sub:"a new Scanner in each method",badge:["trap","bad"],
+     objs:[["Scanner","in main"],["Scanner","in doAdd","bad"],["Scanner","in doSubtract","bad"]],
+     meths:[["main","its own Scanner","lit"],["doAdd()","its own Scanner","badi"],["doSubtract()","its own Scanner","badi"]],
+     cost:'<b class="w">Three Scanners, one keyboard:</b> what the first reads ahead, the others never see. Same line copied three times.',
+     obj:"3",say:["no","bad"],
+     cap:'<b class="w">A Scanner per method.</b> Three objects on one keyboard. Each keeps what it read ahead for itself, so input typed for one can vanish in another, and the same line is copied into every method.',
+     verd:'Type <code>1 25.25 5.25</code> in one go: main’s Scanner takes the whole line, doAdd’s Scanner finds nothing and waits forever. Closing one of them closes System.in for all.',
+     code:[kw("public static void")+' '+fn("main")+'('+ty("String")+'[] args) {','    '+ty("Scanner")+' myScanner = '+kw("new")+' '+ty("Scanner")+'(System.in);','    '+ty("int")+' command = myScanner.'+fn("nextInt")+'();','    '+fn("doAdd")+'();','}','',
+           kw("public static void")+' '+fn("doAdd")+'() {','    '+ty("Scanner")+' myScanner = '+kw("new")+' '+ty("Scanner")+'(System.in);   '+cm("// again"),'    '+ty("double")+' num1 = myScanner.'+fn("nextDouble")+'();','}'],
+     mark:{1:"cut",7:"cut"}},
+    {file:"ScannerAsParameter.java",ttl:"ScannerAsParameter",sub:"one Scanner, passed as a parameter",badge:["best",""],best:true,
+     objs:[["Scanner","created in main, passed on"]],
+     meths:[["main","creates it","lit"],["doAdd(Scanner)","gets it","goodi"],["doSubtract(Scanner)","gets it","goodi"]],
+     cost:'<b class="g">One object, said out loud:</b> the header tells you the method reads input. main stays in charge.',
+     obj:"1",say:["yes","ok"],
+     cap:'<b class="g">One Scanner, passed as a parameter.</b> main creates it and hands the same object to each method. The header <code>doAdd(Scanner ...)</code> says the method reads input; the parameter name can be anything.',
+     verd:'One buffer, so nothing is swallowed. One close() in main, at the end. And a reader knows from the call what the method depends on. This is the shape every later week uses for objects.',
+     code:[kw("public static void")+' '+fn("main")+'('+ty("String")+'[] args) {','    '+ty("Scanner")+' myScanner = '+kw("new")+' '+ty("Scanner")+'(System.in);','    '+ty("int")+' command = myScanner.'+fn("nextInt")+'();','    '+fn("doAdd")+'(myScanner);   '+cm("// the same object travels"),'}','',
+           kw("public static void")+' '+fn("doAdd")+'('+ty("Scanner")+' potatoScanner) {','    '+ty("double")+' num1 = potatoScanner.'+fn("nextDouble")+'();','}'],
+     mark:{3:"ok",6:"ok"}}
   ];
-  var R=RUNS[0];
-  var ASK="What do you want to do (1 = add, 2 = subtract)? ";
+  var at=2;
 
-  function hl(t){
-    return t.split(/("[^"]*")/).map(function(part,i){
-      if(i%2) return '<span class="st">'+part+'</span>';
-      return part
-        .replace(/\b(public|static|void|double|int|if|else|new)\b/g,'<span class="kw">$1</span>')
-        .replace(/\b(Scanner|String|System)\b/g,'<span class="ty">$1</span>')
-        .replace(/\b(myScanner|potatoScanner|tomatoScanner)\b/g,'<span class="vr">$1</span>')
-        .replace(/\b(\d+)\b/g,'<span class="nm">$1</span>');
-    }).join("");
-  }
-
-  function lines(){
-    var arg=(R.trap||R.stat)?"":"myScanner";
-    var L=[];
-    if(R.stat) L.push(["new","static Scanner myScanner = new Scanner(System.in);"],["",""]);
-    L.push(["mainH","public static void main(String[] args) {"]);
-    if(!R.stat) L.push(["new","  Scanner myScanner = new Scanner(System.in);"]);
-    L=L.concat([
-      ["ask",'  System.out.print("'+ASK+'");'],
-      ["cmd","  int command = myScanner.nextInt();"],
-      ["if","  if (command == 1) {"],
-      ["cAdd","    doAdd("+arg+");"],
-      ["elif","  } else if (command == 2) {"],
-      ["cSub","    doSubtract("+arg+");"],
-      ["end","  }"],
-      ["close","  myScanner.close();"],
-      ["mainE","}"],
-      ["",""],
-      ["mH","public static void "+R.m+"("+((R.trap||R.stat)?"":"Scanner "+R.p)+") {"]
-    ]);
-    if(R.trap) L.push(["new2","  Scanner "+R.p+" = new Scanner(System.in);"]);
-    return L.concat([
-      ["p1",'  System.out.print("Enter 1st number: ");'],
-      ["r1","  double num1 = "+R.p+".nextDouble();"],
-      ["p2",'  System.out.print("Enter 2nd number: ");'],
-      ["r2","  double num2 = "+R.p+".nextDouble();"],
-      ["calc","  double "+R.rv+" = num1 "+R.op+" num2;"],
-      ["out",'  System.out.printf("%.2f '+R.op+' %.2f = %.2f%n", num1, num2, '+R.rv+');'],
-      ["mE","}"]
-    ]);
-  }
-
-  /* ---------- picture state helper ---------- */
-  function pic(o){
-    var b={o1:1,o2:0,c1:0,c2:0,tMain:"on",tMeth:"off",to:1,typed:"",b1:[],b2:null,kc:0,badge:0,lit1:0,leak:0};
-    for(var k in o) b[k]=o[k];
-    return b;
-  }
-
-  /* ---------- the walk ---------- */
   function build(){
-    var c=String(R.cmd), call=R.cmd===1?["if","cAdd"]:["elif","cSub"];
-    var S=[];
-    S.push({line:["new"],cls:"",objs:1,read:null,con:[],
-      pic:pic({tMain:"lit",lit1:1}),
-      msg:R.stat?'A <b class="a">static field</b>: one Scanner built before main runs, visible to every method. One object, fine so far.'
-              :'<code>new Scanner(System.in)</code> builds <b class="a">one Scanner object</b> that reads the keyboard stream, and the variable <code>myScanner</code> points to it.'});
-    if(R.stat){
-      var sc1=[[ASK,c]], sc2=sc1.concat([["Enter 1st number: ","25.25"]]), sc3=sc2.concat([["Enter 2nd number: ","5.25"]]), scr=sc3.concat([["25.25 "+R.op+" 5.25 = "+R.res,""]]);
-      S.push({line:["ask","cmd"],cls:"",objs:1,read:c,con:sc1,pic:pic({tMain:"lit",lit1:1,typed:c,b1:[[c,"taken"]]}),
-        msg:'The user types <b class="a">'+c+'</b>. main reads it through the field.'});
-      S.push({line:call,cls:"left",objs:1,read:c,con:sc1,pic:pic({tMeth:"lit"}),
-        msg:'<code>doAdd()</code> is called with <b class="y">nothing</b>. Its header says it needs nothing. It reads the keyboard anyway.'});
-      S.push({line:["p1","r1"],cls:"left",objs:1,read:"25.25",con:sc2,pic:pic({tMeth:"lit",lit1:1,typed:"25.25",b1:[["25.25","taken"]]}),
-        msg:'<code>myScanner.nextDouble()</code> reads <b class="a">25.25</b> straight from the field. Same object, nothing swallowed: it works.'});
-      S.push({line:["calc","out","mE"],cls:"left",objs:1,read:"5.25",con:scr,pic:pic({}),
-        msg:'Result printed. The cost: <b class="y">nothing at the call shows that doAdd reads input</b>, so you cannot test it with other input or reuse it elsewhere.'});
-      S.push({line:["close"],cls:"left",objs:1,read:"5.25",con:scr,pic:pic({tMain:"lit",c1:1}),
-        msg:'Every method shares the field, so <code>close()</code> <b class="y">anywhere closes input everywhere</b>. Pass it as a parameter instead: same one object, said out loud.'});
-    } else if(!R.trap){
-      var con1=[[ASK,c]], con2=con1.concat([["Enter 1st number: ","25.25"]]), con3=con2.concat([["Enter 2nd number: ","5.25"]]);
-      S.push({line:["ask","cmd"],cls:"",objs:1,read:c,con:con1,
-        pic:pic({tMain:"lit",lit1:1,typed:c,b1:[[c,"taken"]]}),
-        msg:'The user types <b class="a">'+c+'</b> and presses Enter. The text flows into the Scanner, and <code>nextInt()</code> hands '+c+' to <code>command</code>.'});
-      S.push({line:call,cls:"",objs:1,read:c,con:con1,pass:1,
-        pic:pic({tMeth:"lit"}),
-        msg:'main calls <code>'+R.m+'(myScanner)</code>. Java hands over a <b class="a">reference</b>, not a new Scanner, so the parameter <code>'+R.p+'</code> points to <b class="g">the same object</b>.'});
-      S.push({line:["p1","r1"],cls:"",objs:1,read:"25.25",con:con2,
-        pic:pic({tMeth:"lit",lit1:1,typed:"25.25",b1:[["25.25","taken"]]}),
-        msg:'A different name, the same Scanner: <code>'+R.p+'.nextDouble()</code> reads <b class="a">25.25</b> from the keyboard stream that main opened.'});
-      S.push({line:["p2","r2"],cls:"",objs:1,read:"5.25",con:con3,
-        pic:pic({tMeth:"lit",lit1:1,typed:"5.25",b1:[["5.25","taken"]]}),
-        msg:'It reads <b class="a">5.25</b> the same way. Still only <b class="g">one object</b> stands between the program and the keyboard.'});
-      S.push({line:["calc","out","mE"],cls:"ok",objs:1,read:"5.25",con:con3.concat([["25.25 "+R.op+" 5.25 = "+R.res,""]]),
-        pic:pic({}),
-        msg:'<code>'+R.m+'</code> prints the result and ends. The name <code>'+R.p+'</code> goes away with it, but <b class="g">the Scanner object stays</b>.'});
-      S.push({line:["close"],cls:"",objs:1,read:"5.25",con:con3.concat([["25.25 "+R.op+" 5.25 = "+R.res,""]]),
-        pic:pic({tMain:"lit",c1:1}),
-        msg:'Back in main, <code>myScanner</code> still points to that same Scanner, which kept working the whole time. main <b class="a">closes it once</b>, at the end.'});
-    } else {
-      var t1=[[ASK,"1 25.25 5.25"]], stuck=[["25.25","stuck"],["5.25","stuck"]];
-      var t2=t1.concat([["Enter 1st number: ","",1]]);
-      S.push({line:["ask","cmd"],cls:"left",objs:1,read:"1",con:t1,
-        pic:pic({tMain:"lit",lit1:1,typed:"1 25.25 5.25",b1:[["1","taken"]].concat(stuck)}),
-        msg:'Say the user types ahead, <b class="a">1 25.25 5.25</b>, then Enter. The whole line lands in this Scanner\'s buffer, <code>nextInt()</code> takes the 1, and <b class="y">25.25 and 5.25 wait there</b>.'});
-      S.push({line:["if","cAdd"],cls:"cut",objs:1,read:"1",con:t1,
-        pic:pic({b1:stuck}),
-        msg:'main calls <code>doAdd()</code> and passes <b class="w">nothing</b>, so doAdd has no way to reach myScanner or its buffer.'});
-      S.push({line:["mH","new2"],cls:"cut",objs:2,read:"1",con:t1,
-        pic:pic({o2:1,b1:stuck,b2:[],tMeth:"bad",to:2,badge:1}),
-        msg:'Inside, <code>new Scanner(System.in)</code> builds a <b class="w">second Scanner on the same keyboard</b>, with its own empty buffer. Same kind of line, different object.'});
-      S.push({line:["p1","r1"],cls:"cut",objs:2,read:"waiting",con:t2,
-        pic:pic({o2:1,b1:stuck,b2:"wait",tMeth:"bad",to:2,badge:1}),
-        msg:'<code>potatoScanner.nextDouble()</code> finds its buffer empty and <b class="w">waits for new typing</b>, while 25.25 and 5.25 sit out of reach in the first Scanner. The workbook calls this swallowing an input.'});
-      S.push({line:["new2"],cls:"cut",objs:2,read:"waiting",con:t2,
-        pic:pic({o2:1,b1:stuck,b2:"wait",tMeth:"bad",to:2,badge:1,leak:1}),
-        msg:'The workbook lists the cost: <b class="w">duplicate code</b> in every method, <b class="w">swallowed input</b>, and a <b class="w">leaked resource</b>, since this second Scanner is never closed.'});
-      S.push({line:["mE"],cls:"cut",objs:2,read:"waiting",con:t2,
-        pic:pic({o2:1,c2:1,b1:stuck,b2:[],tMeth:"bad",to:2,kc:1}),
-        msg:'Closing it is no fix: closing a Scanner also <b class="w">closes System.in</b>, and myScanner could never read the keyboard again. <b class="g">Pass myScanner in instead.</b>'});
-    }
-    return S;
-  }
-
-  /* ---------- state ---------- */
-  var steps=[],at=-1;
-  var codeEl=$("#code"),consEl=$("#console"),statusEl=$("#status"),picEl=$("#pic");
-
-  function renderCode(cur,cls){
-    codeEl.innerHTML=lines().map(function(l,i){
-      var c="ln";
-      if(cur&&l[0]&&cur.indexOf(l[0])>=0) c+=" "+(cls==="cut"?"cut":cls==="left"?"left":cls==="ok"?"ok":"cur");
-      return '<div class="'+c+'"><span class="n">'+(i+1)+'</span><span>'+(l[1]?hl(l[1]):" ")+'</span></div>';
+    $("#pic").innerHTML=WAYS.map(function(w,i){
+      return '<div class="way'+(w.best?' best':'')+'" data-i="'+i+'">'+
+        '<span class="badge '+w.badge[1]+'">'+w.badge[0]+'</span>'+
+        '<p class="ttl">'+w.ttl+'</p><p class="sub">'+w.sub+'</p>'+
+        '<div class="dia"><div class="kb">keyboard · System.in</div>'+
+        '<div class="objs">'+w.objs.map(function(o){return '<div class="sc'+(o[2]?' '+o[2]:'')+'">'+o[0]+'<small>'+o[1]+'</small></div>';}).join("")+'</div>'+
+        '<div class="meths">'+w.meths.map(function(m){return '<div class="m '+m[2]+'">'+m[0]+'<i>'+m[1]+'</i></div>';}).join("")+'</div></div>'+
+        '<p class="cost">'+w.cost+'</p></div>';
     }).join("");
   }
+  function show(i){
+    at=i; var w=WAYS[i];
+    Array.prototype.forEach.call(document.querySelectorAll(".way"),function(el,j){el.classList.toggle("on",j===i);});
+    $("#stepno").innerHTML="<small>way</small>"+(i+1)+" / 3";
+    $("#caption").className="caption "+(w.best?"ok":i===1?"cut":"left");
+    $("#status").innerHTML=w.cap;
+    $("#codeLab").textContent=w.file;
+    $("#code").innerHTML=w.code.map(function(t,k){ return '<div class="ln'+(w.mark[k]?' '+w.mark[k]:'')+'"><span class="n">'+(k+1)+'</span><span>'+(t||" ")+'</span></div>'; }).join("");
+    $("#stObj").textContent=w.obj; $("#stObj").className="v "+(w.obj==="1"?"hot":"bad");
+    $("#stSay").textContent=w.say[0]; $("#stSay").className="v "+w.say[1];
+    $("#verd").innerHTML=w.verd;
+  }
+  $("#pic").addEventListener("click",function(e){ var el=e.target.closest(".way"); if(el) show(+el.getAttribute("data-i")); });
+  document.addEventListener("keydown",function(e){ if(/INPUT|TEXTAREA/.test(e.target.tagName)) return; var k=parseInt(e.key,10); if(k>=1&&k<=3) show(k-1); });
 
-  function renderConsole(con){
-    var html='<div class="cl">output</div>';
-    if(!con||!con.length) html+='<span style="color:rgba(132,150,182,.5)">(nothing yet)</span>';
-    else html+=con.map(function(r){
-      return '<div class="out">'+r[0]+(r[1]?'<span class="in2">'+r[1]+'</span>':'')+(r[2]?'<span class="caret"></span>':'')+'</div>';
-    }).join("");
-    consEl.innerHTML=html;
-  }
-
-  function bufHtml(b){
-    if(b==="wait") return '<span class="bl">buffer</span><span class="tok wait">empty, waiting</span>';
-    if(!b||!b.length) return '<span class="bl">buffer</span><span class="tok empty">empty</span>';
-    return '<span class="bl">buffer</span>'+b.map(function(t){return '<span class="tok '+t[1]+'">'+t[0]+'</span>';}).join("");
-  }
-
-  function rel(el){
-    var p=picEl.getBoundingClientRect(), r=el.getBoundingClientRect();
-    return {l:r.left-p.left,t:r.top-p.top,r:r.right-p.left,b:r.bottom-p.top,h:r.height,w:r.width};
-  }
-  function curve(a,b){
-    var dx=Math.max(24,Math.abs(b.x-a.x)*.45), dir=b.x<a.x?-1:1;
-    return 'M'+a.x+' '+a.y+' C'+(a.x+dir*dx)+' '+a.y+','+(b.x-dir*dx)+' '+b.y+','+b.x+' '+b.y;
-  }
-  var COL={a:"#6ea0ff",m:"rgba(132,150,182,.55)",w:"#ff6a6a",g:"#ffc862"};
-  function drawArrows(p){
-    var svg=$("#arrows");
-    if(!p){svg.innerHTML="";return;}
-    var defs='<defs>'+Object.keys(COL).map(function(k){
-      return '<marker id="ah'+k+'" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0 L10 5 L0 10 z" fill="'+COL[k]+'" stroke="none"/></marker>';
-    }).join("")+'</defs>';
-    var out=[], kb=rel($("#kbd")), o1=rel($("#o1")), o2=rel($("#o2")), tm=rel($("#tMain")), tt=rel($("#tMeth"));
-    function arrow(a,b,k,dash){ out.push('<path d="'+curve(a,b)+'" stroke="'+COL[k]+'"'+(dash?' stroke-dasharray="5 5"':'')+' marker-end="url(#ah'+k+')"/>'); }
-    if(p.o1) arrow({x:kb.r,y:kb.t+kb.h*.4},{x:o1.l-2,y:o1.t+o1.h*.5},p.kc?"w":(p.lit1?"g":"m"),!!p.kc);
-    if(p.o2) arrow({x:kb.r,y:kb.t+kb.h*.75},{x:o2.l-2,y:o2.t+o2.h*.5},"w",!!p.kc);
-    if(p.tMain!=="off") arrow({x:tm.l,y:tm.t+tm.h/2},{x:o1.r+2,y:o1.t+o1.h*.32},p.tMain==="lit"?"a":"m");
-    if(p.tMeth!=="off"){ var tg=p.to===2?o2:o1; arrow({x:tt.l,y:tt.t+tt.h/2},{x:tg.r+2,y:tg.t+tg.h*(p.to===2?.5:.72)},p.to===2?"w":(p.tMeth==="lit"?"a":"m")); }
-    svg.innerHTML=defs+out.join("");
-  }
-
-  function renderPic(p){
-    var kbd=$("#kbd"), o1=$("#o1"), o2=$("#o2"), tm=$("#tMain"), tt=$("#tMeth");
-    $("#tMethIn").textContent="in "+R.m; $("#tMethNm").textContent=R.p;
-    $("#tMain .in").textContent=R.stat?"static field":"in main";
-    $("#codeLab").textContent=R.stat?"ScannerStatic.java":R.trap?"ScannerPerMethod.java":"ScannerAsParameter.java";
-    if(!p){
-      $("#start").style.opacity=1;
-      kbd.className="kbd"; $("#typed").innerHTML=""; $("#kbdS").textContent="the one keyboard stream";
-      o1.className="obj"; o2.className="obj"; tm.className="vtag"; tt.className="vtag"; $("#badge").className="badge";
-      drawArrows(null); return;
-    }
-    $("#start").style.opacity=0;
-    kbd.className="kbd"+(p.kc?" closed":"");
-    $("#kbdS").textContent=p.kc?"closed":"the one keyboard stream";
-    $("#typed").innerHTML=p.typed?p.typed+'<span class="key">Enter</span>':"";
-    o1.className="obj"+(p.o1?" show":"")+(p.lit1?" lit":"")+(p.c1?" closed":"");
-    $("#o1s").textContent=p.c1?"closed by main":"reads System.in";
-    $("#b1").innerHTML=bufHtml(p.b1);
-    o2.className="obj bad"+(p.o2?" show":"")+(p.c2?" closed":"");
-    $("#o2s").innerHTML=p.c2?'closed, and System.in with it':(p.leak?'<span class="x">never closed</span>':'also reads System.in');
-    $("#b2").innerHTML=bufHtml(p.b2);
-    tm.className="vtag"+(p.tMain!=="off"?" show":"")+(p.tMain==="lit"?" lit":"")+(p.kc?" bad":"");
-    tt.className="vtag"+(p.tMeth!=="off"?" show":"")+(p.tMeth==="lit"?" lit":"")+(p.tMeth==="bad"?" bad":"");
-    $("#badge").className="badge"+(p.badge?" show":"");
-    drawArrows(p);
-  }
-
-  /* the reference travels from myScanner to the parameter: the only moving part */
-  var refTimer=null;
-  function sendRef(){
-    var ref=$("#ref"), a=rel($("#tMain")), b=rel($("#tMeth"));
-    clearTimeout(refTimer);
-    if(reduce){ref.style.opacity=0;return;}
-    ref.style.transition="none";
-    ref.style.left=(a.l+a.w/2-9)+"px"; ref.style.top=(a.b-9)+"px"; ref.style.opacity=1;
-    void ref.offsetWidth;
-    ref.style.transition="";
-    ref.style.left=(b.l+b.w/2-9)+"px"; ref.style.top=(b.t-9)+"px";
-    refTimer=setTimeout(function(){ref.style.opacity=0;},800);
-  }
-
-  function setStat(id,v,c){ var e=$(id), box=e.parentNode; if(v===null){e.textContent="?";e.className="v dim";box.classList.add("empty");} else {e.textContent=v;e.className="v "+(c||"");box.classList.toggle("empty",c==="dim");} }
-
-  function show(i,fwd){
-    at=i;
-    if(i<0){
-      renderCode(null); renderPic(null); renderConsole([]);
-      $("#caption").className="caption"; statusEl.innerHTML='Press <b class="a">Next</b> to start. The picture above the code changes at every step.';
-      $("#stepno").innerHTML="<small>step</small>0 / "+steps.length;
-      setStat("#stObj","0","dim"); setStat("#stRead",null); setBtns(); return;
-    }
-    var s=steps[i];
-    $("#stepno").innerHTML="<small>step</small>"+(i+1)+" / "+steps.length;
-    renderCode(s.line,s.cls); renderPic(s.pic); renderConsole(s.con);
-    $("#caption").className="caption "+s.cls; statusEl.innerHTML=s.msg;
-    setStat("#stObj",String(s.objs),s.objs>1?"bad":"ok");
-    setStat("#stRead",s.read,s.read==="waiting"?"bad":"hot");
-    if(s.pass&&fwd) setTimeout(sendRef,reduce?0:120);
-    setBtns();
-  }
-  function setBtns(){ $("#bNext").disabled=at>=steps.length-1; $("#bBack").disabled=at<0;
-    var d=""; for(var k=0;k<steps.length;k++) d+='<i class="'+(k===at?"now":k<at?"done":"")+'"></i>'; $("#dots").innerHTML=d; }
-  /* focus: picture and caption only. Remembered per browser. Arrows are measured, so redraw. */
   function setFocus(on){ document.body.classList.toggle("solo",on); $("#bFocus").textContent=on?"Focus on":"Focus";
-    try{localStorage.setItem("hub-focus",on?"1":"0");}catch(e){} renderPic(at>=0?steps[at].pic:null); }
+    try{localStorage.setItem("hub-focus",on?"1":"0");}catch(e){} }
   $("#bFocus").addEventListener("click",function(){ setFocus(!document.body.classList.contains("solo")); this.blur(); });
   try{ if(localStorage.getItem("hub-focus")==="1") document.body.classList.add("solo"); }catch(e){}
   if(document.body.classList.contains("solo")) $("#bFocus").textContent="Focus on";
-  function next(){ if(at<steps.length-1) show(at+1,true); }
-  function back(){ if(at>=0) show(at-1,false); }
-  function reset(){ steps=build(); show(-1); }
-  function pick(idx){
-    R=RUNS[idx];
-    Array.prototype.forEach.call(document.querySelectorAll(".chip"),function(c,j){c.classList.toggle("on",j===idx);});
-    if(document.activeElement&&document.activeElement.blur) document.activeElement.blur();
-    reset();
-  }
 
-  $("#chips").innerHTML=RUNS.map(function(r,j){return '<button class="chip'+(r.trap?' trap':'')+(j===0?' on':'')+'" data-i="'+j+'">'+r.label+'</button>';}).join("");
-  $("#chips").addEventListener("click",function(e){ var b=e.target.closest(".chip"); if(b) pick(+b.getAttribute("data-i")); });
-  $("#bNext").addEventListener("click",function(){next();});
-  $("#bBack").addEventListener("click",back);
-  $("#bReset").addEventListener("click",reset);
-  document.addEventListener("keydown",function(e){ if(e.code==="Space"&&!/INPUT|BUTTON/.test(e.target.tagName)){e.preventDefault();next();} });
-  addEventListener("resize",function(){ drawArrows(at>=0?steps[at].pic:null); });
-  if(document.fonts&&document.fonts.ready) document.fonts.ready.then(function(){ drawArrows(at>=0?steps[at].pic:null); });
-
-  /* ---------- ambient canvas ---------- */
   var cv=$("#amb"),ctx=cv.getContext&&cv.getContext("2d"),parts=[];
   function sizeC(){if(!ctx)return;cv.width=innerWidth;cv.height=innerHeight;}
-  function initParts(){parts=[];for(var i=0;i<46;i++)parts.push({x:Math.random(),y:Math.random(),
-    r:Math.random()*1.6+.3,s:Math.random()*.02+.004,o:Math.random()*.4+.1});}
+  function initParts(){parts=[];for(var i=0;i<46;i++)parts.push({x:Math.random(),y:Math.random(),r:Math.random()*1.6+.3,s:Math.random()*.02+.004,o:Math.random()*.4+.1});}
   function drawC(){if(!ctx)return;ctx.clearRect(0,0,cv.width,cv.height);
-    parts.forEach(function(p){p.y-=p.s/60;if(p.y<-.02)p.y=1.02;
-      ctx.beginPath();ctx.arc(p.x*cv.width,p.y*cv.height,p.r,0,7);
-      ctx.fillStyle="rgba(140,170,255,"+p.o+")";ctx.fill();});
-    requestAnimationFrame(drawC);}
+    parts.forEach(function(p){p.y-=p.s/60;if(p.y<-.02)p.y=1.02;ctx.beginPath();ctx.arc(p.x*cv.width,p.y*cv.height,p.r,0,7);
+      ctx.fillStyle="rgba(140,170,255,"+p.o+")";ctx.fill();});requestAnimationFrame(drawC);}
   if(ctx&&!reduce){sizeC();initParts();drawC();addEventListener("resize",sizeC);}
 
-  reset();
+  build(); show(2);
 })();
 </script>
 <script src="../manifest.js"></script>
