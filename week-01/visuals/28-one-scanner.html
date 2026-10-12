@@ -216,7 +216,7 @@
 
     <div class="support">
       <div>
-        <p class="lab">InputApp.java</p>
+        <p class="lab" id="codeLab">ScannerAsParameter.java</p>
         <div class="code" id="code"></div>
       </div>
       <div class="side">
@@ -425,6 +425,7 @@
     var kbd=$("#kbd"), o1=$("#o1"), o2=$("#o2"), tm=$("#tMain"), tt=$("#tMeth");
     $("#tMethIn").textContent="in "+R.m; $("#tMethNm").textContent=R.p;
     $("#tMain .in").textContent=R.stat?"static field":"in main";
+    $("#codeLab").textContent=R.stat?"ScannerStatic.java":R.trap?"ScannerPerMethod.java":"ScannerAsParameter.java";
     if(!p){
       $("#start").style.opacity=1;
       kbd.className="kbd"; $("#typed").innerHTML=""; $("#kbdS").textContent="the one keyboard stream";
