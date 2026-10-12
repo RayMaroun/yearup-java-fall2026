@@ -64,6 +64,7 @@ window.HUB_MANIFEST = {
     { file: "condition-crafter.html", title: "Condition Crafter", group: "Workbook 1c · Section 4-1", desc: "Read a rule in plain English, pick the Java condition that says exactly that." },
     { file: "method-builder.html", title: "Method Builder", group: "Workbook 1c · Section 4-2", desc: "A job or a header appears: pick the header that fits, or the one call that compiles." },
     { file: "switch-tracer.html", title: "Switch Tracer", group: "Workbook 1c · Section 4-3", desc: "Read a switch and a value, pick what prints: break, fall-through, arrow cases, default and the switch expression." },
-    { file: "your-first-day.html", title: "Your First Day", group: "Week 1", desc: "Ten situations from a new Java developer's first day: pick the action a pro takes, and see why." }
+    { file: "your-first-day.html", title: "Your First Day", group: "Week 1", desc: "Ten situations from a new Java developer's first day: pick the action a pro takes, and see why." },
+    { file: "flashcard-quiz.html", title: "Flashcard Quiz", group: "Week 1", desc: "Sixty-four week 1 cards on Git, IntelliJ and Java basics; four answers each, the reason after every one, filter by topic." }
   ]
 };

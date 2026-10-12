@@ -548,5 +548,15 @@
     "group": "Week 1",
     "url": "week-01/games/your-first-day.html",
     "text": "← Week 1 index Week 1 · Game Your First Day Your first day as a Java developer. Ten situations, four actions each: pick the one a pro takes. Game 9:00 AM score 0 time 0.0s Your First Day Something happens at your desk. Read it, then click the right action or press its number key. Start the day Day done Play again round 0 / 10 Press Start the day . Keys 1 to 4 pick an action. keys 1 to 4 answer · space starts · read the message before you act The one idea Most first-day problems name their own fix. The red underline, the console and the error message are the first place to look, before you change anything."
+  },
+  {
+    "week": 1,
+    "weekLabel": "Week 1",
+    "section": "Games",
+    "title": "Flashcard Quiz",
+    "desc": "Sixty-four week 1 cards on Git, IntelliJ and Java basics; four answers each, the reason after every one, filter by topic.",
+    "group": "Week 1",
+    "url": "week-01/games/flashcard-quiz.html",
+    "text": "← Week 1 index Workbooks 1a and 1c · Game Flashcard Quiz One question, four answers, one right. Every answer comes back with the reason. Topic all topics score 0 time 0.0s Next Flashcard Quiz Git, IntelliJ and the Java of week 1. Click an answer or press 1 to 4. Pick a topic above, or play them all. Start Round over Play again card 0 / 15 Press Start . Keys 1 to 4 pick an answer. keys 1 to 4 answer · Enter or space for the next card · a topic chip deals only that topic The one idea A right answer counts once you can say why. Read the reason under the card every time, even when you picked correctly."
   }
 ]
