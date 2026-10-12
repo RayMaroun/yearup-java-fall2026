@@ -483,6 +483,16 @@
     "week": 1,
     "weekLabel": "Week 1",
     "section": "Games",
+    "title": "Format Fixer",
+    "desc": "Fill the blank, predict the output, or fix the crash: twelve printf lines against the clock.",
+    "group": "Workbook 1c · Section 3-3",
+    "url": "week-01/games/format-fixer.html",
+    "text": "← Week 1 index Workbook 1c · Section 3-3 · Game Format Fixer Pick the specifier, predict what prints, or fix the line that crashes. Twelve rounds, the clock is running. Game printf score 0 time 0.0s Format Fixer Each round is one printf line. Fill the blank, pick what it prints, or fix the crash. Click an answer or press 1 to 4. Start Round over Play again round 0 / 12 Press Start . Keys 1 to 4 answer. %d int · %f double · %.2f two decimals · %s String · %,d commas · %-20s left · %20s right · %n new line The one idea The letter must match the value: d for whole numbers, f for decimals, s for text. The rest (the comma, the width, the .2) only shapes how it looks. A wrong letter is not a typo the compiler catches; it crashes when the line runs."
+  },
+  {
+    "week": 1,
+    "weekLabel": "Week 1",
+    "section": "Games",
     "title": "Git Mission",
     "desc": "Put the IntelliJ Git steps in order, from New Project to Commit and Push, then say where each commit travels.",
     "group": "Workbook 1a · Sections 1-1 to 1-4",

@@ -58,6 +58,7 @@ window.HUB_MANIFEST = {
     { file: "type-matcher.html", title: "Type Matcher", group: "Workbook 1c · Section 3-1", desc: "A literal flashes up: pick the type that holds it. Twenty rounds against the clock." },
     { file: "name-that-convention.html", title: "Name That Convention", group: "Workbook 1c · Section 3-1", desc: "Pick the right name for each job: camelCase, UPPER_SNAKE_CASE, PascalCase, project dashes or package dots." },
     { file: "cast-or-crash.html", title: "Cast or Crash", group: "Workbook 1c · Section 3-2", desc: "A line of Java appears: compiles, needs a cast, or crash? Twelve rounds against the clock." },
+    { file: "format-fixer.html", title: "Format Fixer", group: "Workbook 1c · Section 3-3", desc: "Fill the blank, predict the output, or fix the crash: twelve printf lines against the clock." },
     { file: "git-mission.html", title: "Git Mission", group: "Workbook 1a · Sections 1-1 to 1-4", desc: "Put the IntelliJ Git steps in order, from New Project to Commit and Push, then say where each commit travels." },
     { file: "output-predictor.html", title: "Output Predictor", group: "Workbook 1c · Modules 3 and 4", desc: "Read a short snippet and pick the exact line Java prints: joins, int division, casts, ++, switch, == vs equals." },
     { file: "bug-hunter.html", title: "Bug Hunter", group: "Workbook 1c · Modules 3 and 4", desc: "Ten snippets, one bug each: find the line before the compiler does." },
