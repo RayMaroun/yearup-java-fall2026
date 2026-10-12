@@ -50,7 +50,8 @@ window.HUB_MANIFEST = {
     { file: "sandwich-shop.html", title: "Sandwich Shop", group: "Workbook 1c · Section 4-1", desc: "Size and age in, one price out: if / else if / else twice." },
     { file: "sandwich-shop-2.html", title: "Sandwich Shop, Loaded", group: "Workbook 1c · Section 4-1", desc: "Add one yes/no question to working code without breaking it." },
     { file: "method-practice.html", title: "Method Practice", group: "Workbook 1c · Section 4-2", desc: "Four tiny programs: call a void method, reuse one, get a value back, get true or false back." },
-    { file: "payroll-calculator-2.html", title: "Payroll Calculator, Refactored", group: "Workbook 1c · Section 4-2", desc: "Same program, same output, split into methods you plan first." }
+    { file: "payroll-calculator-2.html", title: "Payroll Calculator, Refactored", group: "Workbook 1c · Section 4-2", desc: "Same program, same output, split into methods you plan first." },
+    { file: "rental-car-calculator.html", title: "Rental Car Company", group: "Workbook 1c · Section 4-3", desc: "Six questions in, four amounts out: plan it on paper, then make the program agree." }
   ],
   games: []
 };

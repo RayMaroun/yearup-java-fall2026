@@ -14,7 +14,7 @@
 - [x] week-01/index.html (tabs, grouped, hash lands on the item), index.html landing (12 weeks, no Tools card), search.js restyled, build-search-index.js reads manifests, search-index.json built (29 items).
 
 ## Still to do for week 1
-- [ ] Exercise companions (10), spoiler-free: 9 done (all but rental-car-calculator, 2026-10-13; checklist shape); the rest follow Ray's section reviews
+- [x] Exercise companions (10), spoiler-free: 10 done, 2026-10-13, checklist shape; the rest follow Ray's section reviews
 - [ ] Games (13); three need a spoiler check
 - [ ] manifest exercises/games arrays (after Ray's review decisions)
 - [ ] GitHub Pages publish when Ray says
