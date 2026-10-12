@@ -54,17 +54,18 @@ window.HUB_MANIFEST = {
     { file: "rental-car-calculator.html", title: "Rental Car Company", group: "Workbook 1c · Section 4-3", desc: "Six questions in, four amounts out: plan it on paper, then make the program agree." }
   ],
   games: [
+    { file: "git-mission.html", title: "Git Mission", group: "Workbook 1a · Sections 1-1 to 1-4", desc: "Put the IntelliJ Git steps in order, from New Project to Commit and Push, then say where each commit travels." },
+    { file: "project-setup.html", title: "Project Setup", group: "Workbook 1a · Section 1-3", desc: "Fill the New Project dialog and the project tree: name, folder, Git, Java, Maven, JDK 17, package and class file." },
     { file: "type-matcher.html", title: "Type Matcher", group: "Workbook 1c · Section 3-1", desc: "A literal flashes up: pick the type that holds it. Twenty rounds against the clock." },
-    { file: "name-that-convention.html", title: "Name That Convention", group: "Workbook 1c · Section 3-1", desc: "Pick the right name for each job: camelCase, UPPER_SNAKE_CASE, PascalCase, project dashes or package dots." },
+    { file: "box-tracker.html", title: "Box Tracker", group: "Workbook 1c · Sections 3-1 and 3-2", desc: "A program runs one line at a time: type what each variable box holds after each line." },
+    { file: "expression-builder.html", title: "Expression Builder", group: "Workbook 1c · Section 3-2", desc: "Assemble tokens into a println that prints the target: concatenation order, int vs double division, %, and the (double) cast." },
     { file: "cast-or-crash.html", title: "Cast or Crash", group: "Workbook 1c · Section 3-2", desc: "A line of Java appears: compiles, needs a cast, or crash? Twelve rounds against the clock." },
     { file: "format-fixer.html", title: "Format Fixer", group: "Workbook 1c · Section 3-3", desc: "Fill the blank, predict the output, or fix the crash: twelve printf lines against the clock." },
-    { file: "git-mission.html", title: "Git Mission", group: "Workbook 1a · Sections 1-1 to 1-4", desc: "Put the IntelliJ Git steps in order, from New Project to Commit and Push, then say where each commit travels." },
-    { file: "output-predictor.html", title: "Output Predictor", group: "Workbook 1c · Modules 3 and 4", desc: "Read a short snippet and pick the exact line Java prints: joins, int division, casts, ++, switch, == vs equals." },
-    { file: "bug-hunter.html", title: "Bug Hunter", group: "Workbook 1c · Modules 3 and 4", desc: "Ten snippets, one bug each: find the line before the compiler does." },
-    { file: "condition-crafter.html", title: "Condition Crafter", group: "Workbook 1c · Section 4-1", desc: "Read a rule in plain English, pick the Java condition that says exactly that." },
-    { file: "method-builder.html", title: "Method Builder", group: "Workbook 1c · Section 4-2", desc: "A job or a header appears: pick the header that fits, or the one call that compiles." },
+    { file: "scanner-stream.html", title: "Scanner Stream", group: "Workbook 1c · Section 3-3", desc: "Pick the Scanner call that reads each line from the keyboard buffer; watch the leftover Enter." },
+    { file: "branch-runner.html", title: "Branch Runner", group: "Workbook 1c · Section 4-1", desc: "Type a value that makes Java run the gold line of an if / else if / else chain, or spot the line no value can reach." },
+    { file: "spot-the-repeat.html", title: "Spot the Repeat", group: "Workbook 1c · Section 4-2", desc: "Spot the lines that repeat, then pick the header whose parameters are exactly what changes." },
     { file: "switch-tracer.html", title: "Switch Tracer", group: "Workbook 1c · Section 4-3", desc: "Read a switch and a value, pick what prints: break, fall-through, arrow cases, default and the switch expression." },
-    { file: "your-first-day.html", title: "Your First Day", group: "Week 1", desc: "Ten situations from a new Java developer's first day: pick the action a pro takes, and see why." },
-    { file: "flashcard-quiz.html", title: "Flashcard Quiz", group: "Week 1", desc: "Sixty-four week 1 cards on Git, IntelliJ and Java basics; four answers each, the reason after every one, filter by topic." }
+    { file: "bug-hunter.html", title: "Bug Hunter", group: "Week 1", desc: "Ten snippets, one bug each: find the line before the compiler does." },
+    { file: "error-translator.html", title: "Error Translator", group: "Week 1", desc: "Read a red compiler or runtime message, pick what it means in plain English, then click the line that needs the fix." }
   ]
 };

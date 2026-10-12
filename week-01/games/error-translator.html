@@ -1,0 +1,381 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Error Translator | Week 1 Visual Hub</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Sora:wght@500;700&family=Inter:wght@400;500&family=JetBrains+Mono:wght@400;500&display=swap">
+<style>
+  :root{
+    --bg:#080c17; --bg2:#0c1428; --surface:rgba(255,255,255,.045); --line:rgba(255,255,255,.09);
+    --ink:#eef2fb; --muted:#8496b6; --accent:#6ea0ff; --accent2:#8b7bff; --good:#46d98a; --warn:#ff6a6a;
+    --gold:#ffc862; --disp:'Sora',system-ui,sans-serif; --body:'Inter',system-ui,sans-serif;
+    --mono:'JetBrains Mono',ui-monospace,monospace;
+  }
+  *{box-sizing:border-box}
+  body{margin:0;min-height:100vh;color:var(--ink);font-family:var(--body);
+    background:radial-gradient(1200px 700px at 70% -10%,#141d38 0%,transparent 55%),
+               radial-gradient(900px 600px at 10% 110%,#161233 0%,transparent 50%),#080c17;
+    overflow-x:hidden}
+  #amb{position:fixed;inset:0;z-index:0;pointer-events:none;opacity:.6}
+  .back{position:relative;z-index:2;display:block;max-width:1120px;margin:0 auto;padding:26px 24px 0;
+    width:100%;font-family:var(--mono);font-size:.8rem;letter-spacing:.04em;color:var(--muted);
+    text-decoration:none;transition:color .15s}
+  .back:hover{color:var(--accent)}
+  .wrap{position:relative;z-index:1;max-width:1120px;margin:0 auto;padding:22px 24px 70px}
+  .tag{font-family:var(--mono);font-size:.72rem;letter-spacing:.22em;text-transform:uppercase;color:var(--accent);margin:0 0 14px}
+  h1{font-family:var(--disp);font-weight:700;font-size:clamp(2.3rem,6vw,3.6rem);line-height:1;margin:0 0 12px;
+    letter-spacing:-.03em;background:linear-gradient(180deg,#fff,#b9c6e6);-webkit-background-clip:text;
+    background-clip:text;color:transparent}
+  .lede{color:var(--muted);max-width:64ch;font-size:1.05rem;margin:0 0 26px;line-height:1.5}
+  .lede b{color:var(--ink)}
+  .lede code,.take code,.caption code{font-family:var(--mono);font-size:.92em;color:#bcd0ff}
+
+  /* ---------- stage ---------- */
+  .stage{position:relative;background:linear-gradient(180deg,rgba(255,255,255,.03),rgba(255,255,255,.01));
+    border:1px solid var(--line);border-radius:24px;padding:18px 18px 14px;
+    box-shadow:0 1px 0 rgba(255,255,255,.06) inset,0 30px 80px -30px rgba(0,0,0,.8)}
+  .topbar{display:flex;align-items:center;gap:10px;margin:0 0 14px;flex-wrap:wrap}
+  .topbar .lab{margin:0 4px 0 0}
+  .lab{font-family:var(--mono);font-size:.7rem;letter-spacing:.12em;text-transform:uppercase;color:var(--muted);margin:0 0 10px}
+  .btn:focus-visible,.opt:focus-visible,.ln:focus-visible{outline:2px solid var(--accent);outline-offset:2px}
+
+  /* ---------- game board ---------- */
+  .pic{position:relative;min-height:390px;border:1px solid var(--line);border-radius:18px;background:rgba(6,10,20,.5);overflow:hidden;padding:40px 20px 22px}
+  .pic .zone{position:absolute;left:18px;top:14px;font-family:var(--mono);font-size:.62rem;letter-spacing:.14em;text-transform:uppercase;color:rgba(132,150,182,.55)}
+  .hud{position:absolute;right:18px;top:12px;display:flex;gap:14px;font-family:var(--mono);font-size:.72rem;color:var(--muted)}
+  .hud b{color:var(--ink);font-weight:500}
+  .board{display:grid;grid-template-columns:minmax(0,1.15fr) minmax(0,1fr);gap:16px;align-items:start}
+  .code{font-family:var(--mono);font-size:.8rem;line-height:1.6;background:rgba(0,0,0,.32);border:1px solid var(--line);border-radius:14px;padding:8px 0;min-height:60px}
+  .ln{display:flex;width:100%;text-align:left;font:inherit;color:#d6deef;background:transparent;border:0;border-left:3px solid transparent;padding:0 12px 0 0;white-space:pre;cursor:default;transition:background .15s,border-color .15s}
+  .ln .no{flex-shrink:0;width:2.6em;text-align:right;padding-right:12px;color:rgba(132,150,182,.5)}
+  .ln .tx{overflow:hidden;text-overflow:ellipsis}
+  .code.pick .ln{cursor:pointer}
+  .code.pick .ln:hover{background:rgba(110,160,255,.1);border-left-color:var(--accent)}
+  .ln.hit{background:rgba(70,217,138,.12);border-left-color:var(--good)}
+  .ln.miss{background:rgba(255,106,106,.12);border-left-color:var(--warn)}
+  .ln.fixed .tx{color:var(--good)}
+  .k{color:#b9a8ff} .s{color:var(--gold)} .d{color:#7fe0b0} .c{color:var(--muted);font-style:italic}
+  .con{margin-top:10px;font-family:var(--mono);font-size:.76rem;line-height:1.5;color:#ff8a8a;white-space:pre-wrap;word-break:break-word;
+    background:rgba(255,106,106,.06);border:1px solid rgba(255,106,106,.22);border-radius:12px;padding:9px 12px}
+  .con .in{display:block;color:var(--muted)}
+  .con .in b{color:var(--ink);font-weight:500}
+  .side .lab{margin:2px 0 10px}
+  .opts{display:flex;flex-direction:column;gap:8px}
+  .opt{display:flex;gap:10px;align-items:flex-start;text-align:left;font-family:var(--body);font-size:.88rem;line-height:1.4;padding:10px 14px;border-radius:11px;cursor:pointer;
+    border:1px solid var(--line);background:var(--surface);color:var(--ink);transition:.15s}
+  .opt:hover{border-color:var(--accent);color:var(--accent)}
+  .opt:disabled{cursor:default}
+  .opt.hit{border-color:rgba(70,217,138,.7);background:rgba(70,217,138,.14);color:var(--good)}
+  .opt.miss{border-color:rgba(255,106,106,.7);background:rgba(255,106,106,.12);color:var(--warn)}
+  .opt.dim{opacity:.4}
+  .key{flex-shrink:0;font-family:var(--mono);font-size:.66rem;color:var(--muted);padding-top:2px}
+  .nextRow{margin-top:12px;display:flex;justify-content:flex-end}
+  .nextRow[hidden]{display:none}
+  .screen{position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:12px;background:rgba(6,10,20,.94);transition:opacity .25s;padding:20px;overflow:auto}
+  .screen.off{opacity:0;pointer-events:none}
+  .screen h2{font-family:var(--disp);font-weight:700;font-size:1.6rem;margin:0;color:var(--ink)}
+  .screen p{margin:0;color:var(--muted);font-size:.95rem;text-align:center;max-width:50ch;line-height:1.5}
+  .screen .big{font-family:var(--disp);font-weight:700;font-size:2.6rem;color:var(--accent)}
+  .screen .big.gold{color:var(--gold)} .screen .big.good{color:var(--good)}
+  .bar{position:absolute;left:0;right:0;bottom:0;height:4px;background:rgba(255,255,255,.06)}
+  .bar i{display:block;height:100%;width:0;background:var(--accent);transition:width .25s}
+  .misses{font-family:var(--mono);font-size:.72rem;color:var(--muted);line-height:1.6;text-align:left;max-width:720px}
+  .misses b{color:var(--warn);font-weight:500} .misses i{font-style:normal;color:var(--good)}
+  .caption{display:flex;gap:16px;align-items:flex-start;margin:14px 4px 0;min-height:56px}
+  .caption .n{flex-shrink:0;font-family:var(--disp);font-weight:700;font-size:1.35rem;color:var(--accent);font-variant-numeric:tabular-nums;
+    line-height:1.2;min-width:3.2rem}
+  .caption .n small{display:block;font-family:var(--mono);font-weight:400;font-size:.58rem;letter-spacing:.14em;text-transform:uppercase;color:var(--muted)}
+  .caption .t{font-size:1.02rem;line-height:1.55;color:var(--ink);padding-left:16px;border-left:3px solid var(--accent);transition:border-color .3s}
+  .caption.cut .t{border-left-color:var(--warn)} .caption.ok .t{border-left-color:var(--good)}
+  .caption b.g{color:var(--good)} .caption b.w{color:var(--warn)} .caption b.a{color:var(--accent)}
+  .btn{font-family:var(--body);font-weight:500;font-size:.86rem;padding:9px 16px;border-radius:11px;cursor:pointer;
+    border:1px solid var(--line);background:var(--surface);color:var(--ink);transition:.15s}
+  .btn:hover{border-color:var(--accent);color:var(--accent)}
+  .btn.primary{border-color:rgba(110,160,255,.5);background:rgba(110,160,255,.12);padding:9px 22px;min-width:120px}
+  .hint{font-family:var(--mono);font-size:.68rem;color:var(--muted);margin:10px 4px 0;line-height:1.5}
+  .take{margin-top:22px;background:linear-gradient(180deg,rgba(110,160,255,.08),rgba(139,123,255,.04));
+    border:1px solid var(--line);border-left:3px solid var(--accent);border-radius:12px;padding:16px 18px}
+  .take .tk{font-family:var(--mono);font-size:.66rem;letter-spacing:.14em;text-transform:uppercase;color:var(--accent);margin:0 0 8px}
+  .take p{margin:0;font-size:.95rem;color:var(--ink);line-height:1.55}
+  .take b{color:#fff}
+  @media (max-width:760px){
+    .wrap{padding:18px 16px 60px} .back{padding:22px 16px 0}
+    .stage{padding:12px} .pic{padding:40px 12px 18px}
+    .board{grid-template-columns:1fr}
+  }
+  @media (prefers-reduced-motion:reduce){*{animation-duration:.01ms!important;transition-duration:.01ms!important}#amb{display:none}}
+</style>
+</head>
+<body>
+
+<a class="back" href="../index.html#error-translator">&#8592; Week 1 index</a>
+
+<canvas id="amb"></canvas>
+<div class="wrap">
+  <p class="tag">Week 1 &middot; Game</p>
+  <h1>Error Translator</h1>
+  <p class="lede"><b>A red message appears. Say what it means in plain English, then click the line that needs the fix.</b></p>
+
+  <div class="stage">
+    <div class="topbar">
+      <span class="lab">Game</span>
+    </div>
+
+    <div class="pic" id="pic">
+      <span class="zone" id="zone">read the red</span>
+      <div class="hud"><span>score <b id="hScore">0</b></span><span>time <b id="hTime">0.0s</b></span></div>
+      <div class="board">
+        <div>
+          <div class="code" id="code"></div>
+          <div class="con" id="con"></div>
+        </div>
+        <div class="side">
+          <p class="lab" id="ask"></p>
+          <div class="opts" id="opts"></div>
+          <div class="nextRow" id="nextRow" hidden><button class="btn primary" id="bNext">Next</button></div>
+        </div>
+      </div>
+      <div class="bar"><i id="bar"></i></div>
+      <div class="screen" id="startScr">
+        <h2>Error Translator</h2>
+        <p>Each round has two moves: pick what the message means, then click the line to fix. Ten rounds, the clock is running.</p>
+        <button class="btn primary" id="bStart">Start</button>
+      </div>
+      <div class="screen off" id="endScr">
+        <h2>Game over</h2>
+        <div class="big" id="endScore"></div>
+        <p id="endMsg"></p>
+        <div class="misses" id="endMiss"></div>
+        <button class="btn primary" id="bAgain">Play again</button>
+      </div>
+    </div>
+
+    <div class="caption" id="caption">
+      <div class="n" id="stepno"><small>round</small>0 / 10</div>
+      <div class="t" id="status">Press <b class="a">Start</b>. Keys 1 to 4 pick a meaning, then a line number picks a line.</div>
+    </div>
+    <p class="hint">java: ... = compile error, nothing ran &middot; Exception in thread "main" = it ran, then stopped &middot; Enter = next round</p>
+  </div>
+
+  <div class="take">
+    <p class="tk">The one idea</p>
+    <p><b>The first line of the message usually names the fix.</b> Read it slowly, find the line it points to, and the error stops being scary.</p>
+  </div>
+
+  <div id="rail"></div>
+</div>
+
+<script>
+(function(){
+  "use strict";
+  var $=function(s){return document.querySelector(s);};
+  var reduce=matchMedia("(prefers-reduced-motion: reduce)").matches;
+
+  /* each round: code lines, the message, the input typed (runtime only), the meaning, three wrong meanings,
+     the line to fix (1-based), the fixed line, and why. All messages checked against javac / java 17. */
+  var POOL=[
+    {code:['String name = "Raymond";','int age = 26','System.out.println(name + " is " + age);','System.out.println("Next year: " + (age + 1));'],
+     msg:"java: ';' expected",
+     ok:"A statement is missing the semicolon that ends it.",
+     bad:["The variable age was never declared.","26 is too big to fit in an int.","println cannot join text and a number."],
+     line:2,fix:"int age = 26;",why:"every statement ends with ; and javac stops at the first one that does not"},
+    {code:["double price = 19.99;","int dollars = price;",'System.out.println("Price: " + price);','System.out.println("Dollars: " + dollars);'],
+     msg:"java: incompatible types: possible lossy conversion from double to int",
+     ok:"A double cannot go into an int without losing its decimals, so Java will not do it on its own.",
+     bad:["19.99 has too many digits for a double.","price is used before it has a value.","An int cannot be printed next to text."],
+     line:2,fix:"int dollars = (int) price;",why:"cast on purpose with (int); the .99 is dropped and dollars holds 19"},
+    {code:["int localCount;","int dayNumber = 3;","localCount = localCount + dayNumber;","System.out.println(localCount);"],
+     msg:"java: variable localCount might not have been initialized",
+     ok:"A local variable is read before it was ever given a value.",
+     bad:["localCount was declared twice.","Local variables start at 0, so this is only a warning.","dayNumber is the wrong type to add."],
+     line:1,fix:"int localCount = 0;",why:"give it a starting value when you declare it, so line 3 has something to add to"},
+    {code:['final String myName = "Raymond";',"System.out.println(myName);",'myName = "Ray";',"System.out.println(myName);"],
+     msg:"java: cannot assign a value to final variable myName",
+     ok:"The code tries to change a variable that was marked as never changing.",
+     bad:["A String can never be assigned twice, final or not.","A final variable must be written in capitals.","myName does not exist yet on line 3."],
+     line:3,fix:'String nickname = "Ray";',why:"a final variable gets its value once; put the new text in a new variable"},
+    {code:["// file: Main.java","public class TicketPrinter {","    public static void main(String[] args) {",'        System.out.println("Ticket for Raymond");',"    }","}"],
+     msg:"java: class TicketPrinter is public, should be declared in a file named TicketPrinter.java",
+     ok:"The public class name and the file name are different.",
+     bad:["The class has no main method.","A class name cannot be two words joined together.","The file holds two public classes."],
+     line:2,fix:"public class Main {",why:"a public class lives in a file with exactly its name; rename one of them (Shift+F6) so they match"},
+    {code:["public static int ageIn(int age, int years) {","    int future = age + years;","}","public static void main(String[] args) {","    System.out.println(ageIn(26, 5));","}"],
+     msg:"java: missing return statement",
+     ok:"A method promises to give back a value but never does.",
+     bad:["main is not allowed to call another method.","age and years were never given values.","A method that does math must be void."],
+     line:2,fix:"    return age + years;",why:"the int in the signature is a promise, so the body must return an int"},
+    {code:["int cityPopulation = 650000;","int worldPopulation = 8000000000;",'System.out.println("City: " + cityPopulation);','System.out.println("World: " + worldPopulation);'],
+     msg:"java: integer number too large",
+     ok:"A whole number written in the code is past the largest int.",
+     bad:["The program ran out of memory.","No Java type can hold more than 9 digits.","The number needs a decimal point."],
+     line:2,fix:"long worldPopulation = 8000000000L;",why:"a whole-number literal is an int unless it ends in L, and an int stops at about 2.1 billion"},
+    {code:["Scanner scanner = new Scanner(System.in);",'System.out.print("Age: ");',"int age = scanner.nextLine();",'System.out.println("Next year: " + (age + 1));'],
+     msg:"java: incompatible types: String cannot be converted to int",
+     ok:"A method that returns text is being stored in a whole-number variable.",
+     bad:["The user typed letters instead of a number.","Scanner was not imported.","age + 1 cannot be printed."],
+     line:3,fix:"int age = scanner.nextInt();",why:"nextLine() returns a String; nextInt() returns the int the variable wants"},
+    {code:['String name = "Raymond";',"int age = 26;",'System.out.pintln(name + ", " + age);','System.out.println("Done");'],
+     msg:"java: cannot find symbol\n  symbol:   method pintln(String)\n  location: variable out of type PrintStream",
+     ok:"The code calls a method name that does not exist, usually a typo.",
+     bad:["The variable name was never declared.","System.out needs an import.","Text and numbers cannot be joined with +."],
+     line:3,fix:'System.out.println(name + ", " + age);',why:"Java is exact: pintln is not println; let IntelliJ autocomplete names"},
+    {code:['String name = "Raymond";',"int age = 26;",'System.out.println(Name + " is " + age);',"System.out.println(name.length());"],
+     msg:"java: cannot find symbol\n  symbol:   variable Name\n  location: class Main",
+     ok:"The code uses a variable that was never declared; capital letters count.",
+     bad:["The String name is empty.","Name is a reserved word in Java.","The class Main cannot be found."],
+     line:3,fix:'System.out.println(name + " is " + age);',why:"name and Name are different names; use the exact one from the declaration"},
+    {code:["public class Main {","    public static void main(String[] args) {","        double price = 19.99;",'        System.out.println("Price: $" + price);',"    }"],
+     msg:"java: reached end of file while parsing",
+     ok:"The file ended while a { was still open.",
+     bad:["The file is empty.","The last statement is missing a semicolon.","A $ is not allowed inside a String."],
+     line:5,fix:"    }\n}",why:"the method is closed but the class is not; every { needs its }"},
+    {code:["String name = 'Raymond';","int age = 26;",'System.out.println(name + " is " + age);',"System.out.println(name.toUpperCase());"],
+     msg:"java: unclosed character literal",
+     ok:"Single quotes were put around more than one character.",
+     bad:["The line is missing its semicolon.","A name cannot start with a capital letter.","The String was never closed with a brace."],
+     line:1,fix:'String name = "Raymond";',why:"single quotes hold one char; text needs double quotes"},
+    {code:["float price = 19.99;","int dayNumber = 3;",'System.out.println("Day " + dayNumber + ": " + price);',"System.out.println(price * 2);"],
+     msg:"java: incompatible types: possible lossy conversion from double to float",
+     ok:"A decimal literal is a double, which is bigger than a float, so it needs an f to fit.",
+     bad:["A float cannot hold decimals.","19.99 must be rounded first.","price was declared twice."],
+     line:1,fix:"float price = 19.99f;",why:"a decimal literal is a double by default; the f makes it a float"},
+    {code:["long worldPopulation = 8000000000L;","int cityPopulation = 650000;","int people = worldPopulation;","System.out.println(people + cityPopulation);"],
+     msg:"java: incompatible types: possible lossy conversion from long to int",
+     ok:"A long value is going into an int, which may be too small for it.",
+     bad:["The L at the end of the number is a typo.","Two variables cannot hold the same value.","8000000000L is too big for a long."],
+     line:3,fix:"long people = worldPopulation;",why:"8 billion does not fit in an int; keep it in a long (a cast here would give a different, wrong number)"},
+    {code:["int age = 26;","double ticket;","if (age < 18) {","    ticket = 9.99;","} else if (age >= 18) {","    ticket = 19.99;","}","System.out.println(ticket);"],
+     msg:"java: variable ticket might not have been initialized",
+     ok:"The compiler sees a path where the variable never gets a value.",
+     bad:["The two conditions overlap, so Java rejects both.","ticket must be an int to be set inside an if.","age is used before it has a value."],
+     line:5,fix:"} else {",why:"the compiler does not check that two conditions cover every case; a plain else does",
+     alt:{line:2,fix:"double ticket = 0;",why:"a starting value also works: now every path has a value to print"}},
+    {code:["Scanner scanner = new Scanner(System.in);",'System.out.print("Price: ");',"int price = scanner.nextInt();",'System.out.println("You paid " + price);'],
+     input:"19.99",
+     msg:'Exception in thread "main" java.util.InputMismatchException',
+     ok:"The user typed something nextInt() cannot read as a whole number.",
+     bad:["The code stores a String in an int variable.","price was never given a value.","The program has no Scanner import."],
+     line:3,fix:"double price = scanner.nextDouble();",why:"19.99 is not a whole number; nextDouble() reads decimals"},
+    {code:["Scanner scanner = new Scanner(System.in);",'System.out.print("Age: ");',"int age = scanner.nextInt();","scanner.close();","Scanner again = new Scanner(System.in);",'System.out.print("Day number: ");',"int dayNumber = again.nextInt();"],
+     input:"26",
+     msg:'Exception in thread "main" java.util.NoSuchElementException',
+     ok:"A Scanner went looking for input and there was nothing left to read.",
+     bad:["The user typed letters instead of a number.","dayNumber is too big for an int.","A program may only read one number."],
+     line:4,fix:"// close the one Scanner at the end of main",why:"closing a Scanner also closes System.in, so the next Scanner finds nothing; keep one Scanner open until main ends"},
+    {code:["int cityPopulation = 650000;","int districts = 0;",'System.out.println("Districts: " + districts);',"System.out.println(cityPopulation / districts);"],
+     msg:'Exception in thread "main" java.lang.ArithmeticException: / by zero',
+     ok:"A whole number was divided by zero, which has no answer.",
+     bad:["The answer is too big for an int.","Dividing by zero prints Infinity, so the output is wrong.","districts was never given a value."],
+     line:4,fix:"if (districts != 0) System.out.println(cityPopulation / districts);",why:"integer division by 0 stops the program; check the divisor first"}
+  ];
+
+  var N=10, round=[], at=0, score=0, misses=[], t0=0, timer=null, phase=0, cur=null, opts=[];
+  var KW=/^(int|long|double|float|char|boolean|String|final|public|static|void|class|return|if|else|new|Scanner)$/;
+
+  function shuffle(a){ a=a.slice(); for(var i=a.length-1;i>0;i--){ var j=Math.floor(Math.random()*(i+1)); var t=a[i]; a[i]=a[j]; a[j]=t; } return a; }
+  function tick(){ $("#hTime").textContent=((performance.now()-t0)/1000).toFixed(1)+"s"; }
+
+  /* syntax colors, built with text nodes so nothing needs escaping */
+  function paint(el,src){
+    el.textContent="";
+    var re=/(\/\/.*$)|("(?:[^"\\]|\\.)*")|('[^']*'?)|(\b\d[\d_]*(?:\.\d+)?[Lf]?\b)|([A-Za-z_]\w*)|([\s\S])/g, m;
+    while((m=re.exec(src))){
+      var cls=m[1]?"c":(m[2]||m[3])?"s":m[4]?"d":(m[5]&&KW.test(m[5]))?"k":"";
+      if(cls){ var sp=document.createElement("span"); sp.className=cls; sp.textContent=m[0]; el.appendChild(sp); }
+      else el.appendChild(document.createTextNode(m[0]));
+    }
+  }
+  function lineEls(){ return Array.prototype.slice.call(document.querySelectorAll("#code .ln")); }
+  function setTx(btn,src){ paint(btn.querySelector(".tx"),src); }
+
+  function show(){
+    cur=round[at]; phase=1;
+    var code=$("#code"); code.className="code"; code.textContent="";
+    cur.code.forEach(function(src,i){
+      var b=document.createElement("button"); b.className="ln"; b.type="button"; b.setAttribute("data-n",String(i+1)); b.tabIndex=-1;
+      var no=document.createElement("span"); no.className="no"; no.textContent=String(i+1);
+      var tx=document.createElement("span"); tx.className="tx";
+      b.appendChild(no); b.appendChild(tx); code.appendChild(b); paint(tx,src);
+    });
+    var con=$("#con"); con.textContent="";
+    if(cur.input){ var inp=document.createElement("span"); inp.className="in"; inp.appendChild(document.createTextNode("typed: ")); var bb=document.createElement("b"); bb.textContent=cur.input; inp.appendChild(bb); con.appendChild(inp); }
+    con.appendChild(document.createTextNode(cur.msg));
+    opts=shuffle([cur.ok].concat(cur.bad));
+    $("#opts").innerHTML=""; opts.forEach(function(t,i){
+      var b=document.createElement("button"); b.className="opt"; b.type="button"; b.setAttribute("data-i",String(i));
+      var k=document.createElement("span"); k.className="key"; k.textContent=String(i+1);
+      var s=document.createElement("span"); s.textContent=t; b.appendChild(k); b.appendChild(s); $("#opts").appendChild(b);
+    });
+    $("#ask").textContent="1 · what does it mean?"; $("#zone").textContent="read the red"; $("#nextRow").hidden=true;
+    $("#stepno").innerHTML="<small>round</small>"+(at+1)+" / "+N; $("#bar").style.width=(100*at/N)+"%";
+    $("#caption").className="caption"; $("#status").innerHTML="Read the message. <b class=\"a\">What is Java telling you?</b>";
+  }
+  function pickMeaning(i){
+    if(phase!==1||!opts[i]) return; phase=2;
+    var good=opts[i]===cur.ok;
+    Array.prototype.forEach.call(document.querySelectorAll(".opt"),function(b){ b.disabled=true; var t=opts[+b.getAttribute("data-i")];
+      if(t===cur.ok) b.classList.add("hit"); else if(+b.getAttribute("data-i")===i) b.classList.add("miss"); else b.classList.add("dim"); });
+    if(good){ score++; $("#caption").className="caption ok"; $("#status").innerHTML="<b class=\"g\">Right.</b> Now <b class=\"a\">click the line that needs the fix</b>."; }
+    else { misses.push({r:at+1,m:cur.msg.split("\n")[0],t:"it means: "+cur.ok}); $("#caption").className="caption cut"; $("#status").innerHTML="<b class=\"w\">Not that one.</b> It means the green answer. Now <b class=\"a\">click the line that needs the fix</b>."; }
+    $("#hScore").textContent=String(score);
+    $("#ask").textContent="2 · click the line to fix"; $("#zone").textContent="find the line";
+    $("#code").className="code pick"; lineEls().forEach(function(b){ b.tabIndex=0; });
+  }
+  function pickLine(n){
+    if(phase!==2||n<1||n>cur.code.length) return; phase=3;
+    var target=cur.line, fix=cur.fix, why=cur.why, good=n===cur.line;
+    if(!good&&cur.alt&&n===cur.alt.line){ good=true; target=cur.alt.line; fix=cur.alt.fix; why=cur.alt.why; }
+    var els=lineEls(); $("#code").className="code"; els.forEach(function(b){ b.tabIndex=-1; });
+    if(!good) els[n-1].classList.add("miss");
+    var t=els[target-1]; t.classList.add("hit","fixed"); setTx(t,fix);
+    if(good){ score++; $("#caption").className="caption ok"; $("#status").innerHTML="<b class=\"g\">Line "+target+".</b> Fixed: "+why+"."; }
+    else { misses.push({r:at+1,m:cur.msg.split("\n")[0],t:"fix line "+target+", not "+n+": "+why}); $("#caption").className="caption cut"; $("#status").innerHTML="<b class=\"w\">Line "+n+" is not it.</b> Line "+target+": "+why+"."; }
+    $("#hScore").textContent=String(score);
+    $("#ask").textContent="fixed"; $("#nextRow").hidden=false; $("#bNext").textContent=at+1>=N?"See score":"Next"; $("#bNext").focus();
+  }
+  function next(){ if(phase!==3) return; at++; if(at>=N) end(); else show(); }
+  function start(){
+    round=shuffle(POOL).slice(0,N); at=0; score=0; misses=[];
+    $("#hScore").textContent="0"; $("#startScr").classList.add("off"); $("#endScr").classList.add("off");
+    show(); t0=performance.now(); if(timer) clearInterval(timer); timer=setInterval(tick,100);
+  }
+  function end(){
+    clearInterval(timer); tick(); phase=0; $("#bar").style.width="100%";
+    var secs=((performance.now()-t0)/1000).toFixed(1), max=2*N;
+    $("#endScore").textContent=score+" / "+max; $("#endScore").className="big "+(score===max?"good":score>=15?"":"gold");
+    $("#endMsg").textContent=(score===max?"Perfect. ":score>=15?"Solid. ":"Keep going. ")+secs+" seconds.";
+    var box=$("#endMiss"); box.textContent="";
+    misses.forEach(function(v){ var d=document.createElement("div"); var b=document.createElement("b"); b.textContent=v.r+". "+v.m;
+      var i=document.createElement("i"); i.textContent=v.t; d.appendChild(b); d.appendChild(document.createTextNode(" · ")); d.appendChild(i); box.appendChild(d); });
+    $("#endScr").classList.remove("off");
+    $("#stepno").innerHTML="<small>round</small>"+N+" / "+N; $("#caption").className="caption"; $("#status").innerHTML="Game over. <b class=\"a\">Play again</b> deals ten new errors.";
+  }
+
+  $("#opts").addEventListener("click",function(e){ var b=e.target.closest(".opt"); if(b) pickMeaning(+b.getAttribute("data-i")); });
+  $("#code").addEventListener("click",function(e){ var b=e.target.closest(".ln"); if(b) pickLine(+b.getAttribute("data-n")); });
+  $("#bStart").addEventListener("click",start); $("#bAgain").addEventListener("click",start); $("#bNext").addEventListener("click",next);
+  document.addEventListener("keydown",function(e){
+    if(/INPUT|TEXTAREA/.test(e.target.tagName)) return;
+    var k=parseInt(e.key,10);
+    if(phase===1&&k>=1&&k<=4){ pickMeaning(k-1); return; }
+    if(phase===2&&k>=1&&k<=9){ pickLine(k); return; }
+    if(phase===3&&(e.key==="Enter"||e.code==="Space")){ e.preventDefault(); next(); return; }
+    if(e.code==="Space"&&!$("#startScr").classList.contains("off")){ e.preventDefault(); start(); }
+  });
+
+  var cv=$("#amb"),ctx=cv.getContext&&cv.getContext("2d"),parts=[];
+  function sizeC(){if(!ctx)return;cv.width=innerWidth;cv.height=innerHeight;}
+  function initParts(){parts=[];for(var i=0;i<46;i++)parts.push({x:Math.random(),y:Math.random(),r:Math.random()*1.6+.3,s:Math.random()*.02+.004,o:Math.random()*.4+.1});}
+  function drawC(){if(!ctx)return;ctx.clearRect(0,0,cv.width,cv.height);
+    parts.forEach(function(p){p.y-=p.s/60;if(p.y<-.02)p.y=1.02;ctx.beginPath();ctx.arc(p.x*cv.width,p.y*cv.height,p.r,0,7);
+      ctx.fillStyle="rgba(140,170,255,"+p.o+")";ctx.fill();});requestAnimationFrame(drawC);}
+  if(ctx&&!reduce){sizeC();initParts();drawC();addEventListener("resize",sizeC);}
+})();
+</script>
+<script src="../manifest.js"></script>
+<script src="../../assets/rail.js"></script>
+<script>Rail.render(document.getElementById("rail"),{kind:"games",current:"error-translator"});</script>
+</body>
+</html>

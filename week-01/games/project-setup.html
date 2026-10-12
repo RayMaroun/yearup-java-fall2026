@@ -1,0 +1,328 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Project Setup | Week 1 Visual Hub</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Sora:wght@500;700&family=Inter:wght@400;500&family=JetBrains+Mono:wght@400;500&display=swap">
+<style>
+  :root{
+    --bg:#080c17; --bg2:#0c1428; --surface:rgba(255,255,255,.045); --line:rgba(255,255,255,.09);
+    --ink:#eef2fb; --muted:#8496b6; --accent:#6ea0ff; --accent2:#8b7bff; --good:#46d98a; --warn:#ff6a6a;
+    --gold:#ffc862; --disp:'Sora',system-ui,sans-serif; --body:'Inter',system-ui,sans-serif;
+    --mono:'JetBrains Mono',ui-monospace,monospace;
+  }
+  *{box-sizing:border-box}
+  body{margin:0;min-height:100vh;color:var(--ink);font-family:var(--body);
+    background:radial-gradient(1200px 700px at 70% -10%,#141d38 0%,transparent 55%),
+               radial-gradient(900px 600px at 10% 110%,#161233 0%,transparent 50%),#080c17;
+    overflow-x:hidden}
+  #amb{position:fixed;inset:0;z-index:0;pointer-events:none;opacity:.6}
+  .back{position:relative;z-index:2;display:block;max-width:1120px;margin:0 auto;padding:26px 24px 0;
+    width:100%;font-family:var(--mono);font-size:.8rem;letter-spacing:.04em;color:var(--muted);
+    text-decoration:none;transition:color .15s}
+  .back:hover{color:var(--accent)}
+  .wrap{position:relative;z-index:1;max-width:1120px;margin:0 auto;padding:22px 24px 70px}
+  .tag{font-family:var(--mono);font-size:.72rem;letter-spacing:.22em;text-transform:uppercase;color:var(--accent);margin:0 0 14px}
+  h1{font-family:var(--disp);font-weight:700;font-size:clamp(2.3rem,6vw,3.6rem);line-height:1;margin:0 0 12px;
+    letter-spacing:-.03em;background:linear-gradient(180deg,#fff,#b9c6e6);-webkit-background-clip:text;
+    background-clip:text;color:transparent}
+  .lede{color:var(--muted);max-width:64ch;font-size:1.05rem;margin:0 0 26px;line-height:1.5}
+  .lede b{color:var(--ink)}
+  .lede code,.take code,.caption code{font-family:var(--mono);font-size:.92em;color:#bcd0ff}
+
+  /* ---------- stage: picture first, one toolbar, support below ---------- */
+  .stage{position:relative;background:linear-gradient(180deg,rgba(255,255,255,.03),rgba(255,255,255,.01));
+    border:1px solid var(--line);border-radius:24px;padding:18px 18px 14px;
+    box-shadow:0 1px 0 rgba(255,255,255,.06) inset,0 30px 80px -30px rgba(0,0,0,.8)}
+  .topbar{display:flex;align-items:center;gap:10px;margin:0 0 14px;flex-wrap:wrap}
+  .topbar .lab{margin:0 4px 0 0}
+  .lab{font-family:var(--mono);font-size:.7rem;letter-spacing:.12em;text-transform:uppercase;color:var(--muted);margin:0 0 10px}
+  .chips{display:flex;flex-wrap:wrap;gap:6px}
+  .chip{font-family:var(--mono);font-size:.74rem;padding:5px 11px;border-radius:999px;cursor:pointer;
+    border:1px solid var(--line);background:rgba(0,0,0,.25);color:var(--muted);transition:.15s}
+  .chip:hover{border-color:var(--accent);color:var(--accent)}
+  .chip.on{border-color:rgba(110,160,255,.6);background:rgba(110,160,255,.14);color:var(--ink)}
+  .chip:focus-visible,.btn:focus-visible,.focus:focus-visible{outline:2px solid var(--accent);outline-offset:2px}
+  .focus{margin-left:auto;font-family:var(--mono);font-size:.68rem;letter-spacing:.1em;text-transform:uppercase;padding:6px 12px;
+    border-radius:999px;border:1px solid var(--line);background:rgba(0,0,0,.25);color:var(--muted);cursor:pointer;transition:.15s}
+  .focus:hover{border-color:var(--accent);color:var(--accent)}
+  body.solo .focus{border-color:rgba(255,200,98,.6);color:var(--gold);background:rgba(255,200,98,.1)}
+
+  /* ---------- game board ---------- */
+  .pic{position:relative;height:470px;border:1px solid var(--line);border-radius:18px;background:rgba(6,10,20,.5);overflow:hidden;
+    display:grid;grid-template-columns:minmax(0,1.1fr) minmax(0,1fr);gap:18px;padding:40px 18px 18px}
+  .pic .zone{position:absolute;left:18px;top:14px;font-family:var(--mono);font-size:.62rem;letter-spacing:.14em;text-transform:uppercase;color:rgba(132,150,182,.55)}
+  .hud{position:absolute;right:18px;top:12px;display:flex;gap:14px;font-family:var(--mono);font-size:.72rem;color:var(--muted)}
+  .hud b{color:var(--ink);font-weight:500}
+  .left{display:flex;flex-direction:column;gap:10px;min-width:0}
+  .dlg{border:1px solid var(--line);border-radius:14px;background:rgba(0,0,0,.28);overflow:hidden}
+  .dlg .ttl{font-family:var(--body);font-size:.78rem;color:var(--muted);padding:7px 12px;border-bottom:1px solid var(--line);background:rgba(255,255,255,.03)}
+  .row{display:grid;grid-template-columns:104px minmax(0,1fr);align-items:center;gap:8px;padding:4px 12px}
+  .row:first-of-type{padding-top:9px} .row:last-child{padding-bottom:9px}
+  .fl{font-size:.78rem;color:var(--muted);text-align:right}
+  .slot{font-family:var(--mono);font-size:.76rem;min-height:27px;padding:4px 9px;border-radius:8px;border:1px dashed rgba(132,150,182,.4);
+    background:rgba(255,255,255,.02);color:var(--ink);text-align:left;cursor:pointer;overflow-wrap:anywhere;transition:border-color .2s,background .2s,box-shadow .2s}
+  .slot:hover{border-color:var(--accent)}
+  .slot.on{border-style:solid;border-color:var(--accent);background:rgba(110,160,255,.1);box-shadow:0 0 16px -6px rgba(110,160,255,.9)}
+  .slot.done{border-style:solid;border-color:rgba(70,217,138,.6);background:rgba(70,217,138,.1);color:var(--good);cursor:default}
+  .slot.bad{border-color:var(--warn);animation:shake .3s}
+  .slot:focus-visible,.opt:focus-visible{outline:2px solid var(--accent);outline-offset:2px}
+  .tree{font-family:var(--mono);font-size:.76rem;color:var(--muted);border:1px solid var(--line);border-radius:14px;background:rgba(0,0,0,.28);padding:9px 12px;line-height:1.25}
+  .tree div{display:flex;align-items:center;gap:6px;min-height:21px;white-space:nowrap}
+  .tree .slot{min-width:150px}
+  .tree .rt{color:var(--ink)}
+  .tray{display:flex;flex-direction:column;min-width:0}
+  .opts{display:flex;flex-wrap:wrap;gap:7px;align-content:flex-start}
+  .opt{font-family:var(--mono);font-size:.76rem;padding:7px 11px;border-radius:11px;cursor:pointer;border:1px solid var(--line);background:var(--surface);color:var(--ink);
+    transition:.15s;text-align:left;overflow-wrap:anywhere;max-width:100%}
+  .opt:hover{border-color:var(--accent);color:var(--accent)}
+  .opt.dim{opacity:.32}
+  .opt.miss{border-color:rgba(255,106,106,.7);background:rgba(255,106,106,.12);color:var(--warn);opacity:.55;cursor:default;text-decoration:line-through}
+  .opt.shk{animation:shake .3s}
+  .opt.used{display:none}
+  .key{display:inline-block;margin-left:6px;font-size:.62rem;color:var(--accent)}
+  @keyframes shake{25%{transform:translateX(-6px)}75%{transform:translateX(6px)}}
+  .screen{position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:12px;background:rgba(6,10,20,.94);transition:opacity .25s;padding:20px;z-index:3}
+  .screen.off{opacity:0;pointer-events:none}
+  .screen h2{font-family:var(--disp);font-weight:700;font-size:1.6rem;margin:0;color:var(--ink)}
+  .screen p{margin:0;color:var(--muted);font-size:.95rem;text-align:center;max-width:46ch;line-height:1.5}
+  .screen .big{font-family:var(--disp);font-weight:700;font-size:2.6rem;color:var(--accent)}
+  .screen .big.gold{color:var(--gold)} .screen .big.good{color:var(--good)}
+  .bar{position:absolute;left:0;right:0;bottom:0;height:4px;background:rgba(255,255,255,.06)}
+  .bar i{display:block;height:100%;width:0;background:var(--accent);transition:width .25s}
+  .misses{font-family:var(--mono);font-size:.72rem;color:var(--muted);line-height:1.6;text-align:left;max-height:190px;overflow:auto;max-width:680px}
+  .misses b{color:var(--warn);font-weight:500} .misses i{font-style:normal;color:var(--good)}
+  @media (max-width:760px){.pic{height:auto;min-height:620px;grid-template-columns:1fr}.row{grid-template-columns:84px minmax(0,1fr)}}
+  /* caption: the one sentence, right under the picture */
+  .caption{display:flex;gap:16px;align-items:flex-start;margin:14px 4px 0;min-height:56px}
+  .caption .n{flex-shrink:0;font-family:var(--disp);font-weight:700;font-size:1.35rem;color:var(--accent);font-variant-numeric:tabular-nums;
+    line-height:1.2;min-width:3.2rem}
+  .caption .n small{display:block;font-family:var(--mono);font-weight:400;font-size:.58rem;letter-spacing:.14em;text-transform:uppercase;color:var(--muted)}
+  .caption .t{font-size:1.02rem;line-height:1.55;color:var(--ink);padding-left:16px;border-left:3px solid var(--accent);transition:border-color .3s}
+  .caption.cut .t{border-left-color:var(--warn)} .caption.ok .t{border-left-color:var(--good)}
+  .caption b.g{color:var(--good)} .caption b.w{color:var(--warn)} .caption b.a{color:var(--accent)}
+  .caption code{font-family:var(--mono);font-size:.92em;color:#bcd0ff}
+  .btn{font-family:var(--body);font-weight:500;font-size:.86rem;padding:9px 16px;border-radius:11px;cursor:pointer;
+    border:1px solid var(--line);background:var(--surface);color:var(--ink);transition:.15s}
+  .btn:hover{border-color:var(--accent);color:var(--accent)}
+  .btn.primary{border-color:rgba(110,160,255,.5);background:rgba(110,160,255,.12);padding:9px 22px}
+  .btn:focus-visible{outline:2px solid var(--accent);outline-offset:2px}
+  .hint{font-family:var(--mono);font-size:.68rem;color:var(--muted);margin:10px 4px 0;line-height:1.5}
+  .hint b{color:var(--accent)}
+  .take{margin-top:22px;background:linear-gradient(180deg,rgba(110,160,255,.08),rgba(139,123,255,.04));
+    border:1px solid var(--line);border-left:3px solid var(--accent);border-radius:12px;padding:16px 18px}
+  .take .tk{font-family:var(--mono);font-size:.66rem;letter-spacing:.14em;text-transform:uppercase;color:var(--accent);margin:0 0 8px}
+  .take p{margin:0;font-size:.95rem;color:var(--ink);line-height:1.55}
+  .take b{color:#fff}
+  .take code{font-family:var(--mono);font-size:.92em;color:#bcd0ff}
+  @media (max-width:560px){.back,.wrap{padding-left:16px;padding-right:16px}}
+  @media (prefers-reduced-motion:reduce){*{animation-duration:.01ms!important;transition-duration:.01ms!important}#amb{display:none}}
+</style>
+</head>
+<body>
+
+<a class="back" href="../index.html#project-setup">&#8592; Week 1 index</a>
+
+<canvas id="amb"></canvas>
+<div class="wrap">
+  <p class="tag">Workbook 1a &middot; Section 1-3 &middot; Game</p>
+  <h1>Project Setup</h1>
+  <p class="lede"><b>Fill the New Project dialog and the project tree. Every label you place is judged at once.</b></p>
+
+  <div class="stage">
+    <div class="topbar">
+      <span class="lab">Game</span>
+    </div>
+
+    <div class="pic" id="pic">
+      <span class="zone">new project</span>
+      <div class="hud"><span>score <b id="hScore">0</b></span><span>time <b id="hTime">0.0s</b></span></div>
+      <div class="left">
+        <div class="dlg" id="dlg"></div>
+        <div class="tree" id="tree"></div>
+      </div>
+      <div class="tray"><p class="lab">labels</p><div class="opts" id="opts"></div></div>
+      <div class="bar"><i id="bar"></i></div>
+      <div class="screen" id="startScr">
+        <h2>Project Setup</h2>
+        <p>Three projects to create. Click a slot, then the label that belongs in it. Close is not right: case, dashes and folders count.</p>
+        <button class="btn primary" id="bStart">Start</button>
+      </div>
+      <div class="screen off" id="endScr">
+        <h2>Three projects set up</h2>
+        <div class="big" id="endScore"></div>
+        <p id="endMsg"></p>
+        <div class="misses" id="endMiss"></div>
+        <button class="btn primary" id="bAgain">Play again</button>
+      </div>
+    </div>
+
+    <div class="caption" id="caption">
+      <div class="n" id="stepno"><small>round</small>0 / 3</div>
+      <div class="t" id="status">Press <b class="a">Start</b>. Number keys pick a label for the lit slot.</div>
+    </div>
+    <p class="hint">click a slot to switch &middot; keys <b>1</b> to <b>4</b> pick a label &middot; score counts slots right on the first try</p>
+  </div>
+
+  <div class="take">
+    <p class="tk">The one idea</p>
+    <p><b>Every project starts the same way.</b> A lowercase name with hyphens, in <code>workbook-1</code>, Git ticked, Java, Maven, Corretto 17, and a capitalized <code>.java</code> file in <code>com.pluralsight</code>.</p>
+  </div>
+
+  <div id="rail"></div>
+</div>
+
+<script>
+(function(){
+  "use strict";
+  var $=function(s){return document.querySelector(s);};
+  var reduce=matchMedia("(prefers-reduced-motion: reduce)").matches;
+
+  var SLOTS=[
+    {id:"name",lab:"Name:"},{id:"loc",lab:"Location:"},{id:"git",lab:"Git:"},{id:"lang",lab:"Language:"},
+    {id:"build",lab:"Build system:"},{id:"jdk",lab:"JDK:"},{id:"pkg",lab:"package"},{id:"cls",lab:"class file"}
+  ];
+  var NAMES={name:"Name",loc:"Location",git:"Create Git repository",lang:"Language",build:"Build system",jdk:"JDK",pkg:"package",cls:"class file"};
+  var ROUNDS=[{p:"first-maven-project",c:"Main"},{p:"my-first-repo",c:"HelloWorld"},{p:"weather-app",c:"App"}];
+  var LOC="Desktop/pluralsight/java-development/workbook-1";
+
+  function cap(w){ return w.charAt(0).toUpperCase()+w.slice(1); }
+  function labelsFor(r){
+    var w=r.p.split("-");
+    return [
+      {k:"name",t:r.p,ok:1,why:"lowercase words joined by hyphens; it becomes the folder and the GitHub repository name"},
+      {k:"name",t:w.map(cap).join(" "),why:"spaces and capitals follow the project into its folder and GitHub name; use lowercase with hyphens"},
+      {k:"name",t:w.join("_"),why:"a dash, not an underscore: project names are lowercase words joined by hyphens"},
+      {k:"loc",t:LOC,ok:1,why:"workbook-1 holds this workbook\u2019s projects; IntelliJ creates the project folder inside it"},
+      {k:"loc",t:"Desktop",why:"wrong folder: straight on the Desktop, the project sits outside pluralsight and gets lost"},
+      {k:"loc",t:"Downloads",why:"wrong folder: Downloads is for files you fetch, not for projects you keep"},
+      {k:"loc",t:"Desktop/pluralsight",why:"one folder too high: projects go in java-development/workbook-1, not in pluralsight itself"},
+      {k:"git",t:"checked",ok:1,why:"every project is its own Git repository from the moment it is created"},
+      {k:"git",t:"unchecked",why:"unchecked, the project has no repository yet; tick the box when you create it"},
+      {k:"lang",t:"Java",ok:1,why:"this course writes Java"},
+      {k:"lang",t:"Kotlin",why:"Kotlin is a different language; this course writes Java only"},
+      {k:"build",t:"Maven",ok:1,why:"Maven gives the standard src/main/java layout and a pom.xml"},
+      {k:"build",t:"Gradle",why:"Gradle is another build system with a different setup; the workbook uses Maven"},
+      {k:"jdk",t:"17 Amazon Corretto",ok:1,why:"Java 17, the Corretto JDK you installed"},
+      {k:"jdk",t:"21",why:"wrong version: the course uses Java 17, the Amazon Corretto you installed"},
+      {k:"jdk",t:"8",why:"wrong version: Java 8 is far older than the Java 17 this course uses"},
+      {k:"pkg",t:"com.pluralsight",ok:1,why:"all lowercase, parts joined by dots; it becomes the folders com/pluralsight"},
+      {k:"pkg",t:"Com.Pluralsight",why:"wrong case: package names are all lowercase"},
+      {k:"pkg",t:"com pluralsight",why:"a package name has no spaces; its parts are joined by dots"},
+      {k:"cls",t:r.c+".java",ok:1,why:"the file is named after the class, capital first, and ends in .java"},
+      {k:"cls",t:r.c.toLowerCase()+".java",why:"wrong case: the file name matches the class name, and class names start with a capital"},
+      {k:"cls",t:r.c+".class",why:".class is compiled output; you write the .java file"}
+    ];
+  }
+
+  var R=ROUNDS.length, TOTAL=R*SLOTS.length;
+  var rd=0, labels=[], filled={}, missed={}, active=null, score=0, placed=0, misses=[], t0=0, timer=null, busy=false, playing=false;
+
+  function shuffle(a){ a=a.slice(); for(var i=a.length-1;i>0;i--){ var j=Math.floor(Math.random()*(i+1)); var t=a[i]; a[i]=a[j]; a[j]=t; } return a; }
+  function esc(s){ return String(s).replace(/</g,"\u0026lt;"); }
+  function tick(){ $("#hTime").textContent=((performance.now()-t0)/1000).toFixed(1)+"s"; }
+  function slotBtn(id){ var v=filled[id]; return '<button class="slot'+(v?" done":"")+(active===id?" on":"")+'" data-s="'+id+'" aria-label="'+NAMES[id]+'">'+(v?esc(v):"")+'</button>'; }
+
+  function drawBoard(){
+    var h='<div class="ttl">New Project</div>';
+    SLOTS.slice(0,6).forEach(function(s){ h+='<div class="row"><span class="fl">'+s.lab+'</span>'+slotBtn(s.id)+'</div>'; });
+    $("#dlg").innerHTML=h;
+    var root=filled.name?filled.name+"/":"project/";
+    $("#tree").innerHTML='<div class="rt">'+root+'</div><div>\u251c pom.xml</div><div>\u2514 src/main/java/</div>'+
+      '<div>\u00a0\u00a0\u2514 '+slotBtn("pkg")+'</div><div>\u00a0\u00a0\u00a0\u00a0\u2514 '+slotBtn("cls")+'</div>';
+  }
+  function drawTray(){
+    var n=0;
+    $("#opts").innerHTML=labels.map(function(l,i){
+      var cls="opt", key="";
+      if(l.used) cls+=" used";
+      else if(missed[i]) cls+=" miss";
+      else if(active&&l.k!==active) cls+=" dim";
+      if(active&&l.k===active&&!l.used){ n++; key='<span class="key">'+n+'</span>'; l.key=n; } else l.key=0;
+      return '<button class="'+cls+'" data-i="'+i+'"'+(missed[i]?" disabled":"")+'>'+esc(l.t)+key+'</button>';
+    }).join("");
+  }
+  function draw(){ drawBoard(); drawTray(); }
+  function nextEmpty(from){
+    var ids=SLOTS.map(function(s){return s.id;}), i0=from?ids.indexOf(from):-1;
+    for(var j=1;j<=ids.length;j++){ var id=ids[(i0+j)%ids.length]; if(!filled[id]) return id; }
+    return null;
+  }
+  function setActive(id){
+    if(!playing||busy||filled[id]) return; active=id; draw();
+    $("#caption").className="caption"; $("#status").innerHTML='Slot: <b class="a">'+NAMES[id]+'</b>. Pick the label that belongs here.';
+  }
+  function deal(){
+    var r=ROUNDS[rd]; labels=shuffle(labelsFor(r)); filled={}; missed={}; active="name"; busy=false;
+    $("#stepno").innerHTML="<small>round</small>"+(rd+1)+" / "+R;
+    $("#caption").className="caption";
+    $("#status").innerHTML='Create <b class="a">'+r.p+'</b> with a class named <b class="a">'+r.c+'</b>. Start with the Name.';
+    draw();
+  }
+  function start(){
+    rd=0; score=0; placed=0; misses=[]; playing=true;
+    $("#hScore").textContent="0"; $("#bar").style.width="0%";
+    $("#startScr").classList.add("off"); $("#endScr").classList.add("off");
+    deal(); t0=performance.now(); if(timer) clearInterval(timer); timer=setInterval(tick,100);
+  }
+  function answer(i){
+    if(!playing||busy||!active) return;
+    var l=labels[i]; if(!l||l.used||missed[i]||l.k!==active) return;
+    var slotId=active;
+    if(l.ok){
+      var first=!Object.keys(missed).some(function(m){return labels[m].k===slotId;});
+      if(first){ score++; $("#hScore").textContent=String(score); }
+      l.used=true; filled[slotId]=l.t; placed++; $("#bar").style.width=(100*placed/TOTAL)+"%";
+      active=nextEmpty(slotId); draw();
+      $("#caption").className="caption ok"; $("#status").innerHTML='<b class="g">'+esc(l.t)+'</b>: '+l.why+'.';
+      if(!active){ busy=true; setTimeout(function(){ rd++; if(rd>=R) end(); else deal(); }, reduce?400:1600); }
+    } else {
+      missed[i]=true; misses.push({r:rd,s:slotId,t:l.t,why:l.why}); busy=true; drawTray();
+      var b=document.querySelector('.opt[data-i="'+i+'"]'), s=document.querySelector('.slot[data-s="'+slotId+'"]');
+      if(b) b.classList.add("shk"); if(s) s.classList.add("bad");
+      $("#caption").className="caption cut"; $("#status").innerHTML='<b class="w">'+esc(l.t)+'</b>: '+l.why+'.';
+      setTimeout(function(){ busy=false; if(s) s.classList.remove("bad"); }, reduce?50:320);
+    }
+  }
+  function end(){
+    playing=false; active=null; clearInterval(timer); tick(); $("#bar").style.width="100%";
+    var secs=((performance.now()-t0)/1000).toFixed(1);
+    $("#endScore").textContent=score+" / "+TOTAL; $("#endScore").className="big "+(score===TOTAL?"good":score>=20?"":"gold");
+    $("#endMsg").textContent=(score===TOTAL?"Every slot right the first time. ":score>=20?"Solid. ":"Keep going. ")+secs+" seconds.";
+    $("#endMiss").innerHTML=misses.length?misses.map(function(m){
+      return '<div>'+ROUNDS[m.r].p+' \u00b7 '+NAMES[m.s]+': <b>'+esc(m.t)+'</b>, '+m.why+'</div>';
+    }).join(""):"";
+    $("#endScr").classList.remove("off");
+    $("#caption").className="caption"; $("#status").innerHTML='Done. <b class="a">Play again</b> deals the labels in a new order.';
+  }
+
+  $("#pic").addEventListener("click",function(e){
+    var s=e.target.closest(".slot"); if(s){ setActive(s.getAttribute("data-s")); return; }
+    var o=e.target.closest(".opt"); if(o) answer(+o.getAttribute("data-i"));
+  });
+  $("#bStart").addEventListener("click",start); $("#bAgain").addEventListener("click",start);
+  document.addEventListener("keydown",function(e){
+    if(/INPUT|TEXTAREA/.test(e.target.tagName)) return;
+    var k=parseInt(e.key,10);
+    if(playing&&k>=1&&k<=9){ for(var i=0;i<labels.length;i++){ if(labels[i].key===k){ answer(i); break; } } return; }
+    if(e.code==="Space"&&!playing&&!(e.target&&e.target.tagName==="BUTTON")){ e.preventDefault(); start(); }
+  });
+
+  var cv=$("#amb"),ctx=cv.getContext&&cv.getContext("2d"),parts=[];
+  function sizeC(){if(!ctx)return;cv.width=innerWidth;cv.height=innerHeight;}
+  function initParts(){parts=[];for(var i=0;i<46;i++)parts.push({x:Math.random(),y:Math.random(),r:Math.random()*1.6+.3,s:Math.random()*.02+.004,o:Math.random()*.4+.1});}
+  function drawC(){if(!ctx)return;ctx.clearRect(0,0,cv.width,cv.height);
+    parts.forEach(function(p){p.y-=p.s/60;if(p.y<-.02)p.y=1.02;ctx.beginPath();ctx.arc(p.x*cv.width,p.y*cv.height,p.r,0,7);
+      ctx.fillStyle="rgba(140,170,255,"+p.o+")";ctx.fill();});requestAnimationFrame(drawC);}
+  if(ctx&&!reduce){sizeC();initParts();drawC();addEventListener("resize",sizeC);}
+
+  labels=shuffle(labelsFor(ROUNDS[0])); draw();
+})();
+</script>
+<script src="../manifest.js"></script>
+<script src="../../assets/rail.js"></script>
+<script>Rail.render(document.getElementById("rail"),{kind:"games",current:"project-setup"});</script>
+</body>
+</html>

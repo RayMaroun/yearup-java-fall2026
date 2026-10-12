@@ -327,7 +327,7 @@
     "desc": "What the compiler says, what it means, how to fix it.",
     "group": "Reference",
     "url": "week-01/reference/common-errors.html",
-    "text": "← Week 1 index Week 1 · Reference Common Errors The messages you will meet this week, word for word. Read the first line of the message: it usually names the fix. Show All Compile Runtime IntelliJ and Maven Git Compile Missing semicolon See it java: ';' expected Every statement ends with a semicolon, and javac stops at the first line that does not. Fix Add ; at the end of the line the message points to. Before System.out.println(\"Hello\") After System.out.println(\"Hello\"); Compile Misspelled method name java: cannot find symbol symbol: method pintln(java.lang.String) location: variable out of type java.io.PrintStream Java is exact: there is no method called pintln , so the compiler cannot find it. Fix Correct the spelling; let IntelliJ autocomplete names as you type. Before System.out.pintln(\"Hi\"); After System.out.println(\"Hi\"); Compile Misspelled or undeclared variable java: cannot find symbol symbol: variable nmae location: class Main You used a variable name that was never declared, often a typo or a wrong capital letter. Fix Use the exact name from the declaration ( name and Name are different). Before String name = \"Dana\"; System.out.println(nmae); After String name = \"Dana\"; System.out.println(name); Compile Missing closing brace java: reached end of file while parsing The file ended while a { was still open; here the method is closed but the class is not. Fix Add the missing } ; click a brace and IntelliJ highlights its partner. Before public class Main { public static"
+    "text": "← Week 1 index Week 1 · Reference Common Errors The messages you will meet this week, word for word. Read the first line of the message: it usually names the fix. Show All Compile Runtime IntelliJ and Maven Git Compile Missing semicolon See it java: ';' expected Every statement ends with a semicolon, and javac stops at the first line that does not. Fix Add ; at the end of the line the message points to. Before System.out.println(\"Hello\") After System.out.println(\"Hello\"); Compile Misspelled method name java: cannot find symbol symbol: method pintln(String) location: variable out of type PrintStream Java is exact: there is no method called pintln , so the compiler cannot find it. Fix Correct the spelling; let IntelliJ autocomplete names as you type. Before System.out.pintln(\"Hi\"); After System.out.println(\"Hi\"); Compile Misspelled or undeclared variable java: cannot find symbol symbol: variable nmae location: class Main You used a variable name that was never declared, often a typo or a wrong capital letter. Fix Use the exact name from the declaration ( name and Name are different). Before String name = \"Dana\"; System.out.println(nmae); After String name = \"Dana\"; System.out.println(name); Compile Missing closing brace java: reached end of file while parsing The file ended while a { was still open; here the method is closed but the class is not. Fix Add the missing } ; click a brace and IntelliJ highlights its partner. Before public class Main { public static void main(String["
   },
   {
     "week": 1,
@@ -443,6 +443,26 @@
     "week": 1,
     "weekLabel": "Week 1",
     "section": "Games",
+    "title": "Git Mission",
+    "desc": "Put the IntelliJ Git steps in order, from New Project to Commit and Push, then say where each commit travels.",
+    "group": "Workbook 1a · Sections 1-1 to 1-4",
+    "url": "week-01/games/git-mission.html",
+    "text": "← Week 1 index Workbook 1a · Sections 1-1 to 1-4 · Game Git Mission Put the IntelliJ steps in order, then say where each commit travels. Game mission score 0 time 0.0s Working copy files you edit commit → Local repository on your machine push → ← pull Remote repository github.com Git Mission Two missions in IntelliJ: click the next step, or press its number. Between them, questions on where your code goes. Start Missions over Play again round 0 / 8 Press Start . Number keys pick a step. project first-maven-project · folder workbook-1 · commit = local · push = GitHub The one idea A commit is saved on your machine; a push sends it to GitHub. Share Project on GitHub happens once per project. After that, every change is Commit, message, Commit and Push."
+  },
+  {
+    "week": 1,
+    "weekLabel": "Week 1",
+    "section": "Games",
+    "title": "Project Setup",
+    "desc": "Fill the New Project dialog and the project tree: name, folder, Git, Java, Maven, JDK 17, package and class file.",
+    "group": "Workbook 1a · Section 1-3",
+    "url": "week-01/games/project-setup.html",
+    "text": "← Week 1 index Workbook 1a · Section 1-3 · Game Project Setup Fill the New Project dialog and the project tree. Every label you place is judged at once. Game new project score 0 time 0.0s labels Project Setup Three projects to create. Click a slot, then the label that belongs in it. Close is not right: case, dashes and folders count. Start Three projects set up Play again round 0 / 3 Press Start . Number keys pick a label for the lit slot. click a slot to switch · keys 1 to 4 pick a label · score counts slots right on the first try The one idea Every project starts the same way. A lowercase name with hyphens, in workbook-1 , Git ticked, Java, Maven, Corretto 17, and a capitalized .java file in com.pluralsight ."
+  },
+  {
+    "week": 1,
+    "weekLabel": "Week 1",
+    "section": "Games",
     "title": "Type Matcher",
     "desc": "A literal flashes up: pick the type that holds it. Twenty rounds against the clock.",
     "group": "Workbook 1c · Section 3-1",
@@ -453,11 +473,21 @@
     "week": 1,
     "weekLabel": "Week 1",
     "section": "Games",
-    "title": "Name That Convention",
-    "desc": "Pick the right name for each job: camelCase, UPPER_SNAKE_CASE, PascalCase, project dashes or package dots.",
-    "group": "Workbook 1c · Section 3-1",
-    "url": "week-01/games/name-that-convention.html",
-    "text": "← Week 1 index Workbook 1c · Section 3-1 · Game Name That Convention A job appears. Three names compete for it. Pick the one Java would accept and a teammate would read. Game which name? score 0 time 0.0s Name That Convention Each round names a job: a variable, a method, a constant, a class, a project or a package. Click the right name, or press 1, 2 or 3. Start Round over Play again round 0 / 12 Press Start or space. Keys 1 to 3 pick a name. variable, method = camelCase · constant = UPPER_SNAKE_CASE · class = PascalCase · project = lower-dashes · package = lower.dots The one idea The shape of a name tells you what it is. PascalCase is a class, ALL_CAPS is a constant, camelCase is a variable or a method. No leading digit, no keyword, no spaces, and the name says what it holds."
+    "title": "Box Tracker",
+    "desc": "A program runs one line at a time: type what each variable box holds after each line.",
+    "group": "Workbook 1c · Sections 3-1 and 3-2",
+    "url": "week-01/games/box-tracker.html",
+    "text": "← Week 1 index Workbook 1c · Sections 3-1 and 3-2 · Game Box Tracker The program runs one line at a time. Type what each box holds now, exactly as println would show it. Game program boxes score 0 time 0.0s Will not compile Check Box Tracker The lit line runs. Type the new value in each lit box and press Enter. If the line cannot compile, say so. Start Game over Play again round 0 / 8 Press Start . Eight short programs. Enter checks · Tab next lit box · Shift+Enter will not compile · type what println shows: a double always has a decimal point (25.0, not 25 or 25.00), quotes are optional The one idea A box holds one value at a time, and its type decides what that value looks like. An int drops the decimals, a double always shows one, a cast can damage the value, and a final box never changes."
+  },
+  {
+    "week": 1,
+    "weekLabel": "Week 1",
+    "section": "Games",
+    "title": "Expression Builder",
+    "desc": "Assemble tokens into a println that prints the target: concatenation order, int vs double division, %, and the (double) cast.",
+    "group": "Workbook 1c · Section 3-2",
+    "url": "week-01/games/expression-builder.html",
+    "text": "← Week 1 index Workbook 1c · Section 3-2 · Game Expression Builder Build the line that prints the target. Java reads + left to right, and the types decide what comes out. Game build it score 0 time 0.0s must print Clear Check Expression Builder Click tokens to build the expression inside println. Click a placed token to take it back. Check when the line should print the target. Start Game over Play again round 0 / 10 Press Start . Ten targets, the clock is running. keys: digits and + - * / % ( ) add a token · Backspace removes the last · Enter checks The one idea The same values can print different things. Once a String is on the left, + joins text; int with int stays an int; one double makes the whole result a double."
   },
   {
     "week": 1,
@@ -483,51 +513,31 @@
     "week": 1,
     "weekLabel": "Week 1",
     "section": "Games",
-    "title": "Git Mission",
-    "desc": "Put the IntelliJ Git steps in order, from New Project to Commit and Push, then say where each commit travels.",
-    "group": "Workbook 1a · Sections 1-1 to 1-4",
-    "url": "week-01/games/git-mission.html",
-    "text": "← Week 1 index Workbook 1a · Sections 1-1 to 1-4 · Game Git Mission Put the IntelliJ steps in order, then say where each commit travels. Game mission score 0 time 0.0s Working copy files you edit commit → Local repository on your machine push → ← pull Remote repository github.com Git Mission Two missions in IntelliJ: click the next step, or press its number. Between them, questions on where your code goes. Start Missions over Play again round 0 / 8 Press Start . Number keys pick a step. project first-maven-project · folder workbook-1 · commit = local · push = GitHub The one idea A commit is saved on your machine; a push sends it to GitHub. Share Project on GitHub happens once per project. After that, every change is Commit, message, Commit and Push."
+    "title": "Scanner Stream",
+    "desc": "Pick the Scanner call that reads each line from the keyboard buffer; watch the leftover Enter.",
+    "group": "Workbook 1c · Section 3-3",
+    "url": "week-01/games/scanner-stream.html",
+    "text": "← Week 1 index Workbook 1c · Section 3-3 · Game Scanner Stream The keyboard buffer holds what was typed. Pick the Scanner call that takes exactly what each line needs. Game keyboard buffer score 0 time 0.0s Scanner Stream Each cell is one typed character. Pick the call for the current line. A wrong call shows what Java really does. Start Game over Play again round 0 / 10 Press Start . Keys 1 to 4 pick a call. \\n = the Enter key · ␣ = a space · keys 1 to 4 The one idea nextInt(), nextDouble() and next() stop before the Enter; nextLine() eats up to it. After a number, call nextLine() once to clear the leftover before reading text."
   },
   {
     "week": 1,
     "weekLabel": "Week 1",
     "section": "Games",
-    "title": "Output Predictor",
-    "desc": "Read a short snippet and pick the exact line Java prints: joins, int division, casts, ++, switch, == vs equals.",
-    "group": "Workbook 1c · Modules 3 and 4",
-    "url": "week-01/games/output-predictor.html",
-    "text": "← Week 1 index Workbook 1c · Modules 3 and 4 · Game Output Predictor Read the code, predict the exact line it prints. Twelve rounds, the clock is running. Game what does it print? score 0 time 0.0s Output Predictor A short snippet appears with four possible outputs. Click the one Java really prints, or press its number key. Start Round over Play again round 0 / 12 Press Start . Keys 1 to 4 pick an output. left to right · int / int stays int · a cast cuts, it never rounds · == compares objects, equals compares text The one idea Java does exactly what the line says, in order. Types decide the math, left to right decides the joins, and the output follows from both."
-  },
-  {
-    "week": 1,
-    "weekLabel": "Week 1",
-    "section": "Games",
-    "title": "Bug Hunter",
-    "desc": "Ten snippets, one bug each: find the line before the compiler does.",
-    "group": "Workbook 1c · Modules 3 and 4",
-    "url": "week-01/games/bug-hunter.html",
-    "text": "← Week 1 index Workbook 1c · Modules 3 and 4 · Game Bug Hunter Every snippet hides exactly one bug. Find the line before the compiler does. Ten rounds, the clock is running. Game which line? score 0 time 0.0s Bug Hunter A short piece of Java appears. One line is wrong. Click it, or press its number. Start Round over Play again round 0 / 10 Press Start . Keys 1 to 8 pick a line. look for: a missing ; · the wrong quotes · a missing L or f · == on Strings · a missing break · int / int · arguments in the wrong order The one idea Read code one line at a time and ask what Java sees, not what you meant. Most first-week bugs are one character: a semicolon, a quote, a suffix, a break."
-  },
-  {
-    "week": 1,
-    "weekLabel": "Week 1",
-    "section": "Games",
-    "title": "Condition Crafter",
-    "desc": "Read a rule in plain English, pick the Java condition that says exactly that.",
+    "title": "Branch Runner",
+    "desc": "Type a value that makes Java run the gold line of an if / else if / else chain, or spot the line no value can reach.",
     "group": "Workbook 1c · Section 4-1",
-    "url": "week-01/games/condition-crafter.html",
-    "text": "← Week 1 index Workbook 1c · Section 4-1 · Game Condition Crafter A rule in plain English appears. Pick the Java condition that says exactly that. Twelve rounds, the clock is running. Game which condition? score 0 time 0.0s Condition Crafter Read the rule, then click the condition that matches it, or press 1 to 4. Watch the edges: \"or more\", \"any capitals\", \"not\". Start Round over Play again round 0 / 12 Press Start . Keys 1 to 4 pick a condition. and = && · or = || · not = ! · or more = >= · text = .equals · any capitals = .equalsIgnoreCase The one idea Translate the sentence word by word, then check the edges. \"And\" becomes &&, \"or\" becomes ||, \"not\" is ! in front of parentheses, text compares with .equals, and \"or more\" means the number itself counts."
+    "url": "week-01/games/branch-runner.html",
+    "text": "← Week 1 index Workbook 1c · Section 4-1 · Game Branch Runner One line of the chain is the target. Type a value that makes Java run it. Ten rounds, the clock is running. Game reach the gold line score 0 time 0.0s Run No input can reach it console Branch Runner Type a value into the box in the code and press Enter. Watch the path. If no value can ever reach the gold line, say so. Start Round over Play again round 0 / 10 Press Start . Enter = run, and Enter again = next round · one try per round · a check above can catch the value first The one idea To reach a branch, a value must fail every check above it and pass its own. Java runs the first true branch and skips the rest. If an earlier check catches every value first, that branch can never run."
   },
   {
     "week": 1,
     "weekLabel": "Week 1",
     "section": "Games",
-    "title": "Method Builder",
-    "desc": "A job or a header appears: pick the header that fits, or the one call that compiles.",
+    "title": "Spot the Repeat",
+    "desc": "Spot the lines that repeat, then pick the header whose parameters are exactly what changes.",
     "group": "Workbook 1c · Section 4-2",
-    "url": "week-01/games/method-builder.html",
-    "text": "← Week 1 index Workbook 1c · Section 4-2 · Game Method Builder Match a job to its header, and a header to the call that fits it. Twelve rounds, the clock is running. Game method builder score 0 time 0.0s Method Builder Some rounds describe a job: pick the header that does it. Others show a header: pick the one call that compiles. Click, or press 1 to 4. Start Round over Play again round 0 / 12 Press Start . Keys 1 to 4 pick an answer. header = return type · name · (parameters) · void gives nothing back · arguments fill parameters in order The one idea The header is a promise, and every call must keep it. The return type says what comes back, so void has nothing to print or store. The parameters say how many arguments, of which types, in which order."
+    "url": "week-01/games/spot-the-repeat.html",
+    "text": "← Week 1 index Workbook 1c · Section 4-2 · Game Spot the Repeat Find the lines that repeat, then pick the method header that replaces them. Game main score 0 time 0.0s Spot the Repeat Click the lines of one copy of the repeated block, then Check. Then pick the header whose parameters are the values that change. Start Game over Play again round 0 / 8 Press Start . Eight rounds, two points each. Check Next round number keys = toggle a line (1 then 2 = line 12) · Enter = check / next · 1 to 4 = pick a header The one idea The values that change become the parameters. Everything else in the copy moves into the method unchanged, and each copy becomes one call."
   },
   {
     "week": 1,
@@ -543,20 +553,20 @@
     "week": 1,
     "weekLabel": "Week 1",
     "section": "Games",
-    "title": "Your First Day",
-    "desc": "Ten situations from a new Java developer's first day: pick the action a pro takes, and see why.",
+    "title": "Bug Hunter",
+    "desc": "Ten snippets, one bug each: find the line before the compiler does.",
     "group": "Week 1",
-    "url": "week-01/games/your-first-day.html",
-    "text": "← Week 1 index Week 1 · Game Your First Day Your first day as a Java developer. Ten situations, four actions each: pick the one a pro takes. Game 9:00 AM score 0 time 0.0s Your First Day Something happens at your desk. Read it, then click the right action or press its number key. Start the day Day done Play again round 0 / 10 Press Start the day . Keys 1 to 4 pick an action. keys 1 to 4 answer · space starts · read the message before you act The one idea Most first-day problems name their own fix. The red underline, the console and the error message are the first place to look, before you change anything."
+    "url": "week-01/games/bug-hunter.html",
+    "text": "← Week 1 index Workbook 1c · Modules 3 and 4 · Game Bug Hunter Every snippet hides exactly one bug. Find the line before the compiler does. Ten rounds, the clock is running. Game which line? score 0 time 0.0s Bug Hunter A short piece of Java appears. One line is wrong. Click it, or press its number. Start Round over Play again round 0 / 10 Press Start . Keys 1 to 8 pick a line. look for: a missing ; · the wrong quotes · a missing L or f · == on Strings · a missing break · int / int · arguments in the wrong order The one idea Read code one line at a time and ask what Java sees, not what you meant. Most first-week bugs are one character: a semicolon, a quote, a suffix, a break."
   },
   {
     "week": 1,
     "weekLabel": "Week 1",
     "section": "Games",
-    "title": "Flashcard Quiz",
-    "desc": "Sixty-four week 1 cards on Git, IntelliJ and Java basics; four answers each, the reason after every one, filter by topic.",
+    "title": "Error Translator",
+    "desc": "Read a red compiler or runtime message, pick what it means in plain English, then click the line that needs the fix.",
     "group": "Week 1",
-    "url": "week-01/games/flashcard-quiz.html",
-    "text": "← Week 1 index Workbooks 1a and 1c · Game Flashcard Quiz One question, four answers, one right. Every answer comes back with the reason. Topic all topics score 0 time 0.0s Next Flashcard Quiz Git, IntelliJ and the Java of week 1. Click an answer or press 1 to 4. Pick a topic above, or play them all. Start Round over Play again card 0 / 15 Press Start . Keys 1 to 4 pick an answer. keys 1 to 4 answer · Enter or space for the next card · a topic chip deals only that topic The one idea A right answer counts once you can say why. Read the reason under the card every time, even when you picked correctly."
+    "url": "week-01/games/error-translator.html",
+    "text": "← Week 1 index Week 1 · Game Error Translator A red message appears. Say what it means in plain English, then click the line that needs the fix. Game read the red score 0 time 0.0s Next Error Translator Each round has two moves: pick what the message means, then click the line to fix. Ten rounds, the clock is running. Start Game over Play again round 0 / 10 Press Start . Keys 1 to 4 pick a meaning, then a line number picks a line. java: ... = compile error, nothing ran · Exception in thread \"main\" = it ran, then stopped · Enter = next round The one idea The first line of the message usually names the fix. Read it slowly, find the line it points to, and the error stops being scary."
   }
 ]

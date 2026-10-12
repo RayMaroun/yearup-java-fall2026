@@ -127,8 +127,8 @@
         <article class="card" data-cat="compile">
           <div class="ch"><span class="cat">Compile</span><h2>Misspelled method name</h2></div>
           <pre class="msg">java: cannot find symbol
-  symbol:   method pintln(java.lang.String)
-  location: variable out of type java.io.PrintStream</pre>
+  symbol:   method pintln(String)
+  location: variable out of type PrintStream</pre>
           <p class="means">Java is exact: there is no method called <code>pintln</code>, so the compiler cannot find it.</p>
           <p class="fix"><b>Fix</b>Correct the spelling; let IntelliJ autocomplete names as you type.</p>
           <div class="ba"><div class="bad"><span>Before</span><pre>System.out.pintln("Hi");</pre></div><div class="good"><span>After</span><pre>System.out.println("Hi");</pre></div></div>
@@ -215,7 +215,7 @@ int dollars = (int) price;</pre></div></div>
 
         <article class="card" data-cat="compile">
           <div class="ch"><span class="cat">Compile</span><h2>String into an int</h2><a class="see" href="../visuals/20-scanner-methods.html">See it</a></div>
-          <pre class="msg">java: incompatible types: java.lang.String cannot be converted to int</pre>
+          <pre class="msg">java: incompatible types: String cannot be converted to int</pre>
           <p class="means"><code>nextLine()</code> returns a String, and a String does not fit in an <code>int</code> variable.</p>
           <p class="fix"><b>Fix</b>Use the Scanner method that returns the type you want: <code>nextInt()</code>.</p>
           <div class="ba"><div class="bad"><span>Before</span><pre>int age = scanner.nextLine();</pre></div><div class="good"><span>After</span><pre>int age = scanner.nextInt();</pre></div></div>

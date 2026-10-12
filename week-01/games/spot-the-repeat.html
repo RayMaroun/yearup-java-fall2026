@@ -1,0 +1,439 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Expression Builder | Week 1 Visual Hub</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Sora:wght@500;700&family=Inter:wght@400;500&family=JetBrains+Mono:wght@400;500&display=swap">
+<style>
+  :root{
+    --bg:#080c17; --bg2:#0c1428; --surface:rgba(255,255,255,.045); --line:rgba(255,255,255,.09);
+    --ink:#eef2fb; --muted:#8496b6; --accent:#6ea0ff; --accent2:#8b7bff; --good:#46d98a; --warn:#ff6a6a;
+    --gold:#ffc862; --disp:'Sora',system-ui,sans-serif; --body:'Inter',system-ui,sans-serif;
+    --mono:'JetBrains Mono',ui-monospace,monospace;
+  }
+  *{box-sizing:border-box}
+  body{margin:0;min-height:100vh;color:var(--ink);font-family:var(--body);
+    background:radial-gradient(1200px 700px at 70% -10%,#141d38 0%,transparent 55%),
+               radial-gradient(900px 600px at 10% 110%,#161233 0%,transparent 50%),#080c17;
+    overflow-x:hidden}
+  #amb{position:fixed;inset:0;z-index:0;pointer-events:none;opacity:.6}
+  .back{position:relative;z-index:2;display:block;max-width:1120px;margin:0 auto;padding:26px 24px 0;
+    width:100%;font-family:var(--mono);font-size:.8rem;letter-spacing:.04em;color:var(--muted);
+    text-decoration:none;transition:color .15s}
+  .back:hover{color:var(--accent)}
+  .wrap{position:relative;z-index:1;max-width:1120px;margin:0 auto;padding:22px 24px 70px}
+  .tag{font-family:var(--mono);font-size:.72rem;letter-spacing:.22em;text-transform:uppercase;color:var(--accent);margin:0 0 14px}
+  h1{font-family:var(--disp);font-weight:700;font-size:clamp(2.3rem,6vw,3.6rem);line-height:1;margin:0 0 12px;
+    letter-spacing:-.03em;background:linear-gradient(180deg,#fff,#b9c6e6);-webkit-background-clip:text;
+    background-clip:text;color:transparent}
+  .lede{color:var(--muted);max-width:64ch;font-size:1.05rem;margin:0 0 26px;line-height:1.5}
+  .lede b{color:var(--ink)}
+  .lede code,.take code,.caption code{font-family:var(--mono);font-size:.92em;color:#bcd0ff}
+
+  /* ---------- stage: picture first, one toolbar, support below ---------- */
+  .stage{position:relative;background:linear-gradient(180deg,rgba(255,255,255,.03),rgba(255,255,255,.01));
+    border:1px solid var(--line);border-radius:24px;padding:18px 18px 14px;
+    box-shadow:0 1px 0 rgba(255,255,255,.06) inset,0 30px 80px -30px rgba(0,0,0,.8)}
+  .topbar{display:flex;align-items:center;gap:10px;margin:0 0 14px;flex-wrap:wrap}
+  .topbar .lab{margin:0 4px 0 0}
+  .lab{font-family:var(--mono);font-size:.7rem;letter-spacing:.12em;text-transform:uppercase;color:var(--muted);margin:0 0 10px}
+  .chips{display:flex;flex-wrap:wrap;gap:6px}
+  .chip{font-family:var(--mono);font-size:.74rem;padding:5px 11px;border-radius:999px;cursor:pointer;
+    border:1px solid var(--line);background:rgba(0,0,0,.25);color:var(--muted);transition:.15s}
+  .chip:hover{border-color:var(--accent);color:var(--accent)}
+  .chip.on{border-color:rgba(110,160,255,.6);background:rgba(110,160,255,.14);color:var(--ink)}
+  .chip:focus-visible,.btn:focus-visible,.focus:focus-visible{outline:2px solid var(--accent);outline-offset:2px}
+  .focus{margin-left:auto;font-family:var(--mono);font-size:.68rem;letter-spacing:.1em;text-transform:uppercase;padding:6px 12px;
+    border-radius:999px;border:1px solid var(--line);background:rgba(0,0,0,.25);color:var(--muted);cursor:pointer;transition:.15s}
+  .focus:hover{border-color:var(--accent);color:var(--accent)}
+  body.solo .focus{border-color:rgba(255,200,98,.6);color:var(--gold);background:rgba(255,200,98,.1)}
+
+  /* ---------- game board ---------- */
+  .pic{position:relative;height:390px;border:1px solid var(--line);border-radius:18px;background:rgba(6,10,20,.5);overflow:hidden;
+    display:flex;flex-direction:column;align-items:center;justify-content:center;gap:22px;padding:20px}
+  .pic .zone{position:absolute;left:18px;top:14px;font-family:var(--mono);font-size:.62rem;letter-spacing:.14em;text-transform:uppercase;color:rgba(132,150,182,.55)}
+  .hud{position:absolute;right:18px;top:12px;display:flex;gap:14px;font-family:var(--mono);font-size:.72rem;color:var(--muted)}
+  .hud b{color:var(--ink);font-weight:500}
+  .opts{display:flex;flex-wrap:wrap;gap:8px;justify-content:center;max-width:620px}
+  .opt{font-family:var(--mono);font-size:.9rem;padding:10px 18px;border-radius:11px;cursor:pointer;border:1px solid var(--line);background:var(--surface);color:var(--ink);transition:.15s}
+  .opt:hover{border-color:var(--accent);color:var(--accent)}
+  .opt:disabled{cursor:default}
+  .opt.hit{border-color:rgba(70,217,138,.7);background:rgba(70,217,138,.14);color:var(--good)}
+  .opt.miss{border-color:rgba(255,106,106,.7);background:rgba(255,106,106,.12);color:var(--warn)}
+  .opt.dim{opacity:.4}
+  .screen{position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:12px;background:rgba(6,10,20,.92);transition:opacity .25s}
+  .screen.off{opacity:0;pointer-events:none}
+  .screen h2{font-family:var(--disp);font-weight:700;font-size:1.6rem;margin:0;color:var(--ink)}
+  .screen p{margin:0;color:var(--muted);font-size:.95rem;text-align:center;max-width:46ch;line-height:1.5}
+  .screen .big{font-family:var(--disp);font-weight:700;font-size:2.6rem;color:var(--accent)}
+  .screen .big.gold{color:var(--gold)} .screen .big.good{color:var(--good)}
+  .bar{position:absolute;left:0;right:0;bottom:0;height:4px;background:rgba(255,255,255,.06)}
+  .bar i{display:block;height:100%;width:0;background:var(--accent);transition:width .25s}
+  .misses{font-family:var(--mono);font-size:.74rem;color:var(--muted);line-height:1.7;text-align:left}
+  .misses b{color:var(--warn);font-weight:500} .misses i{font-style:normal;color:var(--good)}
+  /* caption: the one sentence, right under the picture */
+  .caption{display:flex;gap:16px;align-items:flex-start;margin:14px 4px 0;min-height:56px}
+  .caption .n{flex-shrink:0;font-family:var(--disp);font-weight:700;font-size:1.35rem;color:var(--accent);font-variant-numeric:tabular-nums;
+    line-height:1.2;min-width:3.2rem}
+  .caption .n small{display:block;font-family:var(--mono);font-weight:400;font-size:.58rem;letter-spacing:.14em;text-transform:uppercase;color:var(--muted)}
+  .caption .t{font-size:1.02rem;line-height:1.55;color:var(--ink);padding-left:16px;border-left:3px solid var(--accent);transition:border-color .3s}
+  body.solo .caption .t{font-size:1.18rem}
+  .caption.cut .t{border-left-color:var(--warn)} .caption.left .t{border-left-color:var(--gold)} .caption.ok .t{border-left-color:var(--good)}
+  .caption b.g{color:var(--good)} .caption b.w{color:var(--warn)} .caption b.a{color:var(--accent)} .caption b.y{color:var(--gold)}
+
+  /* toolbar: same on every page */
+  .toolbar{display:flex;align-items:center;gap:10px;margin:16px 0 0;padding-top:14px;border-top:1px solid var(--line)}
+  .btn{font-family:var(--body);font-weight:500;font-size:.86rem;padding:9px 16px;border-radius:11px;cursor:pointer;
+    border:1px solid var(--line);background:var(--surface);color:var(--ink);transition:.15s}
+  .btn:hover{border-color:var(--accent);color:var(--accent)}
+  .btn.primary{border-color:rgba(110,160,255,.5);background:rgba(110,160,255,.12);padding:9px 22px}
+  .btn:disabled{opacity:.35;cursor:not-allowed}
+  .btn.ghost{background:transparent;color:var(--muted);margin-left:auto}
+  .dots{display:flex;gap:5px;align-items:center;margin:0 6px}
+  .dots i{display:block;width:8px;height:8px;border-radius:50%;background:rgba(255,255,255,.12);transition:.2s}
+  .dots i.done{background:rgba(110,160,255,.45)}
+  .dots i.now{background:var(--accent);transform:scale(1.35);box-shadow:0 0 10px rgba(110,160,255,.7)}
+  .hint{font-family:var(--mono);font-size:.68rem;color:var(--muted);margin:10px 4px 0;line-height:1.5}
+  .hint b{color:var(--accent)}
+
+  .toolbar .btn.primary{min-width:120px}
+  .take{margin-top:22px;background:linear-gradient(180deg,rgba(110,160,255,.08),rgba(139,123,255,.04));
+    border:1px solid var(--line);border-left:3px solid var(--accent);border-radius:12px;padding:16px 18px}
+  .take .tk{font-family:var(--mono);font-size:.66rem;letter-spacing:.14em;text-transform:uppercase;color:var(--accent);margin:0 0 8px}
+  .take p{margin:0;font-size:.95rem;color:var(--ink);line-height:1.55}
+  .take b{color:#fff}
+  @media (prefers-reduced-motion:reduce){*{animation-duration:.01ms!important;transition-duration:.01ms!important}#amb{display:none}}
+</style>
+<body>
+
+<a class="back" href="../index.html#spot-the-repeat">&#8592; Week 1 index</a>
+
+<canvas id="amb"></canvas>
+<div class="wrap">
+  <p class="tag">Workbook 1c &middot; Section 4-2 &middot; Game</p>
+  <h1>Spot the Repeat</h1>
+  <p class="lede"><b>Find the lines that repeat, then pick the method header that replaces them.</b></p>
+
+  <div class="stage">
+    <div class="topbar">
+      <span class="lab">Game</span>
+    </div>
+
+    <div class="pic" id="pic">
+      <span class="zone" id="zone">main</span>
+      <div class="hud"><span>score <b id="hScore">0</b></span><span>time <b id="hTime">0.0s</b></span></div>
+      <div class="code" id="code"></div>
+      <div class="side" id="side"></div>
+      <div class="bar"><i id="bar"></i></div>
+      <div class="screen" id="startScr">
+        <h2>Spot the Repeat</h2>
+        <p>Click the lines of one copy of the repeated block, then Check. Then pick the header whose parameters are the values that change.</p>
+        <button class="btn primary" id="bStart">Start</button>
+      </div>
+      <div class="screen off" id="endScr">
+        <h2>Game over</h2>
+        <div class="big" id="endScore"></div>
+        <p id="endMsg"></p>
+        <div class="misses" id="endMiss"></div>
+        <button class="btn primary" id="bAgain">Play again</button>
+      </div>
+    </div>
+
+    <div class="caption" id="caption">
+      <div class="n" id="stepno"><small>round</small>0 / 8</div>
+      <div class="t" id="status">Press <b class="a">Start</b>. Eight rounds, two points each.</div>
+    </div>
+    <div class="toolbar">
+      <button class="btn primary" id="bCheck" disabled>Check</button>
+      <button class="btn" id="bNext" disabled>Next round</button>
+    </div>
+    <p class="hint">number keys = toggle a line (1 then 2 = line 12) &middot; <b>Enter</b> = check / next &middot; 1 to 4 = pick a header</p>
+  </div>
+
+  <div class="take">
+    <p class="tk">The one idea</p>
+    <p><b>The values that change become the parameters.</b> Everything else in the copy moves into the method unchanged, and each copy becomes one call.</p>
+  </div>
+
+  <div id="rail"></div>
+</div>
+
+<script>
+(function(){
+  "use strict";
+  var $=function(s){return document.querySelector(s);};
+  var reduce=matchMedia("(prefers-reduced-motion: reduce)").matches;
+
+  /* Each line: tag|code. A, B, C = copies of the block; i = input (stays in main); o = runs once; s = differs each time. */
+  /*POOL*/
+  var POOL=[
+    {t:"Rectangles",name:"displayRectangleInfo",
+     L:["i|int length1 = 4;","i|int width1 = 9;","A|int area1 = length1 * width1;","A|int perimeter1 = 2 * (length1 + width1);",
+        'A|System.out.println("The area is: " + area1);','A|System.out.println("The perimeter is: " + perimeter1);',
+        "i|int length2 = 10;","i|int width2 = 3;","B|int area2 = length2 * width2;","B|int perimeter2 = 2 * (length2 + width2);",
+        'B|System.out.println("The area is: " + area2);','B|System.out.println("The perimeter is: " + perimeter2);'],
+     args:["length1, width1","length2, width2"],
+     body:["int area = length * width;","int perimeter = 2 * (length + width);",'System.out.println("The area is: " + area);','System.out.println("The perimeter is: " + perimeter);'],
+     H:[["int length, int width",""],["int length","too few parameters: the width changes between copies too"],
+        ["double length, double width","wrong type: the block stores length * width in an int, so both must be int"],
+        ["int length, int width, int area","area is computed inside the block, it is not a value you pass in"]]},
+    {t:"Greetings",name:"greetPerson",
+     L:['i|String firstName1 = "Maria";','i|String lastName1 = "Lopez";','A|String fullName1 = firstName1 + " " + lastName1;',
+        'A|System.out.println("Hello, " + fullName1 + "!");','A|System.out.println("Name length: " + fullName1.length());',
+        'i|String firstName2 = "Sam";','i|String lastName2 = "Chen";','B|String fullName2 = firstName2 + " " + lastName2;',
+        'B|System.out.println("Hello, " + fullName2 + "!");','B|System.out.println("Name length: " + fullName2.length());',
+        'o|System.out.println("Done.");'],
+     args:["firstName1, lastName1","firstName2, lastName2"],
+     body:['String fullName = firstName + " " + lastName;','System.out.println("Hello, " + fullName + "!");','System.out.println("Name length: " + fullName.length());'],
+     H:[["String firstName, String lastName",""],["String firstName","too few parameters: the last name changes between copies too"],
+        ["String fullName","fullName is built inside the block, the values that change are the first and last names"],
+        ["String firstName, String lastName, String greeting","\u0022Hello, \u0022 is the same in every copy, it never changes"]]},
+    {t:"Price with tax",name:"printTotal",
+     L:['o|System.out.println("Receipt");',"i|double price1 = 19.99;","A|double tax1 = price1 * 0.08;","A|double total1 = price1 + tax1;",
+        'A|System.out.printf("Total: $%.2f%n", total1);',"i|double price2 = 45.50;","B|double tax2 = price2 * 0.08;","B|double total2 = price2 + tax2;",
+        'B|System.out.printf("Total: $%.2f%n", total2);','o|System.out.println("Thank you!");'],
+     args:["price1","price2"],
+     body:["double tax = price * 0.08;","double total = price + tax;",'System.out.printf("Total: $%.2f%n", total);'],
+     H:[["double price",""],["int price","wrong type: 19.99 has a decimal point, so the price is a double"],
+        ["double price, double rate","the rate 0.08 is the same in every copy, it never changes"],
+        ["","no parameters: every call would print the same total"]]},
+    {t:"Countdown",name:"launch",
+     L:['o|System.out.println("Launch day");','A|System.out.println("Rocket Alpha");','A|System.out.println("3... 2... 1...");','A|System.out.println("Alpha is up!");',
+        'B|System.out.println("Rocket Nova");','B|System.out.println("3... 2... 1...");','B|System.out.println("Nova is up!");',
+        'C|System.out.println("Rocket Vega");','C|System.out.println("3... 2... 1...");','C|System.out.println("Vega is up!");'],
+     args:['"Alpha"','"Nova"','"Vega"'],
+     body:['System.out.println("Rocket " + name);','System.out.println("3... 2... 1...");','System.out.println(name + " is up!");'],
+     H:[["String name",""],["String name, String count","the countdown text is the same in all three copies, it never changes"],
+        ["char name","wrong type: Alpha is a word, more than one character, so it is a String"],
+        ["String name, String name2","the name shows up twice but it is one value, so one parameter"]]},
+    {t:"Temperatures",name:"showCelsius",
+     L:['o|System.out.println("Temperatures");',"i|double f1 = 98.6;","A|double c1 = (f1 - 32) * 5 / 9;",'A|System.out.println(f1 + "F is " + c1 + "C");',
+        "i|double f2 = 50.0;","B|double c2 = (f2 - 32) * 5 / 9;",'B|System.out.println(f2 + "F is " + c2 + "C");',
+        "i|double f3 = 212.0;","C|double c3 = (f3 - 32) * 5 / 9;",'C|System.out.println(f3 + "F is " + c3 + "C");','o|System.out.println("Stay warm.");'],
+     args:["f1","f2","f3"],
+     body:["double c = (fahrenheit - 32) * 5 / 9;",'System.out.println(fahrenheit + "F is " + c + "C");'],
+     H:[["double fahrenheit",""],["int fahrenheit","wrong type: 98.6 has a decimal point, so it is a double"],
+        ["double fahrenheit, double celsius","the Celsius value is computed inside the block, it is not passed in"],
+        ["double fahrenheit, int offset","32 is the same in every copy, it never changes"]]},
+    {t:"Trip speeds",name:"showSpeed",
+     L:['o|System.out.println("Trip log");','i|String city1 = "Boston";',"i|double miles1 = 120.0;","i|double hours1 = 2.5;",
+        "A|double speed1 = miles1 / hours1;",'A|System.out.println(city1 + ": " + speed1 + " mph");',
+        'i|String city2 = "Denver";',"i|double miles2 = 300.0;","i|double hours2 = 5.0;",
+        "B|double speed2 = miles2 / hours2;",'B|System.out.println(city2 + ": " + speed2 + " mph");','o|System.out.println("Drive safe.");'],
+     args:["city1, miles1, hours1","city2, miles2, hours2"],
+     body:["double speed = miles / hours;",'System.out.println(city + ": " + speed + " mph");'],
+     H:[["String city, double miles, double hours",""],["double miles, double hours","too few parameters: the city changes between copies too"],
+        ["String city, int miles, int hours","wrong type: 120.0 and 2.5 have decimal points, so they are doubles"],
+        ["String city, double speed","speed is computed inside the block, pass the miles and hours it comes from"]]},
+    {t:"Banners",name:"printBanner",
+     L:['A|System.out.println("==========");','A|System.out.println("  SALES");','A|System.out.println("==========");','s|System.out.println("Sales were up this week.");',
+        'B|System.out.println("==========");','B|System.out.println("  RETURNS");','B|System.out.println("==========");','s|System.out.println("Returns were down.");',
+        'C|System.out.println("==========");','C|System.out.println("  STAFF");','C|System.out.println("==========");','s|System.out.println("Two new hires.");'],
+     args:['"SALES"','"RETURNS"','"STAFF"'],
+     body:['System.out.println("==========");','System.out.println("  " + title);','System.out.println("==========");'],
+     H:[["String title",""],["String title, String border","the border line is the same in every copy, it never changes"],
+        ["char title","wrong type: SALES is a word, more than one character, so it is a String"],
+        ["","no parameters: every banner would show the same word"]]},
+    {t:"Sale prices",name:"showSalePrice",
+     L:["i|double price1 = 80.0;","i|int percent1 = 25;","A|double off1 = price1 * percent1 / 100;","A|double sale1 = price1 - off1;",
+        'A|System.out.println("Sale price: " + sale1);',"i|double price2 = 120.0;","i|int percent2 = 10;","B|double off2 = price2 * percent2 / 100;",
+        "B|double sale2 = price2 - off2;",'B|System.out.println("Sale price: " + sale2);','o|System.out.println("Sale ends Friday.");'],
+     args:["price1, percent1","price2, percent2"],
+     body:["double off = price * percent / 100;","double sale = price - off;",'System.out.println("Sale price: " + sale);'],
+     H:[["double price, int percent",""],["double price","too few parameters: the percent changes too, 25 then 10"],
+        ["int price, int percent","wrong type: 80.0 has a decimal point, so the price is a double"],
+        ["double price, int percent, double sale","sale is computed inside the block, it is not passed in"]]},
+    {t:"Circles",name:"showCircle",
+     L:['o|System.out.println("Circles");',"i|double r1 = 2.0;","A|double area1 = Math.PI * r1 * r1;","A|double around1 = 2 * Math.PI * r1;",
+        'A|System.out.println("Area: " + area1);','A|System.out.println("Around: " + around1);',"i|double r2 = 5.5;",
+        "B|double area2 = Math.PI * r2 * r2;","B|double around2 = 2 * Math.PI * r2;",'B|System.out.println("Area: " + area2);',
+        'B|System.out.println("Around: " + around2);','o|System.out.println("Circles done.");'],
+     args:["r1","r2"],
+     body:["double area = Math.PI * radius * radius;","double around = 2 * Math.PI * radius;",'System.out.println("Area: " + area);','System.out.println("Around: " + around);'],
+     H:[["double radius",""],["double radius, double pi","Math.PI is the same in every copy, it never changes"],
+        ["int radius","wrong type: 5.5 has a decimal point, so the radius is a double"],
+        ["double area, double around","those are results computed inside the block, pass the radius they come from"]]},
+    {t:"Round results",name:"showResult",
+     L:['o|System.out.println("Round results");','i|String player1 = "Ana";',"i|int points1 = 40;","A|int total1 = points1 + 10;",
+        'A|System.out.println(player1 + " scored " + total1);','A|System.out.println("----");','i|String player2 = "Leo";',"i|int points2 = 55;",
+        "B|int total2 = points2 + 10;",'B|System.out.println(player2 + " scored " + total2);','B|System.out.println("----");','o|System.out.println("Next round soon.");'],
+     args:["player1, points1","player2, points2"],
+     body:["int total = points + 10;",'System.out.println(player + " scored " + total);','System.out.println("----");'],
+     H:[["String player, int points",""],["String player","too few parameters: the points change too, 40 then 55"],
+        ["String player, double points","wrong type: total is an int, so points must be an int too"],
+        ["String player, int points, int bonus","the bonus 10 is the same in every copy, it never changes"]]},
+    {t:"Hours and minutes",name:"showTime",
+     L:["i|int mins1 = 135;","A|int h1 = mins1 / 60;","A|int m1 = mins1 % 60;",'A|System.out.println(h1 + " h " + m1 + " min");',
+        "i|int mins2 = 75;","B|int h2 = mins2 / 60;","B|int m2 = mins2 % 60;",'B|System.out.println(h2 + " h " + m2 + " min");',
+        "i|int mins3 = 200;","C|int h3 = mins3 / 60;","C|int m3 = mins3 % 60;",'C|System.out.println(h3 + " h " + m3 + " min");'],
+     args:["mins1","mins2","mins3"],
+     body:["int h = minutes / 60;","int m = minutes % 60;",'System.out.println(h + " h " + m + " min");'],
+     H:[["int minutes",""],["double minutes","wrong type: h and m are ints, so the minutes must be an int"],
+        ["int hours, int minutes","the hours are computed inside the block, they are not passed in"],
+        ["int minutes, int perHour","60 is the same in every copy, it never changes"]]},
+    {t:"Shipping labels",name:"printLabel",
+     L:['o|System.out.println("Labels");','A|System.out.println("To: Maria Lopez");','A|System.out.println("City: Austin");','A|System.out.println("-----");',
+        'B|System.out.println("To: Sam Chen");','B|System.out.println("City: Denver");','B|System.out.println("-----");',
+        'C|System.out.println("To: Ana Ruiz");','C|System.out.println("City: Miami");','C|System.out.println("-----");','o|System.out.println("3 labels printed.");'],
+     args:['"Maria Lopez", "Austin"','"Sam Chen", "Denver"','"Ana Ruiz", "Miami"'],
+     body:['System.out.println("To: " + name);','System.out.println("City: " + city);','System.out.println("-----");'],
+     H:[["String name, String city",""],["String name","too few parameters: the city changes between copies too"],
+        ["String name, String city, String line","the dashed line is the same in every copy, it never changes"],
+        ["char name, char city","wrong type: names and cities are words, so they are Strings"]]},
+    {t:"Tips",name:"showTip",
+     L:["i|double bill1 = 42.00;","A|double tip1 = bill1 * 0.20;",'A|System.out.println("Bill: " + bill1);','A|System.out.println("Tip: " + tip1);',
+        'A|System.out.println("Pay: " + (bill1 + tip1));',"i|double bill2 = 18.50;","B|double tip2 = bill2 * 0.20;",'B|System.out.println("Bill: " + bill2);',
+        'B|System.out.println("Tip: " + tip2);','B|System.out.println("Pay: " + (bill2 + tip2));','o|System.out.println("Thanks for dining.");'],
+     args:["bill1","bill2"],
+     body:["double tip = bill * 0.20;",'System.out.println("Bill: " + bill);','System.out.println("Tip: " + tip);','System.out.println("Pay: " + (bill + tip));'],
+     H:[["double bill",""],["double bill, double tip","tip is computed inside the block, it is not passed in"],
+        ["double bill, double rate","0.20 is the same in every copy, it never changes"],
+        ["String bill","wrong type: you multiply the bill, so it is a number, a double"]]}
+  ];
+  /*END*/
+  var STAY={i:"that line is the input, it stays in main and its value becomes the argument",
+            o:"that line runs once, it is not part of the repeat",
+            s:"that line is different every time, it is not a copy, so it stays in main"};
+
+  var N=8, round=[], at=0, score=0, misses=[], t0=0, timer=null, phase=0, cur=null, sel={}, order=[], buf="", bt=null;
+
+  function shuffle(a){ a=a.slice(); for(var i=a.length-1;i>0;i--){ var j=Math.floor(Math.random()*(i+1)); var t=a[i]; a[i]=a[j]; a[j]=t; } return a; }
+  function esc(s){ return s.replace(/\u0026/g,"\u0026amp;").replace(/</g,"\u0026lt;").replace(/>/g,"\u0026gt;"); }
+  var TOK=/("(?:[^"\\]|\\.)*")|(\b\d+(?:\.\d+)?\b)|(\b(?:int|double|String|char|boolean|long|float|void|public|static)\b)|([A-Za-z_]\w*)(?=\()/g;
+  function hl(s){ var out="",last=0,m; TOK.lastIndex=0;
+    while((m=TOK.exec(s))){ out+=esc(s.slice(last,m.index));
+      var c=m[1]?"s":m[2]?"nm":m[3]?"kw":"fn"; out+='<span class="'+c+'">'+esc(m[0])+'</span>'; last=TOK.lastIndex; }
+    return out+esc(s.slice(last)); }
+  function tag(r,i){ return r.L[i].charAt(0); }
+  function src(r,i){ return r.L[i].slice(2); }
+  function copies(r){ var c={}; r.L.forEach(function(l,i){ var k=l.charAt(0); if(/[ABC]/.test(k)){ (c[k]=c[k]||[]).push(i); } }); return c; }
+  function header(r,p){ return "public static void "+r.name+"("+p+")"; }
+  function tick(){ $("#hTime").textContent=((performance.now()-t0)/1000).toFixed(1)+"s"; }
+  function say(cls,html){ $("#caption").className="caption"+(cls?" "+cls:""); $("#status").innerHTML=html; }
+
+  function drawMain(){
+    var h='<div class="wl">'+hl("public static void main(String[] args) {")+'</div>';
+    cur.L.forEach(function(l,i){ h+='<div class="ln" data-i="'+i+'"><span class="no">'+(i+1)+'</span><code>'+hl(src(cur,i))+'</code></div>'; });
+    $("#code").innerHTML=h+'<div class="wl">}</div>';
+  }
+  function show(){
+    cur=round[at]; phase=1; sel={}; buf="";
+    drawMain(); $("#zone").textContent="main \u00b7 "+cur.t.toLowerCase();
+    $("#side").innerHTML='<p class="lab">step 1 of 2</p><p>Click the lines of <b style="color:var(--ink)">one copy</b> of the repeated block: the lines that would move into a method. Then press Check.</p>';
+    $("#stepno").innerHTML="<small>round</small>"+(at+1)+" / "+N; $("#bar").style.width=(100*at/N)+"%";
+    $("#bCheck").disabled=false; $("#bNext").disabled=true;
+    say("",'Which lines repeat? <b class="a">Select one copy.</b>');
+  }
+  function toggle(n){
+    if(phase!==1||n<1||n>cur.L.length) return;
+    var el=document.querySelector('.ln[data-i="'+(n-1)+'"]'); if(sel[n-1]){ delete sel[n-1]; el.classList.remove("sel"); } else { sel[n-1]=true; el.classList.add("sel"); }
+  }
+  function same(a,b){ return a.length===b.length&&a.every(function(x,i){return x===b[i];}); }
+  function check(){
+    if(phase!==1) return;
+    var c=copies(cur), keys=Object.keys(c), s=Object.keys(sel).map(Number).sort(function(a,b){return a-b;});
+    var hit=null; keys.forEach(function(k){ if(same(c[k],s)) hit=k; });
+    var why="";
+    if(!hit){
+      var best=keys[0], bo=-1;
+      keys.forEach(function(k){ var o=c[k].filter(function(i){return sel[i];}).length; if(o>bo){bo=o;best=k;} });
+      hit=best;
+      var extra=s.filter(function(i){return c[best].indexOf(i)<0;}), miss=c[best].filter(function(i){return !sel[i];});
+      if(!s.length) why="nothing selected: the block is the group of lines that shows up again with different values";
+      else if(extra.length){ var e=extra[0], k=tag(cur,e);
+        why="line "+(e+1)+": "+(/[ABC]/.test(k)?"that line is from another copy, take the lines of one copy only":STAY[k]); }
+      else { var m=miss[0], t=src(cur,m);
+        why="line "+(m+1)+": "+(/print/.test(t)?(/\+/.test(t)?"the print that uses those values belongs in the block too":"every print in the copy repeats, so it belongs in the block too")
+              :"it computes a value the prints need, so it belongs in the block too"); }
+      misses.push(cur.t+", lines: "+why);
+    } else { score++; $("#hScore").textContent=String(score); }
+    Array.prototype.forEach.call(document.querySelectorAll(".ln"),function(el){
+      var i=+el.getAttribute("data-i"), k=tag(cur,i); el.classList.remove("sel"); el.classList.add("fixed");
+      if(k===hit) el.classList.add("good");
+      else if(/[ABC]/.test(k)){ el.classList.add("twin"); if(c[k][0]===i) el.classList.add("twin1"); }
+      else if(sel[i]) el.classList.add("bad");
+    });
+    phase=2; $("#bCheck").disabled=true;
+    order=shuffle(cur.H);
+    $("#side").innerHTML='<p class="lab">step 2 of 2 \u00b7 pick the header</p>'+order.map(function(h,i){
+      return '<button class="opt" data-k="'+i+'"><span class="key">'+(i+1)+'</span>'+hl(header(cur,h[0]))+'</button>'; }).join("");
+    if(why) say("cut",'<b class="w">Not quite.</b> The green lines are one copy. '+why.charAt(0).toUpperCase()+why.slice(1)+'. Now pick the header.');
+    else say("ok",'<b class="g">Right.</b> The faded copies are the same lines with different values. <b class="a">Which header?</b>');
+  }
+  function pick(k){
+    if(phase!==2||k<0||k>3) return; phase=3;
+    var h=order[k], ok=h[1]==="";
+    Array.prototype.forEach.call(document.querySelectorAll(".opt"),function(b,i){ b.disabled=true;
+      if(order[i][1]==="") b.classList.add("hit"); else if(i===k) b.classList.add("miss"); else b.classList.add("dim"); });
+    var right=cur.H[0][0];
+    if(ok){ score++; $("#hScore").textContent=String(score); say("ok",'<b class="g">Right.</b> The parameters are exactly what changes. main shrinks to one call per copy.'); }
+    else { misses.push(cur.t+", header ("+h[0]+"): "+h[1]); say("cut",'<b class="w">'+(h[0]||"No parameters")+'</b>: '+h[1]+'. The right one takes <b class="g">('+right+')</b>.'); }
+    setTimeout(collapse, reduce?100:(ok?700:1400));
+  }
+  function collapse(){
+    var c=copies(cur), out=[], n=0;
+    cur.L.forEach(function(l,i){ var k=tag(cur,i);
+      if(/[ABC]/.test(k)){ if(c[k][0]===i) out.push([cur.name+"("+cur.args[n++]+");",1]); }
+      else out.push([src(cur,i),0]); });
+    var h='<div class="wl">'+hl("public static void main(String[] args) {")+'</div>';
+    out.forEach(function(o,i){ h+='<div class="ln fixed'+(o[1]?" call":"")+'" data-i="'+i+'"><span class="no">'+(i+1)+'</span><code>'+hl(o[0])+'</code></div>'; });
+    $("#code").innerHTML=h+'<div class="wl">}</div>';
+    $("#zone").textContent="main, after \u00b7 "+cur.L.length+" lines down to "+out.length;
+    $("#side").innerHTML='<p class="lab">the method</p><div class="meth">'+hl(header(cur,cur.H[0][0])+" {")+"\n"+cur.body.map(function(b){return "    "+hl(b);}).join("\n")+"\n}</div>";
+    $("#bNext").disabled=false; $("#bNext").textContent=at+1>=N?"See results":"Next round";
+  }
+  function next(){ if(phase!==3||$("#bNext").disabled) return; at++; if(at>=N) end(); else show(); }
+  function start(){
+    round=shuffle(POOL).slice(0,N); at=0; score=0; misses=[];
+    $("#hScore").textContent="0"; $("#startScr").classList.add("off"); $("#endScr").classList.add("off");
+    show(); t0=performance.now(); if(timer) clearInterval(timer); timer=setInterval(tick,100);
+  }
+  function end(){
+    clearInterval(timer); tick(); phase=0; $("#bar").style.width="100%"; $("#bNext").disabled=true; $("#bCheck").disabled=true;
+    var secs=((performance.now()-t0)/1000).toFixed(1), max=2*N;
+    $("#endScore").textContent=score+" / "+max; $("#endScore").className="big "+(score===max?"good":score>=12?"":"gold");
+    $("#endMsg").textContent=(score===max?"Perfect. ":score>=12?"Solid. ":"Keep going. ")+secs+" seconds.";
+    $("#endMiss").innerHTML=misses.map(function(m){ var p=m.split(": "); return '<div><b>'+esc(p[0])+'</b>: '+esc(p.slice(1).join(": "))+'</div>'; }).join("");
+    $("#endScr").classList.remove("off");
+    $("#stepno").innerHTML="<small>round</small>"+N+" / "+N; say("",'Game over. <b class="a">Play again</b> deals eight new programs.');
+  }
+
+  $("#code").addEventListener("click",function(e){ var l=e.target.closest(".ln"); if(l&&phase===1) toggle(+l.getAttribute("data-i")+1); });
+  $("#side").addEventListener("click",function(e){ var b=e.target.closest(".opt"); if(b) pick(+b.getAttribute("data-k")); });
+  $("#bStart").addEventListener("click",start); $("#bAgain").addEventListener("click",start);
+  $("#bCheck").addEventListener("click",check); $("#bNext").addEventListener("click",next);
+  function flush(){ if(buf){ toggle(parseInt(buf,10)); buf=""; } }
+  document.addEventListener("keydown",function(e){
+    if(/INPUT|TEXTAREA/.test(e.target.tagName)||e.metaKey||e.ctrlKey||e.altKey) return;
+    if(e.key==="Enter"){
+      if(e.target.tagName==="BUTTON") return;
+      e.preventDefault();
+      if(!$("#startScr").classList.contains("off")) start();
+      else if(phase===1){ clearTimeout(bt); flush(); check(); }
+      else if(phase===3) next();
+      return;
+    }
+    if(!/^[0-9]$/.test(e.key)) return;
+    if(phase===2){ pick(parseInt(e.key,10)-1); return; }
+    if(phase!==1) return;
+    clearTimeout(bt); buf+=e.key; var n=parseInt(buf,10);
+    if(buf==="0"){ buf=""; return; }
+    if(buf.length>=2||n*10>cur.L.length){ flush(); } else bt=setTimeout(flush,500);
+  });
+
+  var cv=$("#amb"),ctx=cv.getContext&&cv.getContext("2d"),parts=[];
+  function sizeC(){if(!ctx)return;cv.width=innerWidth;cv.height=innerHeight;}
+  function initParts(){parts=[];for(var i=0;i<46;i++)parts.push({x:Math.random(),y:Math.random(),r:Math.random()*1.6+.3,s:Math.random()*.02+.004,o:Math.random()*.4+.1});}
+  function drawC(){if(!ctx)return;ctx.clearRect(0,0,cv.width,cv.height);
+    parts.forEach(function(p){p.y-=p.s/60;if(p.y<-.02)p.y=1.02;ctx.beginPath();ctx.arc(p.x*cv.width,p.y*cv.height,p.r,0,7);
+      ctx.fillStyle="rgba(140,170,255,"+p.o+")";ctx.fill();});requestAnimationFrame(drawC);}
+  if(ctx&&!reduce){sizeC();initParts();drawC();addEventListener("resize",sizeC);}
+})();
+</script>
+<script src="../manifest.js"></script>
+<script src="../../assets/rail.js"></script>
+<script>Rail.render(document.getElementById("rail"),{kind:"games",current:"spot-the-repeat"});</script>
+</body>
+</html>

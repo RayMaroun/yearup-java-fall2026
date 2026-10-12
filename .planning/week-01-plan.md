@@ -42,9 +42,11 @@ cheat-sheet (apply v7.2 fixes: taxRate 0.0825, 2.2f, Math.toRadians, main(String
 ## Exercise companions (10, all KEEP, spoiler-free, 3 updated)
 shopping-list (renamed from shopping-cart), string-application, math-application, basic-calculator (ints, always multiply, show equation), payroll-calculator, sandwich-shop (new "no discount" line), sandwich-shop-2, method-practice (reordered sub-steps), payroll-calculator-2, rental-car-calculator ($22.5 output, step numbering).
 
-## Games (13, all KEEP, re-skin; 3 need a content check for exercise spoilers)
-type-matcher, cast-or-crash, name-that-convention, output-predictor*, format-fixer, bug-hunter*, condition-crafter, switch-tracer (both switch forms), method-builder, binary-challenge, flashcard-quiz, git-mission (IntelliJ flow), your-first-day*.
-(*) verify the code shown is demo-based or invented, never an exercise solution.
+## Games (redone 2026-10-13, Ray: new games, Claude's judgment, built on the updated demos)
+Keep (distinct mechanics): git-mission (order the IntelliJ steps), type-matcher (reflex, the calibration shell), cast-or-crash, format-fixer (fill the blank), switch-tracer (trace), bug-hunter (click the line).
+Dropped (flat four-option quizzes): name-that-convention, output-predictor, condition-crafter, method-builder, your-first-day, flashcard-quiz, and binary-challenge (Module 1 is skipped).
+New, one mechanic each: project-setup (fill the New Project dialog and tree from scrambled labels, 1a), box-tracker (type each variable box after each line, 3-1/3-2), expression-builder (arrange tokens to print a target, 3-2), scanner-stream (pick the Scanner call that eats the next piece of the typed line, leftover Enter boss, 3-3), branch-runner (type an input that lands in the highlighted branch, 4-1), spot-the-repeat (select the repeated lines, pick the method header, 4-2), error-translator (real message: meaning, then click the fix line, all week).
+Rules: examples from the demos or invented, never an exercise; feedback says why after every answer; end screen lists the misses with reasons; keyboard shortcuts; the Type Matcher shell for header, HUD, screens, caption, take, rail.
 
 ## Size balance (corrected 2026-10-12): 25 visuals = Glance 6 · Walk 17 · Model 2. Theme: A (Expeditors tokens), confirmed by the instructor 2026-10-12. File number = position in the manifest order (01 to 25); the call stack stays 21.
 

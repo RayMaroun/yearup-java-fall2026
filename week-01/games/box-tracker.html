@@ -1,0 +1,431 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Box Tracker | Week 1 Visual Hub</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Sora:wght@500;700&family=Inter:wght@400;500&family=JetBrains+Mono:wght@400;500&display=swap">
+<style>
+  :root{
+    --bg:#080c17; --bg2:#0c1428; --surface:rgba(255,255,255,.045); --line:rgba(255,255,255,.09);
+    --ink:#eef2fb; --muted:#8496b6; --accent:#6ea0ff; --accent2:#8b7bff; --good:#46d98a; --warn:#ff6a6a;
+    --gold:#ffc862; --disp:'Sora',system-ui,sans-serif; --body:'Inter',system-ui,sans-serif;
+    --mono:'JetBrains Mono',ui-monospace,monospace;
+  }
+  *{box-sizing:border-box}
+  body{margin:0;min-height:100vh;color:var(--ink);font-family:var(--body);
+    background:radial-gradient(1200px 700px at 70% -10%,#141d38 0%,transparent 55%),
+               radial-gradient(900px 600px at 10% 110%,#161233 0%,transparent 50%),#080c17;
+    overflow-x:hidden}
+  #amb{position:fixed;inset:0;z-index:0;pointer-events:none;opacity:.6}
+  .back{position:relative;z-index:2;display:block;max-width:1120px;margin:0 auto;padding:26px 24px 0;
+    width:100%;font-family:var(--mono);font-size:.8rem;letter-spacing:.04em;color:var(--muted);
+    text-decoration:none;transition:color .15s}
+  .back:hover{color:var(--accent)}
+  .wrap{position:relative;z-index:1;max-width:1120px;margin:0 auto;padding:22px 24px 70px}
+  .tag{font-family:var(--mono);font-size:.72rem;letter-spacing:.22em;text-transform:uppercase;color:var(--accent);margin:0 0 14px}
+  h1{font-family:var(--disp);font-weight:700;font-size:clamp(2.3rem,6vw,3.6rem);line-height:1;margin:0 0 12px;
+    letter-spacing:-.03em;background:linear-gradient(180deg,#fff,#b9c6e6);-webkit-background-clip:text;
+    background-clip:text;color:transparent}
+  .lede{color:var(--muted);max-width:64ch;font-size:1.05rem;margin:0 0 26px;line-height:1.5}
+  .lede b{color:var(--ink)}
+  .lede code,.take code,.caption code{font-family:var(--mono);font-size:.92em;color:#bcd0ff}
+
+  /* ---------- stage ---------- */
+  .stage{position:relative;background:linear-gradient(180deg,rgba(255,255,255,.03),rgba(255,255,255,.01));
+    border:1px solid var(--line);border-radius:24px;padding:18px 18px 14px;
+    box-shadow:0 1px 0 rgba(255,255,255,.06) inset,0 30px 80px -30px rgba(0,0,0,.8)}
+  .topbar{display:flex;align-items:center;gap:10px;margin:0 0 14px;flex-wrap:wrap}
+  .topbar .lab{margin:0 4px 0 0}
+  .lab{font-family:var(--mono);font-size:.7rem;letter-spacing:.12em;text-transform:uppercase;color:var(--muted);margin:0 0 10px}
+
+  /* ---------- game board: program left, boxes right ---------- */
+  .pic{position:relative;height:390px;border:1px solid var(--line);border-radius:18px;background:rgba(6,10,20,.5);overflow:hidden;
+    display:grid;grid-template-columns:minmax(0,1.05fr) minmax(0,1fr);gap:18px;padding:40px 20px 22px}
+  .pic .zone{position:absolute;top:14px;font-family:var(--mono);font-size:.62rem;letter-spacing:.14em;text-transform:uppercase;color:rgba(132,150,182,.55)}
+  .zone.z1{left:18px} .zone.z2{left:calc(51% + 10px)}
+  .hud{position:absolute;right:18px;top:12px;display:flex;gap:14px;font-family:var(--mono);font-size:.72rem;color:var(--muted)}
+  .hud b{color:var(--ink);font-weight:500}
+  .code{min-width:0;align-self:center;font-family:var(--mono);font-size:.84rem;line-height:1.95;background:rgba(0,0,0,.35);
+    border:1px solid var(--line);border-radius:14px;padding:12px 0;overflow-x:auto}
+  .ln{display:flex;gap:12px;padding:0 14px;white-space:pre;color:#c9d4ea;opacity:.45;transition:background .2s,opacity .3s}
+  .ln .n{width:18px;text-align:right;color:rgba(132,150,182,.55);user-select:none;flex-shrink:0}
+  .ln.done{opacity:.8}
+  .ln.cur{opacity:1;background:rgba(110,160,255,.14);box-shadow:inset 3px 0 0 var(--accent)}
+  .ln.cur .n{color:var(--accent)}
+  .ln.cut{opacity:1;background:rgba(255,106,106,.12);box-shadow:inset 3px 0 0 var(--warn)}
+  .kw{color:#c792ea} .ty{color:#82aaff} .st{color:#c3e88d} .nu{color:#f78c6c}
+  .right{min-width:0;display:flex;flex-direction:column;justify-content:center;gap:12px}
+  .boxes{display:grid;grid-template-columns:1fr 1fr;gap:10px 12px}
+  .bx{display:flex;flex-direction:column;gap:4px;transition:opacity .3s,transform .3s}
+  .bx.lock{opacity:.5}
+  .bx.hid{display:none}
+  .bh{display:flex;align-items:center;justify-content:space-between;gap:6px}
+  .bn{font-family:var(--mono);font-size:.76rem;color:var(--ink);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+  .bt{flex-shrink:0;font-family:var(--mono);font-size:.6rem;letter-spacing:.06em;color:#82aaff;padding:1px 8px;border-radius:999px;
+    border:1px solid rgba(130,170,255,.3);background:rgba(130,170,255,.08)}
+  .bt.fin{color:var(--gold);border-color:rgba(255,200,98,.35);background:rgba(255,200,98,.08)}
+  .well{position:relative;height:46px;border-radius:12px;border:1.5px solid rgba(110,160,255,.4);background:rgba(110,160,255,.06);
+    display:flex;align-items:center;justify-content:center;padding:0 8px;transition:border-color .25s,background .25s,box-shadow .25s}
+  .well.empty{border-style:dashed;border-color:rgba(132,150,182,.4);background:transparent}
+  .well.act{border-color:var(--accent);box-shadow:0 0 22px -6px rgba(110,160,255,.8)}
+  .well.good{border-color:var(--good);box-shadow:0 0 22px -6px rgba(70,217,138,.8)}
+  .well.bad{border-color:var(--warn);background:rgba(255,106,106,.08);box-shadow:0 0 22px -6px rgba(255,106,106,.8);animation:shake .3s}
+  @keyframes shake{25%{transform:translateX(-6px)}75%{transform:translateX(6px)}}
+  .bv{font-family:var(--disp);font-weight:700;font-size:1.15rem;font-variant-numeric:tabular-nums;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;max-width:100%}
+  .bv.s{font-family:var(--mono);font-weight:500;font-size:.88rem;color:#c3e88d}
+  .bv.sm{font-size:.8rem} .bv.no{font-family:var(--mono);font-weight:400;font-size:.68rem;color:var(--muted)}
+  .val-in{width:100%;height:100%;border:0;outline:0;background:transparent;color:var(--ink);text-align:center;
+    font-family:var(--mono);font-size:.95rem;caret-color:var(--accent)}
+  .val-in::placeholder{color:rgba(132,150,182,.55);font-size:.78rem}
+  .acts{display:flex;gap:8px;justify-content:flex-end;flex-wrap:wrap}
+  .screen{position:absolute;inset:0;z-index:4;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:12px;background:rgba(6,10,20,.94);transition:opacity .25s;padding:20px}
+  .screen.off{opacity:0;pointer-events:none}
+  .screen h2{font-family:var(--disp);font-weight:700;font-size:1.6rem;margin:0;color:var(--ink)}
+  .screen p{margin:0;color:var(--muted);font-size:.95rem;text-align:center;max-width:50ch;line-height:1.5}
+  .screen .big{font-family:var(--disp);font-weight:700;font-size:2.6rem;color:var(--accent)}
+  .screen .big.gold{color:var(--gold)} .screen .big.good{color:var(--good)}
+  .bar{position:absolute;left:0;right:0;bottom:0;height:4px;background:rgba(255,255,255,.06)}
+  .bar i{display:block;height:100%;width:0;background:var(--accent);transition:width .25s}
+  .misses{font-family:var(--mono);font-size:.72rem;color:var(--muted);line-height:1.6;text-align:left;max-height:120px;overflow-y:auto;max-width:640px;width:100%}
+  .misses b{color:var(--warn);font-weight:500} .misses i{font-style:normal;color:var(--good)} .misses code{color:#c9d4ea}
+  @media (max-width:760px){.pic{height:auto;min-height:560px;grid-template-columns:1fr}.zone.z2{display:none}}
+
+  /* caption */
+  .caption{display:flex;gap:16px;align-items:flex-start;margin:14px 4px 0;min-height:56px}
+  .caption .n{flex-shrink:0;font-family:var(--disp);font-weight:700;font-size:1.35rem;color:var(--accent);font-variant-numeric:tabular-nums;
+    line-height:1.2;min-width:3.2rem}
+  .caption .n small{display:block;font-family:var(--mono);font-weight:400;font-size:.58rem;letter-spacing:.14em;text-transform:uppercase;color:var(--muted)}
+  .caption .t{font-size:1.02rem;line-height:1.55;color:var(--ink);padding-left:16px;border-left:3px solid var(--accent);transition:border-color .3s}
+  .caption.cut .t{border-left-color:var(--warn)} .caption.ok .t{border-left-color:var(--good)}
+  .caption b.g{color:var(--good)} .caption b.w{color:var(--warn)} .caption b.a{color:var(--accent)} .caption b.y{color:var(--gold)}
+
+  .btn{font-family:var(--body);font-weight:500;font-size:.86rem;padding:9px 16px;border-radius:11px;cursor:pointer;
+    border:1px solid var(--line);background:var(--surface);color:var(--ink);transition:.15s}
+  .btn:hover{border-color:var(--accent);color:var(--accent)}
+  .btn.primary{border-color:rgba(110,160,255,.5);background:rgba(110,160,255,.12);padding:9px 22px}
+  .btn.warn:hover{border-color:var(--warn);color:var(--warn)}
+  .btn:disabled{opacity:.35;cursor:not-allowed}
+  .btn:focus-visible{outline:2px solid var(--accent);outline-offset:2px}
+  .hint{font-family:var(--mono);font-size:.68rem;color:var(--muted);margin:10px 4px 0;line-height:1.5}
+  .hint b{color:var(--accent)}
+
+  .take{margin-top:22px;background:linear-gradient(180deg,rgba(110,160,255,.08),rgba(139,123,255,.04));
+    border:1px solid var(--line);border-left:3px solid var(--accent);border-radius:12px;padding:16px 18px}
+  .take .tk{font-family:var(--mono);font-size:.66rem;letter-spacing:.14em;text-transform:uppercase;color:var(--accent);margin:0 0 8px}
+  .take p{margin:0;font-size:.95rem;color:var(--ink);line-height:1.55}
+  .take b{color:#fff}
+  @media (prefers-reduced-motion:reduce){*{animation-duration:.01ms!important;transition-duration:.01ms!important}#amb{display:none}}
+</style>
+</head>
+<body>
+
+<a class="back" href="../index.html#box-tracker">&#8592; Week 1 index</a>
+
+<canvas id="amb"></canvas>
+<div class="wrap">
+  <p class="tag">Workbook 1c &middot; Sections 3-1 and 3-2 &middot; Game</p>
+  <h1>Box Tracker</h1>
+  <p class="lede"><b>The program runs one line at a time. Type what each box holds now, exactly as println would show it.</b></p>
+
+  <div class="stage">
+    <div class="topbar">
+      <span class="lab">Game</span>
+    </div>
+
+    <div class="pic" id="pic">
+      <span class="zone z1">program</span><span class="zone z2">boxes</span>
+      <div class="hud"><span>score <b id="hScore">0</b></span><span>time <b id="hTime">0.0s</b></span></div>
+      <div class="code" id="code"></div>
+      <div class="right">
+        <div class="boxes" id="boxes"></div>
+        <div class="acts">
+          <button class="btn warn" id="bErr" disabled>Will not compile</button>
+          <button class="btn primary" id="bCheck" disabled>Check</button>
+        </div>
+      </div>
+      <div class="bar"><i id="bar"></i></div>
+      <div class="screen" id="startScr">
+        <h2>Box Tracker</h2>
+        <p>The lit line runs. Type the new value in each lit box and press Enter. If the line cannot compile, say so.</p>
+        <button class="btn primary" id="bStart">Start</button>
+      </div>
+      <div class="screen off" id="endScr">
+        <h2>Game over</h2>
+        <div class="big" id="endScore"></div>
+        <p id="endMsg"></p>
+        <div class="misses" id="endMiss"></div>
+        <button class="btn primary" id="bAgain">Play again</button>
+      </div>
+    </div>
+
+    <div class="caption" id="caption">
+      <div class="n" id="stepno"><small>round</small>0 / 8</div>
+      <div class="t" id="status">Press <b class="a">Start</b>. Eight short programs.</div>
+    </div>
+    <p class="hint"><b>Enter</b> checks &middot; <b>Tab</b> next lit box &middot; <b>Shift+Enter</b> will not compile &middot; type what println shows: a double always has a decimal point (25.0, not 25 or 25.00), quotes are optional</p>
+  </div>
+
+  <div class="take">
+    <p class="tk">The one idea</p>
+    <p><b>A box holds one value at a time, and its type decides what that value looks like.</b> An int drops the decimals, a double always shows one, a cast can damage the value, and a final box never changes.</p>
+  </div>
+
+  <div id="rail"></div>
+</div>
+
+<script>
+(function(){
+  "use strict";
+  var $=function(s){return document.querySelector(s);};
+  var reduce=matchMedia("(prefers-reduced-motion: reduce)").matches;
+
+  /* Each program: v = boxes in order {name:type}; l = lines.
+     A line: c = code, s = boxes it sets {name:printed value}, w = why, d = boxes it declares empty, e = the box a compile-error line tries to change. */
+  var POOL=[
+    {v:{firstNumber:"int",name:"String",x:"int",y:"int",z:"int",sum:"int"},l:[
+      {c:"int firstNumber = 26;",s:{firstNumber:"26"},w:"Declare and initialize: the box is created and filled in one line."},
+      {c:"String name;",s:{},d:["name"],w:"Declared only: the box exists, but nothing is in it yet."},
+      {c:"name = \"Raymond\";",s:{name:"Raymond"},w:"Assigning fills the empty box; println shows the text without quotes."},
+      {c:"int x = 5, y, z = 50;",s:{x:"5",z:"50"},d:["y"],w:"Three boxes in one line: x gets 5, z gets 50, y stays empty."},
+      {c:"int sum = x + z;",s:{sum:"55"},w:"Reading x and z copies their values out; 5 + 50 fills the new box."}]},
+    {v:{firstNumber:"int",copy:"int"},l:[
+      {c:"int firstNumber = 26;",s:{firstNumber:"26"},w:"The box is created and filled with 26."},
+      {c:"firstNumber = 30;",s:{firstNumber:"30"},w:"Assigning replaces the value: the 26 is gone."},
+      {c:"int copy = firstNumber;",s:{copy:"30"},w:"Reading copies the value out; firstNumber keeps its 30."},
+      {c:"firstNumber = 12;",s:{firstNumber:"12"},w:"Only firstNumber changes; copy kept its own 30."},
+      {c:"copy = copy + firstNumber;",s:{copy:"42"},w:"The right side runs first with the old copy: 30 + 12 is 42."}]},
+    {v:{x:"int"},l:[
+      {c:"int x = 5;",s:{x:"5"},w:"The box starts at 5."},
+      {c:"x = x + 1;",s:{x:"6"},w:"Read 5, add 1, store 6 back in the same box."},
+      {c:"x++;",s:{x:"7"},w:"x++ on its own line is the same as x = x + 1."},
+      {c:"++x;",s:{x:"8"},w:"On its own line, ++x also just adds 1."},
+      {c:"x = x * 2;",s:{x:"16"},w:"Read 8, double it, store 16."}]},
+    {v:{a:"int",b:"int",c:"int",d:"int",e:"int"},l:[
+      {c:"int a = 5;",s:{a:"5"},w:"The box starts at 5."},
+      {c:"int b = a++;",s:{a:"6",b:"5"},w:"Post-increment: b gets the old value 5, then a becomes 6."},
+      {c:"int c = 5;",s:{c:"5"},w:"A fresh box at 5."},
+      {c:"int d = ++c;",s:{c:"6",d:"6"},w:"Pre-increment: c becomes 6 first, then d gets that 6."},
+      {c:"int e = d++;",s:{d:"7",e:"6"},w:"Post again: e gets the old 6, then d moves on to 7."}]},
+    {v:{firstNumber:"int",secondNumber:"int",result:"int",remainder:"int"},l:[
+      {c:"int firstNumber = 10;",s:{firstNumber:"10"},w:"An int box holding 10."},
+      {c:"int secondNumber = 3;",s:{secondNumber:"3"},w:"An int box holding 3."},
+      {c:"int result = firstNumber / secondNumber;",s:{result:"3"},w:"int divided by int drops the decimals: 10 / 3 is 3."},
+      {c:"int remainder = firstNumber % secondNumber;",s:{remainder:"1"},w:"% keeps what is left over: 10 = 3 * 3 + 1."},
+      {c:"result = result * secondNumber + remainder;",s:{result:"10"},w:"* runs before +: 3 * 3 + 1 is 10, the number we started with."}]},
+    {v:{firstNumber:"double",secondNumber:"double",result:"double"},l:[
+      {c:"double firstNumber = 10;",s:{firstNumber:"10.0"},w:"A double always prints a decimal point, so 10 shows as 10.0."},
+      {c:"double secondNumber = 3;",s:{secondNumber:"3.0"},w:"The int 3 is widened into the double box: 3.0."},
+      {c:"double result = firstNumber / secondNumber;",s:{result:"3.3333333333333335"},w:"Double division keeps the decimals; println shows 3.3333333333333335, the last digit is rounding."},
+      {c:"result = firstNumber % secondNumber;",s:{result:"1.0"},w:"% works on doubles too: the remainder is 1.0."},
+      {c:"result = firstNumber * secondNumber;",s:{result:"30.0"},w:"10.0 times 3.0 is 30.0, still a double."}]},
+    {v:{price:"double",whole:"int",back:"double",rounded:"int"},l:[
+      {c:"double price = 9.99;",s:{price:"9.99"},w:"A double box holding 9.99."},
+      {c:"int whole = (int) price;",s:{whole:"9"},w:"Casting to int cuts the decimals off; it does not round."},
+      {c:"double back = whole;",s:{back:"9.0"},w:"The int widens into a double, but the .99 is already gone."},
+      {c:"int rounded = (int) (price + 0.5);",s:{rounded:"10"},w:"10.49 cut to an int is 10: adding 0.5 first gives rounding."},
+      {c:"price = whole;",s:{price:"9.0"},w:"The double box now holds the int 9, printed as 9.0."}]},
+    {v:{bigNumber:"long",smallNumber:"int",fixedNumber:"long",cityPopulation:"int"},l:[
+      {c:"long bigNumber = 3000000000L;",s:{bigNumber:"3000000000"},w:"The L marks a long literal; println does not show the L."},
+      {c:"int smallNumber = (int) bigNumber;",s:{smallNumber:"-1294967296"},w:"3 billion does not fit in an int; the cast wraps it around to -1294967296."},
+      {c:"long fixedNumber = bigNumber - 1;",s:{fixedNumber:"2999999999"},w:"bigNumber still holds 3000000000; the cast only damaged the copy."},
+      {c:"int cityPopulation = 650000;",s:{cityPopulation:"650000"},w:"650000 fits easily in an int."},
+      {c:"bigNumber = cityPopulation;",s:{bigNumber:"650000"},w:"int into long is widening: automatic and safe."}]},
+    {v:{myInt:"int",myLong:"long",myFloat:"float",myDouble:"double",back:"float"},l:[
+      {c:"int myInt = 9;",s:{myInt:"9"},w:"An int box holding 9."},
+      {c:"long myLong = myInt;",s:{myLong:"9"},w:"int into long widens automatically; a long prints no L."},
+      {c:"float myFloat = 3.8f;",s:{myFloat:"3.8"},w:"The f makes it a float; println shows 3.8."},
+      {c:"double myDouble = myFloat;",s:{myDouble:"3.799999952316284"},w:"A float cannot hold 3.8 exactly; widened to double, the hidden error shows: 3.799999952316284."},
+      {c:"float back = (float) myDouble;",s:{back:"3.8"},w:"Back in a float, the value prints as 3.8 again."}]},
+    {v:{text:"String",fixed:"String",one:"int",front:"String",label:"String"},l:[
+      {c:"String text = \"Sum: \" + 1 + 2;",s:{text:"Sum: 12"},w:"Left to right: \"Sum: \" + 1 is text, then + 2 glues on a 2."},
+      {c:"String fixed = \"Sum: \" + (1 + 2);",s:{fixed:"Sum: 3"},w:"Parentheses run first: 1 + 2 is 3, then it joins the text."},
+      {c:"int one = 1;",s:{one:"1"},w:"An int box holding 1."},
+      {c:"String front = one + 2 + \" is the sum\";",s:{front:"3 is the sum"},w:"Left to right: 1 + 2 is math (3) before any text appears."},
+      {c:"String label = \"A\" + one + one;",s:{label:"A11"},w:"Text came first, so each + glues: A, then 1, then 1."}]},
+    {v:{answer:"int"},l:[
+      {c:"int answer = 0;",s:{answer:"0"},w:"The box starts at 0."},
+      {c:"answer += 10;",s:{answer:"10"},w:"answer += 10 means answer = answer + 10."},
+      {c:"answer -= 5;",s:{answer:"5"},w:"10 - 5 is 5."},
+      {c:"answer *= 10;",s:{answer:"50"},w:"5 * 10 is 50."},
+      {c:"answer /= 2;",s:{answer:"25"},w:"50 / 2 is 25, an int, so no decimal point."},
+      {c:"answer %= 10;",s:{answer:"5"},w:"25 % 10 leaves 5."},
+      {c:"answer++;",s:{answer:"6"},w:"One more: 6."}]},
+    {v:{answer:"double"},l:[
+      {c:"double answer = 0;",s:{answer:"0.0"},w:"A double box: 0 prints as 0.0."},
+      {c:"answer += 10;",s:{answer:"10.0"},w:"0.0 + 10 is 10.0, still a double."},
+      {c:"answer -= 5;",s:{answer:"5.0"},w:"10.0 - 5 is 5.0."},
+      {c:"answer *= 10;",s:{answer:"50.0"},w:"5.0 * 10 is 50.0."},
+      {c:"answer /= 4;",s:{answer:"12.5"},w:"A double keeps the decimals: 50.0 / 4 is 12.5."},
+      {c:"answer %= 10;",s:{answer:"2.5"},w:"12.5 % 10 leaves 2.5."}]},
+    {v:{DAYS_IN_WEEK:"final int",weeks:"int",days:"int"},l:[
+      {c:"final int DAYS_IN_WEEK = 7;",s:{DAYS_IN_WEEK:"7"},w:"final: the box is filled once and then locked."},
+      {c:"int weeks = 2;",s:{weeks:"2"},w:"A normal int box holding 2."},
+      {c:"int days = weeks * DAYS_IN_WEEK;",s:{days:"14"},w:"Reading a final box is fine: 2 * 7 is 14."},
+      {c:"weeks = weeks + 1;",s:{weeks:"3"},w:"weeks is not final, so it can change."},
+      {c:"DAYS_IN_WEEK = 8;",s:{},e:"DAYS_IN_WEEK",w:"DAYS_IN_WEEK is final: assigning it again is a compile error, so nothing runs."}]},
+    {v:{myName:"final String",greeting:"String",city:"String"},l:[
+      {c:"final String myName = \"Raymond\";",s:{myName:"Raymond"},w:"A final String: filled once, then locked."},
+      {c:"String greeting = \"Hi \" + myName;",s:{greeting:"Hi Raymond"},w:"Reading the final box is fine: Hi joined with Raymond."},
+      {c:"String city = \"Boston\";",s:{city:"Boston"},w:"A normal String box."},
+      {c:"greeting = greeting + \" from \" + city;",s:{greeting:"Hi Raymond from Boston"},w:"greeting is not final, so it can grow."},
+      {c:"myName = myName + \" Maroun\";",s:{},e:"myName",w:"myName is final: this assignment is a compile error, so nothing runs."}]},
+    {v:{bigNumber:"long",gpa:"double",whole:"int",total:"long",smallNumber:"int"},l:[
+      {c:"long bigNumber = 3000000000L;",s:{bigNumber:"3000000000"},w:"A long box; println shows no L."},
+      {c:"double gpa = 3.75;",s:{gpa:"3.75"},w:"A double box holding 3.75."},
+      {c:"int whole = (int) gpa;",s:{whole:"3"},w:"The cast cuts .75 off: 3."},
+      {c:"long total = bigNumber + whole;",s:{total:"3000000003"},w:"int plus long is a long: 3000000003."},
+      {c:"int smallNumber = bigNumber;",s:{},e:"smallNumber",w:"long into int can lose data, so Java refuses without a cast: compile error."}]},
+    {v:{firstNumber:"int",secondNumber:"int",result:"double",back:"int"},l:[
+      {c:"int firstNumber = 10;",s:{firstNumber:"10"},w:"An int box holding 10."},
+      {c:"int secondNumber = 4;",s:{secondNumber:"4"},w:"An int box holding 4."},
+      {c:"double result = firstNumber / secondNumber;",s:{result:"2.0"},w:"int / int runs first and gives 2; only then is it widened to 2.0."},
+      {c:"result = (double) firstNumber / secondNumber;",s:{result:"2.5"},w:"The cast makes it double division: 10.0 / 4 is 2.5."},
+      {c:"int back = firstNumber / secondNumber * secondNumber;",s:{back:"8"},w:"10 / 4 is 2 in int math, then 2 * 4 is 8, not 10."}]},
+    {v:{x:"int",z:"int",temp:"int"},l:[
+      {c:"int x = 5;",s:{x:"5"},w:"x holds 5."},
+      {c:"int z = 50;",s:{z:"50"},w:"z holds 50."},
+      {c:"int temp = x;",s:{temp:"5"},w:"temp takes a copy of x before x is replaced."},
+      {c:"x = z;",s:{x:"50"},w:"x is replaced by a copy of z; the old 5 survives only in temp."},
+      {c:"z = temp;",s:{z:"5"},w:"z gets the saved 5: the two values have swapped."}]},
+    {v:{symbol:"char",letter:"char",code:"int",both:"String"},l:[
+      {c:"char symbol = '$';",s:{symbol:"$"},w:"A char box holds exactly one character."},
+      {c:"char letter = 'C';",s:{letter:"C"},w:"Single quotes, one character: C."},
+      {c:"letter++;",s:{letter:"D"},w:"A char is a number underneath; adding 1 moves C to D."},
+      {c:"int code = letter;",s:{code:"68"},w:"A char widens to int as its character code: D is 68."},
+      {c:"String both = letter + \" \" + code;",s:{both:"D 68"},w:"Text joins left to right: D, a space, then 68."}]}
+  ];
+
+  var N=8, round=[], ri=0, li=0, P=null, shown={}, vals={}, targets=[], score=0, total=0, misses=[], t0=0, timer=null, busy=false, playing=false;
+
+  function esc(s){ return String(s).replace(/&/g,"\u0026amp;").replace(/</g,"\u0026lt;").replace(/>/g,"\u0026gt;"); }
+  function shuffle(a){ a=a.slice(); for(var i=a.length-1;i>0;i--){ var j=Math.floor(Math.random()*(i+1)); var t=a[i]; a[i]=a[j]; a[j]=t; } return a; }
+  function hl(c){
+    return esc(c).replace(/("[^"]*"|'[^']*'|\bfinal\b|\b(?:int|long|double|float|char|String|boolean)\b|\b\d[\d_]*(?:\.\d+)?[Lf]?\b)/g,function(m){
+      var k=m.charAt(0)==='"'||m.charAt(0)==="'"?"st":m==="final"?"kw":/^\d/.test(m)?"nu":"ty";
+      return '<span class="'+k+'">'+m+'</span>'; });
+  }
+  function isText(t){ return /String|char/.test(t); }
+  function norm(t,s){ s=s.trim(); if(isText(t)&&s.length>1){ var q=s.charAt(0); if((q==='"'||q==="'")&&s.charAt(s.length-1)===q) s=s.slice(1,-1); } return s; }
+  function nearMiss(t,typed,right){
+    var a=typed.trim();
+    if(/double|float/.test(t)&&a!==""&&!isNaN(+a)&&+a===+right) return "Same number, but println shows this "+t.replace("final ","")+" as "+right+".";
+    if(/int|long/.test(t)&&/^-?\d+\.0+$/.test(a)&&+a===+right) return "An "+t.replace("final ","")+" never prints a decimal point.";
+    if(/[Lf]$/.test(a)&&a.slice(0,-1)===right) return "println does not show the "+a.slice(-1)+" suffix.";
+    return "";
+  }
+
+  function tick(){ $("#hTime").textContent=((performance.now()-t0)/1000).toFixed(1)+"s"; }
+  function setCap(cls,html){ $("#caption").className="caption"+(cls?" "+cls:""); $("#status").innerHTML=html; }
+
+  function paintBox(n,state){
+    var b=$("#bx_"+n), w=b.querySelector(".well"), v=vals[n];
+    b.className="bx"+(shown[n]?"":" hid")+(state==="act"||state==="good"||state==="bad"?"":" lock");
+    w.className="well"+(v===undefined?" empty":"")+(state?" "+state:"");
+    if(state==="act"){ w.innerHTML='<input class="val-in" data-n="'+n+'" autocomplete="off" spellcheck="false" aria-label="value of '+n+'">'; if(v!==undefined) w.firstChild.placeholder="was "+v; return; }
+    var txt=v===undefined?"empty":v, cls="bv"+(v===undefined?" no":isText(P.v[n])?" s":"")+(String(txt).length>12?" sm":"");
+    w.innerHTML='<span class="'+cls+'"></span>'; w.firstChild.textContent=txt;
+  }
+  function renderRound(){
+    P=round[ri]; li=0; shown={}; vals={};
+    $("#code").innerHTML=P.l.map(function(L,i){ return '<div class="ln" id="ln'+i+'"><span class="n">'+(i+1)+'</span><span>'+hl(L.c)+'</span></div>'; }).join("");
+    $("#boxes").innerHTML=Object.keys(P.v).map(function(n){ var t=P.v[n];
+      return '<div class="bx hid" id="bx_'+n+'"><div class="bh"><span class="bn">'+n+'</span><span class="bt'+(/final/.test(t)?" fin":"")+'">'+t+'</span></div><div class="well empty"></div></div>'; }).join("");
+    $("#stepno").innerHTML="<small>round</small>"+(ri+1)+" / "+N; $("#bar").style.width=(100*ri/N)+"%";
+    runLine();
+  }
+  function runLine(){
+    var L=P.l[li]; busy=false;
+    P.l.forEach(function(_,i){ $("#ln"+i).className="ln"+(i<li?" done":i===li?" cur":""); });
+    (L.d||[]).forEach(function(n){ shown[n]=true; });
+    targets=L.e?[L.e]:Object.keys(L.s); targets.forEach(function(n){ shown[n]=true; });
+    Object.keys(P.v).forEach(function(n){ paintBox(n,targets.indexOf(n)>=0?"act":""); });
+    if(!targets.length){ $("#bCheck").disabled=true; $("#bErr").disabled=true;
+      setCap("",esc(L.w)); busy=true; setTimeout(nextLine,reduce?400:1500); return; }
+    $("#bCheck").disabled=false; $("#bErr").disabled=false;
+    setCap("",targets.length>1?'This line changes <b class="a">'+targets.length+' boxes</b>. Fill each one; Tab moves between them.':'Line '+(li+1)+': what does <b class="a">'+esc(targets[0])+'</b> hold now?');
+    var f=document.querySelector(".val-in"); if(f) f.focus();
+  }
+  function finishLine(ok,html){
+    busy=true; $("#bCheck").disabled=true; $("#bErr").disabled=true;
+    $("#hScore").textContent=String(score); setCap(ok?"ok":"cut",html);
+    setTimeout(nextLine,reduce?500:(ok?1100:2600));
+  }
+  function nextLine(){ if(!playing) return; li++; if(li>=P.l.length){ ri++; if(ri>=N) end(); else renderRound(); } else runLine(); }
+
+  function check(){
+    if(busy||!playing||!targets.length) return;
+    var L=P.l[li], ins=Array.prototype.slice.call(document.querySelectorAll(".val-in")), typed={}, empty=null;
+    ins.forEach(function(i){ typed[i.getAttribute("data-n")]=i.value; if(!empty&&i.value.trim()==="") empty=i; });
+    if(empty){ empty.focus(); setCap("","Fill every lit box first, then press <b class=\"a\">Enter</b>."); return; }
+    total+=targets.length;
+    if(L.e){
+      paintBox(L.e,"bad"); $("#ln"+li).className="ln cut";
+      misses.push({c:L.c,n:L.e,you:typed[L.e],r:"will not compile",w:L.w});
+      finishLine(false,'<b class="w">Will not compile.</b> '+esc(L.w)); return;
+    }
+    var allOk=true, note="";
+    targets.forEach(function(n){
+      var t=P.v[n], right=L.s[n], ok=norm(t,typed[n])===right;
+      vals[n]=right; paintBox(n,ok?"good":"bad");
+      if(ok) score++; else { allOk=false; var nm=nearMiss(t,typed[n],right); if(nm&&!note) note=nm;
+        misses.push({c:L.c,n:n,you:typed[n],r:right,w:nm||L.w}); }
+    });
+    var shownR=targets.map(function(n){ return esc(n)+' is '+esc(L.s[n]); }).join(", ");
+    finishLine(allOk,allOk?'<b class="g">Right.</b> '+esc(L.w):'<b class="w">'+shownR+'.</b> '+esc(note||L.w));
+  }
+  function noCompile(){
+    if(busy||!playing||!targets.length) return;
+    var L=P.l[li]; total+=targets.length;
+    if(L.e){ score++; $("#ln"+li).className="ln cut"; paintBox(L.e,"good");
+      finishLine(true,'<b class="g">Right, it will not compile.</b> '+esc(L.w)); return; }
+    targets.forEach(function(n){ vals[n]=L.s[n]; paintBox(n,"bad"); misses.push({c:L.c,n:n,you:"will not compile",r:L.s[n],w:"This line compiles. "+L.w}); });
+    finishLine(false,'<b class="w">This line compiles.</b> '+esc(L.w));
+  }
+
+  function start(){
+    round=shuffle(POOL).slice(0,N); ri=0; score=0; total=0; misses=[]; playing=true;
+    $("#hScore").textContent="0"; $("#startScr").classList.add("off"); $("#endScr").classList.add("off");
+    t0=performance.now(); if(timer) clearInterval(timer); timer=setInterval(tick,100);
+    renderRound();
+  }
+  function end(){
+    playing=false; clearInterval(timer); tick(); $("#bar").style.width="100%";
+    var secs=((performance.now()-t0)/1000).toFixed(1), pct=total?score/total:0;
+    $("#endScore").textContent=score+" / "+total; $("#endScore").className="big "+(score===total?"good":pct>=.8?"":"gold");
+    $("#endMsg").textContent=(score===total?"Perfect tracking. ":pct>=.8?"Solid. ":"Keep going. ")+secs+" seconds.";
+    $("#endMiss").innerHTML=misses.map(function(m){ return '<div><code>'+esc(m.c)+'</code> <b>'+esc(m.you)+'</b> \u2192 <i>'+esc(m.n)+': '+esc(m.r)+'</i>. '+esc(m.w)+'</div>'; }).join("");
+    $("#endScr").classList.remove("off"); $("#bCheck").disabled=true; $("#bErr").disabled=true;
+    $("#stepno").innerHTML="<small>round</small>"+N+" / "+N; setCap("","Game over. <b class=\"a\">Play again</b> deals eight new programs.");
+  }
+
+  $("#bStart").addEventListener("click",start); $("#bAgain").addEventListener("click",start);
+  $("#bCheck").addEventListener("click",check); $("#bErr").addEventListener("click",noCompile);
+  $("#boxes").addEventListener("keydown",function(e){
+    if(!e.target.classList.contains("val-in")||e.key!=="Enter") return;
+    e.preventDefault(); if(e.shiftKey){ noCompile(); return; }
+    var ins=Array.prototype.slice.call(document.querySelectorAll(".val-in")), i=ins.indexOf(e.target);
+    for(var k=1;k<ins.length;k++){ var nx=ins[(i+k)%ins.length]; if(nx.value.trim()===""&&e.target.value.trim()!==""){ nx.focus(); return; } }
+    check();
+  });
+  document.addEventListener("keydown",function(e){
+    if(/INPUT|TEXTAREA|BUTTON/.test(e.target.tagName)) return;
+    var startOn=!$("#startScr").classList.contains("off"), endOn=!$("#endScr").classList.contains("off");
+    if((startOn||endOn)&&(e.code==="Space"||e.key==="Enter")){ e.preventDefault(); start(); }
+  });
+
+  var cv=$("#amb"),ctx=cv.getContext&&cv.getContext("2d"),parts=[];
+  function sizeC(){if(!ctx)return;cv.width=innerWidth;cv.height=innerHeight;}
+  function initParts(){parts=[];for(var i=0;i<46;i++)parts.push({x:Math.random(),y:Math.random(),r:Math.random()*1.6+.3,s:Math.random()*.02+.004,o:Math.random()*.4+.1});}
+  function drawC(){if(!ctx)return;ctx.clearRect(0,0,cv.width,cv.height);
+    parts.forEach(function(p){p.y-=p.s/60;if(p.y<-.02)p.y=1.02;ctx.beginPath();ctx.arc(p.x*cv.width,p.y*cv.height,p.r,0,7);
+      ctx.fillStyle="rgba(140,170,255,"+p.o+")";ctx.fill();});requestAnimationFrame(drawC);}
+  if(ctx&&!reduce){sizeC();initParts();drawC();addEventListener("resize",sizeC);}
+})();
+</script>
+<script src="../manifest.js"></script>
+<script src="../../assets/rail.js"></script>
+<script>Rail.render(document.getElementById("rail"),{kind:"games",current:"box-tracker"});</script>
+</body>
+</html>
