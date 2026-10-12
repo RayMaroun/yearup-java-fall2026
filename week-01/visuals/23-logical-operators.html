@@ -350,7 +350,7 @@
   function renderPic(p){
     var idle=!p; p=p||{};
     $("#board").classList.toggle("idle",idle); $("#start").style.opacity=idle?1:0;
-    $("#startT").innerHTML=esc(P.chip)+" \u00b7 press&nbsp;<b>Next</b>";
+    $("#startT").innerHTML=esc(P.chip)+" \u00b7 press\u00a0<b>Next</b>";
     $("#srcL").textContent=M.Ls; $("#srcR").textContent=M.Rs; $("#opO").textContent=P.op;
     $("#rule").innerHTML=P.op==="&&"?'<b>'+esc("&&")+'</b> true only if both are true. A false left ends it.':'<b>||</b> true if at least one is true. A true left ends it.';
     $("#sideL").className="half"+(p.L==="lit"?" lit":"");

@@ -292,7 +292,7 @@
     VARS.forEach(function(v,i){ var g=geo[i];
       html+='<div class="box" id="b_'+v.id+'" style="left:'+g.x+'px;top:'+g.y+'px;width:'+g.w+'px">'+
         '<div class="nm">'+v.id+'</div><div class="well empty" id="w_'+v.id+'"></div><div class="ty">'+v.type+'</div></div>'; });
-    html+='<div class="start" id="start">8 statements · press&nbsp;<b>Next</b></div>';
+    html+='<div class="start" id="start">8 statements · press\u00a0<b>Next</b></div>';
     html+='<div class="cline" id="cline"><div class="cl">console</div><div id="clineOut"></div></div>';
     picEl.innerHTML=html;
   }
