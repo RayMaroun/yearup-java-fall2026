@@ -23,8 +23,8 @@
 - [x] Idea list drafted: .planning/week-02-plan.md (Ray confirms Thu 16 Oct). Agent brief: .planning/AGENT-BRIEF-W2.md. Workbook text: .planning/workbook-text/wb2a.txt, wb2b.txt, wb2w.txt.
 - [x] 19 visuals built (Opus, one per page), static sweep clean (scratchpad sweep.sh), all 19 clicked through in Chrome by the lead: steps, chips, Experiment (15), rail. Examples from the rebuilt fall demos in 04.Weeks/Week 02/demos/ (demo-01 to demo-07).
 - [x] 13 companions (checklist shape), ticks persist, links resolve once reference exists.
-- [x] 8 games built; 7 opened and started in Chrome (string-method-match, index-inspector, class-builder, constructor-picker, loop-tracer, break-or-continue, bug-hunter-2); parse-or-crash pending at the time of writing.
+- [x] 8 games built, all 8 opened and started in Chrome (one answer each).
 - [x] week-02/index.html (from the week 1 template), landing card set live (local), manifest filled (19/4/13/8).
-- [ ] Reference 4 pages: cheat-sheet and glossary present; common-errors and intellij-shortcuts pending. Verify all four in Chrome.
-- [ ] Run `node build-search-index.js` after the last page; commit locally; DO NOT PUSH before Mon 19 Oct.
+- [x] Reference 4 pages built and opened in Chrome (glossary: 84 entries, every chip resolves).
+- [x] search-index.json rebuilt (101 items, 2 weeks). Committed locally 7b0a73d. NOT PUSHED: push on Mon 19 Oct after Ray's review (git push origin main).
 - Notes for Ray's review: page 03 teaches compareTo (not in the fall workbook, Ray decides); page 19 is the 2b debugger (2b skipped in spring); page 05 uses the workbook's own date example, not the theater one; page 15's exception name is from the demo, the workbook never names it.
