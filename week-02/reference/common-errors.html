@@ -1,0 +1,377 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Common Errors | Week 2 Visual Hub</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Sora:wght@500;700&family=Inter:wght@400;500&family=JetBrains+Mono:wght@400;500&display=swap">
+<style>
+  :root{
+    --bg:#080c17; --bg2:#0c1428; --surface:rgba(255,255,255,.045); --line:rgba(255,255,255,.09);
+    --ink:#eef2fb; --muted:#8496b6; --accent:#6ea0ff; --accent2:#8b7bff; --good:#46d98a; --warn:#ff6a6a;
+    --gold:#ffc862; --disp:'Sora',system-ui,sans-serif; --body:'Inter',system-ui,sans-serif;
+    --mono:'JetBrains Mono',ui-monospace,monospace;
+  }
+  *{box-sizing:border-box}
+  body{margin:0;min-height:100vh;color:var(--ink);font-family:var(--body);
+    background:radial-gradient(1200px 700px at 70% -10%,#141d38 0%,transparent 55%),
+               radial-gradient(900px 600px at 10% 110%,#161233 0%,transparent 50%),#080c17;
+    overflow-x:hidden}
+  #amb{position:fixed;inset:0;z-index:0;pointer-events:none;opacity:.6}
+  .back{position:relative;z-index:2;display:block;max-width:1120px;margin:0 auto;padding:26px 24px 0;
+    width:100%;font-family:var(--mono);font-size:.8rem;letter-spacing:.04em;color:var(--muted);
+    text-decoration:none;transition:color .15s}
+  .back:hover{color:var(--accent)}
+  .wrap{position:relative;z-index:1;max-width:1120px;margin:0 auto;padding:22px 24px 70px}
+  .tag{font-family:var(--mono);font-size:.72rem;letter-spacing:.22em;text-transform:uppercase;color:var(--accent);margin:0 0 14px}
+  h1{font-family:var(--disp);font-weight:700;font-size:clamp(2.3rem,6vw,3.6rem);line-height:1;margin:0 0 12px;
+    letter-spacing:-.03em;background:linear-gradient(180deg,#fff,#b9c6e6);-webkit-background-clip:text;
+    background-clip:text;color:transparent}
+  .lede{color:var(--muted);max-width:64ch;font-size:1.05rem;margin:0 0 26px;line-height:1.5}
+  .lede b{color:var(--ink)}
+
+  /* ---------- stage ---------- */
+  .stage{position:relative;background:linear-gradient(180deg,rgba(255,255,255,.03),rgba(255,255,255,.01));
+    border:1px solid var(--line);border-radius:24px;padding:18px 18px 14px;
+    box-shadow:0 1px 0 rgba(255,255,255,.06) inset,0 30px 80px -30px rgba(0,0,0,.8)}
+  .topbar{display:flex;align-items:center;gap:10px;margin:0 0 14px;flex-wrap:wrap}
+  .topbar .lab{margin:0 4px 0 0}
+  .lab{font-family:var(--mono);font-size:.7rem;letter-spacing:.12em;text-transform:uppercase;color:var(--muted);margin:0 0 10px}
+  .chips{display:flex;flex-wrap:wrap;gap:7px}
+  .chip{font-family:var(--body);font-weight:500;font-size:.84rem;padding:7px 14px;border-radius:999px;border:1px solid var(--line);
+    background:rgba(0,0,0,.25);color:var(--muted);cursor:pointer;transition:.15s;display:inline-flex;align-items:center;gap:7px}
+  .chip:hover{color:var(--accent);border-color:rgba(110,160,255,.4)}
+  .chip.on{background:rgba(110,160,255,.16);border-color:rgba(110,160,255,.55);color:var(--ink)}
+  .chip:focus-visible{outline:2px solid var(--accent);outline-offset:2px}
+  .chip .ct{font-family:var(--mono);font-size:.68rem;color:var(--muted)}
+  .chip .dot{width:7px;height:7px;border-radius:50%}
+  .count{margin-left:auto;font-family:var(--mono);font-size:.72rem;color:var(--muted)}
+  .count b{color:var(--ink);font-weight:500}
+
+  .pic{position:relative;min-height:390px;border:1px solid var(--line);border-radius:18px;background:rgba(6,10,20,.5);padding:14px}
+  .cards{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:12px;align-items:start}
+  @media (max-width:900px){.cards{grid-template-columns:minmax(0,1fr)}}
+  .card{border:1px solid var(--line);border-radius:14px;background:rgba(255,255,255,.02);padding:14px 16px 15px;
+    border-left:3px solid var(--cc);transition:opacity .2s,border-color .2s}
+  .card[hidden]{display:none}
+  .card[data-cat="compile"]{--cc:var(--warn)}
+  .card[data-cat="runtime"]{--cc:var(--gold)}
+  .card[data-cat="ide"]{--cc:var(--accent)}
+  .card[data-cat="git"]{--cc:var(--accent2)}
+  .ch{display:flex;align-items:baseline;gap:10px;flex-wrap:wrap;margin:0 0 9px}
+  .ch h2{font-family:var(--disp);font-weight:700;font-size:1.02rem;letter-spacing:-.01em;margin:0;color:var(--ink);flex:1 1 auto;min-width:0}
+  .cat{font-family:var(--mono);font-size:.6rem;letter-spacing:.14em;text-transform:uppercase;color:var(--cc)}
+  .see{font-family:var(--mono);font-size:.7rem;color:var(--accent);text-decoration:none;border-bottom:1px dashed rgba(110,160,255,.4)}
+  .see:hover{color:#fff;border-bottom-color:#fff}
+  pre{margin:0;font-family:var(--mono);font-size:.76rem;line-height:1.55;white-space:pre-wrap;overflow-wrap:anywhere}
+  .msg{background:rgba(0,0,0,.35);border:1px solid var(--line);border-radius:10px;padding:9px 11px;color:#ffb3b3}
+  .card[data-cat="runtime"] .msg{color:#ffe0a3}
+  .card[data-cat="ide"] .msg{color:#cfdcff}
+  .card[data-cat="git"] .msg{color:#d6ceff}
+  .msg.out{color:var(--ink)!important}
+  .mk{font-family:var(--mono);font-size:.6rem;letter-spacing:.12em;text-transform:uppercase;color:var(--muted);margin:0 0 5px}
+  .means{margin:10px 0 4px;font-size:.9rem;line-height:1.5;color:var(--muted)}
+  .fix{margin:0 0 10px;font-size:.9rem;line-height:1.5;color:var(--ink)}
+  .fix b{font-family:var(--mono);font-size:.66rem;letter-spacing:.12em;text-transform:uppercase;color:var(--good);margin-right:6px}
+  .means code,.fix code{font-family:var(--mono);font-size:.88em;color:#bcd0ff}
+  .ba{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr);gap:8px}
+  @media (max-width:560px){.ba{grid-template-columns:minmax(0,1fr)}}
+  .ba>div{border-radius:10px;padding:8px 10px;border:1px solid}
+  .ba .bad{background:rgba(255,106,106,.06);border-color:rgba(255,106,106,.25)}
+  .ba .good{background:rgba(70,217,138,.06);border-color:rgba(70,217,138,.25)}
+  .ba span{display:block;font-family:var(--mono);font-size:.58rem;letter-spacing:.14em;text-transform:uppercase;margin:0 0 4px}
+  .ba .bad span{color:var(--warn)} .ba .good span{color:var(--good)}
+  .ba pre{color:#dbe4f7;font-size:.74rem}
+  .hint{font-family:var(--mono);font-size:.68rem;color:var(--muted);margin:10px 4px 0;line-height:1.5}
+  .hint b{color:var(--accent)}
+  @media (max-width:600px){.back{padding:20px 16px 0}.wrap{padding:18px 16px 60px}.stage{padding:12px}.pic{padding:8px}.count{margin-left:0}}
+  @media (prefers-reduced-motion:reduce){*{animation-duration:.01ms!important;transition-duration:.01ms!important}#amb{display:none}}
+</style>
+</head>
+<body>
+
+<a class="back" href="../index.html#common-errors">&#8592; Week 2 index</a>
+
+<canvas id="amb"></canvas>
+<div class="wrap">
+  <p class="tag">Week 2 &middot; Reference</p>
+  <h1>Common Errors</h1>
+  <p class="lede">The messages you will meet this week, word for word. <b>Read the first line of the message: it usually names the fix.</b></p>
+
+  <div class="stage">
+    <div class="topbar">
+      <span class="lab">Show</span>
+      <div class="chips" id="chips" role="group" aria-label="Filter errors by kind">
+        <button class="chip on" data-f="all" aria-pressed="true">All <span class="ct" data-c="all"></span></button>
+        <button class="chip" data-f="compile" aria-pressed="false"><span class="dot" style="background:var(--warn)"></span>Compile <span class="ct" data-c="compile"></span></button>
+        <button class="chip" data-f="runtime" aria-pressed="false"><span class="dot" style="background:var(--gold)"></span>Runtime <span class="ct" data-c="runtime"></span></button>
+        <button class="chip" data-f="ide" aria-pressed="false"><span class="dot" style="background:var(--accent)"></span>IntelliJ <span class="ct" data-c="ide"></span></button>
+      </div>
+      <span class="count" id="count"></span>
+    </div>
+
+    <div class="pic">
+      <div class="cards" id="cards">
+
+        <!-- ================= COMPILE ================= -->
+        <article class="card" data-cat="compile">
+          <div class="ch"><span class="cat">Compile</span><h2>Reaching a private field from outside</h2><a class="see" href="../visuals/08-encapsulation.html">See it</a></div>
+          <pre class="msg">java: name has private access in Person</pre>
+          <p class="means">The field is <code>private</code>, so only code inside <code>Person</code> can touch it. <code>Main</code> cannot.</p>
+          <p class="fix"><b>Fix</b>Go through the getter to read it and the setter to change it.</p>
+          <div class="ba"><div class="bad"><span>Before</span><pre>System.out.println(instructor.name);</pre></div><div class="good"><span>After</span><pre>System.out.println(instructor.getName());</pre></div></div>
+        </article>
+
+        <article class="card" data-cat="compile">
+          <div class="ch"><span class="cat">Compile</span><h2>Calling a getter that was never written</h2><a class="see" href="../visuals/08-encapsulation.html">See it</a></div>
+          <pre class="msg">java: cannot find symbol
+  symbol:   method getAge()
+  location: variable student of type Person</pre>
+          <p class="means">The class has an <code>age</code> field but no <code>getAge()</code> method, so there is nothing to call.</p>
+          <p class="fix"><b>Fix</b>Add the getter to the class (Generate &gt; Getter), or check the spelling of the name.</p>
+          <div class="ba"><div class="bad"><span>Before</span><pre>public class Person {
+    private int age;
+    // no getAge()
+}</pre></div><div class="good"><span>After</span><pre>public class Person {
+    private int age;
+    public int getAge() {
+        return this.age;
+    }
+}</pre></div></div>
+        </article>
+
+        <article class="card" data-cat="compile">
+          <div class="ch"><span class="cat">Compile</span><h2>No constructor matches the new</h2><a class="see" href="../visuals/12-constructor-overloading.html">See it</a></div>
+          <pre class="msg">java: constructor Person in class Person cannot be applied to given types;
+  required: String,int
+  found:    no arguments
+  reason: actual and formal argument lists differ in length</pre>
+          <p class="means">The only constructor needs a name and an age. Once you write any constructor, Java no longer gives you an empty one.</p>
+          <p class="fix"><b>Fix</b>Pass what <code>required</code> lists, or add a no-argument constructor to the class.</p>
+          <div class="ba"><div class="bad"><span>Before</span><pre>Person guest = new Person();</pre></div><div class="good"><span>After</span><pre>Person guest = new Person("Guest", 0);</pre></div></div>
+        </article>
+
+        <article class="card" data-cat="compile">
+          <div class="ch"><span class="cat">Compile</span><h2>No overload matches the call</h2><a class="see" href="../visuals/11-method-overloading.html">See it</a></div>
+          <pre class="msg">java: no suitable method found for greet(no arguments)
+    method Person.greet(String) is not applicable
+      (actual and formal argument lists differ in length)
+    method Person.greet(String,int) is not applicable
+      (actual and formal argument lists differ in length)</pre>
+          <p class="means">There are two <code>greet</code> methods and the call fits neither. The compiler lists every overload it tried.</p>
+          <p class="fix"><b>Fix</b>Match one parameter list: types, count and order. Swapped order, like <code>greet(3, "Brandon")</code>, shows as <code>incompatible types</code> instead.</p>
+          <div class="ba"><div class="bad"><span>Before</span><pre>instructor.greet();</pre></div><div class="good"><span>After</span><pre>instructor.greet("Brandon");
+instructor.greet("Brandon", 3);</pre></div></div>
+        </article>
+
+        <article class="card" data-cat="compile">
+          <div class="ch"><span class="cat">Compile</span><h2>Running total with no starting value</h2><a class="see" href="../visuals/13-loop-types.html">See it</a></div>
+          <pre class="msg">java: variable total might not have been initialized</pre>
+          <p class="means"><code>total += week</code> reads <code>total</code> first, and a local variable has no value until you give it one.</p>
+          <p class="fix"><b>Fix</b>Start the total at 0, before the loop.</p>
+          <div class="ba"><div class="bad"><span>Before</span><pre>int total;
+for (int week = 1; week &lt;= 10; week++) {
+    total += week;
+}</pre></div><div class="good"><span>After</span><pre>int total = 0;
+for (int week = 1; week &lt;= 10; week++) {
+    total += week;
+}</pre></div></div>
+        </article>
+
+        <article class="card" data-cat="compile">
+          <div class="ch"><span class="cat">Compile</span><h2>Forgetting new</h2><a class="see" href="../visuals/09-what-new-does.html">See it</a></div>
+          <pre class="msg">java: cannot find symbol
+  symbol:   method Person(String,int)
+  location: class Main</pre>
+          <p class="means">Without <code>new</code>, Java reads <code>Person(...)</code> as a call to a method named Person, and there is none.</p>
+          <p class="fix"><b>Fix</b>Put <code>new</code> in front of the constructor call.</p>
+          <div class="ba"><div class="bad"><span>Before</span><pre>Person student = Person("Natalie", 37);</pre></div><div class="good"><span>After</span><pre>Person student = new Person("Natalie", 37);</pre></div></div>
+        </article>
+
+        <article class="card" data-cat="compile">
+          <div class="ch"><span class="cat">Compile</span><h2>Return only inside the loop</h2><a class="see" href="../visuals/17-arrays-and-methods.html">See it</a></div>
+          <pre class="msg">java: missing return statement</pre>
+          <p class="means">The method promises an <code>int</code>. If the loop ends without a match, nothing is returned, and the compiler refuses that path.</p>
+          <p class="fix"><b>Fix</b>Return something after the loop too, like <code>-1</code> for "not found".</p>
+          <div class="ba"><div class="bad"><span>Before</span><pre>public static int findCity(String[] cities, String target) {
+    for (int i = 0; i &lt; cities.length; i++) {
+        if (cities[i].equals(target)) {
+            return i;
+        }
+    }
+}</pre></div><div class="good"><span>After</span><pre>public static int findCity(String[] cities, String target) {
+    for (int i = 0; i &lt; cities.length; i++) {
+        if (cities[i].equals(target)) {
+            return i;
+        }
+    }
+    return -1;
+}</pre></div></div>
+        </article>
+
+        <article class="card" data-cat="compile">
+          <div class="ch"><span class="cat">Compile</span><h2>Using a StringBuilder as a String</h2><a class="see" href="../visuals/06-stringbuilder.html">See it</a></div>
+          <pre class="msg">java: incompatible types: StringBuilder cannot be converted to String</pre>
+          <p class="means">A StringBuilder is its own type, not a String, even though it holds text.</p>
+          <p class="fix"><b>Fix</b>Call <code>toString()</code> when the text is finished.</p>
+          <div class="ba"><div class="bad"><span>Before</span><pre>String toolList = tools;</pre></div><div class="good"><span>After</span><pre>String toolList = tools.toString();</pre></div></div>
+        </article>
+
+        <!-- ================= RUNTIME ================= -->
+        <article class="card" data-cat="runtime">
+          <div class="ch"><span class="cat">Runtime</span><h2>Text that is not a number</h2><a class="see" href="../visuals/04-string-to-number.html">See it</a></div>
+          <pre class="msg">Exception in thread "main" java.lang.NumberFormatException: For input string: " 12"
+	at java.base/java.lang.NumberFormatException.forInputString(NumberFormatException.java:67)
+	...
+	at com.pluralsight.Main.main(Main.java:11)</pre>
+          <p class="means"><code>parseInt</code> accepts digits only. A space, a letter or a decimal point (<code>"twelve"</code>, <code>"12.5"</code>) makes it throw.</p>
+          <p class="fix"><b>Fix</b>Trim the input first; use <code>Double.parseDouble</code> for decimals.</p>
+          <div class="ba"><div class="bad"><span>Before</span><pre>int boxes = Integer.parseInt(boxesInput);</pre></div><div class="good"><span>After</span><pre>int boxes = Integer.parseInt(boxesInput.trim());</pre></div></div>
+        </article>
+
+        <article class="card" data-cat="runtime">
+          <div class="ch"><span class="cat">Runtime</span><h2>Date in the wrong format</h2><a class="see" href="../visuals/05-string-to-date.html">See it</a></div>
+          <pre class="msg">Exception in thread "main" java.time.format.DateTimeParseException: Text '10/17/2002' could not be parsed at index 0
+	at java.base/java.time.format.DateTimeFormatter.parseResolved0(DateTimeFormatter.java:2052)
+	...
+	at com.pluralsight.Main.main(Main.java:13)</pre>
+          <p class="means"><code>LocalDate.parse(text)</code> reads only <code>yyyy-MM-dd</code>. The index says where the text stopped matching.</p>
+          <p class="fix"><b>Fix</b>Pass a formatter whose pattern matches what the user types.</p>
+          <div class="ba"><div class="bad"><span>Before</span><pre>LocalDate birthday = LocalDate.parse(birthdayInput);</pre></div><div class="good"><span>After</span><pre>DateTimeFormatter inputFormat =
+    DateTimeFormatter.ofPattern("MM/dd/yyyy");
+LocalDate birthday =
+    LocalDate.parse(birthdayInput, inputFormat);</pre></div></div>
+        </article>
+
+        <article class="card" data-cat="runtime">
+          <div class="ch"><span class="cat">Runtime</span><h2>Position past the end of a String</h2><a class="see" href="../visuals/01-string-methods.html">See it</a></div>
+          <pre class="msg">Exception in thread "main" java.lang.StringIndexOutOfBoundsException: String index out of range: 20
+	at java.base/java.lang.StringLatin1.charAt(StringLatin1.java:48)
+	...
+	at com.pluralsight.Main.main(Main.java:15)</pre>
+          <p class="means">The String has 14 characters, at positions 0 to 13. With <code>substring</code> the message reads <code>begin 0, end 20, length 10</code>.</p>
+          <p class="fix"><b>Fix</b>Keep positions below <code>length()</code>; get them from <code>indexOf</code> instead of counting by hand.</p>
+          <div class="ba"><div class="bad"><span>Before</span><pre>String trackingCode = "USA-12981-Y-22";
+char hasShipped = trackingCode.charAt(20);</pre></div><div class="good"><span>After</span><pre>String trackingCode = "USA-12981-Y-22";
+char hasShipped = trackingCode.charAt(10);</pre></div></div>
+        </article>
+
+        <article class="card" data-cat="runtime">
+          <div class="ch"><span class="cat">Runtime</span><h2>One slot too far in an array</h2><a class="see" href="../visuals/15-arrays-indexing.html">See it</a></div>
+          <pre class="msg">Exception in thread "main" java.lang.ArrayIndexOutOfBoundsException: Index 7 out of bounds for length 7
+	at com.pluralsight.Main.main(Main.java:9)</pre>
+          <p class="means">Seven slots means indexes 0 to 6. With <code>&lt;=</code> the loop asks for slot 7 on its last pass.</p>
+          <p class="fix"><b>Fix</b>Loop while <code>i &lt; length</code>, or use a for-each loop.</p>
+          <div class="ba"><div class="bad"><span>Before</span><pre>for (int i = 0; i &lt;= temperatures.length; i++) {</pre></div><div class="good"><span>After</span><pre>for (int i = 0; i &lt; temperatures.length; i++) {</pre></div></div>
+        </article>
+
+        <article class="card" data-cat="runtime">
+          <div class="ch"><span class="cat">Runtime</span><h2>A field that was never set</h2><a class="see" href="../visuals/10-object-references.html">See it</a></div>
+          <pre class="msg">Exception in thread "main" java.lang.NullPointerException: Cannot invoke "String.toUpperCase()" because the return value of "com.pluralsight.Person.getName()" is null
+	at com.pluralsight.Main.main(Main.java:23)</pre>
+          <p class="means">The empty constructor never gave <code>name</code> a value, so it is still <code>null</code>, and you cannot call a method on nothing.</p>
+          <p class="fix"><b>Fix</b>Give every field a value in every constructor, or call the setter before you use it.</p>
+          <div class="ba"><div class="bad"><span>Before</span><pre>public Person() {
+}</pre></div><div class="good"><span>After</span><pre>public Person() {
+    this("Guest", 0);
+}</pre></div></div>
+        </article>
+
+        <article class="card" data-cat="runtime">
+          <div class="ch"><span class="cat">Runtime</span><h2>== on Strings</h2><a class="see" href="../visuals/03-comparing-strings.html">See it</a></div>
+          <p class="mk">No error. Console:</p>
+          <pre class="msg out">Different text</pre>
+          <p class="means"><code>builtLanguage</code> was made at run time, so it is a different object from <code>"Java"</code>. <code>==</code> compares objects, not text.</p>
+          <p class="fix"><b>Fix</b>Compare text with <code>.equals()</code> or <code>.equalsIgnoreCase()</code>.</p>
+          <div class="ba"><div class="bad"><span>Before</span><pre>if (language == builtLanguage) {</pre></div><div class="good"><span>After</span><pre>if (language.equals(builtLanguage)) {</pre></div></div>
+        </article>
+
+        <article class="card" data-cat="runtime">
+          <div class="ch"><span class="cat">Runtime</span><h2>A loop that never ends</h2><a class="see" href="../visuals/13-loop-types.html">See it</a></div>
+          <p class="mk">No error. Console, forever:</p>
+          <pre class="msg out">Week 1
+Week 1
+Week 1
+...</pre>
+          <p class="means">Nothing in the body changes <code>week</code>, so <code>week &lt;= 4</code> stays true.</p>
+          <p class="fix"><b>Fix</b>Stop the program with the red square, then add the update that moves toward the end.</p>
+          <div class="ba"><div class="bad"><span>Before</span><pre>int week = 1;
+while (week &lt;= 4) {
+    System.out.println("Week " + week);
+}</pre></div><div class="good"><span>After</span><pre>int week = 1;
+while (week &lt;= 4) {
+    System.out.println("Week " + week);
+    week++;
+}</pre></div></div>
+        </article>
+
+        <!-- ================= INTELLIJ ================= -->
+        <article class="card" data-cat="ide">
+          <div class="ch"><span class="cat">IntelliJ</span><h2>The wrong main runs</h2></div>
+          <p class="mk">No error. The Run window shows another program's output.</p>
+          <pre class="msg">Run configuration (top right): Main</pre>
+          <p class="means">With two classes that have a <code>main</code>, the Play button runs the last run configuration, not the file you are looking at.</p>
+          <p class="fix"><b>Fix</b>Click the green arrow next to the <code>main</code> you want once, or pick it in the run configuration list.</p>
+          <div class="ba"><div class="bad"><span>Before</span><pre>Play button: runs Main</pre></div><div class="good"><span>After</span><pre>Configuration list: PersonApp, then Play</pre></div></div>
+        </article>
+
+        <article class="card" data-cat="ide">
+          <div class="ch"><span class="cat">IntelliJ</span><h2>The debugger never stops</h2><a class="see" href="../visuals/19-debugger.html">See it</a></div>
+          <p class="mk">No error. The program runs to the end.</p>
+          <pre class="msg">Process finished with exit code 0</pre>
+          <p class="means">Either the program was started with Run instead of Debug, or no breakpoint sits on a line that runs.</p>
+          <p class="fix"><b>Fix</b>Click the gutter for a red dot, then start with the bug icon.</p>
+          <div class="ba"><div class="bad"><span>Before</span><pre>green Play arrow, no red dot</pre></div><div class="good"><span>After</span><pre>red dot on the line, bug icon</pre></div></div>
+        </article>
+
+      </div>
+    </div>
+    <p class="hint">Compile messages appear in the <b>Build</b> window, runtime ones in the <b>Run</b> window. Line numbers will differ in your code.</p>
+  </div>
+
+  <div id="rail"></div>
+</div>
+
+<script>
+(function(){
+  "use strict";
+  var $=function(s){return document.querySelector(s);};
+  var reduce=matchMedia("(prefers-reduced-motion: reduce)").matches;
+  var cards=Array.prototype.slice.call(document.querySelectorAll("#cards .card"));
+  var chips=Array.prototype.slice.call(document.querySelectorAll("#chips .chip"));
+  var NAMES={all:"errors",compile:"compile errors",runtime:"runtime errors",ide:"IntelliJ problems"};
+
+  /* counts per chip */
+  var counts={all:cards.length};
+  cards.forEach(function(c){var k=c.getAttribute("data-cat");counts[k]=(counts[k]||0)+1;});
+  Array.prototype.forEach.call(document.querySelectorAll(".ct"),function(s){s.textContent=counts[s.getAttribute("data-c")]||0;});
+
+  function show(f){
+    var n=0;
+    cards.forEach(function(c){var on=f==="all"||c.getAttribute("data-cat")===f;c.hidden=!on;if(on)n++;});
+    chips.forEach(function(b){var on=b.getAttribute("data-f")===f;b.classList.toggle("on",on);b.setAttribute("aria-pressed",on?"true":"false");});
+    $("#count").innerHTML="<b>"+n+"</b> "+NAMES[f];
+  }
+  $("#chips").addEventListener("click",function(e){var b=e.target.closest(".chip");if(b)show(b.getAttribute("data-f"));});
+
+  /* ---------- ambient canvas ---------- */
+  var cv=$("#amb"),ctx=cv.getContext&&cv.getContext("2d"),parts=[];
+  function sizeC(){if(!ctx)return;cv.width=innerWidth;cv.height=innerHeight;}
+  function initParts(){parts=[];for(var i=0;i<46;i++)parts.push({x:Math.random(),y:Math.random(),
+    r:Math.random()*1.6+.3,s:Math.random()*.02+.004,o:Math.random()*.4+.1});}
+  function drawC(){if(!ctx)return;ctx.clearRect(0,0,cv.width,cv.height);
+    parts.forEach(function(p){p.y-=p.s/60;if(p.y<-.02)p.y=1.02;
+      ctx.beginPath();ctx.arc(p.x*cv.width,p.y*cv.height,p.r,0,7);
+      ctx.fillStyle="rgba(140,170,255,"+p.o+")";ctx.fill();});
+    requestAnimationFrame(drawC);}
+  if(ctx&&!reduce){sizeC();initParts();drawC();addEventListener("resize",sizeC);}
+
+  show("all");
+})();
+</script>
+<script src="../manifest.js"></script>
+<script src="../../assets/rail.js"></script>
+<script>Rail.render(document.getElementById("rail"),{week:2,kind:"reference",current:"common-errors"});</script>
+</body>
+</html>

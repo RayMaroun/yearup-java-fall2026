@@ -1,0 +1,428 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Encapsulation | Week 2 Visual Hub</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Sora:wght@500;700&family=Inter:wght@400;500&family=JetBrains+Mono:wght@400;500&display=swap">
+<style>
+  :root{
+    --bg:#080c17; --bg2:#0c1428; --surface:rgba(255,255,255,.045); --line:rgba(255,255,255,.09);
+    --ink:#eef2fb; --muted:#8496b6; --accent:#6ea0ff; --accent2:#8b7bff; --good:#46d98a; --warn:#ff6a6a;
+    --gold:#ffc862; --disp:'Sora',system-ui,sans-serif; --body:'Inter',system-ui,sans-serif;
+    --mono:'JetBrains Mono',ui-monospace,monospace;
+  }
+  *{box-sizing:border-box}
+  body{margin:0;min-height:100vh;color:var(--ink);font-family:var(--body);
+    background:radial-gradient(1200px 700px at 70% -10%,#141d38 0%,transparent 55%),
+               radial-gradient(900px 600px at 10% 110%,#161233 0%,transparent 50%),#080c17;
+    overflow-x:hidden}
+  #amb{position:fixed;inset:0;z-index:0;pointer-events:none;opacity:.6}
+  .back{position:relative;z-index:2;display:block;max-width:1120px;margin:0 auto;padding:26px 24px 0;
+    width:100%;font-family:var(--mono);font-size:.8rem;letter-spacing:.04em;color:var(--muted);
+    text-decoration:none;transition:color .15s}
+  .back:hover{color:var(--accent)}
+  .wrap{position:relative;z-index:1;max-width:1120px;margin:0 auto;padding:22px 24px 70px}
+  .tag{font-family:var(--mono);font-size:.72rem;letter-spacing:.22em;text-transform:uppercase;color:var(--accent);margin:0 0 14px}
+  h1{font-family:var(--disp);font-weight:700;font-size:clamp(2.3rem,6vw,3.6rem);line-height:1;margin:0 0 12px;
+    letter-spacing:-.03em;background:linear-gradient(180deg,#fff,#b9c6e6);-webkit-background-clip:text;
+    background-clip:text;color:transparent}
+  .lede{color:var(--muted);max-width:64ch;font-size:1.05rem;margin:0 0 26px;line-height:1.5}
+  .lede b{color:var(--ink)}
+  .lede code,.take code,.caption code{font-family:var(--mono);font-size:.92em;color:#bcd0ff}
+
+  /* ---------- stage: picture first, one toolbar, support below ---------- */
+  .stage{position:relative;background:linear-gradient(180deg,rgba(255,255,255,.03),rgba(255,255,255,.01));
+    border:1px solid var(--line);border-radius:24px;padding:18px 18px 14px;
+    box-shadow:0 1px 0 rgba(255,255,255,.06) inset,0 30px 80px -30px rgba(0,0,0,.8)}
+  .topbar{display:flex;align-items:center;gap:10px;margin:0 0 14px;flex-wrap:wrap}
+  .topbar .lab{margin:0 4px 0 0}
+  .lab{font-family:var(--mono);font-size:.7rem;letter-spacing:.12em;text-transform:uppercase;color:var(--muted);margin:0 0 10px}
+  .chips{display:flex;flex-wrap:wrap;gap:6px}
+  .chip{font-family:var(--mono);font-size:.74rem;padding:5px 11px;border-radius:999px;cursor:pointer;
+    border:1px solid var(--line);background:rgba(0,0,0,.25);color:var(--muted);transition:.15s}
+  .chip:hover{border-color:var(--accent);color:var(--accent)}
+  .chip.on{border-color:rgba(110,160,255,.6);background:rgba(110,160,255,.14);color:var(--ink)}
+  .chip:focus-visible,.btn:focus-visible,.focus:focus-visible{outline:2px solid var(--accent);outline-offset:2px}
+  .focus{margin-left:auto;font-family:var(--mono);font-size:.68rem;letter-spacing:.1em;text-transform:uppercase;padding:6px 12px;
+    border-radius:999px;border:1px solid var(--line);background:rgba(0,0,0,.25);color:var(--muted);cursor:pointer;transition:.15s}
+  .focus:hover{border-color:var(--accent);color:var(--accent)}
+  body.solo .focus{border-color:rgba(255,200,98,.6);color:var(--gold);background:rgba(255,200,98,.1)}
+
+  /* hero picture */
+  .pic{position:relative;height:390px;border:1px solid var(--line);border-radius:18px;background:rgba(6,10,20,.5);overflow:hidden}
+  body.solo .pic{height:480px}
+  .pic .start{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;font-family:var(--mono);
+    font-size:.8rem;color:var(--muted);pointer-events:none;transition:opacity .3s}
+  .pic .start b{color:var(--accent);font-weight:500}
+
+  /* caption: the one sentence, right under the picture */
+  .caption{display:flex;gap:16px;align-items:flex-start;margin:14px 4px 0;min-height:56px}
+  .caption .n{flex-shrink:0;font-family:var(--disp);font-weight:700;font-size:1.35rem;color:var(--accent);font-variant-numeric:tabular-nums;
+    line-height:1.2;min-width:3.2rem}
+  .caption .n small{display:block;font-family:var(--mono);font-weight:400;font-size:.58rem;letter-spacing:.14em;text-transform:uppercase;color:var(--muted)}
+  .caption .t{font-size:1.02rem;line-height:1.55;color:var(--ink);padding-left:16px;border-left:3px solid var(--accent);transition:border-color .3s}
+  body.solo .caption .t{font-size:1.18rem}
+  .caption.cut .t{border-left-color:var(--warn)} .caption.left .t{border-left-color:var(--gold)} .caption.ok .t{border-left-color:var(--good)}
+  .caption b.g{color:var(--good)} .caption b.w{color:var(--warn)} .caption b.a{color:var(--accent)} .caption b.y{color:var(--gold)}
+
+  /* toolbar: same on every page */
+  .toolbar{display:flex;align-items:center;gap:10px;margin:16px 0 0;padding-top:14px;border-top:1px solid var(--line)}
+  .btn{font-family:var(--body);font-weight:500;font-size:.86rem;padding:9px 16px;border-radius:11px;cursor:pointer;
+    border:1px solid var(--line);background:var(--surface);color:var(--ink);transition:.15s}
+  .btn:hover{border-color:var(--accent);color:var(--accent)}
+  .btn.primary{border-color:rgba(110,160,255,.5);background:rgba(110,160,255,.12);padding:9px 22px}
+  .btn:disabled{opacity:.35;cursor:not-allowed}
+  .btn.ghost{background:transparent;color:var(--muted);margin-left:auto}
+  .dots{display:flex;gap:5px;align-items:center;margin:0 6px}
+  .dots i{display:block;width:8px;height:8px;border-radius:50%;background:rgba(255,255,255,.12);transition:.2s}
+  .dots i.done{background:rgba(110,160,255,.45)}
+  .dots i.now{background:var(--accent);transform:scale(1.35);box-shadow:0 0 10px rgba(110,160,255,.7)}
+  .hint{font-family:var(--mono);font-size:.68rem;color:var(--muted);margin:10px 4px 0;line-height:1.5}
+  .hint b{color:var(--accent)}
+
+  /* support: code, console, readouts. Below the picture, hidden in focus */
+  .support{display:grid;grid-template-columns:minmax(0,1.3fr) minmax(0,1fr);gap:14px;margin-top:18px}
+  @media (max-width:860px){.support{grid-template-columns:1fr}}
+  body.solo .support,body.solo .take,body.solo .hint{display:none}
+  .code{min-width:0;font-family:var(--mono);font-size:.76rem;line-height:1.8;background:rgba(0,0,0,.35);border:1px solid var(--line);
+    border-radius:14px;padding:12px 0;overflow-x:auto}
+  .ln{display:flex;gap:12px;padding:0 14px;white-space:pre;color:#c9d4ea;transition:background .2s,opacity .3s}
+  .ln .n{width:20px;text-align:right;color:rgba(132,150,182,.55);user-select:none;flex-shrink:0}
+  .ln.cur{background:rgba(110,160,255,.14);box-shadow:inset 3px 0 0 var(--accent)}
+  .ln.cur .n{color:var(--accent)}
+  .ln.cut{background:rgba(255,106,106,.12);box-shadow:inset 3px 0 0 var(--warn)}
+  .ln.left{background:rgba(255,200,98,.12);box-shadow:inset 3px 0 0 var(--gold)}
+  .ln.dim{opacity:.4}
+  .kw{color:#c792ea} .ty{color:#82aaff} .st{color:#c3e88d} .nm{color:#f78c6c} .cm{color:#5f6b85;font-style:italic} .fn{color:#ffcb6b}
+  .side{display:flex;flex-direction:column;gap:12px}
+  .readout{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+  .stat{background:rgba(255,255,255,.03);border:1px solid var(--line);border-radius:12px;padding:11px 13px;transition:opacity .3s}
+  .stat.empty{opacity:.3}
+  .stat .k{font-family:var(--mono);font-size:.62rem;letter-spacing:.1em;text-transform:uppercase;color:var(--muted)}
+  .stat .v{font-family:var(--disp);font-weight:700;font-size:1.45rem;font-variant-numeric:tabular-nums;margin-top:2px;transition:color .3s;min-height:1.6em}
+  .v.hot{color:var(--accent)} .v.gold{color:var(--gold)} .v.dim{color:rgba(132,150,182,.5)}
+  .console{font-family:var(--mono);font-size:.76rem;line-height:1.6;background:#05070e;border:1px solid var(--line);
+    border-radius:12px;padding:10px 14px;min-height:64px;color:#9fe3b6;flex:1}
+  .console .cl{font-size:.6rem;letter-spacing:.14em;text-transform:uppercase;color:rgba(132,150,182,.6);margin-bottom:4px}
+  .console .out{animation:pop .3s}
+  @keyframes pop{from{transform:scale(.6);opacity:0}to{transform:scale(1);opacity:1}}
+  .take{margin-top:22px;background:linear-gradient(180deg,rgba(110,160,255,.08),rgba(139,123,255,.04));
+    border:1px solid var(--line);border-left:3px solid var(--accent);border-radius:12px;padding:16px 18px}
+  .take .tk{font-family:var(--mono);font-size:.66rem;letter-spacing:.14em;text-transform:uppercase;color:var(--accent);margin:0 0 8px}
+  .take p{margin:0;font-size:.95rem;color:var(--ink);line-height:1.55}
+  .take b{color:#fff}
+  /* ---------- the object, its wall and its doors ---------- */
+  .obj{position:absolute;left:20px;right:20px;top:16px;height:214px;border:1px solid rgba(110,160,255,.35);border-radius:16px;
+    background:rgba(110,160,255,.05);opacity:0;transform:translateY(8px);transition:opacity .4s,transform .4s}
+  .obj.show{opacity:1;transform:none}
+  .obj .oh{position:absolute;left:14px;top:9px;font-family:var(--mono);font-size:.66rem;letter-spacing:.12em;text-transform:uppercase;color:var(--muted)}
+  .obj .oh b{color:var(--accent);font-weight:500}
+  .rowf,.roww{position:absolute;left:14px;right:14px;display:flex;gap:10px}
+  .rowf{top:34px;height:96px}
+  .roww{top:146px;height:52px}
+  .fld{flex:1;min-width:0;border:1px solid var(--line);border-radius:12px;background:rgba(6,10,20,.6);padding:10px 12px;transition:border-color .3s,background .3s}
+  .fld .fk{font-family:var(--mono);font-size:.64rem;color:var(--muted);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+  .fld .fk i{font-style:normal;color:var(--warn)}
+  .fld .fk i.pk{color:var(--good)}
+  .fld .fv{font-family:var(--disp);font-weight:700;font-size:1.5rem;margin-top:8px;font-variant-numeric:tabular-nums;transition:color .3s}
+  .fld.flash{border-color:rgba(70,217,138,.7);background:rgba(70,217,138,.1)}
+  .fld.flash .fv{color:var(--good)}
+  .fld.read{border-color:rgba(110,160,255,.6)}
+  .fld.hit{border-color:rgba(255,106,106,.5)}
+  .wall{flex:1;min-width:0;position:relative;border-radius:10px;border:1px solid rgba(132,150,182,.25);
+    background:repeating-linear-gradient(45deg,rgba(132,150,182,.17) 0 6px,rgba(132,150,182,.06) 6px 12px);transition:all .3s}
+  .wall.open{background:rgba(70,217,138,.06);border:1px dashed rgba(70,217,138,.7)}
+  .wall .wl{position:absolute;left:50%;bottom:4px;transform:translateX(-50%);font-family:var(--mono);font-size:.6rem;color:var(--good);white-space:nowrap;opacity:0;transition:opacity .3s}
+  .wall.open .wl{opacity:1}
+  .door{position:absolute;top:10px;height:30px;line-height:28px;padding:0 10px;border-radius:8px;font-family:var(--mono);font-size:.72rem;
+    color:#bcd0ff;background:#05070e;border:1px solid rgba(110,160,255,.45);white-space:nowrap;transition:all .3s}
+  .door.l{left:8px} .door.r{right:8px}
+  .door.lit{border-color:var(--accent);box-shadow:0 0 14px -4px rgba(110,160,255,.9);color:#fff}
+  .door.no{border-color:var(--gold);color:var(--gold);box-shadow:0 0 14px -4px rgba(255,200,98,.8)}
+  .door.yes{border-color:var(--good);color:var(--good);box-shadow:0 0 14px -4px rgba(70,217,138,.8)}
+  .door.ghost{border:1px dashed rgba(255,106,106,.7);color:var(--warn);background:rgba(255,106,106,.08);opacity:0}
+  .door.ghost.show{opacity:1}
+  .card{position:absolute;top:258px;height:116px;border:1px solid var(--line);border-radius:14px;background:rgba(0,0,0,.35);
+    padding:10px 14px;opacity:0;transition:opacity .4s}
+  .card.show{opacity:1}
+  .card.main{left:20px;width:calc(52% - 30px)}
+  .card.coach{right:20px;width:calc(48% - 20px);border-color:rgba(255,106,106,.3)}
+  .card .ch{font-family:var(--mono);font-size:.62rem;letter-spacing:.1em;text-transform:uppercase;color:var(--muted);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+  .card .ch b{font-weight:500;color:var(--accent)}
+  .card .ch b.o{color:var(--warn)}
+  .card .cl2{font-family:var(--mono);font-size:.84rem;color:#c9d4ea;margin-top:9px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+  .card .cr{font-family:var(--body);font-size:.84rem;margin-top:9px;color:var(--muted);line-height:1.35}
+  .card .cr.w{color:var(--warn)} .card .cr.y{color:var(--gold)} .card .cr.g{color:var(--good)} .card .cr.a{color:var(--accent)}
+  .tok{position:absolute;left:0;top:0;transform:translate(-50%,-50%);padding:4px 11px;border-radius:999px;font-family:var(--mono);font-size:.84rem;
+    font-weight:500;background:#bcd0ff;color:#0a1020;border:2px solid var(--accent);box-shadow:0 0 14px -3px rgba(110,160,255,.9);
+    opacity:0;z-index:3;white-space:nowrap;transition:left .55s cubic-bezier(.3,.8,.3,1),top .55s cubic-bezier(.3,.8,.3,1),opacity .3s,background .3s,border-color .3s}
+  .tok.show{opacity:1}
+  .tok.bad{background:#ffd0d0;border-color:var(--warn);box-shadow:0 0 16px -3px rgba(255,106,106,.9);animation:shake .4s}
+  .tok.copy{border-style:dashed}
+  @keyframes shake{0%,100%{margin-left:0}25%{margin-left:-6px}75%{margin-left:6px}}
+  .ln.ok{background:rgba(70,217,138,.1);box-shadow:inset 3px 0 0 var(--good)}
+  .console .err{color:#ff9a9a}
+  .console .none{color:rgba(132,150,182,.5)}
+  @media (max-width:860px){.door{font-size:.62rem;padding:0 6px}.fld .fv{font-size:1.15rem}.card .cl2{font-size:.72rem}}
+  @media (prefers-reduced-motion:reduce){*{animation-duration:.01ms!important;transition-duration:.01ms!important}#amb{display:none}}
+</style>
+
+</head>
+<body>
+
+<a class="back" href="../index.html#08-encapsulation">&#8592; Week 2 index</a>
+
+<canvas id="amb"></canvas>
+<div class="wrap">
+  <p class="tag">Workbook 2a &middot; Section 2-1 &middot; Encapsulation</p>
+  <h1>Encapsulation</h1>
+  <p class="lede"><b>Private fields are behind a wall: public getters and setters are the only doors, and a door can check what comes in.</b></p>
+
+  <div class="stage">
+    <div class="topbar">
+      <span class="lab">Example &middot; Person p</span>
+      <button class="focus" id="bFocus" title="Hide the code and notes, enlarge the picture">Focus</button>
+    </div>
+
+    <div class="pic" id="pic">
+      <div class="obj" id="obj">
+        <span class="oh"><b>p</b> &middot; a Person object</span>
+        <div class="rowf">
+          <div class="fld" id="fName"><div class="fk"><i>private</i> String name</div><div class="fv">"Raymond"</div></div>
+          <div class="fld" id="fAge"><div class="fk"><i>private</i> int age</div><div class="fv" id="vAge">55</div></div>
+          <div class="fld" id="fEnergy"><div class="fk" id="kEnergy"><i>private</i> int energy</div><div class="fv" id="vEnergy">100</div></div>
+        </div>
+        <div class="roww">
+          <div class="wall" id="wName"><span class="door l" id="dGetName">getName()</span><span class="door r ghost" id="dSetName">no setName()</span></div>
+          <div class="wall" id="wAge"><span class="door l" id="dGetAge">getAge()</span><span class="door r" id="dSetAge">setAge(int)</span></div>
+          <div class="wall" id="wEnergy"><span class="wl">same package only</span></div>
+        </div>
+      </div>
+      <div class="card main" id="cMain">
+        <div class="ch" id="hMain">Main.java</div>
+        <div class="cl2" id="lMain"></div>
+        <div class="cr" id="rMain"></div>
+      </div>
+      <div class="card coach" id="cCoach">
+        <div class="ch">Coach.java &middot; <b class="o">package com.otherapp</b></div>
+        <div class="cl2">p.energy = 80;</div>
+        <div class="cr w">compile error</div>
+      </div>
+      <div class="tok" id="tokA"></div>
+      <div class="tok" id="tokB"></div>
+      <div class="start" id="start">Person p &middot; press&nbsp;<b>Next</b></div>
+    </div>
+
+    <div class="caption" id="caption">
+      <div class="n" id="stepno"><small>step</small>0 / 7</div>
+      <div class="t" id="status">Press <b class="a">Next</b>. The picture changes at every step.</div>
+    </div>
+
+    <div class="toolbar">
+      <button class="btn" id="bBack">&larr; Back</button>
+      <div class="dots" id="dots"></div>
+      <button class="btn primary" id="bNext">Next &rarr;</button>
+      <button class="btn ghost" id="bReset">Reset</button>
+    </div>
+    <p class="hint">space = next &middot; <b>red = the compiler says no</b>, gold = the setter says no</p>
+
+    <div class="support">
+      <div>
+        <p class="lab">Person.java</p>
+        <div class="code" id="code"></div>
+      </div>
+      <div class="side">
+        <div class="readout">
+          <div class="stat empty"><div class="k">age inside p</div><div class="v dim" id="stAge"></div></div>
+          <div class="stat empty"><div class="k">a in main</div><div class="v dim" id="stA"></div></div>
+        </div>
+        <div class="console"><div class="cl">compiler</div><div id="console"></div></div>
+      </div>
+    </div>
+  </div>
+
+  <div class="take">
+    <p class="tk">The one idea</p>
+    <p><b>Make the fields private and give the outside world methods.</b> A setter is the only way in, so it can check every
+    value. A getter hands out a copy. Leave out the setter and the field is read-only. With no keyword at all, a member is
+    <b>package-private</b>: visible inside its package, hidden from every other. Be explicit: write <code>private</code> or <code>public</code>.</p>
+  </div>
+
+  <div id="rail"></div>
+</div>
+<script>
+(function(){
+  "use strict";
+  var $=function(s){return document.querySelector(s);};
+  var reduce=matchMedia("(prefers-reduced-motion: reduce)").matches;
+  var pic=$("#pic"),codeEl=$("#code"),consEl=$("#console"),statusEl=$("#status");
+
+  /* ---------- Person.java, line 4 changes on the last step ---------- */
+  function lines(pkg){
+    return [
+      '<span class="kw">public class</span> <span class="ty">Person</span> {',
+      '    <span class="kw">private</span> <span class="ty">String</span> name;',
+      '    <span class="kw">private</span> <span class="ty">int</span> age;',
+      pkg?'    <span class="ty">int</span> energy;          <span class="cm">// no keyword</span>':'    <span class="kw">private</span> <span class="ty">int</span> energy;',
+      '',
+      '    <span class="kw">public</span> <span class="fn">Person</span>(<span class="ty">String</span> name, <span class="ty">int</span> age) {',
+      '        <span class="kw">this</span>.name = name;',
+      '        <span class="kw">this</span>.age = age;',
+      '        <span class="kw">this</span>.energy = <span class="nm">100</span>;',
+      '    }',
+      '    <span class="kw">public</span> <span class="ty">String</span> <span class="fn">getName</span>() { <span class="kw">return</span> name; }',
+      '    <span class="cm">// no setName: name is read-only</span>',
+      '    <span class="kw">public</span> <span class="ty">int</span> <span class="fn">getAge</span>() { <span class="kw">return</span> age; }',
+      '    <span class="kw">public void</span> <span class="fn">setAge</span>(<span class="ty">int</span> age) {',
+      '        <span class="kw">if</span> (age >= <span class="nm">0</span>) {',
+      '            <span class="kw">this</span>.age = age;',
+      '        }',
+      '    }',
+      '}'
+    ];
+  }
+
+  /* ---------- the walk ---------- */
+  var S=[
+    {line:[2,3,4,6,7,8,9,10],lc:"cur",cls:"",age:[55,55],main:'Person p = new Person("Raymond", 55);',res:["a","p holds a new Person object"],
+      msg:'<code>p</code> is a Person. Its fields are <b class="w">private</b>: only code inside Person can touch them.'},
+    {line:[3],lc:"cut",cls:"cut",age:[55,55],main:'p.age = -5;',res:["w","compile error: age is private"],
+      err:"Main.java: error: age has private access in Person",
+      msg:'main reaches for <code>age</code> directly. <b class="w">The compiler refuses</b>: main cannot see a private field.'},
+    {line:[14,15],lc:"left",cls:"left",age:[55,55],main:'p.setAge(-5);',res:["y","checks -5 >= 0: false, age stays 55"],
+      msg:'<code>setAge</code> is a public door, and its <code>if</code> checks the value. <b class="y">-5 is turned away.</b>'},
+    {line:[14,15,16],lc:"ok",cls:"ok",age:[55,56],main:'p.setAge(56);',res:["g","checks 56 >= 0: true, age is now 56"],
+      msg:'56 passes the check, so the setter stores it. <b class="g">The setter decides what gets in.</b>'},
+    {line:[13],lc:"cur",cls:"",age:[56,56],a:56,main:'int a = p.getAge();',res:["a","a = 56, a copy; age inside p is still 56"],
+      msg:'<code>getAge()</code> hands out <b class="a">a copy</b> of 56. main can change <code>a</code>; the age inside stays 56.'},
+    {line:[11,12],lc:"cut",cls:"cut",age:[56,56],a:56,main:'p.setName("Ray");',res:["w","compile error: there is no setName"],
+      err:"Main.java: error: cannot find symbol<br>\u00a0\u00a0symbol: method setName(String)",
+      msg:'Person has <code>getName</code> but <b class="w">no setName</b>, so name is read-only: only the constructor sets it.'},
+    {line:[4],lc:"cur",cls:"ok",age:[56,56],a:56,pkg:true,main:'p.energy = 80;',res:["g","allowed: same package"],
+      err:"Coach.java: error: energy is not public in Person;<br>\u00a0\u00a0cannot be accessed from outside package",
+      msg:'Now <code>energy</code> has no keyword: <b class="g">package-private</b>. Main, same package, gets in. Coach does not.'}
+  ];
+  var at=-1,timers=[];
+
+  function renderCode(s){
+    var L=lines(s&&s.pkg);
+    codeEl.innerHTML=L.map(function(t,i){
+      var n=i+1,c="ln";
+      if(s&&s.line.indexOf(n)>=0) c+=" "+s.lc;
+      return '<div class="'+c+'"><span class="n">'+n+'</span><span>'+(t||" ")+'</span></div>';
+    }).join("");
+  }
+
+  /* ---------- geometry: centers of parts, relative to the picture ---------- */
+  function ctr(el,dx,dy){
+    var r=el.getBoundingClientRect(),p=pic.getBoundingClientRect();
+    return {x:r.left-p.left-pic.clientLeft+r.width*(dx===undefined?.5:dx),y:r.top-p.top-pic.clientTop+r.height*(dy===undefined?.5:dy)};
+  }
+  function place(t,pt){ t.style.left=pt.x+"px"; t.style.top=pt.y+"px"; }
+  /* fly a token through a list of points; the first point is the start, no transition */
+  function fly(t,text,cls,pts,done,animate){
+    t.textContent=text; t.className="tok"+(cls?" "+cls:"");
+    if(!animate||reduce){ place(t,pts[pts.length-1]); t.classList.add("show"); if(done) done(true); return; }
+    t.style.transition="none"; place(t,pts[0]); void t.offsetWidth; t.style.transition=""; t.classList.add("show");
+    pts.slice(1).forEach(function(pt,k){ timers.push(setTimeout(function(){ place(t,pt); },60+k*600)); });
+    if(done) timers.push(setTimeout(function(){ done(false); },60+(pts.length-1)*600));
+  }
+  function hide(t){ t.className="tok"; }
+
+  function setAge(v,flash){ $("#vAge").textContent=v; $("#fAge").classList.toggle("flash",!!flash); }
+  function setEnergy(v,flash){ $("#vEnergy").textContent=v; $("#fEnergy").classList.toggle("flash",!!flash); }
+
+  function renderPic(i,animate){
+    timers.forEach(clearTimeout); timers=[];
+    var tA=$("#tokA"),tB=$("#tokB");
+    hide(tA); hide(tB);
+    $("#start").style.opacity=i<0?1:0;
+    $("#obj").classList.toggle("show",i>=0);
+    $("#cMain").classList.toggle("show",i>=0);
+    $("#cCoach").classList.toggle("show",i===6);
+    ["#dGetName","#dGetAge","#dSetAge"].forEach(function(d){ $(d).className=$(d).className.replace(/ (lit|no|yes)/g,""); });
+    $("#dSetName").classList.toggle("show",i===5);
+    ["#fName","#fAge","#fEnergy"].forEach(function(f){ $(f).classList.remove("flash","read","hit"); });
+    $("#wEnergy").classList.toggle("open",i===6);
+    $("#kEnergy").innerHTML=i===6?'<i class="pk">package-private</i> int energy':'<i>private</i> int energy';
+    $("#hMain").innerHTML=i===6?'Main.java \u00b7 <b>package com.pluralsight</b>':'Main.java \u00b7 main';
+    setEnergy(100); setAge(i<0?55:S[i].age[0]);
+    if(i<0){ $("#lMain").textContent=""; $("#rMain").textContent=""; return; }
+    var s=S[i], from=ctr($("#cMain"),.5,.18);
+    $("#lMain").textContent=s.main;
+    var rm=$("#rMain"); rm.className="cr"; rm.innerHTML="";
+    function result(){ rm.className="cr "+s.res[0]; rm.innerHTML=s.res[1]; }
+    if(i===0){ result(); return; }
+    if(i===1){ var wa=ctr($("#wAge"));
+      fly(tA,"-5","",[from,wa],function(){ tA.classList.add("bad"); $("#fAge").classList.add("hit"); result(); },animate); }
+    if(i===2){ var ds=ctr($("#dSetAge"));
+      $("#dSetAge").classList.add("lit");
+      fly(tA,"-5","",[from,ds],function(){ tA.classList.add("bad"); $("#dSetAge").classList.remove("lit"); $("#dSetAge").classList.add("no"); result(); },animate); }
+    if(i===3){ var ds2=ctr($("#dSetAge")), fa=ctr($("#vAge"),.2,.5);
+      $("#dSetAge").classList.add("lit");
+      fly(tA,"56","",[from,ds2,fa],function(){ hide(tA); $("#dSetAge").classList.remove("lit"); $("#dSetAge").classList.add("yes"); setAge(56,true); result(); },animate);
+      if(animate&&!reduce) timers.push(setTimeout(function(){ $("#dSetAge").classList.remove("lit"); $("#dSetAge").classList.add("yes"); },660)); }
+    if(i===4){ var va=ctr($("#vAge"),.2,.5), dg=ctr($("#dGetAge"));
+      $("#fAge").classList.add("read"); $("#dGetAge").classList.add("lit");
+      fly(tA,"56","copy",[va,dg,from],function(){ hide(tA); result(); },animate); }
+    if(i===5){ var dn=ctr($("#dSetName"));
+      fly(tA,'"Ray"',"",[from,dn],function(){ tA.classList.add("bad"); result(); },animate); }
+    if(i===6){ var we=ctr($("#wEnergy"),.35,.5), ve=ctr($("#vEnergy"),.2,.5), we2=ctr($("#wEnergy"),.7,.5), fc=ctr($("#cCoach"),.5,.18);
+      fly(tA,"80","",[from,we,ve],function(){ hide(tA); setEnergy(80,true); result(); },animate);
+      fly(tB,"80","",[fc,we2],function(){ tB.classList.add("bad"); },animate); }
+  }
+
+  function show(i,animate){
+    at=i;
+    var s=i>=0?S[i]:null;
+    $("#stepno").innerHTML="<small>step</small>"+(i+1)+" / "+S.length;
+    renderCode(s); renderPic(i,animate);
+    $("#caption").className="caption"+(s&&s.cls?" "+s.cls:"");
+    statusEl.innerHTML=s?s.msg:'Press <b class="a">Next</b>. The picture changes at every step.';
+    consEl.innerHTML=s&&s.err?'<div class="out err">'+s.err+'</div>':'<span class="none">'+(s&&i>0?"(compiles fine)":"(nothing yet)")+'</span>';
+    setStat("#stAge",s?s.age[1]:null,s&&s.cls==="ok"&&i===3?"hot":"");
+    setStat("#stA",s&&s.a!==undefined?s.a:null,"");
+    setBtns();
+  }
+  function setStat(id,v,c){ var e=$(id),box=e.parentNode; if(v===null){e.textContent="";e.className="v dim";box.classList.add("empty");} else {e.textContent=v;e.className="v "+(c||"");box.classList.remove("empty");} }
+  function setBtns(){ $("#bNext").disabled=at>=S.length-1; $("#bBack").disabled=at<0;
+    var d=""; for(var k=0;k<S.length;k++) d+='<i class="'+(k===at?"now":k<at?"done":"")+'"></i>'; $("#dots").innerHTML=d; }
+
+  /* focus: picture and caption only. Remembered per browser. */
+  function setFocus(on){ document.body.classList.toggle("solo",on); $("#bFocus").textContent=on?"Focus on":"Focus";
+    try{localStorage.setItem("hub-focus",on?"1":"0");}catch(e){} renderPic(at,false); }
+  $("#bFocus").addEventListener("click",function(){ setFocus(!document.body.classList.contains("solo")); this.blur(); });
+  try{ if(localStorage.getItem("hub-focus")==="1") document.body.classList.add("solo"); }catch(e){}
+  if(document.body.classList.contains("solo")) $("#bFocus").textContent="Focus on";
+
+  function next(){ if(at<S.length-1) show(at+1,true); }
+  function back(){ if(at>=0) show(at-1,true); }
+  function reset(){ show(-1,false); }
+  $("#bNext").addEventListener("click",next);
+  $("#bBack").addEventListener("click",back);
+  $("#bReset").addEventListener("click",reset);
+  document.addEventListener("keydown",function(e){ if(e.code==="Space"&&!/INPUT|BUTTON/.test(e.target.tagName)){e.preventDefault();next();} });
+  addEventListener("resize",function(){ renderPic(at,false); });
+
+  /* ---------- ambient canvas ---------- */
+  var cv=$("#amb"),ctx=cv.getContext&&cv.getContext("2d"),parts=[];
+  function sizeC(){if(!ctx)return;cv.width=innerWidth;cv.height=innerHeight;}
+  function initParts(){parts=[];for(var i=0;i<46;i++)parts.push({x:Math.random(),y:Math.random(),
+    r:Math.random()*1.6+.3,s:Math.random()*.02+.004,o:Math.random()*.4+.1});}
+  function drawC(){if(!ctx)return;ctx.clearRect(0,0,cv.width,cv.height);
+    parts.forEach(function(p){p.y-=p.s/60;if(p.y<-.02)p.y=1.02;
+      ctx.beginPath();ctx.arc(p.x*cv.width,p.y*cv.height,p.r,0,7);
+      ctx.fillStyle="rgba(140,170,255,"+p.o+")";ctx.fill();});
+    requestAnimationFrame(drawC);}
+  if(ctx&&!reduce){sizeC();initParts();drawC();addEventListener("resize",sizeC);}
+
+  reset();
+})();
+</script>
+<script src="../manifest.js"></script>
+<script src="../../assets/rail.js"></script>
+<script>Rail.render(document.getElementById("rail"),{week:2,kind:"visuals",current:"08-encapsulation"});</script>
+</body>
+</html>

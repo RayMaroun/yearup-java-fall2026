@@ -1,0 +1,356 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>break or continue | Week 2 Visual Hub</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Sora:wght@500;700&family=Inter:wght@400;500&family=JetBrains+Mono:wght@400;500&display=swap">
+<style>
+  :root{
+    --bg:#080c17; --bg2:#0c1428; --surface:rgba(255,255,255,.045); --line:rgba(255,255,255,.09);
+    --ink:#eef2fb; --muted:#8496b6; --accent:#6ea0ff; --accent2:#8b7bff; --good:#46d98a; --warn:#ff6a6a;
+    --gold:#ffc862; --disp:'Sora',system-ui,sans-serif; --body:'Inter',system-ui,sans-serif;
+    --mono:'JetBrains Mono',ui-monospace,monospace;
+  }
+  *{box-sizing:border-box}
+  body{margin:0;min-height:100vh;color:var(--ink);font-family:var(--body);
+    background:radial-gradient(1200px 700px at 70% -10%,#141d38 0%,transparent 55%),
+               radial-gradient(900px 600px at 10% 110%,#161233 0%,transparent 50%),#080c17;
+    overflow-x:hidden}
+  #amb{position:fixed;inset:0;z-index:0;pointer-events:none;opacity:.6}
+  .back{position:relative;z-index:2;display:block;max-width:1120px;margin:0 auto;padding:26px 24px 0;
+    width:100%;font-family:var(--mono);font-size:.8rem;letter-spacing:.04em;color:var(--muted);
+    text-decoration:none;transition:color .15s}
+  .back:hover{color:var(--accent)}
+  .wrap{position:relative;z-index:1;max-width:1120px;margin:0 auto;padding:22px 24px 70px}
+  .tag{font-family:var(--mono);font-size:.72rem;letter-spacing:.22em;text-transform:uppercase;color:var(--accent);margin:0 0 14px}
+  h1{font-family:var(--disp);font-weight:700;font-size:clamp(2.3rem,6vw,3.6rem);line-height:1;margin:0 0 12px;
+    letter-spacing:-.03em;background:linear-gradient(180deg,#fff,#b9c6e6);-webkit-background-clip:text;
+    background-clip:text;color:transparent}
+  .lede{color:var(--muted);max-width:64ch;font-size:1.05rem;margin:0 0 26px;line-height:1.5}
+  .lede b{color:var(--ink)}
+  .lede code,.take code,.caption code{font-family:var(--mono);font-size:.92em;color:#bcd0ff}
+
+  /* ---------- stage ---------- */
+  .stage{position:relative;background:linear-gradient(180deg,rgba(255,255,255,.03),rgba(255,255,255,.01));
+    border:1px solid var(--line);border-radius:24px;padding:18px 18px 14px;
+    box-shadow:0 1px 0 rgba(255,255,255,.06) inset,0 30px 80px -30px rgba(0,0,0,.8)}
+  .topbar{display:flex;align-items:center;gap:10px;margin:0 0 14px;flex-wrap:wrap}
+  .topbar .lab{margin:0 4px 0 0}
+  .lab{font-family:var(--mono);font-size:.7rem;letter-spacing:.12em;text-transform:uppercase;color:var(--muted);margin:0 0 10px}
+  .btn:focus-visible,.opt:focus-visible{outline:2px solid var(--accent);outline-offset:2px}
+
+  /* ---------- game board ---------- */
+  .pic{position:relative;height:390px;border:1px solid var(--line);border-radius:18px;background:rgba(6,10,20,.5);overflow:hidden;
+    display:flex;flex-direction:column;align-items:center;justify-content:center;gap:16px;padding:40px 20px 22px}
+  .pic .zone{position:absolute;left:18px;top:14px;font-family:var(--mono);font-size:.62rem;letter-spacing:.14em;text-transform:uppercase;color:rgba(132,150,182,.55)}
+  .pic .zone.c{color:rgba(255,200,98,.75)} .pic .zone.h{color:rgba(139,123,255,.85)}
+  .hud{position:absolute;right:18px;top:12px;display:flex;gap:14px;font-family:var(--mono);font-size:.72rem;color:var(--muted)}
+  .hud b{color:var(--ink);font-weight:500}
+  .board{display:grid;grid-template-columns:minmax(0,1.3fr) minmax(0,1fr);gap:12px;width:100%;max-width:920px;align-items:stretch}
+  .code{font-family:var(--mono);font-size:clamp(.74rem,1.5vw,.9rem);line-height:1.65;color:var(--ink);padding:12px 18px;border:1px solid var(--line);
+    border-radius:14px;background:rgba(0,0,0,.3);max-width:100%;overflow-x:auto;white-space:pre;transition:border-color .2s,box-shadow .2s,transform .2s}
+  .code.good{border-color:rgba(70,217,138,.7);box-shadow:0 0 28px -8px rgba(70,217,138,.8)}
+  .code.bad{border-color:rgba(255,106,106,.7);box-shadow:0 0 28px -8px rgba(255,106,106,.8);animation:shake .3s}
+  @keyframes shake{25%{transform:translateX(-6px)}75%{transform:translateX(6px)}}
+  .blank{display:inline-block;min-width:5ch;padding:0 4px;border-radius:5px;border:1px dashed rgba(255,200,98,.7);color:var(--gold);text-align:center}
+  .blank.fill{border-style:solid;border-color:rgba(70,217,138,.7);color:var(--good);background:rgba(70,217,138,.1)}
+  .blank.wrong{border-style:solid;border-color:rgba(255,106,106,.7);color:var(--warn);background:rgba(255,106,106,.1)}
+  .outs{display:flex;flex-direction:column;gap:10px;justify-content:center;padding:12px 16px;border:1px solid var(--line);border-radius:14px;background:rgba(0,0,0,.22)}
+  .row .k{font-family:var(--mono);font-size:.62rem;letter-spacing:.14em;text-transform:uppercase;color:var(--muted);margin:0 0 4px}
+  .row .v{font-family:var(--mono);font-size:1rem;color:var(--ink);padding:6px 10px;border-radius:8px;background:rgba(255,255,255,.05);white-space:pre-wrap;word-break:break-word;min-height:1.9em}
+  .row .tr{font-family:var(--mono);font-size:.7rem;color:var(--muted);margin:4px 0 0}
+  .row.ran{transition:opacity .25s}
+  .row.ran.off{opacity:0}
+  .row.ran.good .v{color:var(--good);background:rgba(70,217,138,.1)}
+  .row.ran.bad .v{color:var(--warn);background:rgba(255,106,106,.1)}
+  .opts{display:grid;grid-template-columns:repeat(3,auto);gap:8px;justify-content:center;max-width:100%}
+  .opt{font-family:var(--mono);font-size:.86rem;padding:10px 16px;border-radius:11px;cursor:pointer;border:1px solid var(--line);background:var(--surface);
+    color:var(--ink);transition:.15s;white-space:pre;text-align:left}
+  .opt:hover{border-color:var(--accent);color:var(--accent)}
+  .opt:disabled{cursor:default}
+  .opt.hit{border-color:rgba(70,217,138,.7);background:rgba(70,217,138,.14);color:var(--good)}
+  .opt.miss{border-color:rgba(255,106,106,.7);background:rgba(255,106,106,.12);color:var(--warn)}
+  .opt.dim{opacity:.4}
+  .key{display:inline-block;margin-left:8px;font-size:.62rem;color:var(--muted)}
+  .next{position:absolute;right:18px;bottom:16px}
+  .next.off{display:none}
+  .screen{position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:12px;padding:20px;background:rgba(6,10,20,.94);transition:opacity .25s}
+  .screen.off{opacity:0;pointer-events:none}
+  .screen h2{font-family:var(--disp);font-weight:700;font-size:1.6rem;margin:0;color:var(--ink)}
+  .screen p{margin:0;color:var(--muted);font-size:.95rem;text-align:center;max-width:50ch;line-height:1.5}
+  .screen .big{font-family:var(--disp);font-weight:700;font-size:2.6rem;color:var(--accent)}
+  .screen .big.gold{color:var(--gold)} .screen .big.good{color:var(--good)}
+  .bar{position:absolute;left:0;right:0;bottom:0;height:4px;background:rgba(255,255,255,.06)}
+  .bar i{display:block;height:100%;width:0;background:var(--accent);transition:width .25s}
+  .misses{font-family:var(--mono);font-size:.72rem;color:var(--muted);line-height:1.6;text-align:left;max-height:150px;overflow-y:auto;max-width:720px;width:100%}
+  .misses div{padding:3px 0;border-bottom:1px solid rgba(255,255,255,.05)}
+  .misses code{color:#bcd0ff;white-space:pre}
+  .misses b{color:var(--warn);font-weight:500;white-space:pre} .misses i{font-style:normal;color:var(--good);white-space:pre}
+
+  /* caption: the one sentence, right under the picture */
+  .caption{display:flex;gap:16px;align-items:flex-start;margin:14px 4px 0;min-height:56px}
+  .caption .n{flex-shrink:0;font-family:var(--disp);font-weight:700;font-size:1.35rem;color:var(--accent);font-variant-numeric:tabular-nums;
+    line-height:1.2;min-width:3.2rem}
+  .caption .n small{display:block;font-family:var(--mono);font-weight:400;font-size:.58rem;letter-spacing:.14em;text-transform:uppercase;color:var(--muted)}
+  .caption .t{font-size:1.02rem;line-height:1.55;color:var(--ink);padding-left:16px;border-left:3px solid var(--accent);transition:border-color .3s}
+  .caption.cut .t{border-left-color:var(--warn)} .caption.ok .t{border-left-color:var(--good)}
+  .caption b{font-family:var(--mono);font-weight:500;white-space:pre}
+  .caption b.g{color:var(--good)} .caption b.w{color:var(--warn)} .caption b.a{color:var(--accent);font-family:var(--body)}
+
+  .btn{font-family:var(--body);font-weight:500;font-size:.86rem;padding:9px 16px;border-radius:11px;cursor:pointer;
+    border:1px solid var(--line);background:var(--surface);color:var(--ink);transition:.15s}
+  .btn:hover{border-color:var(--accent);color:var(--accent)}
+  .btn.primary{border-color:rgba(110,160,255,.5);background:rgba(110,160,255,.12);padding:9px 22px;min-width:120px}
+  .hint{font-family:var(--mono);font-size:.68rem;color:var(--muted);margin:10px 4px 0;line-height:1.5}
+  .hint b{color:var(--accent);font-weight:500}
+
+  .take{margin-top:22px;background:linear-gradient(180deg,rgba(110,160,255,.08),rgba(139,123,255,.04));
+    border:1px solid var(--line);border-left:3px solid var(--accent);border-radius:12px;padding:16px 18px}
+  .take .tk{font-family:var(--mono);font-size:.66rem;letter-spacing:.14em;text-transform:uppercase;color:var(--accent);margin:0 0 8px}
+  .take p{margin:0;font-size:.95rem;color:var(--ink);line-height:1.55}
+  .take b{color:#fff}
+  @media (max-width:760px){
+    .back{padding:20px 16px 0} .wrap{padding:18px 16px 60px} .stage{padding:12px}
+    .pic{height:auto;min-height:560px;padding:40px 12px 64px;gap:12px}
+    .board{grid-template-columns:minmax(0,1fr)}
+    .opts{grid-template-columns:minmax(0,1fr);width:100%}
+    .opt{padding:9px 10px;font-size:.8rem;overflow:hidden;text-overflow:ellipsis}
+  }
+  @media (prefers-reduced-motion:reduce){*{animation-duration:.01ms!important;transition-duration:.01ms!important}#amb{display:none}}
+</style>
+</head>
+<body>
+
+<a class="back" href="../index.html#break-or-continue">&#8592; Week 2 index</a>
+
+<canvas id="amb"></canvas>
+<div class="wrap">
+  <p class="tag">Workbook 2a &middot; Section 3-1 &middot; Game</p>
+  <h1>break or continue</h1>
+  <p class="lede"><b>Pick the piece that makes the loop print exactly the target. Then the loop runs, and you see what it really printed.</b></p>
+
+  <div class="stage">
+    <div class="topbar">
+      <span class="lab">Game</span>
+    </div>
+
+    <div class="pic" id="pic">
+      <span class="zone" id="zone">loop</span>
+      <div class="hud"><span>score <b id="hScore">0</b></span><span>time <b id="hTime">0.0s</b></span></div>
+      <div class="board">
+        <div class="code" id="code">&nbsp;</div>
+        <div class="outs">
+          <div class="row"><p class="k">target</p><div class="v" id="target">&nbsp;</div></div>
+          <div class="row ran off" id="ranRow"><p class="k">your loop printed</p><div class="v" id="ran">&nbsp;</div><p class="tr" id="trace"></p></div>
+        </div>
+      </div>
+      <div class="opts" id="opts"></div>
+      <button class="btn next off" id="bNext">Next</button>
+      <div class="bar"><i id="bar"></i></div>
+      <div class="screen" id="startScr">
+        <h2>break or continue</h2>
+        <p>Each round is one loop with one blank and the output it should print. Pick the piece that fills the blank, by click or keys 1 to 3. The loop then runs with your piece.</p>
+        <button class="btn primary" id="bStart">Start</button>
+      </div>
+      <div class="screen off" id="endScr">
+        <h2>Round over</h2>
+        <div class="big" id="endScore"></div>
+        <p id="endMsg"></p>
+        <div class="misses" id="endMiss"></div>
+        <button class="btn primary" id="bAgain">Play again</button>
+      </div>
+    </div>
+
+    <div class="caption" id="caption">
+      <div class="n" id="stepno"><small>round</small>0 / 12</div>
+      <div class="t" id="status">Press <b class="a">Start</b>. Keys 1 to 3 answer.</div>
+    </div>
+    <p class="hint"><b>break</b> leaves the whole loop &middot; <b>continue</b> skips the rest of this pass &middot; <b>% 3 == 0</b> true at 3, 6, 9 &middot; <b>== 3</b> true once &middot; space or Enter goes on after a miss</p>
+  </div>
+
+  <div class="take">
+    <p class="tk">The one idea</p>
+    <p><b>break ends the loop; continue ends only the current pass.</b> After break, nothing else in the loop runs. After continue, the update runs and the loop checks its condition again, so the next pass still happens.</p>
+  </div>
+
+  <div id="rail"></div>
+</div>
+
+<script>
+(function(){
+  "use strict";
+  var $=function(s){return document.querySelector(s);};
+  var reduce=matchMedia("(prefers-reduced-motion: reduce)").matches;
+
+  function rnd(a,b){ return a+Math.floor(Math.random()*(b-a+1)); }
+  function pick(a){ return a[Math.floor(Math.random()*a.length)]; }
+  function shuffle(a){ a=a.slice(); for(var i=a.length-1;i>0;i--){ var j=Math.floor(Math.random()*(i+1)); var t=a[i]; a[i]=a[j]; a[j]=t; } return a; }
+  function esc(s){ return String(s).replace(/&/g,"\u0026amp;").replace(/</g,"\u0026lt;").replace(/>/g,"\u0026gt;").replace(/"/g,"\u0026quot;"); }
+  function jd(n){ return n%1===0?n.toFixed(1):String(n); }   /* how Java prints a double */
+
+  /* Each template builds one round: z = zone kind, code = lines (one holds ___), o = the three pieces,
+     run(i) = runs the loop with piece i and returns {out, tr}, d = what each piece does.
+     The answer is a random piece; the target is what that piece really prints. */
+  var T={
+    stmtLaps:function(){
+      var N=rnd(5,8), K=rnd(2,N-1);
+      return {z:"s",
+        code:["for (int lap = 1; lap <= "+N+"; lap++) {","    if (lap == "+K+") {","        ___","    }","    System.out.print(lap + \" \");","}"],
+        o:["break;","continue;","System.out.print(\"rest \");"],
+        run:function(i){ var out=[]; for(var lap=1;lap<=N;lap++){ if(lap===K){ if(i===0) break; if(i===1) continue; out.push("rest"); } out.push(lap); } return {out:out.join(" ")}; },
+        d:["break leaves the loop at lap "+K+", so no lap from "+K+" on prints",
+           "continue skips only the rest of lap "+K+", then laps "+(K+1)+" to "+N+" still run",
+           "printing skips nothing: lap "+K+" still prints right after rest"],
+        w:[0,1,0,1,2]};
+    },
+    stmtBank:function(){
+      var K=rnd(2,4), N=rnd(Math.max(6,2*K),10);
+      return {z:"s",
+        code:["int piggyBank = 0;","for (int week = 1; week <= "+N+"; week++) {","    if (week % "+K+" == 0) {","        ___","    }","    piggyBank += week;","}","System.out.println(\"Piggy bank: \" + piggyBank);"],
+        o:["break;","continue;","piggyBank += week;"],
+        run:function(i){ var bank=0, add=[];
+          for(var week=1;week<=N;week++){ if(week%K===0){ if(i===0) break; if(i===1) continue; bank+=week; add.push(week); } bank+=week; add.push(week); }
+          return {out:"Piggy bank: "+bank, tr:"added: "+(add.length?add.join(" + "):"nothing")}; },
+        d:["break stops at week "+K+", the first multiple of "+K+", so only weeks 1 to "+(K-1)+" are added",
+           "continue skips every multiple of "+K+" and adds all the other weeks",
+           "adding inside the if counts every multiple of "+K+" twice"],
+        w:[0,1,0,1]};
+    },
+    condSkip:function(){
+      var K=rnd(2,4), N=rnd(Math.max(7,2*K+1),10);
+      return {z:"c",
+        code:["for (int week = 1; week <= "+N+"; week++) {","    if (___) {","        continue;","    }","    System.out.print(week + \" \");","}"],
+        o:["week % "+K+" == 0","week == "+K,"week % "+K+" != 0"],
+        run:function(i){ var out=[]; for(var week=1;week<=N;week++){ var c=i===0?week%K===0:i===1?week===K:week%K!==0; if(c) continue; out.push(week); } return {out:out.join(" ")}; },
+        d:["% "+K+" == 0 is true at "+K+", "+(2*K)+" and every multiple, so all of them are skipped",
+           "== "+K+" is true only at week "+K+", so only that week is skipped",
+           "% "+K+" != 0 is true on the other weeks, so they are skipped and only the multiples print"],
+        w:[0,1,0,1,2]};
+    },
+    condStop:function(){
+      var N=rnd(6,9), K=rnd(3,N-2);
+      return {z:"c",
+        code:["for (int lap = 1; lap <= "+N+"; lap++) {","    if (___) {","        break;","    }","    System.out.print(lap + \" \");","}"],
+        o:["lap == "+K,"lap > "+K,"lap % 2 == 0"],
+        run:function(i){ var out=[]; for(var lap=1;lap<=N;lap++){ var c=i===0?lap===K:i===1?lap>K:lap%2===0; if(c) break; out.push(lap); } return {out:out.join(" ")}; },
+        d:["== "+K+" is first true at lap "+K+", and break leaves before lap "+K+" prints",
+           "> "+K+" is first true at lap "+(K+1)+", so lap "+K+" still prints",
+           "% 2 == 0 is already true at lap 2, and break stops at the first true, not at every one"],
+        w:[0,1,0,1,2]};
+    },
+    header:function(){
+      var S=rnd(0,2), E=S+2*rnd(3,4);
+      return {z:"h",
+        code:["for (___) {","    System.out.print(day + \" \");","}"],
+        o:["int day = "+S+"; day <= "+E+"; day += 2","int day = "+S+"; day <= "+E+"; day++","int day = "+S+"; day < "+E+"; day += 2"],
+        run:function(i){ var out=[]; for(var day=S; i===2?day<E:day<=E; day+=(i===1?1:2)) out.push(day); return {out:out.join(" ")}; },
+        d:["day += 2 jumps two days at a time, and <= "+E+" lets day "+E+" in",
+           "day++ goes one day at a time, so every day prints",
+           "< "+E+" stops before "+E+", so day "+E+" never prints"],
+        w:[0,1,2]};
+    },
+    savings:function(){
+      var A=pick([20,25,50]), G=A*rnd(3,5);
+      return {z:"c",
+        code:["double savings = 0;","int week = 0;","while (___) {","    savings = savings + "+A+";","    week++;","}","System.out.println(week + \" weeks, saved \" + savings);"],
+        o:["savings < "+G,"savings <= "+G,"savings > "+G],
+        run:function(i){ var s=0, week=0; while(i===0?s<G:i===1?s<=G:s>G){ s=s+A; week++; } return {out:week+" weeks, saved "+jd(s)}; },
+        d:["< "+G+" turns false as soon as savings reaches "+G,
+           "<= "+G+" is still true at exactly "+G+", so it saves one more week",
+           "> "+G+" is false at the start (0 is not more than "+G+"), so the body never runs"],
+        w:[0,1,0,1,2]};
+    }
+  };
+  var ZONE={s:"break or continue?",c:"which condition?",h:"which loop header?"};
+  var KINDS=["stmtLaps","stmtBank","condSkip","condStop","header","savings"];
+
+  function make(kind){
+    for(var tries=0;tries<20;tries++){
+      var r=T[kind](), outs=[0,1,2].map(function(i){ return r.run(i); });
+      if(outs[0].out===outs[1].out||outs[0].out===outs[2].out||outs[1].out===outs[2].out) continue;
+      var perm=shuffle([0,1,2]), a=pick(r.w);
+      return {z:r.z, code:r.code, o:perm.map(function(p){return r.o[p];}), res:perm.map(function(p){return outs[p];}),
+        d:perm.map(function(p){return r.d[p];}), a:perm.indexOf(a), target:outs[a].out};
+    }
+    return make("header");
+  }
+
+  var N=12, round=[], at=0, score=0, misses=[], t0=0, timer=null, busy=false, playing=false, waiting=false;
+
+  function codeHtml(v,i){
+    return v.code.map(function(l){
+      if(l.indexOf("___")<0) return esc(l);
+      var parts=l.split("___"), fill=i==null?'<span class="blank">'+"  "+'</span>'
+        :'<span class="blank '+(i===v.a?"fill":"wrong")+'">'+esc(v.o[i])+'</span>';
+      return esc(parts[0])+fill+esc(parts[1]);
+    }).join("\n");
+  }
+  function show(s){ return s===""?"(nothing)":s; }
+  function tick(){ $("#hTime").textContent=((performance.now()-t0)/1000).toFixed(1)+"s"; }
+  function showVal(){
+    var v=round[at]; waiting=false; $("#bNext").classList.add("off");
+    $("#zone").textContent=ZONE[v.z]; $("#zone").className="zone "+v.z;
+    $("#code").innerHTML=codeHtml(v,null); $("#code").className="code";
+    $("#target").textContent=show(v.target);
+    $("#ranRow").className="row ran off"; $("#ran").innerHTML="\u00a0"; $("#trace").textContent="";
+    $("#opts").innerHTML=v.o.map(function(o,i){ return '<button class="opt" data-i="'+i+'">'+esc(o)+'<span class="key">'+(i+1)+'</span></button>'; }).join("");
+    $("#stepno").innerHTML="<small>round</small>"+(at+1)+" / "+N; $("#bar").style.width=(100*at/N)+"%";
+    $("#caption").className="caption"; $("#status").innerHTML="Read the loop. <b class=\"a\">Which piece prints exactly the target?</b>";
+  }
+  function start(){
+    round=shuffle(KINDS.concat(KINDS)).map(make); at=0; score=0; misses=[]; busy=false; playing=true;
+    $("#hScore").textContent="0"; $("#startScr").classList.add("off"); $("#endScr").classList.add("off");
+    showVal(); t0=performance.now(); if(timer) clearInterval(timer); timer=setInterval(tick,100);
+  }
+  function next(){ if(!waiting) return; waiting=false; at++; busy=false; if(at>=N) end(); else showVal(); }
+  function answer(i){
+    if(!playing||busy||at>=round.length) return; busy=true;
+    var v=round[at], ok=i===v.a, r=v.res[i];
+    Array.prototype.forEach.call(document.querySelectorAll(".opt"),function(b){ var j=+b.getAttribute("data-i"); b.disabled=true;
+      b.classList.add(j===v.a?"hit":j===i?"miss":"dim"); });
+    $("#code").innerHTML=codeHtml(v,i); $("#code").className="code "+(ok?"good":"bad");
+    $("#ran").textContent=show(r.out); $("#trace").textContent=r.tr||"";
+    $("#ranRow").className="row ran "+(ok?"good":"bad");
+    if(ok){ score++; $("#hScore").textContent=String(score); $("#caption").className="caption ok";
+      $("#status").innerHTML='<b class="g">'+esc(v.o[i])+'</b> matches: '+esc(v.d[i])+'.';
+      waiting=true; setTimeout(next, reduce?500:1700); }
+    else { misses.push([v,i]); $("#caption").className="caption cut";
+      $("#status").innerHTML='<b class="w">'+esc(v.o[i])+'</b> prints something else: '+esc(v.d[i])+'. <b class="g">'+esc(v.o[v.a])+'</b>: '+esc(v.d[v.a])+'.';
+      waiting=true; $("#bNext").classList.remove("off"); $("#bNext").focus(); }
+  }
+  function end(){
+    playing=false; waiting=false; clearInterval(timer); tick(); $("#bar").style.width="100%"; $("#bNext").classList.add("off");
+    var secs=((performance.now()-t0)/1000).toFixed(1);
+    $("#endScore").textContent=score+" / "+N; $("#endScore").className="big "+(score===N?"good":score>=9?"":"gold");
+    $("#endMsg").textContent=(score===N?"Perfect. ":score>=9?"Solid. ":"Keep going. ")+secs+" seconds."+(misses.length?" Your misses:":"");
+    $("#endMiss").innerHTML=misses.map(function(m){ var v=m[0], i=m[1];
+      return '<div>target <code>'+esc(show(v.target))+'</code><br><b>'+esc(v.o[i])+'</b> printed <b>'+esc(show(v.res[i].out))+'</b>: '+esc(v.d[i])+'.<br><i>'+esc(v.o[v.a])+'</i>: '+esc(v.d[v.a])+'.</div>'; }).join("");
+    $("#endMiss").style.display=misses.length?"":"none";
+    $("#endScr").classList.remove("off");
+    $("#stepno").innerHTML="<small>round</small>"+N+" / "+N; $("#caption").className="caption";
+    $("#status").innerHTML="Round over. <b class=\"a\">Play again</b> builds twelve new loops.";
+  }
+  $("#opts").addEventListener("click",function(e){ var b=e.target.closest(".opt"); if(b) answer(+b.getAttribute("data-i")); });
+  $("#bStart").addEventListener("click",start); $("#bAgain").addEventListener("click",start);
+  $("#bNext").addEventListener("click",function(e){ e.stopPropagation(); next(); });
+  document.addEventListener("keydown",function(e){ if(/INPUT|TEXTAREA/.test(e.target.tagName)) return;
+    var k=parseInt(e.key,10); if(playing&&!busy&&k>=1&&k<=3){ answer(k-1); return; }
+    if((e.code==="Space"||e.key==="Enter")&&playing&&waiting&&!$("#bNext").classList.contains("off")){ e.preventDefault(); next(); return; }
+    if(e.code==="Space"&&!playing&&e.target.tagName!=="BUTTON"){ e.preventDefault(); start(); } });
+
+  var cv=$("#amb"),ctx=cv.getContext&&cv.getContext("2d"),parts=[];
+  function sizeC(){if(!ctx)return;cv.width=innerWidth;cv.height=innerHeight;}
+  function initParts(){parts=[];for(var i=0;i<46;i++)parts.push({x:Math.random(),y:Math.random(),r:Math.random()*1.6+.3,s:Math.random()*.02+.004,o:Math.random()*.4+.1});}
+  function drawC(){if(!ctx)return;ctx.clearRect(0,0,cv.width,cv.height);
+    parts.forEach(function(p){p.y-=p.s/60;if(p.y<-.02)p.y=1.02;ctx.beginPath();ctx.arc(p.x*cv.width,p.y*cv.height,p.r,0,7);
+      ctx.fillStyle="rgba(140,170,255,"+p.o+")";ctx.fill();});requestAnimationFrame(drawC);}
+  if(ctx&&!reduce){sizeC();initParts();drawC();addEventListener("resize",sizeC);}
+})();
+</script>
+<script src="../manifest.js"></script>
+<script src="../../assets/rail.js"></script>
+<script>Rail.render(document.getElementById("rail"),{week:2,kind:"games",current:"break-or-continue"});</script>
+</body>
+</html>

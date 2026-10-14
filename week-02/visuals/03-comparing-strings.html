@@ -1,0 +1,493 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Comparing Strings | Week 2 Visual Hub</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Sora:wght@500;700&family=Inter:wght@400;500&family=JetBrains+Mono:wght@400;500&display=swap">
+<style>
+  :root{
+    --bg:#080c17; --bg2:#0c1428; --surface:rgba(255,255,255,.045); --line:rgba(255,255,255,.09);
+    --ink:#eef2fb; --muted:#8496b6; --accent:#6ea0ff; --accent2:#8b7bff; --good:#46d98a; --warn:#ff6a6a;
+    --gold:#ffc862; --disp:'Sora',system-ui,sans-serif; --body:'Inter',system-ui,sans-serif;
+    --mono:'JetBrains Mono',ui-monospace,monospace;
+  }
+  *{box-sizing:border-box}
+  body{margin:0;min-height:100vh;color:var(--ink);font-family:var(--body);
+    background:radial-gradient(1200px 700px at 70% -10%,#141d38 0%,transparent 55%),
+               radial-gradient(900px 600px at 10% 110%,#161233 0%,transparent 50%),#080c17;
+    overflow-x:hidden}
+  #amb{position:fixed;inset:0;z-index:0;pointer-events:none;opacity:.6}
+  .back{position:relative;z-index:2;display:block;max-width:1120px;margin:0 auto;padding:26px 24px 0;
+    width:100%;font-family:var(--mono);font-size:.8rem;letter-spacing:.04em;color:var(--muted);
+    text-decoration:none;transition:color .15s}
+  .back:hover{color:var(--accent)}
+  .wrap{position:relative;z-index:1;max-width:1120px;margin:0 auto;padding:22px 24px 70px}
+  .tag{font-family:var(--mono);font-size:.72rem;letter-spacing:.22em;text-transform:uppercase;color:var(--accent);margin:0 0 14px}
+  h1{font-family:var(--disp);font-weight:700;font-size:clamp(2.3rem,6vw,3.6rem);line-height:1;margin:0 0 12px;
+    letter-spacing:-.03em;background:linear-gradient(180deg,#fff,#b9c6e6);-webkit-background-clip:text;
+    background-clip:text;color:transparent}
+  .lede{color:var(--muted);max-width:64ch;font-size:1.05rem;margin:0 0 26px;line-height:1.5}
+  .lede b{color:var(--ink)}
+  .lede code,.take code,.caption code{font-family:var(--mono);font-size:.92em;color:#bcd0ff}
+
+  /* ---------- stage: picture first, one toolbar, support below ---------- */
+  .stage{position:relative;background:linear-gradient(180deg,rgba(255,255,255,.03),rgba(255,255,255,.01));
+    border:1px solid var(--line);border-radius:24px;padding:18px 18px 14px;
+    box-shadow:0 1px 0 rgba(255,255,255,.06) inset,0 30px 80px -30px rgba(0,0,0,.8)}
+  .topbar{display:flex;align-items:center;gap:10px;margin:0 0 14px;flex-wrap:wrap}
+  .topbar .lab{margin:0 4px 0 0}
+  .lab{font-family:var(--mono);font-size:.7rem;letter-spacing:.12em;text-transform:uppercase;color:var(--muted);margin:0 0 10px}
+  .chips{display:flex;flex-wrap:wrap;gap:6px}
+  .chip{font-family:var(--mono);font-size:.74rem;padding:5px 11px;border-radius:999px;cursor:pointer;
+    border:1px solid var(--line);background:rgba(0,0,0,.25);color:var(--muted);transition:.15s}
+  .chip:hover{border-color:var(--accent);color:var(--accent)}
+  .chip.on{border-color:rgba(110,160,255,.6);background:rgba(110,160,255,.14);color:var(--ink)}
+  .chip:focus-visible,.btn:focus-visible,.focus:focus-visible{outline:2px solid var(--accent);outline-offset:2px}
+  .focus{margin-left:auto;font-family:var(--mono);font-size:.68rem;letter-spacing:.1em;text-transform:uppercase;padding:6px 12px;
+    border-radius:999px;border:1px solid var(--line);background:rgba(0,0,0,.25);color:var(--muted);cursor:pointer;transition:.15s}
+  .focus:hover{border-color:var(--accent);color:var(--accent)}
+  body.solo .focus{border-color:rgba(255,200,98,.6);color:var(--gold);background:rgba(255,200,98,.1)}
+
+  /* hero picture */
+  .pic{position:relative;height:390px;border:1px solid var(--line);border-radius:18px;background:rgba(6,10,20,.5);overflow:hidden}
+  body.solo .pic{height:480px}
+  .pic .rowlab{position:absolute;width:80px;text-align:right;font-family:var(--mono);font-size:.74rem;color:var(--muted);line-height:58px;transition:color .3s,opacity .3s;opacity:0}
+  .pic .rowlab.show{opacity:1}
+  .pic .idx{position:absolute;width:58px;text-align:center;font-family:var(--mono);font-size:.6rem;color:rgba(132,150,182,.55);opacity:0;transition:opacity .3s}
+  .pic .idx.show{opacity:1}
+  .col{position:absolute;border-radius:14px;border:1px solid transparent;transition:all .35s}
+  .col.match{border-color:rgba(70,217,138,.5);background:rgba(70,217,138,.08)}
+  .col.miss{border-color:rgba(255,106,106,.75);background:rgba(255,106,106,.12);box-shadow:0 0 18px -6px rgba(255,106,106,.7)}
+  .col.diff{border-color:rgba(110,160,255,.8);background:rgba(110,160,255,.14);box-shadow:0 0 18px -6px rgba(110,160,255,.7)}
+  .col.skip{border-color:rgba(255,255,255,.05);border-style:dashed}
+  .col.quiet{border-color:rgba(70,217,138,.22);background:rgba(70,217,138,.03)}
+  .tile{position:absolute;width:58px;height:58px;border-radius:11px;border:1px solid rgba(110,160,255,.4);background:rgba(110,160,255,.08);
+    display:flex;flex-direction:column;align-items:center;justify-content:center;opacity:0;transform:scale(.6);
+    transition:opacity .35s,transform .35s,border-color .3s,background .3s}
+  .tile.in{opacity:1;transform:scale(1)}
+  .tile .ch{font-family:var(--mono);font-size:1.55rem;color:var(--ink);line-height:1}
+  .tile .cc{font-family:var(--mono);font-size:.62rem;color:var(--accent);height:0;opacity:0;overflow:hidden;transition:opacity .3s,height .3s}
+  .tile.code .cc{height:auto;opacity:1;margin-top:4px}
+  .tile.code{border-color:rgba(110,160,255,.85);background:rgba(110,160,255,.18)}
+  .tile.second.code .cc{color:var(--gold)}
+  .tile.folded{border-color:var(--gold);background:rgba(255,200,98,.14)}
+  .tile.folded .ch{color:#ffe6b0}
+  .tile.faded{opacity:.35}
+  .nl{position:absolute;opacity:0;transition:opacity .4s}
+  .nl.show{opacity:1}
+  .nl .ax{position:absolute;left:0;right:0;top:40px;height:2px;background:rgba(255,255,255,.18)}
+  .nl .tk{position:absolute;top:34px;width:2px;height:14px;margin-left:-1px;background:rgba(255,255,255,.25)}
+  .nl .tl{position:absolute;top:52px;width:24px;margin-left:-12px;text-align:center;font-family:var(--mono);font-size:.7rem;color:var(--muted)}
+  .nl .mk{position:absolute;top:0;transform:translateX(-50%);font-family:var(--mono);font-size:.7rem;white-space:nowrap;padding:3px 8px;border-radius:999px}
+  .nl .mk.a{color:var(--accent);border:1px solid rgba(110,160,255,.6);background:rgba(110,160,255,.12)}
+  .nl .mk.b{color:var(--gold);border:1px solid rgba(255,200,98,.6);background:rgba(255,200,98,.1)}
+  .nl .gap{position:absolute;top:39px;height:4px;border-radius:2px;background:var(--accent);box-shadow:0 0 12px rgba(110,160,255,.7)}
+  .nl .gl{position:absolute;top:76px;transform:translateX(-50%);font-family:var(--mono);font-size:.78rem;color:var(--ink);white-space:nowrap}
+  .nl .dash{position:absolute;top:40px;height:2px;border-top:2px dashed rgba(255,255,255,.25)}
+  .card{position:absolute;width:118px;height:46px;border-radius:12px;display:flex;align-items:center;justify-content:center;
+    font-family:var(--mono);font-size:1rem;color:var(--ink);border:1px solid rgba(110,160,255,.55);background:rgba(110,160,255,.1);
+    opacity:0;transition:left .6s cubic-bezier(.2,.9,.3,1),top .6s cubic-bezier(.2,.9,.3,1),opacity .4s}
+  .card.b{border-color:rgba(255,200,98,.6);background:rgba(255,200,98,.1)}
+  .card.show{opacity:1}
+  .ordlab{position:absolute;font-family:var(--mono);font-size:.62rem;letter-spacing:.14em;text-transform:uppercase;color:var(--gold);opacity:0;transition:opacity .4s}
+  .ordsym{position:absolute;width:40px;text-align:center;font-family:var(--disp);font-weight:700;font-size:1.4rem;color:var(--muted);opacity:0;transition:opacity .4s}
+  .ordlab.show,.ordsym.show{opacity:1}
+  .answer .w{color:var(--warn)}
+  .answer{position:absolute;right:18px;bottom:14px;font-family:var(--disp);font-weight:700;font-size:1.7rem;color:var(--ink);
+    font-variant-numeric:tabular-nums;opacity:0;transition:opacity .4s;text-align:right;line-height:1.1}
+  .answer.show{opacity:1}
+  .answer small{display:block;font-family:var(--mono);font-weight:400;font-size:.6rem;letter-spacing:.14em;text-transform:uppercase;color:var(--muted);margin-bottom:2px}
+  .answer s{color:var(--warn);text-decoration-color:var(--warn);opacity:.9}
+  .answer .k{color:var(--accent)} .answer .y{color:var(--gold)} .answer .g{color:var(--good)}
+  .pic .start{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;font-family:var(--mono);
+    font-size:.8rem;color:var(--muted);pointer-events:none;transition:opacity .3s}
+  .pic .start b{color:var(--accent);font-weight:500}
+
+  /* caption: the one sentence, right under the picture */
+  .caption{display:flex;gap:16px;align-items:flex-start;margin:14px 4px 0;min-height:56px}
+  .caption .n{flex-shrink:0;font-family:var(--disp);font-weight:700;font-size:1.35rem;color:var(--accent);font-variant-numeric:tabular-nums;
+    line-height:1.2;min-width:3.2rem}
+  .caption .n small{display:block;font-family:var(--mono);font-weight:400;font-size:.58rem;letter-spacing:.14em;text-transform:uppercase;color:var(--muted)}
+  .caption .t{font-size:1.02rem;line-height:1.55;color:var(--ink);padding-left:16px;border-left:3px solid var(--accent);transition:border-color .3s}
+  body.solo .caption .t{font-size:1.18rem}
+  .caption.cut .t{border-left-color:var(--warn)} .caption.left .t{border-left-color:var(--gold)} .caption.ok .t{border-left-color:var(--good)}
+  .caption b.g{color:var(--good)} .caption b.w{color:var(--warn)} .caption b.a{color:var(--accent)} .caption b.y{color:var(--gold)}
+
+  /* toolbar: same on every page */
+  .toolbar{display:flex;align-items:center;gap:10px;margin:16px 0 0;padding-top:14px;border-top:1px solid var(--line)}
+  .btn{font-family:var(--body);font-weight:500;font-size:.86rem;padding:9px 16px;border-radius:11px;cursor:pointer;
+    border:1px solid var(--line);background:var(--surface);color:var(--ink);transition:.15s}
+  .btn:hover{border-color:var(--accent);color:var(--accent)}
+  .btn.primary{border-color:rgba(110,160,255,.5);background:rgba(110,160,255,.12);padding:9px 22px}
+  .btn:disabled{opacity:.35;cursor:not-allowed}
+  .btn.ghost{background:transparent;color:var(--muted);margin-left:auto}
+  .dots{display:flex;gap:5px;align-items:center;margin:0 6px}
+  .dots i{display:block;width:8px;height:8px;border-radius:50%;background:rgba(255,255,255,.12);transition:.2s}
+  .dots i.done{background:rgba(110,160,255,.45)}
+  .dots i.now{background:var(--accent);transform:scale(1.35);box-shadow:0 0 10px rgba(110,160,255,.7)}
+  .hint{font-family:var(--mono);font-size:.68rem;color:var(--muted);margin:10px 4px 0;line-height:1.5}
+  .hint b{color:var(--accent)}
+
+  /* support: code, console, readouts. Below the picture, hidden in focus */
+  .support{display:grid;grid-template-columns:minmax(0,1.3fr) minmax(0,1fr);gap:14px;margin-top:18px}
+  @media (max-width:860px){.support{grid-template-columns:1fr}}
+  body.solo .support,body.solo .take,body.solo .hint{display:none}
+  .code{min-width:0;font-family:var(--mono);font-size:.76rem;line-height:1.8;background:rgba(0,0,0,.35);border:1px solid var(--line);
+    border-radius:14px;padding:12px 0;overflow-x:auto}
+  .ln{display:flex;gap:12px;padding:0 14px;white-space:pre;color:#c9d4ea;transition:background .2s,opacity .3s}
+  .ln .n{width:20px;text-align:right;color:rgba(132,150,182,.55);user-select:none;flex-shrink:0}
+  .ln.cur{background:rgba(110,160,255,.14);box-shadow:inset 3px 0 0 var(--accent)}
+  .ln.cur .n{color:var(--accent)}
+  .ln.cut{background:rgba(255,106,106,.12);box-shadow:inset 3px 0 0 var(--warn)}
+  .ln.ok{background:rgba(70,217,138,.12);box-shadow:inset 3px 0 0 var(--good)}
+  .ln.left{background:rgba(255,200,98,.12);box-shadow:inset 3px 0 0 var(--gold)}
+  .ln.dim{opacity:.4}
+  .kw{color:#c792ea} .ty{color:#82aaff} .st{color:#c3e88d} .nm{color:#f78c6c} .cm{color:#5f6b85;font-style:italic} .fn{color:#ffcb6b}
+  .side{display:flex;flex-direction:column;gap:12px}
+  .readout{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+  .stat{background:rgba(255,255,255,.03);border:1px solid var(--line);border-radius:12px;padding:11px 13px;transition:opacity .3s}
+  .stat.empty{opacity:.3}
+  .stat .k{font-family:var(--mono);font-size:.62rem;letter-spacing:.1em;text-transform:uppercase;color:var(--muted)}
+  .stat .v{font-family:var(--disp);font-weight:700;font-size:1.45rem;font-variant-numeric:tabular-nums;margin-top:2px;transition:color .3s;min-height:1.6em}
+  .v.hot{color:var(--accent)} .v.gold{color:var(--gold)} .v.dim{color:rgba(132,150,182,.5)}
+  .console{font-family:var(--mono);font-size:.76rem;line-height:1.6;background:#05070e;border:1px solid var(--line);
+    border-radius:12px;padding:10px 14px;min-height:64px;color:#9fe3b6;flex:1}
+  .console .cl{font-size:.6rem;letter-spacing:.14em;text-transform:uppercase;color:rgba(132,150,182,.6);margin-bottom:4px}
+  .console .out{animation:pop .3s}
+  @keyframes pop{from{transform:scale(.6);opacity:0}to{transform:scale(1);opacity:1}}
+  .take{margin-top:22px;background:linear-gradient(180deg,rgba(110,160,255,.08),rgba(139,123,255,.04));
+    border:1px solid var(--line);border-left:3px solid var(--accent);border-radius:12px;padding:16px 18px}
+  .take .tk{font-family:var(--mono);font-size:.66rem;letter-spacing:.14em;text-transform:uppercase;color:var(--accent);margin:0 0 8px}
+  .take p{margin:0;font-size:.95rem;color:var(--ink);line-height:1.55}
+  .take b{color:#fff}
+  @media (prefers-reduced-motion:reduce){*{animation-duration:.01ms!important;transition-duration:.01ms!important}#amb{display:none}}
+</style>
+</head>
+<body>
+
+<a class="back" href="../index.html#03-comparing-strings">&#8592; Week 2 index</a>
+
+<canvas id="amb"></canvas>
+<div class="wrap">
+  <p class="tag">Workbook 2a &middot; Section 1-1 &middot; Comparing Strings</p>
+  <h1>Comparing Strings</h1>
+  <p class="lede"><b><code>equals</code> checks every character, <code>equalsIgnoreCase</code> lets case slide, and <code>compareTo</code> says which String sorts first.</b></p>
+
+  <div class="stage">
+    <div class="topbar">
+      <span class="lab">Strings</span>
+      <div class="chips" id="chips"></div>
+      <button class="focus" id="bFocus" title="Hide the code and notes, enlarge the picture">Focus</button>
+    </div>
+
+    <div class="pic" id="pic"></div>
+
+    <div class="caption" id="caption">
+      <div class="n" id="stepno"><small>step</small>0 / 6</div>
+      <div class="t" id="status">Press <b class="a">Next</b>. The picture changes at every step.</div>
+    </div>
+
+    <div class="toolbar">
+      <button class="btn" id="bBack">&larr; Back</button>
+      <div class="dots" id="dots"></div>
+      <button class="btn primary" id="bNext">Next &rarr;</button>
+      <button class="btn ghost" id="bReset">Reset</button>
+    </div>
+    <p class="hint">space = next &middot; <b>try different case</b></p>
+
+    <div class="support">
+      <div>
+        <p class="lab">Main.java</p>
+        <div class="code" id="code"></div>
+      </div>
+      <div class="side">
+        <div class="readout" style="grid-template-columns:1fr 1fr 1fr">
+          <div class="stat empty"><div class="k">equals</div><div class="v dim" id="stEq">?</div></div>
+          <div class="stat empty"><div class="k">ignoreCase</div><div class="v dim" id="stIc">?</div></div>
+          <div class="stat empty"><div class="k">compareTo</div><div class="v dim" id="stCmp">?</div></div>
+        </div>
+        <div class="console"><div class="cl">console</div><div id="console"></div></div>
+      </div>
+    </div>
+  </div>
+
+  <div class="take">
+    <p class="tk">The one idea</p>
+    <p><b><code>equals</code> asks "same text?"</b> by checking the characters in pairs; <code>equalsIgnoreCase</code> does the same
+    with M and m counted as one letter. <b><code>compareTo</code> asks "which comes first?"</b>: it stops at the first different pair
+    and returns the gap between their codes. Negative means before, zero means same place, positive means after.</p>
+  </div>
+
+  <div id="rail"></div>
+</div>
+
+<script>
+(function(){
+  "use strict";
+  var $=function(s){return document.querySelector(s);};
+  var reduce=matchMedia("(prefers-reduced-motion: reduce)").matches;
+
+  /* ---------- presets ---------- */
+  var PRESETS=[
+    {label:"same text",a:"Maya",b:"Maya"},
+    {label:"different case",a:"Maya",b:"maya"},
+    {label:"different text",a:"Mark",b:"Maya"}
+  ];
+  var DEF=2, A=PRESETS[DEF].a, B=PRESETS[DEF].b;
+
+  function q(s){return '<span class="st">"'+s+'"</span>';}
+  function lines(){
+    return [
+      '<span class="ty">String</span> first = '+q(A)+';',
+      '<span class="ty">String</span> second = '+q(B)+';',
+      '',
+      'System.out.<span class="fn">println</span>(first.<span class="fn">equals</span>(second));',
+      'System.out.<span class="fn">println</span>(first.<span class="fn">equalsIgnoreCase</span>(second));',
+      'System.out.<span class="fn">println</span>(first.<span class="fn">compareTo</span>(second));',
+      '',
+      '<span class="kw">if</span> (first.<span class="fn">compareTo</span>(second) < <span class="nm">0</span>) {',
+      '    System.out.<span class="fn">println</span>(first + <span class="st">" goes first"</span>);',
+      '} <span class="kw">else if</span> (first.<span class="fn">compareTo</span>(second) > <span class="nm">0</span>) {',
+      '    System.out.<span class="fn">println</span>(second + <span class="st">" goes first"</span>);',
+      '} <span class="kw">else</span> {',
+      '    System.out.<span class="fn">println</span>(<span class="st">"Same place"</span>);',
+      '}'
+    ];
+  }
+
+  /* ---------- what Java computes, character by character ---------- */
+  function firstMismatch(x,y){
+    var n=Math.min(x.length,y.length);
+    for(var i=0;i<n;i++) if(x.charAt(i)!==y.charAt(i)) return i;
+    return x.length===y.length?-1:n;
+  }
+  function facts(){
+    var fa=A.toLowerCase(), fb=B.toLowerCase();
+    var mis=firstMismatch(A,B), misF=firstMismatch(fa,fb);
+    var cmp=0, ca=0, cb=0, ranOut=false;
+    if(mis>=0&&mis<A.length&&mis<B.length){ ca=A.charCodeAt(mis); cb=B.charCodeAt(mis); cmp=ca-cb; }
+    else if(mis>=0){ ranOut=true; cmp=A.length-B.length; }
+    return {mis:mis,misF:misF,eq:mis<0,ic:misF<0,cmp:cmp,ca:ca,cb:cb,ranOut:ranOut,fa:fa,fb:fb};
+  }
+  function ch(s,i){return '<code>'+s.charAt(i)+'</code>';}
+
+  function build(){
+    var F=facts(), S=[], m=F.mis, i;
+    var foldedAny=false; for(i=0;i<Math.max(A.length,B.length);i++){ if(A.charAt(i)!==F.fa.charAt(i)||B.charAt(i)!==F.fb.charAt(i)) foldedAny=true; }
+    var sign=F.cmp<0?"neg":F.cmp>0?"pos":"zero";
+    S.push({line:[1,2],pic:{cols:"none"},cls:"",
+      msg:'Two Strings, lined up <b class="a">character by character</b>. Not <code>==</code>: that asks "same object?", not "same text?".'});
+    S.push({line:[4],pic:{cols:"eq"},cls:F.eq?"ok":"cut",eq:F.eq,out:[String(F.eq)],
+      ans:{lab:"first.equals(second)",val:String(F.eq),c:F.eq?"g":"w"},
+      msg:F.eq?'<code>equals</code> checks each pair, left to right. All '+A.length+' pairs match: <b class="g">true</b>.'
+              :'<code>equals</code> checks pairs left to right and stops at the first mismatch, '+ch(A,m)+' vs '+ch(B,m)+': <b class="w">false</b>.'});
+    S.push({line:[5],pic:{cols:"fold",fold:true},cls:F.ic?"ok":"cut",eq:F.eq,ic:F.ic,out:[String(F.eq),String(F.ic)],
+      ans:{lab:"equalsIgnoreCase",val:String(F.ic),c:F.ic?"g":"w"},
+      msg:'<code>equalsIgnoreCase</code> puts every letter in one case first'+
+        (F.ic?(foldedAny&&!F.eq?', so '+ch(A,m)+' and '+ch(B,m)+' now match: <b class="g">true</b>.':'. Nothing differs: <b class="g">true</b>.')
+             :', but '+ch(F.fa,F.misF)+' and '+ch(F.fb,F.misF)+' still differ: <b class="w">false</b>.')});
+    S.push({line:[6],pic:{cols:"diff",codes:true},cls:"",eq:F.eq,ic:F.ic,out:[String(F.eq),String(F.ic)],
+      ans:m>=0&&!F.ranOut?{lab:"first difference",val:"index "+m,c:"k"}:null,
+      msg:m<0?'<code>compareTo</code> walks the same pairs looking for the first difference. <b class="a">There is none.</b>'
+        :F.ranOut?'<code>compareTo</code> walks the pairs and one String <b class="a">runs out first</b>.'
+        :'<code>compareTo</code> stops at the first difference and reads each character as a number: '+ch(A,m)+' is <b class="a">'+F.ca+'</b>, '+ch(B,m)+' is <b class="y">'+F.cb+'</b>.'});
+    S.push({line:[6],pic:{cols:"diff",codes:true,nl:true},cls:"",eq:F.eq,ic:F.ic,cmp:F.cmp,out:[String(F.eq),String(F.ic),String(F.cmp)],
+      ans:{lab:"first.compareTo(second)",val:String(F.cmp),c:"k"},
+      msg:m<0?'Same characters, same length, so <code>compareTo</code> returns <b class="a">0</b>.'
+        :F.ranOut?'It returns the difference in length: <b class="a">'+F.cmp+'</b>.'
+        :'It returns first minus second: '+F.ca+' - '+F.cb+' = <b class="a">'+F.cmp+'</b>. The sign is what matters.'});
+    var branch=sign==="neg"?9:sign==="pos"?11:13;
+    var said=sign==="neg"?A+" goes first":sign==="pos"?B+" goes first":"Same place";
+    var caseNote=(m>=0&&!F.ranOut&&A.charAt(m).toLowerCase()===B.charAt(m).toLowerCase());
+    S.push({line:[8,branch],pic:{cols:"diff",order:true},cls:"ok",eq:F.eq,ic:F.ic,cmp:F.cmp,out:[String(F.eq),String(F.ic),String(F.cmp),said],
+      ans:{lab:"first.compareTo(second)",val:String(F.cmp),c:"k"},
+      msg:sign==="zero"?'<b class="g">Zero: same place</b> when sorting. Negative would mean before, positive after.'
+        :sign==="neg"?'<b class="g">Negative: '+A+' goes before '+B+'.</b>'+(caseNote?' Capitals have smaller codes, so they sort first.':' Positive would mean after.')
+        :'<b class="g">Positive: '+A+' goes after '+B+'.</b> Negative would mean before.'});
+    return S;
+  }
+
+  /* ---------- state ---------- */
+  var steps=[],at=-1;
+  var codeEl=$("#code"),picEl=$("#pic"),consEl=$("#console"),statusEl=$("#status");
+
+  function renderCode(cur,cls){
+    codeEl.innerHTML=lines().map(function(t,i){
+      var n=i+1,c="ln";
+      if(cur&&cur.indexOf(n)>=0) c+=" "+(cls==="cut"?"cut":cls==="ok"?"ok":"cur");
+      return '<div class="'+c+'"><span class="n">'+n+'</span><span>'+(t||" ")+'</span></div>';
+    }).join("");
+  }
+
+  /* ---------- the picture: two rows of character tiles, one column per index ---------- */
+  var TW=58,GAP=12,RA=44,RB=116;
+  function N(){return Math.max(A.length,B.length);}
+  function X0(){ var w=picEl.clientWidth||800, bw=N()*(TW+GAP)-GAP; return Math.round((w-bw)/2); }
+  function colX(i){return X0()+i*(TW+GAP);}
+  function buildPic(){
+    var h="",i,n=N(),x0=X0();
+    for(i=0;i<n;i++){
+      h+='<div class="col" id="c'+i+'" style="left:'+(colX(i)-7)+'px;top:'+(RA-8)+'px;width:'+(TW+14)+'px;height:'+(RB-RA+TW+16)+'px"></div>';
+      h+='<span class="idx" id="x'+i+'" style="left:'+colX(i)+'px;top:20px">'+i+'</span>';
+    }
+    h+='<span class="rowlab" id="la" style="left:'+(x0-96)+'px;top:'+RA+'px">first</span>';
+    h+='<span class="rowlab" id="lb" style="left:'+(x0-96)+'px;top:'+RB+'px">second</span>';
+    for(i=0;i<A.length;i++) h+='<div class="tile first" id="ta'+i+'" style="left:'+colX(i)+'px;top:'+RA+'px"><span class="ch"></span><span class="cc"></span></div>';
+    for(i=0;i<B.length;i++) h+='<div class="tile second" id="tb'+i+'" style="left:'+colX(i)+'px;top:'+RB+'px"><span class="ch"></span><span class="cc"></span></div>';
+    h+='<div class="nl" id="nl"></div>';
+    h+='<span class="ordlab" id="olab">sorted order</span><span class="ordsym" id="osym"></span>';
+    h+='<div class="card" id="cardA">'+A+'</div><div class="card b" id="cardB">'+B+'</div>';
+    h+='<div class="start" id="start">"'+A+'" and "'+B+'" · press <b>Next</b></div>';
+    h+='<div class="answer" id="ans"></div>';
+    picEl.innerHTML=h;
+  }
+  function relayout(){ /* keep columns centered when the picture changes width */
+    var i,n=N(),x0=X0();
+    for(i=0;i<n;i++){ $("#c"+i).style.left=(colX(i)-7)+"px"; $("#x"+i).style.left=colX(i)+"px"; }
+    for(i=0;i<A.length;i++) $("#ta"+i).style.left=colX(i)+"px";
+    for(i=0;i<B.length;i++) $("#tb"+i).style.left=colX(i)+"px";
+    $("#la").style.left=(x0-96)+"px"; $("#lb").style.left=(x0-96)+"px";
+  }
+  function bottomBox(){
+    var w=picEl.clientWidth||800, L=Math.max(30,Math.round(w*0.06));
+    return {L:L,W:Math.max(200,Math.min(560,w-L-230)),T:RB+TW+40};
+  }
+  function drawLine(F){
+    var nl=$("#nl"), B0=bottomBox(), W=B0.W, h="";
+    nl.style.left=B0.L+"px"; nl.style.top=B0.T+"px"; nl.style.width=W+"px"; nl.style.height="100px";
+    if(F.mis<0||F.ranOut){
+      h='<span class="gl" style="left:'+(W/2)+'px;top:30px">'+(F.mis<0?'no difference found: 0 apart':'lengths '+A.length+' and '+B.length+': '+F.cmp)+'</span>';
+      nl.innerHTML=h; return;
+    }
+    var lo=Math.min(F.ca,F.cb), hi=Math.max(F.ca,F.cb), span=hi-lo;
+    function px(c){return Math.round(20+(c-lo)/span*(W-40));}
+    h+='<div class="ax"></div>';
+    if(span<=14){
+      for(var c=lo;c<=hi;c++) h+='<span class="tk" style="left:'+px(c)+'px"></span><span class="tl" style="left:'+px(c)+'px">'+String.fromCharCode(c)+'</span>';
+    } else {
+      h+='<span class="tk" style="left:'+px(lo)+'px"></span><span class="tl" style="left:'+px(lo)+'px">'+String.fromCharCode(lo)+'</span>';
+      h+='<span class="tk" style="left:'+px(hi)+'px"></span><span class="tl" style="left:'+px(hi)+'px">'+String.fromCharCode(hi)+'</span>';
+    }
+    h+='<span class="gap" style="left:'+px(lo)+'px;width:'+(px(hi)-px(lo))+'px"></span>';
+    h+='<span class="mk a" style="left:'+px(F.ca)+'px">first '+String.fromCharCode(F.ca)+' '+F.ca+'</span>';
+    h+='<span class="mk b" style="left:'+px(F.cb)+'px;top:'+(F.ca===F.cb?'-26px':'0')+'">second '+String.fromCharCode(F.cb)+' '+F.cb+'</span>';
+    h+='<span class="gl" style="left:'+((px(lo)+px(hi))/2)+'px">'+span+' apart: '+F.ca+' - '+F.cb+' = '+F.cmp+'</span>';
+    nl.innerHTML=h;
+  }
+  function renderPic(s){
+    var F=facts(), p=s?s.pic:null, i, n=N();
+    $("#start").style.opacity=p?0:1;
+    $("#la").className="rowlab"+(p?" show":""); $("#lb").className="rowlab"+(p?" show":"");
+    for(i=0;i<n;i++){
+      $("#x"+i).className="idx"+(p?" show":"");
+      var c="col", mm=(p&&p.cols==="fold")?F.misF:F.mis, stop=mm<0?n:mm;
+      if(p&&p.cols!=="none"){
+        if(i<stop) c+=(p.cols==="diff")?" quiet":" match";
+        else if(i===stop) c+=(p.cols==="diff")?" diff":" miss";
+        else c+=" skip";
+      }
+      $("#c"+i).className=c;
+    }
+    function tile(id,str,fstr,k,isA){
+      var t=$("#"+id+k), c="tile "+(isA?"first":"second")+(p?" in":"");
+      var shown=(p&&p.fold)?fstr.charAt(k):str.charAt(k);
+      if(p&&p.fold&&shown!==str.charAt(k)) c+=" folded";
+      var isDiff=p&&p.cols==="diff"&&k===F.mis;
+      if(isDiff&&p.codes) c+=" code";
+      if(p&&p.cols==="diff"&&F.mis>=0&&k>F.mis) c+=" faded";
+      t.className=c;
+      t.querySelector(".ch").textContent=shown;
+      t.querySelector(".cc").textContent=str.charCodeAt(k);
+    }
+    for(i=0;i<A.length;i++) tile("ta",A,F.fa,i,true);
+    for(i=0;i<B.length;i++) tile("tb",B,F.fb,i,false);
+    /* number line */
+    var nl=$("#nl");
+    if(p&&p.nl){ drawLine(F); nl.className="nl show"; } else nl.className="nl";
+    /* sorted order: the two words slide down into place */
+    var bb=bottomBox(), ca=$("#cardA"), cb=$("#cardB"), ol=$("#olab"), os=$("#osym");
+    var x0=X0();
+    if(p&&p.order){
+      var aFirst=F.cmp<=0, y=bb.T+30, xl=bb.L+20, xr=xl+118+44;
+      ca.style.left=(aFirst?xl:xr)+"px"; cb.style.left=(aFirst?xr:xl)+"px"; ca.style.top=y+"px"; cb.style.top=y+"px";
+      ca.className="card show"; cb.className="card b show";
+      ol.style.left=xl+"px"; ol.style.top=(y-24)+"px"; ol.className="ordlab show";
+      os.style.left=(xl+118+2)+"px"; os.style.top=(y+8)+"px"; os.textContent=F.cmp===0?"=":"<"; os.className="ordsym show";
+    } else {
+      ca.style.left=x0+"px"; ca.style.top=(RA+6)+"px"; cb.style.left=x0+"px"; cb.style.top=(RB+6)+"px";
+      ca.className="card"; cb.className="card b"; ol.className="ordlab"; os.className="ordsym";
+    }
+    var ans=$("#ans");
+    if(s&&s.ans) ans.innerHTML='<small>'+s.ans.lab+'</small><span class="'+s.ans.c+'">'+s.ans.val+'</span>';
+    else ans.innerHTML="";
+    ans.className="answer"+(ans.innerHTML?" show":"");
+  }
+
+  function setStat(id,v){ var e=$(id), box=e.parentNode;
+    if(v===undefined){e.textContent="?";e.className="v dim";box.classList.add("empty");}
+    else {e.textContent=String(v);e.className="v hot";box.classList.remove("empty");} }
+
+  function show(i){
+    at=i;
+    var s=i>=0?steps[i]:null;
+    $("#stepno").innerHTML="<small>step</small>"+(i+1)+" / "+steps.length;
+    renderCode(s?s.line:null,s?s.cls:"");
+    renderPic(s);
+    var out=s&&s.out?s.out:[];
+    consEl.innerHTML=out.map(function(o){return '<div class="out">'+o+'</div>';}).join("")||'<span style="color:rgba(132,150,182,.5)">(nothing printed yet)</span>';
+    $("#caption").className="caption"+(s&&s.cls?" "+s.cls:"");
+    statusEl.innerHTML=s?s.msg:'Press <b class="a">Next</b>. The picture changes at every step.';
+    setStat("#stEq",s?s.eq:undefined); setStat("#stIc",s?s.ic:undefined); setStat("#stCmp",s?s.cmp:undefined);
+    setBtns();
+  }
+  function setBtns(){ $("#bNext").disabled=at>=steps.length-1; $("#bBack").disabled=at<0;
+    var d=""; for(var k=0;k<steps.length;k++) d+='<i class="'+(k===at?"now":k<at?"done":"")+'"></i>'; $("#dots").innerHTML=d; }
+
+  /* focus: picture and caption only. Remembered per browser. */
+  function redraw(){ relayout(); renderPic(at>=0?steps[at]:null); }
+  function setFocus(on){ document.body.classList.toggle("solo",on); $("#bFocus").textContent=on?"Focus on":"Focus";
+    try{localStorage.setItem("hub-focus",on?"1":"0");}catch(e){} redraw(); }
+  $("#bFocus").addEventListener("click",function(){ setFocus(!document.body.classList.contains("solo")); this.blur(); });
+  try{ if(localStorage.getItem("hub-focus")==="1") document.body.classList.add("solo"); }catch(e){}
+  if(document.body.classList.contains("solo")) $("#bFocus").textContent="Focus on";
+
+  function next(){ if(at<steps.length-1) show(at+1); }
+  function back(){ if(at>=0) show(at-1); }
+  function reset(){ steps=build(); buildPic(); show(-1); }
+  function pick(idx){
+    A=PRESETS[idx].a; B=PRESETS[idx].b;
+    Array.prototype.forEach.call(document.querySelectorAll(".chip"),function(c,j){c.classList.toggle("on",j===idx);});
+    if(document.activeElement&&document.activeElement.blur) document.activeElement.blur();
+    reset();
+  }
+
+  $("#chips").innerHTML=PRESETS.map(function(p,j){return '<button class="chip'+(j===DEF?' on':'')+'" data-i="'+j+'">'+p.label+'</button>';}).join("");
+  $("#chips").addEventListener("click",function(e){ var b=e.target.closest(".chip"); if(b) pick(+b.getAttribute("data-i")); });
+  $("#bNext").addEventListener("click",next);
+  $("#bBack").addEventListener("click",back);
+  $("#bReset").addEventListener("click",reset);
+  document.addEventListener("keydown",function(e){ if(e.code==="Space"&&!/INPUT|BUTTON/.test(e.target.tagName)){e.preventDefault();next();} });
+  addEventListener("resize",redraw);
+
+  /* ---------- ambient canvas ---------- */
+  var cv=$("#amb"),ctx=cv.getContext&&cv.getContext("2d"),parts=[];
+  function sizeC(){if(!ctx)return;cv.width=innerWidth;cv.height=innerHeight;}
+  function initParts(){parts=[];for(var i=0;i<46;i++)parts.push({x:Math.random(),y:Math.random(),
+    r:Math.random()*1.6+.3,s:Math.random()*.02+.004,o:Math.random()*.4+.1});}
+  function drawC(){if(!ctx)return;ctx.clearRect(0,0,cv.width,cv.height);
+    parts.forEach(function(p){p.y-=p.s/60;if(p.y<-.02)p.y=1.02;
+      ctx.beginPath();ctx.arc(p.x*cv.width,p.y*cv.height,p.r,0,7);
+      ctx.fillStyle="rgba(140,170,255,"+p.o+")";ctx.fill();});
+    requestAnimationFrame(drawC);}
+  if(ctx&&!reduce){sizeC();initParts();drawC();addEventListener("resize",sizeC);}
+
+  reset();
+})();
+</script>
+<script src="../manifest.js"></script>
+<script src="../../assets/rail.js"></script>
+<script>Rail.render(document.getElementById("rail"),{week:2,kind:"visuals",current:"03-comparing-strings"});</script>
+</body>
+</html>

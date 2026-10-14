@@ -18,3 +18,13 @@
 - [x] Games (13, redone 2026-10-13 per Ray: 7 new mechanics + 6 kept, 7 quizzes dropped; see week-01-plan.md), all verified in the browser
 - [x] manifest exercises/games arrays (2026-10-13)
 - [x] GitHub Pages live 2026-10-13: https://raymaroun.github.io/yearup-java-fall2026/
+
+## Week 2 (built 2026-10-15 night on Ray's instruction, ahead of his review; LOCAL ONLY until Mon 19 Oct)
+- [x] Idea list drafted: .planning/week-02-plan.md (Ray confirms Thu 16 Oct). Agent brief: .planning/AGENT-BRIEF-W2.md. Workbook text: .planning/workbook-text/wb2a.txt, wb2b.txt, wb2w.txt.
+- [x] 19 visuals built (Opus, one per page), static sweep clean (scratchpad sweep.sh), all 19 clicked through in Chrome by the lead: steps, chips, Experiment (15), rail. Examples from the rebuilt fall demos in 04.Weeks/Week 02/demos/ (demo-01 to demo-07).
+- [x] 13 companions (checklist shape), ticks persist, links resolve once reference exists.
+- [x] 8 games built; 7 opened and started in Chrome (string-method-match, index-inspector, class-builder, constructor-picker, loop-tracer, break-or-continue, bug-hunter-2); parse-or-crash pending at the time of writing.
+- [x] week-02/index.html (from the week 1 template), landing card set live (local), manifest filled (19/4/13/8).
+- [ ] Reference 4 pages: cheat-sheet and glossary present; common-errors and intellij-shortcuts pending. Verify all four in Chrome.
+- [ ] Run `node build-search-index.js` after the last page; commit locally; DO NOT PUSH before Mon 19 Oct.
+- Notes for Ray's review: page 03 teaches compareTo (not in the fall workbook, Ray decides); page 19 is the 2b debugger (2b skipped in spring); page 05 uses the workbook's own date example, not the theater one; page 15's exception name is from the demo, the workbook never names it.

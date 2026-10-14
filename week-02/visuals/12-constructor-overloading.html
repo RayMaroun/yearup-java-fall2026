@@ -1,0 +1,529 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Constructor Overloading | Week 2 Visual Hub</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Sora:wght@500;700&family=Inter:wght@400;500&family=JetBrains+Mono:wght@400;500&display=swap">
+<style>
+  :root{
+    --bg:#080c17; --bg2:#0c1428; --surface:rgba(255,255,255,.045); --line:rgba(255,255,255,.09);
+    --ink:#eef2fb; --muted:#8496b6; --accent:#6ea0ff; --accent2:#8b7bff; --good:#46d98a; --warn:#ff6a6a;
+    --gold:#ffc862; --disp:'Sora',system-ui,sans-serif; --body:'Inter',system-ui,sans-serif;
+    --mono:'JetBrains Mono',ui-monospace,monospace;
+  }
+  *{box-sizing:border-box}
+  body{margin:0;min-height:100vh;color:var(--ink);font-family:var(--body);
+    background:radial-gradient(1200px 700px at 70% -10%,#141d38 0%,transparent 55%),
+               radial-gradient(900px 600px at 10% 110%,#161233 0%,transparent 50%),#080c17;
+    overflow-x:hidden}
+  #amb{position:fixed;inset:0;z-index:0;pointer-events:none;opacity:.6}
+  .back{position:relative;z-index:2;display:block;max-width:1120px;margin:0 auto;padding:26px 24px 0;
+    width:100%;font-family:var(--mono);font-size:.8rem;letter-spacing:.04em;color:var(--muted);
+    text-decoration:none;transition:color .15s}
+  .back:hover{color:var(--accent)}
+  .wrap{position:relative;z-index:1;max-width:1120px;margin:0 auto;padding:22px 24px 70px}
+  .tag{font-family:var(--mono);font-size:.72rem;letter-spacing:.22em;text-transform:uppercase;color:var(--accent);margin:0 0 14px}
+  h1{font-family:var(--disp);font-weight:700;font-size:clamp(2.3rem,6vw,3.6rem);line-height:1;margin:0 0 12px;
+    letter-spacing:-.03em;background:linear-gradient(180deg,#fff,#b9c6e6);-webkit-background-clip:text;
+    background-clip:text;color:transparent}
+  .lede{color:var(--muted);max-width:64ch;font-size:1.05rem;margin:0 0 26px;line-height:1.5}
+  .lede b{color:var(--ink)}
+  .lede code,.take code,.caption code{font-family:var(--mono);font-size:.92em;color:#bcd0ff}
+
+  /* ---------- stage: picture first, one toolbar, support below ---------- */
+  .stage{position:relative;background:linear-gradient(180deg,rgba(255,255,255,.03),rgba(255,255,255,.01));
+    border:1px solid var(--line);border-radius:24px;padding:18px 18px 14px;
+    box-shadow:0 1px 0 rgba(255,255,255,.06) inset,0 30px 80px -30px rgba(0,0,0,.8)}
+  .topbar{display:flex;align-items:center;gap:10px;margin:0 0 14px;flex-wrap:wrap}
+  .topbar .lab{margin:0 4px 0 0}
+  .lab{font-family:var(--mono);font-size:.7rem;letter-spacing:.12em;text-transform:uppercase;color:var(--muted);margin:0 0 10px}
+  .chips{display:flex;flex-wrap:wrap;gap:6px}
+  .chip{font-family:var(--mono);font-size:.74rem;padding:5px 11px;border-radius:999px;cursor:pointer;
+    border:1px solid var(--line);background:rgba(0,0,0,.25);color:var(--muted);transition:.15s}
+  .chip:hover{border-color:var(--accent);color:var(--accent)}
+  .chip.on{border-color:rgba(110,160,255,.6);background:rgba(110,160,255,.14);color:var(--ink)}
+  .chip:focus-visible,.btn:focus-visible,.focus:focus-visible{outline:2px solid var(--accent);outline-offset:2px}
+  .focus{margin-left:auto;font-family:var(--mono);font-size:.68rem;letter-spacing:.1em;text-transform:uppercase;padding:6px 12px;
+    border-radius:999px;border:1px solid var(--line);background:rgba(0,0,0,.25);color:var(--muted);cursor:pointer;transition:.15s}
+  .focus:hover{border-color:var(--accent);color:var(--accent)}
+  body.solo .focus{border-color:rgba(255,200,98,.6);color:var(--gold);background:rgba(255,200,98,.1)}
+
+
+  /* hero picture: the call, three doors, the object */
+  .pic{position:relative;height:390px;border:1px solid var(--line);border-radius:18px;background:rgba(6,10,20,.5);overflow:hidden}
+  body.solo .pic{height:480px}
+  .pic .zone{position:absolute;font-family:var(--mono);font-size:.62rem;letter-spacing:.14em;text-transform:uppercase;
+    color:rgba(132,150,182,.55);transition:opacity .3s;white-space:nowrap}
+  .callc{position:absolute;font-family:var(--mono);font-size:.64rem;color:#c9d4ea;padding:9px 10px;border-radius:12px;
+    border:1px solid rgba(110,160,255,.45);background:rgba(110,160,255,.08);opacity:0;transition:opacity .4s,border-color .3s,background .3s}
+  .callc.show{opacity:1}
+  .callc.bad{border-color:rgba(255,106,106,.7);background:rgba(255,106,106,.08)}
+  .door{position:absolute;border-radius:14px 14px 6px 6px;border:1px solid rgba(110,160,255,.35);background:rgba(110,160,255,.05);
+    opacity:0;transition:opacity .4s,border-color .3s,background .3s,box-shadow .3s}
+  .door.show{opacity:1}
+  .door.dim{opacity:.32}
+  .door.lit{border-color:rgba(70,217,138,.75);background:rgba(70,217,138,.08);box-shadow:0 0 22px -8px rgba(70,217,138,.8)}
+  .door.hop{border-color:rgba(255,200,98,.7);background:rgba(255,200,98,.07);box-shadow:0 0 22px -8px rgba(255,200,98,.7)}
+  .door.bad{opacity:.75;border-color:rgba(255,106,106,.6);background:rgba(255,106,106,.05)}
+  .door .dl{padding:10px 8px 0;text-align:center;font-family:var(--mono);line-height:1.3}
+  .door .dl small{display:block;font-size:.58rem;letter-spacing:.14em;text-transform:uppercase;color:var(--muted)}
+  .door .dl span{font-size:.78rem;color:var(--ink)}
+  .door .db{margin:10px 8px 0;padding-top:8px;border-top:1px dashed rgba(255,255,255,.1);font-family:var(--mono);font-size:.58rem;
+    line-height:1.7;color:rgba(201,212,234,.75);white-space:nowrap;overflow:hidden}
+  .door.lit .db,.door.hop .db{color:#e6ecf8}
+  .door .slot{position:absolute;left:10px;right:10px;height:36px;border-radius:9px;border:1px dashed rgba(132,150,182,.4);
+    font-family:var(--mono);font-size:.58rem;color:rgba(132,150,182,.7);display:flex;align-items:center;justify-content:center}
+  .door .none{position:absolute;left:0;right:0;text-align:center;font-family:var(--mono);font-size:.6rem;color:rgba(132,150,182,.6)}
+  .door .why{position:absolute;left:50%;top:48%;transform:translate(-50%,-50%);font-family:var(--mono);font-size:.62rem;white-space:nowrap;
+    padding:3px 9px;border-radius:999px;color:var(--warn);border:1px solid rgba(255,106,106,.55);background:rgba(20,8,12,.9);opacity:0;transition:opacity .3s}
+  .door .why.show{opacity:1}
+  .arg{position:absolute;height:36px;border-radius:9px;border:1px solid rgba(110,160,255,.8);background:#16213f;color:var(--ink);
+    font-family:var(--mono);text-align:center;line-height:1.15;padding-top:4px;opacity:0;
+    transition:left .6s cubic-bezier(.2,.9,.3,1),top .6s cubic-bezier(.2,.9,.3,1),opacity .4s,border-color .3s,background .3s}
+  .arg b{display:block;font-weight:500;font-size:.74rem}
+  .arg small{display:block;font-size:.54rem;letter-spacing:.08em;color:var(--muted)}
+  .arg.show{opacity:1}
+  .arg.faded{opacity:.3}
+  .arg.new{border-color:var(--gold);background:#2a2412}
+  .arg.bad{border-color:var(--warn);background:#2a1418}
+  svg.hopline{position:absolute;inset:0;width:100%;height:100%;pointer-events:none;overflow:visible}
+  svg.hopline path{fill:none;stroke:var(--gold);stroke-width:2;opacity:0;transition:opacity .3s}
+  svg.hopline path.show{opacity:1;animation:draw .7s ease-out}
+  svg.hopline text{fill:var(--gold);font-family:var(--mono);font-size:11px;text-anchor:middle;opacity:0;transition:opacity .3s}
+  svg.hopline text.show{opacity:1}
+  @keyframes draw{from{stroke-dashoffset:var(--len)}to{stroke-dashoffset:0}}
+  .obj{position:absolute;border-radius:14px;border:1px solid rgba(110,160,255,.45);background:rgba(110,160,255,.06);padding:10px 12px;
+    opacity:0;transition:opacity .4s,border-color .3s}
+  .obj.show{opacity:1}
+  .obj.done{border-color:rgba(70,217,138,.7)}
+  .obj .oh{font-family:var(--mono);font-size:.58rem;letter-spacing:.14em;text-transform:uppercase;color:var(--muted);margin-bottom:6px}
+  .obj .row{padding:6px 0;border-top:1px solid rgba(255,255,255,.06)}
+  .obj .row small{display:block;font-family:var(--mono);font-size:.56rem;letter-spacing:.1em;color:var(--muted)}
+  .obj .row span{display:block;font-family:var(--mono);font-size:.82rem;color:rgba(132,150,182,.6);transition:color .3s}
+  .obj .row span.set{color:var(--good);animation:pop .35s}
+  .vtag{position:absolute;font-family:var(--mono);font-size:.72rem;color:var(--accent);opacity:0;transition:opacity .4s;white-space:nowrap}
+  .vtag.show{opacity:1}
+  .errb{position:absolute;font-family:var(--mono);font-size:.7rem;color:var(--warn);padding:6px 12px;border-radius:10px;text-align:center;
+    border:1px solid rgba(255,106,106,.6);background:rgba(255,106,106,.1);opacity:0;transition:opacity .4s}
+  .errb.show{opacity:1}
+  .pic .start{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;font-family:var(--mono);
+    font-size:.8rem;color:var(--muted);pointer-events:none;transition:opacity .3s}
+  .pic .start b{color:var(--accent);font-weight:500}
+  .stat .v.sm{font-family:var(--mono);font-weight:500;font-size:.9rem;line-height:1.75}
+  .console .err{color:var(--warn)}
+
+  /* caption: the one sentence, right under the picture */
+  .caption{display:flex;gap:16px;align-items:flex-start;margin:14px 4px 0;min-height:56px}
+  .caption .n{flex-shrink:0;font-family:var(--disp);font-weight:700;font-size:1.35rem;color:var(--accent);font-variant-numeric:tabular-nums;
+    line-height:1.2;min-width:3.2rem}
+  .caption .n small{display:block;font-family:var(--mono);font-weight:400;font-size:.58rem;letter-spacing:.14em;text-transform:uppercase;color:var(--muted)}
+  .caption .t{font-size:1.02rem;line-height:1.55;color:var(--ink);padding-left:16px;border-left:3px solid var(--accent);transition:border-color .3s}
+  body.solo .caption .t{font-size:1.18rem}
+  .caption.cut .t{border-left-color:var(--warn)} .caption.left .t{border-left-color:var(--gold)} .caption.ok .t{border-left-color:var(--good)}
+  .caption b.g{color:var(--good)} .caption b.w{color:var(--warn)} .caption b.a{color:var(--accent)} .caption b.y{color:var(--gold)}
+
+  /* toolbar: same on every page */
+  .toolbar{display:flex;align-items:center;gap:10px;margin:16px 0 0;padding-top:14px;border-top:1px solid var(--line)}
+  .btn{font-family:var(--body);font-weight:500;font-size:.86rem;padding:9px 16px;border-radius:11px;cursor:pointer;
+    border:1px solid var(--line);background:var(--surface);color:var(--ink);transition:.15s}
+  .btn:hover{border-color:var(--accent);color:var(--accent)}
+  .btn.primary{border-color:rgba(110,160,255,.5);background:rgba(110,160,255,.12);padding:9px 22px}
+  .btn:disabled{opacity:.35;cursor:not-allowed}
+  .btn.ghost{background:transparent;color:var(--muted);margin-left:auto}
+  .dots{display:flex;gap:5px;align-items:center;margin:0 6px}
+  .dots i{display:block;width:8px;height:8px;border-radius:50%;background:rgba(255,255,255,.12);transition:.2s}
+  .dots i.done{background:rgba(110,160,255,.45)}
+  .dots i.now{background:var(--accent);transform:scale(1.35);box-shadow:0 0 10px rgba(110,160,255,.7)}
+  .hint{font-family:var(--mono);font-size:.68rem;color:var(--muted);margin:10px 4px 0;line-height:1.5}
+  .hint b{color:var(--accent)}
+
+  /* support: code, console, readouts. Below the picture, hidden in focus */
+  .support{display:grid;grid-template-columns:minmax(0,1.3fr) minmax(0,1fr);gap:14px;margin-top:18px}
+  @media (max-width:860px){.support{grid-template-columns:1fr}}
+  body.solo .support,body.solo .take,body.solo .hint{display:none}
+  .code{min-width:0;font-family:var(--mono);font-size:.76rem;line-height:1.8;background:rgba(0,0,0,.35);border:1px solid var(--line);
+    border-radius:14px;padding:12px 0;overflow-x:auto}
+  .ln{display:flex;gap:12px;padding:0 14px;white-space:pre;color:#c9d4ea;transition:background .2s,opacity .3s}
+  .ln .n{width:20px;text-align:right;color:rgba(132,150,182,.55);user-select:none;flex-shrink:0}
+  .ln.cur{background:rgba(110,160,255,.14);box-shadow:inset 3px 0 0 var(--accent)}
+  .ln.cur .n{color:var(--accent)}
+  .ln.cut{background:rgba(255,106,106,.12);box-shadow:inset 3px 0 0 var(--warn)}
+  .ln.left{background:rgba(255,200,98,.12);box-shadow:inset 3px 0 0 var(--gold)}
+  .ln.dim{opacity:.4}
+  .kw{color:#c792ea} .ty{color:#82aaff} .st{color:#c3e88d} .nm{color:#f78c6c} .cm{color:#5f6b85;font-style:italic} .fn{color:#ffcb6b}
+  .side{display:flex;flex-direction:column;gap:12px}
+  .readout{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+  .stat{background:rgba(255,255,255,.03);border:1px solid var(--line);border-radius:12px;padding:11px 13px;transition:opacity .3s}
+  .stat.empty{opacity:.3}
+  .stat .k{font-family:var(--mono);font-size:.62rem;letter-spacing:.1em;text-transform:uppercase;color:var(--muted)}
+  .stat .v{font-family:var(--disp);font-weight:700;font-size:1.45rem;font-variant-numeric:tabular-nums;margin-top:2px;transition:color .3s;min-height:1.6em}
+  .v.hot{color:var(--accent)} .v.gold{color:var(--gold)} .v.dim{color:rgba(132,150,182,.5)}
+  .console{font-family:var(--mono);font-size:.76rem;line-height:1.6;background:#05070e;border:1px solid var(--line);
+    border-radius:12px;padding:10px 14px;min-height:64px;color:#9fe3b6;flex:1}
+  .console .cl{font-size:.6rem;letter-spacing:.14em;text-transform:uppercase;color:rgba(132,150,182,.6);margin-bottom:4px}
+  .console .out{animation:pop .3s}
+  @keyframes pop{from{transform:scale(.6);opacity:0}to{transform:scale(1);opacity:1}}
+  .take{margin-top:22px;background:linear-gradient(180deg,rgba(110,160,255,.08),rgba(139,123,255,.04));
+    border:1px solid var(--line);border-left:3px solid var(--accent);border-radius:12px;padding:16px 18px}
+  .take .tk{font-family:var(--mono);font-size:.66rem;letter-spacing:.14em;text-transform:uppercase;color:var(--accent);margin:0 0 8px}
+  .take p{margin:0;font-size:.95rem;color:var(--ink);line-height:1.55}
+  .take b{color:#fff}
+  @media (prefers-reduced-motion:reduce){*{animation-duration:.01ms!important;transition-duration:.01ms!important}#amb{display:none}}
+</style>
+</head>
+<body>
+
+<a class="back" href="../index.html#12-constructor-overloading">&#8592; Week 2 index</a>
+
+<canvas id="amb"></canvas>
+<div class="wrap">
+  <p class="tag">Workbook 2a &middot; Section 2-3 &middot; Overloading constructors</p>
+  <h1>Constructor Overloading</h1>
+  <p class="lede"><b>A class can have several constructors. Java opens the one whose parameter list matches your arguments.</b></p>
+
+  <div class="stage">
+    <div class="topbar">
+      <span class="lab">Call</span>
+      <div class="chips" id="chips"></div>
+      <button class="focus" id="bFocus" title="Hide the code and notes, enlarge the picture">Focus</button>
+    </div>
+
+    <div class="pic" id="pic"></div>
+
+    <div class="caption" id="caption">
+      <div class="n" id="stepno"><small>step</small>0 / 8</div>
+      <div class="t" id="status">Press <b class="a">Next</b>. The picture changes at every step.</div>
+    </div>
+
+    <div class="toolbar">
+      <button class="btn" id="bBack">&larr; Back</button>
+      <div class="dots" id="dots"></div>
+      <button class="btn primary" id="bNext">Next &rarr;</button>
+      <button class="btn ghost" id="bReset">Reset</button>
+    </div>
+    <p class="hint">space = next &middot; <b>try each call</b>: two of them hop through this(...)</p>
+
+    <div class="support">
+      <div>
+        <p class="lab">Main.java</p>
+        <div class="code" id="codeM"></div>
+        <p class="lab" style="margin-top:14px">Person.java</p>
+        <div class="code" id="codeP"></div>
+      </div>
+      <div class="side">
+        <div class="readout">
+          <div class="stat empty"><div class="k">matched</div><div class="v sm" id="stMatch"></div></div>
+          <div class="stat empty"><div class="k">ran</div><div class="v sm" id="stRan"></div></div>
+        </div>
+        <div class="console"><div class="cl">console</div><div id="console"></div></div>
+      </div>
+    </div>
+  </div>
+
+  <div class="take">
+    <p class="tk">The one idea</p>
+    <p><b>Overloaded constructors share one name and differ in their parameter lists.</b> The compiler matches your
+    arguments by count, type and order, and only that constructor runs. <code>this(...)</code> lets a short constructor
+    hand its values to the full one, so the fields are set in one place. <b>No match, no compile.</b></p>
+  </div>
+
+  <div id="rail"></div>
+</div>
+
+<script>
+(function(){
+  "use strict";
+  var $=function(s){return document.querySelector(s);};
+  var reduce=matchMedia("(prefers-reduced-motion: reduce)").matches;
+
+  /* ---------- the class: three constructors, three doors ---------- */
+  var DOORS=[
+    {sig:"()",params:[],body:['this("Guest", 0);'],line:12,bodyLines:[13]},
+    {sig:"(String)",params:["String"],body:["this(name, 18);"],line:16,bodyLines:[17]},
+    {sig:"(String, int)",params:["String","int"],body:["this.name = name;","this.age = age;","this.energy = 100;"],line:6,bodyLines:[7,8,9]}
+  ];
+  /* ---------- the three calls ---------- */
+  var PRESETS=[
+    {call:"new Person()",v:"guest",args:[],door:0,
+      hop:[{v:'"Guest"',t:"String",from:-1},{v:"0",t:"int",from:-1}],hopCode:'this("Guest", 0)',
+      name:'"Guest"',age:0,energy:100},
+    {call:'new Person("Dana")',v:"learner",args:[{v:'"Dana"',t:"String"}],door:1,
+      hop:[{v:'"Dana"',t:"String",from:0},{v:"18",t:"int",from:-1}],hopCode:"this(name, 18)",
+      name:'"Dana"',age:18,energy:100},
+    {call:'new Person("Raymond", 35)',v:"instructor",args:[{v:'"Raymond"',t:"String"},{v:"35",t:"int"}],door:2,
+      hop:null,name:'"Raymond"',age:35,energy:100}
+  ];
+  var ERR={call:"new Person(50)",arg:{v:"50",t:"int"},why:["takes 0","needs a String","takes 2"]};
+  var cur=0, P=PRESETS[0];
+
+  function hl(s){ /* tiny one-pass highlighter for the code panels */
+    return s.replace(/("[^"]*")|\b(public|class|private|new|this)\b|\b(String|int|Person|System)\b|\b(\d+)\b/g,function(m,st,kw,ty,nm){
+      var c=st?"st":kw?"kw":ty?"ty":"nm"; return '<span class="'+c+'">'+m+'</span>';
+    });
+  }
+
+  var PERSON=[
+    "public class Person {",
+    "    private String name;",
+    "    private int age;",
+    "    private int energy;",
+    "",
+    "    public Person(String name, int age) {",
+    "        this.name = name;",
+    "        this.age = age;",
+    "        this.energy = 100;",
+    "    }",
+    "",
+    "    public Person() {",
+    '        this("Guest", 0);',
+    "    }",
+    "",
+    "    public Person(String name) {",
+    "        this(name, 18);",
+    "    }",
+    "}"
+  ];
+  function mainLines(withErr){
+    var v=P.v, L=[
+      "Person "+v+" = "+P.call+";",
+      'System.out.printf("Person'+DOORS[P.door].sig+': %s is %d with %d energy%n",',
+      "        "+v+".getName(), "+v+".getAge(), "+v+".getEnergy());"
+    ];
+    if(withErr) L.push("Person child = "+ERR.call+";");
+    return L;
+  }
+  function outLine(){ return "Person"+DOORS[P.door].sig+": "+P.name.replace(/"/g,"")+" is "+P.age+" with "+P.energy+" energy"; }
+
+  /* ---------- the walk: one snapshot per step, built from the chosen call ---------- */
+  function build(){
+    var d=DOORS[P.door], sig="Person"+d.sig, S=[];
+    var argText=P.args.length===0?"an empty argument list: no values at all":
+      P.args.length===1?"one argument: a String":"two arguments: a String, then an int";
+    S.push({pic:"doors",p:[6,12,16],m:[],cls:"",
+      msg:'Person has three constructors: same name, different parameter lists. <b class="a">Three doors into one class.</b>'});
+    S.push({pic:"call",p:[],m:[1],cls:"",
+      msg:'<code>'+P.call+'</code> brings <b class="a">'+argText+'</b>.'});
+    S.push({pic:"match",p:[d.line],m:[1],cls:"ok",match:sig,
+      msg:'The compiler checks count, type and order. Only <b class="g">'+sig+'</b> fits, so that door opens.'});
+    var enterMsg=P.args.length===0?'Person() takes no arguments, so nothing goes in.':
+      P.args.length===1?'<code>"Dana"</code> lands in the <code>name</code> parameter.':'"Raymond" and 35 land in the two parameters.';
+    S.push({pic:"enter",p:[d.line],m:[1],cls:"",match:sig,ran:sig,
+      msg:'<code>new</code> makes the object, fields still <b class="y">null, 0, 0</b>. '+enterMsg});
+    if(P.hop){
+      var carry=P.hop.map(function(h){return h.v;}).join(" and ");
+      S.push({pic:"hop",p:d.bodyLines,m:[1],cls:"left",match:sig,ran:d.sig+" → (String, int)",
+        msg:'<code>'+P.hopCode+'</code> <b class="y">hops into the full constructor</b>, carrying '+carry+'.'});
+    }
+    S.push({pic:"fill",p:[7,8,9],m:[1],cls:"ok",match:sig,ran:P.hop?d.sig+" → (String, int)":sig,
+      msg:(P.hop?'The full constructor does the work: ':'Both parameters go into fields, energy is set by the body: ')+
+        '<b class="g">name '+P.name+', age '+P.age+', energy 100</b>.'});
+    S.push({pic:"print",p:[],m:[2,3],cls:"",match:sig,ran:P.hop?d.sig+" → (String, int)":sig,out:outLine(),
+      msg:'<code>new</code> hands back a reference, stored in <code>'+P.v+'</code>. printf reads the three fields.'});
+    S.push({pic:"error",p:[6,12,16],m:[4],cls:"cut",match:"none",ran:"nothing",err:true,
+      msg:'<code>'+ERR.call+'</code> brings one int. <b class="w">No door takes (int)</b>, so it does not compile. Nothing runs.'});
+    return S;
+  }
+
+  /* ---------- code panels ---------- */
+  function renderCode(s){
+    var cls=s?(s.cls==="cut"?"cut":s.cls==="left"?"left":"cur"):"";
+    var M=mainLines(s&&s.err);
+    $("#codeM").innerHTML=M.map(function(t,i){
+      var c="ln"+(s&&s.m.indexOf(i+1)>=0?" "+cls:"");
+      return '<div class="'+c+'"><span class="n">'+(i+1)+'</span><span>'+hl(t)+'</span></div>';
+    }).join("");
+    $("#codeP").innerHTML=PERSON.map(function(t,i){
+      var c="ln"+(s&&s.p.indexOf(i+1)>=0?" "+cls:"");
+      return '<div class="'+c+'"><span class="n">'+(i+1)+'</span><span>'+(t?hl(t):" ")+'</span></div>';
+    }).join("");
+  }
+
+  /* ---------- the picture ---------- */
+  var picEl=$("#pic"),consEl=$("#console"),statusEl=$("#status");
+  function layout(){
+    var W=picEl.clientWidth||900, H=picEl.clientHeight||390;
+    var x0=W*.27, x1=W*.79, gap=W*.02, dw=(x1-x0-2*gap)/3, top=100;
+    return {W:W,H:H,dw:dw,top:top,dh:H-top-22,dx:function(i){return x0+i*(dw+gap);},x0:x0,x1:x1,
+      chipW:dw-20,callX:16,callW:W*.23};
+  }
+  function slotPos(L,door,i){
+    var k=DOORS[door].params.length;
+    return {x:L.dx(door)+10, y:L.top+L.dh-12-(k-i)*44};
+  }
+  function chip(id,a,cls){ return '<div class="arg '+(cls||"")+'" id="'+id+'"><b>'+a.v+'</b><small>'+a.t+'</small></div>'; }
+  function buildPic(){
+    var L=layout(), h="", i;
+    h+='<span class="zone" style="left:16px;top:16px">the call</span>';
+    h+='<span class="zone" id="zd" style="left:'+L.x0+'px;top:16px">constructors</span>';
+    h+='<div class="callc" id="call" style="left:'+L.callX+'px;top:38px;width:'+L.callW+'px"></div>';
+    for(i=0;i<3;i++){
+      var d=DOORS[i], body=d.body.join("<br>");
+      h+='<div class="door" id="door'+i+'"><div class="dl"><small>Person</small><span>'+d.sig+'</span></div><div class="db">'+body+'</div>';
+      if(d.params.length===0) h+='<div class="none" id="none'+i+'">no parameters</div>';
+      d.params.forEach(function(t,j){ h+='<div class="slot" id="slot'+i+'_'+j+'">'+t+'</div>'; });
+      h+='<span class="why" id="why'+i+'"></span></div>';
+    }
+    h+='<svg class="hopline" id="hopsvg"><defs><marker id="ah" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" style="fill:#ffc862;stroke:none;opacity:1"></path></marker></defs>'+
+      '<path id="hopPath" marker-end="url(#ah)"></path><text id="hopText"></text></svg>';
+    P.args.forEach(function(a,j){ h+=chip("a"+j,a); });
+    if(P.hop) P.hop.forEach(function(a,j){ if(a.from<0) h+=chip("h"+j,a,"new"); });
+    h+=chip("ae",ERR.arg,"bad");
+    h+='<div class="obj" id="obj"><div class="oh">Person object</div>'+
+      '<div class="row"><small>name</small><span id="fName"></span></div>'+
+      '<div class="row"><small>age</small><span id="fAge"></span></div>'+
+      '<div class="row"><small>energy</small><span id="fEnergy"></span></div></div>';
+    h+='<span class="vtag" id="vtag"></span>';
+    h+='<div class="errb" id="errb">error: no suitable constructor found for Person(int)</div>';
+    h+='<div class="start" id="start">'+P.call+' · press <b>Next</b></div>';
+    picEl.innerHTML=h;
+  }
+  function place(el,x,y,w){ el.style.left=x+"px"; el.style.top=y+"px"; if(w) el.style.width=w+"px"; }
+
+  function renderPic(mode){
+    var L=layout(), order=["none","doors","call","match","enter","hop","fill","print","error"], k=order.indexOf(mode);
+    var m=P.door, isErr=mode==="error", i, j, el;
+    $("#start").style.opacity=mode==="none"?1:0;
+    $("#zd").style.opacity=k>=1?1:0;
+
+    /* the call card */
+    var call=$("#call");
+    call.innerHTML=hl(isErr?ERR.call:P.call);
+    call.className="callc"+(k>=2?" show":"")+(isErr?" bad":"");
+
+    /* doors */
+    for(i=0;i<3;i++){
+      el=$("#door"+i); place(el,L.dx(i),L.top,L.dw); el.style.height=L.dh+"px";
+      var c="door"+(k>=1?" show":"");
+      if(mode==="match"||mode==="enter") c+=(i===m?" lit":" dim");
+      if(mode==="hop") c+=(i===m?" hop":i===2?" lit":" dim");
+      if(mode==="fill") c+=(i===2?" lit":i===m&&P.hop?" hop dim":" dim");
+      if(mode==="print") c+=" dim";
+      if(isErr) c+=" bad";
+      el.className=c;
+      DOORS[i].params.forEach(function(t,j2){ var sp=slotPos(L,i,j2), s=$("#slot"+i+"_"+j2); s.style.top=(sp.y-L.top)+"px"; });
+      var no=$("#none"+i); if(no) no.style.top=(L.dh-40)+"px";
+      var why=$("#why"+i);
+      if(isErr){ why.textContent="✕ "+ERR.why[i]; why.className="why show"; }
+      else if(mode==="match"&&i!==m){ why.textContent="✕ takes "+DOORS[i].params.length; why.className="why show"; }
+      else why.className="why";
+    }
+
+    /* argument chips: home under the call, then into the parameter slots */
+    var hopTarget={};
+    if(P.hop) P.hop.forEach(function(h,j3){ if(h.from>=0) hopTarget[h.from]=j3; });
+    P.args.forEach(function(a,j4){
+      var e=$("#a"+j4), home={x:L.callX+10,y:96+j4*46}, pos=home, cls="arg";
+      if(k>=2&&!isErr) cls+=" show";
+      if(k>=4&&!isErr) pos=slotPos(L,m,j4);
+      if(k>=5&&P.hop&&hopTarget[j4]!==undefined) pos=slotPos(L,2,hopTarget[j4]);
+      if(P.hop&&mode==="hop"&&hopTarget[j4]===undefined) cls+=" faded";
+      if(mode==="fill"||mode==="print") cls+=" faded";
+      place(e,pos.x,pos.y,L.chipW); e.className=cls;
+    });
+    if(P.hop) P.hop.forEach(function(h,j5){
+      if(h.from>=0) return;
+      var e=$("#h"+j5), db=L.dx(m)+10, pos={x:db,y:L.top+58}, cls="arg new";
+      if(k>=5&&!isErr){ pos=slotPos(L,2,j5); cls+=" show"; }
+      if(mode==="fill"||mode==="print") cls+=" faded";
+      place(e,pos.x,pos.y,L.chipW); e.className=cls;
+    });
+    var ae=$("#ae"); place(ae,L.callX+10,96,L.chipW); ae.className="arg bad"+(isErr?" show":"");
+
+    /* the this(...) hop: an arrow from the short door into the full one */
+    var path=$("#hopPath"), txt=$("#hopText");
+    if(P.hop&&(mode==="hop"||mode==="fill")){
+      var ax=L.dx(m)+L.dw/2, bx=L.dx(2)+L.dw/2, y=L.top-2, peak=L.top-52;
+      path.setAttribute("d","M"+ax+","+y+" C"+ax+","+peak+" "+bx+","+peak+" "+bx+","+(y-2));
+      var len=path.getTotalLength?path.getTotalLength():300;
+      path.style.strokeDasharray=len; path.style.setProperty("--len",len);
+      if(mode==="hop"&&!reduce){ path.classList.remove("show"); void path.getBoundingClientRect(); }
+      path.classList.add("show");
+      txt.setAttribute("x",(ax+bx)/2); txt.setAttribute("y",peak+4); txt.textContent=P.hopCode; txt.classList.add("show");
+      path.style.opacity=mode==="fill"?.35:""; txt.style.opacity=mode==="fill"?.35:"";
+    } else { path.classList.remove("show"); txt.classList.remove("show"); path.style.opacity=""; txt.style.opacity=""; }
+
+    /* the object */
+    var obj=$("#obj"), ox=L.W*.815, ow=L.W*.165;
+    place(obj,ox,L.top+10,ow);
+    obj.className="obj"+(k>=4&&!isErr?" show":"")+(k>=6&&!isErr?" done":"");
+    var filled=k>=6&&!isErr;
+    setField("#fName",filled?P.name:"null",filled);
+    setField("#fAge",filled?String(P.age):"0",filled);
+    setField("#fEnergy",filled?String(P.energy):"0",filled);
+    var vt=$("#vtag"); vt.textContent=P.v+" ↓"; place(vt,ox+4,L.top-18); vt.className="vtag"+(mode==="print"?" show":"");
+
+    /* compile error banner */
+    var eb=$("#errb"); place(eb,L.x0,L.top-58,L.x1-L.x0); eb.className="errb"+(isErr?" show":"");
+  }
+  function setField(id,v,on){ var e=$(id); if(e.textContent!==v){ e.textContent=v; } e.className=on?"set":""; }
+
+  /* ---------- state ---------- */
+  var steps=[],at=-1;
+  function show(i){
+    at=i;
+    if(i<0){
+      renderCode(null); renderPic("none");
+      consEl.innerHTML='<span style="color:rgba(132,150,182,.5)">(nothing printed yet)</span>';
+      $("#caption").className="caption"; statusEl.innerHTML='Press <b class="a">Next</b>. The picture changes at every step.';
+      setStat("#stMatch",null); setStat("#stRan",null);
+      $("#stepno").innerHTML="<small>step</small>0 / "+steps.length; setBtns(); return;
+    }
+    var s=steps[i];
+    $("#stepno").innerHTML="<small>step</small>"+(i+1)+" / "+steps.length;
+    renderCode(s); renderPic(s.pic);
+    if(s.err) consEl.innerHTML='<div class="out err">Main.java: error: no suitable constructor found for Person(int)</div>';
+    else consEl.innerHTML=s.out?'<div class="out">'+s.out+'</div>':'<span style="color:rgba(132,150,182,.5)">(nothing printed yet)</span>';
+    $("#caption").className="caption "+s.cls; statusEl.innerHTML=s.msg;
+    setStat("#stMatch",s.match===undefined?null:s.match); setStat("#stRan",s.ran===undefined?null:s.ran);
+    setBtns();
+  }
+  function setStat(id,v){ var e=$(id), box=e.parentNode; if(v===null){e.textContent="";box.classList.add("empty");} else {e.textContent=v;box.classList.remove("empty");} }
+  function setBtns(){ $("#bNext").disabled=at>=steps.length-1; $("#bBack").disabled=at<0;
+    var d=""; for(var k=0;k<steps.length;k++) d+='<i class="'+(k===at?"now":k<at?"done":"")+'"></i>'; $("#dots").innerHTML=d; }
+  /* focus: picture and caption only. Remembered per browser. */
+  function redraw(){ renderPic(at>=0?steps[at].pic:"none"); }
+  function setFocus(on){ document.body.classList.toggle("solo",on); $("#bFocus").textContent=on?"Focus on":"Focus";
+    try{localStorage.setItem("hub-focus",on?"1":"0");}catch(e){} redraw(); }
+  $("#bFocus").addEventListener("click",function(){ setFocus(!document.body.classList.contains("solo")); this.blur(); });
+  try{ if(localStorage.getItem("hub-focus")==="1") document.body.classList.add("solo"); }catch(e){}
+  if(document.body.classList.contains("solo")) $("#bFocus").textContent="Focus on";
+  function next(){ if(at<steps.length-1) show(at+1); }
+  function back(){ if(at>=0) show(at-1); }
+  function reset(){ steps=build(); buildPic(); show(-1); }
+  function pick(idx){
+    cur=idx; P=PRESETS[idx];
+    Array.prototype.forEach.call(document.querySelectorAll(".chip"),function(c,j){c.classList.toggle("on",j===idx);});
+    if(document.activeElement&&document.activeElement.blur) document.activeElement.blur();
+    reset();
+  }
+
+  $("#chips").innerHTML=PRESETS.map(function(p,j){return '<button class="chip'+(j===0?' on':'')+'" data-i="'+j+'">'+p.call+'</button>';}).join("");
+  $("#chips").addEventListener("click",function(e){ var b=e.target.closest(".chip"); if(b) pick(+b.getAttribute("data-i")); });
+  $("#bNext").addEventListener("click",next);
+  $("#bBack").addEventListener("click",back);
+  $("#bReset").addEventListener("click",reset);
+  document.addEventListener("keydown",function(e){ if(e.code==="Space"&&!/INPUT|BUTTON/.test(e.target.tagName)){e.preventDefault();next();} });
+  addEventListener("resize",redraw);
+
+  /* ---------- ambient canvas ---------- */
+  var cv=$("#amb"),ctx=cv.getContext&&cv.getContext("2d"),parts=[];
+  function sizeC(){if(!ctx)return;cv.width=innerWidth;cv.height=innerHeight;}
+  function initParts(){parts=[];for(var i=0;i<46;i++)parts.push({x:Math.random(),y:Math.random(),
+    r:Math.random()*1.6+.3,s:Math.random()*.02+.004,o:Math.random()*.4+.1});}
+  function drawC(){if(!ctx)return;ctx.clearRect(0,0,cv.width,cv.height);
+    parts.forEach(function(p){p.y-=p.s/60;if(p.y<-.02)p.y=1.02;
+      ctx.beginPath();ctx.arc(p.x*cv.width,p.y*cv.height,p.r,0,7);
+      ctx.fillStyle="rgba(140,170,255,"+p.o+")";ctx.fill();});
+    requestAnimationFrame(drawC);}
+  if(ctx&&!reduce){sizeC();initParts();drawC();addEventListener("resize",sizeC);}
+
+  reset();
+})();
+</script>
+<script src="../manifest.js"></script>
+<script src="../../assets/rail.js"></script>
+<script>Rail.render(document.getElementById("rail"),{week:2,kind:"visuals",current:"12-constructor-overloading"});</script>
+</body>
+</html>

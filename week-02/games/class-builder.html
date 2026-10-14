@@ -1,0 +1,431 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Class Builder | Week 2 Visual Hub</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Sora:wght@500;700&family=Inter:wght@400;500&family=JetBrains+Mono:wght@400;500&display=swap">
+<style>
+  :root{
+    --bg:#080c17; --bg2:#0c1428; --surface:rgba(255,255,255,.045); --line:rgba(255,255,255,.09);
+    --ink:#eef2fb; --muted:#8496b6; --accent:#6ea0ff; --accent2:#8b7bff; --good:#46d98a; --warn:#ff6a6a;
+    --gold:#ffc862; --disp:'Sora',system-ui,sans-serif; --body:'Inter',system-ui,sans-serif;
+    --mono:'JetBrains Mono',ui-monospace,monospace;
+  }
+  *{box-sizing:border-box}
+  body{margin:0;min-height:100vh;color:var(--ink);font-family:var(--body);
+    background:radial-gradient(1200px 700px at 70% -10%,#141d38 0%,transparent 55%),
+               radial-gradient(900px 600px at 10% 110%,#161233 0%,transparent 50%),#080c17;
+    overflow-x:hidden}
+  #amb{position:fixed;inset:0;z-index:0;pointer-events:none;opacity:.6}
+  .back{position:relative;z-index:2;display:block;max-width:1120px;margin:0 auto;padding:26px 24px 0;
+    width:100%;font-family:var(--mono);font-size:.8rem;letter-spacing:.04em;color:var(--muted);
+    text-decoration:none;transition:color .15s}
+  .back:hover{color:var(--accent)}
+  .wrap{position:relative;z-index:1;max-width:1120px;margin:0 auto;padding:22px 24px 70px}
+  .tag{font-family:var(--mono);font-size:.72rem;letter-spacing:.22em;text-transform:uppercase;color:var(--accent);margin:0 0 14px}
+  h1{font-family:var(--disp);font-weight:700;font-size:clamp(2.3rem,6vw,3.6rem);line-height:1;margin:0 0 12px;
+    letter-spacing:-.03em;background:linear-gradient(180deg,#fff,#b9c6e6);-webkit-background-clip:text;
+    background-clip:text;color:transparent}
+  .lede{color:var(--muted);max-width:64ch;font-size:1.05rem;margin:0 0 26px;line-height:1.5}
+  .lede b{color:var(--ink)}
+  .lede code,.take code,.caption code{font-family:var(--mono);font-size:.92em;color:#bcd0ff}
+
+  /* ---------- stage: picture first, one toolbar, support below ---------- */
+  .stage{position:relative;background:linear-gradient(180deg,rgba(255,255,255,.03),rgba(255,255,255,.01));
+    border:1px solid var(--line);border-radius:24px;padding:18px 18px 14px;
+    box-shadow:0 1px 0 rgba(255,255,255,.06) inset,0 30px 80px -30px rgba(0,0,0,.8)}
+  .topbar{display:flex;align-items:center;gap:10px;margin:0 0 14px;flex-wrap:wrap}
+  .topbar .lab{margin:0 4px 0 0}
+  .lab{font-family:var(--mono);font-size:.7rem;letter-spacing:.12em;text-transform:uppercase;color:var(--muted);margin:0 0 10px}
+  .chips{display:flex;flex-wrap:wrap;gap:6px}
+  .chip{font-family:var(--mono);font-size:.74rem;padding:5px 11px;border-radius:999px;cursor:pointer;
+    border:1px solid var(--line);background:rgba(0,0,0,.25);color:var(--muted);transition:.15s}
+  .chip:hover{border-color:var(--accent);color:var(--accent)}
+  .chip.on{border-color:rgba(110,160,255,.6);background:rgba(110,160,255,.14);color:var(--ink)}
+  .chip:focus-visible,.btn:focus-visible,.focus:focus-visible{outline:2px solid var(--accent);outline-offset:2px}
+  .focus{margin-left:auto;font-family:var(--mono);font-size:.68rem;letter-spacing:.1em;text-transform:uppercase;padding:6px 12px;
+    border-radius:999px;border:1px solid var(--line);background:rgba(0,0,0,.25);color:var(--muted);cursor:pointer;transition:.15s}
+  .focus:hover{border-color:var(--accent);color:var(--accent)}
+  body.solo .focus{border-color:rgba(255,200,98,.6);color:var(--gold);background:rgba(255,200,98,.1)}
+
+  /* ---------- game board ---------- */
+  .pic{position:relative;height:390px;border:1px solid var(--line);border-radius:18px;background:rgba(6,10,20,.5);overflow:hidden;
+    display:flex;flex-direction:column;align-items:center;justify-content:center;gap:22px;padding:20px}
+  .pic .zone{position:absolute;left:18px;top:14px;font-family:var(--mono);font-size:.62rem;letter-spacing:.14em;text-transform:uppercase;color:rgba(132,150,182,.55)}
+  .hud{position:absolute;right:18px;top:12px;display:flex;gap:14px;font-family:var(--mono);font-size:.72rem;color:var(--muted)}
+  .hud b{color:var(--ink);font-weight:500}
+  .value{font-family:var(--mono);font-size:clamp(2rem,5vw,3.2rem);color:var(--ink);padding:14px 34px;border:1px solid var(--line);border-radius:16px;
+    background:rgba(0,0,0,.3);min-width:180px;text-align:center;transition:border-color .2s,box-shadow .2s,transform .2s}
+  .value.good{border-color:rgba(70,217,138,.7);box-shadow:0 0 28px -8px rgba(70,217,138,.8)}
+  .value.bad{border-color:rgba(255,106,106,.7);box-shadow:0 0 28px -8px rgba(255,106,106,.8);animation:shake .3s}
+  @keyframes shake{25%{transform:translateX(-6px)}75%{transform:translateX(6px)}}
+  .opts{display:flex;flex-wrap:wrap;gap:8px;justify-content:center;max-width:620px}
+  .opt{font-family:var(--mono);font-size:.9rem;padding:10px 18px;border-radius:11px;cursor:pointer;border:1px solid var(--line);background:var(--surface);color:var(--ink);transition:.15s}
+  .opt:hover{border-color:var(--accent);color:var(--accent)}
+  .opt:disabled{cursor:default}
+  .opt.hit{border-color:rgba(70,217,138,.7);background:rgba(70,217,138,.14);color:var(--good)}
+  .opt.miss{border-color:rgba(255,106,106,.7);background:rgba(255,106,106,.12);color:var(--warn)}
+  .opt.dim{opacity:.4}
+  .key{display:inline-block;margin-left:6px;font-size:.62rem;color:var(--muted)}
+  .screen{position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:12px;background:rgba(6,10,20,.92);transition:opacity .25s}
+  .screen.off{opacity:0;pointer-events:none}
+  .screen h2{font-family:var(--disp);font-weight:700;font-size:1.6rem;margin:0;color:var(--ink)}
+  .screen p{margin:0;color:var(--muted);font-size:.95rem;text-align:center;max-width:46ch;line-height:1.5}
+  .screen .big{font-family:var(--disp);font-weight:700;font-size:2.6rem;color:var(--accent)}
+  .screen .big.gold{color:var(--gold)} .screen .big.good{color:var(--good)}
+  .bar{position:absolute;left:0;right:0;bottom:0;height:4px;background:rgba(255,255,255,.06)}
+  .bar i{display:block;height:100%;width:0;background:var(--accent);transition:width .25s}
+  .misses{font-family:var(--mono);font-size:.74rem;color:var(--muted);line-height:1.7;text-align:left}
+  .misses b{color:var(--warn);font-weight:500} .misses i{font-style:normal;color:var(--good)}
+  /* caption: the one sentence, right under the picture */
+  .caption{display:flex;gap:16px;align-items:flex-start;margin:14px 4px 0;min-height:56px}
+  .caption .n{flex-shrink:0;font-family:var(--disp);font-weight:700;font-size:1.35rem;color:var(--accent);font-variant-numeric:tabular-nums;
+    line-height:1.2;min-width:3.2rem}
+  .caption .n small{display:block;font-family:var(--mono);font-weight:400;font-size:.58rem;letter-spacing:.14em;text-transform:uppercase;color:var(--muted)}
+  .caption .t{font-size:1.02rem;line-height:1.55;color:var(--ink);padding-left:16px;border-left:3px solid var(--accent);transition:border-color .3s}
+  body.solo .caption .t{font-size:1.18rem}
+  .caption.cut .t{border-left-color:var(--warn)} .caption.left .t{border-left-color:var(--gold)} .caption.ok .t{border-left-color:var(--good)}
+  .caption b.g{color:var(--good)} .caption b.w{color:var(--warn)} .caption b.a{color:var(--accent)} .caption b.y{color:var(--gold)}
+
+  /* toolbar: same on every page */
+  .toolbar{display:flex;align-items:center;gap:10px;margin:16px 0 0;padding-top:14px;border-top:1px solid var(--line)}
+  .btn{font-family:var(--body);font-weight:500;font-size:.86rem;padding:9px 16px;border-radius:11px;cursor:pointer;
+    border:1px solid var(--line);background:var(--surface);color:var(--ink);transition:.15s}
+  .btn:hover{border-color:var(--accent);color:var(--accent)}
+  .btn.primary{border-color:rgba(110,160,255,.5);background:rgba(110,160,255,.12);padding:9px 22px}
+  .btn:disabled{opacity:.35;cursor:not-allowed}
+  .btn.ghost{background:transparent;color:var(--muted);margin-left:auto}
+  .dots{display:flex;gap:5px;align-items:center;margin:0 6px}
+  .dots i{display:block;width:8px;height:8px;border-radius:50%;background:rgba(255,255,255,.12);transition:.2s}
+  .dots i.done{background:rgba(110,160,255,.45)}
+  .dots i.now{background:var(--accent);transform:scale(1.35);box-shadow:0 0 10px rgba(110,160,255,.7)}
+  .hint{font-family:var(--mono);font-size:.68rem;color:var(--muted);margin:10px 4px 0;line-height:1.5}
+  .hint b{color:var(--accent)}
+
+  .toolbar .btn.primary{min-width:120px}
+  .take{margin-top:22px;background:linear-gradient(180deg,rgba(110,160,255,.08),rgba(139,123,255,.04));
+    border:1px solid var(--line);border-left:3px solid var(--accent);border-radius:12px;padding:16px 18px}
+  .take .tk{font-family:var(--mono);font-size:.66rem;letter-spacing:.14em;text-transform:uppercase;color:var(--accent);margin:0 0 8px}
+  .take p{margin:0;font-size:.95rem;color:var(--ink);line-height:1.55}
+  .take b{color:#fff}
+  /* ---------- class builder board ---------- */
+  .pic{height:auto;min-height:390px;justify-content:flex-start;gap:12px;padding:44px 22px 24px}
+  .q{font-family:var(--disp);font-weight:500;font-size:1.08rem;color:var(--ink);text-align:center;margin:0;line-height:1.35}
+  .q small{display:block;font-family:var(--mono);font-weight:400;font-size:.62rem;letter-spacing:.14em;text-transform:uppercase;color:var(--accent);margin-bottom:6px}
+  .list{position:relative;width:100%;max-width:640px;display:flex;flex-direction:column;gap:3px;padding:10px;border:1px dashed rgba(255,255,255,.14);
+    border-radius:14px;background:rgba(0,0,0,.25);transition:border-color .2s,box-shadow .2s}
+  .list.good{border-style:solid;border-color:rgba(70,217,138,.7);box-shadow:0 0 28px -8px rgba(70,217,138,.8)}
+  .list.bad{border-style:solid;border-color:rgba(255,106,106,.7);box-shadow:0 0 28px -8px rgba(255,106,106,.8);animation:shake .3s}
+  .tl{display:flex;align-items:center;gap:10px;font-family:var(--mono);font-size:.84rem;line-height:1.3;padding:4px 10px;border-radius:8px;cursor:grab;
+    border:1px solid transparent;background:rgba(255,255,255,.03);color:var(--ink);white-space:pre;user-select:none;touch-action:none;transition:border-color .15s,background .15s,padding .2s}
+  .tl:hover{border-color:rgba(110,160,255,.4)}
+  .tl .ln{flex-shrink:0;width:1.6rem;text-align:right;font-size:.66rem;color:rgba(132,150,182,.55)}
+  .tl .cd{flex:1;min-width:0;overflow:hidden;text-overflow:ellipsis}
+  .tl.cur{border-color:rgba(110,160,255,.6);background:rgba(110,160,255,.1)}
+  .tl.held{border-color:rgba(255,200,98,.7);background:rgba(255,200,98,.12);box-shadow:0 0 18px -6px rgba(255,200,98,.7)}
+  .tl.drag{opacity:.85;cursor:grabbing;border-color:rgba(255,200,98,.7);background:rgba(255,200,98,.12)}
+  .tl.ok{border-color:rgba(70,217,138,.35)}
+  .tl.err{border-color:rgba(255,106,106,.8);background:rgba(255,106,106,.14);color:var(--warn)}
+  .list.lock .tl{cursor:default}
+  .kw{color:var(--accent2)} .ty{color:var(--gold)} .br{color:var(--muted)}
+  .tl.err .kw,.tl.err .ty,.tl.err .br{color:inherit}
+  .row{display:flex;gap:10px}
+  .screen{overflow-y:auto;padding:20px}
+  .misses{max-width:640px}
+  .misses div{margin-bottom:6px}
+  .misses code{font-family:var(--mono);color:#bcd0ff}
+  @media (prefers-reduced-motion:reduce){*{animation-duration:.01ms!important;transition-duration:.01ms!important}#amb{display:none}}
+  @media (max-width:640px){.wrap{padding:18px 16px 60px}.back{padding:22px 16px 0}.stage{padding:12px}.pic{padding:44px 8px 20px}.tl{font-size:.74rem;padding:4px 6px}}
+</style>
+</head>
+<body>
+
+<a class="back" href="../index.html#class-builder">&#8592; Week 2 index</a>
+
+<canvas id="amb"></canvas>
+<div class="wrap">
+  <p class="tag">Workbook 2a &middot; Sections 2-1 to 2-3 &middot; Game</p>
+  <h1>Class Builder</h1>
+  <p class="lede"><b>The lines of a class are scrambled. Put them back in an order that compiles.</b></p>
+
+  <div class="stage">
+    <div class="topbar">
+      <span class="lab">Game</span>
+    </div>
+
+    <div class="pic" id="pic">
+      <span class="zone">build the class</span>
+      <div class="hud"><span>score <b id="hScore">0</b></span><span>time <b id="hTime">0.0s</b></span></div>
+      <p class="q" id="q"></p>
+      <div class="list" id="list"></div>
+      <div class="row"><button class="btn ghost" id="bFix" disabled>Show a valid order</button><button class="btn primary" id="bCheck" disabled>Check</button></div>
+      <div class="bar"><i id="bar"></i></div>
+      <div class="screen" id="startScr">
+        <h2>Class Builder</h2>
+        <p>Drag the lines into an order that compiles, or grab one with Space and move it with the arrow keys. More than one order is right: the rules decide, not a single answer.</p>
+        <button class="btn primary" id="bStart">Start</button>
+      </div>
+      <div class="screen off" id="endScr">
+        <h2>Classes built</h2>
+        <div class="big" id="endScore"></div>
+        <p id="endMsg"></p>
+        <div class="misses" id="endMiss"></div>
+        <button class="btn primary" id="bAgain">Play again</button>
+      </div>
+    </div>
+
+    <div class="caption" id="caption">
+      <div class="n" id="stepno"><small>round</small>0 / 6</div>
+      <div class="t" id="status">Press <b class="a">Start</b>. Six classes, the clock is running.</div>
+    </div>
+    <p class="hint">drag a line &middot; or <b>&#8593; &#8595;</b> pick a line, <b>Space</b> grab it, <b>&#8593; &#8595;</b> move it, <b>Space</b> drop &middot; <b>Enter</b> checks &middot; fields can sit before or after the methods</p>
+  </div>
+
+  <div class="take">
+    <p class="tk">The one idea</p>
+    <p><b>A class is a set of nested braces.</b> The header opens the class, every constructor and method opens and closes its own block inside it, statements live only inside those blocks, and the last brace closes the class.</p>
+  </div>
+
+  <div id="rail"></div>
+</div>
+
+<script>
+(function(){
+  "use strict";
+  var $=function(s){return document.querySelector(s);};
+  var reduce=matchMedia("(prefers-reduced-motion: reduce)").matches;
+
+  var CLASSES=[
+    { name:"Person", header:"public class Person {", fields:["private String name;","private int energy;"],
+      blocks:[
+        {open:"public Person(String name) {", label:"the constructor", body:["this.name = name;","this.energy = 100;"]},
+        {open:"public int getEnergy() {", label:"getEnergy()", body:["return this.energy;"]},
+        {open:"public void setName(String name) {", label:"setName()", body:["this.name = name;"]},
+        {open:"public void work(int hours) {", label:"work()", body:["this.energy -= hours * 10;"]}
+      ]},
+    { name:"Dog", header:"public class Dog {", fields:["private String name;","private int tricks;"],
+      blocks:[
+        {open:"public Dog(String name, int tricks) {", label:"the constructor", body:["this.name = name;","this.tricks = tricks;"]},
+        {open:"public String getName() {", label:"getName()", body:["return this.name;"]},
+        {open:"public void setTricks(int tricks) {", label:"setTricks()", body:["this.tricks = tricks;"]},
+        {open:"public void learnTrick() {", label:"learnTrick()", body:["this.tricks++;"]}
+      ]},
+    { name:"Notebook", header:"public class Notebook {", fields:["private String title;","private int pagesUsed;"],
+      blocks:[
+        {open:"public Notebook(String title) {", label:"the constructor", body:["this.title = title;","this.pagesUsed = 0;"]},
+        {open:"public int getPagesUsed() {", label:"getPagesUsed()", body:["return this.pagesUsed;"]},
+        {open:"public void setTitle(String title) {", label:"setTitle()", body:["this.title = title;"]},
+        {open:"public void write(int pages) {", label:"write()", body:["this.pagesUsed += pages;"]}
+      ]},
+    { name:"Car", header:"public class Car {", fields:["private String color;","private int speed;"],
+      blocks:[
+        {open:"public Car(String color) {", label:"the constructor", body:["this.color = color;","this.speed = 0;"]},
+        {open:"public int getSpeed() {", label:"getSpeed()", body:["return this.speed;"]},
+        {open:"public void setColor(String color) {", label:"setColor()", body:["this.color = color;"]},
+        {open:"public void accelerate(int amount) {", label:"accelerate()", body:["this.speed += amount;"]}
+      ]},
+    { name:"Plant", header:"public class Plant {", fields:["private String species;","private int height;"],
+      blocks:[
+        {open:"public Plant(String species, int height) {", label:"the constructor", body:["this.species = species;","this.height = height;"]},
+        {open:"public String getSpecies() {", label:"getSpecies()", body:["return this.species;"]},
+        {open:"public void setHeight(int height) {", label:"setHeight()", body:["this.height = height;"]},
+        {open:"public void water() {", label:"water()", body:["this.height += 2;"]}
+      ]},
+    { name:"Playlist", header:"public class Playlist {", fields:["private String title;","private int songCount;"],
+      blocks:[
+        {open:"public Playlist(String title) {", label:"the constructor", body:["this.title = title;","this.songCount = 0;"]},
+        {open:"public int getSongCount() {", label:"getSongCount()", body:["return this.songCount;"]},
+        {open:"public void setTitle(String title) {", label:"setTitle()", body:["this.title = title;"]},
+        {open:"public void addSong() {", label:"addSong()", body:["this.songCount++;"]}
+      ]}
+  ];
+  var N=CLASSES.length;
+  var rounds=[], at=0, score=0, misses=[], t0=0, timer=null, state="idle";
+  var cls=null, tiles=[], order=[], sel=0, held=false, drag=null, errAt=-1;
+
+  function shuffle(a){ a=a.slice(); for(var i=a.length-1;i>0;i--){ var j=Math.floor(Math.random()*(i+1)); var t=a[i]; a[i]=a[j]; a[j]=t; } return a; }
+  function esc(s){ var d=document.createElement("span"); d.textContent=String(s); return d.innerHTML; }
+  function code(s){ return "<code>"+esc(s)+"</code>"; }
+  function tick(){ $("#hTime").textContent=((performance.now()-t0)/1000).toFixed(1)+"s"; }
+  function setCap(c,html){ $("#caption").className="caption"+(c?" "+c:""); $("#status").innerHTML=html; }
+
+  /* tiles: header, fields, each block (open, body lines, close), then the class close */
+  function makeTiles(c){
+    var t=[{k:"header",s:c.header}];
+    c.fields.forEach(function(f){ t.push({k:"field",s:f}); });
+    c.blocks.forEach(function(b,i){ t.push({k:"open",s:b.open,b:i}); b.body.forEach(function(s){ t.push({k:"body",s:s}); }); t.push({k:"close",s:"}"}); });
+    t.push({k:"close",s:"}"});
+    return t;
+  }
+  function owners(c,s){ return c.blocks.filter(function(b){ return b.body.indexOf(s)>=0; }).map(function(b){ return b.label; }); }
+
+  /* the rules: header first, members in the class body, statements inside their own block, braces balanced, class brace last */
+  function validate(seq,c){
+    function bad(i,msg){ return {ok:false,at:i,msg:msg}; }
+    if(seq[0].k!=="header"){
+      for(var h=0;h<seq.length;h++) if(seq[h].k==="header") break;
+      return bad(h,code(c.header)+" must be the first line: everything else lives inside the class braces.");
+    }
+    var depth=1, blk=null, rem=null, closedAt=-1;
+    for(var i=1;i<seq.length;i++){
+      var x=seq[i];
+      if(depth===0) return bad(closedAt,"This "+code("}")+" closes the class too early: the class brace must be the very last line.");
+      if(x.k==="field"){
+        if(blk) return bad(i,code(x.s)+" is a field: it belongs in the class body, not inside "+blk.label+".");
+      } else if(x.k==="open"){
+        if(blk) return bad(i,code(x.s)+" cannot start inside "+blk.label+": close "+blk.label+" with its "+code("}")+" first.");
+        blk=c.blocks[x.b]; rem=blk.body.slice(); depth=2;
+      } else if(x.k==="body"){
+        var own=owners(c,x.s);
+        if(!blk) return bad(i,code(x.s)+" must be inside "+own.join(" or ")+": a statement cannot sit loose in the class body.");
+        var k=rem.indexOf(x.s);
+        if(k<0){
+          if(blk.body.indexOf(x.s)>=0) return bad(i,blk.label+" already has "+code(x.s)+": the other copy belongs in "+own.filter(function(o){ return o!==blk.label; }).join(" or ")+".");
+          return bad(i,code(x.s)+" must be inside "+own.join(" or ")+", not inside "+blk.label+".");
+        }
+        rem.splice(k,1);
+      } else if(x.k==="close"){
+        if(blk){
+          if(rem.length) return bad(i,code(rem[0])+" must be inside "+blk.label+", before this closing "+code("}")+".");
+          blk=null; depth=1;
+        } else { depth=0; closedAt=i; }
+      }
+    }
+    if(depth!==0) return bad(seq.length-1,"The class never closes: the last line must be its own "+code("}")+".");
+    return {ok:true};
+  }
+
+  function depthList(seq){
+    var d=0, out=[];
+    seq.forEach(function(x){ if(x.k==="close") d=Math.max(0,d-1); out.push(Math.min(d,3)); if(x.k==="header"||x.k==="open") d++; });
+    return out;
+  }
+  function paint(s){
+    var h=esc(s);
+    h=h.replace(/\b(public|private|class|void|return|this)\b/g,'<span class="kw">$1</span>');
+    h=h.replace(/\b(String|int)\b/g,'<span class="ty">$1</span>');
+    h=h.replace(/([{}])/g,'<span class="br">$1</span>');
+    return h;
+  }
+  function render(){
+    var seq=order.map(function(i){ return tiles[i]; }), dep=depthList(seq);
+    $("#list").innerHTML=seq.map(function(x,p){
+      var c="tl";
+      if(state==="play"&&p===sel) c+=held?" held":" cur";
+      if(drag&&drag.moved&&order[p]===drag.id) c+=" drag";
+      if(state==="shown"){ if(p===errAt) c+=" err"; else if(errAt<0) c+=" ok"; }
+      return '<div class="'+c+'" data-p="'+p+'" style="padding-left:'+(10+dep[p]*22)+'px"><span class="ln">'+(p+1)+'</span><span class="cd">'+paint(x.s)+'</span></div>';
+    }).join("");
+  }
+
+  function showRound(){
+    cls=rounds[at]; tiles=makeTiles(cls); state="play"; sel=0; held=false; errAt=-1;
+    var idx=tiles.map(function(t,i){ return i; });
+    do { order=shuffle(idx); } while(validate(order.map(function(i){ return tiles[i]; }),cls).ok);
+    $("#q").innerHTML="<small>class "+(at+1)+"</small>"+cls.name;
+    $("#list").className="list"; render();
+    $("#bCheck").textContent="Check"; $("#bCheck").disabled=false; $("#bFix").disabled=true;
+    $("#stepno").innerHTML="<small>round</small>"+(at+1)+" / "+N; $("#bar").style.width=(100*at/N)+"%";
+    setCap("","Arrange the "+tiles.length+" lines of <b class=\"a\">"+cls.name+"</b> so the class compiles.");
+  }
+  function start(){
+    rounds=CLASSES.slice(); at=0; score=0; misses=[];
+    $("#hScore").textContent="0"; $("#startScr").classList.add("off"); $("#endScr").classList.add("off");
+    showRound(); t0=performance.now(); if(timer) clearInterval(timer); timer=setInterval(tick,100);
+  }
+  function check(){
+    if(state==="shown"){ at++; if(at>=N) end(); else showRound(); return; }
+    if(state!=="play") return;
+    var r=validate(order.map(function(i){ return tiles[i]; }),cls);
+    state="shown"; held=false; drag=null;
+    $("#list").className="list lock "+(r.ok?"good":"bad");
+    if(r.ok){
+      score++; $("#hScore").textContent=String(score); errAt=-1;
+      setCap("ok","<b class=\"g\">It compiles.</b> Header first, every statement inside its own block, and the class brace last.");
+    } else {
+      errAt=r.at; misses.push({name:cls.name,msg:r.msg});
+      setCap("cut","<b class=\"w\">Line "+(r.at+1)+":</b> "+r.msg);
+      $("#bFix").disabled=false;
+    }
+    render();
+    $("#bCheck").textContent=at+1>=N?"Finish":"Next";
+  }
+  function showFix(){
+    if(state!=="shown"||errAt<0) return;
+    order=tiles.map(function(t,i){ return i; }); errAt=-1;
+    $("#list").className="list lock good"; render(); $("#bFix").disabled=true;
+    setCap("left","One valid order for <b class=\"y\">"+cls.name+"</b>. The fields could also go last, and the methods could swap places.");
+  }
+  function end(){
+    state="end"; clearInterval(timer); tick(); $("#bar").style.width="100%";
+    var secs=((performance.now()-t0)/1000).toFixed(1);
+    $("#endScore").textContent=score+" / "+N; $("#endScore").className="big "+(score===N?"good":score>=4?"":"gold");
+    $("#endMsg").textContent=(score===N?"Perfect. ":score>=4?"Solid. ":"Keep going. ")+secs+" seconds.";
+    $("#endMiss").innerHTML=misses.map(function(m){ return "<div><b>"+m.name+"</b>: "+m.msg+"</div>"; }).join("");
+    $("#endScr").classList.remove("off");
+    $("#stepno").innerHTML="<small>round</small>"+N+" / "+N;
+    setCap("","Game over. <b class=\"a\">Play again</b> scrambles the six classes again.");
+  }
+
+  /* moving lines: one move function for drag and keys */
+  function move(from,to){
+    if(to<0||to>=order.length||from===to) return;
+    var v=order.splice(from,1)[0]; order.splice(to,0,v);
+  }
+  $("#list").addEventListener("pointerdown",function(e){
+    var el=e.target.closest(".tl"); if(!el||state!=="play") return;
+    e.preventDefault();
+    var p=+el.getAttribute("data-p");
+    drag={id:order[p],y0:e.clientY,moved:false,p:p};
+  });
+  document.addEventListener("pointermove",function(e){
+    if(!drag) return;
+    if(!drag.moved&&Math.abs(e.clientY-drag.y0)<5) return;
+    drag.moved=true;
+    var els=document.querySelectorAll("#list .tl"), cur=order.indexOf(drag.id), target=0;
+    Array.prototype.forEach.call(els,function(el,p){ if(p===cur) return; var r=el.getBoundingClientRect(); if(e.clientY>r.top+r.height/2) target++; });
+    move(cur,target); sel=target; held=false; render();
+  });
+  document.addEventListener("pointerup",function(){
+    if(!drag) return;
+    var d=drag; drag=null;
+    if(!d.moved){ if(sel===d.p&&held) held=false; else { sel=d.p; held=true; } }
+    render();
+  });
+
+  $("#bCheck").addEventListener("click",function(){ this.blur(); check(); });
+  $("#bFix").addEventListener("click",function(){ this.blur(); showFix(); });
+  $("#bStart").addEventListener("click",function(){ this.blur(); start(); });
+  $("#bAgain").addEventListener("click",function(){ this.blur(); start(); });
+  document.addEventListener("keydown",function(e){
+    if(/INPUT|TEXTAREA/.test(e.target.tagName)||e.metaKey||e.ctrlKey||e.altKey) return;
+    if(state==="idle"){ if(e.code==="Space"){ e.preventDefault(); start(); } return; }
+    if(state==="end") return;
+    if(e.key==="Enter"){ e.preventDefault(); check(); return; }
+    if(state!=="play") return;
+    if(e.code==="Space"){ e.preventDefault(); held=!held; render(); return; }
+    if(e.key==="ArrowUp"||e.key==="ArrowDown"){
+      e.preventDefault();
+      var to=sel+(e.key==="ArrowUp"?-1:1);
+      if(to<0||to>=order.length) return;
+      if(held) move(sel,to);
+      sel=to; render();
+    }
+  });
+
+  var cv=$("#amb"),ctx=cv.getContext&&cv.getContext("2d"),parts=[];
+  function sizeC(){if(!ctx)return;cv.width=innerWidth;cv.height=innerHeight;}
+  function initParts(){parts=[];for(var i=0;i<46;i++)parts.push({x:Math.random(),y:Math.random(),r:Math.random()*1.6+.3,s:Math.random()*.02+.004,o:Math.random()*.4+.1});}
+  function drawC(){if(!ctx)return;ctx.clearRect(0,0,cv.width,cv.height);
+    parts.forEach(function(p){p.y-=p.s/60;if(p.y<-.02)p.y=1.02;ctx.beginPath();ctx.arc(p.x*cv.width,p.y*cv.height,p.r,0,7);
+      ctx.fillStyle="rgba(140,170,255,"+p.o+")";ctx.fill();});requestAnimationFrame(drawC);}
+  if(ctx&&!reduce){sizeC();initParts();drawC();addEventListener("resize",sizeC);}
+})();
+</script>
+<script src="../manifest.js"></script>
+<script src="../../assets/rail.js"></script>
+<script>Rail.render(document.getElementById("rail"),{week:2,kind:"games",current:"class-builder"});</script>
+</body>
+</html>

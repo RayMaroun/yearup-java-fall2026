@@ -1,0 +1,455 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Method Overloading | Week 2 Visual Hub</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Sora:wght@500;700&family=Inter:wght@400;500&family=JetBrains+Mono:wght@400;500&display=swap">
+<style>
+  :root{
+    --bg:#080c17; --bg2:#0c1428; --surface:rgba(255,255,255,.045); --line:rgba(255,255,255,.09);
+    --ink:#eef2fb; --muted:#8496b6; --accent:#6ea0ff; --accent2:#8b7bff; --good:#46d98a; --warn:#ff6a6a;
+    --gold:#ffc862; --disp:'Sora',system-ui,sans-serif; --body:'Inter',system-ui,sans-serif;
+    --mono:'JetBrains Mono',ui-monospace,monospace;
+  }
+  *{box-sizing:border-box}
+  body{margin:0;min-height:100vh;color:var(--ink);font-family:var(--body);
+    background:radial-gradient(1200px 700px at 70% -10%,#141d38 0%,transparent 55%),
+               radial-gradient(900px 600px at 10% 110%,#161233 0%,transparent 50%),#080c17;
+    overflow-x:hidden}
+  #amb{position:fixed;inset:0;z-index:0;pointer-events:none;opacity:.6}
+  .back{position:relative;z-index:2;display:block;max-width:1120px;margin:0 auto;padding:26px 24px 0;
+    width:100%;font-family:var(--mono);font-size:.8rem;letter-spacing:.04em;color:var(--muted);
+    text-decoration:none;transition:color .15s}
+  .back:hover{color:var(--accent)}
+  .wrap{position:relative;z-index:1;max-width:1120px;margin:0 auto;padding:22px 24px 70px}
+  .tag{font-family:var(--mono);font-size:.72rem;letter-spacing:.22em;text-transform:uppercase;color:var(--accent);margin:0 0 14px}
+  h1{font-family:var(--disp);font-weight:700;font-size:clamp(2.3rem,6vw,3.6rem);line-height:1;margin:0 0 12px;
+    letter-spacing:-.03em;background:linear-gradient(180deg,#fff,#b9c6e6);-webkit-background-clip:text;
+    background-clip:text;color:transparent}
+  .lede{color:var(--muted);max-width:64ch;font-size:1.05rem;margin:0 0 26px;line-height:1.5}
+  .lede b{color:var(--ink)}
+  .lede code,.take code,.caption code{font-family:var(--mono);font-size:.92em;color:#bcd0ff}
+
+  /* ---------- stage: picture first, one toolbar, support below ---------- */
+  .stage{position:relative;background:linear-gradient(180deg,rgba(255,255,255,.03),rgba(255,255,255,.01));
+    border:1px solid var(--line);border-radius:24px;padding:18px 18px 14px;
+    box-shadow:0 1px 0 rgba(255,255,255,.06) inset,0 30px 80px -30px rgba(0,0,0,.8)}
+  .topbar{display:flex;align-items:center;gap:10px;margin:0 0 14px;flex-wrap:wrap}
+  .topbar .lab{margin:0 4px 0 0}
+  .lab{font-family:var(--mono);font-size:.7rem;letter-spacing:.12em;text-transform:uppercase;color:var(--muted);margin:0 0 10px}
+  .chips{display:flex;flex-wrap:wrap;gap:6px}
+  .chip{font-family:var(--mono);font-size:.74rem;padding:5px 11px;border-radius:999px;cursor:pointer;
+    border:1px solid var(--line);background:rgba(0,0,0,.25);color:var(--muted);transition:.15s}
+  .chip:hover{border-color:var(--accent);color:var(--accent)}
+  .chip.on{border-color:rgba(110,160,255,.6);background:rgba(110,160,255,.14);color:var(--ink)}
+  .chip:focus-visible,.btn:focus-visible,.focus:focus-visible{outline:2px solid var(--accent);outline-offset:2px}
+  .focus{margin-left:auto;font-family:var(--mono);font-size:.68rem;letter-spacing:.1em;text-transform:uppercase;padding:6px 12px;
+    border-radius:999px;border:1px solid var(--line);background:rgba(0,0,0,.25);color:var(--muted);cursor:pointer;transition:.15s}
+  .focus:hover{border-color:var(--accent);color:var(--accent)}
+  body.solo .focus{border-color:rgba(255,200,98,.6);color:var(--gold);background:rgba(255,200,98,.1)}
+
+  /* hero picture */
+  .pic{position:relative;height:390px;border:1px solid var(--line);border-radius:18px;background:rgba(6,10,20,.5);overflow:hidden}
+  body.solo .pic{height:480px}
+  .arena{position:absolute;inset:0;display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1.7fr);gap:40px;padding:22px 24px;
+    transition:opacity .3s}
+  .zone{font-family:var(--mono);font-size:.62rem;letter-spacing:.14em;text-transform:uppercase;color:rgba(132,150,182,.55);
+    margin:0 0 6px;transition:color .3s,opacity .3s}
+  .zone.on{color:var(--gold)}
+  /* the arriving call (or the new method in the last step) */
+  .callzone{display:flex;flex-direction:column;justify-content:center;min-width:0}
+  .card{border:1px solid rgba(110,160,255,.45);background:rgba(110,160,255,.08);border-radius:14px;padding:16px 16px 14px;
+    opacity:0;transform:translateX(-24px);transition:opacity .4s,transform .5s cubic-bezier(.2,.9,.3,1),border-color .3s,background .3s}
+  .card.in{opacity:1;transform:none}
+  .card.ok{border-color:rgba(70,217,138,.6);background:rgba(70,217,138,.07)}
+  .card.bad{border-color:rgba(255,106,106,.7);background:rgba(255,106,106,.08)}
+  .card .who{font-family:var(--mono);font-size:.62rem;letter-spacing:.14em;text-transform:uppercase;color:var(--muted);margin-bottom:10px}
+  .card .call{font-family:var(--mono);font-size:.9rem;color:#c9d4ea;display:flex;flex-wrap:wrap;align-items:flex-start;gap:6px}
+  .card .call .p{padding-top:5px}
+  .arg{display:inline-flex;flex-direction:column;align-items:center;gap:2px}
+  .arg .val{font-family:var(--mono);font-size:.84rem;padding:4px 9px;border-radius:8px;border:1px solid var(--line);background:rgba(0,0,0,.3);color:var(--ink)}
+  .arg .ty{font-family:var(--mono);font-size:.62rem;color:var(--accent)}
+  .card .sum{font-family:var(--mono);font-size:.74rem;color:var(--muted);margin-top:12px}
+  .card .sum b{color:var(--ink);font-weight:500}
+  .card.bad .sum b{color:var(--warn)} .card.ok .sum b{color:var(--good)}
+  /* the doors */
+  .doors{display:grid;grid-template-rows:1fr 1fr;gap:14px;min-width:0}
+  .row{display:flex;flex-direction:column;min-height:0}
+  .pair{display:grid;grid-template-columns:1fr 1fr;gap:14px;flex:1;min-height:0}
+  .door{position:relative;border:1px solid rgba(110,160,255,.35);background:linear-gradient(180deg,rgba(110,160,255,.08),rgba(110,160,255,.02));
+    border-radius:16px 16px 5px 5px;padding:12px 30px 10px 14px;display:flex;flex-direction:column;gap:8px;min-width:0;
+    opacity:0;transition:opacity .35s,border-color .3s,background .3s,box-shadow .3s}
+  .door::after{content:"";position:absolute;right:12px;top:52%;width:7px;height:7px;border-radius:50%;background:rgba(110,160,255,.5);transition:background .3s}
+  .door.show{opacity:1}
+  .door.name{opacity:.16}
+  .door.dark{opacity:.5;border-color:var(--line);background:rgba(255,255,255,.02)}
+  .door.open{border-color:rgba(70,217,138,.75);background:linear-gradient(180deg,rgba(70,217,138,.18),rgba(70,217,138,.05));
+    box-shadow:0 0 22px -6px rgba(70,217,138,.7)}
+  .door.open::after{background:var(--good)}
+  .door.bad{opacity:1;border-color:rgba(255,106,106,.7);background:rgba(255,106,106,.07)}
+  .door.bad::after{background:var(--warn)}
+  .door .hd{font-family:var(--mono);font-size:.84rem;color:var(--ink);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+  .door .hd i{font-style:normal;color:var(--muted)}
+  .slots{display:flex;align-items:center;gap:5px;font-family:var(--mono);font-size:.8rem;color:var(--muted);flex-wrap:wrap}
+  .slot{font-size:.72rem;padding:3px 8px;border-radius:7px;border:1px dashed rgba(110,160,255,.45);color:#bcd0ff;transition:.3s}
+  .slot.ok{border-style:solid;border-color:var(--good);color:var(--good);background:rgba(70,217,138,.1)}
+  .slot.bad{border-style:solid;border-color:var(--warn);color:var(--warn);background:rgba(255,106,106,.1)}
+  .slots .none{font-size:.7rem;font-style:italic}
+  .sig{font-family:var(--mono);font-size:.64rem;color:rgba(132,150,182,.75);margin-top:auto}
+  .why{font-family:var(--mono);font-size:.64rem;color:var(--muted);min-height:1em}
+  .door.open .why{color:var(--good)} .door.bad .why{color:var(--warn)}
+  .pic .start{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;font-family:var(--mono);
+    font-size:.8rem;color:var(--muted);pointer-events:none;transition:opacity .3s}
+  .pic .start b{color:var(--accent);font-weight:500}
+
+  /* caption: the one sentence, right under the picture */
+  .caption{display:flex;gap:16px;align-items:flex-start;margin:14px 4px 0;min-height:56px}
+  .caption .n{flex-shrink:0;font-family:var(--disp);font-weight:700;font-size:1.35rem;color:var(--accent);font-variant-numeric:tabular-nums;
+    line-height:1.2;min-width:3.2rem}
+  .caption .n small{display:block;font-family:var(--mono);font-weight:400;font-size:.58rem;letter-spacing:.14em;text-transform:uppercase;color:var(--muted)}
+  .caption .t{font-size:1.02rem;line-height:1.55;color:var(--ink);padding-left:16px;border-left:3px solid var(--accent);transition:border-color .3s}
+  body.solo .caption .t{font-size:1.18rem}
+  .caption.cut .t{border-left-color:var(--warn)} .caption.left .t{border-left-color:var(--gold)} .caption.ok .t{border-left-color:var(--good)}
+  .caption b.g{color:var(--good)} .caption b.w{color:var(--warn)} .caption b.a{color:var(--accent)} .caption b.y{color:var(--gold)}
+
+  /* toolbar: same on every page */
+  .toolbar{display:flex;align-items:center;gap:10px;margin:16px 0 0;padding-top:14px;border-top:1px solid var(--line)}
+  .btn{font-family:var(--body);font-weight:500;font-size:.86rem;padding:9px 16px;border-radius:11px;cursor:pointer;
+    border:1px solid var(--line);background:var(--surface);color:var(--ink);transition:.15s}
+  .btn:hover{border-color:var(--accent);color:var(--accent)}
+  .btn.primary{border-color:rgba(110,160,255,.5);background:rgba(110,160,255,.12);padding:9px 22px}
+  .btn:disabled{opacity:.35;cursor:not-allowed}
+  .btn.ghost{background:transparent;color:var(--muted);margin-left:auto}
+  .dots{display:flex;gap:5px;align-items:center;margin:0 6px}
+  .dots i{display:block;width:8px;height:8px;border-radius:50%;background:rgba(255,255,255,.12);transition:.2s}
+  .dots i.done{background:rgba(110,160,255,.45)}
+  .dots i.now{background:var(--accent);transform:scale(1.35);box-shadow:0 0 10px rgba(110,160,255,.7)}
+  .hint{font-family:var(--mono);font-size:.68rem;color:var(--muted);margin:10px 4px 0;line-height:1.5}
+  .hint b{color:var(--accent)}
+
+  /* support: code, console, readouts. Below the picture, hidden in focus */
+  .support{display:grid;grid-template-columns:minmax(0,1.3fr) minmax(0,1fr);gap:14px;margin-top:18px}
+  @media (max-width:860px){.support{grid-template-columns:1fr}}
+  body.solo .support,body.solo .take,body.solo .hint{display:none}
+  .code{min-width:0;font-family:var(--mono);font-size:.76rem;line-height:1.8;background:rgba(0,0,0,.35);border:1px solid var(--line);
+    border-radius:14px;padding:12px 0;overflow-x:auto}
+  .ln{display:flex;gap:12px;padding:0 14px;white-space:pre;color:#c9d4ea;transition:background .2s,opacity .3s}
+  .ln .n{width:20px;text-align:right;color:rgba(132,150,182,.55);user-select:none;flex-shrink:0}
+  .ln.cur{background:rgba(110,160,255,.14);box-shadow:inset 3px 0 0 var(--accent)}
+  .ln.cur .n{color:var(--accent)}
+  .ln.cut{background:rgba(255,106,106,.12);box-shadow:inset 3px 0 0 var(--warn)}
+  .ln.left{background:rgba(255,200,98,.12);box-shadow:inset 3px 0 0 var(--gold)}
+  .ln.dim{opacity:.4}
+  .ln.ok{background:rgba(70,217,138,.12);box-shadow:inset 3px 0 0 var(--good)}
+  .kw{color:#c792ea} .ty{color:#82aaff} .st{color:#c3e88d} .nm{color:#f78c6c} .cm{color:#5f6b85;font-style:italic} .fn{color:#ffcb6b}
+  .side{display:flex;flex-direction:column;gap:12px}
+  .readout{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+  .stat{background:rgba(255,255,255,.03);border:1px solid var(--line);border-radius:12px;padding:11px 13px;transition:opacity .3s}
+  .stat.empty{opacity:.3}
+  .stat .k{font-family:var(--mono);font-size:.62rem;letter-spacing:.1em;text-transform:uppercase;color:var(--muted)}
+  .stat .v{font-family:var(--disp);font-weight:700;font-size:1.45rem;font-variant-numeric:tabular-nums;margin-top:2px;transition:color .3s;min-height:1.6em}
+  .v.hot{color:var(--accent)} .v.gold{color:var(--gold)} .v.dim{color:rgba(132,150,182,.5)}
+  .console{font-family:var(--mono);font-size:.76rem;line-height:1.6;background:#05070e;border:1px solid var(--line);
+    border-radius:12px;padding:10px 14px;min-height:64px;color:#9fe3b6;flex:1}
+  .console .cl{font-size:.6rem;letter-spacing:.14em;text-transform:uppercase;color:rgba(132,150,182,.6);margin-bottom:4px}
+  .console .out{animation:pop .3s}
+  .console .err{color:var(--warn)}
+  #stArgs,#stDoor{font-family:var(--mono);font-weight:500;font-size:1.02rem;line-height:1.6}
+  @keyframes pop{from{transform:scale(.6);opacity:0}to{transform:scale(1);opacity:1}}
+  .take{margin-top:22px;background:linear-gradient(180deg,rgba(110,160,255,.08),rgba(139,123,255,.04));
+    border:1px solid var(--line);border-left:3px solid var(--accent);border-radius:12px;padding:16px 18px}
+  .take .tk{font-family:var(--mono);font-size:.66rem;letter-spacing:.14em;text-transform:uppercase;color:var(--accent);margin:0 0 8px}
+  .take p{margin:0;font-size:.95rem;color:var(--ink);line-height:1.55}
+  .take b{color:#fff}
+  @media (prefers-reduced-motion:reduce){*{animation-duration:.01ms!important;transition-duration:.01ms!important}#amb{display:none}}
+</style>
+</head>
+<body>
+
+<a class="back" href="../index.html#11-method-overloading">&#8592; Week 2 index</a>
+
+<canvas id="amb"></canvas>
+<div class="wrap">
+  <p class="tag">Workbook 2a &middot; Section 2-3 &middot; Overloading methods</p>
+  <h1>Method Overloading</h1>
+  <p class="lede"><b>One name, several parameter lists: the compiler reads the arguments and picks the one that fits.</b></p>
+
+  <div class="stage">
+    <div class="topbar">
+      <span class="lab">Person</span>
+      <button class="focus" id="bFocus" title="Hide the code and notes, enlarge the picture">Focus</button>
+    </div>
+
+    <div class="pic" id="pic">
+      <div class="arena" id="arena">
+        <div class="callzone">
+          <p class="zone" id="zCall">the call</p>
+          <div class="card" id="card"></div>
+        </div>
+        <div class="doors" id="doors"></div>
+      </div>
+      <div class="start" id="start">4 methods, 2 names &middot; press&nbsp;<b>Next</b></div>
+    </div>
+
+    <div class="caption" id="caption">
+      <div class="n" id="stepno"><small>step</small>0 / 7</div>
+      <div class="t" id="status">Press <b class="a">Next</b>. The picture changes at every step.</div>
+    </div>
+
+    <div class="toolbar">
+      <button class="btn" id="bBack">&larr; Back</button>
+      <div class="dots" id="dots"></div>
+      <button class="btn primary" id="bNext">Next &rarr;</button>
+      <button class="btn ghost" id="bReset">Reset</button>
+    </div>
+    <p class="hint">space = next &middot; <b>type, count, order</b> decide which door opens</p>
+
+    <div class="support">
+      <div>
+        <p class="lab">Person.java and Main.java</p>
+        <div class="code" id="code"></div>
+      </div>
+      <div class="side">
+        <div class="readout">
+          <div class="stat empty"><div class="k">argument types</div><div class="v dim" id="stArgs">?</div></div>
+          <div class="stat empty"><div class="k">door that opens</div><div class="v dim" id="stDoor">?</div></div>
+        </div>
+        <div class="console"><div class="cl">console</div><div id="console"></div></div>
+      </div>
+    </div>
+  </div>
+
+  <div class="take">
+    <p class="tk">The one idea</p>
+    <p><b>A method's signature is its name plus its parameter types.</b> Methods in one class may share a name as long as
+    the signatures differ. At each call the compiler compares the arguments with every parameter list of that name,
+    by <b>type, count and order</b>, and if none fits, the code does not compile. The return type is not part of the
+    signature, so it cannot tell two methods apart.</p>
+  </div>
+
+  <div id="rail"></div>
+</div>
+
+<script>
+(function(){
+  "use strict";
+  var $=function(s){return document.querySelector(s);};
+  var reduce=matchMedia("(prefers-reduced-motion: reduce)").matches;
+
+  /* ---------- the four methods (doors), as in Person.java ---------- */
+  var DOORS=[
+    {id:"e0",name:"eat",params:[],sig:"eat",line:2},
+    {id:"e1",name:"eat",params:["int"],sig:"eat_int",line:3},
+    {id:"g0",name:"greet",params:["String"],sig:"greet_String",line:4},
+    {id:"g1",name:"greet",params:["String","int"],sig:"greet_String_int",line:5}
+  ];
+
+  var CODE=[
+    '<span class="cm">// Person.java</span>',
+    '<span class="kw">public void</span> <span class="fn">eat</span>() { ... }',
+    '<span class="kw">public void</span> <span class="fn">eat</span>(<span class="ty">int</span> amount) { ... }',
+    '<span class="kw">public void</span> <span class="fn">greet</span>(<span class="ty">String</span> otherName) { ... }',
+    '<span class="kw">public void</span> <span class="fn">greet</span>(<span class="ty">String</span> otherName, <span class="ty">int</span> times) { ... }',
+    '',
+    '',
+    '<span class="cm">// Main.java</span>',
+    '<span class="ty">Person</span> instructor = <span class="kw">new</span> <span class="ty">Person</span>(<span class="st">"Raymond"</span>, <span class="nm">80</span>);',
+    'instructor.<span class="fn">eat</span>();',
+    'instructor.<span class="fn">eat</span>(<span class="nm">15</span>);',
+    'instructor.<span class="fn">greet</span>(<span class="st">"Brandon"</span>, <span class="nm">3</span>);',
+    'instructor.<span class="fn">greet</span>(<span class="nm">3</span>, <span class="st">"Brandon"</span>);   <span class="cm">// does not compile</span>'
+  ];
+  var LINE6='<span class="kw">public</span> <span class="ty">int</span> <span class="fn">eat</span>() { ... }   <span class="cm">// does not compile</span>';
+
+  /* ---------- matching: computed from the call, never hard-coded ---------- */
+  /* returns {st, slots, why} for one door against one call */
+  function judge(d,call,nameOnly){
+    if(d.name!==call.name) return {st:"name",slots:[],why:"other name"};
+    if(nameOnly) return {st:"show",slots:[],why:"same name"};
+    var types=call.args.map(function(a){return a.t;});
+    if(types.length!==d.params.length){
+      return {st:"dark",slots:[],why:d.params.length===0?"wants no arguments":"wants "+d.params.length+" argument"+(d.params.length>1?"s":"")};
+    }
+    var slots=d.params.map(function(p,i){return p===types[i]?"ok":"bad";});
+    var ok=slots.every(function(s){return s==="ok";});
+    if(ok) return {st:"open",slots:slots,why:"fits"};
+    var first=-1; slots.forEach(function(s,i){ if(s==="bad"&&first<0) first=i; });
+    return {st:"dark",slots:slots,why:"wants "+d.params[first]+(first===0?" first":" at "+(first+1))};
+  }
+
+  var CALLS={
+    eat0:{name:"eat",args:[],line:10},
+    eat1:{name:"eat",args:[{v:"15",t:"int"}],line:11},
+    gr2:{name:"greet",args:[{v:'"Brandon"',t:"String"},{v:"3",t:"int"}],line:12,out:"Raymond says hi to Brandon 3 times!"},
+    grX:{name:"greet",args:[{v:"3",t:"int"},{v:'"Brandon"',t:"String"}],line:13}
+  };
+
+  /* ---------- the walk ---------- */
+  var steps=[
+    {kind:"doors",msg:'Four methods, two names. Each door shows its <b class="a">signature</b>: the name plus the parameter types.'},
+    {kind:"call",call:"eat0",nameOnly:true,msg:'The call <code>instructor.eat()</code> arrives. First the name: only the <b class="a">eat</b> doors stay in play.'},
+    {kind:"call",call:"eat0",msg:'No arguments, an empty list. Only <code>eat()</code> has an empty parameter list, so <b class="g">that door opens</b>.'},
+    {kind:"call",call:"eat1",msg:'<code>eat(15)</code> passes one int. <code>eat()</code> wants nothing, so <b class="g">eat(int)</b> opens.'},
+    {kind:"call",call:"gr2",msg:'A String then an int: two arguments, in that order. <b class="g">greet(String, int)</b> opens.'},
+    {kind:"call",call:"grX",msg:'An int then a String. No door takes that order: <b class="w">compile error</b>, the program never runs.'},
+    {kind:"dup",msg:'A new <code>int eat()</code> fails: its signature is still eat. <b class="w">Return type alone is not an overload.</b>'}
+  ];
+
+  var at=-1;
+  var codeEl=$("#code"),consEl=$("#console"),statusEl=$("#status"),cardEl=$("#card"),doorsEl=$("#doors");
+
+  function argList(args){ return "("+args.map(function(a){return a.t;}).join(", ")+")"; }
+  function header(d){ return d.name+"("+d.params.join(", ")+")"; }
+
+  function buildDoors(){
+    var html="";
+    ["eat","greet"].forEach(function(nm){
+      html+='<div class="row"><p class="zone" id="z'+nm+'">name: '+nm+'</p><div class="pair">';
+      DOORS.filter(function(d){return d.name===nm;}).forEach(function(d){
+        html+='<div class="door" id="'+d.id+'"><div class="hd"><i id="'+d.id+'r">void </i>'+d.name+'</div>'+
+          '<div class="slots" id="'+d.id+'s"></div><div class="why" id="'+d.id+'w"></div>'+
+          '<div class="sig">signature: '+d.sig+'</div></div>';
+      });
+      html+='</div></div>';
+    });
+    doorsEl.innerHTML=html;
+  }
+  function slotsHtml(d,marks){
+    if(!d.params.length) return '( <span class="none">nothing</span> )';
+    return '( '+d.params.map(function(p,i){return '<span class="slot '+(marks[i]||"")+'">'+p+'</span>';}).join(" , ")+' )';
+  }
+
+  function renderPic(s){
+    var started=!!s;
+    $("#start").style.opacity=started?0:1;
+    $("#arena").style.opacity=started?1:0;
+    var verdicts={},call=null;
+    if(s&&s.kind==="call"){ call=CALLS[s.call]; DOORS.forEach(function(d){ verdicts[d.id]=judge(d,call,s.nameOnly); }); }
+    DOORS.forEach(function(d){
+      var v=verdicts[d.id]||{st:"show",slots:[],why:""};
+      if(s&&s.kind==="dup") v=d.id==="e0"?{st:"bad",slots:[],why:"same signature: eat"}:{st:"name",slots:[],why:""};
+      if(call&&!s.nameOnly&&v.st==="dark"&&!Object.keys(verdicts).some(function(k){return verdicts[k].st==="open";})) v.st="bad";
+      var el=$("#"+d.id);
+      el.className="door"+(s?" show":"")+(v.st!=="show"?" "+v.st:"");
+      $("#"+d.id+"s").innerHTML=slotsHtml(d,v.slots);
+      $("#"+d.id+"w").textContent=v.why;
+    });
+    ["eat","greet"].forEach(function(nm){ $("#z"+nm).className="zone"+(call&&call.name===nm?" on":""); });
+    /* the card: the call that arrives, or the new method */
+    if(!s||s.kind==="doors"){ cardEl.className="card"; $("#zCall").style.opacity=s?1:0; cardEl.innerHTML=""; return; }
+    $("#zCall").style.opacity=1;
+    var html,cls;
+    if(s.kind==="dup"){
+      $("#zCall").textContent="a new method";
+      html='<div class="who">added to Person.java</div><div class="call"><span class="p">public <b style="color:var(--warn);font-weight:500">int</b> eat()</span></div>'+
+        '<div class="sum">signature: <b>eat</b>, already taken</div>';
+      cls="bad";
+    } else {
+      $("#zCall").textContent="the call";
+      var open=DOORS.filter(function(d){return verdicts[d.id].st==="open";})[0];
+      html='<div class="who">instructor.'+call.name+'</div><div class="call"><span class="p">'+call.name+'(</span>'+
+        call.args.map(function(a){return '<span class="arg"><span class="val">'+a.v+'</span><span class="ty">'+a.t+'</span></span>';}).join('<span class="p">,</span>')+
+        '<span class="p">)</span></div>'+
+        '<div class="sum">arguments <b>'+(call.args.length?argList(call.args):"(none)")+'</b>'+
+        (s.nameOnly?'':open?' \u2192 <b>'+header(open)+'</b>':' \u2192 <b>no match</b>')+'</div>';
+      cls=s.nameOnly?"":open?"ok":"bad";
+    }
+    var wasIn=cardEl.classList.contains("in")&&cardEl.getAttribute("data-k")===(s.call||s.kind);
+    cardEl.innerHTML=html; cardEl.setAttribute("data-k",s.call||s.kind);
+    if(wasIn||reduce){ cardEl.className="card in "+cls; }
+    else { cardEl.className="card"; void cardEl.offsetWidth; cardEl.className="card in "+cls; }
+  }
+
+  function renderCode(s){
+    var marks={},show6=false;
+    if(s){
+      if(s.kind==="doors"){ [2,3,4,5].forEach(function(n){marks[n]="cur";}); }
+      if(s.kind==="call"){
+        var c=CALLS[s.call]; marks[c.line]="cur";
+        if(!s.nameOnly){
+          var open=DOORS.filter(function(d){return judge(d,c).st==="open";})[0];
+          if(open) marks[open.line]="ok"; else marks[c.line]="cut";
+        }
+      }
+      if(s.kind==="dup"){ show6=true; marks[6]="cut"; marks[2]="cut"; }
+    }
+    codeEl.innerHTML=CODE.map(function(t,i){
+      var n=i+1; if(n===6&&show6) t=LINE6;
+      var c="ln"+(marks[n]?" "+marks[n]:"");
+      return '<div class="'+c+'"><span class="n">'+n+'</span><span>'+(t||" ")+'</span></div>';
+    }).join("");
+  }
+
+  function setStat(id,v,c){ var e=$(id), box=e.parentNode;
+    if(v===null){e.textContent="?";e.className="v dim";box.classList.add("empty");}
+    else {e.textContent=v;e.className="v "+(c||"");box.classList.remove("empty");} }
+
+  function show(i){
+    at=i;
+    var s=i>=0?steps[i]:null;
+    $("#stepno").innerHTML="<small>step</small>"+(i+1)+" / "+steps.length;
+    renderPic(s); renderCode(s);
+    var cap="",args=null,door=null,dc="";
+    if(s&&s.kind==="call"){
+      var c=CALLS[s.call]; args=c.args.length?argList(c.args):"none";
+      if(!s.nameOnly){
+        var open=DOORS.filter(function(d){return judge(d,c).st==="open";})[0];
+        door=open?header(open):"none"; dc=open?"hot":""; cap=open?"ok":"cut";
+      }
+    }
+    if(s&&s.kind==="dup"){ cap="cut"; }
+    /* console: what a run would print. A compile error means nothing runs at all */
+    var errs={5:"error: no suitable method found for greet(int,String)",6:"error: method eat() is already defined in class Person"};
+    if(errs[i]!==undefined) consEl.innerHTML='<div class="out err">'+errs[i]+'</div>';
+    else {
+      var out=[]; for(var k=0;k<=i;k++){ var st=steps[k]; if(st.kind==="call"&&!st.nameOnly&&CALLS[st.call].out) out.push(CALLS[st.call].out); }
+      consEl.innerHTML=out.map(function(o){return '<div class="out">'+o+'</div>';}).join("")||'<span style="color:rgba(132,150,182,.5)">(nothing printed yet)</span>';
+    }
+    $("#caption").className="caption "+cap;
+    statusEl.innerHTML=s?s.msg:'Press <b class="a">Next</b>. The picture changes at every step.';
+    setStat("#stArgs",args); setStat("#stDoor",door,dc);
+    if(door==="none"){ $("#stDoor").style.color="var(--warn)"; } else { $("#stDoor").style.color=""; }
+    if(s&&s.kind==="dup"){ setStat("#stDoor","none"); $("#stDoor").style.color="var(--warn)"; }
+    setBtns();
+  }
+  function setBtns(){ $("#bNext").disabled=at>=steps.length-1; $("#bBack").disabled=at<0;
+    var d=""; for(var k=0;k<steps.length;k++) d+='<i class="'+(k===at?"now":k<at?"done":"")+'"></i>'; $("#dots").innerHTML=d; }
+
+  /* focus: picture and caption only. Remembered per browser. */
+  function setFocus(on){ document.body.classList.toggle("solo",on); $("#bFocus").textContent=on?"Focus on":"Focus";
+    try{localStorage.setItem("hub-focus",on?"1":"0");}catch(e){} }
+  $("#bFocus").addEventListener("click",function(){ setFocus(!document.body.classList.contains("solo")); this.blur(); });
+  try{ if(localStorage.getItem("hub-focus")==="1") document.body.classList.add("solo"); }catch(e){}
+  if(document.body.classList.contains("solo")) $("#bFocus").textContent="Focus on";
+
+  function next(){ if(at<steps.length-1) show(at+1); }
+  function back(){ if(at>=0) show(at-1); }
+  function reset(){ show(-1); }
+  $("#bNext").addEventListener("click",next);
+  $("#bBack").addEventListener("click",back);
+  $("#bReset").addEventListener("click",reset);
+  document.addEventListener("keydown",function(e){ if(e.code==="Space"&&!/INPUT|BUTTON/.test(e.target.tagName)){e.preventDefault();next();} });
+
+  /* ---------- ambient canvas ---------- */
+  var cv=$("#amb"),ctx=cv.getContext&&cv.getContext("2d"),parts=[];
+  function sizeC(){if(!ctx)return;cv.width=innerWidth;cv.height=innerHeight;}
+  function initParts(){parts=[];for(var i=0;i<46;i++)parts.push({x:Math.random(),y:Math.random(),
+    r:Math.random()*1.6+.3,s:Math.random()*.02+.004,o:Math.random()*.4+.1});}
+  function drawC(){if(!ctx)return;ctx.clearRect(0,0,cv.width,cv.height);
+    parts.forEach(function(p){p.y-=p.s/60;if(p.y<-.02)p.y=1.02;
+      ctx.beginPath();ctx.arc(p.x*cv.width,p.y*cv.height,p.r,0,7);
+      ctx.fillStyle="rgba(140,170,255,"+p.o+")";ctx.fill();});
+    requestAnimationFrame(drawC);}
+  if(ctx&&!reduce){sizeC();initParts();drawC();addEventListener("resize",sizeC);}
+
+  buildDoors();
+  reset();
+})();
+</script>
+<script src="../manifest.js"></script>
+<script src="../../assets/rail.js"></script>
+<script>Rail.render(document.getElementById("rail"),{week:2,kind:"visuals",current:"11-method-overloading"});</script>
+</body>
+</html>

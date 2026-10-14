@@ -1,0 +1,399 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Parse or Crash | Week 2 Visual Hub</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Sora:wght@500;700&family=Inter:wght@400;500&family=JetBrains+Mono:wght@400;500&display=swap">
+<style>
+  :root{
+    --bg:#080c17; --bg2:#0c1428; --surface:rgba(255,255,255,.045); --line:rgba(255,255,255,.09);
+    --ink:#eef2fb; --muted:#8496b6; --accent:#6ea0ff; --accent2:#8b7bff; --good:#46d98a; --warn:#ff6a6a;
+    --gold:#ffc862; --disp:'Sora',system-ui,sans-serif; --body:'Inter',system-ui,sans-serif;
+    --mono:'JetBrains Mono',ui-monospace,monospace;
+  }
+  *{box-sizing:border-box}
+  body{margin:0;min-height:100vh;color:var(--ink);font-family:var(--body);
+    background:radial-gradient(1200px 700px at 70% -10%,#141d38 0%,transparent 55%),
+               radial-gradient(900px 600px at 10% 110%,#161233 0%,transparent 50%),#080c17;
+    overflow-x:hidden}
+  #amb{position:fixed;inset:0;z-index:0;pointer-events:none;opacity:.6}
+  .back{position:relative;z-index:2;display:block;max-width:1120px;margin:0 auto;padding:26px 24px 0;
+    width:100%;font-family:var(--mono);font-size:.8rem;letter-spacing:.04em;color:var(--muted);
+    text-decoration:none;transition:color .15s}
+  .back:hover{color:var(--accent)}
+  .wrap{position:relative;z-index:1;max-width:1120px;margin:0 auto;padding:22px 24px 70px}
+  .tag{font-family:var(--mono);font-size:.72rem;letter-spacing:.22em;text-transform:uppercase;color:var(--accent);margin:0 0 14px}
+  h1{font-family:var(--disp);font-weight:700;font-size:clamp(2.3rem,6vw,3.6rem);line-height:1;margin:0 0 12px;
+    letter-spacing:-.03em;background:linear-gradient(180deg,#fff,#b9c6e6);-webkit-background-clip:text;
+    background-clip:text;color:transparent}
+  .lede{color:var(--muted);max-width:64ch;font-size:1.05rem;margin:0 0 26px;line-height:1.5}
+  .lede b{color:var(--ink)}
+  .lede code,.take code,.caption code{font-family:var(--mono);font-size:.92em;color:#bcd0ff}
+
+  /* ---------- stage: picture first, one toolbar, support below ---------- */
+  .stage{position:relative;background:linear-gradient(180deg,rgba(255,255,255,.03),rgba(255,255,255,.01));
+    border:1px solid var(--line);border-radius:24px;padding:18px 18px 14px;
+    box-shadow:0 1px 0 rgba(255,255,255,.06) inset,0 30px 80px -30px rgba(0,0,0,.8)}
+  .topbar{display:flex;align-items:center;gap:10px;margin:0 0 14px;flex-wrap:wrap}
+  .topbar .lab{margin:0 4px 0 0}
+  .lab{font-family:var(--mono);font-size:.7rem;letter-spacing:.12em;text-transform:uppercase;color:var(--muted);margin:0 0 10px}
+  .chips{display:flex;flex-wrap:wrap;gap:6px}
+  .chip{font-family:var(--mono);font-size:.74rem;padding:5px 11px;border-radius:999px;cursor:pointer;
+    border:1px solid var(--line);background:rgba(0,0,0,.25);color:var(--muted);transition:.15s}
+  .chip:hover{border-color:var(--accent);color:var(--accent)}
+  .chip.on{border-color:rgba(110,160,255,.6);background:rgba(110,160,255,.14);color:var(--ink)}
+  .chip:focus-visible,.btn:focus-visible,.focus:focus-visible{outline:2px solid var(--accent);outline-offset:2px}
+  .focus{margin-left:auto;font-family:var(--mono);font-size:.68rem;letter-spacing:.1em;text-transform:uppercase;padding:6px 12px;
+    border-radius:999px;border:1px solid var(--line);background:rgba(0,0,0,.25);color:var(--muted);cursor:pointer;transition:.15s}
+  .focus:hover{border-color:var(--accent);color:var(--accent)}
+  body.solo .focus{border-color:rgba(255,200,98,.6);color:var(--gold);background:rgba(255,200,98,.1)}
+
+  /* ---------- game board ---------- */
+  .pic{position:relative;height:390px;border:1px solid var(--line);border-radius:18px;background:rgba(6,10,20,.5);overflow:hidden;
+    display:flex;flex-direction:column;align-items:center;justify-content:center;gap:22px;padding:20px}
+  .pic .zone{position:absolute;left:18px;top:14px;font-family:var(--mono);font-size:.62rem;letter-spacing:.14em;text-transform:uppercase;color:rgba(132,150,182,.55)}
+  .hud{position:absolute;right:18px;top:12px;display:flex;gap:14px;font-family:var(--mono);font-size:.72rem;color:var(--muted)}
+  .hud b{color:var(--ink);font-weight:500}
+  .code{font-family:var(--mono);font-size:clamp(.95rem,2.1vw,1.3rem);line-height:1.55;color:var(--ink);padding:18px 30px;border:1px solid var(--line);border-radius:16px;
+    background:rgba(0,0,0,.3);min-width:300px;max-width:100%;white-space:pre;overflow-x:auto;transition:border-color .2s,box-shadow .2s,transform .2s}
+  .code .ty{color:#c9a7ff} .code .nm{color:var(--gold)} .code .cs{color:var(--accent)} .code .st{color:#9fe6b8}
+  .code .sp{background:rgba(255,200,98,.28);border-radius:3px;box-shadow:0 0 0 1px rgba(255,200,98,.35) inset}
+  .after{font-family:var(--mono);font-size:.82rem;color:var(--muted);min-height:1.3em}
+  .after b{color:var(--ink);font-weight:500}
+  .code.good{border-color:rgba(70,217,138,.7);box-shadow:0 0 28px -8px rgba(70,217,138,.8)}
+  .code.bad{border-color:rgba(255,106,106,.7);box-shadow:0 0 28px -8px rgba(255,106,106,.8);animation:shake .3s}
+  @keyframes shake{25%{transform:translateX(-6px)}75%{transform:translateX(6px)}}
+  .opts{display:flex;flex-wrap:wrap;gap:8px;justify-content:center;max-width:620px}
+  .opt{font-family:var(--mono);font-size:.9rem;padding:10px 18px;border-radius:11px;cursor:pointer;border:1px solid var(--line);background:var(--surface);color:var(--ink);transition:.15s}
+  .opt:hover{border-color:var(--accent);color:var(--accent)}
+  .opt:disabled{cursor:default}
+  .opt.hit{border-color:rgba(70,217,138,.7);background:rgba(70,217,138,.14);color:var(--good)}
+  .opt.miss{border-color:rgba(255,106,106,.7);background:rgba(255,106,106,.12);color:var(--warn)}
+  .opt.dim{opacity:.4}
+  .key{display:inline-block;margin-left:6px;font-size:.62rem;color:var(--muted)}
+  .screen{position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:12px;background:rgba(6,10,20,.92);transition:opacity .25s}
+  .screen.off{opacity:0;pointer-events:none}
+  .screen h2{font-family:var(--disp);font-weight:700;font-size:1.6rem;margin:0;color:var(--ink)}
+  .screen p{margin:0;color:var(--muted);font-size:.95rem;text-align:center;max-width:46ch;line-height:1.5}
+  .screen .big{font-family:var(--disp);font-weight:700;font-size:2.6rem;color:var(--accent)}
+  .screen .big.gold{color:var(--gold)} .screen .big.good{color:var(--good)}
+  .bar{position:absolute;left:0;right:0;bottom:0;height:4px;background:rgba(255,255,255,.06)}
+  .bar i{display:block;height:100%;width:0;background:var(--accent);transition:width .25s}
+  .misses{font-family:var(--mono);font-size:.72rem;color:var(--muted);line-height:1.6;text-align:left;max-width:680px;max-height:160px;overflow-y:auto;padding:0 8px}
+  .misses b{color:var(--warn);font-weight:500} .misses i{font-style:normal;color:var(--good)}
+  /* caption: the one sentence, right under the picture */
+  .caption{display:flex;gap:16px;align-items:flex-start;margin:14px 4px 0;min-height:56px}
+  .caption .n{flex-shrink:0;font-family:var(--disp);font-weight:700;font-size:1.35rem;color:var(--accent);font-variant-numeric:tabular-nums;
+    line-height:1.2;min-width:3.2rem}
+  .caption .n small{display:block;font-family:var(--mono);font-weight:400;font-size:.58rem;letter-spacing:.14em;text-transform:uppercase;color:var(--muted)}
+  .caption .t{font-size:1.02rem;line-height:1.55;color:var(--ink);padding-left:16px;border-left:3px solid var(--accent);transition:border-color .3s}
+  body.solo .caption .t{font-size:1.18rem}
+  .caption.cut .t{border-left-color:var(--warn)} .caption.left .t{border-left-color:var(--gold)} .caption.ok .t{border-left-color:var(--good)}
+  .caption b.g{color:var(--good)} .caption b.w{color:var(--warn)} .caption b.a{color:var(--accent)} .caption b.y{color:var(--gold)}
+
+  /* toolbar: same on every page */
+  .toolbar{display:flex;align-items:center;gap:10px;margin:16px 0 0;padding-top:14px;border-top:1px solid var(--line)}
+  .btn{font-family:var(--body);font-weight:500;font-size:.86rem;padding:9px 16px;border-radius:11px;cursor:pointer;
+    border:1px solid var(--line);background:var(--surface);color:var(--ink);transition:.15s}
+  .btn:hover{border-color:var(--accent);color:var(--accent)}
+  .btn.primary{border-color:rgba(110,160,255,.5);background:rgba(110,160,255,.12);padding:9px 22px}
+  .btn:disabled{opacity:.35;cursor:not-allowed}
+  .btn.ghost{background:transparent;color:var(--muted);margin-left:auto}
+  .dots{display:flex;gap:5px;align-items:center;margin:0 6px}
+  .dots i{display:block;width:8px;height:8px;border-radius:50%;background:rgba(255,255,255,.12);transition:.2s}
+  .dots i.done{background:rgba(110,160,255,.45)}
+  .dots i.now{background:var(--accent);transform:scale(1.35);box-shadow:0 0 10px rgba(110,160,255,.7)}
+  .hint{font-family:var(--mono);font-size:.68rem;color:var(--muted);margin:10px 4px 0;line-height:1.5}
+  .hint b{color:var(--accent)}
+
+  .toolbar .btn.primary{min-width:120px}
+  .take{margin-top:22px;background:linear-gradient(180deg,rgba(110,160,255,.08),rgba(139,123,255,.04));
+    border:1px solid var(--line);border-left:3px solid var(--accent);border-radius:12px;padding:16px 18px}
+  .take .tk{font-family:var(--mono);font-size:.66rem;letter-spacing:.14em;text-transform:uppercase;color:var(--accent);margin:0 0 8px}
+  .take p{margin:0;font-size:.95rem;color:var(--ink);line-height:1.55}
+  .take b{color:#fff}
+  @media (prefers-reduced-motion:reduce){*{animation-duration:.01ms!important;transition-duration:.01ms!important}#amb{display:none}}
+</style>
+</head>
+<body>
+
+<a class="back" href="../index.html#parse-or-crash">&#8592; Week 2 index</a>
+
+<canvas id="amb"></canvas>
+<div class="wrap">
+  <p class="tag">Workbook 2a &middot; Section 1-2 &middot; Game</p>
+  <h1>Parse or Crash</h1>
+  <p class="lede"><b>A typed line meets a conversion call. Does it give a value, or throw? Sixteen rounds, the clock is running.</b></p>
+
+  <div class="stage">
+    <div class="topbar">
+      <span class="lab">Game</span>
+    </div>
+
+    <div class="pic" id="pic">
+      <span class="zone">value or exception?</span>
+      <div class="hud"><span>score <b id="hScore">0</b></span><span>time <b id="hTime">0.0s</b></span></div>
+      <div class="code" id="value">&nbsp;</div>
+      <div class="after" id="after"></div>
+      <div class="opts" id="opts"></div>
+      <div class="bar"><i id="bar"></i></div>
+      <div class="screen" id="startScr">
+        <h2>Parse or Crash</h2>
+        <p>Read the text in the quotes, then the call. Press V if you get a value, N for NumberFormatException, D for DateTimeParseException. Gold boxes are spaces.</p>
+        <button class="btn primary" id="bStart">Start</button>
+      </div>
+      <div class="screen off" id="endScr">
+        <h2>Round over</h2>
+        <div class="big" id="endScore"></div>
+        <p id="endMsg"></p>
+        <div class="misses" id="endMiss"></div>
+        <button class="btn primary" id="bAgain">Play again</button>
+      </div>
+    </div>
+
+    <div class="caption" id="caption">
+      <div class="n" id="stepno"><small>round</small>0 / 16</div>
+      <div class="t" id="status">Press <b class="a">Start</b>. Keys V, N and D answer.</div>
+    </div>
+    <p class="hint">parseInt = digits only, no spaces &middot; parseDouble = a number, spaces at the ends are fine &middot; LocalDate.parse = yyyy-MM-dd unless you give a pattern</p>
+  </div>
+
+  <div class="take">
+    <p class="tk">The one idea</p>
+    <p><b>Parsing reads text exactly as typed.</b> One extra space, a comma, or a month and day in the wrong order is enough to throw. Trim the line, know the format, and the conversion becomes predictable.</p>
+  </div>
+
+  <div id="rail"></div>
+</div>
+
+<script>
+(function(){
+  "use strict";
+  var $=function(s){return document.querySelector(s);};
+  var reduce=matchMedia("(prefers-reduced-motion: reduce)").matches;
+
+  var ANS=["V","N","D"];
+  var LABEL={V:"Value",N:"NumberFormatException",D:"DateTimeParseException"};
+  var INT_MAX=2147483647, INT_MIN=-2147483648;
+
+  // [typed line, call]. Calls: int, intTrim, dbl, iso, isoTrim, or a date pattern such as "MM/dd/yyyy".
+  // Outcomes are not stored: the rules below compute them.
+  var POOL=[
+    ["25 ","int"],[" 25 ","intTrim"],["3.5","int"],["3.5","dbl"],["12","int"],["twelve","int"],
+    ["-7","int"],["007","int"],["","int"],["3000000000","int"],["2022-10-17","int"],[" 12","intTrim"],
+    ["4.99","dbl"],["12","dbl"],["4,99","dbl"],["$4.99","dbl"],[" 4.99 ","dbl"],["","dbl"],
+    ["2022-10-17","iso"],["2026-10-12","iso"],["10/17/2022","iso"],["2022-02-30","iso"],["2022-10-7","iso"],
+    ["25","iso"],[" 2022-10-17","iso"],["2026-10-12 ","isoTrim"],
+    ["10/17/2022","MM/dd/yyyy"],["17/10/2022","MM/dd/yyyy"],["17/10/2022","dd/MM/yyyy"],["1/5/2022","MM/dd/yyyy"],
+    ["1/5/2022","M/d/yyyy"],["10-17-2022","MM/dd/yyyy"],["10/17/22","MM/dd/yyyy"],["13/01/2022","MM/dd/yyyy"],
+    ["10/17/2002","MM/dd/yyyy"],["10/17/2002 ","MM/dd/yyyy"]
+  ];
+
+  // ---------- the rules ----------
+  function q(s){ return "\""+s+"\""; }
+  function ch(c){ return c===" "?"a space":"'"+c+"'"; }
+  function ok(v,why){ return {a:"V",v:v,why:why}; }
+  function nfe(why){ return {a:"N",why:why}; }
+  function dtpe(why){ return {a:"D",why:why}; }
+
+  // Integer.parseInt: digits only, one optional sign in front, no spaces, must fit in an int
+  function parseIntJ(s,trimmed){
+    var pre=trimmed?"trim() removes the outer spaces first, then ":"";
+    if(s==="") return nfe(pre+"an empty line has no digits at all");
+    var i=0;
+    if((s.charAt(0)==="-"||s.charAt(0)==="+")&&s.length>1) i=1;
+    for(;i<s.length;i++){
+      var c=s.charAt(i);
+      if(c<"0"||c>"9"){
+        if(c===" ") return nfe("parseInt does not skip spaces, and a space is not a digit: call trim() first");
+        if(c===".") return nfe("a decimal point never fits an int: Double.parseDouble reads "+s);
+        if(/[a-zA-Z]/.test(c)) return nfe("parseInt reads digits, not words: "+ch(c)+" is not a digit");
+        if(c==="-"||c==="/") return nfe("parseInt reads one whole number: the "+ch(c)+" inside is not a digit");
+        return nfe(ch(c)+" is not a digit, and parseInt accepts only digits with an optional leading minus");
+      }
+    }
+    var n=Number(s);
+    if(n>INT_MAX||n<INT_MIN) return nfe("only digits, but "+s+" is too big for an int: the largest is 2147483647");
+    var why=/^[+-]?0\d/.test(s)?"leading zeros are fine, "+s+" is read as "+n:"only digits"+(n<0?" and a leading minus":"")+", so parseInt returns "+n;
+    return ok(String(n),pre+why);
+  }
+
+  // Double.parseDouble: trims spaces itself, then needs a number with an optional decimal point
+  function javaDouble(x){ return Number.isInteger(x)?x+".0":String(x); }
+  function parseDoubleJ(s){
+    var t=s.trim();
+    if(t==="") return nfe("an empty line is not a number, not even 0.0");
+    if(/^[+-]?(\d+\.?\d*|\.\d+)([eE][+-]?\d+)?[fFdD]?$/.test(t)){
+      var x=parseFloat(t);
+      if(t!==s) return ok(javaDouble(x),"parseDouble skips spaces at both ends on its own (parseInt does not)");
+      if(t.indexOf(".")<0) return ok(javaDouble(x),"a whole number is a valid double too: "+t+" becomes "+javaDouble(x));
+      return ok(javaDouble(x),"a number with a decimal point is exactly what parseDouble reads");
+    }
+    if(t.indexOf(",")>=0) return nfe("Java writes decimals with a dot: the comma is just a bad character");
+    if(t.indexOf("$")>=0) return nfe("the $ sign is not part of a number: remove it before parsing");
+    var bad=t.replace(/[\d.+\-eE]/g,"").charAt(0)||t.charAt(0);
+    return nfe(ch(bad)+" cannot be part of a number");
+  }
+
+  // Dates: pattern letters M, MM, d, dd, yyyy are matched against the text; every other character must appear as is.
+  // MM and dd need exactly two digits, M and d take one or more, yyyy needs at least four.
+  function tokens(p){ var out=[],i=0; while(i<p.length){ var c=p.charAt(i),j=i; if("Mdy".indexOf(c)>=0){ while(p.charAt(j)===c) j++; out.push({f:c,w:j-i}); i=j; } else { out.push({lit:c}); i++; } } return out; }
+  var NAME={M:"the month",d:"the day",y:"the year"};
+  function monthLen(y,m){ return [31,(y%4===0&&y%100!==0)||y%400===0?29:28,31,30,31,30,31,31,30,31,30,31][m-1]; }
+
+  function parseDate(s,pat,strict){
+    var tk=tokens(pat), pos=0, val={};
+    for(var k=0;k<tk.length;k++){
+      var t=tk[k];
+      if(t.lit!==undefined){
+        if(pos>=s.length) return dtpe("the text ends before the pattern does");
+        var c=s.charAt(pos);
+        if(c!==t.lit) return dtpe("the pattern expects '"+t.lit+"' here, the text has "+ch(c));
+        pos++; continue;
+      }
+      var e=pos; while(e<s.length&&e-pos<19&&/\d/.test(s.charAt(e))) e++;
+      var n=e-pos, code=new Array(t.w+1).join(t.f);
+      if(n===0){
+        var c2=pos<s.length?s.charAt(pos):"";
+        if(c2===" ") return dtpe("a space is extra text the format does not expect: call trim() first");
+        return dtpe(code+" expects digits for "+NAME[t.f]+(c2?", the text has "+ch(c2):", but the text has ended"));
+      }
+      if(t.f==="y"){ if(n<4) return dtpe(code+" needs a four-digit year, the text has only "+q(s.substr(pos,n))); }
+      else if(t.w===2){ if(n<2) return dtpe(code+" needs exactly two digits, the text has only "+q(s.substr(pos,n))); e=pos+2; }
+      val[t.f]=Number(s.substring(pos,e)); pos=e;
+    }
+    if(pos<s.length){
+      return dtpe(s.charAt(pos)===" "?"a space is extra text the format does not expect: call trim() first":"text is left over after the pattern ends");
+    }
+    var y=val.y,m=val.M,d=val.d;
+    if(m<1||m>12) return dtpe("there is no month "+m+": "+pat+" reads that number as the month");
+    if(d<1||d>31) return dtpe("there is no day "+d+" in any month");
+    if(d>monthLen(y,m)){
+      if(strict) return dtpe("the shape is right, but "+s+" does not exist on the calendar");
+      d=monthLen(y,m);
+    }
+    var iso=String(y)+"-"+(m<10?"0":"")+m+"-"+(d<10?"0":"")+d;
+    return ok(iso,null);
+  }
+
+  // LocalDate.parse(text) with no pattern reads only yyyy-MM-dd, and the date must exist
+  function isoJ(s,trimmed){
+    var t=trimmed?s.trim():s;
+    if(/^\s*\d{1,2}\/\d{1,2}\/\d+\s*$/.test(t)) return dtpe("with no pattern, parse() only reads yyyy-MM-dd: this text needs a DateTimeFormatter");
+    var r=parseDate(t,"yyyy-MM-dd",true);
+    if(r.a==="V") r.why=(trimmed?"trim() removes the trailing space, and then ":"")+"yyyy-MM-dd is the one format parse() reads with no pattern";
+    return r;
+  }
+  function patJ(s,pat){
+    var r=parseDate(s,pat,false);
+    if(r.a==="V"){
+      var p=r.v.split("-");
+      r.why=pat+" reads "+Number(p[1])+" as the month and "+Number(p[2])+" as the day";
+    }
+    return r;
+  }
+
+  function outcome(item){
+    var s=item[0], c=item[1];
+    if(c==="int") return parseIntJ(s,false);
+    if(c==="intTrim") return parseIntJ(s.trim(),true);
+    if(c==="dbl") return parseDoubleJ(s);
+    if(c==="iso") return isoJ(s,false);
+    if(c==="isoTrim") return isoJ(s,true);
+    return patJ(s,c);
+  }
+  function varName(c){ return c==="dbl"?"price":/int/.test(c)?"n":"date"; }
+
+  // ---------- drawing ----------
+  var AMP=String.fromCharCode(38), ENT={"<":"lt;",">":"gt;","\"":"quot;"};
+  function esc(s){ return String(s).replace(/[<>"]/g,function(c){ return AMP+ENT[c]; }); }
+  function lit(s){ return '<span class="st">"'+esc(s).replace(/ /g,'<span class="sp"> </span>')+'"</span>'; }
+  function codeOf(item){
+    var s=item[0], c=item[1], L1='<span class="ty">String</span> line = '+lit(s)+';\n';
+    if(c==="int") return L1+'<span class="ty">int</span> n = Integer.<span class="cs">parseInt</span>(line);';
+    if(c==="intTrim") return L1+'<span class="ty">int</span> n = Integer.<span class="cs">parseInt</span>(line.trim());';
+    if(c==="dbl") return L1+'<span class="ty">double</span> price = Double.<span class="cs">parseDouble</span>(line);';
+    if(c==="iso") return L1+'<span class="ty">LocalDate</span> date = LocalDate.<span class="cs">parse</span>(line);';
+    if(c==="isoTrim") return L1+'<span class="ty">LocalDate</span> date = LocalDate.<span class="cs">parse</span>(line.trim());';
+    return L1+'<span class="ty">DateTimeFormatter</span> fmt = DateTimeFormatter.ofPattern(<span class="nm">"'+esc(c)+'"</span>);\n'+
+      '<span class="ty">LocalDate</span> date = LocalDate.<span class="cs">parse</span>(line, fmt);';
+  }
+  function callText(item){
+    var c=item[1];
+    if(c==="int") return "Integer.parseInt(line)";
+    if(c==="intTrim") return "Integer.parseInt(line.trim())";
+    if(c==="dbl") return "Double.parseDouble(line)";
+    if(c==="iso") return "LocalDate.parse(line)";
+    if(c==="isoTrim") return "LocalDate.parse(line.trim())";
+    return "LocalDate.parse(line, \""+c+"\")";
+  }
+
+  // ---------- game ----------
+  var N=16, round=[], at=0, score=0, misses=[], t0=0, timer=null, busy=false, live=false;
+
+  function shuffle(a){ a=a.slice(); for(var i=a.length-1;i>0;i--){ var j=Math.floor(Math.random()*(i+1)); var t=a[i]; a[i]=a[j]; a[j]=t; } return a; }
+  // deal a mix: 6 values, 5 NumberFormatException, 5 DateTimeParseException
+  function deal(){
+    var by={V:[],N:[],D:[]};
+    shuffle(POOL).forEach(function(it){ by[outcome(it).a].push(it); });
+    return shuffle(by.V.slice(0,6).concat(by.N.slice(0,5),by.D.slice(0,5)));
+  }
+  function buildOpts(){ $("#opts").innerHTML=ANS.map(function(t){ return '<button class="opt" data-t="'+t+'">'+LABEL[t]+'<span class="key">'+t+'</span></button>'; }).join(""); }
+  function tick(){ $("#hTime").textContent=((performance.now()-t0)/1000).toFixed(1)+"s"; }
+  function showVal(){
+    var v=round[at]; $("#value").innerHTML=codeOf(v); $("#value").className="code"; $("#after").innerHTML="";
+    Array.prototype.forEach.call(document.querySelectorAll(".opt"),function(b){ b.className="opt"; b.disabled=false; });
+    $("#stepno").innerHTML="<small>round</small>"+(at+1)+" / "+N; $("#bar").style.width=(100*at/N)+"%";
+  }
+  function start(){
+    round=deal(); at=0; score=0; misses=[]; busy=false; live=true;
+    $("#hScore").textContent="0"; $("#startScr").classList.add("off"); $("#endScr").classList.add("off");
+    $("#caption").className="caption"; $("#status").innerHTML="Read the quotes, then the call. <b class=\"a\">Value or exception?</b>";
+    showVal(); t0=performance.now(); if(timer) clearInterval(timer); timer=setInterval(tick,100);
+  }
+  function answer(t){
+    if(!live||busy||at>=round.length) return; busy=true;
+    var v=round[at], r=outcome(v), good=t===r.a;
+    Array.prototype.forEach.call(document.querySelectorAll(".opt"),function(b){ b.disabled=true;
+      if(b.getAttribute("data-t")===r.a) b.classList.add("hit"); else if(b.getAttribute("data-t")===t) b.classList.add("miss"); else b.classList.add("dim"); });
+    $("#value").className="code "+(good?"good":"bad");
+    $("#after").innerHTML=r.a==="V"?"→ "+varName(v[1])+" is <b>"+esc(r.v)+"</b>":"→ throws <b>"+LABEL[r.a]+"</b>";
+    var res=r.a==="V"?"Value "+esc(r.v):LABEL[r.a];
+    if(good){ score++; $("#hScore").textContent=String(score); $("#caption").className="caption ok"; $("#status").innerHTML='<b class="g">'+res+'</b>: '+esc(r.why)+'.'; }
+    else { misses.push([v,r]); $("#caption").className="caption cut"; $("#status").innerHTML='Not <b class="w">'+LABEL[t]+'</b>. It is <b class="g">'+res+'</b>: '+esc(r.why)+'.'; }
+    setTimeout(function(){ at++; busy=false; if(at>=N) end(); else showVal(); }, reduce?300:(good?1100:2800));
+  }
+  function end(){
+    live=false; clearInterval(timer); tick(); $("#bar").style.width="100%";
+    var secs=((performance.now()-t0)/1000).toFixed(1);
+    $("#endScore").textContent=score+" / "+N; $("#endScore").className="big "+(score===N?"good":score>=12?"":"gold");
+    $("#endMsg").textContent=(score===N?"Perfect. ":score>=12?"Solid. ":"Keep going. ")+secs+" seconds.";
+    $("#endMiss").innerHTML=misses.length?misses.map(function(m){ var v=m[0], r=m[1];
+      return '<div><b>'+esc(q(v[0]))+' with '+esc(callText(v))+'</b> <i>'+(r.a==="V"?esc(r.v):LABEL[r.a])+'</i>: '+esc(r.why)+'</div>'; }).join(""):"";
+    $("#endScr").classList.remove("off");
+    $("#stepno").innerHTML="<small>round</small>"+N+" / "+N; $("#caption").className="caption"; $("#status").innerHTML="Round over. <b class=\"a\">Play again</b> deals sixteen new lines.";
+  }
+  $("#opts").addEventListener("click",function(e){ var b=e.target.closest(".opt"); if(b) answer(b.getAttribute("data-t")); });
+  $("#bStart").addEventListener("click",start); $("#bAgain").addEventListener("click",start);
+  document.addEventListener("keydown",function(e){ if(/INPUT|TEXTAREA/.test(e.target.tagName)||e.ctrlKey||e.metaKey||e.altKey) return;
+    var k=e.key.toUpperCase(); if(live&&ANS.indexOf(k)>=0){ answer(k); return; }
+    if((e.code==="Space"||e.key==="Enter")&&!live&&e.target.tagName!=="BUTTON"){ e.preventDefault(); start(); } });
+
+  var cv=$("#amb"),ctx=cv.getContext&&cv.getContext("2d"),parts=[];
+  function sizeC(){if(!ctx)return;cv.width=innerWidth;cv.height=innerHeight;}
+  function initParts(){parts=[];for(var i=0;i<46;i++)parts.push({x:Math.random(),y:Math.random(),r:Math.random()*1.6+.3,s:Math.random()*.02+.004,o:Math.random()*.4+.1});}
+  function drawC(){if(!ctx)return;ctx.clearRect(0,0,cv.width,cv.height);
+    parts.forEach(function(p){p.y-=p.s/60;if(p.y<-.02)p.y=1.02;ctx.beginPath();ctx.arc(p.x*cv.width,p.y*cv.height,p.r,0,7);
+      ctx.fillStyle="rgba(140,170,255,"+p.o+")";ctx.fill();});requestAnimationFrame(drawC);}
+  if(ctx&&!reduce){sizeC();initParts();drawC();addEventListener("resize",sizeC);}
+
+  buildOpts();
+})();
+</script>
+<script src="../manifest.js"></script>
+<script src="../../assets/rail.js"></script>
+<script>Rail.render(document.getElementById("rail"),{week:2,kind:"games",current:"parse-or-crash"});</script>
+</body>
+</html>

@@ -1,0 +1,357 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Loop Tracer | Week 2 Visual Hub</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Sora:wght@500;700&family=Inter:wght@400;500&family=JetBrains+Mono:wght@400;500&display=swap">
+<style>
+  :root{
+    --bg:#080c17; --bg2:#0c1428; --surface:rgba(255,255,255,.045); --line:rgba(255,255,255,.09);
+    --ink:#eef2fb; --muted:#8496b6; --accent:#6ea0ff; --accent2:#8b7bff; --good:#46d98a; --warn:#ff6a6a;
+    --gold:#ffc862; --disp:'Sora',system-ui,sans-serif; --body:'Inter',system-ui,sans-serif;
+    --mono:'JetBrains Mono',ui-monospace,monospace;
+  }
+  *{box-sizing:border-box}
+  body{margin:0;min-height:100vh;color:var(--ink);font-family:var(--body);
+    background:radial-gradient(1200px 700px at 70% -10%,#141d38 0%,transparent 55%),
+               radial-gradient(900px 600px at 10% 110%,#161233 0%,transparent 50%),#080c17;
+    overflow-x:hidden}
+  #amb{position:fixed;inset:0;z-index:0;pointer-events:none;opacity:.6}
+  .back{position:relative;z-index:2;display:block;max-width:1120px;margin:0 auto;padding:26px 24px 0;
+    width:100%;font-family:var(--mono);font-size:.8rem;letter-spacing:.04em;color:var(--muted);
+    text-decoration:none;transition:color .15s}
+  .back:hover{color:var(--accent)}
+  .wrap{position:relative;z-index:1;max-width:1120px;margin:0 auto;padding:22px 24px 70px}
+  .tag{font-family:var(--mono);font-size:.72rem;letter-spacing:.22em;text-transform:uppercase;color:var(--accent);margin:0 0 14px}
+  h1{font-family:var(--disp);font-weight:700;font-size:clamp(2.3rem,6vw,3.6rem);line-height:1;margin:0 0 12px;
+    letter-spacing:-.03em;background:linear-gradient(180deg,#fff,#b9c6e6);-webkit-background-clip:text;
+    background-clip:text;color:transparent}
+  .lede{color:var(--muted);max-width:64ch;font-size:1.05rem;margin:0 0 26px;line-height:1.5}
+  .lede b{color:var(--ink)}
+  .lede code,.take code,.caption code{font-family:var(--mono);font-size:.92em;color:#bcd0ff}
+
+  /* ---------- stage: picture first, one toolbar, support below ---------- */
+  .stage{position:relative;background:linear-gradient(180deg,rgba(255,255,255,.03),rgba(255,255,255,.01));
+    border:1px solid var(--line);border-radius:24px;padding:18px 18px 14px;
+    box-shadow:0 1px 0 rgba(255,255,255,.06) inset,0 30px 80px -30px rgba(0,0,0,.8)}
+  .topbar{display:flex;align-items:center;gap:10px;margin:0 0 14px;flex-wrap:wrap}
+  .topbar .lab{margin:0 4px 0 0}
+  .lab{font-family:var(--mono);font-size:.7rem;letter-spacing:.12em;text-transform:uppercase;color:var(--muted);margin:0 0 10px}
+  .btn:focus-visible{outline:2px solid var(--accent);outline-offset:2px}
+
+  /* ---------- game board ---------- */
+  .pic{position:relative;height:420px;border:1px solid var(--line);border-radius:18px;background:rgba(6,10,20,.5);overflow:hidden;
+    display:grid;grid-template-columns:1.15fr 1fr;gap:22px;align-items:stretch;padding:40px 22px 22px}
+  .pic .zone{position:absolute;top:14px;font-family:var(--mono);font-size:.62rem;letter-spacing:.14em;text-transform:uppercase;color:rgba(132,150,182,.55)}
+  .pic .zone.z1{left:18px} .pic .zone.z2{left:calc(53.5% + 4px)}
+  .hud{position:absolute;right:18px;top:12px;display:flex;gap:14px;font-family:var(--mono);font-size:.72rem;color:var(--muted)}
+  .hud b{color:var(--ink);font-weight:500}
+  .code{margin:0;min-width:0;align-self:center;font-family:var(--mono);font-size:.8rem;line-height:1.7;color:var(--ink);white-space:pre;overflow-x:auto;
+    padding:14px 16px;border:1px solid var(--line);border-radius:14px;background:rgba(0,0,0,.3);transition:border-color .2s,box-shadow .2s}
+  .code .ln{display:block;min-height:1.7em}
+  .code .kw{color:#c792ea} .code .ty{color:#82aaff} .code .st{color:#c3e88d} .code .nm{color:#f78c6c} .code .fn{color:#ffcb6b}
+  .code.good{border-color:rgba(70,217,138,.7);box-shadow:0 0 28px -8px rgba(70,217,138,.8)}
+  .code.bad{border-color:rgba(255,106,106,.7);box-shadow:0 0 28px -8px rgba(255,106,106,.8);animation:shake .3s}
+  @keyframes shake{25%{transform:translateX(-6px)}75%{transform:translateX(6px)}}
+  .out{min-width:0;display:flex;flex-direction:column;border:1px solid var(--line);border-radius:14px;background:rgba(0,0,0,.4);overflow:hidden}
+  .rows{flex:1;overflow-y:auto;padding:12px 14px;font-family:var(--mono);font-size:.84rem;line-height:1.5;display:flex;flex-direction:column;gap:4px}
+  .rows .empty{color:rgba(132,150,182,.55);font-size:.74rem;margin:auto;text-align:center}
+  .row{padding:3px 10px;border-left:3px solid transparent;border-radius:4px;white-space:pre-wrap;word-break:break-word}
+  .row.ok{border-left-color:var(--good);color:var(--ink)}
+  .row.miss{border-left-color:var(--warn);background:rgba(255,106,106,.07);color:var(--good)}
+  .row.miss s{display:block;color:var(--warn);font-size:.72rem;text-decoration:line-through;opacity:.85}
+  .row.fin{color:var(--muted);font-style:italic}
+  .row.fin.miss{color:var(--good)}
+  .inrow{display:flex;align-items:center;gap:8px;border-top:1px solid var(--line);padding:10px 14px;background:rgba(110,160,255,.05)}
+  .inrow .pr{font-family:var(--mono);color:var(--accent);font-size:.9rem}
+  .ans{flex:1;min-width:0;border:0;outline:0;background:transparent;color:var(--ink);font-family:var(--mono);font-size:.92rem;caret-color:var(--accent)}
+  .ans::placeholder{color:rgba(132,150,182,.55);font-size:.78rem}
+  .ans:disabled{opacity:.4}
+  .screen{position:absolute;inset:0;z-index:4;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:12px;background:rgba(6,10,20,.94);transition:opacity .25s;padding:20px}
+  .screen.off{opacity:0;pointer-events:none}
+  .screen h2{font-family:var(--disp);font-weight:700;font-size:1.6rem;margin:0;color:var(--ink)}
+  .screen p{margin:0;color:var(--muted);font-size:.95rem;text-align:center;max-width:50ch;line-height:1.5}
+  .screen .big{font-family:var(--disp);font-weight:700;font-size:2.6rem;color:var(--accent)}
+  .screen .big.gold{color:var(--gold)} .screen .big.good{color:var(--good)}
+  .bar{position:absolute;left:0;right:0;bottom:0;height:4px;background:rgba(255,255,255,.06)}
+  .bar i{display:block;height:100%;width:0;background:var(--accent);transition:width .25s}
+  .misses{font-family:var(--mono);font-size:.72rem;color:var(--muted);line-height:1.6;text-align:left;max-height:150px;overflow-y:auto;max-width:680px;width:100%}
+  .misses b{color:var(--warn);font-weight:500} .misses i{font-style:normal;color:var(--good)} .misses code{color:#c9d4ea}
+  @media (max-width:760px){.pic{height:auto;min-height:620px;grid-template-columns:1fr;grid-template-rows:auto 260px}.pic .zone.z2{display:none}}
+
+  /* caption: the one sentence, right under the picture */
+  .caption{display:flex;gap:16px;align-items:flex-start;margin:14px 4px 0;min-height:56px}
+  .caption .n{flex-shrink:0;font-family:var(--disp);font-weight:700;font-size:1.35rem;color:var(--accent);font-variant-numeric:tabular-nums;
+    line-height:1.2;min-width:3.2rem}
+  .caption .n small{display:block;font-family:var(--mono);font-weight:400;font-size:.58rem;letter-spacing:.14em;text-transform:uppercase;color:var(--muted)}
+  .caption .t{font-size:1.02rem;line-height:1.55;color:var(--ink);padding-left:16px;border-left:3px solid var(--accent);transition:border-color .3s}
+  .caption.cut .t{border-left-color:var(--warn)} .caption.ok .t{border-left-color:var(--good)}
+  .caption b.g{color:var(--good)} .caption b.w{color:var(--warn)} .caption b.a{color:var(--accent)} .caption b.y{color:var(--gold)}
+
+  .btn{font-family:var(--body);font-weight:500;font-size:.86rem;padding:9px 16px;border-radius:11px;cursor:pointer;
+    border:1px solid var(--line);background:var(--surface);color:var(--ink);transition:.15s}
+  .btn:hover{border-color:var(--accent);color:var(--accent)}
+  .btn.primary{border-color:rgba(110,160,255,.5);background:rgba(110,160,255,.12);padding:9px 22px}
+  .btn:disabled{opacity:.35;cursor:not-allowed}
+  .hint{font-family:var(--mono);font-size:.68rem;color:var(--muted);margin:10px 4px 0;line-height:1.5}
+  .hint b{color:var(--accent)}
+
+  .take{margin-top:22px;background:linear-gradient(180deg,rgba(110,160,255,.08),rgba(139,123,255,.04));
+    border:1px solid var(--line);border-left:3px solid var(--accent);border-radius:12px;padding:16px 18px}
+  .take .tk{font-family:var(--mono);font-size:.66rem;letter-spacing:.14em;text-transform:uppercase;color:var(--accent);margin:0 0 8px}
+  .take p{margin:0;font-size:.95rem;color:var(--ink);line-height:1.55}
+  .take b{color:#fff}
+  @media (prefers-reduced-motion:reduce){*{animation-duration:.01ms!important;transition-duration:.01ms!important}#amb{display:none}}
+</style>
+</head>
+<body>
+
+<a class="back" href="../index.html#loop-tracer">&#8592; Week 2 index</a>
+
+<canvas id="amb"></canvas>
+<div class="wrap">
+  <p class="tag">Workbook 2a &middot; Section 3-1 &middot; Game</p>
+  <h1>Loop Tracer</h1>
+  <p class="lede"><b>A loop runs. Type each line it prints, one Enter at a time, and type end when the loop is over.</b></p>
+
+  <div class="stage">
+    <div class="topbar">
+      <span class="lab">Game</span>
+    </div>
+
+    <div class="pic" id="pic">
+      <span class="zone z1">program</span><span class="zone z2">console</span>
+      <div class="hud"><span>score <b id="hScore">0</b></span><span>time <b id="hTime">0.0s</b></span></div>
+      <pre class="code" id="code"></pre>
+      <div class="out">
+        <div class="rows" id="rows"><span class="empty">the output appears here, line by line</span></div>
+        <div class="inrow"><span class="pr">&gt;</span><input class="ans" id="ans" autocomplete="off" spellcheck="false" placeholder="next line it prints, or end" aria-label="next printed line" disabled></div>
+      </div>
+      <div class="bar"><i id="bar"></i></div>
+      <div class="screen" id="startScr">
+        <h2>Loop Tracer</h2>
+        <p>Ten short loops. Run each one in your head and type what it prints, one line per Enter. When the loop stops, type <b>end</b>.</p>
+        <button class="btn primary" id="bStart">Start</button>
+      </div>
+      <div class="screen off" id="endScr">
+        <h2>Game over</h2>
+        <div class="big" id="endScore"></div>
+        <p id="endMsg"></p>
+        <div class="misses" id="endMiss"></div>
+        <button class="btn primary" id="bAgain">Play again</button>
+      </div>
+    </div>
+
+    <div class="caption" id="caption">
+      <div class="n" id="stepno"><small>loop</small>0 / 10</div>
+      <div class="t" id="status">Press <b class="a">Start</b>. Ten loops, a new set each game.</div>
+    </div>
+    <p class="hint"><b>Enter</b> checks the line &middot; type <b>end</b> when nothing more prints &middot; capitals and extra spaces do not count &middot; a double prints with a decimal point (25.0)</p>
+  </div>
+
+  <div class="take">
+    <p class="tk">The one idea</p>
+    <p><b>A loop asks its question again before every pass.</b> while and for ask first, so they can run zero times; do/while asks after, so it always runs once. break leaves the loop now; continue skips the rest of this pass and goes on to the next.</p>
+  </div>
+
+  <div id="rail"></div>
+</div>
+
+<script>
+(function(){
+  "use strict";
+  var $=function(s){return document.querySelector(s);};
+  var reduce=matchMedia("(prefers-reduced-motion: reduce)").matches;
+
+  function R(a,b){ return a+Math.floor(Math.random()*(b-a+1)); }
+  function pick(a){ return a[R(0,a.length-1)]; }
+  function shuffle(a){ a=a.slice(); for(var i=a.length-1;i>0;i--){ var j=Math.floor(Math.random()*(i+1)); var t=a[i]; a[i]=a[j]; a[j]=t; } return a; }
+  function esc(s){ return String(s).replace(/\u0026/g,"\u0026amp;").replace(/</g,"\u0026lt;").replace(/>/g,"\u0026gt;"); }
+  var I="    ", I2="        ";
+  function P(expr){ return "System.out.println("+expr+");"; }
+  function L(out,why,extra){ var s={out:out,why:why}; if(extra) s.dbl=extra; return s; }
+  function END(why){ return {out:"end",why:why}; }
+
+  /* Each template builds one loop with fresh numbers: code lines, the header shown in the miss list, and the expected steps.
+     Every step is one printed line, then a final "end", each with the sentence that explains it. */
+  var T={
+    savings:function(){
+      var step,goal,n; do{ step=pick([10,15,20,25,30,40,50]); goal=pick([50,60,75,80,100,120,150]); n=Math.ceil(goal/step); }while(n<3||n>6);
+      var s=[];
+      for(var i=1;i<=n;i++){
+        s.push(L("Week "+i+": saved "+(i*step)+".0", i===1?"savings starts at 0, 0.0 < "+goal+" is true, so the first pass adds "+step+" and prints week 1":
+          "savings was "+((i-1)*step)+".0, still under "+goal+", so pass "+i+" adds "+step, String(i*step)));
+      }
+      s.push(END("savings is now "+(n*step)+".0, and "+(n*step)+".0 < "+goal+" is false, so the loop stops"));
+      return {head:"while (savings < "+goal+")", code:["int week = 1;","double savings = 0;","while (savings < "+goal+") {",I+"savings = savings + "+step+";",I+P("\"Week \" + week + \": saved \" + savings"),I+"week++;","}"], steps:s};
+    },
+    laps:function(){
+      var past=Math.random()<0.4, max, st, s=[];
+      if(past){ max=R(2,5); st=max+R(1,3); }
+      else { st=R(1,2); max=st+R(2,5); }
+      var last=past?st:max;
+      for(var v=st;v<=last;v++){
+        s.push(L("Lap "+v, v===st?(past?"do/while runs the body once before it checks, so Lap "+st+" prints even though "+st+" <= "+max+" is false":
+          "do/while runs the body first, so Lap "+st+" prints before any check"):"lap is now "+v+", and "+v+" <= "+max+" is true, so the body runs again"));
+      }
+      s.push(END(past?"lap is now "+(st+1)+", and "+(st+1)+" <= "+max+" is false: the body ran once and that is all":"lap is now "+(max+1)+", and "+(max+1)+" <= "+max+" is false, so the loop stops"));
+      return {head:"do { ... } while (lap <= "+max+")", code:["int lap = "+st+";","do {",I+P("\"Lap \" + lap"),I+"lap++;","} while (lap <= "+max+");"], steps:s};
+    },
+    stairs:function(){
+      var past=Math.random()<0.45, top, st, s=[];
+      if(past){ top=R(2,5); st=top+R(1,3); s.push(END("while checks before the first pass: "+st+" <= "+top+" is false, so the body never runs")); }
+      else {
+        st=R(1,3); top=st+R(2,5);
+        for(var v=st;v<=top;v++) s.push(L("Walking up to floor "+v, v===st?"floor starts at "+st+", and "+st+" <= "+top+" is true, so the first pass runs":"floor++ made it "+v+", still <= "+top));
+        s.push(END("floor is now "+(top+1)+", and "+(top+1)+" <= "+top+" is false, so the loop stops"));
+      }
+      return {head:"while (floor <= "+top+")", code:["int floor = "+st+";","while (floor <= "+top+") {",I+P("\"Walking up to floor \" + floor"),I+"floor++;","}"], steps:s};
+    },
+    packing:function(){
+      var a=R(1,2), b=a+R(2,5), s=[];
+      for(var v=a;v<=b;v++) s.push(L("Packing item "+v+" into the bag", v===a?"item starts at "+a+", and "+a+" <= "+b+" is true, so the first pass runs":"item++ made it "+v+", still <= "+b));
+      s.push(END("item++ made it "+(b+1)+", and "+(b+1)+" <= "+b+" is false, so the loop stops"));
+      return {head:"for (int item = "+a+"; item <= "+b+"; item++)", code:["for (int item = "+a+"; item <= "+b+"; item++) {",I+P("\"Packing item \" + item + \" into the bag\""),"}"], steps:s};
+    },
+    elevator:function(){
+      var b=R(0,2), t=b+R(2,5), s=[];
+      for(var v=t;v>=b;v--) s.push(L("Elevator at floor "+v, v===t?"floor starts at "+t+" and counts down, so the first line is floor "+t:"floor-- made it "+v+", and "+v+" >= "+b+" is still true"));
+      s.push(END("floor-- made it "+(b-1)+", and "+(b-1)+" >= "+b+" is false, so the loop stops"));
+      return {head:"for (int floor = "+t+"; floor >= "+b+"; floor--)", code:["for (int floor = "+t+"; floor >= "+b+"; floor--) {",I+P("\"Elevator at floor \" + floor"),"}"], steps:s};
+    },
+    plants:function(){
+      var st=R(2,3), a=R(1,3), n=R(3,5), lastV=a+st*(n-1), b=lastV+R(0,st-1), s=[];
+      for(var v=a;v<=b;v+=st) s.push(L("Water the plants on day "+v, v===a?"day starts at "+a+", so the first line is day "+a:"day += "+st+" jumps from "+(v-st)+" to "+v+", which is still <= "+b));
+      s.push(END("day += "+st+" made it "+(lastV+st)+", and "+(lastV+st)+" <= "+b+" is false, so the loop stops"));
+      return {head:"for (int day = "+a+"; day <= "+b+"; day += "+st+")", code:["for (int day = "+a+"; day <= "+b+"; day += "+st+") {",I+P("\"Water the plants on day \" + day"),"}"], steps:s};
+    },
+    fullWeek:function(){
+      var k=R(3,5), s=[];
+      for(var w=1;w<k;w++) s.push(L("Week "+w+": saving", w+" % "+k+" is "+w+", not 0, so the if is skipped and the saving line prints"));
+      s.push(L("Week "+k+": piggy bank is full", k+" % "+k+" is 0, so the if runs and prints the full line"));
+      s.push(END("break leaves the loop at once, even though "+k+" <= 10 is still true"));
+      return {head:"for (int week = 1; week <= 10; week++) with break", code:["for (int week = 1; week <= 10; week++) {",I+"if (week % "+k+" == 0) {",I2+P("\"Week \" + week + \": piggy bank is full\""),I2+"break;",I+"}",I+P("\"Week \" + week + \": saving\""),"}"], steps:s};
+    },
+    piggy:function(){
+      var amt, lim, n; do{ amt=pick([5,10,15,20,25]); lim=pick([30,40,50,60,75,80]); n=Math.ceil(lim/amt); }while(n<3||n>6);
+      var s=[];
+      for(var w=1;w<n;w++) s.push(L("Week "+w+": "+(w*amt), (w===1?"piggyBank goes from 0 to ":"piggyBank goes up to ")+(w*amt)+", which is under "+lim+", so the if is skipped"));
+      s.push(L("Full in week "+n, "piggyBank reaches "+(n*amt)+", and "+(n*amt)+" >= "+lim+" is true, so the if prints the full line"));
+      s.push(END("break leaves the loop right there, so the week line after the if never prints for week "+n));
+      return {head:"for (int week = 1; week <= 10; week++) with break", code:["int piggyBank = 0;","for (int week = 1; week <= 10; week++) {",I+"piggyBank += "+amt+";",I+"if (piggyBank >= "+lim+") {",I2+P("\"Full in week \" + week"),I2+"break;",I+"}",I+P("\"Week \" + week + \": \" + piggyBank"),"}"], steps:s};
+    },
+    skip:function(){
+      var n,k,cnt; do{ n=R(5,8); k=R(2,4); cnt=n-Math.floor(n/k); }while(cnt<3||cnt>6);
+      var s=[], prevSkip=0;
+      for(var w=1;w<=n;w++){
+        if(w%k===0){ prevSkip=w; continue; }
+        s.push(L("Saving in week "+w, prevSkip===w-1&&prevSkip>0?"week "+prevSkip+" hit continue ("+prevSkip+" % "+k+" is 0), so its line was skipped and the loop went on to week "+w:
+          w+" % "+k+" is not 0, so continue is skipped and the line prints"));
+      }
+      s.push(END(n%k===0?"week "+n+" hit continue, then week++ made it "+(n+1)+", and "+(n+1)+" <= "+n+" is false":"after week "+n+", week++ makes it "+(n+1)+", and "+(n+1)+" <= "+n+" is false, so the loop stops"));
+      return {head:"for (int week = 1; week <= "+n+"; week++) with continue", code:["for (int week = 1; week <= "+n+"; week++) {",I+"if (week % "+k+" == 0) {",I2+"continue;",I+"}",I+P("\"Saving in week \" + week"),"}"], steps:s};
+    },
+    total:function(){
+      var n=R(3,6), amt=pick([0,0,5,10,20]), s=[], tot=0;
+      for(var w=1;w<=n;w++){
+        var add=amt?amt:w, was=tot; tot+=add;
+        s.push(L("Week "+w+": total "+tot, "total was "+was+", and adding "+add+" makes "+tot+(w===1?": the total starts at 0, outside the loop":"")));
+      }
+      s.push(END("week++ made it "+(n+1)+", and "+(n+1)+" <= "+n+" is false, so the loop stops"));
+      return {head:"for (int week = 1; week <= "+n+"; week++) running total", code:["int total = 0;","for (int week = 1; week <= "+n+"; week++) {",I+"total += "+(amt?amt:"week")+";",I+P("\"Week \" + week + \": total \" + total"),"}"], steps:s};
+    },
+    zeroLap:function(){
+      var n=R(3,6), s=[];
+      for(var v=0;v<n;v++) s.push(L("Lap "+v, v===0?"lap starts at 0, so the first line is Lap 0":"lap++ made it "+v+", and "+v+" < "+n+" is true"));
+      s.push(END("lap is now "+n+", and "+n+" < "+n+" is false: < stops one short of "+n));
+      return {head:"for (int lap = 0; lap < "+n+"; lap++)", code:["for (int lap = 0; lap < "+n+"; lap++) {",I+P("\"Lap \" + lap"),"}"], steps:s};
+    }
+  };
+  var KEYS=Object.keys(T);
+  var TOK=/("[^"]*")|(\b(?:while|do|for|if|break|continue)\b)|(\b(?:int|double)\b)|(\bprintln\b)|(\b\d+\b)/g;
+  function hl(line){ return '<span class="ln">'+esc(line).replace(TOK,function(m,a,b,c,d){ return '<span class="'+(a?"st":b?"kw":c?"ty":d?"fn":"nm")+'">'+m+'</span>'; })+'</span>'; }
+  function norm(s){ s=String(s).trim().replace(/\s+/g," ").toLowerCase(); if(s.length>1&&s.charAt(0)==="\""&&s.charAt(s.length-1)==="\"") s=s.slice(1,-1).trim(); return s; }
+  function cap(s){ return s.charAt(0).toUpperCase()+s.slice(1)+"."; }
+
+  var N=10, round=[], ri=0, si=0, cur=null, score=0, total=0, misses=[], t0=0, timer=null, busy=false, playing=false, loopOk=true;
+
+  function tick(){ $("#hTime").textContent=((performance.now()-t0)/1000).toFixed(1)+"s"; }
+  function setCap(cls,html){ $("#caption").className="caption"+(cls?" "+cls:""); $("#status").innerHTML=html; }
+  function addRow(cls,html){ var r=$("#rows"), e=r.querySelector(".empty"); if(e) r.removeChild(e);
+    var d=document.createElement("div"); d.className="row "+cls; d.innerHTML=html; r.appendChild(d); r.scrollTop=r.scrollHeight; }
+
+  function renderLoop(){
+    cur=round[ri]; si=0; loopOk=true;
+    $("#code").innerHTML=cur.code.map(hl).join(""); $("#code").className="code";
+    $("#rows").innerHTML='<span class="empty">the output appears here, line by line</span>';
+    $("#stepno").innerHTML="<small>loop</small>"+(ri+1)+" / "+N; $("#bar").style.width=(100*ri/N)+"%";
+    setCap("","What does it print first? Type the line, or <b class=\"a\">end</b> if it prints nothing.");
+    var a=$("#ans"); a.disabled=false; a.value=""; a.focus(); busy=false;
+  }
+  function check(){
+    if(busy||!playing) return;
+    var a=$("#ans"), typed=a.value; if(typed.trim()===""){ a.focus(); return; }
+    var st=cur.steps[si], ok=norm(typed)===norm(st.out), isEnd=st.out==="end", why=cap(st.why);
+    total++; a.value="";
+    if(ok){
+      score++; $("#hScore").textContent=String(score);
+      addRow(isEnd?"ok fin":"ok", isEnd?"end":esc(st.out));
+      setCap("ok",'<b class="g">Right.</b> '+esc(why));
+    } else {
+      loopOk=false;
+      var note="";
+      if(st.dbl&&norm(typed)===norm(st.out.replace(st.dbl+".0",st.dbl))) note="savings is a double, so println shows "+st.dbl+".0, with the decimal point. ";
+      else if(!isEnd&&norm(typed)==="end") note="Not over yet. ";
+      else if(isEnd) note="Nothing more prints. ";
+      addRow(isEnd?"miss fin":"miss",(isEnd?"end":esc(st.out))+"<s>"+esc(typed.trim())+"</s>");
+      setCap("cut",'<b class="w">'+(isEnd?"The loop is over: end":"It prints "+esc(st.out))+'.</b> '+esc(note+why));
+      misses.push({head:cur.head,you:typed.trim(),right:st.out,why:note+why});
+    }
+    si++;
+    if(si>=cur.steps.length){
+      busy=true; a.disabled=true; $("#code").className="code "+(loopOk?"good":"bad");
+      setTimeout(function(){ if(!playing) return; ri++; if(ri>=N) end(); else renderLoop(); }, reduce?400:(ok?1400:3000));
+    } else a.focus();
+  }
+  function start(){
+    var keys=shuffle(KEYS).slice(0,N);
+    round=keys.map(function(k){ return T[k](); });
+    ri=0; score=0; total=0; misses=[]; playing=true;
+    $("#hScore").textContent="0"; $("#startScr").classList.add("off"); $("#endScr").classList.add("off");
+    t0=performance.now(); if(timer) clearInterval(timer); timer=setInterval(tick,100);
+    renderLoop();
+  }
+  function end(){
+    playing=false; clearInterval(timer); tick(); $("#bar").style.width="100%"; $("#ans").disabled=true;
+    var secs=((performance.now()-t0)/1000).toFixed(1), pct=total?score/total:0;
+    $("#endScore").textContent=score+" / "+total; $("#endScore").className="big "+(score===total?"good":pct>=.8?"":"gold");
+    $("#endMsg").textContent=(score===total?"Perfect tracing. ":pct>=.8?"Solid. ":"Keep going. ")+secs+" seconds.";
+    $("#endMiss").innerHTML=misses.map(function(m){ return '<div><code>'+esc(m.head)+'</code> you typed <b>'+esc(m.you)+'</b>, it was <i>'+esc(m.right)+'</i>. '+esc(m.why)+'</div>'; }).join("");
+    $("#endScr").classList.remove("off");
+    $("#stepno").innerHTML="<small>loop</small>"+N+" / "+N; setCap("","Game over. <b class=\"a\">Play again</b> builds ten new loops.");
+  }
+
+  $("#bStart").addEventListener("click",start); $("#bAgain").addEventListener("click",start);
+  $("#ans").addEventListener("keydown",function(e){ if(e.key==="Enter"){ e.preventDefault(); check(); } });
+  document.addEventListener("keydown",function(e){
+    if(/INPUT|TEXTAREA|BUTTON/.test(e.target.tagName)) return;
+    var startOn=!$("#startScr").classList.contains("off"), endOn=!$("#endScr").classList.contains("off");
+    if((startOn||endOn)&&(e.code==="Space"||e.key==="Enter")){ e.preventDefault(); start(); }
+  });
+
+  var cv=$("#amb"),ctx=cv.getContext&&cv.getContext("2d"),parts=[];
+  function sizeC(){if(!ctx)return;cv.width=innerWidth;cv.height=innerHeight;}
+  function initParts(){parts=[];for(var i=0;i<46;i++)parts.push({x:Math.random(),y:Math.random(),r:Math.random()*1.6+.3,s:Math.random()*.02+.004,o:Math.random()*.4+.1});}
+  function drawC(){if(!ctx)return;ctx.clearRect(0,0,cv.width,cv.height);
+    parts.forEach(function(p){p.y-=p.s/60;if(p.y<-.02)p.y=1.02;ctx.beginPath();ctx.arc(p.x*cv.width,p.y*cv.height,p.r,0,7);
+      ctx.fillStyle="rgba(140,170,255,"+p.o+")";ctx.fill();});requestAnimationFrame(drawC);}
+  if(ctx&&!reduce){sizeC();initParts();drawC();addEventListener("resize",sizeC);}
+})();
+</script>
+<script src="../manifest.js"></script>
+<script src="../../assets/rail.js"></script>
+<script>Rail.render(document.getElementById("rail"),{week:2,kind:"games",current:"loop-tracer"});</script>
+</body>
+</html>

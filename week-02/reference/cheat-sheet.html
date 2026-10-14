@@ -1,0 +1,389 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Week 2 Cheat Sheet | Week 2 Visual Hub</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Sora:wght@500;700&family=Inter:wght@400;500&family=JetBrains+Mono:wght@400;500&display=swap">
+<style>
+  :root{
+    --bg:#080c17; --bg2:#0c1428; --surface:rgba(255,255,255,.045); --line:rgba(255,255,255,.09);
+    --ink:#eef2fb; --muted:#8496b6; --accent:#6ea0ff; --accent2:#8b7bff; --good:#46d98a; --warn:#ff6a6a;
+    --gold:#ffc862; --disp:'Sora',system-ui,sans-serif; --body:'Inter',system-ui,sans-serif;
+    --mono:'JetBrains Mono',ui-monospace,monospace;
+  }
+  *{box-sizing:border-box}
+  body{margin:0;min-height:100vh;color:var(--ink);font-family:var(--body);
+    background:radial-gradient(1200px 700px at 70% -10%,#141d38 0%,transparent 55%),
+               radial-gradient(900px 600px at 10% 110%,#161233 0%,transparent 50%),#080c17;
+    overflow-x:hidden}
+  #amb{position:fixed;inset:0;z-index:0;pointer-events:none;opacity:.6}
+  .back{position:relative;z-index:2;display:block;max-width:1120px;margin:0 auto;padding:26px 24px 0;
+    width:100%;font-family:var(--mono);font-size:.8rem;letter-spacing:.04em;color:var(--muted);
+    text-decoration:none;transition:color .15s}
+  .back:hover{color:var(--accent)}
+  .wrap{position:relative;z-index:1;max-width:1120px;margin:0 auto;padding:22px 24px 70px}
+  .tag{font-family:var(--mono);font-size:.72rem;letter-spacing:.22em;text-transform:uppercase;color:var(--accent);margin:0 0 14px}
+  h1{font-family:var(--disp);font-weight:700;font-size:clamp(2.3rem,6vw,3.6rem);line-height:1;margin:0 0 12px;
+    letter-spacing:-.03em;background:linear-gradient(180deg,#fff,#b9c6e6);-webkit-background-clip:text;
+    background-clip:text;color:transparent}
+  .lede{color:var(--muted);max-width:64ch;font-size:1.05rem;margin:0 0 26px;line-height:1.5}
+  .lede b{color:var(--ink)}
+
+  /* ---------- stage ---------- */
+  .stage{position:relative;background:linear-gradient(180deg,rgba(255,255,255,.03),rgba(255,255,255,.01));
+    border:1px solid var(--line);border-radius:24px;padding:18px 18px 14px;
+    box-shadow:0 1px 0 rgba(255,255,255,.06) inset,0 30px 80px -30px rgba(0,0,0,.8)}
+  .topbar{display:flex;align-items:center;gap:10px;margin:0 0 14px;flex-wrap:wrap}
+  .lab{font-family:var(--mono);font-size:.7rem;letter-spacing:.12em;text-transform:uppercase;color:var(--muted);margin:0 4px 0 0}
+  .chips{display:flex;flex-wrap:wrap;gap:7px}
+  .chip{font-family:var(--body);font-weight:500;font-size:.82rem;padding:7px 14px;border-radius:999px;border:1px solid var(--line);
+    background:rgba(0,0,0,.25);color:var(--muted);cursor:pointer;transition:.15s}
+  .chip:hover{border-color:var(--accent);color:var(--accent)}
+  .chip.on{background:rgba(110,160,255,.16);border-color:rgba(110,160,255,.55);color:var(--ink)}
+  .chip:focus-visible{outline:2px solid var(--accent);outline-offset:2px}
+
+  .pic{position:relative;min-height:390px;border:1px solid var(--line);border-radius:18px;background:rgba(6,10,20,.5);padding:14px}
+  .sheet{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:12px;align-items:start}
+  .sheet.one{grid-template-columns:minmax(0,1fr)}
+  .card{border:1px solid var(--line);border-radius:14px;background:rgba(255,255,255,.025);padding:14px 16px 12px;
+    transition:border-color .2s,opacity .2s}
+  .card:hover{border-color:rgba(110,160,255,.35)}
+  .card[hidden]{display:none}
+  .card h2{font-family:var(--disp);font-weight:700;font-size:1.02rem;letter-spacing:-.01em;margin:0 0 10px;color:var(--ink);
+    display:flex;align-items:baseline;gap:10px}
+  .card h2 .wb{font-family:var(--mono);font-weight:400;font-size:.62rem;letter-spacing:.12em;text-transform:uppercase;color:var(--muted)}
+  .row{display:grid;grid-template-columns:132px minmax(0,1fr);gap:12px;padding:5px 0;border-top:1px solid rgba(255,255,255,.04);align-items:baseline}
+  .row:first-of-type{border-top:0}
+  .k{font-size:.78rem;color:var(--muted);line-height:1.35}
+  .row code{font-family:var(--mono);font-size:.8rem;color:#bcd0ff;white-space:pre-wrap;overflow-wrap:anywhere;line-height:1.45}
+  .row code .c{color:#6f7f9e}
+  .row code .w{color:var(--warn)}
+  .row code .g{color:var(--good)}
+  .see{margin:10px 0 0;padding-top:9px;border-top:1px solid var(--line);font-family:var(--mono);font-size:.7rem;color:var(--muted);
+    display:flex;flex-wrap:wrap;gap:6px 12px;align-items:baseline}
+  .see a{color:var(--accent);text-decoration:none;transition:color .15s}
+  .see a:hover{color:#fff;text-decoration:underline}
+  .hint{font-family:var(--mono);font-size:.68rem;color:var(--muted);margin:10px 4px 0;line-height:1.5}
+  .hint b{color:var(--accent);font-weight:500}
+  @media (max-width:860px){
+    .sheet{grid-template-columns:minmax(0,1fr)}
+    .row{grid-template-columns:minmax(0,1fr);gap:2px}
+  }
+  @media (prefers-reduced-motion:reduce){*{animation-duration:.01ms!important;transition-duration:.01ms!important}#amb{display:none}}
+</style>
+</head>
+<body>
+
+<a class="back" href="../index.html#cheat-sheet">&#8592; Week 2 index</a>
+
+<canvas id="amb"></canvas>
+<div class="wrap">
+  <p class="tag">Week 2 &middot; Reference</p>
+  <h1>Week 2 Cheat Sheet</h1>
+  <p class="lede">The syntax of the week, one line per idea. <b>Pick a topic to see only that card; every card links to the page that shows it moving.</b></p>
+
+  <div class="stage">
+    <div class="topbar">
+      <span class="lab">Topic</span>
+      <div class="chips" id="chips" role="group" aria-label="Filter by topic">
+        <button class="chip on" data-t="all" aria-pressed="true">All</button>
+        <button class="chip" data-t="strings" aria-pressed="false">Strings</button>
+        <button class="chip" data-t="convert" aria-pressed="false">Converting</button>
+        <button class="chip" data-t="builder" aria-pressed="false">StringBuilder</button>
+        <button class="chip" data-t="classes" aria-pressed="false">Classes</button>
+        <button class="chip" data-t="overload" aria-pressed="false">Overloading</button>
+        <button class="chip" data-t="loops" aria-pressed="false">Loops</button>
+        <button class="chip" data-t="arrays" aria-pressed="false">Arrays</button>
+        <button class="chip" data-t="ide" aria-pressed="false">Generate and debug</button>
+      </div>
+    </div>
+
+    <div class="pic">
+      <div class="sheet" id="sheet">
+
+        <section class="card" data-t="strings">
+          <h2>String methods <span class="wb">2a &middot; 1-1</span></h2>
+          <div class="row"><span class="k">length(): int</span><code>"Lina Fares".length()  <span class="c">// 10, the space counts</span></code></div>
+          <div class="row"><span class="k">trim(): String</span><code>"   danaw   ".trim()  <span class="c">// "danaw", both ends only</span></code></div>
+          <div class="row"><span class="k">toUpperCase(): String</span><code>"New Mexico".toUpperCase()  <span class="c">// "NEW MEXICO"</span></code></div>
+          <div class="row"><span class="k">toLowerCase(): String</span><code>"New Mexico".toLowerCase()  <span class="c">// "new mexico"</span></code></div>
+          <div class="row"><span class="k">chain calls</span><code>typedName.trim().toUpperCase()  <span class="c">// trim, then uppercase</span></code></div>
+          <div class="row"><span class="k">startsWith(): boolean</span><code>"FAIR-15OFF".startsWith("FAIR")  <span class="c">// true</span></code></div>
+          <div class="row"><span class="k">endsWith(): boolean</span><code>"SAVE-50".endsWith("-50")  <span class="c">// true</span></code></div>
+          <div class="row"><span class="k">charAt(i): char</span><code>"USA-12981-Y-22".charAt(10)  <span class="c">// 'Y', positions start at 0</span></code></div>
+          <div class="row"><span class="k">indexOf(): int</span><code>"ACME-12213".indexOf("-")  <span class="c">// 4; -1 when not found</span></code></div>
+          <div class="row"><span class="k">substring(start, end)</span><code>"ACME-12213".substring(0, 4)  <span class="c">// "ACME", end not included</span></code></div>
+          <div class="row"><span class="k">substring(start)</span><code>"ACME-12213".substring(5)  <span class="c">// "12213", to the end</span></code></div>
+          <div class="row"><span class="k">replace(): String</span><code>"10-15-2026".replace("-", "/")  <span class="c">// "10/15/2026", every match</span></code></div>
+          <div class="row"><span class="k">contains(): boolean</span><code>sentence.contains("Java")  <span class="c">// case sensitive</span></code></div>
+          <div class="row"><span class="k">isEmpty(): boolean</span><code>"".isEmpty()  <span class="c">// true;</span> "   ".trim().isEmpty()  <span class="c">// true</span></code></div>
+          <div class="row"><span class="k">immutable</span><code><span class="w">city.toUpperCase();</span>  <span class="c">// city unchanged</span>
+city = city.toUpperCase();  <span class="c">// keep the new String</span></code></div>
+          <p class="see">See it:
+            <a href="../visuals/01-string-methods.html">String Methods</a>
+            <a href="../visuals/02-string-immutability.html">Strings Are Immutable</a>
+          </p>
+        </section>
+
+        <section class="card" data-t="strings">
+          <h2>Escape characters and comparing <span class="wb">2a &middot; 1-1</span></h2>
+          <div class="row"><span class="k">quote inside text</span><code>"Big Tex says \"Howdy\"!"</code></div>
+          <div class="row"><span class="k">single quote</span><code>"Let's go!"  <span class="c">// no escape needed in a String</span></code></div>
+          <div class="row"><span class="k">new line, tab</span><code>\n   \t   <span class="c">// "Week:\t2\n"</span></code></div>
+          <div class="row"><span class="k">return, backslash</span><code>\r   \\</code></div>
+          <div class="row"><span class="k">same text?</span><code>language.equals(builtLanguage)  <span class="c">// char by char</span></code></div>
+          <div class="row"><span class="k">ignore capitals</span><code>"YES".equalsIgnoreCase("yes")  <span class="c">// true</span></code></div>
+          <div class="row"><span class="k">not ==</span><code><span class="w">language == builtLanguage</span>  <span class="c">// same object? can be false for the same text</span></code></div>
+          <div class="row"><span class="k">compareTo(): int</span><code>"Austin".compareTo("Dallas")  <span class="c">// negative: Austin comes first</span>
+"Dallas".compareTo("Austin")  <span class="c">// positive: Dallas comes after</span>
+"Austin".compareTo("Austin")  <span class="c">// 0: same text</span></code></div>
+          <p class="see">See it:
+            <a href="../visuals/03-comparing-strings.html">Comparing Strings</a>
+          </p>
+        </section>
+
+        <section class="card" data-t="convert">
+          <h2>Converting Strings <span class="wb">2a &middot; 1-1, 1-2</span></h2>
+          <div class="row"><span class="k">to int</span><code>int quantity = Integer.parseInt("12");  <span class="c">// 12, a number now</span></code></div>
+          <div class="row"><span class="k">to double</span><code>double price = Double.parseDouble("4.99");</code></div>
+          <div class="row"><span class="k">to float</span><code>float rate = Float.parseFloat("0.5");</code></div>
+          <div class="row"><span class="k">user input</span><code>int boxes = Integer.parseInt(scanner.nextLine().trim());</code></div>
+          <div class="row"><span class="k">split on a bar</span><code>String[] tokens = record.split(Pattern.quote("|"));</code></div>
+          <div class="row"><span class="k">same, escaped</span><code>record.split("\\|")   <span class="w">record.split("|")</span>  <span class="c">// wrong: | is special</span></code></div>
+          <div class="row"><span class="k">import</span><code>import java.util.regex.Pattern;</code></div>
+          <div class="row"><span class="k">fields of a record</span><code>"204|Ground Coffee (2 lb)|30|13.49"
+int productId = Integer.parseInt(tokens[0]);  <span class="c">// 204</span></code></div>
+          <div class="row"><span class="k">to date, ISO</span><code>LocalDate start = LocalDate.parse("2026-10-12");  <span class="c">// yyyy-MM-dd only</span></code></div>
+          <div class="row"><span class="k">to date, pattern</span><code>DateTimeFormatter f = DateTimeFormatter.ofPattern("MM/dd/yyyy");
+LocalDate birthday = LocalDate.parse("10/17/2002", f);</code></div>
+          <div class="row"><span class="k">date to text</span><code>birthday.format(DateTimeFormatter.ofPattern("MMMM d, yyyy"))  <span class="c">// October 17, 2002</span></code></div>
+          <div class="row"><span class="k">pattern letters</span><code>d dd  M MM MMM MMMM  yy yyyy  <span class="c">// 7 Oct 2002 is "d MMM yyyy"</span></code></div>
+          <div class="row"><span class="k">imports</span><code>import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;</code></div>
+          <p class="see">See it:
+            <a href="../visuals/04-string-to-number.html">String to Number</a>
+            <a href="../visuals/05-string-to-date.html">String to Date</a>
+          </p>
+        </section>
+
+        <section class="card" data-t="builder">
+          <h2>StringBuilder <span class="wb">2a &middot; 1-4</span></h2>
+          <div class="row"><span class="k">why</span><code>a String never changes; += makes a new one each time</code></div>
+          <div class="row"><span class="k">create</span><code>StringBuilder tools = new StringBuilder();</code></div>
+          <div class="row"><span class="k">append</span><code>tools.append("Java");  tools.append(17);  <span class="c">// changed in place</span></code></div>
+          <div class="row"><span class="k">chain</span><code>receipt.append("Coffee x ").append(2).append(" = $").append(7.25);</code></div>
+          <div class="row"><span class="k">insert at index</span><code>tools.insert(0, "Course tools: ");  <span class="c">// 0 is the front</span></code></div>
+          <div class="row"><span class="k">length</span><code>tools.length()</code></div>
+          <div class="row"><span class="k">back to String</span><code>String toolList = tools.toString();</code></div>
+          <div class="row"><span class="k">not a String</span><code><span class="w">String toolList = tools;</span>  <span class="c">// compile error</span></code></div>
+          <p class="see">See it:
+            <a href="../visuals/06-stringbuilder.html">StringBuilder</a>
+            <a href="../visuals/02-string-immutability.html">Strings Are Immutable</a>
+          </p>
+        </section>
+
+        <section class="card" data-t="classes">
+          <h2>Class anatomy <span class="wb">2a &middot; 2-1, 2-2</span></h2>
+          <div class="row"><span class="k">file</span><code>Person.java  <span class="c">// one public class, same name</span></code></div>
+          <div class="row"><span class="k">fields, private</span><code>private String name;  private int age;  private int energy;</code></div>
+          <div class="row"><span class="k">constructor</span><code>public Person(String name, int age) {
+    this.name = name;  <span class="c">// field = parameter</span>
+    this.age = age;
+    this.energy = 100;
+}</code></div>
+          <div class="row"><span class="k">getter</span><code>public String getName() { return this.name; }</code></div>
+          <div class="row"><span class="k">setter</span><code>public void setAge(int age) { this.age = age; }</code></div>
+          <div class="row"><span class="k">action method</span><code>public void work(int hours) { this.energy -= (hours * 10); }</code></div>
+          <div class="row"><span class="k">read only field</span><code>getEnergy() but no setEnergy()</code></div>
+          <div class="row"><span class="k">no modifier</span><code>int age;  <span class="c">// package-private: visible in com.pluralsight only</span></code></div>
+          <div class="row"><span class="k">declare, then create</span><code>Person instructor;
+instructor = new Person("Raymond", 35);</code></div>
+          <div class="row"><span class="k">one step</span><code>Person student = new Person("Natalie", 37);</code></div>
+          <div class="row"><span class="k">use it</span><code>student.setAge(38);  instructor.work(5);  instructor.getEnergy()</code></div>
+          <div class="row"><span class="k">not from outside</span><code><span class="w">instructor.name</span>  <span class="c">// error: private access</span></code></div>
+          <div class="row"><span class="k">same object</span><code>Person host = instructor;  <span class="c">// two names, one object</span></code></div>
+          <p class="see">See it:
+            <a href="../visuals/07-class-vs-object.html">Class vs Object</a>
+            <a href="../visuals/08-encapsulation.html">Encapsulation</a>
+            <a href="../visuals/09-what-new-does.html">What new Does</a>
+            <a href="../visuals/10-object-references.html">Two Names, One Object</a>
+          </p>
+        </section>
+
+        <section class="card" data-t="overload">
+          <h2>Overloading <span class="wb">2a &middot; 2-3</span></h2>
+          <div class="row"><span class="k">same name</span><code>public void eat() { ... }
+public void eat(int amount) { ... }</code></div>
+          <div class="row"><span class="k">signature</span><code>name + parameter types: eat, eat_int, greet_String_int</code></div>
+          <div class="row"><span class="k">the call picks</span><code>instructor.eat();  <span class="c">// eat()</span>   instructor.eat(15);  <span class="c">// eat(int)</span></code></div>
+          <div class="row"><span class="k">order matters</span><code>greet("Brandon", 3)  <span class="c">// ok</span>   <span class="w">greet(3, "Brandon")</span>  <span class="c">// no match</span></code></div>
+          <div class="row"><span class="k">not enough</span><code>a different return type alone is not an overload</code></div>
+          <div class="row"><span class="k">constructors</span><code>new Person()   new Person("Dana")   new Person("Raymond", 35)</code></div>
+          <div class="row"><span class="k">this(...)</span><code>public Person(String name) {
+    this(name, 18);  <span class="c">// hand off to the full constructor; first line</span>
+}</code></div>
+          <div class="row"><span class="k">empty, then setters</span><code>Person newcomer = new Person();  newcomer.setName("Natalie");</code></div>
+          <div class="row"><span class="k">no free empty one</span><code>write any constructor and Java stops giving you Person()</code></div>
+          <p class="see">See it:
+            <a href="../visuals/11-method-overloading.html">Method Overloading</a>
+            <a href="../visuals/12-constructor-overloading.html">Constructor Overloading</a>
+          </p>
+        </section>
+
+        <section class="card" data-t="loops">
+          <h2>Three loops, one job <span class="wb">2a &middot; 3-1</span></h2>
+          <div class="row"><span class="k">while</span><code>int lap = 1;
+while (lap &lt;= 3) {
+    System.out.println("Lap " + lap);
+    lap++;
+}</code></div>
+          <div class="row"><span class="k">do / while</span><code>int lap = 1;
+do {
+    System.out.println("Lap " + lap);
+    lap++;
+} while (lap &lt;= 3);</code></div>
+          <div class="row"><span class="k">for</span><code>for (int lap = 1; lap &lt;= 3; lap++) {
+    System.out.println("Lap " + lap);
+}</code></div>
+          <div class="row"><span class="k">when checked</span><code>while, for: before each pass   do / while: after, so <span class="g">at least once</span></code></div>
+          <div class="row"><span class="k">pick</span><code>for: count known   while: until something happens</code></div>
+          <div class="row"><span class="k">count down, step</span><code>for (int floor = 3; floor &gt;= 1; floor--)   day += 2</code></div>
+          <div class="row"><span class="k">running total</span><code>int total = 0;  <span class="c">// outside the loop</span>
+for (...) { total += week; }</code></div>
+          <div class="row"><span class="k">until the user stops</span><code>while (!input.equalsIgnoreCase("exit")) { ... }</code></div>
+          <div class="row"><span class="k">no update</span><code><span class="w">while (week &lt;= 4) { ... }</span>  <span class="c">// no week++: runs forever</span></code></div>
+          <p class="see">See it:
+            <a href="../visuals/13-loop-types.html">Three Loops, One Job</a>
+          </p>
+        </section>
+
+        <section class="card" data-t="loops">
+          <h2>break and continue <span class="wb">2a &middot; 3-1</span></h2>
+          <div class="row"><span class="k">break</span><code>leave the loop now</code></div>
+          <div class="row"><span class="k">continue</span><code>skip the rest of this pass, go to the next one</code></div>
+          <div class="row"><span class="k">break example</span><code>for (int i = 1; i &lt;= 10; i++) {
+    if (i % 3 == 0) { break; }
+    sum += i;
+}  <span class="c">// sum is 3 (1 + 2)</span></code></div>
+          <div class="row"><span class="k">continue example</span><code>for (int i = 1; i &lt;= 10; i++) {
+    if (i % 3 == 0) { continue; }
+    sum += i;
+}  <span class="c">// sum is 37, skips 3, 6, 9</span></code></div>
+          <div class="row"><span class="k">without continue</span><code>if (i % 3 != 0) { sum += i; }  <span class="c">// same 37</span></code></div>
+          <div class="row"><span class="k">typical break</span><code>stop a search once you found it</code></div>
+          <p class="see">See it:
+            <a href="../visuals/14-break-vs-continue.html">break vs continue</a>
+          </p>
+        </section>
+
+        <section class="card" data-t="arrays">
+          <h2>Arrays <span class="wb">2a &middot; 3-2</span></h2>
+          <div class="row"><span class="k">declare, create</span><code>int[] temperatures = new int[7];  <span class="c">// size fixed forever</span></code></div>
+          <div class="row"><span class="k">defaults</span><code>int 0   double 0.0   boolean false   String null</code></div>
+          <div class="row"><span class="k">literal</span><code>String[] cities = {"Beirut", "Boston", "Chicago"};</code></div>
+          <div class="row"><span class="k">length</span><code>temperatures.length  <span class="c">// 7, no parentheses</span></code></div>
+          <div class="row"><span class="k">index</span><code>temperatures[0] = 22;  <span class="c">// first is 0</span></code></div>
+          <div class="row"><span class="k">last</span><code>temperatures[temperatures.length - 1]  <span class="w">temperatures[7]</span>  <span class="c">// out of bounds</span></code></div>
+          <div class="row"><span class="k">for, with index</span><code>for (int i = 0; i &lt; temperatures.length; i++) { temperatures[i] ... }</code></div>
+          <div class="row"><span class="k">for-each, value</span><code>for (String city : cities) { System.out.println(city); }</code></div>
+          <div class="row"><span class="k">pass to method</span><code>public static void addDegrees(int[] temperatures, int degrees)  <span class="c">// no size</span></code></div>
+          <div class="row"><span class="k">method changes it</span><code>addDegrees(temperatures, 2);  <span class="c">// caller sees the change</span></code></div>
+          <div class="row"><span class="k">return one</span><code>public static String[] getWeekDays() { ... return days; }</code></div>
+          <div class="row"><span class="k">of objects</span><code>Person[] team = new Person[4];  team[0] = new Person("Dana", 63);</code></div>
+          <p class="see">See it:
+            <a href="../visuals/15-arrays-indexing.html">Arrays and Indexes</a>
+            <a href="../visuals/16-for-each-loop.html">for-each vs for</a>
+            <a href="../visuals/17-arrays-and-methods.html">Arrays In and Out of Methods</a>
+          </p>
+        </section>
+
+        <section class="card" data-t="arrays">
+          <h2>Arrays class and copying <span class="wb">2a &middot; 3-2</span></h2>
+          <div class="row"><span class="k">import</span><code>import java.util.Arrays;</code></div>
+          <div class="row"><span class="k">print values</span><code>Arrays.toString(cities)  <span class="c">// [Beirut, Boston, Chicago]</span>
+<span class="w">System.out.println(temperatures)</span>  <span class="c">// [I@1b6d3586</span></code></div>
+          <div class="row"><span class="k">sort, in place</span><code>Arrays.sort(cities);  <span class="c">// A to Z, small to big</span></code></div>
+          <div class="row"><span class="k">copy, new array</span><code>int[] backup = Arrays.copyOf(temperatures, temperatures.length);</code></div>
+          <div class="row"><span class="k">part copy</span><code>System.arraycopy(temperatures, 5, weekend, 0, 2);
+<span class="c">// from, at 5, into, at 0, how many</span></code></div>
+          <div class="row"><span class="k">not a copy</span><code><span class="w">int[] sameWeek = temperatures;</span>  <span class="c">// both names, one array</span></code></div>
+          <div class="row"><span class="k">fill</span><code>Arrays.fill(nextWeek, 20);  <span class="c">// every slot 20</span></code></div>
+          <div class="row"><span class="k">same values?</span><code>Arrays.equals(temperatures, backup)  <span class="c">// true;</span>  temperatures == backup  <span class="c">// false</span></code></div>
+          <div class="row"><span class="k">find in sorted</span><code>Arrays.binarySearch(cities, "Chicago")  <span class="c">// index; negative if missing; sort first</span></code></div>
+          <p class="see">See it:
+            <a href="../visuals/18-sort-and-copy.html">Sorting and Copying Arrays</a>
+            <a href="../visuals/10-object-references.html">Two Names, One Object</a>
+          </p>
+        </section>
+
+        <section class="card" data-t="ide">
+          <h2>Generate and debug in IntelliJ <span class="wb">2b &middot; 1-1, 1-2</span></h2>
+          <div class="row"><span class="k">Generate</span><code>right-click a blank line in the class &gt; Generate</code></div>
+          <div class="row"><span class="k">constructor</span><code>Generate &gt; Constructor, select all fields, OK</code></div>
+          <div class="row"><span class="k">getters, setters</span><code>Generate &gt; Getter and Setter, pick the fields</code></div>
+          <div class="row"><span class="k">toString()</span><code>Generate &gt; toString(); println(person) calls it for you</code></div>
+          <div class="row"><span class="k">run configuration</span><code>pick which main runs, top right of the window</code></div>
+          <div class="row"><span class="k">breakpoint</span><code>click the gutter next to the line number: red dot</code></div>
+          <div class="row"><span class="k">debug</span><code>the bug icon; the program pauses on the breakpoint line, not yet run</code></div>
+          <div class="row"><span class="k">step</span><code>Step Over: next line   Step Into: into the method   Step Out: back</code></div>
+          <div class="row"><span class="k">look</span><code>Frames: the call stack   Variables: current values</code></div>
+          <p class="see">See it:
+            <a href="../visuals/19-debugger.html">The Debugger</a>
+            <a href="intellij-shortcuts.html">IntelliJ Shortcuts</a>
+          </p>
+        </section>
+
+      </div>
+    </div>
+    <p class="hint" id="hint">Showing <b id="count">11</b> of <b id="total">11</b> cards. Java 17, package <b>com.pluralsight</b>.</p>
+  </div>
+
+  <div id="rail"></div>
+</div>
+
+<script>
+(function(){
+  "use strict";
+  var $=function(s){return document.querySelector(s);};
+  var reduce=matchMedia("(prefers-reduced-motion: reduce)").matches;
+  var cards=Array.prototype.slice.call(document.querySelectorAll("#sheet .card"));
+  var chips=Array.prototype.slice.call(document.querySelectorAll("#chips .chip"));
+
+  function show(t){
+    var n=0;
+    cards.forEach(function(c){
+      var on=(t==="all"||c.getAttribute("data-t")===t);
+      c.hidden=!on; if(on) n++;
+    });
+    chips.forEach(function(b){
+      var on=b.getAttribute("data-t")===t;
+      b.classList.toggle("on",on); b.setAttribute("aria-pressed",on?"true":"false");
+    });
+    $("#sheet").classList.toggle("one",n===1);
+    $("#count").textContent=n;
+  }
+  $("#chips").addEventListener("click",function(e){ var b=e.target.closest(".chip"); if(b) show(b.getAttribute("data-t")); });
+  $("#total").textContent=cards.length;
+
+  /* ---------- ambient canvas ---------- */
+  var cv=$("#amb"),ctx=cv.getContext&&cv.getContext("2d"),parts=[];
+  function sizeC(){if(!ctx)return;cv.width=innerWidth;cv.height=innerHeight;}
+  function initParts(){parts=[];for(var i=0;i<46;i++)parts.push({x:Math.random(),y:Math.random(),
+    r:Math.random()*1.6+.3,s:Math.random()*.02+.004,o:Math.random()*.4+.1});}
+  function drawC(){if(!ctx)return;ctx.clearRect(0,0,cv.width,cv.height);
+    parts.forEach(function(p){p.y-=p.s/60;if(p.y<-.02)p.y=1.02;
+      ctx.beginPath();ctx.arc(p.x*cv.width,p.y*cv.height,p.r,0,7);
+      ctx.fillStyle="rgba(140,170,255,"+p.o+")";ctx.fill();});
+    requestAnimationFrame(drawC);}
+  if(ctx&&!reduce){sizeC();initParts();drawC();addEventListener("resize",sizeC);}
+
+  show("all");
+})();
+</script>
+<script src="../manifest.js"></script>
+<script src="../../assets/rail.js"></script>
+<script>Rail.render(document.getElementById("rail"),{week:2,kind:"reference",current:"cheat-sheet"});</script>
+</body>
+</html>

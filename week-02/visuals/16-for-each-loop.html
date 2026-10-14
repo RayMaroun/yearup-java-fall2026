@@ -1,0 +1,417 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>for-each vs for | Week 2 Visual Hub</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Sora:wght@500;700&family=Inter:wght@400;500&family=JetBrains+Mono:wght@400;500&display=swap">
+<style>
+  :root{
+    --bg:#080c17; --bg2:#0c1428; --surface:rgba(255,255,255,.045); --line:rgba(255,255,255,.09);
+    --ink:#eef2fb; --muted:#8496b6; --accent:#6ea0ff; --accent2:#8b7bff; --good:#46d98a; --warn:#ff6a6a;
+    --gold:#ffc862; --disp:'Sora',system-ui,sans-serif; --body:'Inter',system-ui,sans-serif;
+    --mono:'JetBrains Mono',ui-monospace,monospace;
+  }
+  *{box-sizing:border-box}
+  body{margin:0;min-height:100vh;color:var(--ink);font-family:var(--body);
+    background:radial-gradient(1200px 700px at 70% -10%,#141d38 0%,transparent 55%),
+               radial-gradient(900px 600px at 10% 110%,#161233 0%,transparent 50%),#080c17;
+    overflow-x:hidden}
+  #amb{position:fixed;inset:0;z-index:0;pointer-events:none;opacity:.6}
+  .back{position:relative;z-index:2;display:block;max-width:1120px;margin:0 auto;padding:26px 24px 0;
+    width:100%;font-family:var(--mono);font-size:.8rem;letter-spacing:.04em;color:var(--muted);
+    text-decoration:none;transition:color .15s}
+  .back:hover{color:var(--accent)}
+  .wrap{position:relative;z-index:1;max-width:1120px;margin:0 auto;padding:22px 24px 70px}
+  .tag{font-family:var(--mono);font-size:.72rem;letter-spacing:.22em;text-transform:uppercase;color:var(--accent);margin:0 0 14px}
+  h1{font-family:var(--disp);font-weight:700;font-size:clamp(2.3rem,6vw,3.6rem);line-height:1;margin:0 0 12px;
+    letter-spacing:-.03em;background:linear-gradient(180deg,#fff,#b9c6e6);-webkit-background-clip:text;
+    background-clip:text;color:transparent}
+  .lede{color:var(--muted);max-width:64ch;font-size:1.05rem;margin:0 0 26px;line-height:1.5}
+  .lede b{color:var(--ink)}
+  .lede code,.take code,.caption code{font-family:var(--mono);font-size:.92em;color:#bcd0ff}
+
+  /* ---------- stage: picture first, one toolbar, support below ---------- */
+  .stage{position:relative;background:linear-gradient(180deg,rgba(255,255,255,.03),rgba(255,255,255,.01));
+    border:1px solid var(--line);border-radius:24px;padding:18px 18px 14px;
+    box-shadow:0 1px 0 rgba(255,255,255,.06) inset,0 30px 80px -30px rgba(0,0,0,.8)}
+  .topbar{display:flex;align-items:center;gap:10px;margin:0 0 14px;flex-wrap:wrap}
+  .topbar .lab{margin:0 4px 0 0}
+  .lab{font-family:var(--mono);font-size:.7rem;letter-spacing:.12em;text-transform:uppercase;color:var(--muted);margin:0 0 10px}
+  .chips{display:flex;flex-wrap:wrap;gap:6px}
+  .chip{font-family:var(--mono);font-size:.74rem;padding:5px 11px;border-radius:999px;cursor:pointer;
+    border:1px solid var(--line);background:rgba(0,0,0,.25);color:var(--muted);transition:.15s}
+  .chip:hover{border-color:var(--accent);color:var(--accent)}
+  .chip.on{border-color:rgba(110,160,255,.6);background:rgba(110,160,255,.14);color:var(--ink)}
+  .chip:focus-visible,.btn:focus-visible,.focus:focus-visible{outline:2px solid var(--accent);outline-offset:2px}
+  .focus{margin-left:auto;font-family:var(--mono);font-size:.68rem;letter-spacing:.1em;text-transform:uppercase;padding:6px 12px;
+    border-radius:999px;border:1px solid var(--line);background:rgba(0,0,0,.25);color:var(--muted);cursor:pointer;transition:.15s}
+  .focus:hover{border-color:var(--accent);color:var(--accent)}
+  body.solo .focus{border-color:rgba(255,200,98,.6);color:var(--gold);background:rgba(255,200,98,.1)}
+
+  /* hero picture */
+  .pic{position:relative;height:390px;border:1px solid var(--line);border-radius:18px;background:rgba(6,10,20,.5);overflow:hidden}
+  body.solo .pic{height:480px}
+  .pic .zone{position:absolute;font-family:var(--mono);font-size:.62rem;letter-spacing:.14em;text-transform:uppercase;
+    color:rgba(132,150,182,.55);transition:color .3s,opacity .3s}
+  .pic .start{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;font-family:var(--mono);
+    font-size:.8rem;color:var(--muted);pointer-events:none;transition:opacity .3s}
+  .pic .start b{color:var(--accent);font-weight:500}
+  .scene{position:absolute;inset:0;transition:opacity .35s}
+  .scene.off{opacity:0}
+  .arr{position:absolute;left:40px;right:40px;top:70px;display:flex;gap:10px}
+  .slot{position:relative;flex:1;min-width:0;height:62px;border-radius:12px;border:1px solid rgba(110,160,255,.25);
+    background:rgba(110,160,255,.04);display:flex;align-items:center;justify-content:center;font-family:var(--mono);
+    font-size:clamp(.72rem,1.6vw,1rem);color:#c3e88d;transition:border-color .3s,background .3s,box-shadow .3s,color .3s,opacity .3s}
+  .slot.done{border-color:rgba(110,160,255,.4);background:rgba(110,160,255,.09)}
+  .slot.lit{border-color:rgba(110,160,255,.85);background:rgba(110,160,255,.2);box-shadow:0 0 22px -6px rgba(110,160,255,.8)}
+  .slot.kept{border-color:rgba(255,106,106,.7);background:rgba(255,106,106,.08)}
+  .slot.chg{border-color:rgba(255,200,98,.8);background:rgba(255,200,98,.12);color:var(--gold);box-shadow:0 0 18px -6px rgba(255,200,98,.8)}
+  .slot .ix{position:absolute;bottom:-24px;left:0;right:0;text-align:center;font-size:.72rem;color:var(--muted);transition:opacity .3s}
+  .pic.each .slot .ix{opacity:.28}
+  .slot .ps{position:absolute;top:-26px;left:50%;transform:translateX(-50%);font-size:.62rem;letter-spacing:.1em;text-transform:uppercase;
+    color:var(--accent);white-space:nowrap;opacity:0;transition:opacity .3s}
+  .slot.lit .ps{opacity:1}
+  .slot.chg .ps,.slot.kept .ps{opacity:0}
+  .verdict{position:absolute;right:40px;top:26px;font-family:var(--mono);font-size:.66rem;padding:3px 10px;border-radius:999px;
+    opacity:0;transition:opacity .4s;white-space:nowrap}
+  .verdict.show{opacity:1}
+  .verdict.w{color:var(--warn);border:1px solid rgba(255,106,106,.6);background:rgba(255,106,106,.1)}
+  .verdict.y{color:var(--gold);border:1px solid rgba(255,200,98,.6);background:rgba(255,200,98,.1)}
+  .vars{position:absolute;left:16px;right:16px;top:240px;display:flex;justify-content:center;gap:26px}
+  body.solo .vars{top:300px}
+  .var{width:210px;max-width:44%;border-radius:14px;border:1px solid rgba(110,160,255,.4);background:rgba(110,160,255,.07);
+    padding:10px 14px;transition:border-color .3s,background .3s,opacity .3s}
+  .var .vk{font-family:var(--mono);font-size:.64rem;letter-spacing:.1em;color:var(--muted)}
+  .var .vv{font-family:var(--mono);font-size:1.3rem;margin-top:4px;min-height:1.6em;color:var(--ink);font-variant-numeric:tabular-nums;
+    white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+  .var .vv.s{color:#c3e88d}
+  .var.none{border-style:dashed;border-color:rgba(132,150,182,.35);background:transparent;opacity:.6}
+  .var.none .vv{font-size:.82rem;color:var(--muted);padding-top:6px}
+  .var.idle{opacity:.4}
+  .var.hot{border-color:rgba(110,160,255,.85);background:rgba(110,160,255,.16)}
+  .var.w{border-color:rgba(255,106,106,.7);background:rgba(255,106,106,.08)}
+  .var.y{border-color:rgba(255,200,98,.8);background:rgba(255,200,98,.1)}
+  .var .vv.end{color:var(--warn)}
+  svg.links{position:absolute;inset:0;width:100%;height:100%;pointer-events:none}
+  svg.links path{fill:none;stroke-width:2}
+  svg.links .lab2{font-family:var(--mono);font-size:11px}
+
+  /* caption: the one sentence, right under the picture */
+  .caption{display:flex;gap:16px;align-items:flex-start;margin:14px 4px 0;min-height:56px}
+  .caption .n{flex-shrink:0;font-family:var(--disp);font-weight:700;font-size:1.35rem;color:var(--accent);font-variant-numeric:tabular-nums;
+    line-height:1.2;min-width:3.2rem}
+  .caption .n small{display:block;font-family:var(--mono);font-weight:400;font-size:.58rem;letter-spacing:.14em;text-transform:uppercase;color:var(--muted)}
+  .caption .t{font-size:1.02rem;line-height:1.55;color:var(--ink);padding-left:16px;border-left:3px solid var(--accent);transition:border-color .3s}
+  body.solo .caption .t{font-size:1.18rem}
+  .caption.cut .t{border-left-color:var(--warn)} .caption.left .t{border-left-color:var(--gold)} .caption.ok .t{border-left-color:var(--good)}
+  .caption b.g{color:var(--good)} .caption b.w{color:var(--warn)} .caption b.a{color:var(--accent)} .caption b.y{color:var(--gold)}
+
+  /* toolbar: same on every page */
+  .toolbar{display:flex;align-items:center;gap:10px;margin:16px 0 0;padding-top:14px;border-top:1px solid var(--line)}
+  .btn{font-family:var(--body);font-weight:500;font-size:.86rem;padding:9px 16px;border-radius:11px;cursor:pointer;
+    border:1px solid var(--line);background:var(--surface);color:var(--ink);transition:.15s}
+  .btn:hover{border-color:var(--accent);color:var(--accent)}
+  .btn.primary{border-color:rgba(110,160,255,.5);background:rgba(110,160,255,.12);padding:9px 22px}
+  .btn:disabled{opacity:.35;cursor:not-allowed}
+  .btn.ghost{background:transparent;color:var(--muted);margin-left:auto}
+  .dots{display:flex;gap:5px;align-items:center;margin:0 6px}
+  .dots i{display:block;width:8px;height:8px;border-radius:50%;background:rgba(255,255,255,.12);transition:.2s}
+  .dots i.done{background:rgba(110,160,255,.45)}
+  .dots i.now{background:var(--accent);transform:scale(1.35);box-shadow:0 0 10px rgba(110,160,255,.7)}
+  .hint{font-family:var(--mono);font-size:.68rem;color:var(--muted);margin:10px 4px 0;line-height:1.5}
+  .hint b{color:var(--accent)}
+
+  /* support: code, console, readouts. Below the picture, hidden in focus */
+  .support{display:grid;grid-template-columns:minmax(0,1.3fr) minmax(0,1fr);gap:14px;margin-top:18px}
+  @media (max-width:860px){.support{grid-template-columns:1fr}}
+  body.solo .support,body.solo .take,body.solo .hint{display:none}
+  .code{min-width:0;font-family:var(--mono);font-size:.76rem;line-height:1.8;background:rgba(0,0,0,.35);border:1px solid var(--line);
+    border-radius:14px;padding:12px 0;overflow-x:auto}
+  .ln{display:flex;gap:12px;padding:0 14px;white-space:pre;color:#c9d4ea;transition:background .2s,opacity .3s}
+  .ln .n{width:20px;text-align:right;color:rgba(132,150,182,.55);user-select:none;flex-shrink:0}
+  .ln.cur{background:rgba(110,160,255,.14);box-shadow:inset 3px 0 0 var(--accent)}
+  .ln.cur .n{color:var(--accent)}
+  .ln.cut{background:rgba(255,106,106,.12);box-shadow:inset 3px 0 0 var(--warn)}
+  .ln.left{background:rgba(255,200,98,.12);box-shadow:inset 3px 0 0 var(--gold)}
+  .ln.dim{opacity:.4}
+  .kw{color:#c792ea} .ty{color:#82aaff} .st{color:#c3e88d} .nm{color:#f78c6c} .cm{color:#5f6b85;font-style:italic} .fn{color:#ffcb6b}
+  .side{display:flex;flex-direction:column;gap:12px}
+  .readout{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+  .stat{background:rgba(255,255,255,.03);border:1px solid var(--line);border-radius:12px;padding:11px 13px;transition:opacity .3s}
+  .stat.empty{opacity:.3}
+  .stat .k{font-family:var(--mono);font-size:.62rem;letter-spacing:.1em;text-transform:uppercase;color:var(--muted)}
+  .stat .v{font-family:var(--disp);font-weight:700;font-size:1.45rem;font-variant-numeric:tabular-nums;margin-top:2px;transition:color .3s;min-height:1.6em}
+  .v.hot{color:var(--accent)} .v.gold{color:var(--gold)} .v.dim{color:rgba(132,150,182,.5)}
+  .console{font-family:var(--mono);font-size:.76rem;line-height:1.6;background:#05070e;border:1px solid var(--line);
+    border-radius:12px;padding:10px 14px;min-height:64px;color:#9fe3b6;flex:1}
+  .console .cl{font-size:.6rem;letter-spacing:.14em;text-transform:uppercase;color:rgba(132,150,182,.6);margin-bottom:4px}
+  .console .out{animation:pop .3s}
+  @keyframes pop{from{transform:scale(.6);opacity:0}to{transform:scale(1);opacity:1}}
+  .take{margin-top:22px;background:linear-gradient(180deg,rgba(110,160,255,.08),rgba(139,123,255,.04));
+    border:1px solid var(--line);border-left:3px solid var(--accent);border-radius:12px;padding:16px 18px}
+  .take .tk{font-family:var(--mono);font-size:.66rem;letter-spacing:.14em;text-transform:uppercase;color:var(--accent);margin:0 0 8px}
+  .take p{margin:0;font-size:.95rem;color:var(--ink);line-height:1.55}
+  .take b{color:#fff}
+  @media (prefers-reduced-motion:reduce){*{animation-duration:.01ms!important;transition-duration:.01ms!important}#amb{display:none}}
+</style>
+</head>
+<body>
+
+<a class="back" href="../index.html#16-for-each-loop">&#8592; Week 2 index</a>
+
+<canvas id="amb"></canvas>
+<div class="wrap">
+  <p class="tag">Workbook 2a &middot; Section 3-2 &middot; Arrays</p>
+  <h1>for-each vs for</h1>
+  <p class="lede"><b>for-each hands you every element in order, but no index, and it cannot change the array.</b></p>
+
+  <div class="stage">
+    <div class="topbar">
+      <span class="lab">Loop</span>
+      <div class="chips" id="chips">
+        <button class="chip" data-m="idx">for (int i = 0; ...)</button>
+        <button class="chip on" data-m="each">for (String city : cities)</button>
+      </div>
+      <button class="focus" id="bFocus" title="Hide the code and notes, enlarge the picture">Focus</button>
+    </div>
+
+    <div class="pic each" id="pic">
+      <svg class="links" id="links"></svg>
+      <div class="scene off" id="scene">
+        <span class="zone" style="left:40px;top:26px">cities</span>
+        <span class="verdict" id="verdict"></span>
+        <div class="arr" id="arr"></div>
+        <div class="vars">
+          <div class="var" id="vI"><div class="vk" id="kI">int i</div><div class="vv" id="vvI"></div></div>
+          <div class="var" id="vE"><div class="vk" id="kE">String city</div><div class="vv s" id="vvE"></div></div>
+        </div>
+      </div>
+      <div class="start" id="start">5 cities &middot; press&nbsp;<b>Next</b></div>
+    </div>
+
+    <div class="caption" id="caption">
+      <div class="n" id="stepno"><small>step</small>0 / 7</div>
+      <div class="t" id="status">Press <b class="a">Next</b>. Switch the loop at any step to compare.</div>
+    </div>
+
+    <div class="toolbar">
+      <button class="btn" id="bBack">&larr; Back</button>
+      <div class="dots" id="dots"></div>
+      <button class="btn primary" id="bNext">Next &rarr;</button>
+      <button class="btn ghost" id="bReset">Reset</button>
+    </div>
+    <p class="hint">space = next &middot; <b>switch the loop at any step</b>: same step, other form</p>
+
+    <div class="support">
+      <div>
+        <p class="lab">Main.java</p>
+        <div class="code" id="code"></div>
+      </div>
+      <div class="side">
+        <div class="readout">
+          <div class="stat empty"><div class="k">pass</div><div class="v dim" id="stPass"></div></div>
+          <div class="stat empty"><div class="k">cities[0]</div><div class="v dim" id="stC0"></div></div>
+        </div>
+        <div class="console"><div class="cl">console</div><div id="console"></div></div>
+      </div>
+    </div>
+  </div>
+
+  <div class="take">
+    <p class="tk">The one idea</p>
+    <p><b>for-each is the short way to read every element</b>, in order, none skipped. The loop variable is its own
+    variable that holds a copy of the current element, so assigning to it never reaches the array, and there is no index.
+    <b>Need the position, or need to change the array? Use the for loop with <code>i</code>.</b></p>
+  </div>
+
+  <div id="rail"></div>
+</div>
+
+<script>
+(function(){
+  "use strict";
+  var $=function(s){return document.querySelector(s);};
+  var reduce=matchMedia("(prefers-reduced-motion: reduce)").matches;
+
+  var CITIES=["Beirut","Boston","Chicago","Atlanta","Denver"];
+  var UP=CITIES.map(function(c){return c.toUpperCase();});
+  var mode="each", at=-1;
+
+  function q(s){ return '"'+s+'"'; }
+  function code(){
+    var S='<span class="ty">String</span>', head=mode==="each"
+      ?'<span class="kw">for</span> ('+S+' city : cities) {'
+      :'<span class="kw">for</span> (<span class="ty">int</span> i = <span class="nm">0</span>; i \u003c cities.length; i++) {';
+    return [
+      S+'[] cities = {'+CITIES.map(function(c){return '<span class="st">"'+c+'"</span>';}).join(", ")+'};',
+      '',
+      head,
+      mode==="each"?'    System.out.println(city);':'    System.out.println(i + <span class="st">": "</span> + cities[i]);',
+      '}',
+      '',
+      head,
+      mode==="each"?'    city = city.<span class="fn">toUpperCase</span>();':'    cities[i] = cities[i].<span class="fn">toUpperCase</span>();',
+      '}',
+      'System.out.println(Arrays.<span class="fn">toString</span>(cities));'
+    ];
+  }
+  function printed(k){ return mode==="each"?CITIES[k]:k+": "+CITIES[k]; }
+
+  /* one snapshot per step; same step number in both forms so the switch compares like with like */
+  function snap(n){
+    var E=mode==="each", s={lit:-1,done:0,vals:CITIES,i:null,el:null,link:null,out:[],line:[],cls:"",verdict:null};
+    var k;
+    if(n===0){ s.line=[1]; s.msg=E?'Five cities in one array. for-each will hand them to you <b class="a">one at a time, in order</b>.'
+      :'Five cities in one array, at <b class="a">indexes 0 to 4</b>. The for loop counts i up to reach each one.'; }
+    if(n>=1&&n<=3){
+      s.lit=n===1?0:n===2?1:4; s.done=s.lit; s.link="read"; s.line=[3,4];
+      for(k=0;k<=s.lit;k++) s.out.push(printed(k));
+      s.i=E?null:s.lit; s.el=CITIES[s.lit]; s.pass=s.lit+1;
+      if(n===1) s.msg=E?'Pass 1: Java puts the first element into city. city is <b class="a">"Beirut"</b>. No index anywhere.'
+        :'Pass 1: i is 0, so cities[i] reads slot 0: <b class="a">"Beirut"</b>. You hold the index and the element.';
+      if(n===2) s.msg=E?'Pass 2: city now holds <b class="a">"Boston"</b>. The loop moved to the next slot by itself.'
+        :'Pass 2: i++ made i 1, so cities[1] is <b class="a">"Boston"</b>. The index moves the loop along.';
+      if(n===3) s.msg=E?'Passes 3 to 5: Chicago, Atlanta, Denver. <b class="g">Every element, in order, none skipped.</b>'
+        :'Passes 3 to 5: i is 2, 3, then 4. <b class="g">Same elements, same order</b> as for-each.';
+    }
+    if(n===4){
+      s.done=5; s.line=[3]; for(k=0;k<5;k++) s.out.push(printed(k)); s.pass="end";
+      if(E){ s.msg='No elements left, so the loop ends. You saw every value but <b class="a">never its position</b>.'; }
+      else { s.i=5; s.iEnd=true; s.msg='i becomes 5, and 5 \u003c 5 is false: the loop ends. i gave you <b class="a">each position</b>.'; }
+    }
+    if(n===5){
+      s.lit=0; s.done=0; s.line=[7,8]; for(k=0;k<5;k++) s.out.push(printed(k)); s.pass=1;
+      if(E){ s.el="BEIRUT"; s.link="blocked"; s.cls="cut"; s.kept=[0];
+        s.msg='Now change it: city becomes "BEIRUT". <b class="w">Slot 0 still says "Beirut"</b>: only city changed.'; }
+      else { s.i=0; s.el="BEIRUT"; s.link="write"; s.cls="left"; s.vals=["BEIRUT"].concat(CITIES.slice(1)); s.chg=[0];
+        s.msg='Now change it: cities[i] = ... writes into the slot itself. <b class="y">Slot 0 now says "BEIRUT"</b>.'; }
+    }
+    if(n===6){
+      s.line=[10]; for(k=0;k<5;k++) s.out.push(printed(k)); s.pass="end";
+      if(E){ s.kept=[0,1,2,3,4]; s.cls="cut"; s.verdict=["w","array unchanged"];
+        s.out.push("["+CITIES.join(", ")+"]");
+        s.msg='city was a copy every pass, so the array is <b class="w">unchanged</b>. To change elements, use the index.'; }
+      else { s.vals=UP; s.chg=[0,1,2,3,4]; s.cls="ok"; s.verdict=["y","array changed"];
+        s.out.push("["+UP.join(", ")+"]");
+        s.msg='Every slot was rewritten through its index. <b class="g">Use for with i when the array must change.</b>'; }
+    }
+    s.c0=s.vals[0];
+    return s;
+  }
+  var TOTAL=7;
+
+  var picEl=$("#pic"), svg=$("#links"), codeEl=$("#code");
+  function renderCode(cur,cls){
+    codeEl.innerHTML=code().map(function(t,i){
+      var c="ln"; if(cur&&cur.indexOf(i+1)>=0) c+=" "+(cls==="cut"?"cut":cls==="left"?"left":"cur");
+      return '<div class="'+c+'"><span class="n">'+(i+1)+'</span><span>'+(t||" ")+'</span></div>';
+    }).join("");
+  }
+  function renderPic(s){
+    var E=mode==="each";
+    picEl.className="pic "+mode;
+    $("#scene").className="scene"+(s?"":" off"); $("#start").style.opacity=s?0:1;
+    var vals=s?s.vals:CITIES, h="";
+    for(var k=0;k<5;k++){
+      var c="slot";
+      if(s){ if(k<s.done) c+=" done"; if(k===s.lit) c+=" lit";
+        if(s.kept&&s.kept.indexOf(k)>=0) c+=" kept"; if(s.chg&&s.chg.indexOf(k)>=0) c+=" chg"; }
+      h+='<div class="'+c+'" id="s'+k+'"><span class="ps">pass '+(k+1)+'</span>'+q(vals[k])+'<span class="ix">['+k+']</span></div>';
+    }
+    $("#arr").innerHTML=h;
+    var vI=$("#vI"), vE=$("#vE");
+    $("#kI").textContent=E?"index":"int i";
+    $("#kE").textContent=E?"String city":"cities[i]";
+    if(E){ vI.className="var none"; $("#vvI").textContent="not given"; $("#vvI").className="vv"; }
+    else { vI.className="var"+(s&&s.i!==null?(s.iEnd?" w":" hot"):" idle"); $("#vvI").textContent=s&&s.i!==null?String(s.i):"";
+      $("#vvI").className="vv"+(s&&s.iEnd?" end":""); }
+    var ec="var"; if(!s||s.el===null) ec+=" idle"; else if(s.link==="blocked") ec+=" w"; else if(s.link==="write") ec+=" y"; else ec+=" hot";
+    vE.className=ec; $("#vvE").textContent=s&&s.el!==null?q(s.el):"";
+    var v=$("#verdict"); if(s&&s.verdict){ v.className="verdict show "+s.verdict[0]; v.textContent=s.verdict[1]; } else v.className="verdict";
+    drawLinks(s);
+  }
+  /* the arrow between the slot and the loop variable: read (down), write (up), blocked (up, stops) */
+  function drawLinks(s){
+    var defs='<defs>'+
+      '<marker id="mA" markerWidth="8" markerHeight="8" refX="6" refY="4" orient="auto"><path d="M0,0 L8,4 L0,8 z" fill="#6ea0ff"/></marker>'+
+      '<marker id="mY" markerWidth="8" markerHeight="8" refX="6" refY="4" orient="auto"><path d="M0,0 L8,4 L0,8 z" fill="#ffc862"/></marker></defs>';
+    if(!s||!s.link||s.lit<0){ svg.innerHTML=defs; return; }
+    var pr=picEl.getBoundingClientRect(), sr=$("#s"+s.lit).getBoundingClientRect(), br=$("#vE").getBoundingClientRect();
+    var sx=sr.left+sr.width/2-pr.left, sy=sr.bottom-pr.top+28, bx=br.left+br.width/2-pr.left, by=br.top-pr.top-6;
+    var p, mid=(sy+by)/2;
+    if(s.link==="read"){
+      svg.innerHTML=defs+'<path d="M'+sx+','+sy+' C'+sx+','+mid+' '+bx+','+mid+' '+bx+','+by+'" stroke="#6ea0ff" stroke-opacity=".8" marker-end="url(#mA)"/>'+
+        '<text class="lab2" x="'+((sx+bx)/2+8)+'" y="'+(mid-4)+'" fill="#6ea0ff">copy in</text>';
+    } else if(s.link==="write"){
+      svg.innerHTML=defs+'<path d="M'+bx+','+by+' C'+bx+','+mid+' '+sx+','+mid+' '+sx+','+sy+'" stroke="#ffc862" marker-end="url(#mY)"/>'+
+        '<text class="lab2" x="'+((sx+bx)/2+8)+'" y="'+(mid-4)+'" fill="#ffc862">writes slot 0</text>';
+    } else {
+      var hx=(sx+bx)/2, hy=mid;
+      svg.innerHTML=defs+'<path d="M'+bx+','+by+' C'+bx+','+mid+' '+hx+','+mid+' '+hx+','+hy+'" stroke="#ff6a6a" stroke-dasharray="5 5"/>'+
+        '<path d="M'+(hx-8)+','+(hy-8)+' L'+(hx+8)+','+(hy+8)+' M'+(hx+8)+','+(hy-8)+' L'+(hx-8)+','+(hy+8)+'" stroke="#ff6a6a" stroke-width="2.5"/>'+
+        '<text class="lab2" x="'+(hx+14)+'" y="'+(hy+4)+'" fill="#ff6a6a">no way back to the slot</text>';
+    }
+  }
+  function setStat(id,v,c){ var e=$(id), box=e.parentNode;
+    if(v===null||v===undefined){ e.textContent=""; e.className="v dim"; box.classList.add("empty"); }
+    else { e.textContent=v; e.className="v "+(c||""); box.classList.remove("empty"); } }
+  function show(i){
+    at=i;
+    var s=i<0?null:snap(i);
+    renderCode(s?s.line:null,s?s.cls:""); renderPic(s);
+    $("#stepno").innerHTML="<small>step</small>"+(i+1)+" / "+TOTAL;
+    $("#caption").className="caption"+(s&&s.cls?" "+s.cls:"");
+    $("#status").innerHTML=s?s.msg:'Press <b class="a">Next</b>. Switch the loop at any step to compare.';
+    $("#console").innerHTML=s&&s.out.length?s.out.map(function(o){return '<div>'+o+'</div>';}).join("")
+      :'<span style="color:rgba(132,150,182,.5)">(nothing printed yet)</span>';
+    setStat("#stPass",s?s.pass:null,"hot");
+    setStat("#stC0",s?q(s.c0):null,s&&s.c0!==CITIES[0]?"gold":"");
+    $("#bNext").disabled=at>=TOTAL-1; $("#bBack").disabled=at<0;
+    var d=""; for(var k=0;k<TOTAL;k++) d+='<i class="'+(k===at?"now":k<at?"done":"")+'"></i>'; $("#dots").innerHTML=d;
+  }
+  function next(){ if(at<TOTAL-1) show(at+1); }
+  function back(){ if(at>=0) show(at-1); }
+  function reset(){ show(-1); }
+  function setMode(m){
+    mode=m;
+    Array.prototype.forEach.call(document.querySelectorAll(".chip"),function(c){ c.classList.toggle("on",c.getAttribute("data-m")===m); });
+    if(document.activeElement&&document.activeElement.blur) document.activeElement.blur();
+    show(at);
+  }
+
+  function setFocus(on){ document.body.classList.toggle("solo",on); $("#bFocus").textContent=on?"Focus on":"Focus";
+    try{localStorage.setItem("hub-focus",on?"1":"0");}catch(e){} show(at); }
+  $("#bFocus").addEventListener("click",function(){ setFocus(!document.body.classList.contains("solo")); this.blur(); });
+  try{ if(localStorage.getItem("hub-focus")==="1") document.body.classList.add("solo"); }catch(e){}
+  if(document.body.classList.contains("solo")) $("#bFocus").textContent="Focus on";
+
+  $("#chips").addEventListener("click",function(e){ var b=e.target.closest(".chip"); if(b) setMode(b.getAttribute("data-m")); });
+  $("#bNext").addEventListener("click",next);
+  $("#bBack").addEventListener("click",back);
+  $("#bReset").addEventListener("click",reset);
+  document.addEventListener("keydown",function(e){ if(e.code==="Space"&&!/INPUT|BUTTON/.test(e.target.tagName)){e.preventDefault();next();} });
+  addEventListener("resize",function(){ show(at); });
+
+  /* ---------- ambient canvas ---------- */
+  var cv=$("#amb"),ctx=cv.getContext&&cv.getContext("2d"),parts=[];
+  function sizeC(){if(!ctx)return;cv.width=innerWidth;cv.height=innerHeight;}
+  function initParts(){parts=[];for(var i=0;i<46;i++)parts.push({x:Math.random(),y:Math.random(),
+    r:Math.random()*1.6+.3,s:Math.random()*.02+.004,o:Math.random()*.4+.1});}
+  function drawC(){if(!ctx)return;ctx.clearRect(0,0,cv.width,cv.height);
+    parts.forEach(function(p){p.y-=p.s/60;if(p.y<-.02)p.y=1.02;
+      ctx.beginPath();ctx.arc(p.x*cv.width,p.y*cv.height,p.r,0,7);
+      ctx.fillStyle="rgba(140,170,255,"+p.o+")";ctx.fill();});
+    requestAnimationFrame(drawC);}
+  if(ctx&&!reduce){sizeC();initParts();drawC();addEventListener("resize",sizeC);}
+
+  if(document.fonts&&document.fonts.ready) document.fonts.ready.then(function(){ show(at); });
+  reset();
+})();
+</script>
+<script src="../manifest.js"></script>
+<script src="../../assets/rail.js"></script>
+<script>Rail.render(document.getElementById("rail"),{week:2,kind:"visuals",current:"16-for-each-loop"});</script>
+</body>
+</html>

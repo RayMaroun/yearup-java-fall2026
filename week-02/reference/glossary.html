@@ -1,0 +1,312 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Glossary | Week 2 Visual Hub</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Sora:wght@500;700&family=Inter:wght@400;500&family=JetBrains+Mono:wght@400;500&display=swap">
+<style>
+  :root{
+    --bg:#080c17; --bg2:#0c1428; --surface:rgba(255,255,255,.045); --line:rgba(255,255,255,.09);
+    --ink:#eef2fb; --muted:#8496b6; --accent:#6ea0ff; --accent2:#8b7bff; --good:#46d98a; --warn:#ff6a6a;
+    --gold:#ffc862; --disp:'Sora',system-ui,sans-serif; --body:'Inter',system-ui,sans-serif;
+    --mono:'JetBrains Mono',ui-monospace,monospace;
+  }
+  *{box-sizing:border-box}
+  body{margin:0;min-height:100vh;color:var(--ink);font-family:var(--body);
+    background:radial-gradient(1200px 700px at 70% -10%,#141d38 0%,transparent 55%),
+               radial-gradient(900px 600px at 10% 110%,#161233 0%,transparent 50%),#080c17;
+    overflow-x:hidden}
+  #amb{position:fixed;inset:0;z-index:0;pointer-events:none;opacity:.6}
+  .back{position:relative;z-index:2;display:block;max-width:1120px;margin:0 auto;padding:26px 24px 0;
+    width:100%;font-family:var(--mono);font-size:.8rem;letter-spacing:.04em;color:var(--muted);
+    text-decoration:none;transition:color .15s}
+  .back:hover{color:var(--accent)}
+  .wrap{position:relative;z-index:1;max-width:1120px;margin:0 auto;padding:22px 24px 70px}
+  .tag{font-family:var(--mono);font-size:.72rem;letter-spacing:.22em;text-transform:uppercase;color:var(--accent);margin:0 0 14px}
+  h1{font-family:var(--disp);font-weight:700;font-size:clamp(2.3rem,6vw,3.6rem);line-height:1;margin:0 0 12px;
+    letter-spacing:-.03em;background:linear-gradient(180deg,#fff,#b9c6e6);-webkit-background-clip:text;
+    background-clip:text;color:transparent}
+  .lede{color:var(--muted);max-width:64ch;font-size:1.05rem;margin:0 0 26px;line-height:1.5}
+  .lede b{color:var(--ink)}
+
+  /* ---------- stage ---------- */
+  .stage{position:relative;background:linear-gradient(180deg,rgba(255,255,255,.03),rgba(255,255,255,.01));
+    border:1px solid var(--line);border-radius:24px;padding:18px 18px 14px;
+    box-shadow:0 1px 0 rgba(255,255,255,.06) inset,0 30px 80px -30px rgba(0,0,0,.8)}
+  .topbar{display:flex;align-items:center;gap:10px;margin:0 0 14px;flex-wrap:wrap}
+  .lab{font-family:var(--mono);font-size:.7rem;letter-spacing:.12em;text-transform:uppercase;color:var(--muted);margin:0 4px 0 0}
+  .find{position:relative;flex:1 1 260px;max-width:420px}
+  .find input{width:100%;font-family:var(--mono);font-size:.9rem;color:var(--ink);background:rgba(0,0,0,.3);
+    border:1px solid var(--line);border-radius:11px;padding:10px 40px 10px 14px;outline:none;transition:border-color .15s,box-shadow .15s}
+  .find input::placeholder{color:var(--muted)}
+  .find input:focus{border-color:var(--accent);box-shadow:0 0 0 3px rgba(110,160,255,.15)}
+  .find kbd{position:absolute;right:10px;top:50%;transform:translateY(-50%);font-family:var(--mono);font-size:.66rem;color:var(--muted);
+    border:1px solid var(--line);border-radius:6px;padding:1px 6px;pointer-events:none}
+  .count{margin-left:auto;font-family:var(--mono);font-size:.72rem;color:var(--muted);letter-spacing:.06em}
+  .count b{color:var(--accent);font-weight:500}
+  .chips{display:flex;flex-wrap:wrap;gap:6px;margin:0 0 14px}
+  .chip{font-family:var(--mono);font-size:.7rem;letter-spacing:.06em;padding:6px 12px;border-radius:999px;border:1px solid var(--line);
+    background:rgba(0,0,0,.25);color:var(--muted);cursor:pointer;transition:.15s}
+  .chip:hover{border-color:var(--accent);color:var(--accent)}
+  .chip.on{background:rgba(110,160,255,.16);border-color:rgba(110,160,255,.5);color:var(--ink)}
+  .chip:focus-visible{outline:2px solid var(--accent);outline-offset:2px}
+
+  /* the list: grows with its content, never clipped */
+  .pic{position:relative;min-height:390px;border:1px solid var(--line);border-radius:18px;background:rgba(6,10,20,.5);padding:18px}
+  .grp+.grp{margin-top:22px}
+  .gh{font-family:var(--mono);font-weight:500;font-size:.72rem;letter-spacing:.16em;text-transform:uppercase;color:var(--accent);margin:0 0 10px}
+  .cards{display:grid;grid-template-columns:repeat(auto-fill,minmax(300px,1fr));gap:8px}
+  .term{border:1px solid var(--line);border-radius:14px;background:rgba(255,255,255,.025);padding:12px 14px;
+    display:flex;flex-direction:column;gap:6px;transition:border-color .2s,background .2s}
+  .term:hover{border-color:rgba(110,160,255,.4);background:rgba(110,160,255,.05)}
+  .term h3{font-family:var(--disp);font-weight:700;font-size:1.02rem;margin:0;color:var(--ink);letter-spacing:-.01em}
+  .term p{margin:0;font-size:.9rem;line-height:1.5;color:var(--muted)}
+  .term p b{color:var(--ink);font-weight:500}
+  .term code{display:block;font-family:var(--mono);font-size:.78rem;color:#bcd0ff;background:rgba(0,0,0,.35);
+    border:1px solid var(--line);border-radius:8px;padding:6px 9px;white-space:pre-wrap;word-break:break-word}
+  .see{align-self:flex-start;font-family:var(--mono);font-size:.68rem;letter-spacing:.04em;color:var(--accent);text-decoration:none;
+    border-bottom:1px dashed rgba(110,160,255,.4);padding-bottom:1px;transition:color .15s}
+  .see:hover{color:#fff;border-bottom-color:#fff}
+  .hide{display:none!important}
+  mark{background:rgba(255,200,98,.22);color:var(--ink);border-radius:3px;padding:0 1px}
+  .empty{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;font-family:var(--mono);font-size:.82rem;color:var(--muted)}
+  .hint{font-family:var(--mono);font-size:.68rem;color:var(--muted);margin:10px 4px 0;line-height:1.5}
+  .hint b{color:var(--accent)}
+  @media (max-width:600px){.cards{grid-template-columns:1fr}.count{margin-left:0}}
+  @media (prefers-reduced-motion:reduce){*{animation-duration:.01ms!important;transition-duration:.01ms!important}#amb{display:none}}
+</style>
+</head>
+<body>
+
+<a class="back" href="../index.html#glossary">&#8592; Week 2 index</a>
+
+<canvas id="amb"></canvas>
+<div class="wrap">
+  <p class="tag">Week 2 &middot; Reference</p>
+  <h1>Glossary</h1>
+  <p class="lede">The words of the week, one sentence each. <b>Type a word and the list narrows as you go.</b></p>
+
+  <div class="stage">
+    <div class="topbar">
+      <span class="lab">Filter</span>
+      <label class="find"><input id="q" type="search" placeholder="Try substring, setter, index..." aria-label="Filter terms" autocomplete="off" spellcheck="false"><kbd>/</kbd></label>
+      <span class="count" id="count"></span>
+    </div>
+    <div class="chips" id="chips" role="group" aria-label="Topic">
+        <button class="chip on" data-g="all">All</button>
+        <button class="chip" data-g="strings">Strings</button>
+        <button class="chip" data-g="convert">Converting</button>
+        <button class="chip" data-g="builder">StringBuilder</button>
+        <button class="chip" data-g="classes">Classes and objects</button>
+        <button class="chip" data-g="overload">Overloading</button>
+        <button class="chip" data-g="loops">Loops</button>
+        <button class="chip" data-g="arrays">Arrays</button>
+        <button class="chip" data-g="ide">Generate and debug</button>
+    </div>
+
+    <div class="pic" id="list">
+      <section class="grp" data-g="strings">
+        <h2 class="gh">Strings</h2>
+        <div class="cards">
+          <article class="term" data-k="string method dot call"><h3>String method</h3><p>A built-in action you call on a String with a dot; it reads the text or returns a new String.</p><code>"New Mexico".toUpperCase()</code><a class="see" href="../visuals/01-string-methods.html">See it: String Methods</a></article>
+          <article class="term" data-k="escape character backslash \n \t \r quote"><h3>Escape character</h3><p>A backslash that gives the next character a special meaning: \" a quote, \n a new line, \t a tab.</p><code>"Big Tex says \"Howdy\"!"</code><a class="see" href="../visuals/01-string-methods.html">See it: String Methods</a></article>
+          <article class="term" data-k="immutable cannot change new string"><h3>Immutable</h3><p>A String can never change; every method that seems to change it returns a new String instead.</p><code>city = city.toUpperCase();</code><a class="see" href="../visuals/02-string-immutability.html">See it: Strings Are Immutable</a></article>
+          <article class="term" data-k="index position charat zero"><h3>Index (in a String)</h3><p>The position of a character, counted from 0, so the last one is at length() - 1.</p><code>"ACME".charAt(0)   // 'A'</code><a class="see" href="../visuals/01-string-methods.html">See it: String Methods</a></article>
+          <article class="term" data-k="substring part end exclusive"><h3>Substring</h3><p>A piece of a String, from a start index up to, but not including, an end index.</p><code>"ACME-12213".substring(0, 4)   // ACME</code><a class="see" href="../visuals/01-string-methods.html">See it: String Methods</a></article>
+          <article class="term" data-k="chaining chain calls"><h3>Chaining</h3><p>Calling a method on the result of another method, read left to right.</p><code>typedName.trim().toUpperCase()</code><a class="see" href="../visuals/01-string-methods.html">See it: String Methods</a></article>
+          <article class="term" data-k="empty string isempty blank"><h3>Empty string</h3><p>A String with no characters at all; a String of spaces is not empty until you trim it.</p><code>"".isEmpty()   // true</code><a class="see" href="../visuals/01-string-methods.html">See it: String Methods</a></article>
+          <article class="term" data-k="equals() compare text same characters"><h3>equals()</h3><p>Compares two Strings character by character and returns true when the text matches.</p><code>language.equals(builtLanguage)</code><a class="see" href="../visuals/03-comparing-strings.html">See it: Comparing Strings</a></article>
+          <article class="term" data-k="equalsignorecase() capitals case"><h3>equalsIgnoreCase()</h3><p>Like equals(), but upper and lower case count as the same letter.</p><code>"YES".equalsIgnoreCase("yes")   // true</code><a class="see" href="../visuals/03-comparing-strings.html">See it: Comparing Strings</a></article>
+          <article class="term" data-k="compareto() order alphabetical negative positive zero"><h3>compareTo()</h3><p>Returns a negative number, zero or a positive number to say which String comes first in alphabetical order.</p><code>"Austin".compareTo("Dallas")   // negative</code><a class="see" href="../visuals/03-comparing-strings.html">See it: Comparing Strings</a></article>
+          <article class="term" data-k="reference equality == same object"><h3>Reference equality (==)</h3><p>On Strings, == asks whether both variables point to the same object, not whether the text is the same.</p><code>String built = prefix + "va";   built == "Java"   // false</code><a class="see" href="../visuals/03-comparing-strings.html">See it: Comparing Strings</a></article>
+        </div>
+      </section>
+      <section class="grp" data-g="convert">
+        <h2 class="gh">Converting</h2>
+        <div class="cards">
+          <article class="term" data-k="parse parsing convert text to number"><h3>Parse</h3><p>To read text and turn it into a value of another type, like a number or a date.</p><code>Integer.parseInt("12")   // 12</code><a class="see" href="../visuals/04-string-to-number.html">See it: String to Number</a></article>
+          <article class="term" data-k="integer.parseint() double.parsedouble() float.parsefloat()"><h3>Integer.parseInt() / Double.parseDouble()</h3><p>Turn text like "12" or "4.99" into an int or a double; anything else in the text throws NumberFormatException.</p><code>double price = Double.parseDouble("4.99");</code><a class="see" href="../visuals/04-string-to-number.html">See it: String to Number</a></article>
+          <article class="term" data-k="delimiter separator pipe split"><h3>Delimiter</h3><p>The character that separates the fields of a line of text, such as | or a comma.</p><code>"204|Ground Coffee (2 lb)|30|13.49"</code><a class="see" href="../visuals/04-string-to-number.html">See it: String to Number</a></article>
+          <article class="term" data-k="split() array tokens"><h3>split()</h3><p>Cuts a String at every delimiter and returns the pieces as a String array.</p><code>String[] tokens = record.split(Pattern.quote("|"));</code><a class="see" href="../visuals/04-string-to-number.html">See it: String to Number</a></article>
+          <article class="term" data-k="regular expression regex pattern"><h3>Regular expression</h3><p>A pattern that describes what text looks like; split() reads its argument as one, so some characters are special.</p><code>record.split("\\|")</code><a class="see" href="../visuals/04-string-to-number.html">See it: String to Number</a></article>
+          <article class="term" data-k="pattern.quote() literal java.util.regex"><h3>Pattern.quote()</h3><p>Makes split() treat a character as plain text, not as a regular expression symbol.</p><code>import java.util.regex.Pattern;</code><a class="see" href="../visuals/04-string-to-number.html">See it: String to Number</a></article>
+          <article class="term" data-k="localdate date java.time"><h3>LocalDate</h3><p>A date with no time of day; it knows its day of the week and can be compared and formatted.</p><code>LocalDate start = LocalDate.parse("2026-10-12");</code><a class="see" href="../visuals/05-string-to-date.html">See it: String to Date</a></article>
+          <article class="term" data-k="iso 8601 yyyy-mm-dd standard"><h3>ISO 8601</h3><p>The international date format yyyy-MM-dd, the only one LocalDate.parse() reads without help.</p><code>2026-10-12</code><a class="see" href="../visuals/05-string-to-date.html">See it: String to Date</a></article>
+          <article class="term" data-k="datetimeformatter ofpattern format pattern mm dd yyyy"><h3>DateTimeFormatter</h3><p>Describes a date layout with letters like MM, dd and yyyy, to parse text in that layout or to print a date that way.</p><code>DateTimeFormatter.ofPattern("MM/dd/yyyy")</code><a class="see" href="../visuals/05-string-to-date.html">See it: String to Date</a></article>
+        </div>
+      </section>
+      <section class="grp" data-g="builder">
+        <h2 class="gh">StringBuilder</h2>
+        <div class="cards">
+          <article class="term" data-k="stringbuilder mutable builder"><h3>StringBuilder</h3><p>A changeable sequence of characters you add to in place, then turn into a String at the end.</p><code>StringBuilder tools = new StringBuilder();</code><a class="see" href="../visuals/06-stringbuilder.html">See it: StringBuilder</a></article>
+          <article class="term" data-k="mutable change in place"><h3>Mutable</h3><p>Able to change after it is created; a StringBuilder is mutable, a String is not.</p><a class="see" href="../visuals/06-stringbuilder.html">See it: StringBuilder</a></article>
+          <article class="term" data-k="append() add to the end"><h3>append()</h3><p>Adds text or a number to the end of a StringBuilder and returns the same builder, so calls can be chained.</p><code>receipt.append("Coffee x ").append(2);</code><a class="see" href="../visuals/06-stringbuilder.html">See it: StringBuilder</a></article>
+          <article class="term" data-k="insert() index front"><h3>insert()</h3><p>Puts text into a StringBuilder at an index; index 0 is the front.</p><code>tools.insert(0, "Course tools: ");</code><a class="see" href="../visuals/06-stringbuilder.html">See it: StringBuilder</a></article>
+          <article class="term" data-k="tostring() string builder result"><h3>toString() on a builder</h3><p>Hands back the finished text as a real String, since a StringBuilder is not a String.</p><code>String toolList = tools.toString();</code><a class="see" href="../visuals/06-stringbuilder.html">See it: StringBuilder</a></article>
+        </div>
+      </section>
+      <section class="grp" data-g="classes">
+        <h2 class="gh">Classes and objects</h2>
+        <div class="cards">
+          <article class="term" data-k="object-oriented programming oop"><h3>Object-oriented programming</h3><p>Organizing a program into classes that package data with the methods that work on that data.</p><a class="see" href="../visuals/07-class-vs-object.html">See it: Class vs Object</a></article>
+          <article class="term" data-k="class blueprint"><h3>Class (blueprint)</h3><p>The blueprint that says what data an object holds and what it can do; it lives in a .java file of the same name.</p><code>public class Person { ... }</code><a class="see" href="../visuals/07-class-vs-object.html">See it: Class vs Object</a></article>
+          <article class="term" data-k="object instance"><h3>Object (instance)</h3><p>One thing built from a class, with its own copy of every field.</p><code>Person student = new Person("Natalie", 37);</code><a class="see" href="../visuals/07-class-vs-object.html">See it: Class vs Object</a></article>
+          <article class="term" data-k="instantiate create object"><h3>Instantiate</h3><p>To create an object from a class with new.</p><code>instructor = new Person("Raymond", 35);</code><a class="see" href="../visuals/09-what-new-does.html">See it: What new Does</a></article>
+          <article class="term" data-k="new keyword memory"><h3>new</h3><p>Makes room for a new object, runs the constructor, and gives back a reference to the object.</p><code>new Person("Dana", 63)</code><a class="see" href="../visuals/09-what-new-does.html">See it: What new Does</a></article>
+          <article class="term" data-k="field instance variable member"><h3>Field (instance variable)</h3><p>A variable declared in the class, outside every method; each object keeps its own value.</p><code>private int energy;</code><a class="see" href="../visuals/07-class-vs-object.html">See it: Class vs Object</a></article>
+          <article class="term" data-k="state values fields"><h3>State</h3><p>The current values of an object's fields; two Person objects can be in different states.</p><code>instructor.getEnergy()   // 50 after work(5)</code><a class="see" href="../visuals/07-class-vs-object.html">See it: Class vs Object</a></article>
+          <article class="term" data-k="constructor same name as the class"><h3>Constructor</h3><p>The code that runs once when an object is created; same name as the class, no return type.</p><code>public Person(String name, int age) { ... }</code><a class="see" href="../visuals/09-what-new-does.html">See it: What new Does</a></article>
+          <article class="term" data-k="this keyword field parameter"><h3>this</h3><p>Means "this object"; this.name is the field, name alone is the parameter.</p><code>this.name = name;</code><a class="see" href="../visuals/09-what-new-does.html">See it: What new Does</a></article>
+          <article class="term" data-k="encapsulation black box hide"><h3>Encapsulation</h3><p>Hiding an object's data inside the class and letting other code reach it only through methods.</p><a class="see" href="../visuals/08-encapsulation.html">See it: Encapsulation</a></article>
+          <article class="term" data-k="access modifier public private"><h3>public / private</h3><p>Access modifiers: public members can be used from any class, private ones only inside their own class.</p><code>private String name;   public String getName()</code><a class="see" href="../visuals/08-encapsulation.html">See it: Encapsulation</a></article>
+          <article class="term" data-k="package-private default access no modifier"><h3>Package-private</h3><p>What you get with no modifier: visible to every class in the same package, hidden from other packages.</p><code>int age;</code><a class="see" href="../visuals/08-encapsulation.html">See it: Encapsulation</a></article>
+          <article class="term" data-k="getter get accessor read"><h3>Getter</h3><p>A public method starting with get that returns the value of a private field.</p><code>public int getAge() { return this.age; }</code><a class="see" href="../visuals/08-encapsulation.html">See it: Encapsulation</a></article>
+          <article class="term" data-k="setter set mutator change"><h3>Setter</h3><p>A public method starting with set that changes a private field; leave it out to make the field read only.</p><code>public void setAge(int age) { this.age = age; }</code><a class="see" href="../visuals/08-encapsulation.html">See it: Encapsulation</a></article>
+          <article class="term" data-k="method action behavior"><h3>Method (action)</h3><p>A method that does something with the object's data, rather than just reading or setting a field.</p><code>instructor.work(5);   instructor.eat();</code><a class="see" href="../visuals/08-encapsulation.html">See it: Encapsulation</a></article>
+          <article class="term" data-k="reference variable points to object"><h3>Reference</h3><p>What a class-type variable holds: the address of an object, so two variables can point to the same one.</p><code>Person host = instructor;   // same object</code><a class="see" href="../visuals/10-object-references.html">See it: Two Names, One Object</a></article>
+          <article class="term" data-k="null no object"><h3>null</h3><p>The value of a reference that points to no object; calling a method on it throws NullPointerException.</p><code>String[] names = new String[3];   // null null null</code><a class="see" href="../visuals/10-object-references.html">See it: Two Names, One Object</a></article>
+        </div>
+      </section>
+      <section class="grp" data-g="overload">
+        <h2 class="gh">Overloading</h2>
+        <div class="cards">
+          <article class="term" data-k="overloading overload same name"><h3>Overloading</h3><p>Several methods with the same name in one class, each with a different parameter list.</p><code>eat()   eat(int amount)</code><a class="see" href="../visuals/11-method-overloading.html">See it: Method Overloading</a></article>
+          <article class="term" data-k="signature name parameter types"><h3>Signature</h3><p>A method's name plus the types of its parameters in order; the compiler uses it to pick an overload.</p><code>greet(String, int)   // greet_String_int</code><a class="see" href="../visuals/11-method-overloading.html">See it: Method Overloading</a></article>
+          <article class="term" data-k="parameter list types count order"><h3>Parameter list</h3><p>The types, count and order of the values a method or constructor takes.</p><code>(String otherName, int times)</code><a class="see" href="../visuals/11-method-overloading.html">See it: Method Overloading</a></article>
+          <article class="term" data-k="constructor overloading several constructors"><h3>Constructor overloading</h3><p>Giving a class more than one constructor so an object can be created in more than one way.</p><code>new Person()   new Person("Dana")   new Person("Raymond", 35)</code><a class="see" href="../visuals/12-constructor-overloading.html">See it: Constructor Overloading</a></article>
+          <article class="term" data-k="no-argument constructor parameterless empty"><h3>No-argument constructor</h3><p>A constructor that takes nothing and sets default values; Java stops giving you one once you write any constructor.</p><code>public Person() { this("Guest", 0); }</code><a class="see" href="../visuals/12-constructor-overloading.html">See it: Constructor Overloading</a></article>
+          <article class="term" data-k="this(...) constructor chaining"><h3>this(...)</h3><p>Calls another constructor of the same class; it must be the first line of the constructor.</p><code>public Person(String name) { this(name, 18); }</code><a class="see" href="../visuals/12-constructor-overloading.html">See it: Constructor Overloading</a></article>
+        </div>
+      </section>
+      <section class="grp" data-g="loops">
+        <h2 class="gh">Loops</h2>
+        <div class="cards">
+          <article class="term" data-k="loop repeat"><h3>Loop</h3><p>A block of code that repeats while a condition stays true.</p><a class="see" href="../visuals/13-loop-types.html">See it: Three Loops, One Job</a></article>
+          <article class="term" data-k="iteration pass"><h3>Iteration</h3><p>One pass through the body of a loop.</p><a class="see" href="../visuals/13-loop-types.html">See it: Three Loops, One Job</a></article>
+          <article class="term" data-k="while loop condition before"><h3>while loop</h3><p>Checks the condition before every pass, so the body may run zero times; good when you do not know the count.</p><code>while (savings &lt; 100) { ... }</code><a class="see" href="../visuals/13-loop-types.html">See it: Three Loops, One Job</a></article>
+          <article class="term" data-k="do / while loop do-while at least once"><h3>do / while loop</h3><p>Checks the condition after each pass, so the body always runs at least once.</p><code>do { ... } while (lap &lt;= 3);</code><a class="see" href="../visuals/13-loop-types.html">See it: Three Loops, One Job</a></article>
+          <article class="term" data-k="for loop initialization condition update"><h3>for loop</h3><p>Puts start, condition and update on one line; good when you know how many times to repeat.</p><code>for (int item = 1; item &lt;= 4; item++)</code><a class="see" href="../visuals/13-loop-types.html">See it: Three Loops, One Job</a></article>
+          <article class="term" data-k="counter loop variable update"><h3>Counter</h3><p>A variable the loop changes on every pass so that the condition eventually turns false.</p><code>week++;</code><a class="see" href="../visuals/13-loop-types.html">See it: Three Loops, One Job</a></article>
+          <article class="term" data-k="running total sum accumulator"><h3>Running total</h3><p>A variable declared before the loop, starting at 0, that the loop adds to on each pass.</p><code>int total = 0;   total += week;</code><a class="see" href="../visuals/13-loop-types.html">See it: Three Loops, One Job</a></article>
+          <article class="term" data-k="infinite loop never ends"><h3>Infinite loop</h3><p>A loop whose condition never becomes false, usually because the counter is never updated.</p><code>while (week &lt;= 4) { }   // no week++</code><a class="see" href="../visuals/13-loop-types.html">See it: Three Loops, One Job</a></article>
+          <article class="term" data-k="break exit leave loop"><h3>break</h3><p>Leaves the loop at once and continues with the code after it.</p><code>if (i % 3 == 0) { break; }</code><a class="see" href="../visuals/14-break-vs-continue.html">See it: break vs continue</a></article>
+          <article class="term" data-k="continue skip pass"><h3>continue</h3><p>Skips the rest of the current pass and goes on to the next one.</p><code>if (i % 3 == 0) { continue; }</code><a class="see" href="../visuals/14-break-vs-continue.html">See it: break vs continue</a></article>
+        </div>
+      </section>
+      <section class="grp" data-g="arrays">
+        <h2 class="gh">Arrays</h2>
+        <div class="cards">
+          <article class="term" data-k="array list fixed size"><h3>Array</h3><p>A fixed-size list of values of one type, stored side by side.</p><code>int[] temperatures = new int[7];</code><a class="see" href="../visuals/15-arrays-indexing.html">See it: Arrays and Indexes</a></article>
+          <article class="term" data-k="element value slot"><h3>Element</h3><p>One value stored in an array.</p><code>temperatures[2]   // the third element</code><a class="see" href="../visuals/15-arrays-indexing.html">See it: Arrays and Indexes</a></article>
+          <article class="term" data-k="index subscript zero based"><h3>Index (subscript)</h3><p>The position of an element in square brackets, from 0 up to length - 1.</p><code>temperatures[temperatures.length - 1]</code><a class="see" href="../visuals/15-arrays-indexing.html">See it: Arrays and Indexes</a></article>
+          <article class="term" data-k="length array size no parentheses"><h3>length</h3><p>How many slots an array has; no parentheses, unlike length() on a String.</p><code>cities.length</code><a class="see" href="../visuals/15-arrays-indexing.html">See it: Arrays and Indexes</a></article>
+          <article class="term" data-k="default value 0 null false"><h3>Default value</h3><p>What every slot of a new array holds before you fill it: 0 for numbers, false for boolean, null for Strings and objects.</p><code>new int[5]   // 0 0 0 0 0</code><a class="see" href="../visuals/15-arrays-indexing.html">See it: Arrays and Indexes</a></article>
+          <article class="term" data-k="array literal initializer braces"><h3>Array literal</h3><p>Values in curly braces that create and fill an array in one step; the size comes from the count.</p><code>String[] cities = {"Beirut", "Boston", "Chicago"};</code><a class="see" href="../visuals/15-arrays-indexing.html">See it: Arrays and Indexes</a></article>
+          <article class="term" data-k="for-each loop enhanced for colon"><h3>for-each loop</h3><p>Visits every element in order and hands you the value, with no index.</p><code>for (String city : cities) { ... }</code><a class="see" href="../visuals/16-for-each-loop.html">See it: for-each vs for</a></article>
+          <article class="term" data-k="array parameter pass return method"><h3>Array parameter</h3><p>A method can take or return an array with no size in brackets; the method works on the caller's array, not a copy.</p><code>public static void addDegrees(int[] temperatures, int degrees)</code><a class="see" href="../visuals/17-arrays-and-methods.html">See it: Arrays In and Out of Methods</a></article>
+          <article class="term" data-k="array of objects person[]"><h3>Array of objects</h3><p>An array whose slots hold references to objects; each slot is null until you put an object in it.</p><code>Person[] team = new Person[4];</code><a class="see" href="../visuals/15-arrays-indexing.html">See it: Arrays and Indexes</a></article>
+          <article class="term" data-k="arrays class java.util.arrays tostring"><h3>Arrays.toString()</h3><p>Turns an array into readable text like [22, 24, 19]; printing the array itself shows only its reference.</p><code>System.out.println(Arrays.toString(cities));</code><a class="see" href="../visuals/18-sort-and-copy.html">See it: Sorting and Copying Arrays</a></article>
+          <article class="term" data-k="arrays.sort() natural order alphabetical"><h3>Arrays.sort()</h3><p>Sorts an array in place in its natural order: smallest number first, Strings alphabetically.</p><code>Arrays.sort(cities);</code><a class="see" href="../visuals/18-sort-and-copy.html">See it: Sorting and Copying Arrays</a></article>
+          <article class="term" data-k="arrays.copyof() system.arraycopy() copy"><h3>Arrays.copyOf() / System.arraycopy()</h3><p>Copy elements into a separate array; assigning one array variable to another copies only the reference.</p><code>System.arraycopy(temperatures, 5, weekend, 0, 2);</code><a class="see" href="../visuals/18-sort-and-copy.html">See it: Sorting and Copying Arrays</a></article>
+          <article class="term" data-k="arrays.fill() arrays.equals() same values"><h3>Arrays.fill() / Arrays.equals()</h3><p>fill() puts one value in every slot; equals() is true when two arrays hold the same values in the same order.</p><code>Arrays.fill(nextWeek, 20);</code><a class="see" href="../visuals/18-sort-and-copy.html">See it: Sorting and Copying Arrays</a></article>
+          <article class="term" data-k="arrays.binarysearch() sorted find"><h3>Arrays.binarySearch()</h3><p>Finds a value in a sorted array and returns its index, or a negative number when it is not there.</p><code>Arrays.binarySearch(cities, "Chicago")</code><a class="see" href="../visuals/18-sort-and-copy.html">See it: Sorting and Copying Arrays</a></article>
+        </div>
+      </section>
+      <section class="grp" data-g="ide">
+        <h2 class="gh">Generate and debug</h2>
+        <div class="cards">
+          <article class="term" data-k="generate constructor getter setter intellij"><h3>Generate</h3><p>IntelliJ's menu that writes a constructor, getters and setters, or toString() for the fields you pick.</p><a class="see" href="intellij-shortcuts.html">See it: IntelliJ Shortcuts</a></article>
+          <article class="term" data-k="tostring() object text println"><h3>toString()</h3><p>The method that turns an object into text; println calls it for you when you print the object.</p><code>System.out.println(person);</code><a class="see" href="intellij-shortcuts.html">See it: IntelliJ Shortcuts</a></article>
+          <article class="term" data-k="entry point main run configuration"><h3>Run configuration</h3><p>A saved choice of which main method to run, picked in the top right of IntelliJ when a project has more than one entry point.</p><a class="see" href="intellij-shortcuts.html">See it: IntelliJ Shortcuts</a></article>
+          <article class="term" data-k="logic error bug wrong result"><h3>Logic error</h3><p>Code that compiles and runs but gives the wrong result; the debugger is how you find it.</p><a class="see" href="../visuals/19-debugger.html">See it: The Debugger</a></article>
+          <article class="term" data-k="breakpoint gutter red dot"><h3>Breakpoint</h3><p>A red dot in the gutter next to a line number; the debugger pauses before that line runs.</p><a class="see" href="../visuals/19-debugger.html">See it: The Debugger</a></article>
+          <article class="term" data-k="debug mode debugger"><h3>Debugger</h3><p>Runs the program so that it stops at breakpoints and lets you go one line at a time while watching the values.</p><a class="see" href="../visuals/19-debugger.html">See it: The Debugger</a></article>
+          <article class="term" data-k="step over next line"><h3>Step Over</h3><p>Runs the current line, including any method it calls, and stops on the next line.</p><a class="see" href="../visuals/19-debugger.html">See it: The Debugger</a></article>
+          <article class="term" data-k="step into step out method"><h3>Step Into / Step Out</h3><p>Step Into goes inside the method on the current line; Step Out finishes it and returns to the caller.</p><a class="see" href="../visuals/19-debugger.html">See it: The Debugger</a></article>
+          <article class="term" data-k="resume continue program"><h3>Resume</h3><p>Lets the program run on until the next breakpoint or the end.</p><a class="see" href="../visuals/19-debugger.html">See it: The Debugger</a></article>
+          <article class="term" data-k="frames pane call stack"><h3>Frames pane</h3><p>The debugger's view of the call stack: which methods were called to reach the current line.</p><a class="see" href="../visuals/19-debugger.html">See it: The Debugger</a></article>
+          <article class="term" data-k="variables pane values watch"><h3>Variables pane</h3><p>Shows the current value of every variable in scope, updated after each step.</p><a class="see" href="../visuals/19-debugger.html">See it: The Debugger</a></article>
+          <article class="term" data-k="evaluate expression watch"><h3>Evaluate expression</h3><p>Type any expression while paused, like total / 2 or student.getAge(), and see its value now.</p><a class="see" href="../visuals/19-debugger.html">See it: The Debugger</a></article>
+        </div>
+      </section>
+      <p class="empty hide" id="none">No term matches. Try a shorter word.</p>
+    </div>
+    <p class="hint">Press <b>/</b> to jump to the filter, <b>Esc</b> to clear it. Matches names, definitions and code. <b>See it</b> opens the visual for that term.</p>
+  </div>
+
+  <div id="rail"></div>
+</div>
+
+<script>
+(function(){
+  "use strict";
+  var $=function(s){return document.querySelector(s);};
+  var reduce=matchMedia("(prefers-reduced-motion: reduce)").matches;
+  var q=$("#q"), terms=[].slice.call(document.querySelectorAll(".term")), groups=[].slice.call(document.querySelectorAll(".grp"));
+  var topic="all";
+
+  /* keep the original text of each name so highlights can be undone */
+  terms.forEach(function(t){
+    var h=t.querySelector("h3");
+    t._name=h.textContent;
+    var c=t.querySelector("code");
+    t._hay=(t.getAttribute("data-k")+" "+t.querySelector("p").textContent+" "+(c?c.textContent:"")).toLowerCase();
+    t._g=t.closest(".grp").getAttribute("data-g");
+  });
+
+  function mark(text,word){
+    var h=document.createDocumentFragment(), i=word?text.toLowerCase().indexOf(word):-1;
+    if(i<0){h.appendChild(document.createTextNode(text));return h;}
+    h.appendChild(document.createTextNode(text.slice(0,i)));
+    var m=document.createElement("mark"); m.textContent=text.slice(i,i+word.length); h.appendChild(m);
+    h.appendChild(document.createTextNode(text.slice(i+word.length)));
+    return h;
+  }
+
+  function apply(){
+    var words=q.value.trim().toLowerCase().split(/\s+/).filter(Boolean), shown=0;
+    terms.forEach(function(t){
+      var ok=(topic==="all"||t._g===topic)&&words.every(function(w){return t._hay.indexOf(w)>=0;});
+      t.classList.toggle("hide",!ok);
+      var h=t.querySelector("h3"); h.textContent=""; h.appendChild(mark(t._name,words[0]||""));
+      if(ok) shown++;
+    });
+    groups.forEach(function(g){ g.classList.toggle("hide",!g.querySelector(".term:not(.hide)")); });
+    $("#none").classList.toggle("hide",shown>0);
+    $("#count").innerHTML="<b>"+shown+"</b> of "+terms.length+" terms";
+  }
+
+  q.addEventListener("input",apply);
+  q.addEventListener("keydown",function(e){ if(e.key==="Escape"){ q.value=""; apply(); q.blur(); } });
+  $("#chips").addEventListener("click",function(e){
+    var b=e.target.closest(".chip"); if(!b) return;
+    topic=b.getAttribute("data-g");
+    [].forEach.call(document.querySelectorAll(".chip"),function(c){c.classList.toggle("on",c===b);});
+    apply();
+  });
+  document.addEventListener("keydown",function(e){
+    if(e.key==="/"&&document.activeElement!==q){ e.preventDefault(); q.focus(); }
+  });
+
+  /* ---------- ambient canvas ---------- */
+  var cv=$("#amb"),ctx=cv.getContext&&cv.getContext("2d"),parts=[];
+  function sizeC(){if(!ctx)return;cv.width=innerWidth;cv.height=innerHeight;}
+  function initParts(){parts=[];for(var i=0;i<46;i++)parts.push({x:Math.random(),y:Math.random(),
+    r:Math.random()*1.6+.3,s:Math.random()*.02+.004,o:Math.random()*.4+.1});}
+  function drawC(){if(!ctx)return;ctx.clearRect(0,0,cv.width,cv.height);
+    parts.forEach(function(p){p.y-=p.s/60;if(p.y<-.02)p.y=1.02;
+      ctx.beginPath();ctx.arc(p.x*cv.width,p.y*cv.height,p.r,0,7);
+      ctx.fillStyle="rgba(140,170,255,"+p.o+")";ctx.fill();});
+    requestAnimationFrame(drawC);}
+  if(ctx&&!reduce){sizeC();initParts();drawC();addEventListener("resize",sizeC);}
+
+  apply();
+})();
+</script>
+<script src="../manifest.js"></script>
+<script src="../../assets/rail.js"></script>
+<script>Rail.render(document.getElementById("rail"),{week:2,kind:"reference",current:"glossary"});</script>
+</body>
+</html>

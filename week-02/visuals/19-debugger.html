@@ -1,0 +1,403 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>The Debugger | Week 2 Visual Hub</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Sora:wght@500;700&family=Inter:wght@400;500&family=JetBrains+Mono:wght@400;500&display=swap">
+<style>
+  :root{
+    --bg:#080c17; --bg2:#0c1428; --surface:rgba(255,255,255,.045); --line:rgba(255,255,255,.09);
+    --ink:#eef2fb; --muted:#8496b6; --accent:#6ea0ff; --accent2:#8b7bff; --good:#46d98a; --warn:#ff6a6a;
+    --gold:#ffc862; --disp:'Sora',system-ui,sans-serif; --body:'Inter',system-ui,sans-serif;
+    --mono:'JetBrains Mono',ui-monospace,monospace;
+  }
+  *{box-sizing:border-box}
+  body{margin:0;min-height:100vh;color:var(--ink);font-family:var(--body);
+    background:radial-gradient(1200px 700px at 70% -10%,#141d38 0%,transparent 55%),
+               radial-gradient(900px 600px at 10% 110%,#161233 0%,transparent 50%),#080c17;
+    overflow-x:hidden}
+  #amb{position:fixed;inset:0;z-index:0;pointer-events:none;opacity:.6}
+  .back{position:relative;z-index:2;display:block;max-width:1120px;margin:0 auto;padding:26px 24px 0;
+    width:100%;font-family:var(--mono);font-size:.8rem;letter-spacing:.04em;color:var(--muted);
+    text-decoration:none;transition:color .15s}
+  .back:hover{color:var(--accent)}
+  .wrap{position:relative;z-index:1;max-width:1120px;margin:0 auto;padding:22px 24px 70px}
+  .tag{font-family:var(--mono);font-size:.72rem;letter-spacing:.22em;text-transform:uppercase;color:var(--accent);margin:0 0 14px}
+  h1{font-family:var(--disp);font-weight:700;font-size:clamp(2.3rem,6vw,3.6rem);line-height:1;margin:0 0 12px;
+    letter-spacing:-.03em;background:linear-gradient(180deg,#fff,#b9c6e6);-webkit-background-clip:text;
+    background-clip:text;color:transparent}
+  .lede{color:var(--muted);max-width:64ch;font-size:1.05rem;margin:0 0 26px;line-height:1.5}
+  .lede b{color:var(--ink)}
+  .lede code,.take code,.caption code{font-family:var(--mono);font-size:.92em;color:#bcd0ff}
+
+  /* ---------- stage: picture first, one toolbar, support below ---------- */
+  .stage{position:relative;background:linear-gradient(180deg,rgba(255,255,255,.03),rgba(255,255,255,.01));
+    border:1px solid var(--line);border-radius:24px;padding:18px 18px 14px;
+    box-shadow:0 1px 0 rgba(255,255,255,.06) inset,0 30px 80px -30px rgba(0,0,0,.8)}
+  .topbar{display:flex;align-items:center;gap:10px;margin:0 0 14px;flex-wrap:wrap}
+  .topbar .lab{margin:0 4px 0 0}
+  .lab{font-family:var(--mono);font-size:.7rem;letter-spacing:.12em;text-transform:uppercase;color:var(--muted);margin:0 0 10px}
+  .btn:focus-visible,.focus:focus-visible{outline:2px solid var(--accent);outline-offset:2px}
+  .focus{margin-left:auto;font-family:var(--mono);font-size:.68rem;letter-spacing:.1em;text-transform:uppercase;padding:6px 12px;
+    border-radius:999px;border:1px solid var(--line);background:rgba(0,0,0,.25);color:var(--muted);cursor:pointer;transition:.15s}
+  .focus:hover{border-color:var(--accent);color:var(--accent)}
+  body.solo .focus{border-color:rgba(255,200,98,.6);color:var(--gold);background:rgba(255,200,98,.1)}
+
+  /* hero picture: a stylized IntelliJ window in Debug mode */
+  .pic{position:relative;height:390px;border:1px solid var(--line);border-radius:18px;background:rgba(6,10,20,.5);overflow:hidden}
+  body.solo .pic{height:480px}
+  .ide{position:absolute;inset:0;display:flex;flex-direction:column;transition:opacity .3s}
+  .pic.idle .ide{opacity:.3}
+  .pic .start{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;font-family:var(--mono);
+    font-size:.8rem;color:var(--muted);pointer-events:none;transition:opacity .3s}
+  .pic .start b{color:var(--accent);font-weight:500}
+  .tabs{flex:0 0 34px;display:flex;align-items:stretch;justify-content:space-between;border-bottom:1px solid var(--line);background:rgba(255,255,255,.025)}
+  .ftab{display:flex;align-items:center;padding:0 16px;font-family:var(--mono);font-size:.72rem;color:var(--ink);box-shadow:inset 0 -2px 0 var(--accent)}
+  .ib{align-self:center;margin-right:10px;display:inline-flex;align-items:center;gap:6px;font-family:var(--mono);font-size:.68rem;color:var(--muted);
+    padding:4px 10px;border-radius:7px;border:1px solid var(--line);transition:.25s}
+  .ib svg{width:14px;height:14px}
+  .ib.press,.tb.press{border-color:rgba(110,160,255,.8);color:var(--ink);background:rgba(110,160,255,.18);box-shadow:0 0 14px -3px rgba(110,160,255,.8)}
+
+  .editor{flex:1;position:relative;padding:8px 0;overflow:hidden;font-family:var(--mono);font-size:.76rem;color:#c9d4ea}
+  .gz{position:absolute;left:0;top:0;bottom:0;width:58px;background:rgba(255,255,255,.025);border-right:1px solid var(--line);transition:background .3s}
+  .gz.aim{background:rgba(255,200,98,.08)}
+  .gzl{position:absolute;left:64px;bottom:8px;font-family:var(--mono);font-size:.6rem;letter-spacing:.14em;text-transform:uppercase;
+    color:var(--gold);opacity:0;transition:opacity .3s}
+  .gz.aim+.gzl{opacity:1}
+  .el{position:relative;display:flex;height:17px;line-height:17px;white-space:pre;transition:background .15s,box-shadow .15s}
+  body.solo .el{height:22px;line-height:22px}
+  .el .num{width:30px;text-align:right;color:rgba(132,150,182,.55);flex-shrink:0;user-select:none}
+  .el .bp{width:28px;display:flex;align-items:center;justify-content:center;flex-shrink:0}
+  .el .bp i{display:block;width:11px;height:11px;border-radius:50%;background:#ff5f56;box-shadow:0 0 8px rgba(255,95,86,.6);
+    transform:scale(0);transition:transform .25s cubic-bezier(.2,.9,.3,1.4)}
+  .el .bp.aim{box-shadow:inset 0 0 0 1px rgba(255,200,98,.7);border-radius:6px}
+  .el.has-bp{background:rgba(255,106,106,.09)}
+  .el.has-bp .bp i{transform:scale(1)}
+  .el .tx{padding-left:12px}
+  .el.flash{background:rgba(110,160,255,.12)}
+  .el.paused{background:rgba(110,160,255,.24);box-shadow:inset 3px 0 0 var(--accent)}
+  .el.paused .num{color:var(--accent)}
+  .kw{color:#c792ea} .ty{color:#82aaff} .st{color:#c3e88d} .nm{color:#f78c6c} .fn{color:#ffcb6b}
+
+  .dbg{flex:0 0 auto;border-top:1px solid var(--line);background:rgba(0,0,0,.22)}
+  .dbar{display:flex;align-items:center;gap:6px;padding:6px 10px;border-bottom:1px solid var(--line);flex-wrap:wrap}
+  .dbar .dl{font-family:var(--mono);font-size:.6rem;letter-spacing:.14em;text-transform:uppercase;color:var(--muted);margin-right:6px}
+  .tb{display:inline-flex;align-items:center;gap:5px;font-family:var(--mono);font-size:.66rem;color:var(--muted);padding:3px 9px;
+    border-radius:7px;border:1px solid var(--line);transition:.25s}
+  .tb.off{opacity:.35}
+  .tb .ic{font-size:.7rem} .tb .g{color:var(--good)} .tb .r{color:var(--warn)} .tb .a{color:var(--accent)}
+  .panes{display:grid;grid-template-columns:38% 1fr;min-height:84px}
+  .pane{padding:6px 12px 8px;font-family:var(--mono);font-size:.72rem;transition:background .3s}
+  .pane+.pane{border-left:1px solid var(--line)}
+  .pane.lit{background:rgba(110,160,255,.07)}
+  .ph{font-size:.58rem;letter-spacing:.14em;text-transform:uppercase;color:var(--muted);margin-bottom:4px;transition:color .3s}
+  .pane.lit .ph{color:var(--accent)}
+  .row{line-height:1.6;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+  .row.top{background:rgba(110,160,255,.14);border-radius:5px;padding:0 6px;margin:0 -6px}
+  .row .m{color:var(--muted)}
+  .row .vv{color:#f78c6c;display:inline-block}
+  .row.chg .vv{color:var(--gold);animation:pop .35s}
+  .row.chg .was{color:var(--muted);margin-left:10px;font-size:.66rem}
+  .row.none{color:rgba(132,150,182,.6)}
+
+  /* caption: the one sentence, right under the picture */
+  .caption{display:flex;gap:16px;align-items:flex-start;margin:14px 4px 0;min-height:56px}
+  .caption .n{flex-shrink:0;font-family:var(--disp);font-weight:700;font-size:1.35rem;color:var(--accent);font-variant-numeric:tabular-nums;
+    line-height:1.2;min-width:3.2rem}
+  .caption .n small{display:block;font-family:var(--mono);font-weight:400;font-size:.58rem;letter-spacing:.14em;text-transform:uppercase;color:var(--muted)}
+  .caption .t{font-size:1.02rem;line-height:1.55;color:var(--ink);padding-left:16px;border-left:3px solid var(--accent);transition:border-color .3s}
+  body.solo .caption .t{font-size:1.18rem}
+  .caption.left .t{border-left-color:var(--gold)} .caption.ok .t{border-left-color:var(--good)}
+  .caption b.g{color:var(--good)} .caption b.a{color:var(--accent)} .caption b.y{color:var(--gold)}
+
+  /* toolbar: same on every page */
+  .toolbar{display:flex;align-items:center;gap:10px;margin:16px 0 0;padding-top:14px;border-top:1px solid var(--line)}
+  .btn{font-family:var(--body);font-weight:500;font-size:.86rem;padding:9px 16px;border-radius:11px;cursor:pointer;
+    border:1px solid var(--line);background:var(--surface);color:var(--ink);transition:.15s}
+  .btn:hover{border-color:var(--accent);color:var(--accent)}
+  .btn.primary{border-color:rgba(110,160,255,.5);background:rgba(110,160,255,.12);padding:9px 22px}
+  .btn:disabled{opacity:.35;cursor:not-allowed}
+  .btn.ghost{background:transparent;color:var(--muted);margin-left:auto}
+  .dots{display:flex;gap:5px;align-items:center;margin:0 6px}
+  .dots i{display:block;width:8px;height:8px;border-radius:50%;background:rgba(255,255,255,.12);transition:.2s}
+  .dots i.done{background:rgba(110,160,255,.45)}
+  .dots i.now{background:var(--accent);transform:scale(1.35);box-shadow:0 0 10px rgba(110,160,255,.7)}
+  .hint{font-family:var(--mono);font-size:.68rem;color:var(--muted);margin:10px 4px 0;line-height:1.5}
+  .hint b{color:var(--accent)}
+
+  /* support: readouts and console. Below the picture, hidden in focus */
+  .support{display:grid;grid-template-columns:minmax(0,1.3fr) minmax(0,1fr);gap:14px;margin-top:18px}
+  @media (max-width:860px){.support{grid-template-columns:1fr}}
+  body.solo .support,body.solo .take,body.solo .hint{display:none}
+  .readout{display:grid;grid-template-columns:repeat(3,1fr);gap:10px}
+  .stat{background:rgba(255,255,255,.03);border:1px solid var(--line);border-radius:12px;padding:11px 13px;transition:opacity .3s}
+  .stat.empty{opacity:.3}
+  .stat .k{font-family:var(--mono);font-size:.62rem;letter-spacing:.1em;text-transform:uppercase;color:var(--muted)}
+  .stat .v{font-family:var(--disp);font-weight:700;font-size:1.45rem;font-variant-numeric:tabular-nums;margin-top:2px;transition:color .3s;min-height:1.6em;white-space:nowrap}
+  .stat .v.txt{font-size:1.05rem;line-height:1.55em}
+  .v.hot{color:var(--accent)} .v.dim{color:rgba(132,150,182,.5)}
+  .console{font-family:var(--mono);font-size:.76rem;line-height:1.6;background:#05070e;border:1px solid var(--line);
+    border-radius:12px;padding:10px 14px;min-height:64px;color:#9fe3b6}
+  .console .cl{font-size:.6rem;letter-spacing:.14em;text-transform:uppercase;color:rgba(132,150,182,.6);margin-bottom:4px}
+  .console .out{animation:pop .3s}
+  @keyframes pop{from{transform:scale(.6);opacity:0}to{transform:scale(1);opacity:1}}
+  .take{margin-top:22px;background:linear-gradient(180deg,rgba(110,160,255,.08),rgba(139,123,255,.04));
+    border:1px solid var(--line);border-left:3px solid var(--accent);border-radius:12px;padding:16px 18px}
+  .take .tk{font-family:var(--mono);font-size:.66rem;letter-spacing:.14em;text-transform:uppercase;color:var(--accent);margin:0 0 8px}
+  .take p{margin:0;font-size:.95rem;color:var(--ink);line-height:1.55}
+  .take b{color:#fff}
+  @media (prefers-reduced-motion:reduce){*{animation-duration:.01ms!important;transition-duration:.01ms!important}#amb{display:none}}
+</style>
+</head>
+<body>
+
+<a class="back" href="../index.html#19-debugger">&#8592; Week 2 index</a>
+
+<canvas id="amb"></canvas>
+<div class="wrap">
+  <p class="tag">Workbook 2b &middot; Section 1-2 &middot; Running the debugger</p>
+  <h1>The Debugger</h1>
+  <p class="lede"><b>The debugger pauses your program on a line you choose, so you can run it one line at a time and watch the values change.</b></p>
+
+  <div class="stage">
+    <div class="topbar">
+      <span class="lab">IntelliJ in Debug mode</span>
+      <button class="focus" id="bFocus" title="Hide the console and notes, enlarge the picture">Focus</button>
+    </div>
+
+    <div class="pic idle" id="pic">
+      <div class="ide">
+        <div class="tabs">
+          <span class="ftab">Main.java</span>
+          <span class="ib" id="ibDebug"><svg viewBox="0 0 16 16" fill="none" stroke="#46d98a" stroke-width="1.4" stroke-linecap="round"><ellipse cx="8" cy="9.5" rx="3.6" ry="4.3"/><path d="M8 5.2v8.6M4.4 9.5H1.8M14.2 9.5h-2.6M4.9 6.6 3 4.8M11.1 6.6 13 4.8M4.9 12.5 3 14.2M11.1 12.5l1.9 1.7M6 4.3a2 2 0 0 1 4 0"/></svg>Debug</span>
+        </div>
+        <div class="editor" id="editor">
+          <div class="gz" id="gz"></div><span class="gzl">gutter</span>
+          <div class="el" data-n="1"><span class="num">1</span><span class="bp"><i></i></span><span class="tx"><span class="kw">public class</span> Main {</span></div>
+          <div class="el" data-n="2"><span class="num">2</span><span class="bp"><i></i></span><span class="tx">    <span class="kw">public static void</span> <span class="fn">main</span>(<span class="ty">String</span>[] args) {</span></div>
+          <div class="el" data-n="3"><span class="num">3</span><span class="bp"><i></i></span><span class="tx">        <span class="ty">int</span> week = <span class="nm">1</span>;</span></div>
+          <div class="el" data-n="4"><span class="num">4</span><span class="bp"><i></i></span><span class="tx">        <span class="ty">double</span> savings = <span class="nm">0</span>;</span></div>
+          <div class="el" data-n="5"><span class="num">5</span><span class="bp"><i></i></span><span class="tx">        <span class="kw">while</span> (savings &lt; <span class="nm">100</span>) {</span></div>
+          <div class="el" data-n="6"><span class="num">6</span><span class="bp"><i></i></span><span class="tx">            savings = savings + <span class="nm">25</span>;</span></div>
+          <div class="el" data-n="7"><span class="num">7</span><span class="bp"><i></i></span><span class="tx">            System.out.<span class="fn">println</span>(<span class="st">"Week "</span> + week + <span class="st">": saved "</span> + savings);</span></div>
+          <div class="el" data-n="8"><span class="num">8</span><span class="bp"><i></i></span><span class="tx">            week++;</span></div>
+          <div class="el" data-n="9"><span class="num">9</span><span class="bp"><i></i></span><span class="tx">        }</span></div>
+          <div class="el" data-n="10"><span class="num">10</span><span class="bp"><i></i></span><span class="tx">        System.out.<span class="fn">println</span>(<span class="st">"Reached 100 after "</span> + (week - <span class="nm">1</span>) + <span class="st">" weeks"</span>);</span></div>
+          <div class="el" data-n="11"><span class="num">11</span><span class="bp"><i></i></span><span class="tx">    }</span></div>
+          <div class="el" data-n="12"><span class="num">12</span><span class="bp"><i></i></span><span class="tx">}</span></div>
+        </div>
+        <div class="dbg">
+          <div class="dbar">
+            <span class="dl">Debug</span>
+            <span class="tb" id="tbResume"><span class="ic g">&#9654;</span>Resume</span>
+            <span class="tb" id="tbOver"><span class="ic a">&#8631;</span>Step Over</span>
+            <span class="tb" id="tbInto"><span class="ic a">&#8600;</span>Step Into</span>
+            <span class="tb" id="tbStop"><span class="ic r">&#9632;</span>Stop</span>
+          </div>
+          <div class="panes">
+            <div class="pane" id="pFrames"><div class="ph">Frames</div><div id="frames"></div></div>
+            <div class="pane" id="pVars"><div class="ph">Variables</div><div id="vars"></div></div>
+          </div>
+        </div>
+      </div>
+      <div class="start" id="start">a loop with a breakpoint &middot; press&nbsp;<b>Next</b></div>
+    </div>
+
+    <div class="caption" id="caption">
+      <div class="n" id="stepno"><small>step</small>0 / 8</div>
+      <div class="t" id="status">Press <b class="a">Next</b>. The picture changes at every step.</div>
+    </div>
+
+    <div class="toolbar">
+      <button class="btn" id="bBack">&larr; Back</button>
+      <div class="dots" id="dots"></div>
+      <button class="btn primary" id="bNext">Next &rarr;</button>
+      <button class="btn ghost" id="bReset">Reset</button>
+    </div>
+    <p class="hint">space = next &middot; <b>the highlighted line is the next one to run</b>, it has not run yet</p>
+
+    <div class="support">
+      <div class="readout">
+        <div class="stat empty" id="sLine"><div class="k">Paused on</div><div class="v dim" id="stLine"></div></div>
+        <div class="stat empty" id="sPass"><div class="k">Loop pass</div><div class="v dim" id="stPass"></div></div>
+        <div class="stat empty" id="sBtn"><div class="k">You pressed</div><div class="v txt dim" id="stBtn"></div></div>
+      </div>
+      <div class="console"><div class="cl">console</div><div id="console"></div></div>
+    </div>
+  </div>
+
+  <div class="take">
+    <p class="tk">The one idea</p>
+    <p>A <b>breakpoint</b>, the red dot in the gutter, is where Debug pauses. While paused, the highlighted line has not run yet.
+    <b>Step Over</b> runs one line, <b>Resume</b> runs until the next breakpoint, the <b>Variables</b> pane shows the values right now
+    and the <b>Frames</b> pane shows which method you are in. Reach for it when the code runs but the answer is wrong.</p>
+  </div>
+
+  <div id="rail"></div>
+</div>
+
+<script>
+(function(){
+  "use strict";
+  var $=function(s){return document.querySelector(s);};
+  var reduce=matchMedia("(prefers-reduced-motion: reduce)").matches;
+
+  /* ---------- the walk: one snapshot per step ----------
+     bp: breakpoint on line 6 is set. line: the paused line (null = not paused).
+     btn: what was pressed. vars: week and savings, chg: which one just changed, was: its old value.
+     sweep: lines that run quickly before the pause lands. out: what this step prints. */
+  var S=[
+    {bp:true,line:null,btn:"gutter",cls:"left",
+     msg:'Click the gutter next to line 6. A <b class="y">red dot</b> appears: a breakpoint, where Debug will pause.'},
+    {bp:true,line:6,btn:"debug",pass:1,week:"1",sav:"0.0",lit:"frames",sweep:[3,4,5],
+     msg:'Debug runs to line 6 and pauses. <b class="a">Frames</b> says you are in main. The highlighted line has not run yet.'},
+    {bp:true,line:7,btn:"over",pass:1,week:"1",sav:"25.0",chg:"sav",was:"0.0",lit:"vars",
+     msg:'<b class="a">Step Over</b> runs line 6 and only line 6. <b class="a">Variables</b> shows savings went from 0.0 to 25.0.'},
+    {bp:true,line:8,btn:"over",pass:1,week:"1",sav:"25.0",out:["Week 1: saved 25.0"],
+     msg:'<b class="a">Step Over</b> runs the println. The console shows Week 1: saved 25.0. Paused on line 8.'},
+    {bp:true,line:6,btn:"resume",pass:2,week:"2",sav:"25.0",chg:"week",was:"1",lit:"vars",sweep:[8,5],
+     msg:'<b class="a">Resume</b> runs week++ and the loop check, then stops at the breakpoint again. Pass 2, week is 2.'},
+    {bp:true,line:7,btn:"over",pass:2,week:"2",sav:"50.0",chg:"sav",was:"25.0",lit:"vars",
+     msg:'<b class="a">Step Over</b> runs line 6 on pass 2. savings goes from 25.0 to 50.0, one pass at a time.'},
+    {bp:false,line:7,btn:"gutter",pass:2,week:"2",sav:"50.0",cls:"left",
+     msg:'Click the <b class="y">red dot</b> again to remove the breakpoint. The program stays paused on line 7.'},
+    {bp:false,line:null,btn:"resume",done:true,cls:"ok",sweep:[7,8,5,6,7,8,5,6,7,8,5,10],
+     out:["Week 2: saved 50.0","Week 3: saved 75.0","Week 4: saved 100.0","Reached 100 after 4 weeks"],
+     msg:'<b class="g">Resume</b>: no breakpoint left, so the program runs to the end. Frames and Variables go empty.'}
+  ];
+
+  /* ---------- state ---------- */
+  var at=-1,timers=[];
+  var picEl=$("#pic"),statusEl=$("#status"),consEl=$("#console");
+  var LINES=document.querySelectorAll(".el");
+  var TB={resume:$("#tbResume"),over:$("#tbOver"),into:$("#tbInto"),stop:$("#tbStop")};
+
+  function clearTimers(){ timers.forEach(clearTimeout); timers=[]; }
+
+  function paintLines(s,pausedLine,flashLine){
+    Array.prototype.forEach.call(LINES,function(el){
+      var n=+el.getAttribute("data-n");
+      el.classList.toggle("has-bp",!!(s&&s.bp)&&n===6);
+      el.classList.toggle("paused",pausedLine===n);
+      el.classList.toggle("flash",flashLine===n);
+      el.querySelector(".bp").classList.toggle("aim",!!s&&s.btn==="gutter"&&n===6);
+    });
+    $("#gz").classList.toggle("aim",!!s&&s.btn==="gutter");
+  }
+
+  function paintButtons(s){
+    var running=!!(s&&s.line);
+    Object.keys(TB).forEach(function(k){
+      var press=!!s&&s.btn===k;
+      TB[k].classList.toggle("press",press);
+      TB[k].classList.toggle("off",!running&&!press);
+    });
+    $("#ibDebug").classList.toggle("press",!!s&&s.btn==="debug");
+  }
+
+  function row(html,cls){ return '<div class="row'+(cls?" "+cls:"")+'">'+html+'</div>'; }
+
+  function paintPanes(s){
+    var fr=$("#frames"),vr=$("#vars");
+    if(!s||!s.line){
+      var msg=s&&s.done?"program finished":"not running";
+      fr.innerHTML=row(msg,"none"); vr.innerHTML=row(msg,"none");
+    } else {
+      fr.innerHTML=row('main:'+s.line+', Main <span class="m">(com.pluralsight)</span>',"top");
+      vr.innerHTML=row('args = <span class="m">{String[0]}</span>')+
+        row('week = <span class="vv">'+s.week+'</span>'+(s.chg==="week"?'<span class="was">was '+s.was+'</span>':""),s.chg==="week"?"chg":"")+
+        row('savings = <span class="vv">'+s.sav+'</span>'+(s.chg==="sav"?'<span class="was">was '+s.was+'</span>':""),s.chg==="sav"?"chg":"");
+    }
+    $("#pFrames").classList.toggle("lit",!!s&&s.lit==="frames");
+    $("#pVars").classList.toggle("lit",!!s&&s.lit==="vars");
+  }
+
+  function paintConsole(upto){
+    var out=[];
+    for(var k=0;k<=upto;k++) if(S[k].out) out=out.concat(S[k].out);
+    if(!out.length){ consEl.innerHTML='<span style="color:rgba(132,150,182,.5)">(nothing printed yet)</span>'; return; }
+    consEl.innerHTML="";
+    out.forEach(function(o){ var d=document.createElement("div"); d.className="out"; d.textContent=o; consEl.appendChild(d); });
+  }
+
+  function setStat(id,v){
+    var e=$(id),box=e.parentNode;
+    if(v===null||v===undefined){ e.textContent=""; e.classList.add("dim"); box.classList.add("empty"); }
+    else { e.textContent=v; e.classList.remove("dim"); box.classList.remove("empty"); }
+  }
+  var BTN_NAME={gutter:"gutter",debug:"Debug",over:"Step Over",resume:"Resume"};
+
+  function landed(i){
+    var s=S[i];
+    paintLines(s,s.line,null); paintPanes(s); paintConsole(i);
+    setStat("#stLine",s.line?"line "+s.line:(s.done?"finished":null));
+    setStat("#stPass",s.pass||null);
+  }
+
+  function show(i,forward){
+    clearTimers(); at=i;
+    var n=S.length;
+    picEl.classList.toggle("idle",i<0);
+    $("#start").style.opacity=i<0?1:0;
+    if(i<0){
+      paintLines(null,null,null); paintButtons(null); paintPanes(null); paintConsole(-1);
+      setStat("#stLine",null); setStat("#stPass",null); setStat("#stBtn",null);
+      $("#caption").className="caption"; statusEl.innerHTML='Press <b class="a">Next</b>. The picture changes at every step.';
+      $("#stepno").innerHTML="<small>step</small>0 / "+n; setBtns(); return;
+    }
+    var s=S[i];
+    $("#stepno").innerHTML="<small>step</small>"+(i+1)+" / "+n;
+    $("#caption").className="caption "+(s.cls||""); statusEl.innerHTML=s.msg;
+    paintButtons(s); setStat("#stBtn",BTN_NAME[s.btn]);
+    if(forward&&s.sweep&&!reduce){
+      /* the lines that run at full speed light up one after another, then the pause lands */
+      var prev=i>0?S[i-1]:null;
+      paintPanes(prev&&prev.line?prev:null);
+      var dt=s.sweep.length>4?110:220;
+      s.sweep.forEach(function(ln,k){ timers.push(setTimeout(function(){ paintLines(s,null,ln); },k*dt)); });
+      timers.push(setTimeout(function(){ landed(i); },s.sweep.length*dt));
+    } else landed(i);
+    setBtns();
+  }
+
+  function setBtns(){ $("#bNext").disabled=at>=S.length-1; $("#bBack").disabled=at<0;
+    var d=""; for(var k=0;k<S.length;k++) d+='<i class="'+(k===at?"now":k<at?"done":"")+'"></i>'; $("#dots").innerHTML=d; }
+
+  /* focus: picture and caption only. Remembered per browser. */
+  function setFocus(on){ document.body.classList.toggle("solo",on); $("#bFocus").textContent=on?"Focus on":"Focus";
+    try{localStorage.setItem("hub-focus",on?"1":"0");}catch(e){} }
+  $("#bFocus").addEventListener("click",function(){ setFocus(!document.body.classList.contains("solo")); this.blur(); });
+  try{ if(localStorage.getItem("hub-focus")==="1") document.body.classList.add("solo"); }catch(e){}
+  if(document.body.classList.contains("solo")) $("#bFocus").textContent="Focus on";
+
+  function next(){ if(at<S.length-1) show(at+1,true); }
+  function back(){ if(at>=0) show(at-1,false); }
+  function reset(){ show(-1,false); }
+
+  $("#bNext").addEventListener("click",next);
+  $("#bBack").addEventListener("click",back);
+  $("#bReset").addEventListener("click",reset);
+  document.addEventListener("keydown",function(e){ if(e.code==="Space"&&!/INPUT|BUTTON/.test(e.target.tagName)){e.preventDefault();next();} });
+
+  /* ---------- ambient canvas ---------- */
+  var cv=$("#amb"),ctx=cv.getContext&&cv.getContext("2d"),parts=[];
+  function sizeC(){if(!ctx)return;cv.width=innerWidth;cv.height=innerHeight;}
+  function initParts(){parts=[];for(var i=0;i<46;i++)parts.push({x:Math.random(),y:Math.random(),
+    r:Math.random()*1.6+.3,s:Math.random()*.02+.004,o:Math.random()*.4+.1});}
+  function drawC(){if(!ctx)return;ctx.clearRect(0,0,cv.width,cv.height);
+    parts.forEach(function(p){p.y-=p.s/60;if(p.y<-.02)p.y=1.02;
+      ctx.beginPath();ctx.arc(p.x*cv.width,p.y*cv.height,p.r,0,7);
+      ctx.fillStyle="rgba(140,170,255,"+p.o+")";ctx.fill();});
+    requestAnimationFrame(drawC);}
+  if(ctx&&!reduce){sizeC();initParts();drawC();addEventListener("resize",sizeC);}
+
+  reset();
+})();
+</script>
+<script src="../manifest.js"></script>
+<script src="../../assets/rail.js"></script>
+<script>Rail.render(document.getElementById("rail"),{week:2,kind:"visuals",current:"19-debugger"});</script>
+</body>
+</html>

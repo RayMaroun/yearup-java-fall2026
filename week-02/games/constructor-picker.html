@@ -1,0 +1,380 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Constructor Picker | Week 2 Visual Hub</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Sora:wght@500;700&family=Inter:wght@400;500&family=JetBrains+Mono:wght@400;500&display=swap">
+<style>
+  :root{
+    --bg:#080c17; --bg2:#0c1428; --surface:rgba(255,255,255,.045); --line:rgba(255,255,255,.09);
+    --ink:#eef2fb; --muted:#8496b6; --accent:#6ea0ff; --accent2:#8b7bff; --good:#46d98a; --warn:#ff6a6a;
+    --gold:#ffc862; --disp:'Sora',system-ui,sans-serif; --body:'Inter',system-ui,sans-serif;
+    --mono:'JetBrains Mono',ui-monospace,monospace;
+  }
+  *{box-sizing:border-box}
+  body{margin:0;min-height:100vh;color:var(--ink);font-family:var(--body);
+    background:radial-gradient(1200px 700px at 70% -10%,#141d38 0%,transparent 55%),
+               radial-gradient(900px 600px at 10% 110%,#161233 0%,transparent 50%),#080c17;
+    overflow-x:hidden}
+  #amb{position:fixed;inset:0;z-index:0;pointer-events:none;opacity:.6}
+  .back{position:relative;z-index:2;display:block;max-width:1120px;margin:0 auto;padding:26px 24px 0;
+    width:100%;font-family:var(--mono);font-size:.8rem;letter-spacing:.04em;color:var(--muted);
+    text-decoration:none;transition:color .15s}
+  .back:hover{color:var(--accent)}
+  .wrap{position:relative;z-index:1;max-width:1120px;margin:0 auto;padding:22px 24px 70px}
+  .tag{font-family:var(--mono);font-size:.72rem;letter-spacing:.22em;text-transform:uppercase;color:var(--accent);margin:0 0 14px}
+  h1{font-family:var(--disp);font-weight:700;font-size:clamp(2.3rem,6vw,3.6rem);line-height:1;margin:0 0 12px;
+    letter-spacing:-.03em;background:linear-gradient(180deg,#fff,#b9c6e6);-webkit-background-clip:text;
+    background-clip:text;color:transparent}
+  .lede{color:var(--muted);max-width:64ch;font-size:1.05rem;margin:0 0 26px;line-height:1.5}
+  .lede b{color:var(--ink)}
+  .lede code,.take code,.caption code{font-family:var(--mono);font-size:.92em;color:#bcd0ff}
+
+  /* ---------- stage: picture first, one toolbar, support below ---------- */
+  .stage{position:relative;background:linear-gradient(180deg,rgba(255,255,255,.03),rgba(255,255,255,.01));
+    border:1px solid var(--line);border-radius:24px;padding:18px 18px 14px;
+    box-shadow:0 1px 0 rgba(255,255,255,.06) inset,0 30px 80px -30px rgba(0,0,0,.8)}
+  .topbar{display:flex;align-items:center;gap:10px;margin:0 0 14px;flex-wrap:wrap}
+  .topbar .lab{margin:0 4px 0 0}
+  .lab{font-family:var(--mono);font-size:.7rem;letter-spacing:.12em;text-transform:uppercase;color:var(--muted);margin:0 0 10px}
+  .chips{display:flex;flex-wrap:wrap;gap:6px}
+  .chip{font-family:var(--mono);font-size:.74rem;padding:5px 11px;border-radius:999px;cursor:pointer;
+    border:1px solid var(--line);background:rgba(0,0,0,.25);color:var(--muted);transition:.15s}
+  .chip:hover{border-color:var(--accent);color:var(--accent)}
+  .chip.on{border-color:rgba(110,160,255,.6);background:rgba(110,160,255,.14);color:var(--ink)}
+  .chip:focus-visible,.btn:focus-visible,.focus:focus-visible{outline:2px solid var(--accent);outline-offset:2px}
+  .focus{margin-left:auto;font-family:var(--mono);font-size:.68rem;letter-spacing:.1em;text-transform:uppercase;padding:6px 12px;
+    border-radius:999px;border:1px solid var(--line);background:rgba(0,0,0,.25);color:var(--muted);cursor:pointer;transition:.15s}
+  .focus:hover{border-color:var(--accent);color:var(--accent)}
+  body.solo .focus{border-color:rgba(255,200,98,.6);color:var(--gold);background:rgba(255,200,98,.1)}
+
+
+  /* ---------- game board ---------- */
+  .pic{position:relative;height:390px;border:1px solid var(--line);border-radius:18px;background:rgba(6,10,20,.5);overflow:hidden;
+    display:flex;flex-direction:column;align-items:center;justify-content:center;padding:40px 20px 24px}
+  .pic .zone{position:absolute;left:18px;top:14px;font-family:var(--mono);font-size:.62rem;letter-spacing:.14em;text-transform:uppercase;color:rgba(132,150,182,.55)}
+  .hud{position:absolute;right:18px;top:12px;display:flex;gap:14px;font-family:var(--mono);font-size:.72rem;color:var(--muted)}
+  .hud b{color:var(--ink);font-weight:500}
+  .board{display:grid;grid-template-columns:minmax(0,1fr) 270px;gap:20px;width:100%;max-width:1000px;align-items:center}
+  .code{width:100%;border:1px solid var(--line);border-radius:14px;background:rgba(0,0,0,.3);padding:6px 0;transition:border-color .2s}
+  .code.bad{animation:shake .3s}
+  @keyframes shake{25%{transform:translateX(-6px)}75%{transform:translateX(6px)}}
+  .ln{display:flex;width:100%;align-items:baseline;gap:14px;padding:3px 16px;border:0;border-left:3px solid transparent;background:transparent;
+    color:#c9d4ea;font-family:var(--mono);font-size:.88rem;line-height:1.55;text-align:left;cursor:pointer;transition:background .15s,border-color .15s}
+  .ln:hover{background:rgba(110,160,255,.08);border-left-color:var(--accent)}
+  .ln:disabled{cursor:default}
+  .ln.deco{cursor:default;color:var(--muted)}
+  .ln.deco:hover{background:transparent;border-left-color:transparent}
+  .ln .no{flex-shrink:0;width:1.4em;text-align:right;color:var(--muted);font-size:.78rem}
+  .ln .src{white-space:pre;overflow:hidden;text-overflow:ellipsis}
+  .ln.hit{background:rgba(70,217,138,.12);border-left-color:var(--good)}
+  .ln.miss{background:rgba(255,106,106,.12);border-left-color:var(--warn)}
+  .ln.dim{opacity:.45}
+  .kw{color:#c792ea} .ty{color:#6ea0ff} .st{color:#9ee493} .nm{color:#ffc862} .fn{color:#7fdbca}
+  .side{display:flex;flex-direction:column;gap:14px}
+  .callk{font-family:var(--mono);font-size:.62rem;letter-spacing:.14em;text-transform:uppercase;color:var(--muted);margin:0 0 -6px}
+  .call{font-family:var(--mono);font-size:1.12rem;color:var(--ink);padding:16px 14px;border:1px solid var(--line);border-radius:14px;
+    background:rgba(0,0,0,.3);text-align:center;word-break:break-word;transition:border-color .2s,box-shadow .2s}
+  .call.good{border-color:rgba(70,217,138,.7);box-shadow:0 0 28px -8px rgba(70,217,138,.8)}
+  .call.bad{border-color:rgba(255,106,106,.7);box-shadow:0 0 28px -8px rgba(255,106,106,.8)}
+  .call .ctx{display:block;margin-top:6px;font-size:.7rem;color:var(--muted)}
+  .xbtn{font-family:var(--mono);font-size:.84rem;padding:11px 14px;border-radius:11px;cursor:pointer;border:1px solid var(--line);background:var(--surface);color:var(--ink);transition:.15s;text-align:center}
+  .xbtn:hover{border-color:var(--warn);color:var(--warn)}
+  .xbtn:disabled{cursor:default}
+  .xbtn.hit{border-color:rgba(70,217,138,.7);background:rgba(70,217,138,.14);color:var(--good)}
+  .xbtn.miss{border-color:rgba(255,106,106,.7);background:rgba(255,106,106,.12);color:var(--warn)}
+  .xbtn.dim{opacity:.4}
+  .key{display:inline-block;margin-left:6px;font-size:.62rem;color:var(--muted)}
+  .screen{position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:12px;background:rgba(6,10,20,.92);transition:opacity .25s;padding:20px}
+  .screen.off{opacity:0;pointer-events:none}
+  .screen h2{font-family:var(--disp);font-weight:700;font-size:1.6rem;margin:0;color:var(--ink)}
+  .screen p{margin:0;color:var(--muted);font-size:.95rem;text-align:center;max-width:46ch;line-height:1.5}
+  .screen .big{font-family:var(--disp);font-weight:700;font-size:2.6rem;color:var(--accent)}
+  .screen .big.gold{color:var(--gold)} .screen .big.good{color:var(--good)}
+  .bar{position:absolute;left:0;right:0;bottom:0;height:4px;background:rgba(255,255,255,.06)}
+  .bar i{display:block;height:100%;width:0;background:var(--accent);transition:width .25s}
+  .misses{font-family:var(--mono);font-size:.72rem;color:var(--muted);line-height:1.6;text-align:left;max-width:640px;max-height:130px;overflow-y:auto}
+  .misses div{margin:0 0 4px}
+  .misses b{color:var(--warn);font-weight:500;white-space:pre}
+  @media (max-width:760px){.pic{height:auto;min-height:390px}.board{grid-template-columns:1fr}.ln .src{white-space:pre-wrap}}
+  /* caption: the one sentence, right under the picture */
+  .caption{display:flex;gap:16px;align-items:flex-start;margin:14px 4px 0;min-height:56px}
+  .caption .n{flex-shrink:0;font-family:var(--disp);font-weight:700;font-size:1.35rem;color:var(--accent);font-variant-numeric:tabular-nums;
+    line-height:1.2;min-width:3.2rem}
+  .caption .n small{display:block;font-family:var(--mono);font-weight:400;font-size:.58rem;letter-spacing:.14em;text-transform:uppercase;color:var(--muted)}
+  .caption .t{font-size:1.02rem;line-height:1.55;color:var(--ink);padding-left:16px;border-left:3px solid var(--accent);transition:border-color .3s}
+  body.solo .caption .t{font-size:1.18rem}
+  .caption.cut .t{border-left-color:var(--warn)} .caption.left .t{border-left-color:var(--gold)} .caption.ok .t{border-left-color:var(--good)}
+  .caption b.g{color:var(--good)} .caption b.w{color:var(--warn)} .caption b.a{color:var(--accent)} .caption b.y{color:var(--gold)}
+
+  /* toolbar: same on every page */
+  .toolbar{display:flex;align-items:center;gap:10px;margin:16px 0 0;padding-top:14px;border-top:1px solid var(--line)}
+  .btn{font-family:var(--body);font-weight:500;font-size:.86rem;padding:9px 16px;border-radius:11px;cursor:pointer;
+    border:1px solid var(--line);background:var(--surface);color:var(--ink);transition:.15s}
+  .btn:hover{border-color:var(--accent);color:var(--accent)}
+  .btn.primary{border-color:rgba(110,160,255,.5);background:rgba(110,160,255,.12);padding:9px 22px}
+  .btn:disabled{opacity:.35;cursor:not-allowed}
+  .btn.ghost{background:transparent;color:var(--muted);margin-left:auto}
+  .dots{display:flex;gap:5px;align-items:center;margin:0 6px}
+  .dots i{display:block;width:8px;height:8px;border-radius:50%;background:rgba(255,255,255,.12);transition:.2s}
+  .dots i.done{background:rgba(110,160,255,.45)}
+  .dots i.now{background:var(--accent);transform:scale(1.35);box-shadow:0 0 10px rgba(110,160,255,.7)}
+  .hint{font-family:var(--mono);font-size:.68rem;color:var(--muted);margin:10px 4px 0;line-height:1.5}
+  .hint b{color:var(--accent)}
+
+  .toolbar .btn.primary{min-width:120px}
+  .take{margin-top:22px;background:linear-gradient(180deg,rgba(110,160,255,.08),rgba(139,123,255,.04));
+    border:1px solid var(--line);border-left:3px solid var(--accent);border-radius:12px;padding:16px 18px}
+  .take .tk{font-family:var(--mono);font-size:.66rem;letter-spacing:.14em;text-transform:uppercase;color:var(--accent);margin:0 0 8px}
+  .take p{margin:0;font-size:.95rem;color:var(--ink);line-height:1.55}
+  .take b{color:#fff}
+  @media (prefers-reduced-motion:reduce){*{animation-duration:.01ms!important;transition-duration:.01ms!important}#amb{display:none}}
+</style>
+</head>
+<body>
+
+
+<a class="back" href="../index.html#constructor-picker">&#8592; Week 2 index</a>
+
+<canvas id="amb"></canvas>
+<div class="wrap">
+  <p class="tag">Workbook 2a &middot; Section 2-3 &middot; Game</p>
+  <h1>Constructor Picker</h1>
+  <p class="lede"><b>A call flashes up. Java picks the version whose parameter list matches it. Click that line before Java does. Fifteen rounds.</b></p>
+
+  <div class="stage">
+    <div class="topbar">
+      <span class="lab">Game</span>
+    </div>
+
+    <div class="pic" id="pic">
+      <span class="zone" id="zone">which version runs?</span>
+      <div class="hud"><span>score <b id="hScore">0</b></span><span>time <b id="hTime">0.0s</b></span></div>
+      <div class="board">
+        <div class="code" id="code"></div>
+        <div class="side">
+          <p class="callk">this call</p>
+          <div class="call" id="call">&nbsp;</div>
+          <button class="xbtn" id="bX">Compile error: nothing matches<span class="key">X</span></button>
+        </div>
+      </div>
+      <div class="bar"><i id="bar"></i></div>
+      <div class="screen" id="startScr">
+        <h2>Constructor Picker</h2>
+        <p>A class with overloaded constructors and methods appears, then a call. Click the line that runs, or press its number. If no version fits, press X.</p>
+        <button class="btn primary" id="bStart">Start</button>
+      </div>
+      <div class="screen off" id="endScr">
+        <h2>Round over</h2>
+        <div class="big" id="endScore"></div>
+        <p id="endMsg"></p>
+        <div class="misses" id="endMiss"></div>
+        <button class="btn primary" id="bAgain">Play again</button>
+      </div>
+    </div>
+
+    <div class="caption" id="caption">
+      <div class="n" id="stepno"><small>round</small>0 / 15</div>
+      <div class="t" id="status">Press <b class="a">Start</b>. Keys 1 to 9 pick a line, X means nothing matches.</div>
+    </div>
+    <p class="hint">match the name &middot; then the number of arguments &middot; then each type, in order &middot; "text" = String &middot; 35 = int &middot; 1.5 = double &middot; true = boolean</p>
+  </div>
+
+  <div class="take">
+    <p class="tk">The one idea</p>
+    <p><b>Java picks an overload by its parameter list: how many arguments, which types, in which order.</b> The parameter names never count. If no list fits the call, the code does not compile.</p>
+  </div>
+
+  <div id="rail"></div>
+</div>
+
+<script>
+(function(){
+  "use strict";
+  var $=function(s){return document.querySelector(s);};
+  var reduce=matchMedia("(prefers-reduced-motion: reduce)").matches;
+
+  // Each class: members in display order. k "c" = constructor, "m" = method. p = [type, name] pairs.
+  var CLASSES=[
+    {name:"Person",v:"p",members:[
+      {k:"c",n:"Person",p:[["String","name"],["int","age"]]},
+      {k:"c",n:"Person",p:[]},
+      {k:"c",n:"Person",p:[["String","name"]]},
+      {k:"m",n:"eat",p:[]},
+      {k:"m",n:"eat",p:[["int","amount"]]},
+      {k:"m",n:"greet",p:[["String","otherName"]]},
+      {k:"m",n:"greet",p:[["String","otherName"],["int","times"]]}
+    ],vals:{name:['"Dana"','"Raymond"','"Brandon"'],age:["35","22","19"],amount:["15","30"],otherName:['"Brandon"','"Dana"'],times:["3","2"]}},
+    {name:"Plant",v:"fern",members:[
+      {k:"c",n:"Plant",p:[]},
+      {k:"c",n:"Plant",p:[["String","species"]]},
+      {k:"c",n:"Plant",p:[["String","species"],["int","heightCm"]]},
+      {k:"c",n:"Plant",p:[["String","species"],["double","litersPerWeek"]]},
+      {k:"m",n:"water",p:[]},
+      {k:"m",n:"water",p:[["double","liters"]]},
+      {k:"m",n:"move",p:[["String","room"]]},
+      {k:"m",n:"move",p:[["String","room"],["boolean","sunny"]]}
+    ],vals:{species:['"Fern"','"Basil"','"Cactus"'],heightCm:["30","12"],litersPerWeek:["0.5","1.5","2"],liters:["0.25","2.0","2"],room:['"kitchen"','"office"'],sunny:["true","false"]}},
+    {name:"Playlist",v:"mix",members:[
+      {k:"c",n:"Playlist",p:[]},
+      {k:"c",n:"Playlist",p:[["String","name"]]},
+      {k:"c",n:"Playlist",p:[["String","name"],["int","maxSongs"]]},
+      {k:"c",n:"Playlist",p:[["String","name"],["boolean","shuffle"]]},
+      {k:"m",n:"add",p:[["String","song"]]},
+      {k:"m",n:"add",p:[["String","song"],["int","position"]]},
+      {k:"m",n:"play",p:[]},
+      {k:"m",n:"play",p:[["int","times"]]}
+    ],vals:{name:['"Road Trip"','"Focus"','"Gym"'],maxSongs:["50","100"],shuffle:["true","false"],song:['"Halo"','"Clocks"','"Yellow"'],position:["1","3"],times:["2","5"]}}
+  ];
+  var PER=5, N=CLASSES.length*PER;
+  var KW=/^(public|void|class|new|true|false)$/;
+  var TY=/^(int|long|double|boolean|String|Person|Plant|Playlist)$/;
+  var round=[], at=0, score=0, misses=[], t0=0, timer=null, busy=false;
+
+  function esc(s){ return s.replace(/&/g,"\u0026amp;").replace(/</g,"\u0026lt;").replace(/>/g,"\u0026gt;"); }
+  function hl(src){
+    var re=/("(?:[^"\\]|\\.)*"|\b\d[\d_]*(?:\.\d+)?\b|[A-Za-z_]\w*)/g, out="", last=0, m;
+    while((m=re.exec(src))){
+      out+=esc(src.slice(last,m.index)); var t=m[0], c="";
+      if(t[0]==='"') c="st"; else if(/^\d/.test(t)) c="nm"; else if(KW.test(t)) c="kw"; else if(TY.test(t)) c="ty";
+      else if(/^\s*\(/.test(src.slice(re.lastIndex))) c="fn";
+      out+=c?'<span class="'+c+'">'+esc(t)+'</span>':esc(t); last=re.lastIndex;
+    }
+    return out+esc(src.slice(last));
+  }
+  function shuffle(a){ a=a.slice(); for(var i=a.length-1;i>0;i--){ var j=Math.floor(Math.random()*(i+1)); var t=a[i]; a[i]=a[j]; a[j]=t; } return a; }
+  function pick(a){ return a[Math.floor(Math.random()*a.length)]; }
+
+  // ---------- matching: the same rules javac uses for these types ----------
+  function typeOf(lit){ if(lit[0]==='"') return "String"; if(lit==="true"||lit==="false") return "boolean"; if(lit.indexOf(".")>=0) return "double"; return "int"; }
+  function fits(a,p){ return a===p||(a==="int"&&(p==="long"||p==="double")); }
+  function sameFamily(m,call){ return m.k===call.k&&m.n===call.n; }
+  function moreSpecific(a,b){ for(var i=0;i<a.p.length;i++) if(!fits(a.p[i][0],b.p[i][0])) return false; return true; }
+  function resolve(cls,call){
+    var types=call.args.map(typeOf), cands=[];
+    cls.members.forEach(function(m,i){
+      if(!sameFamily(m,call)||m.p.length!==types.length) return;
+      for(var j=0;j<types.length;j++) if(!fits(types[j],m.p[j][0])) return;
+      cands.push(i);
+    });
+    var best=cands.filter(function(i){ return cands.every(function(o){ return o===i||moreSpecific(cls.members[i],cls.members[o]); }); });
+    return {line:best.length===1?best[0]+1:0, cands:cands, ambiguous:cands.length>1&&best.length!==1};
+  }
+
+  // ---------- text ----------
+  function sig(m){ return m.n+"("+m.p.map(function(q){return q[0]+" "+q[1];}).join(", ")+")"; }
+  function lineSrc(m){ return "    public "+(m.k==="m"?"void ":"")+sig(m)+" { ... }"; }
+  function callText(cls,call){ return (call.k==="c"?"new "+cls.name:cls.v+"."+call.n)+"("+call.args.join(", ")+")"; }
+  function typeList(ts){ return ts.length?ts.join(" then "):"no parameters"; }
+  function what(call){ return call.k==="c"?call.n+" constructor":call.n+" method"; }
+  function why(cls,call,res){
+    var types=call.args.map(typeOf);
+    if(res.line){
+      var m=cls.members[res.line-1], s="picked by the parameter list: "+typeList(m.p.map(function(q){return q[0];}));
+      var wid=[]; types.forEach(function(t,i){ if(t!==m.p[i][0]) wid.push("the int "+call.args[i]+" widens to "+m.p[i][0]); });
+      if(wid.length) s+=", and "+wid.join(", ");
+      if(res.cands.length>1) s+="; an exact match beats a version that needs widening";
+      return s;
+    }
+    var fam=cls.members.filter(function(m){ return sameFamily(m,call); });
+    var same=fam.filter(function(m){ return m.p.length===types.length; });
+    if(!same.length) return "no "+what(call)+" takes "+(types.length===1?"1 argument":types.length+" arguments")+", so it does not compile";
+    var perm=same.some(function(m){ return m.p.map(function(q){return q[0];}).sort().join()===types.slice().sort().join(); });
+    var s="no "+what(call)+" takes "+(types.length===1?(types[0]==="int"?"an ":"a ")+types[0]:typeList(types));
+    if(perm) s+="; the order of the types counts";
+    else if(types.indexOf("double")>=0&&same.some(function(m){ return m.p.some(function(q){return q[0]==="int";}); })) s+="; a double does not fit into an int";
+    return s+", so it does not compile";
+  }
+
+  // ---------- generate calls from the signatures ----------
+  function argFor(cls,q){
+    var pool=cls.vals[q[1]]||(q[0]==="String"?['"Sam"']:q[0]==="boolean"?["true"]:q[0]==="double"?["1.5"]:["3"]);
+    return pick(pool);
+  }
+  function wrongLit(t){ return t==="String"?pick(["42","7"]):t==="int"?pick(['"15"',"2.5"]):t==="double"?'"two"':"1"; }
+  function makeRounds(cls){
+    var valid=[], bad=[], seen={};
+    function add(list,call){ var r=resolve(cls,call); if(r.ambiguous) return; var key=callText(cls,call); if(seen[key]) return; seen[key]=1; call.res=r; call.cls=cls; list.push(call); }
+    shuffle(cls.members).forEach(function(m){ add(valid,{k:m.k,n:m.n,args:m.p.map(function(q){ return argFor(cls,q); })}); });
+    cls.members.forEach(function(m){
+      var args=m.p.map(function(q){ return argFor(cls,q); });
+      if(m.p.length===2&&m.p[0][0]!==m.p[1][0]){ var sw={k:m.k,n:m.n,args:[args[1],args[0]]}; if(!resolve(cls,sw).line) add(bad,sw); }
+      if(m.p.length===1){ var wr={k:m.k,n:m.n,args:[wrongLit(m.p[0][0])]}; if(!resolve(cls,wr).line) add(bad,wr); }
+    });
+    var max=0, top=null; cls.members.forEach(function(m){ if(m.k==="c"&&m.p.length>=max){ max=m.p.length; top=m; } });
+    add(bad,{k:"c",n:top.n,args:top.p.map(function(q){ return argFor(cls,q); }).concat([argFor(cls,["int","x"])])});
+    valid=valid.filter(function(c){ return c.res.line; }).concat(valid.filter(function(c){ return !c.res.line; }));
+    var nb=Math.random()<.5?1:2;
+    return shuffle(shuffle(bad).slice(0,nb).concat(valid.slice(0,PER-nb)));
+  }
+
+  // ---------- game ----------
+  function tick(){ $("#hTime").textContent=((performance.now()-t0)/1000).toFixed(1)+"s"; }
+  function lines(){ return document.querySelectorAll(".ln[data-n]"); }
+  function showRound(){
+    var c=round[at], cls=c.cls;
+    $("#zone").textContent=cls.name+".java"; $("#code").className="code";
+    $("#code").innerHTML='<div class="ln deco"><span class="no"></span><span class="src">'+hl("public class "+cls.name+" {")+'</span></div>'
+      +cls.members.map(function(m,i){ return '<button class="ln" data-n="'+(i+1)+'"><span class="no">'+(i+1)+'</span><span class="src">'+hl(lineSrc(m))+'</span></button>'; }).join("")
+      +'<div class="ln deco"><span class="no"></span><span class="src">}</span></div>';
+    $("#call").className="call";
+    $("#call").innerHTML=hl(callText(cls,c))+(c.k==="m"?'<span class="ctx">'+cls.v+" is a "+cls.name+'</span>':"");
+    $("#bX").className="xbtn"; $("#bX").disabled=false;
+    $("#stepno").innerHTML="<small>round</small>"+(at+1)+" / "+N; $("#bar").style.width=(100*at/N)+"%";
+  }
+  function start(){
+    round=[]; CLASSES.forEach(function(cls){ round=round.concat(makeRounds(cls)); });
+    at=0; score=0; misses=[]; busy=false;
+    $("#hScore").textContent="0"; $("#startScr").classList.add("off"); $("#endScr").classList.add("off");
+    $("#caption").className="caption"; $("#status").innerHTML="Which version runs? <b class=\"a\">Click its line</b>, or X if none fits.";
+    showRound(); t0=performance.now(); if(timer) clearInterval(timer); timer=setInterval(tick,100);
+  }
+  function answer(n){
+    if(busy||at>=round.length) return; var c=round[at], cls=c.cls; if(n<0||n>cls.members.length) return; busy=true;
+    var right=c.res.line, ok=n===right, w=why(cls,c,c.res); c.why=w;
+    Array.prototype.forEach.call(lines(),function(b){ var k=+b.getAttribute("data-n"); b.disabled=true;
+      b.classList.add(k===right?"hit":k===n?"miss":"dim"); });
+    $("#bX").disabled=true; $("#bX").classList.add(right===0?"hit":n===0?"miss":"dim");
+    $("#call").className="call "+(ok?"good":"bad");
+    var target=right?'<b class="g">line '+right+'</b>':'<b class="g">compile error</b>';
+    if(ok){ score++; $("#hScore").textContent=String(score); $("#caption").className="caption ok";
+      $("#status").innerHTML=target+": "+esc(w)+"."; }
+    else { misses.push(c); $("#code").className="code bad"; $("#caption").className="caption cut";
+      $("#status").innerHTML='<b class="w">'+(n?"Line "+n:"Compile error")+'</b> is not it. The answer is '+target+": "+esc(w)+"."; }
+    setTimeout(function(){ at++; busy=false; if(at>=N) end(); else showRound(); }, reduce?400:(ok?1700:3400));
+  }
+  function end(){
+    clearInterval(timer); tick(); $("#bar").style.width="100%";
+    var secs=((performance.now()-t0)/1000).toFixed(1);
+    $("#endScore").textContent=score+" / "+N; $("#endScore").className="big "+(score===N?"good":score>=11?"":"gold");
+    $("#endMsg").textContent=(score===N?"Perfect. ":score>=11?"Solid. ":"Keep going. ")+secs+" seconds.";
+    $("#endMiss").innerHTML=misses.map(function(c){ return '<div><b>'+esc(callText(c.cls,c))+'</b> '+(c.res.line?"runs "+esc(sig(c.cls.members[c.res.line-1]))+": ":"")+esc(c.why)+'</div>'; }).join("");
+    $("#endScr").classList.remove("off");
+    $("#stepno").innerHTML="<small>round</small>"+N+" / "+N; $("#caption").className="caption"; $("#status").innerHTML="Round over. <b class=\"a\">Play again</b> deals fifteen new calls.";
+  }
+  $("#code").addEventListener("click",function(e){ var b=e.target.closest(".ln[data-n]"); if(b) answer(+b.getAttribute("data-n")); });
+  $("#bX").addEventListener("click",function(){ answer(0); });
+  $("#bStart").addEventListener("click",start); $("#bAgain").addEventListener("click",start);
+  document.addEventListener("keydown",function(e){ if(/INPUT|TEXTAREA/.test(e.target.tagName)) return;
+    var playing=$("#startScr").classList.contains("off")&&$("#endScr").classList.contains("off");
+    var k=parseInt(e.key,10); if(playing&&k>=1&&k<=9) answer(k);
+    if(playing&&(e.key==="x"||e.key==="X")) answer(0);
+    if(e.code==="Space"&&!playing){ e.preventDefault(); start(); } });
+
+  var cv=$("#amb"),ctx=cv.getContext&&cv.getContext("2d"),parts=[];
+  function sizeC(){if(!ctx)return;cv.width=innerWidth;cv.height=innerHeight;}
+  function initParts(){parts=[];for(var i=0;i<46;i++)parts.push({x:Math.random(),y:Math.random(),r:Math.random()*1.6+.3,s:Math.random()*.02+.004,o:Math.random()*.4+.1});}
+  function drawC(){if(!ctx)return;ctx.clearRect(0,0,cv.width,cv.height);
+    parts.forEach(function(p){p.y-=p.s/60;if(p.y<-.02)p.y=1.02;ctx.beginPath();ctx.arc(p.x*cv.width,p.y*cv.height,p.r,0,7);
+      ctx.fillStyle="rgba(140,170,255,"+p.o+")";ctx.fill();});requestAnimationFrame(drawC);}
+  if(ctx&&!reduce){sizeC();initParts();drawC();addEventListener("resize",sizeC);}
+
+})();
+</script>
+<script src="../manifest.js"></script>
+<script src="../../assets/rail.js"></script>
+<script>Rail.render(document.getElementById("rail"),{week:2,kind:"games",current:"constructor-picker"});</script>
+</body>
+</html>

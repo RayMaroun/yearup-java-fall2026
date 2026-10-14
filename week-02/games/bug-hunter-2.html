@@ -1,0 +1,321 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Bug Hunter 2 | Week 2 Visual Hub</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Sora:wght@500;700&family=Inter:wght@400;500&family=JetBrains+Mono:wght@400;500&display=swap">
+<style>
+  :root{
+    --bg:#080c17; --bg2:#0c1428; --surface:rgba(255,255,255,.045); --line:rgba(255,255,255,.09);
+    --ink:#eef2fb; --muted:#8496b6; --accent:#6ea0ff; --accent2:#8b7bff; --good:#46d98a; --warn:#ff6a6a;
+    --gold:#ffc862; --disp:'Sora',system-ui,sans-serif; --body:'Inter',system-ui,sans-serif;
+    --mono:'JetBrains Mono',ui-monospace,monospace;
+  }
+  *{box-sizing:border-box}
+  body{margin:0;min-height:100vh;color:var(--ink);font-family:var(--body);
+    background:radial-gradient(1200px 700px at 70% -10%,#141d38 0%,transparent 55%),
+               radial-gradient(900px 600px at 10% 110%,#161233 0%,transparent 50%),#080c17;
+    overflow-x:hidden}
+  #amb{position:fixed;inset:0;z-index:0;pointer-events:none;opacity:.6}
+  .back{position:relative;z-index:2;display:block;max-width:1120px;margin:0 auto;padding:26px 24px 0;
+    width:100%;font-family:var(--mono);font-size:.8rem;letter-spacing:.04em;color:var(--muted);
+    text-decoration:none;transition:color .15s}
+  .back:hover{color:var(--accent)}
+  .wrap{position:relative;z-index:1;max-width:1120px;margin:0 auto;padding:22px 24px 70px}
+  .tag{font-family:var(--mono);font-size:.72rem;letter-spacing:.22em;text-transform:uppercase;color:var(--accent);margin:0 0 14px}
+  h1{font-family:var(--disp);font-weight:700;font-size:clamp(2.3rem,6vw,3.6rem);line-height:1;margin:0 0 12px;
+    letter-spacing:-.03em;background:linear-gradient(180deg,#fff,#b9c6e6);-webkit-background-clip:text;
+    background-clip:text;color:transparent}
+  .lede{color:var(--muted);max-width:64ch;font-size:1.05rem;margin:0 0 26px;line-height:1.5}
+  .lede b{color:var(--ink)}
+  .lede code,.take code,.caption code{font-family:var(--mono);font-size:.92em;color:#bcd0ff}
+
+  /* ---------- stage: picture first, one toolbar, support below ---------- */
+  .stage{position:relative;background:linear-gradient(180deg,rgba(255,255,255,.03),rgba(255,255,255,.01));
+    border:1px solid var(--line);border-radius:24px;padding:18px 18px 14px;
+    box-shadow:0 1px 0 rgba(255,255,255,.06) inset,0 30px 80px -30px rgba(0,0,0,.8)}
+  .topbar{display:flex;align-items:center;gap:10px;margin:0 0 14px;flex-wrap:wrap}
+  .topbar .lab{margin:0 4px 0 0}
+  .lab{font-family:var(--mono);font-size:.7rem;letter-spacing:.12em;text-transform:uppercase;color:var(--muted);margin:0 0 10px}
+  .chips{display:flex;flex-wrap:wrap;gap:6px}
+  .chip{font-family:var(--mono);font-size:.74rem;padding:5px 11px;border-radius:999px;cursor:pointer;
+    border:1px solid var(--line);background:rgba(0,0,0,.25);color:var(--muted);transition:.15s}
+  .chip:hover{border-color:var(--accent);color:var(--accent)}
+  .chip.on{border-color:rgba(110,160,255,.6);background:rgba(110,160,255,.14);color:var(--ink)}
+  .chip:focus-visible,.btn:focus-visible,.focus:focus-visible{outline:2px solid var(--accent);outline-offset:2px}
+  .focus{margin-left:auto;font-family:var(--mono);font-size:.68rem;letter-spacing:.1em;text-transform:uppercase;padding:6px 12px;
+    border-radius:999px;border:1px solid var(--line);background:rgba(0,0,0,.25);color:var(--muted);cursor:pointer;transition:.15s}
+  .focus:hover{border-color:var(--accent);color:var(--accent)}
+  body.solo .focus{border-color:rgba(255,200,98,.6);color:var(--gold);background:rgba(255,200,98,.1)}
+
+
+  /* ---------- game board ---------- */
+  .pic{position:relative;height:390px;border:1px solid var(--line);border-radius:18px;background:rgba(6,10,20,.5);overflow:hidden;
+    display:flex;flex-direction:column;align-items:center;justify-content:center;padding:40px 20px 24px}
+  .pic .zone{position:absolute;left:18px;top:14px;font-family:var(--mono);font-size:.62rem;letter-spacing:.14em;text-transform:uppercase;color:rgba(132,150,182,.55)}
+  .hud{position:absolute;right:18px;top:12px;display:flex;gap:14px;font-family:var(--mono);font-size:.72rem;color:var(--muted)}
+  .hud b{color:var(--ink);font-weight:500}
+  .code{width:100%;max-width:700px;border:1px solid var(--line);border-radius:14px;background:rgba(0,0,0,.3);padding:8px 0;transition:border-color .2s}
+  .code.bad{animation:shake .3s}
+  @keyframes shake{25%{transform:translateX(-6px)}75%{transform:translateX(6px)}}
+  .ln{display:flex;width:100%;align-items:baseline;gap:14px;padding:4px 16px;border:0;border-left:3px solid transparent;background:transparent;
+    color:#c9d4ea;font-family:var(--mono);font-size:.92rem;line-height:1.55;text-align:left;cursor:pointer;transition:background .15s,border-color .15s}
+  .ln:hover{background:rgba(110,160,255,.08);border-left-color:var(--accent)}
+  .ln:disabled{cursor:default}
+  .ln .no{flex-shrink:0;width:1.4em;text-align:right;color:var(--muted);font-size:.78rem}
+  .ln .src{white-space:pre;overflow:hidden;text-overflow:ellipsis}
+  .ln.hit{background:rgba(70,217,138,.12);border-left-color:var(--good)}
+  .ln.miss{background:rgba(255,106,106,.12);border-left-color:var(--warn)}
+  .ln.dim{opacity:.45}
+  .cm{color:#6b7a99;font-style:italic}
+  .kw{color:#c792ea} .ty{color:#6ea0ff} .st{color:#9ee493} .nm{color:#ffc862} .fn{color:#7fdbca}
+  .screen{position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:12px;background:rgba(6,10,20,.92);transition:opacity .25s;padding:20px}
+  .screen.off{opacity:0;pointer-events:none}
+  .screen h2{font-family:var(--disp);font-weight:700;font-size:1.6rem;margin:0;color:var(--ink)}
+  .screen p{margin:0;color:var(--muted);font-size:.95rem;text-align:center;max-width:46ch;line-height:1.5}
+  .screen .big{font-family:var(--disp);font-weight:700;font-size:2.6rem;color:var(--accent)}
+  .screen .big.gold{color:var(--gold)} .screen .big.good{color:var(--good)}
+  .bar{position:absolute;left:0;right:0;bottom:0;height:4px;background:rgba(255,255,255,.06)}
+  .bar i{display:block;height:100%;width:0;background:var(--accent);transition:width .25s}
+  .misses{font-family:var(--mono);font-size:.72rem;color:var(--muted);line-height:1.6;text-align:left;max-width:640px;max-height:130px;overflow-y:auto}
+  .misses div{margin:0 0 4px}
+  .misses b{color:var(--warn);font-weight:500;white-space:pre}
+  /* caption: the one sentence, right under the picture */
+  .caption{display:flex;gap:16px;align-items:flex-start;margin:14px 4px 0;min-height:56px}
+  .caption .n{flex-shrink:0;font-family:var(--disp);font-weight:700;font-size:1.35rem;color:var(--accent);font-variant-numeric:tabular-nums;
+    line-height:1.2;min-width:3.2rem}
+  .caption .n small{display:block;font-family:var(--mono);font-weight:400;font-size:.58rem;letter-spacing:.14em;text-transform:uppercase;color:var(--muted)}
+  .caption .t{font-size:1.02rem;line-height:1.55;color:var(--ink);padding-left:16px;border-left:3px solid var(--accent);transition:border-color .3s}
+  body.solo .caption .t{font-size:1.18rem}
+  .caption.cut .t{border-left-color:var(--warn)} .caption.left .t{border-left-color:var(--gold)} .caption.ok .t{border-left-color:var(--good)}
+  .caption b.g{color:var(--good)} .caption b.w{color:var(--warn)} .caption b.a{color:var(--accent)} .caption b.y{color:var(--gold)}
+
+  /* toolbar: same on every page */
+  .toolbar{display:flex;align-items:center;gap:10px;margin:16px 0 0;padding-top:14px;border-top:1px solid var(--line)}
+  .btn{font-family:var(--body);font-weight:500;font-size:.86rem;padding:9px 16px;border-radius:11px;cursor:pointer;
+    border:1px solid var(--line);background:var(--surface);color:var(--ink);transition:.15s}
+  .btn:hover{border-color:var(--accent);color:var(--accent)}
+  .btn.primary{border-color:rgba(110,160,255,.5);background:rgba(110,160,255,.12);padding:9px 22px}
+  .btn:disabled{opacity:.35;cursor:not-allowed}
+  .btn.ghost{background:transparent;color:var(--muted);margin-left:auto}
+  .dots{display:flex;gap:5px;align-items:center;margin:0 6px}
+  .dots i{display:block;width:8px;height:8px;border-radius:50%;background:rgba(255,255,255,.12);transition:.2s}
+  .dots i.done{background:rgba(110,160,255,.45)}
+  .dots i.now{background:var(--accent);transform:scale(1.35);box-shadow:0 0 10px rgba(110,160,255,.7)}
+  .hint{font-family:var(--mono);font-size:.68rem;color:var(--muted);margin:10px 4px 0;line-height:1.5}
+  .hint b{color:var(--accent)}
+
+  .toolbar .btn.primary{min-width:120px}
+  .take{margin-top:22px;background:linear-gradient(180deg,rgba(110,160,255,.08),rgba(139,123,255,.04));
+    border:1px solid var(--line);border-left:3px solid var(--accent);border-radius:12px;padding:16px 18px}
+  .take .tk{font-family:var(--mono);font-size:.66rem;letter-spacing:.14em;text-transform:uppercase;color:var(--accent);margin:0 0 8px}
+  .take p{margin:0;font-size:.95rem;color:var(--ink);line-height:1.55}
+  .take b{color:#fff}
+  @media (prefers-reduced-motion:reduce){*{animation-duration:.01ms!important;transition-duration:.01ms!important}#amb{display:none}}
+</style>
+</head>
+<body>
+
+
+<a class="back" href="../index.html#bug-hunter-2">&#8592; Week 2 index</a>
+
+<canvas id="amb"></canvas>
+<div class="wrap">
+  <p class="tag">Workbook 2a &middot; all sections &middot; Game</p>
+  <h1>Bug Hunter 2</h1>
+  <p class="lede"><b>Every snippet hides exactly one week 2 bug. Click the line you would change. Fifteen rounds, the clock is running.</b></p>
+
+  <div class="stage">
+    <div class="topbar">
+      <span class="lab">Game</span>
+    </div>
+
+    <div class="pic" id="pic">
+      <span class="zone" id="zone">which line?</span>
+      <div class="hud"><span>score <b id="hScore">0</b></span><span>time <b id="hTime">0.0s</b></span></div>
+      <div class="code" id="code"></div>
+      <div class="bar"><i id="bar"></i></div>
+      <div class="screen" id="startScr">
+        <h2>Bug Hunter 2</h2>
+        <p>A short piece of Java appears. One line is wrong: it does not compile, crashes, or does the wrong thing. Click the line you would change, or press its number.</p>
+        <button class="btn primary" id="bStart">Start</button>
+      </div>
+      <div class="screen off" id="endScr">
+        <h2>Round over</h2>
+        <div class="big" id="endScore"></div>
+        <p id="endMsg"></p>
+        <div class="misses" id="endMiss"></div>
+        <button class="btn primary" id="bAgain">Play again</button>
+      </div>
+    </div>
+
+    <div class="caption" id="caption">
+      <div class="n" id="stepno"><small>round</small>0 / 15</div>
+      <div class="t" id="status">Press <b class="a">Start</b>. Keys 1 to 9 pick a line.</div>
+    </div>
+    <p class="hint">look for: == on Strings &middot; a String result thrown away &middot; substring end index &middot; a missing this. &middot; a missing new or () &middot; &lt;= length &middot; a loop that never ends &middot; break vs continue</p>
+  </div>
+
+  <div class="take">
+    <p class="tk">The one idea</p>
+    <p><b>Most week 2 bugs compile and still do the wrong thing.</b> Ask what each line really changes: a String method returns a new String, a for-each hands you a copy, a setter must write to <code>this</code>, and a loop ends only when something moves it toward the end.</p>
+  </div>
+
+  <div id="rail"></div>
+</div>
+
+<script>
+(function(){
+  "use strict";
+  var $=function(s){return document.querySelector(s);};
+  var reduce=matchMedia("(prefers-reduced-motion: reduce)").matches;
+
+  var MAIN="inside main", CLS="inside a class";
+  var POOL=[
+    {f:MAIN,b:5,w:'built is a new object with the same text, and == asks whether it is the same object, so this is false; write built.equals(saved)',l:[
+      'String saved = "coffee";','StringBuilder sb = new StringBuilder("cof");','sb.append("fee");','String built = sb.toString();','if (built == saved) {','    System.out.println("Match");','}']},
+    {f:MAIN,b:5,w:'toLowerCase builds two new Strings and == compares objects, not text; write typed.equalsIgnoreCase(city)',l:[
+      'Scanner scanner = new Scanner(System.in);','String city = "Denver";','System.out.print("Where do you live? ");','String typed = scanner.nextLine();','if (typed.toLowerCase() == city.toLowerCase()) {','    System.out.println("Same city as me");','} else {','    System.out.println("Different city");','}']},
+    {f:MAIN,b:3,w:'Strings never change, so toUpperCase returns a new String that is thrown away; write name = name.toUpperCase();',l:[
+      'String name = "maya";','int length = name.length();','name.toUpperCase();','String badge = "Badge: " + name;','System.out.println(badge);   // want: Badge: MAYA','System.out.println(length + " letters");']},
+    {f:MAIN,b:4,w:'trim returns a new String and leaves city alone; write city = city.trim();',l:[
+      'Scanner scanner = new Scanner(System.in);','System.out.print("City: ");','String city = scanner.nextLine();   // typed with spaces around it','city.trim();','System.out.println("[" + city + "]");   // want: [Austin]','System.out.println(city.length() + " characters");']},
+    {f:MAIN,b:4,w:'replace returns a new String and the result is never stored; write sentence = sentence.replace(drink, "coffee");',l:[
+      'String sentence = "I like tea";','String drink = "tea";','if (sentence.contains(drink)) {','    sentence.replace(drink, "coffee");','}','System.out.println(sentence);   // want: I like coffee']},
+    {f:MAIN,b:2,w:'substring stops before the end index, so (0, 2) gives "Sa"; write substring(0, 3)',l:[
+      'String day = "Saturday";','String shortDay = day.substring(0, 2);','String upper = shortDay.toUpperCase();','System.out.println(shortDay);   // want: Sat','System.out.println(upper);      // want: SAT','System.out.println(day.length());']},
+    {f:MAIN,b:3,w:'the end index is already left out, so dash - 1 also cuts the C; write substring(0, dash)',l:[
+      'String code = "NYC-2026";','int dash = code.indexOf("-");','String city = code.substring(0, dash - 1);','String year = code.substring(dash + 1);','System.out.println(city);   // want: NYC','System.out.println(year);   // want: 2026']},
+    {f:MAIN,b:2,w:'parseInt does not skip spaces, so "  42  " throws NumberFormatException; parse line.trim() instead',l:[
+      'String line = "  42  ";','int boxes = Integer.parseInt(line);','int perBox = 12;','int items = boxes * perBox;','System.out.println(boxes + " boxes");','System.out.println(items + " items");']},
+    {f:MAIN,b:4,w:'split on "," leaves the space, so parts[1] is " 30" and parseInt throws; parse parts[1].trim()',l:[
+      'String pair = "12, 30";','String[] parts = pair.split(",");','int first = Integer.parseInt(parts[0]);','int second = Integer.parseInt(parts[1]);','int total = first + second;','System.out.println("Total: " + total);']},
+    {f:MAIN,b:2,w:'the $ is not part of a number, so parseDouble throws; parse price.substring(1)',l:[
+      'String price = "$4.50";','double amount = Double.parseDouble(price);','int cups = 2;','double total = amount * cups;','System.out.printf("Total: %.2f%n", total);','System.out.println(price + " each");']},
+    {f:"Plant.java",b:6,w:'heightCm = heightCm assigns the parameter to itself and the field stays 0; write this.heightCm = heightCm;',l:[
+      'public class Plant {','    private String species;','    private int heightCm;','    public Plant(String species, int heightCm) {','        this.species = species;','        heightCm = heightCm;','    }','    public int getHeightCm() {','        return heightCm;','    }','}']},
+    {f:"Song.java",b:5,w:'title = title copies the parameter onto itself and the field stays null; write this.title = title;',l:[
+      'public class Song {','    private String title;','    private int seconds;','    public Song(String title, int seconds) {','        title = title;','        this.seconds = seconds;','    }','}']},
+    {f:"Lamp.java",b:7,w:'int brightness declares a new local variable that vanishes at the brace; write this.brightness = level;',l:[
+      'public class Lamp {','    private int brightness;','    public int getBrightness() {','        return brightness;','    }','    public void setBrightness(int level) {','        int brightness = level;','    }','}']},
+    {f:"Speaker.java",b:4,w:'the assignment runs backwards and copies the field into the parameter; write this.volume = volume;',l:[
+      'public class Speaker {','    private int volume;','    public void setVolume(int volume) {','        volume = this.volume;','    }','    public int getVolume() {','        return volume;','    }','}']},
+    {f:"Wallet.java",b:2,w:'history is never created, so it is null and append throws NullPointerException; write = new StringBuilder() on this line',l:[
+      'public class Wallet {','    private StringBuilder history;','    private double balance = 0;','    public void deposit(double amount) {','        balance += amount;','        history.append("+" + amount + " ");','    }','}']},
+    {f:MAIN,b:4,w:'getAge is a method, so calling it takes parentheses: ana.getAge()',l:[
+      'Person ana = new Person("Ana", 31);','ana.setAge(32);','String who = ana.getName();','int years = ana.getAge;','System.out.println(who + " is " + years);','System.out.println("Energy: " + ana.getEnergy());']},
+    {f:MAIN,b:6,w:'getBrightness is a method, not a field, so it needs (): desk.getBrightness()',l:[
+      'Lamp desk = new Lamp();','Lamp floor = new Lamp();','desk.setBrightness(70);','floor.setBrightness(30);','int total = desk.getBrightness() + floor.getBrightness();','System.out.println("Desk: " + desk.getBrightness);','System.out.println("Both: " + total);']},
+    {f:MAIN,b:5,w:'toString is a method, so it needs (): sb.toString(). The append lines are fine, they change sb itself',l:[
+      'StringBuilder sb = new StringBuilder();','sb.append("Hello");','sb.append(", ");','sb.append("world");','String msg = sb.toString;','System.out.println(msg);']},
+    {f:MAIN,b:4,w:'concat returns a new String that is thrown away, unlike append which changes sb; write greeting = greeting.concat("?");',l:[
+      'String greeting = "hi";','StringBuilder sb = new StringBuilder(greeting);','sb.append("!");','greeting.concat("?");','String built = sb.toString();','System.out.println(built);      // want: hi!','System.out.println(greeting);   // want: hi?']},
+    {f:MAIN,b:1,w:'creating an object takes new: StringBuilder log = new StringBuilder();',l:[
+      'StringBuilder log = StringBuilder();','log.append("start ");','for (int step = 1; step <= 3; step++) {','    log.append(step).append(" ");','}','log.append("stop");','System.out.println(log);']},
+    {f:MAIN,b:1,w:'a constructor runs only with new: Person sam = new Person("Sam", 25);',l:[
+      'Person sam = Person("Sam", 25);','sam.work(3);','sam.eat();','int left = sam.getEnergy();','System.out.println(sam.getName() + ": " + left);','sam.sleep(8);']},
+    {f:MAIN,b:1,w:'an array is created with new: int[] laps = new int[5];',l:[
+      'int[] laps = int[5];','for (int i = 0; i < laps.length; i++) {','    laps[i] = (i + 1) * 400;','}','System.out.println("First: " + laps[0]);','System.out.println("Last: " + laps[laps.length - 1]);']},
+    {f:CLS,b:2,w:'no version of price takes (int, double); the two-argument one wants the price first: price(4.50, 3)',l:[
+      'public static void main(String[] args) {','    double total = price(3, 4.50);','    System.out.println(total);','}','public static double price(int cups) {','    return cups * 3.00;','}','public static double price(double each, int cups) {','    return each * cups;','}']},
+    {f:CLS,b:2,w:'no version of pad takes (int, String); the text comes first: pad("Hi", 5)',l:[
+      'public static void main(String[] args) {','    System.out.println(pad(5, "Hi"));','}','public static String pad(String text) {','    return pad(text, 10);','}','public static String pad(String text, int width) {','    return String.format("%-" + width + "s|", text);','}']},
+    {f:MAIN,b:3,w:'the last index is length - 1, so i <= length reaches temps[4] and throws; write i < temps.length',l:[
+      'int[] temps = {22, 24, 19, 21};','int sum = 0;','for (int i = 0; i <= temps.length; i++) {','    sum += temps[i];','}','System.out.println(sum);']},
+    {f:MAIN,b:3,w:'there is no slot at index length, so this throws ArrayIndexOutOfBoundsException; write cities[cities.length - 1]',l:[
+      'String[] cities = {"Austin", "Boston", "Chicago"};','String first = cities[0];','String last = cities[cities.length];','System.out.println(first + " to " + last);','for (String c : cities) {','    System.out.print(c + " ");','}']},
+    {f:MAIN,b:6,w:'week never changes, so week <= 4 stays true forever; write week++;',l:[
+      'int week = 1;','double savings = 0;','while (week <= 4) {','    savings += 25;','    System.out.println("Week " + week + ": " + savings);','    int next = week + 1;','}']},
+    {f:MAIN,b:4,w:'countdown++ moves away from 0, so countdown > 0 never turns false; write countdown--;',l:[
+      'int countdown = 5;','while (countdown > 0) {','    System.out.println(countdown);','    countdown++;','}','System.out.println("Liftoff");']},
+    {f:MAIN,b:5,w:'a do/while ends with a semicolon after the condition: } while (lap <= 3);',l:[
+      'int lap = 1;','do {','    System.out.println("Lap " + lap);','    lap++;','} while (lap <= 3)','System.out.println("Done");']},
+    {f:MAIN,b:3,w:'p is a copy of each value, so changing it never touches the array; loop with an index and write prices[i] = prices[i] * 2;',l:[
+      'int[] prices = {10, 20, 30};','for (int p : prices) {','    p = p * 2;','}','System.out.println(Arrays.toString(prices));   // want: [20, 40, 60]','System.out.println("Count: " + prices.length);']},
+    {f:MAIN,b:3,w:'the backup was meant to keep the original order, so sort lapTimes instead: Arrays.sort(lapTimes);',l:[
+      'int[] lapTimes = {58, 52, 61, 49};','int[] backup = Arrays.copyOf(lapTimes, lapTimes.length);','Arrays.sort(backup);','System.out.println("Fastest: " + lapTimes[0]);','System.out.println("Slowest: " + lapTimes[lapTimes.length - 1]);','System.out.println("Original order: " + Arrays.toString(backup));']},
+    {f:MAIN,b:5,w:'break ends the whole loop at -999, so 19 and 21 are never added; continue skips just that reading',l:[
+      'int[] readings = {22, -999, 19, 21};','int sum = 0;','for (int r : readings) {','    if (r == -999) {','        break;','    }','    sum += r;','}','System.out.println("Valid total: " + sum);   // want: 62']}
+  ];
+  var KW=/^(public|private|static|void|class|final|if|else|while|for|do|break|continue|return|new|this|null)$/;
+  var TY=/^(int|long|double|float|char|boolean|String|StringBuilder|Scanner|Arrays|Integer|Double|Person|Lamp|Plant|Song|Speaker|Wallet)$/;
+  var N=15, round=[], at=0, score=0, misses=[], t0=0, timer=null, busy=false;
+
+  function esc(s){ return s.replace(/&/g,"\u0026amp;").replace(/</g,"\u0026lt;").replace(/>/g,"\u0026gt;"); }
+  function splitComment(src){
+    var q=false;
+    for(var i=0;i<src.length-1;i++){
+      if(src[i]==='"'&&src[i-1]!=="\\") q=!q;
+      if(!q&&src[i]==="/"&&src[i+1]==="/") return [src.slice(0,i),src.slice(i)];
+    }
+    return [src,""];
+  }
+  function hl(full){
+    var parts=splitComment(full), src=parts[0];
+    var re=/("(?:[^"\\]|\\.)*"|'(?:[^'\\]|\\.)*'|\b\d[\d_]*(?:\.\d+)?[LfFdD]?\b|[A-Za-z_]\w*)/g, out="", last=0, m;
+    while((m=re.exec(src))){
+      out+=esc(src.slice(last,m.index)); var t=m[0], c="";
+      if(t[0]==='"'||t[0]==="'") c="st"; else if(/^\d/.test(t)) c="nm"; else if(KW.test(t)) c="kw"; else if(TY.test(t)) c="ty";
+      else if(/^\s*\(/.test(src.slice(re.lastIndex))) c="fn";
+      out+=c?'<span class="'+c+'">'+esc(t)+'</span>':esc(t); last=re.lastIndex;
+    }
+    out+=esc(src.slice(last));
+    return parts[1]?out+'<span class="cm">'+esc(parts[1])+'</span>':out;
+  }
+  function shuffle(a){ a=a.slice(); for(var i=a.length-1;i>0;i--){ var j=Math.floor(Math.random()*(i+1)); var t=a[i]; a[i]=a[j]; a[j]=t; } return a; }
+  function tick(){ $("#hTime").textContent=((performance.now()-t0)/1000).toFixed(1)+"s"; }
+  function lines(){ return document.querySelectorAll(".ln"); }
+  function showSnip(){
+    var s=round[at]; $("#zone").textContent=s.f; $("#code").className="code";
+    $("#code").innerHTML=s.l.map(function(x,i){ return '<button class="ln" data-n="'+(i+1)+'"><span class="no">'+(i+1)+'</span><span class="src">'+hl(x)+'</span></button>'; }).join("");
+    $("#stepno").innerHTML="<small>round</small>"+(at+1)+" / "+N; $("#bar").style.width=(100*at/N)+"%";
+  }
+  function start(){
+    round=shuffle(POOL).slice(0,N); at=0; score=0; misses=[]; busy=false;
+    $("#hScore").textContent="0"; $("#startScr").classList.add("off"); $("#endScr").classList.add("off");
+    $("#caption").className="caption"; $("#status").innerHTML="One line is wrong. <b class=\"a\">Which one would you change?</b>";
+    showSnip(); t0=performance.now(); if(timer) clearInterval(timer); timer=setInterval(tick,100);
+  }
+  function answer(n){
+    if(busy||at>=round.length) return; var s=round[at]; if(n<1||n>s.l.length) return; busy=true;
+    var ok=n===s.b;
+    Array.prototype.forEach.call(lines(),function(b){ var k=+b.getAttribute("data-n"); b.disabled=true;
+      b.classList.add(k===s.b?"hit":k===n?"miss":"dim"); });
+    if(ok){ score++; $("#hScore").textContent=String(score); $("#caption").className="caption ok";
+      $("#status").innerHTML='<b class="g">Line '+s.b+'</b>: '+esc(s.w)+'.'; }
+    else { misses.push(s); $("#code").className="code bad"; $("#caption").className="caption cut";
+      $("#status").innerHTML='<b class="w">Line '+n+'</b> is fine. The bug is on <b class="g">line '+s.b+'</b>: '+esc(s.w)+'.'; }
+    setTimeout(function(){ at++; busy=false; if(at>=N) end(); else showSnip(); }, reduce?400:(ok?2000:3600));
+  }
+  function end(){
+    clearInterval(timer); tick(); $("#bar").style.width="100%";
+    var secs=((performance.now()-t0)/1000).toFixed(1);
+    $("#endScore").textContent=score+" / "+N; $("#endScore").className="big "+(score===N?"good":score>=11?"":"gold");
+    $("#endMsg").textContent=(score===N?"Perfect. ":score>=11?"Solid. ":"Keep going. ")+secs+" seconds.";
+    $("#endMiss").innerHTML=misses.map(function(s){ return '<div><b>'+esc(splitComment(s.l[s.b-1])[0].trim())+'</b> '+esc(s.w)+'</div>'; }).join("");
+    $("#endScr").classList.remove("off");
+    $("#stepno").innerHTML="<small>round</small>"+N+" / "+N; $("#caption").className="caption"; $("#status").innerHTML="Round over. <b class=\"a\">Play again</b> deals fifteen new snippets.";
+  }
+  $("#code").addEventListener("click",function(e){ var b=e.target.closest(".ln"); if(b) answer(+b.getAttribute("data-n")); });
+  $("#bStart").addEventListener("click",start); $("#bAgain").addEventListener("click",start);
+  document.addEventListener("keydown",function(e){ if(/INPUT|TEXTAREA/.test(e.target.tagName)) return;
+    var playing=$("#startScr").classList.contains("off")&&$("#endScr").classList.contains("off");
+    var k=parseInt(e.key,10); if(playing&&k>=1&&k<=9) answer(k);
+    if(e.code==="Space"&&!playing){ e.preventDefault(); start(); } });
+
+  var cv=$("#amb"),ctx=cv.getContext&&cv.getContext("2d"),parts=[];
+  function sizeC(){if(!ctx)return;cv.width=innerWidth;cv.height=innerHeight;}
+  function initParts(){parts=[];for(var i=0;i<46;i++)parts.push({x:Math.random(),y:Math.random(),r:Math.random()*1.6+.3,s:Math.random()*.02+.004,o:Math.random()*.4+.1});}
+  function drawC(){if(!ctx)return;ctx.clearRect(0,0,cv.width,cv.height);
+    parts.forEach(function(p){p.y-=p.s/60;if(p.y<-.02)p.y=1.02;ctx.beginPath();ctx.arc(p.x*cv.width,p.y*cv.height,p.r,0,7);
+      ctx.fillStyle="rgba(140,170,255,"+p.o+")";ctx.fill();});requestAnimationFrame(drawC);}
+  if(ctx&&!reduce){sizeC();initParts();drawC();addEventListener("resize",sizeC);}
+})();
+</script>
+<script src="../manifest.js"></script>
+<script src="../../assets/rail.js"></script>
+<script>Rail.render(document.getElementById("rail"),{week:2,kind:"games",current:"bug-hunter-2"});</script>
+</body>
+</html>

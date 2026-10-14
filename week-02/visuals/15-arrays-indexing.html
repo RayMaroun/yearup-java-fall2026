@@ -1,0 +1,483 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Arrays and Indexes | Week 2 Visual Hub</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Sora:wght@500;700&family=Inter:wght@400;500&family=JetBrains+Mono:wght@400;500&display=swap">
+<style>
+  :root{
+    --bg:#080c17; --bg2:#0c1428; --surface:rgba(255,255,255,.045); --line:rgba(255,255,255,.09);
+    --ink:#eef2fb; --muted:#8496b6; --accent:#6ea0ff; --accent2:#8b7bff; --good:#46d98a; --warn:#ff6a6a;
+    --gold:#ffc862; --disp:'Sora',system-ui,sans-serif; --body:'Inter',system-ui,sans-serif;
+    --mono:'JetBrains Mono',ui-monospace,monospace;
+  }
+  *{box-sizing:border-box}
+  body{margin:0;min-height:100vh;color:var(--ink);font-family:var(--body);
+    background:radial-gradient(1200px 700px at 70% -10%,#141d38 0%,transparent 55%),
+               radial-gradient(900px 600px at 10% 110%,#161233 0%,transparent 50%),#080c17;
+    overflow-x:hidden}
+  #amb{position:fixed;inset:0;z-index:0;pointer-events:none;opacity:.6}
+  .back{position:relative;z-index:2;display:block;max-width:1120px;margin:0 auto;padding:26px 24px 0;
+    width:100%;font-family:var(--mono);font-size:.8rem;letter-spacing:.04em;color:var(--muted);
+    text-decoration:none;transition:color .15s}
+  .back:hover{color:var(--accent)}
+  .wrap{position:relative;z-index:1;max-width:1120px;margin:0 auto;padding:22px 24px 70px}
+  .tag{font-family:var(--mono);font-size:.72rem;letter-spacing:.22em;text-transform:uppercase;color:var(--accent);margin:0 0 14px}
+  h1{font-family:var(--disp);font-weight:700;font-size:clamp(2.3rem,6vw,3.6rem);line-height:1;margin:0 0 12px;
+    letter-spacing:-.03em;background:linear-gradient(180deg,#fff,#b9c6e6);-webkit-background-clip:text;
+    background-clip:text;color:transparent}
+  .lede{color:var(--muted);max-width:64ch;font-size:1.05rem;margin:0 0 26px;line-height:1.5}
+  .lede b{color:var(--ink)}
+  .lede code,.take code,.caption code{font-family:var(--mono);font-size:.92em;color:#bcd0ff}
+
+  /* ---------- stage: picture first, one toolbar, support below ---------- */
+  .stage{position:relative;background:linear-gradient(180deg,rgba(255,255,255,.03),rgba(255,255,255,.01));
+    border:1px solid var(--line);border-radius:24px;padding:18px 18px 14px;
+    box-shadow:0 1px 0 rgba(255,255,255,.06) inset,0 30px 80px -30px rgba(0,0,0,.8)}
+  .topbar{display:flex;align-items:center;gap:10px;margin:0 0 14px;flex-wrap:wrap}
+  .topbar .lab{margin:0 4px 0 0}
+  .lab{font-family:var(--mono);font-size:.7rem;letter-spacing:.12em;text-transform:uppercase;color:var(--muted);margin:0 0 10px}
+  .chips{display:flex;flex-wrap:wrap;gap:6px}
+  .chip{font-family:var(--mono);font-size:.74rem;padding:5px 11px;border-radius:999px;cursor:pointer;
+    border:1px solid var(--line);background:rgba(0,0,0,.25);color:var(--muted);transition:.15s}
+  .chip:hover{border-color:var(--accent);color:var(--accent)}
+  .chip.on{border-color:rgba(110,160,255,.6);background:rgba(110,160,255,.14);color:var(--ink)}
+  .chip:disabled{opacity:.4;cursor:not-allowed}
+  .chip:focus-visible,.btn:focus-visible,.focus:focus-visible{outline:2px solid var(--accent);outline-offset:2px}
+  .focus{margin-left:auto;font-family:var(--mono);font-size:.68rem;letter-spacing:.1em;text-transform:uppercase;padding:6px 12px;
+    border-radius:999px;border:1px solid var(--line);background:rgba(0,0,0,.25);color:var(--muted);cursor:pointer;transition:.15s}
+  .focus:hover{border-color:var(--accent);color:var(--accent)}
+  body.solo .focus{border-color:rgba(255,200,98,.6);color:var(--gold);background:rgba(255,200,98,.1)}
+
+  /* hero picture: the array as a row of slots, i walks along it */
+  .pic{position:relative;height:390px;border:1px solid var(--line);border-radius:18px;background:rgba(6,10,20,.5);overflow:hidden}
+  body.solo .pic{height:480px}
+  .pic .start{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;font-family:var(--mono);
+    font-size:.8rem;color:var(--muted);pointer-events:none}
+  .pic .start b{color:var(--accent);font-weight:500}
+  .arr{position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center;padding:0 24px;gap:22px}
+  .aname{font-family:var(--mono);font-size:.95rem;color:var(--muted)}
+  .aname b{color:var(--accent);font-weight:500}
+  .expr{font-family:var(--mono);font-size:1.25rem;min-height:1.7em;padding:6px 18px;border-radius:999px;border:1px solid var(--line);
+    background:rgba(0,0,0,.3);color:var(--ink);transition:border-color .3s,background .3s;white-space:nowrap}
+  .expr:empty{visibility:hidden}
+  .expr .g{color:var(--good)} .expr .w{color:var(--warn)} .expr .a{color:var(--accent)} .expr .y{color:var(--gold)} .expr .m{color:var(--muted)}
+  .expr.bad{border-color:rgba(255,106,106,.6);background:rgba(255,106,106,.1)}
+  .rowwrap{position:relative;width:100%;max-width:1000px;padding:40px 0 46px}
+  .row{display:flex;justify-content:center;gap:8px;width:100%}
+  .slot{width:min(80px,calc((100% - 88px) / 12));display:flex;flex-direction:column;align-items:center;gap:7px}
+  .box{width:100%;height:66px;border-radius:12px;border:1px solid rgba(110,160,255,.35);background:rgba(110,160,255,.06);
+    display:flex;align-items:center;justify-content:center;font-family:var(--disp);font-weight:700;font-size:1.2rem;color:var(--ink);
+    font-variant-numeric:tabular-nums;transition:border-color .3s,background .3s,box-shadow .3s,color .3s;text-align:center;line-height:1.1;padding:2px}
+  .box.str{font-family:var(--mono);font-weight:500;font-size:.74rem}
+  .box.def{color:rgba(132,150,182,.6);font-family:var(--mono);font-weight:400;font-size:.9rem;font-style:italic}
+  .box.cur{border-color:var(--accent);background:rgba(110,160,255,.18);box-shadow:0 0 22px -6px rgba(110,160,255,.8)}
+  .box.newv{animation:pop .35s cubic-bezier(.2,1.4,.4,1)}
+  .box.read{border-color:var(--gold);background:rgba(255,200,98,.14);box-shadow:0 0 22px -6px rgba(255,200,98,.8);color:#ffe6b0}
+  .idx{font-family:var(--mono);font-size:.82rem;color:var(--muted);transition:color .3s}
+  .idx.on{color:var(--accent)} .idx.rd{color:var(--gold)}
+  .slot.ghost{visibility:hidden}
+  .slot.ghost .box{border:2px dashed rgba(255,106,106,.75);background:rgba(255,106,106,.08);color:var(--warn);font-family:var(--mono);
+    font-weight:500;font-size:.72rem}
+  .slot.ghost .idx{color:var(--warn)}
+  .slot.ghost.show{visibility:visible;animation:pop .35s}
+  .ptr{position:absolute;top:0;left:50%;transform:translateX(-50%);display:flex;flex-direction:column;align-items:center;
+    font-family:var(--mono);font-size:.9rem;color:var(--accent);opacity:0;transition:left .45s cubic-bezier(.2,.9,.3,1),opacity .25s,color .3s;white-space:nowrap}
+  .ptr::after{content:"";width:0;height:0;border-left:7px solid transparent;border-right:7px solid transparent;border-top:9px solid currentColor;margin-top:3px}
+  .ptr.show{opacity:1}
+  .ptr.bad{color:var(--warn)} .ptr.rd{color:var(--gold)}
+  .brace{position:absolute;bottom:4px;height:30px;border:1px solid rgba(132,150,182,.4);border-top:none;border-radius:0 0 10px 10px;
+    opacity:0;transition:opacity .3s}
+  .brace.show{opacity:1}
+  .brace span{position:absolute;top:100%;margin-top:4px;font-family:var(--mono);font-size:.72rem;color:var(--muted);white-space:nowrap}
+  .brace .l{left:0} .brace .r{right:0} .brace .c{left:50%;transform:translateX(-50%)}
+  .brace b{color:var(--ink);font-weight:500}
+
+  /* caption: the one sentence, right under the picture */
+  .caption{display:flex;gap:16px;align-items:flex-start;margin:14px 4px 0;min-height:56px}
+  .caption .n{flex-shrink:0;font-family:var(--disp);font-weight:700;font-size:1.35rem;color:var(--accent);font-variant-numeric:tabular-nums;
+    line-height:1.2;min-width:3.2rem}
+  .caption .n small{display:block;font-family:var(--mono);font-weight:400;font-size:.58rem;letter-spacing:.14em;text-transform:uppercase;color:var(--muted)}
+  .caption .t{font-size:1.02rem;line-height:1.55;color:var(--ink);padding-left:16px;border-left:3px solid var(--accent);transition:border-color .3s}
+  body.solo .caption .t{font-size:1.18rem}
+  .caption.write .t{border-left-color:var(--accent)} .caption.read .t{border-left-color:var(--gold)} .caption.ok .t{border-left-color:var(--good)} .caption.trouble .t{border-left-color:var(--warn)}
+  .caption b.g{color:var(--good)} .caption b.w{color:var(--warn)} .caption b.a{color:var(--accent)} .caption b.y{color:var(--gold)}
+
+  /* toolbar: Step, Run, Back, dots, Reset, Experiment */
+  .toolbar{display:flex;align-items:center;gap:10px;margin:16px 0 0;padding-top:14px;border-top:1px solid var(--line);flex-wrap:wrap}
+  .btn{font-family:var(--body);font-weight:500;font-size:.86rem;padding:9px 16px;border-radius:11px;cursor:pointer;
+    border:1px solid var(--line);background:var(--surface);color:var(--ink);transition:.15s}
+  .btn:hover{border-color:var(--accent);color:var(--accent)}
+  .btn.primary{border-color:rgba(110,160,255,.5);background:rgba(110,160,255,.12);padding:9px 22px}
+  .btn:disabled{opacity:.35;cursor:not-allowed}
+  .btn.warn{margin-left:auto}
+  .btn.warn:hover{border-color:var(--warn);color:var(--warn)}
+  .btn.on{border-color:var(--warn);color:var(--warn);background:rgba(255,106,106,.1)}
+  .dots{display:flex;gap:5px;align-items:center;margin:0 6px;flex-wrap:wrap}
+  .dots i{display:block;width:8px;height:8px;border-radius:50%;background:rgba(255,255,255,.12);transition:.2s}
+  .dots i.done{background:rgba(110,160,255,.45)}
+  .dots i.now{background:var(--accent);transform:scale(1.35);box-shadow:0 0 10px rgba(110,160,255,.7)}
+  .hint{font-family:var(--mono);font-size:.68rem;color:var(--muted);margin:10px 4px 0;line-height:1.5}
+  .hint b{color:var(--accent)}
+
+  /* support: code left; inputs, readouts and console right. Hidden in focus */
+  .support{display:grid;grid-template-columns:minmax(0,1.3fr) minmax(0,1fr);gap:14px;margin-top:18px}
+  @media (max-width:860px){.support{grid-template-columns:1fr}}
+  body.solo .support,body.solo .take,body.solo .hint{display:none}
+  .code{min-width:0;font-family:var(--mono);font-size:.76rem;line-height:1.8;background:rgba(0,0,0,.35);border:1px solid var(--line);
+    border-radius:14px;padding:12px 0;overflow-x:auto}
+  .ln{display:flex;gap:12px;padding:0 14px;white-space:pre-wrap;word-break:break-word;color:#c9d4ea;transition:background .2s}
+  .ln .n{width:20px;text-align:right;color:rgba(132,150,182,.55);user-select:none;flex-shrink:0}
+  .ln.cur{background:rgba(110,160,255,.14);box-shadow:inset 3px 0 0 var(--accent)}
+  .ln.cur .n{color:var(--accent)}
+  .ln.rd{background:rgba(255,200,98,.12);box-shadow:inset 3px 0 0 var(--gold)}
+  .ln.mut{background:rgba(255,106,106,.12);box-shadow:inset 3px 0 0 var(--warn)}
+  .kw{color:#c792ea} .ty{color:#82aaff} .st{color:#c3e88d} .nm{color:#f78c6c} .cm{color:#5f6b85;font-style:italic} .fn{color:#ffcb6b}
+  .op{color:var(--warn);font-weight:500}
+  .side{display:flex;flex-direction:column;gap:12px}
+  .side .lab{margin:0}
+  .inputs{background:rgba(0,0,0,.32);border:1px solid var(--line);border-radius:14px;padding:14px 16px}
+  .ititle{font-family:var(--mono);font-size:.64rem;letter-spacing:.1em;text-transform:uppercase;color:var(--gold);margin:0 0 10px}
+  .irow{display:flex;align-items:center;justify-content:space-between;font-family:var(--mono);font-size:.85rem;margin:7px 0;gap:10px}
+  .irow .kk{color:var(--muted)}
+  .irow input{width:90px;font-family:var(--mono);font-size:.85rem;color:var(--ink);background:rgba(255,255,255,.05);
+    border:1px solid var(--line);border-radius:8px;padding:5px 8px;text-align:right;transition:.15s}
+  .irow input:focus{outline:none;border-color:var(--gold)}
+  .irow input:disabled{opacity:.5}
+  .inote{font-size:.78rem;color:var(--muted);margin:8px 0 0;line-height:1.45}
+  .readout{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+  .stat{background:rgba(255,255,255,.03);border:1px solid var(--line);border-radius:12px;padding:11px 13px;transition:opacity .3s}
+  .stat.empty{opacity:.3}
+  .stat .k{font-family:var(--mono);font-size:.62rem;letter-spacing:.1em;text-transform:uppercase;color:var(--muted)}
+  .stat .v{font-family:var(--disp);font-weight:700;font-size:1.45rem;font-variant-numeric:tabular-nums;margin-top:2px;transition:color .3s;min-height:1.6em}
+  .v.hot{color:var(--accent)} .v.gold{color:var(--gold)} .v.bad{color:var(--warn)} .v.dim{color:rgba(132,150,182,.5)}
+  .console{font-family:var(--mono);font-size:.76rem;line-height:1.6;background:#05070e;border:1px solid var(--line);
+    border-radius:12px;padding:10px 14px;min-height:64px;color:#9fe3b6;flex:1;word-break:break-word}
+  .console .cl{font-size:.6rem;letter-spacing:.14em;text-transform:uppercase;color:rgba(132,150,182,.6);margin-bottom:4px}
+  .console .out{animation:pop .3s}
+  .console .err{color:#ff9d9d}
+  @keyframes pop{from{transform:scale(.6);opacity:0}to{transform:scale(1);opacity:1}}
+  .take{margin-top:22px;background:linear-gradient(180deg,rgba(110,160,255,.08),rgba(139,123,255,.04));
+    border:1px solid var(--line);border-left:3px solid var(--accent);border-radius:12px;padding:16px 18px}
+  .take .tk{font-family:var(--mono);font-size:.66rem;letter-spacing:.14em;text-transform:uppercase;color:var(--accent);margin:0 0 8px}
+  .take p{margin:0;font-size:.95rem;color:var(--ink);line-height:1.55}
+  .take b{color:#fff}
+  @media (prefers-reduced-motion:reduce){*{animation-duration:.01ms!important;transition-duration:.01ms!important}#amb{display:none}}
+</style>
+</head>
+<body>
+
+<a class="back" href="../index.html#15-arrays-indexing">&#8592; Week 2 index</a>
+
+<canvas id="amb"></canvas>
+<div class="wrap">
+  <p class="tag">Workbook 2a &middot; Section 3-2 &middot; Arrays</p>
+  <h1>Arrays and Indexes</h1>
+  <p class="lede"><b>An array is a fixed row of slots numbered from 0, so the last index is always <code>length - 1</code>.</b></p>
+
+  <div class="stage">
+    <div class="topbar">
+      <span class="lab">The array</span>
+      <div class="chips" id="chips">
+        <button class="chip on" data-t="int">int[] temperatures</button>
+        <button class="chip" data-t="str">String[] cityNames</button>
+      </div>
+      <button class="focus" id="bFocus" title="Hide the code and notes, enlarge the picture">Focus</button>
+    </div>
+
+    <div class="pic" id="pic">
+      <div class="start" id="start"></div>
+      <div class="arr" id="arr" style="display:none">
+        <div class="aname" id="aname"></div>
+        <div class="expr" id="expr"></div>
+        <div class="rowwrap" id="rowwrap">
+          <div class="ptr" id="ptr">i</div>
+          <div class="row" id="row"></div>
+          <div class="brace" id="brace"></div>
+        </div>
+      </div>
+    </div>
+
+    <div class="caption" id="caption">
+      <div class="n" id="stepno"><small>step</small>0 / 0</div>
+      <div class="t" id="status">Press <b class="a">Step</b> to create the array, or <b class="a">Run</b> to watch the loop fill it.</div>
+    </div>
+
+    <div class="toolbar">
+      <button class="btn primary" id="bStep">Step &rarr;</button>
+      <button class="btn" id="bRun">Run</button>
+      <button class="btn" id="bBack">&larr; Back</button>
+      <div class="dots" id="dots"></div>
+      <button class="btn" id="bReset">Reset</button>
+      <button class="btn warn" id="bMut">Experiment: loop with i &lt;= length</button>
+    </div>
+    <p class="hint">space = step &middot; set the index to the size, or turn on the experiment. <b>What is past the last slot?</b></p>
+
+    <div class="support">
+      <div>
+        <p class="lab">Main.java</p>
+        <div class="code" id="code"></div>
+      </div>
+      <div class="side">
+        <p class="lab">Inputs</p>
+        <div class="inputs">
+          <p class="ititle">Change these, then press Step</p>
+          <div class="irow"><span class="kk">size of the array (3 to 10)</span><input id="inN" type="number" min="3" max="10" value="7"></div>
+          <div class="irow"><span class="kk">index to read at the end</span><input id="inK" type="number" min="-1" max="12" value="6"></div>
+          <p class="inote">Edit while stopped. Every step is computed from these values.</p>
+        </div>
+        <div class="readout">
+          <div class="stat empty"><div class="k">length</div><div class="v dim" id="stLen"></div></div>
+          <div class="stat empty"><div class="k">last index</div><div class="v dim" id="stLast"></div></div>
+          <div class="stat empty"><div class="k">current i</div><div class="v dim" id="stI"></div></div>
+          <div class="stat empty"><div class="k">value</div><div class="v dim" id="stVal"></div></div>
+        </div>
+        <div class="console"><div class="cl">console</div><div id="console"></div></div>
+      </div>
+    </div>
+  </div>
+
+  <div class="take">
+    <p class="tk">The one idea</p>
+    <p>An array has a <b>fixed number of slots</b>, set when it is created. <b>Indexes run from 0 to <code>length - 1</code></b>,
+    which is why the loop uses <code>i &lt; array.length</code>. A new array is never empty: int slots start at 0, String slots at null.
+    Ask for any index outside that range and Java stops with <b>ArrayIndexOutOfBoundsException</b>.</p>
+  </div>
+
+  <div id="rail"></div>
+</div>
+
+<script>
+(function(){
+  "use strict";
+  var $=function(s){return document.querySelector(s);};
+  var reduce=matchMedia("(prefers-reduced-motion: reduce)").matches;
+
+  /* ---------- the two arrays the page can build ---------- */
+  var TYPES={
+    int:{name:"temperatures",type:"int",def:0,defTxt:"0",
+      val:function(i){return 20+i;}, show:function(v){return String(v);},
+      fill:'<span class="nm">20</span> + i;   <span class="cm">// 20, 21, 22, ...</span>'},
+    str:{name:"cityNames",type:"String",def:null,defTxt:"null",
+      val:function(i){return "City "+i;}, show:function(v){return '"'+v+'"';},
+      fill:'<span class="st">"City "</span> + i;'}
+  };
+  var T=TYPES.int, mut=false;
+
+  function lines(inp){
+    var a=T.name, op=mut?'<span class="op"><=</span>':'<';
+    return [
+      '<span class="ty">'+T.type+'</span>[] '+a+' = <span class="kw">new</span> <span class="ty">'+T.type+'</span>[<span class="nm">'+inp.N+'</span>];',
+      '<span class="kw">for</span> (<span class="ty">int</span> i = <span class="nm">0</span>; i '+op+' '+a+'.length; i++) {'+(mut?'   <span class="cm">// the experiment</span>':''),
+      '    '+a+'[i] = '+T.fill,
+      '}',
+      'System.out.println(<span class="st">"Last index: "</span> + ('+a+'.length - <span class="nm">1</span>));',
+      'System.out.println('+a+'[<span class="nm">'+inp.K+'</span>]);'
+    ];
+  }
+
+  /* ---------- the run, computed from the inputs ---------- */
+  function exc(idx,len){ return 'Exception in thread "main" java.lang.ArrayIndexOutOfBoundsException: Index '+idx+' out of bounds for length '+len; }
+  function build(inp){
+    var N=inp.N, K=inp.K, a=T.name, S=[], vals=[], filled=[], out=[], i;
+    for(i=0;i<N;i++){vals.push(T.def);filled.push(false);}
+    function snap(o){ o.vals=vals.slice(); o.filled=filled.slice(); o.out=out.slice(); S.push(o); }
+    var opTxt=mut?"<=":"<";
+    snap({line:[1],cls:"",len:true,
+      expr:'<span class="a">new '+T.type+'['+N+']</span>',
+      msg:'<code>new '+T.type+'['+N+']</code> makes <b class="a">'+N+' slots</b>, numbered 0 to '+(N-1)+'. Each starts at <b class="a">'+T.defTxt+'</b>, the default for '+T.type+'.'});
+    for(i=0;;i++){
+      var ok=mut?i<=N:i<N;
+      if(!ok){
+        snap({line:[2],cls:"ok",i:i,ptr:i,len:true,
+          expr:'i '+opTxt+' length <span class="m">\u2192</span> '+i+' '+opTxt+' '+N+' <span class="m">\u2192</span> <span class="a">false</span>',
+          msg:'i is '+i+': '+i+' '+opTxt+' '+N+' is <b class="g">false</b>. The loop stops just before the end of the array.'});
+        break;
+      }
+      if(i>=N){
+        out.push({err:exc(i,N)});
+        snap({line:[3],cls:"trouble",i:i,ptr:i,bad:i,len:true,val:"no slot",
+          expr:'i '+opTxt+' length <span class="m">\u2192</span> '+i+' '+opTxt+' '+N+' <span class="m">\u2192</span> <span class="w">true</span>',
+          msg:'i is '+i+': '+i+' <= '+N+' is true, but there is <b class="w">no slot '+i+'</b>. Java throws ArrayIndexOutOfBoundsException.'});
+        return S;
+      }
+      vals[i]=T.val(i); filled[i]=true;
+      var shown=T.show(vals[i]);
+      var m;
+      if(i===0) m='i starts at <b class="a">0</b>, the first index. 0 '+opTxt+' '+N+' is true, so '+a+'[0] gets '+shown+'.';
+      else if(i===N-1) m='i is '+i+', the <b class="a">last index</b>. '+i+' '+opTxt+' '+N+' is still true, so the last slot gets '+shown+'.';
+      else m='i is '+i+': '+i+' '+opTxt+' '+N+' is true, so '+a+'['+i+'] gets '+shown+'.';
+      snap({line:[2,3],cls:"write",i:i,ptr:i,cur:i,fresh:i,len:true,val:shown,
+        expr:'i '+opTxt+' length <span class="m">\u2192</span> '+i+' '+opTxt+' '+N+' <span class="m">\u2192</span> <span class="g">true</span>',
+        msg:m});
+    }
+    out.push({txt:"Last index: "+(N-1)});
+    snap({line:[5],cls:"",len:true,brace:true,i:N,
+      expr:'length - 1 <span class="m">\u2192</span> '+N+' - 1 <span class="m">\u2192</span> <span class="a">'+(N-1)+'</span>',
+      msg:'The loop is done and every slot is filled. The last index is always <b class="a">length - 1</b>: '+N+' - 1 = '+(N-1)+'.'});
+    if(K>=0&&K<N){
+      var v=T.show(vals[K]);
+      out.push({txt:T.type==="int"?v:vals[K]});
+      snap({line:[6],cls:"read",idxPtr:true,len:true,brace:true,i:N,ptr:K,rd:K,val:v,
+        expr:a+'['+K+'] <span class="m">\u2192</span> <span class="y">'+v+'</span>',
+        msg:'<code>'+a+'['+K+']</code> goes straight to slot '+K+' and prints <b class="y">'+v+'</b>.'});
+    } else {
+      out.push({err:exc(K,N)});
+      snap({line:[6],cls:"trouble",idxPtr:true,len:true,brace:true,i:N,ptr:K,bad:K,val:"no slot",
+        expr:a+'['+K+'] <span class="m">\u2192</span> <span class="w">no slot '+K+'</span>',
+        msg:'There is <b class="w">no slot '+K+'</b>: valid indexes are 0 to '+(N-1)+'. Java throws ArrayIndexOutOfBoundsException.'});
+    }
+    return S;
+  }
+
+  /* ---------- state ---------- */
+  var steps=[], at=-1, timer=null;
+  var codeEl=$("#code"), consEl=$("#console"), statusEl=$("#status");
+
+  function clampInt(v,lo,hi,d){ v=parseInt(v,10); if(isNaN(v)) v=d; return Math.max(lo,Math.min(hi,v)); }
+  function inputs(){ return {N:clampInt($("#inN").value,3,10,7), K:clampInt($("#inK").value,-1,12,6)}; }
+
+  function renderCode(cur,cls){
+    var L=lines(inputs());
+    codeEl.innerHTML=L.map(function(t,i){
+      var n=i+1, c="ln";
+      if(cur&&cur.indexOf(n)>=0) c+=(cls==="trouble"?" mut":cls==="read"?" rd":" cur");
+      return '<div class="'+c+'"><span class="n">'+n+'</span><span>'+(t||" ")+'</span></div>';
+    }).join("");
+  }
+
+  /* ---------- the picture ---------- */
+  function slotHtml(idx,cls,box,boxCls){
+    return '<div class="slot'+cls+'" data-i="'+idx+'"><div class="box'+boxCls+'">'+box+'</div><div class="idx">'+idx+'</div></div>';
+  }
+  function renderPic(s){
+    var inp=inputs(), N=inp.N;
+    if(!s){
+      $("#arr").style.display="none"; $("#start").style.display="flex";
+      $("#start").innerHTML=T.type+"["+N+"] · press <b>Step</b>";
+      return;
+    }
+    $("#start").style.display="none"; $("#arr").style.display="flex";
+    $("#aname").innerHTML=T.type+'[] <b>'+T.name+'</b> \u00b7 length '+N;
+    var expr=$("#expr"); expr.innerHTML=s.expr||""; expr.className="expr"+(s.bad!==undefined?" bad":"");
+    var leftIdx=(s.bad!==undefined&&s.bad<0)?s.bad:-1, rightIdx=(s.bad!==undefined&&s.bad>=N)?s.bad:N;
+    var h=slotHtml(leftIdx," ghost"+(s.bad!==undefined&&s.bad<0?" show":""),"no slot","");
+    for(var i=0;i<N;i++){
+      var v=s.vals[i], isDef=!s.filled[i], bc="";
+      if(isDef) bc+=" def"; else if(T.type==="String") bc+=" str";
+      if(s.cur===i) bc+=" cur";
+      if(s.fresh===i) bc+=" newv";
+      if(s.rd===i) bc+=" read";
+      var txt=isDef?T.defTxt:(T.type==="String"?'"'+v+'"':v);
+      h+=slotHtml(i,"",txt,bc);
+    }
+    h+=slotHtml(rightIdx," ghost"+(s.bad!==undefined&&s.bad>=N?" show":""),"no slot","");
+    $("#row").innerHTML=h;
+    Array.prototype.forEach.call(document.querySelectorAll("#row .slot"),function(el){
+      var k=+el.getAttribute("data-i"), ix=el.querySelector(".idx");
+      if(s.cur===k) ix.classList.add("on"); if(s.rd===k) ix.classList.add("rd");
+    });
+    placeOverlays(s);
+  }
+  function slotEl(k){ return document.querySelector('#row .slot[data-i="'+k+'"]'); }
+  function placeOverlays(s){
+    var ptr=$("#ptr"), br=$("#brace"), N=inputs().N;
+    var target=s.ptr!==undefined?slotEl(s.ptr):null;
+    if(target){
+      ptr.style.left=(target.offsetLeft+target.offsetWidth/2)+"px";
+      ptr.textContent=s.idxPtr?"["+s.ptr+"]":"i = "+s.ptr;
+      ptr.className="ptr show"+(s.bad!==undefined?" bad":s.rd!==undefined?" rd":"");
+    } else ptr.className="ptr";
+    var f=slotEl(0), l=slotEl(N-1);
+    if(s.brace&&f&&l){
+      br.style.left=f.offsetLeft+"px"; br.style.width=(l.offsetLeft+l.offsetWidth-f.offsetLeft)+"px";
+      br.innerHTML='<span class="l">first <b>0</b></span><span class="r">last <b>'+(N-1)+'</b> = length - 1</span>';
+      br.className="brace show";
+    } else { br.className="brace"; br.innerHTML=""; }
+  }
+
+  function show(i){
+    at=i;
+    if(i<0){
+      renderCode(null); renderPic(null);
+      consEl.innerHTML='<span style="color:rgba(132,150,182,.5)">(nothing printed yet)</span>';
+      $("#caption").className="caption";
+      statusEl.innerHTML='Press <b class="a">Step</b> to create the array, or <b class="a">Run</b> to watch the loop fill it.';
+      setStat("#stLen",null); setStat("#stLast",null); setStat("#stI",null); setStat("#stVal",null);
+      setBtns(); return;
+    }
+    var s=steps[i], N=inputs().N;
+    renderCode(s.line,s.cls); renderPic(s);
+    consEl.innerHTML=s.out.map(function(o){ return o.err?'<div class="out err">'+o.err+'</div>':'<div class="out">'+o.txt+'</div>'; }).join("")
+      ||'<span style="color:rgba(132,150,182,.5)">(nothing printed yet)</span>';
+    $("#caption").className="caption "+s.cls; statusEl.innerHTML=s.msg;
+    setStat("#stLen",N); setStat("#stLast",N-1,s.brace?"hot":"");
+    setStat("#stI",s.i===undefined?null:s.i,s.bad!==undefined&&s.i===s.bad?"bad":"hot");
+    setStat("#stVal",s.val===undefined?null:s.val,s.bad!==undefined?"bad":s.rd!==undefined?"gold":"");
+    setBtns();
+  }
+  function setStat(id,v,c){ var e=$(id), box=e.parentNode;
+    if(v===null){e.textContent="";e.className="v dim";box.classList.add("empty");}
+    else {e.textContent=v;e.className="v "+(c||"");box.classList.remove("empty");} }
+  function setBtns(){
+    var end=steps.length>0&&at>=steps.length-1;
+    $("#stepno").innerHTML="<small>step</small>"+(at+1)+" / "+steps.length;
+    var dd=""; for(var k=0;k<steps.length;k++) dd+='<i class="'+(k===at?"now":k<at?"done":"")+'"></i>'; $("#dots").innerHTML=dd;
+    $("#bStep").disabled=end; $("#bBack").disabled=at<0;
+    $("#bRun").textContent=timer?"Pause":(end?"Run again":"Run");
+    ["#inN","#inK"].forEach(function(id){$(id).disabled=at>=0;});
+    Array.prototype.forEach.call(document.querySelectorAll(".chip"),function(c){c.disabled=at>=0;});
+  }
+  function rebuild(){ steps=build(inputs()); }
+  function step(){ if(at<0) rebuild(); if(at<steps.length-1) show(at+1); else stop(); }
+  function back(){ if(at>=0) show(at-1); }
+  function reset(){ stop(); rebuild(); show(-1); }
+  function stop(){ if(timer){clearInterval(timer);timer=null;} setBtns(); }
+  function run(){ if(timer){stop();return;} if(at>=steps.length-1&&steps.length) show(-1); step();
+    timer=setInterval(function(){ if(at>=steps.length-1) stop(); else step(); }, reduce?400:1100); setBtns(); }
+
+  $("#bStep").addEventListener("click",function(){stop();step();});
+  $("#bBack").addEventListener("click",function(){stop();back();});
+  $("#bReset").addEventListener("click",reset);
+  $("#bRun").addEventListener("click",run);
+  $("#bMut").addEventListener("click",function(){ mut=!mut; this.classList.toggle("on",mut);
+    this.textContent=mut?"Experiment ON: i <= length":"Experiment: loop with i <= length"; reset(); });
+  $("#chips").addEventListener("click",function(e){ var b=e.target.closest(".chip"); if(!b||b.disabled) return;
+    T=TYPES[b.getAttribute("data-t")];
+    Array.prototype.forEach.call(document.querySelectorAll(".chip"),function(c){c.classList.toggle("on",c===b);});
+    b.blur(); reset(); });
+  ["#inN","#inK"].forEach(function(id){
+    $(id).addEventListener("input",function(){ if(at<0){ rebuild(); show(-1); } });
+    $(id).addEventListener("change",function(){ var inp=inputs(); $("#inN").value=inp.N; $("#inK").value=inp.K; if(at<0){ rebuild(); show(-1); } });
+  });
+  document.addEventListener("keydown",function(e){ if(e.code==="Space"&&!/INPUT|BUTTON/.test(e.target.tagName)){e.preventDefault();stop();step();} });
+  addEventListener("resize",function(){ if(at>=0) placeOverlays(steps[at]); });
+  /* focus: picture and caption only. Remembered per browser. */
+  function setFocus(on){ document.body.classList.toggle("solo",on); $("#bFocus").textContent=on?"Focus on":"Focus";
+    try{localStorage.setItem("hub-focus",on?"1":"0");}catch(e){} if(at>=0) placeOverlays(steps[at]); }
+  $("#bFocus").addEventListener("click",function(){ setFocus(!document.body.classList.contains("solo")); this.blur(); });
+  try{ if(localStorage.getItem("hub-focus")==="1") document.body.classList.add("solo"); }catch(e){}
+  if(document.body.classList.contains("solo")) $("#bFocus").textContent="Focus on";
+
+  /* ---------- ambient canvas ---------- */
+  var cv=$("#amb"),ctx=cv.getContext&&cv.getContext("2d"),parts=[];
+  function sizeC(){if(!ctx)return;cv.width=innerWidth;cv.height=innerHeight;}
+  function initParts(){parts=[];for(var i=0;i<46;i++)parts.push({x:Math.random(),y:Math.random(),
+    r:Math.random()*1.6+.3,s:Math.random()*.02+.004,o:Math.random()*.4+.1});}
+  function drawC(){if(!ctx)return;ctx.clearRect(0,0,cv.width,cv.height);
+    parts.forEach(function(p){p.y-=p.s/60;if(p.y<-.02)p.y=1.02;
+      ctx.beginPath();ctx.arc(p.x*cv.width,p.y*cv.height,p.r,0,7);
+      ctx.fillStyle="rgba(140,170,255,"+p.o+")";ctx.fill();});
+    requestAnimationFrame(drawC);}
+  if(ctx&&!reduce){sizeC();initParts();drawC();addEventListener("resize",sizeC);}
+
+  reset();
+})();
+</script>
+<script src="../manifest.js"></script>
+<script src="../../assets/rail.js"></script>
+<script>Rail.render(document.getElementById("rail"),{week:2,kind:"visuals",current:"15-arrays-indexing"});</script>
+</body>
+</html>

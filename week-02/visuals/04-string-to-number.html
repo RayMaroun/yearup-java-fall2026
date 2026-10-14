@@ -1,0 +1,539 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>String to Number | Week 2 Visual Hub</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Sora:wght@500;700&family=Inter:wght@400;500&family=JetBrains+Mono:wght@400;500&display=swap">
+<style>
+  :root{
+    --bg:#080c17; --bg2:#0c1428; --surface:rgba(255,255,255,.045); --line:rgba(255,255,255,.09);
+    --ink:#eef2fb; --muted:#8496b6; --accent:#6ea0ff; --accent2:#8b7bff; --good:#46d98a; --warn:#ff6a6a;
+    --gold:#ffc862; --disp:'Sora',system-ui,sans-serif; --body:'Inter',system-ui,sans-serif;
+    --mono:'JetBrains Mono',ui-monospace,monospace;
+  }
+  *{box-sizing:border-box}
+  body{margin:0;min-height:100vh;color:var(--ink);font-family:var(--body);
+    background:radial-gradient(1200px 700px at 70% -10%,#141d38 0%,transparent 55%),
+               radial-gradient(900px 600px at 10% 110%,#161233 0%,transparent 50%),#080c17;
+    overflow-x:hidden}
+  #amb{position:fixed;inset:0;z-index:0;pointer-events:none;opacity:.6}
+  .back{position:relative;z-index:2;display:block;max-width:1120px;margin:0 auto;padding:26px 24px 0;
+    width:100%;font-family:var(--mono);font-size:.8rem;letter-spacing:.04em;color:var(--muted);
+    text-decoration:none;transition:color .15s}
+  .back:hover{color:var(--accent)}
+  .wrap{position:relative;z-index:1;max-width:1120px;margin:0 auto;padding:22px 24px 70px}
+  .tag{font-family:var(--mono);font-size:.72rem;letter-spacing:.22em;text-transform:uppercase;color:var(--accent);margin:0 0 14px}
+  h1{font-family:var(--disp);font-weight:700;font-size:clamp(2.3rem,6vw,3.6rem);line-height:1;margin:0 0 12px;
+    letter-spacing:-.03em;background:linear-gradient(180deg,#fff,#b9c6e6);-webkit-background-clip:text;
+    background-clip:text;color:transparent}
+  .lede{color:var(--muted);max-width:64ch;font-size:1.05rem;margin:0 0 26px;line-height:1.5}
+  .lede b{color:var(--ink)}
+  .lede code,.take code,.caption code{font-family:var(--mono);font-size:.92em;color:#bcd0ff;white-space:pre}
+
+  /* ---------- stage: picture first, one toolbar, support below ---------- */
+  .stage{position:relative;background:linear-gradient(180deg,rgba(255,255,255,.03),rgba(255,255,255,.01));
+    border:1px solid var(--line);border-radius:24px;padding:18px 18px 14px;
+    box-shadow:0 1px 0 rgba(255,255,255,.06) inset,0 30px 80px -30px rgba(0,0,0,.8)}
+  .topbar{display:flex;align-items:center;gap:10px;margin:0 0 14px;flex-wrap:wrap}
+  .topbar .lab{margin:0 4px 0 0}
+  .lab{font-family:var(--mono);font-size:.7rem;letter-spacing:.12em;text-transform:uppercase;color:var(--muted);margin:0 0 10px}
+  .chips{display:flex;flex-wrap:wrap;gap:6px}
+  .chip{font-family:var(--mono);font-size:.74rem;padding:5px 11px;border-radius:999px;cursor:pointer;white-space:pre;
+    border:1px solid var(--line);background:rgba(0,0,0,.25);color:var(--muted);transition:.15s}
+  .chip:hover{border-color:var(--accent);color:var(--accent)}
+  .chip.on{border-color:rgba(110,160,255,.6);background:rgba(110,160,255,.14);color:var(--ink)}
+  .chip:focus-visible,.btn:focus-visible,.focus:focus-visible{outline:2px solid var(--accent);outline-offset:2px}
+  .focus{margin-left:auto;font-family:var(--mono);font-size:.68rem;letter-spacing:.1em;text-transform:uppercase;padding:6px 12px;
+    border-radius:999px;border:1px solid var(--line);background:rgba(0,0,0,.25);color:var(--muted);cursor:pointer;transition:.15s}
+  .focus:hover{border-color:var(--accent);color:var(--accent)}
+  body.solo .focus{border-color:rgba(255,200,98,.6);color:var(--gold);background:rgba(255,200,98,.1)}
+
+  /* hero picture */
+  .pic{position:relative;height:390px;border:1px solid var(--line);border-radius:18px;background:rgba(6,10,20,.5);overflow:hidden}
+  body.solo .pic{height:480px}
+  .layer{position:absolute;inset:0;transition:opacity .3s}
+  .zone{position:absolute;font-family:var(--mono);font-size:.62rem;letter-spacing:.14em;text-transform:uppercase;
+    color:rgba(132,150,182,.75);transition:opacity .3s,left .5s,top .5s;white-space:nowrap}
+  .zone.on{color:var(--gold)}
+  .zone.g{color:var(--good)} .zone.a{color:var(--accent)}
+  /* one box per character */
+  .ch{position:absolute;display:flex;align-items:center;justify-content:center;border-radius:10px;font-family:var(--mono);font-weight:500;
+    color:#dfe7fb;border:1px solid rgba(110,160,255,.45);background:rgba(110,160,255,.08);
+    transition:left .55s cubic-bezier(.2,.9,.3,1),top .55s cubic-bezier(.2,.9,.3,1),opacity .4s,transform .4s,background .3s,border-color .3s,color .3s,box-shadow .3s}
+  .ch.sp{color:rgba(132,150,182,.8)}
+  .ch.nl{color:rgba(132,150,182,.9);font-size:.72rem!important}
+  .ch.plus{border-color:var(--gold);background:rgba(255,200,98,.16);color:#ffe6b0;box-shadow:0 0 16px -6px rgba(255,200,98,.9)}
+  .ch.ok{border-color:rgba(70,217,138,.75);background:rgba(70,217,138,.12);color:#bff3d6}
+  .ch.bad{border-color:var(--warn);background:rgba(255,106,106,.2);color:#ffd0d0;box-shadow:0 0 18px -4px rgba(255,106,106,.9);transform:scale(1.08)}
+  .ch.gone{border-style:dashed;border-color:rgba(255,106,106,.7);background:transparent;color:var(--warn);opacity:.45;transform:translateY(26px) scale(.85)}
+  .ch.left{border-color:var(--gold);background:rgba(255,200,98,.14);color:#ffe6b0}
+  .ch.skip{opacity:.3}
+  .ch.hide{opacity:0;transform:scale(.6)}
+  .caret{position:absolute;width:0;height:0;border-left:7px solid transparent;border-right:7px solid transparent;border-top:9px solid var(--accent);
+    transition:left .3s,opacity .3s;opacity:0}
+  .caret.show{opacity:1}
+  .via{position:absolute;font-family:var(--mono);font-size:.72rem;color:var(--accent);white-space:nowrap;transform:translateX(-50%);
+    opacity:0;transition:opacity .3s,left .5s}
+  .via.show{opacity:1}
+  .via:after{content:"";display:block;width:1px;height:18px;margin:4px auto 0;background:rgba(110,160,255,.6)}
+  .res{position:absolute;width:170px;height:82px;border-radius:14px;border:2px solid rgba(70,217,138,.8);background:rgba(70,217,138,.1);
+    display:flex;flex-direction:column;align-items:center;justify-content:center;opacity:0;transform:translateY(10px);
+    transition:opacity .4s,transform .4s,left .5s,top .5s}
+  .res.show{opacity:1;transform:none}
+  .res .rk{font-family:var(--mono);font-size:.62rem;letter-spacing:.12em;text-transform:uppercase;color:var(--good)}
+  .res .rv{font-family:var(--disp);font-weight:700;font-size:2rem;font-variant-numeric:tabular-nums;color:#eafff2;line-height:1.1}
+  .exc{position:absolute;border-radius:14px;border:1px solid rgba(255,106,106,.7);background:rgba(255,106,106,.1);padding:12px 18px;
+    font-family:var(--mono);text-align:center;opacity:0;transform:translateY(10px);transition:opacity .4s,transform .4s}
+  .exc.show{opacity:1;transform:none;box-shadow:0 0 30px -10px rgba(255,106,106,.8)}
+  .exc b{display:block;font-family:var(--disp);font-size:1.15rem;color:var(--warn);font-weight:700}
+  .exc span{display:block;font-size:.8rem;color:#ffd0d0;margin-top:4px;white-space:pre}
+  .exc small{display:block;font-size:.62rem;letter-spacing:.12em;text-transform:uppercase;color:var(--muted);margin-top:6px}
+  .note{position:absolute;font-family:var(--mono);font-size:.68rem;color:var(--muted);white-space:nowrap;opacity:0;transition:opacity .3s}
+  .note.show{opacity:1}
+  .note.y{color:var(--gold)} .note.g{color:var(--good)}
+  .answer{position:absolute;right:18px;bottom:14px;font-family:var(--disp);font-weight:700;font-size:1.7rem;color:var(--ink);
+    font-variant-numeric:tabular-nums;opacity:0;transition:opacity .4s;text-align:right;line-height:1.1;white-space:pre}
+  .answer.show{opacity:1}
+  .answer small{display:block;font-family:var(--mono);font-weight:400;font-size:.6rem;letter-spacing:.14em;text-transform:uppercase;color:var(--muted);margin-bottom:2px}
+  .answer s{color:var(--warn);text-decoration-color:var(--warn);opacity:.8;font-size:1.2rem}
+  .answer .y{color:var(--gold)} .answer .g{color:var(--good)}
+  .pic .start{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;font-family:var(--mono);
+    font-size:.8rem;color:var(--muted);pointer-events:none;transition:opacity .3s;white-space:pre}
+  .pic .start b{color:var(--accent);font-weight:500}
+
+  /* caption: the one sentence, right under the picture */
+  .caption{display:flex;gap:16px;align-items:flex-start;margin:14px 4px 0;min-height:56px}
+  .caption .n{flex-shrink:0;font-family:var(--disp);font-weight:700;font-size:1.35rem;color:var(--accent);font-variant-numeric:tabular-nums;
+    line-height:1.2;min-width:3.2rem}
+  .caption .n small{display:block;font-family:var(--mono);font-weight:400;font-size:.58rem;letter-spacing:.14em;text-transform:uppercase;color:var(--muted)}
+  .caption .t{font-size:1.02rem;line-height:1.55;color:var(--ink);padding-left:16px;border-left:3px solid var(--accent);transition:border-color .3s}
+  body.solo .caption .t{font-size:1.18rem}
+  .caption.cut .t{border-left-color:var(--warn)} .caption.left .t{border-left-color:var(--gold)} .caption.ok .t{border-left-color:var(--good)}
+  .caption b.g{color:var(--good)} .caption b.w{color:var(--warn)} .caption b.a{color:var(--accent)} .caption b.y{color:var(--gold)}
+
+  /* toolbar: same on every page */
+  .toolbar{display:flex;align-items:center;gap:10px;margin:16px 0 0;padding-top:14px;border-top:1px solid var(--line)}
+  .btn{font-family:var(--body);font-weight:500;font-size:.86rem;padding:9px 16px;border-radius:11px;cursor:pointer;
+    border:1px solid var(--line);background:var(--surface);color:var(--ink);transition:.15s}
+  .btn:hover{border-color:var(--accent);color:var(--accent)}
+  .btn.primary{border-color:rgba(110,160,255,.5);background:rgba(110,160,255,.12);padding:9px 22px}
+  .btn:disabled{opacity:.35;cursor:not-allowed}
+  .btn.ghost{background:transparent;color:var(--muted);margin-left:auto}
+  .dots{display:flex;gap:5px;align-items:center;margin:0 6px}
+  .dots i{display:block;width:8px;height:8px;border-radius:50%;background:rgba(255,255,255,.12);transition:.2s}
+  .dots i.done{background:rgba(110,160,255,.45)}
+  .dots i.now{background:var(--accent);transform:scale(1.35);box-shadow:0 0 10px rgba(110,160,255,.7)}
+  .hint{font-family:var(--mono);font-size:.68rem;color:var(--muted);margin:10px 4px 0;line-height:1.5}
+  .hint b{color:var(--accent)}
+
+  /* support: code, console, readouts. Below the picture, hidden in focus */
+  .support{display:grid;grid-template-columns:minmax(0,1.3fr) minmax(0,1fr);gap:14px;margin-top:18px}
+  @media (max-width:860px){.support{grid-template-columns:1fr}}
+  body.solo .support,body.solo .take,body.solo .hint{display:none}
+  .code{min-width:0;font-family:var(--mono);font-size:.76rem;line-height:1.8;background:rgba(0,0,0,.35);border:1px solid var(--line);
+    border-radius:14px;padding:12px 0;overflow-x:auto}
+  .ln{display:flex;gap:12px;padding:0 14px;white-space:pre;color:#c9d4ea;transition:background .2s,opacity .3s}
+  .ln .n{width:20px;text-align:right;color:rgba(132,150,182,.55);user-select:none;flex-shrink:0}
+  .ln.cur{background:rgba(110,160,255,.14);box-shadow:inset 3px 0 0 var(--accent)}
+  .ln.cur .n{color:var(--accent)}
+  .ln.cut{background:rgba(255,106,106,.12);box-shadow:inset 3px 0 0 var(--warn)}
+  .ln.left{background:rgba(255,200,98,.12);box-shadow:inset 3px 0 0 var(--gold)}
+  .ln.ok{background:rgba(70,217,138,.1);box-shadow:inset 3px 0 0 var(--good)}
+  .ln.dim{opacity:.4}
+  .kw{color:#c792ea} .ty{color:#82aaff} .st{color:#c3e88d} .nm{color:#f78c6c} .cm{color:#5f6b85;font-style:italic} .fn{color:#ffcb6b}
+  .side{display:flex;flex-direction:column;gap:12px}
+  .readout{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+  .stat{background:rgba(255,255,255,.03);border:1px solid var(--line);border-radius:12px;padding:11px 13px;transition:opacity .3s}
+  .stat.empty{opacity:.3}
+  .stat .k{font-family:var(--mono);font-size:.62rem;letter-spacing:.1em;text-transform:uppercase;color:var(--muted)}
+  .stat .v{font-family:var(--disp);font-weight:700;font-size:1.45rem;font-variant-numeric:tabular-nums;margin-top:2px;transition:color .3s;min-height:1.6em;white-space:pre}
+  .v.hot{color:var(--accent)} .v.good{color:var(--good)} .v.bad{color:var(--warn)} .v.dim{color:rgba(132,150,182,.5)}
+  .console{font-family:var(--mono);font-size:.76rem;line-height:1.6;background:#05070e;border:1px solid var(--line);
+    border-radius:12px;padding:10px 14px;min-height:64px;color:#9fe3b6;flex:1;overflow-x:auto}
+  .console .cl{font-size:.6rem;letter-spacing:.14em;text-transform:uppercase;color:rgba(132,150,182,.6);margin-bottom:4px}
+  .console .out{animation:pop .3s;white-space:pre}
+  .console .err{color:#ff9a9a;white-space:pre-wrap}
+  .console .mute{color:rgba(132,150,182,.6)}
+  @keyframes pop{from{transform:scale(.6);opacity:0}to{transform:scale(1);opacity:1}}
+  .take{margin-top:22px;background:linear-gradient(180deg,rgba(110,160,255,.08),rgba(139,123,255,.04));
+    border:1px solid var(--line);border-left:3px solid var(--accent);border-radius:12px;padding:16px 18px}
+  .take .tk{font-family:var(--mono);font-size:.66rem;letter-spacing:.14em;text-transform:uppercase;color:var(--accent);margin:0 0 8px}
+  .take p{margin:0;font-size:.95rem;color:var(--ink);line-height:1.55}
+  .take b{color:#fff}
+  @media (prefers-reduced-motion:reduce){*{animation-duration:.01ms!important;transition-duration:.01ms!important}#amb{display:none}}
+</style>
+</head>
+<body>
+
+<a class="back" href="../index.html#04-string-to-number">&#8592; Week 2 index</a>
+
+<canvas id="amb"></canvas>
+<div class="wrap">
+  <p class="tag">Workbook 2a &middot; Section 1-2 &middot; Converting strings</p>
+  <h1>String to Number</h1>
+  <p class="lede"><b>Typed input is text. <code>Integer.parseInt</code> turns its characters into a number, and one wrong character stops the program.</b></p>
+
+  <div class="stage">
+    <div class="topbar">
+      <span class="lab">Typed</span>
+      <div class="chips" id="chips"></div>
+      <button class="focus" id="bFocus" title="Hide the code and notes, enlarge the picture">Focus</button>
+    </div>
+
+    <div class="pic" id="pic"></div>
+
+    <div class="caption" id="caption">
+      <div class="n" id="stepno"><small>step</small>0 / 7</div>
+      <div class="t" id="status">Press <b class="a">Next</b>. The picture changes at every step.</div>
+    </div>
+
+    <div class="toolbar">
+      <button class="btn" id="bBack">&larr; Back</button>
+      <div class="dots" id="dots"></div>
+      <button class="btn primary" id="bNext">Next &rarr;</button>
+      <button class="btn ghost" id="bReset">Reset</button>
+    </div>
+    <p class="hint">space = next &middot; <b>try " 25 " and "25 apples"</b></p>
+
+    <div class="support">
+      <div>
+        <p class="lab">Main.java</p>
+        <div class="code" id="code"></div>
+      </div>
+      <div class="side">
+        <div class="readout">
+          <div class="stat empty"><div class="k">line (String)</div><div class="v dim" id="stLine"></div></div>
+          <div class="stat empty"><div class="k" id="kNum">count (int)</div><div class="v dim" id="stNum"></div></div>
+        </div>
+        <div class="console"><div class="cl">console</div><div id="console"></div></div>
+      </div>
+    </div>
+  </div>
+
+  <div class="take">
+    <p class="tk">The one idea</p>
+    <p><b>Scanner gives you a String of characters.</b> Read the whole line with <code>nextLine()</code>, <code>trim()</code> it,
+    then convert: <code>Integer.parseInt</code> for whole numbers, <code>Double.parseDouble</code> for decimals.
+    <b>Every character must belong to the number</b>, or Java throws a <code>NumberFormatException</code>.
+    When the line holds more than a number, <code>split</code> it first and parse one piece.</p>
+  </div>
+
+  <div id="rail"></div>
+</div>
+
+<script>
+(function(){
+  "use strict";
+  var $=function(s){return document.querySelector(s);};
+  var reduce=matchMedia("(prefers-reduced-motion: reduce)").matches;
+
+  /* ---------- presets: what the learner typed ---------- */
+  var PRESETS=["25"," 25 ","25 apples","3.75"];
+  var RAW=PRESETS[0], M=null;
+
+  function javaDouble(x){ var s=String(x); return s.indexOf(".")<0?s+".0":s; }
+  function q(s){ return '"'+s+'"'; }
+
+  /* everything the walk needs, computed from the typed text */
+  function model(){
+    var raw=RAW, n=raw.length, a=0, b=n, i, bad=-1;
+    while(a<b&&raw.charAt(a)===" ") a++;
+    while(b>a&&raw.charAt(b-1)===" ") b--;
+    var clean=raw.slice(a,b);
+    for(i=a;i<b;i++){ if(!/[0-9]/.test(raw.charAt(i))){ bad=i; break; } }
+    var kind=bad<0?"int":(/^[0-9]+\.[0-9]+$/.test(clean)?"double":"split");
+    var sp=raw.indexOf(" ",a);
+    var tokEnd=sp<0?n:sp;                 /* where nextInt / nextDouble stops reading */
+    var tokens=kind==="split"?clean.split(" "):null;
+    return {raw:raw,n:n,a:a,b:b,clean:clean,bad:bad,kind:kind,sp:sp,tokEnd:tokEnd,tokens:tokens,
+      val:bad<0?parseInt(clean,10):null,
+      dbl:kind==="double"?parseFloat(clean):null,
+      t0:tokens?parseInt(tokens[0],10):null};
+  }
+
+  /* ---------- the code in the support area ---------- */
+  function lines(){
+    var L=[
+      '<span class="ty">Scanner</span> scanner = <span class="kw">new</span> <span class="ty">Scanner</span>(System.in);',
+      '<span class="ty">String</span> line = scanner.<span class="fn">nextLine</span>();   <span class="cm">// typed: '+M.raw+'</span>',
+      'System.out.<span class="fn">println</span>(line + <span class="nm">1</span>);',
+      '<span class="ty">String</span> clean = line.<span class="fn">trim</span>();',
+      '<span class="ty">int</span> count = <span class="ty">Integer</span>.<span class="fn">parseInt</span>(clean);',
+      'System.out.<span class="fn">println</span>(count + <span class="nm">1</span>);'
+    ];
+    if(M.kind==="split") L=L.concat(['',
+      '<span class="cm">// the fix: split first, then parse one piece</span>',
+      '<span class="ty">String</span>[] tokens = clean.<span class="fn">split</span>(<span class="st">" "</span>);',
+      '<span class="ty">int</span> amount = <span class="ty">Integer</span>.<span class="fn">parseInt</span>(tokens[<span class="nm">0</span>]);',
+      '<span class="ty">String</span> unit = tokens[<span class="nm">1</span>];',
+      'System.out.<span class="fn">println</span>(amount + <span class="nm">1</span> + <span class="st">" "</span> + unit);']);
+    if(M.kind==="double") L=L.concat(['',
+      '<span class="cm">// the fix: a decimal needs parseDouble</span>',
+      '<span class="ty">double</span> amount = <span class="ty">Double</span>.<span class="fn">parseDouble</span>(clean);',
+      'System.out.<span class="fn">println</span>(amount + <span class="nm">1</span>);']);
+    return L;
+  }
+
+  /* ---------- the walk: one snapshot per step ---------- */
+  function build(){
+    var S=[], ok=M.bad<0, ch=ok?"":M.raw.charAt(M.bad);
+    var badName=ch===" "?"a space":q(ch);
+    var reader=M.kind==="double"?"nextDouble()":"nextInt()";
+    var tok=M.raw.slice(M.a,M.tokEnd);
+    S.push({line:[2],cls:"",line1:true,
+      msg:'<code>nextLine()</code> hands back <code>'+q(M.raw)+'</code>: '+M.n+' characters in a row, <b class="a">not a number</b>.'});
+    S.push({line:[3],cls:"left",line1:true,out:M.raw+"1",
+      msg:'<code>line + 1</code> just glues a character on: <b class="y">'+q(M.raw+"1")+'</b>. To Java this is still text.'});
+    S.push({line:[4],cls:"",line1:true,
+      msg:M.a>0||M.b<M.n?'<code>trim()</code> cuts the spaces off both ends, leaving <code>'+q(M.clean)+'</code>. Spaces are not digits.'
+        :(M.sp>=0?'<code>trim()</code> only cuts spaces at the ends. The space inside <code>'+q(M.clean)+'</code> stays.'
+        :'<code>trim()</code> finds no spaces at the ends, so clean is still <code>'+q(M.clean)+'</code>. Trim typed input anyway.')});
+    S.push({line:[5],cls:ok?"ok":"cut",line1:true,scan:true,
+      msg:ok?'<code>Integer.parseInt</code> reads clean one character at a time: <b class="g">every one is a digit</b>.'
+        :'<code>Integer.parseInt</code> reads one character at a time and hits <b class="w">'+badName+'</b>, which is not a digit.'});
+    S.push({line:[5],cls:ok?"ok":"cut",line1:true,num:ok?String(M.val):"error",numCls:ok?"good":"bad",
+      out:ok?null:{err:'Exception in thread "main" java.lang.NumberFormatException: For input string: '+q(M.clean)},
+      msg:ok?'All digits, so <code>parseInt</code> builds the <b class="g">int '+M.val+'</b>: a real number, ready for math.'
+        :'<b class="w">NumberFormatException</b>. The program stops on this line: nothing after it runs.'});
+    if(M.kind==="int") S.push({line:[6],cls:"ok",line1:true,num:String(M.val),numCls:"good",out:String(M.val+1),
+      msg:'<code>count + 1</code> is now arithmetic: <b class="g">'+(M.val+1)+'</b>, not <code>'+q(M.raw+"1")+'</code>.'});
+    else if(M.kind==="split") S.push({line:[9,10,11,12],cls:"ok",line1:true,num:String(M.t0),numCls:"good",fix:"amount (int)",
+      out:(M.t0+1)+" "+M.tokens[1],
+      msg:'The fix: <code>split</code> on the space, parse <code>tokens[0]</code> to <b class="g">'+M.t0+'</b>, keep <code>tokens[1]</code> as a String.'});
+    else S.push({line:[9,10],cls:"ok",line1:true,num:javaDouble(M.dbl),numCls:"good",fix:"amount (double)",out:javaDouble(M.dbl+1),
+      msg:'A decimal needs <code>Double.parseDouble</code>: it reads the dot, and '+M.clean+' + 1 is <b class="g">'+javaDouble(M.dbl+1)+'</b>.'});
+    S.push({line:[2],cls:"left",line1:true,keepNum:true,
+      msg:'<code>'+reader+'</code> takes '+tok+' and leaves <b class="y">'+(M.tokEnd<M.n?'the rest of the line and the Enter':'the Enter')+'</b> behind. <code>nextLine()</code> takes the whole line.'});
+    return S;
+  }
+
+  /* ---------- state ---------- */
+  var steps=[],at=-1,timers=[];
+  var codeEl=$("#code"),picEl=$("#pic"),consEl=$("#console"),statusEl=$("#status");
+
+  function renderCode(cur,cls,stepIdx){
+    var L=lines(), fail=M.bad>=0;
+    codeEl.innerHTML=L.map(function(t,i){
+      var n=i+1,c="ln";
+      if(cur&&cur.indexOf(n)>=0) c+=" "+(cls==="cut"?"cut":cls==="left"?"left":cls==="ok"?"ok":"cur");
+      else if(fail&&n===6&&stepIdx>=4) c+=" dim";
+      else if(n>6&&(stepIdx===null||stepIdx<5)) c+=" dim";
+      return '<div class="'+c+'"><span class="n">'+n+'</span><span>'+(t||" ")+'</span></div>';
+    }).join("");
+  }
+
+  /* ---------- the picture ---------- */
+  function glyph(c){ return c===" "?"␣":c; }
+  function buildPic(){
+    var h="", i;
+    h+='<div class="layer" id="L1">';
+    h+='<span class="zone" id="zone"></span>';
+    h+='<span class="zone a" id="lab0"></span><span class="zone" id="lab1"></span>';
+    h+='<span class="caret" id="caret"></span>';
+    for(i=0;i<M.n;i++) h+='<div class="ch'+(M.raw.charAt(i)===" "?" sp":"")+'" id="c'+i+'">'+glyph(M.raw.charAt(i))+'</div>';
+    h+='<div class="ch plus hide" id="cPlus">1</div>';
+    h+='<span class="via" id="via"></span>';
+    h+='<div class="res" id="res"><span class="rk" id="resK"></span><span class="rv" id="resV"></span></div>';
+    h+='<div class="exc" id="exc"><b>NumberFormatException</b><span>For input string: '+q(M.clean)+'</span><small>the program stops here</small></div>';
+    h+='<span class="note" id="note"></span>';
+    h+='<div class="answer" id="ans"></div>';
+    h+='</div>';
+    h+='<div class="layer" id="L2" style="opacity:0"></div>';
+    h+='<div class="start" id="start">typed '+q(M.raw)+' · press <b>Next</b></div>';
+    picEl.innerHTML=h;
+  }
+
+  function clearTimers(){ timers.forEach(clearTimeout); timers=[]; }
+
+  /* draw step i (0-based; -1 = nothing yet). anim = play the reading scan */
+  function renderPic(i,anim){
+    clearTimers();
+    var W=picEl.clientWidth||800, H=picEl.clientHeight||390, n=M.n, k;
+    var bs=Math.max(24,Math.min(58,Math.floor((W-60)/(n+3))-6)), st=bs+6, fs=Math.round(bs*.46);
+    var rowW=(n+1)*st-6, x0=Math.round((W-rowW)/2), y0=Math.round(H*.24);
+    var split=M.kind==="split"&&i===5, s=steps[i]||{};
+    $("#start").style.opacity=i<0?1:0;
+    $("#L1").style.opacity=(i>=0&&i<6)?1:0;
+    $("#L2").style.opacity=i===6?1:0;
+
+    /* character boxes */
+    for(k=0;k<n;k++){
+      var el=$("#c"+k), c="ch"+(M.raw.charAt(k)===" "?" sp":""), x=x0+k*st;
+      var outside=k<M.a||k>=M.b;
+      if(i<0) c+=" hide";
+      else if(i>=2&&outside) c+=(i===2?" gone":" hide");
+      else if(i===4||(i===5&&M.kind!=="int")||(i===5&&M.kind==="int")){
+        if(M.bad<0||(i===5&&M.kind==="double")) c+=" ok";
+        else if(i===4){ if(k<M.bad) c+=" ok"; else if(k===M.bad) c+=" bad"; }
+      }
+      if(split){
+        c=c.replace(/ (ok|bad)/g,"");
+        if(k<M.sp){ c+=" ok"; x-=st; }
+        else if(k===M.sp) c+=" gone";
+        else { c+=" ok"; x+=st; }
+      }
+      el.className=c;
+      el.style.left=x+"px"; el.style.top=y0+"px"; el.style.width=bs+"px"; el.style.height=bs+"px"; el.style.fontSize=fs+"px";
+    }
+    var pl=$("#cPlus");
+    pl.className="ch plus"+(i===1?"":" hide");
+    pl.style.left=(x0+n*st)+"px"; pl.style.top=y0+"px"; pl.style.width=bs+"px"; pl.style.height=bs+"px"; pl.style.fontSize=fs+"px";
+
+    /* label over the row */
+    var zone=$("#zone");
+    zone.textContent=i<=1?"line · String":"clean · String";
+    zone.className="zone"+(i===1?" on":"");
+    zone.style.left=(x0)+"px"; zone.style.top=(y0-30)+"px"; zone.style.opacity=(i>=0&&!split)?1:0;
+    var l0=$("#lab0"), l1=$("#lab1");
+    if(split){
+      l0.textContent="tokens[0]"; l0.style.left=(x0-st)+"px"; l0.style.top=(y0-30)+"px"; l0.style.opacity=1;
+      l1.textContent="tokens[1]"; l1.style.left=(x0+(M.sp+2)*st)+"px"; l1.style.top=(y0-30)+"px"; l1.style.opacity=1;
+    } else { l0.style.opacity=0; l1.style.opacity=0; }
+
+    /* the parse arrow, result box, exception */
+    var cx=x0+((M.a+M.b)/2)*st-3, yR=y0+bs+66;
+    var via=$("#via"), res=$("#res"), exc=$("#exc"), note=$("#note"), ans=$("#ans");
+    via.className="via"+(i>=3&&i<=5?" show":"");
+    via.textContent=(i===5&&M.kind==="double")?"Double.parseDouble(clean)":split?"Integer.parseInt(tokens[0])":"Integer.parseInt(clean)";
+    var vx=split?x0-st+(M.sp*st-6)/2:cx;
+    via.style.left=vx+"px"; via.style.top=(y0+bs+12)+"px";
+    var showRes=(i===4&&M.bad<0)||i===5;
+    res.className="res"+(showRes?" show":"");
+    $("#resK").textContent=i===5&&M.kind==="double"?"amount · double":(i===5&&split?"amount · int":"count · int");
+    $("#resV").textContent=i===5&&M.kind==="double"?javaDouble(M.dbl):(split?String(M.t0):String(M.val));
+    var rx=Math.max(10,Math.min(W-180,Math.round(vx-85)));
+    res.style.left=rx+"px"; res.style.top=(yR+6)+"px";
+    var ew=Math.min(560,W-40);
+    exc.style.width=ew+"px"; exc.style.left=Math.round((W-ew)/2)+"px"; exc.style.top=(yR+6)+"px";
+    exc.className="exc"+(i===4&&M.bad>=0?" show":"");
+    if(split){ note.textContent="unit · String: stays text"; note.className="note show";
+      note.style.left=(x0+(M.sp+2)*st)+"px"; note.style.top=(y0+bs+14)+"px"; }
+    else note.className="note";
+
+    /* the answer in the corner */
+    var h="";
+    if(i===1) h='<small>line + 1</small><span class="y">'+q(M.raw+"1")+'</span>';
+    if(i===5&&M.kind==="int") h='<small>count + 1</small><s>'+q(M.raw+"1")+'</s>  <span class="g">'+(M.val+1)+'</span>';
+    if(i===5&&M.kind==="double") h='<small>amount + 1</small><span class="g">'+javaDouble(M.dbl+1)+'</span>';
+    if(split) h='<small>printed</small><span class="g">'+(M.t0+1)+' '+M.tokens[1]+'</span>';
+    ans.innerHTML=h; ans.className="answer"+(h?" show":"");
+
+    /* the reading scan: parseInt walks the characters left to right */
+    var caret=$("#caret");
+    caret.className="caret";
+    if(i===3){
+      var last=M.bad<0?M.b-1:M.bad, list=[];
+      for(k=M.a;k<=last;k++) list.push(k);
+      var mark=function(k){
+        var e=$("#c"+k);
+        e.classList.add(k===M.bad?"bad":"ok");
+        caret.style.left=(x0+k*st+bs/2-7)+"px"; caret.style.top=(y0-14)+"px"; caret.className="caret show";
+      };
+      if(anim&&!reduce){
+        caret.style.left=(x0+M.a*st+bs/2-7)+"px"; caret.style.top=(y0-14)+"px";
+        list.forEach(function(k,j){ timers.push(setTimeout(function(){ mark(k); },260+j*420)); });
+      } else list.forEach(mark);
+      zone.style.opacity=0;
+    }
+
+    if(i===6) drawBuffer(W,H);
+  }
+
+  /* step 7: the Scanner buffer, read two ways */
+  function drawBuffer(W,H){
+    var chars=M.raw.split("").concat(["\\n"]), n=chars.length, k, h="";
+    var reader=M.kind==="double"?"nextDouble()":"nextInt()";
+    var bs=Math.max(24,Math.min(50,Math.floor((W-60)/(n+1))-6)), st=bs+6, fs=Math.round(bs*.44);
+    var x0=Math.round((W-(n*st-6))/2), yA=Math.round(H*.17), yB=Math.round(H*.6);
+    var left=M.raw.slice(M.tokEnd).replace(/ /g,"␣")+"\\n";
+    h+='<span class="zone a" style="left:'+x0+'px;top:'+(yA-28)+'px">scanner.'+reader+'</span>';
+    h+='<span class="zone a" style="left:'+x0+'px;top:'+(yB-28)+'px">scanner.nextLine()</span>';
+    for(k=0;k<n;k++){
+      var c=chars[k], cl="ch"+(c===" "?" sp":"")+(c==="\\n"?" nl":"");
+      var ca=cl+(k<M.a?" skip":(k<M.tokEnd?" ok":" left"));
+      var cb=cl+" ok";
+      var g=c===" "?"␣":c;
+      h+='<div class="'+ca+'" style="left:'+(x0+k*st)+'px;top:'+yA+'px;width:'+bs+'px;height:'+bs+'px;font-size:'+fs+'px">'+g+'</div>';
+      h+='<div class="'+cb+'" style="left:'+(x0+k*st)+'px;top:'+yB+'px;width:'+bs+'px;height:'+bs+'px;font-size:'+fs+'px">'+g+'</div>';
+    }
+    h+='<span class="note y show" style="left:'+x0+'px;top:'+(yA+bs+12)+'px">left in the buffer: '+left+'. The next nextLine() gets it.</span>';
+    h+='<span class="note g show" style="left:'+x0+'px;top:'+(yB+bs+12)+'px">buffer empty. You hold '+q(M.raw)+' and parse it yourself.</span>';
+    $("#L2").innerHTML=h;
+  }
+
+  function show(i,anim){
+    at=i;
+    var k,out=[];
+    if(i<0){
+      renderCode(null,"",null); renderPic(-1); consEl.innerHTML='<span class="mute">(nothing printed yet)</span>';
+      $("#caption").className="caption"; statusEl.innerHTML='Press <b class="a">Next</b>. The picture changes at every step.';
+      setStat("#stLine",null); setStat("#stNum",null); $("#kNum").textContent="count (int)";
+      $("#stepno").innerHTML="<small>step</small>0 / "+steps.length; setBtns(); return;
+    }
+    var s=steps[i];
+    $("#stepno").innerHTML="<small>step</small>"+(i+1)+" / "+steps.length;
+    renderCode(s.line,s.cls,i); renderPic(i,anim);
+    for(k=0;k<=i;k++){
+      var o=steps[k].out; if(!o) continue;
+      if(o.err) out.push('<div class="out err">'+o.err+'</div>');
+      else { if(k===5&&M.bad>=0) out.push('<div class="mute">(run again, with the fix)</div>'); out.push('<div class="out">'+o+'</div>'); }
+    }
+    consEl.innerHTML=out.join("")||'<span class="mute">(nothing printed yet)</span>';
+    $("#caption").className="caption "+s.cls; statusEl.innerHTML=s.msg;
+    setStat("#stLine",q(M.raw),"hot");
+    var numStep=null; for(k=i;k>=0;k--){ if(steps[k].num!==undefined){ numStep=steps[k]; break; } }
+    setStat("#stNum",numStep?numStep.num:null,numStep?numStep.numCls:"");
+    $("#kNum").textContent=numStep&&numStep.fix?numStep.fix:"count (int)";
+    setBtns();
+  }
+  function setStat(id,v,c){ var e=$(id), box=e.parentNode; if(v===null){e.textContent="";e.className="v dim";box.classList.add("empty");} else {e.textContent=v;e.className="v "+(c||"");box.classList.remove("empty");} }
+  function setBtns(){ $("#bNext").disabled=at>=steps.length-1; $("#bBack").disabled=at<0;
+    var d=""; for(var k=0;k<steps.length;k++) d+='<i class="'+(k===at?"now":k<at?"done":"")+'"></i>'; $("#dots").innerHTML=d; }
+
+  /* focus: picture and caption only. Remembered per browser. */
+  function setFocus(on){ document.body.classList.toggle("solo",on); $("#bFocus").textContent=on?"Focus on":"Focus";
+    try{localStorage.setItem("hub-focus",on?"1":"0");}catch(e){} renderPic(at,false); }
+  $("#bFocus").addEventListener("click",function(){ setFocus(!document.body.classList.contains("solo")); this.blur(); });
+  try{ if(localStorage.getItem("hub-focus")==="1") document.body.classList.add("solo"); }catch(e){}
+  if(document.body.classList.contains("solo")) $("#bFocus").textContent="Focus on";
+
+  function next(){ if(at<steps.length-1) show(at+1,true); }
+  function back(){ if(at>=0) show(at-1,false); }
+  function reset(){ M=model(); steps=build(); buildPic(); show(-1); }
+  function pick(idx){
+    RAW=PRESETS[idx];
+    Array.prototype.forEach.call(document.querySelectorAll(".chip"),function(c,j){c.classList.toggle("on",j===idx);});
+    if(document.activeElement&&document.activeElement.blur) document.activeElement.blur();
+    reset();
+  }
+
+  $("#chips").innerHTML=PRESETS.map(function(p,j){return '<button class="chip'+(j===0?' on':'')+'" data-i="'+j+'">'+q(p)+'</button>';}).join("");
+  $("#chips").addEventListener("click",function(e){ var b=e.target.closest(".chip"); if(b) pick(+b.getAttribute("data-i")); });
+  $("#bNext").addEventListener("click",next);
+  $("#bBack").addEventListener("click",back);
+  $("#bReset").addEventListener("click",reset);
+  document.addEventListener("keydown",function(e){ if(e.code==="Space"&&!/INPUT|BUTTON/.test(e.target.tagName)){e.preventDefault();next();} });
+  addEventListener("resize",function(){ renderPic(at,false); });
+
+  /* ---------- ambient canvas ---------- */
+  var cv=$("#amb"),ctx=cv.getContext&&cv.getContext("2d"),parts=[];
+  function sizeC(){if(!ctx)return;cv.width=innerWidth;cv.height=innerHeight;}
+  function initParts(){parts=[];for(var i=0;i<46;i++)parts.push({x:Math.random(),y:Math.random(),
+    r:Math.random()*1.6+.3,s:Math.random()*.02+.004,o:Math.random()*.4+.1});}
+  function drawC(){if(!ctx)return;ctx.clearRect(0,0,cv.width,cv.height);
+    parts.forEach(function(p){p.y-=p.s/60;if(p.y<-.02)p.y=1.02;
+      ctx.beginPath();ctx.arc(p.x*cv.width,p.y*cv.height,p.r,0,7);
+      ctx.fillStyle="rgba(140,170,255,"+p.o+")";ctx.fill();});
+    requestAnimationFrame(drawC);}
+  if(ctx&&!reduce){sizeC();initParts();drawC();addEventListener("resize",sizeC);}
+
+  reset();
+})();
+</script>
+<script src="../manifest.js"></script>
+<script src="../../assets/rail.js"></script>
+<script>Rail.render(document.getElementById("rail"),{week:2,kind:"visuals",current:"04-string-to-number"});</script>
+</body>
+</html>

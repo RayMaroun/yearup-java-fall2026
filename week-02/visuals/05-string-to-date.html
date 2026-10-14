@@ -1,0 +1,411 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>String to Date | Week 2 Visual Hub</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Sora:wght@500;700&family=Inter:wght@400;500&family=JetBrains+Mono:wght@400;500&display=swap">
+<style>
+  :root{
+    --bg:#080c17; --bg2:#0c1428; --surface:rgba(255,255,255,.045); --line:rgba(255,255,255,.09);
+    --ink:#eef2fb; --muted:#8496b6; --accent:#6ea0ff; --accent2:#8b7bff; --good:#46d98a; --warn:#ff6a6a;
+    --gold:#ffc862; --disp:'Sora',system-ui,sans-serif; --body:'Inter',system-ui,sans-serif;
+    --mono:'JetBrains Mono',ui-monospace,monospace;
+  }
+  *{box-sizing:border-box}
+  body{margin:0;min-height:100vh;color:var(--ink);font-family:var(--body);
+    background:radial-gradient(1200px 700px at 70% -10%,#141d38 0%,transparent 55%),
+               radial-gradient(900px 600px at 10% 110%,#161233 0%,transparent 50%),#080c17;
+    overflow-x:hidden}
+  #amb{position:fixed;inset:0;z-index:0;pointer-events:none;opacity:.6}
+  .back{position:relative;z-index:2;display:block;max-width:1120px;margin:0 auto;padding:26px 24px 0;
+    width:100%;font-family:var(--mono);font-size:.8rem;letter-spacing:.04em;color:var(--muted);
+    text-decoration:none;transition:color .15s}
+  .back:hover{color:var(--accent)}
+  .wrap{position:relative;z-index:1;max-width:1120px;margin:0 auto;padding:22px 24px 70px}
+  .tag{font-family:var(--mono);font-size:.72rem;letter-spacing:.22em;text-transform:uppercase;color:var(--accent);margin:0 0 14px}
+  h1{font-family:var(--disp);font-weight:700;font-size:clamp(2.3rem,6vw,3.6rem);line-height:1;margin:0 0 12px;
+    letter-spacing:-.03em;background:linear-gradient(180deg,#fff,#b9c6e6);-webkit-background-clip:text;
+    background-clip:text;color:transparent}
+  .lede{color:var(--muted);max-width:64ch;font-size:1.05rem;margin:0 0 26px;line-height:1.5}
+  .lede b{color:var(--ink)}
+  .lede code,.take code,.caption code{font-family:var(--mono);font-size:.92em;color:#bcd0ff}
+
+  /* ---------- stage: picture first, one toolbar, support below ---------- */
+  .stage{position:relative;background:linear-gradient(180deg,rgba(255,255,255,.03),rgba(255,255,255,.01));
+    border:1px solid var(--line);border-radius:24px;padding:18px 18px 14px;
+    box-shadow:0 1px 0 rgba(255,255,255,.06) inset,0 30px 80px -30px rgba(0,0,0,.8)}
+  .topbar{display:flex;align-items:center;gap:10px;margin:0 0 14px;flex-wrap:wrap}
+  .topbar .lab{margin:0 4px 0 0}
+  .lab{font-family:var(--mono);font-size:.7rem;letter-spacing:.12em;text-transform:uppercase;color:var(--muted);margin:0 0 10px}
+  .chips{display:flex;flex-wrap:wrap;gap:6px}
+  .chip{font-family:var(--mono);font-size:.74rem;padding:5px 11px;border-radius:999px;cursor:pointer;
+    border:1px solid var(--line);background:rgba(0,0,0,.25);color:var(--muted);transition:.15s}
+  .chip:hover{border-color:var(--accent);color:var(--accent)}
+  .chip.on{border-color:rgba(110,160,255,.6);background:rgba(110,160,255,.14);color:var(--ink)}
+  .chip:focus-visible,.btn:focus-visible,.focus:focus-visible{outline:2px solid var(--accent);outline-offset:2px}
+  .focus{margin-left:auto;font-family:var(--mono);font-size:.68rem;letter-spacing:.1em;text-transform:uppercase;padding:6px 12px;
+    border-radius:999px;border:1px solid var(--line);background:rgba(0,0,0,.25);color:var(--muted);cursor:pointer;transition:.15s}
+  .focus:hover{border-color:var(--accent);color:var(--accent)}
+  body.solo .focus{border-color:rgba(255,200,98,.6);color:var(--gold);background:rgba(255,200,98,.1)}
+
+  /* hero picture */
+  .pic{position:relative;height:390px;border:1px solid var(--line);border-radius:18px;background:rgba(6,10,20,.5);overflow:hidden}
+  body.solo .pic{height:480px}
+  .pic .zone{position:absolute;font-family:var(--mono);font-size:.62rem;letter-spacing:.14em;text-transform:uppercase;
+    color:rgba(132,150,182,.55);transition:color .3s,opacity .3s}
+  .pic .start{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;font-family:var(--mono);
+    font-size:.8rem;color:var(--muted);pointer-events:none;transition:opacity .3s}
+  .pic .start b{color:var(--accent);font-weight:500}
+  .top{position:absolute;left:0;right:0;top:40px;display:flex;justify-content:center}
+  body.solo .top{top:60px}
+  .low{position:absolute;left:0;right:0;top:214px;display:flex;justify-content:center;align-items:center;gap:22px;padding:0 16px}
+  body.solo .low{top:270px}
+  .al{display:flex;align-items:flex-start}
+  .rl{display:flex;flex-direction:column;margin-right:14px}
+  .rl span{height:40px;display:flex;align-items:center;justify-content:flex-end;font-family:var(--mono);font-size:.62rem;
+    letter-spacing:.12em;text-transform:uppercase;color:var(--muted)}
+  .rl span+span{margin-top:8px}
+  .seg{display:flex;flex-direction:column;align-items:center;transition:margin .3s,opacity .3s}
+  .al.split .seg{margin:0 6px}
+  .cells{display:flex;gap:3px;height:40px}
+  .cells+.cells{margin-top:8px}
+  .c{width:28px;height:40px;border-radius:7px;display:flex;align-items:center;justify-content:center;font-family:var(--mono);
+    font-size:1.12rem;background:rgba(255,255,255,.04);border:1px solid var(--line);color:var(--ink);transition:.3s}
+  .c.p{color:#bcd0ff;font-size:1rem}
+  .c.sp{color:rgba(132,150,182,.45)}
+  .fl{margin-top:7px;font-family:var(--mono);font-size:.6rem;letter-spacing:.12em;text-transform:uppercase;height:14px}
+  .seg.m .c{border-color:rgba(110,160,255,.6);background:rgba(110,160,255,.12)} .seg.m .fl{color:var(--accent)}
+  .seg.d .c{border-color:rgba(70,217,138,.6);background:rgba(70,217,138,.1)} .seg.d .fl{color:var(--good)}
+  .seg.y .c{border-color:rgba(255,200,98,.6);background:rgba(255,200,98,.1)} .seg.y .fl{color:var(--gold)}
+  .seg.bad .c{border-color:rgba(255,106,106,.8);background:rgba(255,106,106,.14)} .seg.bad .fl{color:var(--warn)}
+  .seg.x{opacity:.3}
+  .al.dim{opacity:.45;transition:opacity .3s}
+  .box{border:1px solid var(--line);border-radius:14px;background:rgba(255,255,255,.03);padding:10px 14px 12px;animation:pop .35s}
+  .box .h{font-family:var(--mono);font-size:.62rem;letter-spacing:.12em;text-transform:uppercase;color:var(--muted);margin:0 0 8px}
+  .box .h b{color:var(--ink);font-weight:500}
+  .fields{display:flex;gap:8px}
+  .f{min-width:74px;border-radius:10px;padding:7px 10px;text-align:center;border:1px solid var(--line)}
+  .f .k{font-family:var(--mono);font-size:.58rem;letter-spacing:.12em;text-transform:uppercase}
+  .f .v{font-family:var(--disp);font-weight:700;font-size:1.5rem;font-variant-numeric:tabular-nums}
+  .f.y{border-color:rgba(255,200,98,.55)} .f.y .k,.f.y .v{color:var(--gold)}
+  .f.m{border-color:rgba(110,160,255,.55)} .f.m .k,.f.m .v{color:var(--accent)}
+  .f.d{border-color:rgba(70,217,138,.55)} .f.d .k,.f.d .v{color:var(--good)}
+  .arrow{font-family:var(--mono);font-size:.7rem;color:var(--muted);text-align:center;line-height:1.4}
+  .arrow b{display:block;font-size:1.3rem;color:var(--accent);font-weight:400}
+  .box.out .c{width:22px;height:32px;font-size:.95rem}
+  .box.out .cells{height:32px}
+  .box.out .fl{display:none}
+  .box.err{border-color:rgba(255,106,106,.7);background:rgba(255,106,106,.08);max-width:560px}
+  .box.err .h{color:var(--warn)}
+  .box.err p{margin:0;font-family:var(--mono);font-size:.78rem;line-height:1.5;color:#ffb3b3}
+  /* caption: the one sentence, right under the picture */
+  .caption{display:flex;gap:16px;align-items:flex-start;margin:14px 4px 0;min-height:56px}
+  .caption .n{flex-shrink:0;font-family:var(--disp);font-weight:700;font-size:1.35rem;color:var(--accent);font-variant-numeric:tabular-nums;
+    line-height:1.2;min-width:3.2rem}
+  .caption .n small{display:block;font-family:var(--mono);font-weight:400;font-size:.58rem;letter-spacing:.14em;text-transform:uppercase;color:var(--muted)}
+  .caption .t{font-size:1.02rem;line-height:1.55;color:var(--ink);padding-left:16px;border-left:3px solid var(--accent);transition:border-color .3s}
+  body.solo .caption .t{font-size:1.18rem}
+  .caption.cut .t{border-left-color:var(--warn)} .caption.left .t{border-left-color:var(--gold)} .caption.ok .t{border-left-color:var(--good)}
+  .caption b.g{color:var(--good)} .caption b.w{color:var(--warn)} .caption b.a{color:var(--accent)} .caption b.y{color:var(--gold)}
+
+  /* toolbar: same on every page */
+  .toolbar{display:flex;align-items:center;gap:10px;margin:16px 0 0;padding-top:14px;border-top:1px solid var(--line)}
+  .btn{font-family:var(--body);font-weight:500;font-size:.86rem;padding:9px 16px;border-radius:11px;cursor:pointer;
+    border:1px solid var(--line);background:var(--surface);color:var(--ink);transition:.15s}
+  .btn:hover{border-color:var(--accent);color:var(--accent)}
+  .btn.primary{border-color:rgba(110,160,255,.5);background:rgba(110,160,255,.12);padding:9px 22px}
+  .btn:disabled{opacity:.35;cursor:not-allowed}
+  .btn.ghost{background:transparent;color:var(--muted);margin-left:auto}
+  .dots{display:flex;gap:5px;align-items:center;margin:0 6px}
+  .dots i{display:block;width:8px;height:8px;border-radius:50%;background:rgba(255,255,255,.12);transition:.2s}
+  .dots i.done{background:rgba(110,160,255,.45)}
+  .dots i.now{background:var(--accent);transform:scale(1.35);box-shadow:0 0 10px rgba(110,160,255,.7)}
+  .hint{font-family:var(--mono);font-size:.68rem;color:var(--muted);margin:10px 4px 0;line-height:1.5}
+  .hint b{color:var(--accent)}
+
+  /* support: code, console, readouts. Below the picture, hidden in focus */
+  .support{display:grid;grid-template-columns:minmax(0,1.3fr) minmax(0,1fr);gap:14px;margin-top:18px}
+  @media (max-width:860px){.support{grid-template-columns:1fr}}
+  body.solo .support,body.solo .take,body.solo .hint{display:none}
+  .code{min-width:0;font-family:var(--mono);font-size:.76rem;line-height:1.8;background:rgba(0,0,0,.35);border:1px solid var(--line);
+    border-radius:14px;padding:12px 0;overflow-x:auto}
+  .ln{display:flex;gap:12px;padding:0 14px;white-space:pre;color:#c9d4ea;transition:background .2s,opacity .3s}
+  .ln .n{width:20px;text-align:right;color:rgba(132,150,182,.55);user-select:none;flex-shrink:0}
+  .ln.cur{background:rgba(110,160,255,.14);box-shadow:inset 3px 0 0 var(--accent)}
+  .ln.cur .n{color:var(--accent)}
+  .ln.cut{background:rgba(255,106,106,.12);box-shadow:inset 3px 0 0 var(--warn)}
+  .ln.left{background:rgba(255,200,98,.12);box-shadow:inset 3px 0 0 var(--gold)}
+  .ln.dim{opacity:.4}
+  .kw{color:#c792ea} .ty{color:#82aaff} .st{color:#c3e88d} .nm{color:#f78c6c} .cm{color:#5f6b85;font-style:italic} .fn{color:#ffcb6b}
+  .side{display:flex;flex-direction:column;gap:12px}
+  .readout{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+  .stat{background:rgba(255,255,255,.03);border:1px solid var(--line);border-radius:12px;padding:11px 13px;transition:opacity .3s}
+  .stat.empty{opacity:.3}
+  .stat .k{font-family:var(--mono);font-size:.62rem;letter-spacing:.1em;text-transform:uppercase;color:var(--muted)}
+  .stat .v{font-family:var(--disp);font-weight:700;font-size:1.45rem;font-variant-numeric:tabular-nums;margin-top:2px;transition:color .3s;min-height:1.6em}
+  .v.hot{color:var(--accent)} .v.gold{color:var(--gold)} .v.dim{color:rgba(132,150,182,.5)}
+  .console{font-family:var(--mono);font-size:.76rem;line-height:1.6;background:#05070e;border:1px solid var(--line);
+    border-radius:12px;padding:10px 14px;min-height:64px;color:#9fe3b6;flex:1}
+  .console .cl{font-size:.6rem;letter-spacing:.14em;text-transform:uppercase;color:rgba(132,150,182,.6);margin-bottom:4px}
+  .console .out{animation:pop .3s}
+  @keyframes pop{from{transform:scale(.6);opacity:0}to{transform:scale(1);opacity:1}}
+  .take{margin-top:22px;background:linear-gradient(180deg,rgba(110,160,255,.08),rgba(139,123,255,.04));
+    border:1px solid var(--line);border-left:3px solid var(--accent);border-radius:12px;padding:16px 18px}
+  .take .tk{font-family:var(--mono);font-size:.66rem;letter-spacing:.14em;text-transform:uppercase;color:var(--accent);margin:0 0 8px}
+  .take p{margin:0;font-size:.95rem;color:var(--ink);line-height:1.55}
+  .take b{color:#fff}
+  @media (prefers-reduced-motion:reduce){*{animation-duration:.01ms!important;transition-duration:.01ms!important}#amb{display:none}}
+</style>
+</head>
+<body>
+
+<a class="back" href="../index.html#05-string-to-date">&#8592; Week 2 index</a>
+
+<canvas id="amb"></canvas>
+<div class="wrap">
+  <p class="tag">Workbook 2a &middot; Section 1-2 &middot; Converting a String to a date</p>
+  <h1>String to Date</h1>
+  <p class="lede"><b>The pattern tells <code>LocalDate.parse</code> which characters are the month, the day and the year.</b></p>
+
+  <div class="stage">
+    <div class="topbar">
+      <span class="lab">Input</span>
+      <div class="chips" id="chips"></div>
+      <button class="focus" id="bFocus" title="Hide the code and notes, enlarge the picture">Focus</button>
+    </div>
+
+    <div class="pic" id="pic"></div>
+
+    <div class="caption" id="caption">
+      <div class="n" id="stepno"><small>step</small>0 / 6</div>
+      <div class="t" id="status">Press <b class="a">Next</b>. The picture changes at every step.</div>
+    </div>
+
+    <div class="toolbar">
+      <button class="btn" id="bBack">&larr; Back</button>
+      <div class="dots" id="dots"></div>
+      <button class="btn primary" id="bNext">Next &rarr;</button>
+      <button class="btn ghost" id="bReset">Reset</button>
+    </div>
+    <p class="hint">space = next &middot; <b>try another input</b>: each one has its own pattern and its own trap</p>
+
+    <div class="support">
+      <div>
+        <p class="lab">Main.java</p>
+        <div class="code" id="code"></div>
+      </div>
+      <div class="side">
+        <div class="readout">
+          <div class="stat empty"><div class="k">birthDay</div><div class="v dim" id="stDate"></div></div>
+          <div class="stat empty"><div class="k">format(display)</div><div class="v dim" id="stFmt"></div></div>
+        </div>
+        <div class="console"><div class="cl">console</div><div id="console"></div></div>
+      </div>
+    </div>
+  </div>
+
+  <div class="take">
+    <p class="tk">The one idea</p>
+    <p><b>The pattern must describe the text exactly.</b> <code>MM</code> reads a two digit month, <code>d</code> a day of one or
+    two digits, <code>MMM</code> a short month name, <code>yyyy</code> a four digit year, and every <code>/</code> or space must match too.
+    Without a formatter, <code>LocalDate.parse</code> expects <code>yyyy-MM-dd</code>. A LocalDate holds only three numbers:
+    println shows them in ISO order, <code>format</code> shows them in any pattern you choose.</p>
+  </div>
+
+  <div id="rail"></div>
+</div>
+
+<script>
+(function(){
+  "use strict";
+  var $=function(s){return document.querySelector(s);};
+  var reduce=matchMedia("(prefers-reduced-motion: reduce)").matches;
+
+  /* ---------- presets: [pattern piece, text piece, field] ; field m/d/y, s = literal, bad = mismatch, x = never read ---------- */
+  var PRESETS=[
+    {text:"10/17/2022",pat:"MM/dd/yyyy",Y:2022,M:10,D:17,
+     segs:[["MM","10","m"],["/","/","s"],["dd","17","d"],["/","/","s"],["yyyy","2022","y"]],
+     outPat:"d MMM yyyy",out:[["d","17","d"],[" "," ","s"],["MMM","Oct","m"],[" "," ","s"],["yyyy","2022","y"]],
+     trapLines:['<span class="ty">DateTimeFormatter</span> wrong = <span class="ty">DateTimeFormatter</span>.<span class="fn">ofPattern</span>(<span class="st">"dd/MM/yyyy"</span>);',
+                '<span class="ty">LocalDate</span> oops = <span class="ty">LocalDate</span>.<span class="fn">parse</span>(userInput, wrong);'],
+     trapLab:"dd/MM/yyyy",trapSegs:[["dd","10","d"],["/","/","s"],["MM","17","bad","no month 17"],["/","/","s"],["yyyy","2022","y"]],
+     trapMsg:'Swap to <code>"dd/MM/yyyy"</code>: MM now reads 17, and there is no month 17. <b class="w">No LocalDate.</b>',
+     err:"Text '10/17/2022' could not be parsed: Invalid value for MonthOfYear (valid values 1 - 12): 17"},
+    {text:"7 Oct 2002",pat:"d MMM yyyy",Y:2002,M:10,D:7,
+     segs:[["d","7","d"],[" "," ","s"],["MMM","Oct","m"],[" "," ","s"],["yyyy","2002","y"]],
+     outPat:"MM/dd/yyyy",out:[["MM","10","m"],["/","/","s"],["dd","07","d"],["/","/","s"],["yyyy","2002","y"]],
+     trapLines:['<span class="ty">DateTimeFormatter</span> wrong = <span class="ty">DateTimeFormatter</span>.<span class="fn">ofPattern</span>(<span class="st">"dd MMM yyyy"</span>);',
+                '<span class="ty">LocalDate</span> oops = <span class="ty">LocalDate</span>.<span class="fn">parse</span>(userInput, wrong);'],
+     trapLab:"dd MMM yyyy",trapSegs:[["dd","7 ","bad","needs 2 digits"],[" MMM yyyy","Oct 2002","x","never read"]],
+     trapMsg:'Swap to <code>"dd MMM yyyy"</code>: dd needs two digits but finds 7 and a space. <b class="w">No LocalDate.</b>',
+     err:"Text '7 Oct 2002' could not be parsed at index 0"},
+    {text:"17/October/2002",pat:"d/MMMM/yyyy",Y:2002,M:10,D:17,
+     segs:[["d","17","d"],["/","/","s"],["MMMM","October","m"],["/","/","s"],["yyyy","2002","y"]],
+     outPat:"MMM d, yyyy",out:[["MMM","Oct","m"],[" "," ","s"],["d","17","d"],[", ",", ","s"],["yyyy","2002","y"]],
+     trapLines:['<span class="cm">// no formatter: parse expects yyyy-MM-dd</span>',
+                '<span class="ty">LocalDate</span> oops = <span class="ty">LocalDate</span>.<span class="fn">parse</span>(userInput);'],
+     trapLab:"yyyy-MM-dd",trapRow:"ISO",trapSegs:[["yyyy","17","bad","needs 4 digits"],["-MM-dd","/October/2002","x","never read"]],
+     trapMsg:'Leave the formatter out: parse expects yyyy-MM-dd, but finds only 17 for the year. <b class="w">No LocalDate.</b>',
+     err:"Text '17/October/2002' could not be parsed at index 0"}
+  ];
+  var P=PRESETS[0];
+  var NAMES={m:"month",d:"day",y:"year"};
+  function iso(){ return P.Y+"-"+(P.M<10?"0":"")+P.M+"-"+(P.D<10?"0":"")+P.D; }
+  function isoSegs(){ var s=iso(); return [["yyyy",s.slice(0,4),"y"],["-","-","s"],["MM",s.slice(5,7),"m"],["-","-","s"],["dd",s.slice(8,10),"d"]]; }
+  function joinOut(){ return P.out.map(function(s){return s[1];}).join(""); }
+
+  function lines(){
+    return [
+      '<span class="ty">String</span> userInput = <span class="st">"'+P.text+'"</span>;',
+      '<span class="ty">DateTimeFormatter</span> formatter = <span class="ty">DateTimeFormatter</span>.<span class="fn">ofPattern</span>(<span class="st">"'+P.pat+'"</span>);',
+      '<span class="ty">LocalDate</span> birthDay = <span class="ty">LocalDate</span>.<span class="fn">parse</span>(userInput, formatter);',
+      'System.out.<span class="fn">println</span>(birthDay);',
+      '',
+      '<span class="ty">DateTimeFormatter</span> display = <span class="ty">DateTimeFormatter</span>.<span class="fn">ofPattern</span>(<span class="st">"'+P.outPat+'"</span>);',
+      'System.out.<span class="fn">println</span>(birthDay.<span class="fn">format</span>(display));',
+      '',
+      P.trapLines[0],
+      P.trapLines[1]
+    ];
+  }
+
+  /* ---------- the walk ---------- */
+  function build(){
+    var reads=P.segs.filter(function(s){return s[2]!=="s";}).map(function(s){return s[0]+" reads "+s[1];}).join(", ");
+    var S=[];
+    S.push({line:[1,2],pic:"plain",cls:"",msg:'Two Strings: the input <code>"'+P.text+'"</code> and the pattern <code>"'+P.pat+'"</code>. Only characters so far.'});
+    S.push({line:[3],pic:"aligned",cls:"",msg:'parse lines the pattern up with the text: <b class="a">'+reads+'</b>.'});
+    S.push({line:[3],pic:"date",cls:"ok",msg:'The result is a LocalDate holding three numbers: year '+P.Y+', month '+P.M+', day '+P.D+'. <b class="g">No text inside.</b>',date:true});
+    S.push({line:[4],pic:"iso",cls:"",msg:'println has no pattern to follow, so it prints ISO order, year-month-day: <b class="a">'+iso()+'</b>.',date:true,out:iso()});
+    S.push({line:[6,7],pic:"fmt",cls:"left",msg:'A second pattern, <code>"'+P.outPat+'"</code>, turns the same date into new text: <b class="y">'+joinOut()+'</b>.',date:true,fmt:true,out:joinOut()});
+    S.push({line:[9,10],pic:"trap",cls:"cut",msg:P.trapMsg,date:true,fmt:true,err:true});
+    return S;
+  }
+
+  /* ---------- picture ---------- */
+  function cellsHTML(str,cls){
+    var h='<div class="cells">';
+    for(var i=0;i<str.length;i++){ var ch=str.charAt(i), sp=ch===" ";
+      h+='<span class="c'+(cls?" "+cls:"")+(sp?" sp":"")+'">'+(sp?"·":ch)+'</span>'; }
+    return h+'</div>';
+  }
+  function alignHTML(segs,opts){
+    var h='<div class="al'+(opts.split?" split":"")+(opts.dim?" dim":"")+'">';
+    if(opts.rows) h+='<div class="rl"><span>'+opts.rows[0]+'</span><span>'+opts.rows[1]+'</span></div>';
+    segs.forEach(function(s){
+      var f=opts.color?s[2]:"";
+      h+='<div class="seg '+f+'">'+cellsHTML(s[0],"p")+cellsHTML(s[1],"");
+      if(opts.labels) h+='<div class="fl">'+(s[3]||NAMES[s[2]]||"")+'</div>';
+      h+='</div>';
+    });
+    return h+'</div>';
+  }
+  function dateBox(){
+    return '<div class="box"><p class="h"><b>LocalDate</b> birthDay</p><div class="fields">'+
+      '<div class="f y"><div class="k">year</div><div class="v">'+P.Y+'</div></div>'+
+      '<div class="f m"><div class="k">month</div><div class="v">'+P.M+'</div></div>'+
+      '<div class="f d"><div class="k">day</div><div class="v">'+P.D+'</div></div></div></div>';
+  }
+  function outBox(title,segs){
+    return '<div class="box out"><p class="h">'+title+'</p>'+alignHTML(segs,{split:true,color:true})+'</div>';
+  }
+  function renderPic(mode){
+    var h="";
+    if(mode==="none"){ $("#pic").innerHTML='<div class="start">"'+P.text+'" · press <b>Next</b></div>'; return; }
+    h+='<span class="zone" style="left:22px;top:16px">'+(mode==="trap"?"wrong pattern":"text and pattern")+'</span>';
+    if(mode==="plain") h+='<div class="top">'+alignHTML([[P.pat,P.text,""]],{rows:["pattern","String"]})+'</div>';
+    else if(mode==="trap") h+='<div class="top">'+alignHTML(P.trapSegs,{split:true,color:true,labels:true,rows:[P.trapRow||"pattern","String"]})+'</div>';
+    else h+='<div class="top">'+alignHTML(P.segs,{split:true,color:true,labels:true,dim:mode!=="aligned",rows:["pattern","String"]})+'</div>';
+    if(mode==="date"||mode==="iso"||mode==="fmt"){
+      h+='<div class="low">'+dateBox();
+      if(mode==="iso") h+='<div class="arrow"><b>\u2192</b>println</div>'+outBox("printed \u00b7 ISO",isoSegs());
+      if(mode==="fmt") h+='<div class="arrow"><b>\u2192</b>format</div>'+outBox("printed \u00b7 display",P.out);
+      h+='</div>';
+    }
+    if(mode==="trap") h+='<div class="low"><div class="box err"><p class="h">DateTimeParseException \u00b7 no LocalDate</p><p>'+P.err+'</p></div></div>';
+    $("#pic").innerHTML=h;
+  }
+
+  /* ---------- state ---------- */
+  var steps=[],at=-1;
+  var codeEl=$("#code"),consEl=$("#console"),statusEl=$("#status");
+  var EMPTY='<span style="color:rgba(132,150,182,.5)">(nothing printed yet)</span>';
+
+  function renderCode(cur,cls){
+    codeEl.innerHTML=lines().map(function(t,i){
+      var n=i+1,c="ln";
+      if(cur&&cur.indexOf(n)>=0) c+=" "+(cls==="cut"?"cut":cls==="left"?"left":"cur");
+      else if(cur&&n>=9&&cur[0]<9) c+=" dim";
+      return '<div class="'+c+'"><span class="n">'+n+'</span><span>'+(t||" ")+'</span></div>';
+    }).join("");
+  }
+  function setStat(id,v,c){ var e=$(id), box=e.parentNode;
+    if(v===null){ e.textContent=""; e.className="v dim"; box.classList.add("empty"); }
+    else { e.textContent=v; e.className="v "+(c||""); box.classList.remove("empty"); } }
+  function setBtns(){ $("#bNext").disabled=at>=steps.length-1; $("#bBack").disabled=at<0;
+    var d=""; for(var k=0;k<steps.length;k++) d+='<i class="'+(k===at?"now":k<at?"done":"")+'"></i>'; $("#dots").innerHTML=d; }
+
+  function show(i){
+    at=i;
+    if(i<0){
+      renderCode(null); renderPic("none"); consEl.innerHTML=EMPTY;
+      $("#caption").className="caption"; statusEl.innerHTML='Press <b class="a">Next</b>. The picture changes at every step.';
+      setStat("#stDate",null); setStat("#stFmt",null); $("#stepno").innerHTML="<small>step</small>0 / "+steps.length; setBtns(); return;
+    }
+    var s=steps[i], out=[], k;
+    $("#stepno").innerHTML="<small>step</small>"+(i+1)+" / "+steps.length;
+    renderCode(s.line,s.cls); renderPic(s.pic);
+    for(k=0;k<=i;k++) if(steps[k].out) out.push('<div class="out">'+steps[k].out+'</div>');
+    if(s.err) out.push('<div class="out" style="color:#ff9b9b">Exception in thread "main" java.time.format.DateTimeParseException: '+P.err+'</div>');
+    consEl.innerHTML=out.join("")||EMPTY;
+    $("#caption").className="caption "+s.cls; statusEl.innerHTML=s.msg;
+    setStat("#stDate",s.date?iso():null,"hot"); setStat("#stFmt",s.fmt?joinOut():null,"gold");
+    setBtns();
+  }
+
+  /* focus: picture and caption only. Remembered per browser. */
+  function setFocus(on){ document.body.classList.toggle("solo",on); $("#bFocus").textContent=on?"Focus on":"Focus";
+    try{localStorage.setItem("hub-focus",on?"1":"0");}catch(e){} }
+  $("#bFocus").addEventListener("click",function(){ setFocus(!document.body.classList.contains("solo")); this.blur(); });
+  try{ if(localStorage.getItem("hub-focus")==="1") document.body.classList.add("solo"); }catch(e){}
+  if(document.body.classList.contains("solo")) $("#bFocus").textContent="Focus on";
+
+  function next(){ if(at<steps.length-1) show(at+1); }
+  function back(){ if(at>=0) show(at-1); }
+  function reset(){ steps=build(); show(-1); }
+  function pick(idx){
+    P=PRESETS[idx];
+    Array.prototype.forEach.call(document.querySelectorAll(".chip"),function(c,j){c.classList.toggle("on",j===idx);});
+    if(document.activeElement&&document.activeElement.blur) document.activeElement.blur();
+    reset();
+  }
+
+  $("#chips").innerHTML=PRESETS.map(function(p,j){return '<button class="chip'+(j===0?' on':'')+'" data-i="'+j+'">"'+p.text+'"</button>';}).join("");
+  $("#chips").addEventListener("click",function(e){ var b=e.target.closest(".chip"); if(b) pick(+b.getAttribute("data-i")); });
+  $("#bNext").addEventListener("click",next);
+  $("#bBack").addEventListener("click",back);
+  $("#bReset").addEventListener("click",reset);
+  document.addEventListener("keydown",function(e){ if(e.code==="Space"&&!/INPUT|BUTTON/.test(e.target.tagName)){e.preventDefault();next();} });
+
+  /* ---------- ambient canvas ---------- */
+  var cv=$("#amb"),ctx=cv.getContext&&cv.getContext("2d"),parts=[];
+  function sizeC(){if(!ctx)return;cv.width=innerWidth;cv.height=innerHeight;}
+  function initParts(){parts=[];for(var i=0;i<46;i++)parts.push({x:Math.random(),y:Math.random(),
+    r:Math.random()*1.6+.3,s:Math.random()*.02+.004,o:Math.random()*.4+.1});}
+  function drawC(){if(!ctx)return;ctx.clearRect(0,0,cv.width,cv.height);
+    parts.forEach(function(p){p.y-=p.s/60;if(p.y<-.02)p.y=1.02;
+      ctx.beginPath();ctx.arc(p.x*cv.width,p.y*cv.height,p.r,0,7);
+      ctx.fillStyle="rgba(140,170,255,"+p.o+")";ctx.fill();});
+    requestAnimationFrame(drawC);}
+  if(ctx&&!reduce){sizeC();initParts();drawC();addEventListener("resize",sizeC);}
+
+  reset();
+})();
+</script>
+<script src="../manifest.js"></script>
+<script src="../../assets/rail.js"></script>
+<script>Rail.render(document.getElementById("rail"),{week:2,kind:"visuals",current:"05-string-to-date"});</script>
+</body>
+</html>
