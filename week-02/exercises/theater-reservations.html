@@ -135,9 +135,9 @@ How many tickets would you like? 3
         <div>
           <p class="lab">Pages that help</p>
           <div class="links">
-            <a href="../visuals/05-string-to-date.html">Text to LocalDate</a>
-            <a href="../visuals/04-string-to-number.html">Text to int</a>
-            <a href="../visuals/01-string-methods.html">split</a>
+            <a href="../visuals/04-string-to-date.html">Text to LocalDate</a>
+            <a href="../visuals/03-string-to-number.html">Text to int</a>
+            <a href="../visuals/02-string-methods.html">indexOf and substring</a>
             <a href="../reference/common-errors.html">What the red text means</a>
           </div>
         </div>
@@ -147,7 +147,7 @@ How many tickets would you like? 3
 
   <div class="take">
     <p class="tk">The one idea</p>
-    <p><b>Read text, convert it, then build the sentence.</b> The date becomes a LocalDate, the count picks ticket or tickets, the name is split and turned around.</p>
+    <p><b>Read text, convert it, then build the sentence.</b> The date becomes a LocalDate, the count picks ticket or tickets, the name is cut at the space and turned around.</p>
   </div>
 
   <div id="rail"></div>
@@ -177,8 +177,8 @@ How many tickets would you like? 3
     {t:"Ask for the number of tickets and read a whole number.",
      d:"Prompt <b>How many tickets would you like?</b> and read an <code>int</code>.",
      ok:"3 is stored as a number"},
-    {t:"Split the name into first and last name.",
-     d:"<code>split()</code> on the space gives two pieces.",
+    {t:"Cut the name into first and last name.",
+     d:"<code>indexOf(\" \")</code> finds the space; <code>substring</code> before it is the first name, after it the last name.",
      ok:"you hold Geri and Johnson separately"},
     {t:"Print the confirmation: ticket for one, tickets for more.",
      d:"Decide the word from the count before you print. The workbook format is # ticket(s) reserved for (date) under (LastName, FirstName).",

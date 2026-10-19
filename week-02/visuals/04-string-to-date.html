@@ -156,30 +156,35 @@
   .take .tk{font-family:var(--mono);font-size:.66rem;letter-spacing:.14em;text-transform:uppercase;color:var(--accent);margin:0 0 8px}
   .take p{margin:0;font-size:.95rem;color:var(--ink);line-height:1.55}
   .take b{color:#fff}
+  .rl.one span{height:40px}
+  .f .v.w{font-size:1.25rem}
+  .v.ok{color:var(--good)} .v.bad{color:var(--warn)}
+  .stat.wide{grid-column:1/-1}
+  .console .in{color:var(--ink)}
+  .console .err{color:#ff9b9b}
   @media (prefers-reduced-motion:reduce){*{animation-duration:.01ms!important;transition-duration:.01ms!important}#amb{display:none}}
 </style>
 </head>
 <body>
 
-<a class="back" href="../index.html#05-string-to-date">&#8592; Week 2 index</a>
+<a class="back" href="../index.html#04-string-to-date">&#8592; Week 2 index</a>
 
 <canvas id="amb"></canvas>
 <div class="wrap">
   <p class="tag">Workbook 2a &middot; Section 1-2 &middot; Converting a String to a date</p>
   <h1>String to Date</h1>
-  <p class="lede"><b>The pattern tells <code>LocalDate.parse</code> which characters are the month, the day and the year.</b></p>
+  <p class="lede"><b>A String is not a date: a typed date like 17/October/2002 needs a formatter whose pattern matches it exactly.</b></p>
 
   <div class="stage">
     <div class="topbar">
-      <span class="lab">Input</span>
-      <div class="chips" id="chips"></div>
+      <span class="lab">One typed date, one pattern</span>
       <button class="focus" id="bFocus" title="Hide the code and notes, enlarge the picture">Focus</button>
     </div>
 
     <div class="pic" id="pic"></div>
 
     <div class="caption" id="caption">
-      <div class="n" id="stepno"><small>step</small>0 / 6</div>
+      <div class="n" id="stepno"><small>step</small>0 / 5</div>
       <div class="t" id="status">Press <b class="a">Next</b>. The picture changes at every step.</div>
     </div>
 
@@ -189,7 +194,7 @@
       <button class="btn primary" id="bNext">Next &rarr;</button>
       <button class="btn ghost" id="bReset">Reset</button>
     </div>
-    <p class="hint">space = next &middot; <b>try another input</b>: each one has its own pattern and its own trap</p>
+    <p class="hint">space = next &middot; <b>line up the pattern and the text: every piece must match</b></p>
 
     <div class="support">
       <div>
@@ -198,8 +203,7 @@
       </div>
       <div class="side">
         <div class="readout">
-          <div class="stat empty"><div class="k">birthDay</div><div class="v dim" id="stDate"></div></div>
-          <div class="stat empty"><div class="k">format(display)</div><div class="v dim" id="stFmt"></div></div>
+          <div class="stat wide empty"><div class="k">userDate</div><div class="v dim" id="stUser"></div></div>
         </div>
         <div class="console"><div class="cl">console</div><div id="console"></div></div>
       </div>
@@ -208,10 +212,10 @@
 
   <div class="take">
     <p class="tk">The one idea</p>
-    <p><b>The pattern must describe the text exactly.</b> <code>MM</code> reads a two digit month, <code>d</code> a day of one or
-    two digits, <code>MMM</code> a short month name, <code>yyyy</code> a four digit year, and every <code>/</code> or space must match too.
-    Without a formatter, <code>LocalDate.parse</code> expects <code>yyyy-MM-dd</code>. A LocalDate holds only three numbers:
-    println shows them in ISO order, <code>format</code> shows them in any pattern you choose.</p>
+    <p><b>A String is not a date.</b> Only <code>yyyy-MM-dd</code> text parses with no formatter, so
+    <code>"17/October/2002"</code> needs a <code>DateTimeFormatter</code> whose pattern matches it exactly: <code>d</code> the day,
+    <code>MMMM</code> the full month name, <code>yyyy</code> the year, every <code>/</code> in its place. Once parsed,
+    println shows the date as yyyy-MM-dd.</p>
   </div>
 
   <div id="rail"></div>
@@ -223,73 +227,49 @@
   var $=function(s){return document.querySelector(s);};
   var reduce=matchMedia("(prefers-reduced-motion: reduce)").matches;
 
-  /* ---------- presets: [pattern piece, text piece, field] ; field m/d/y, s = literal, bad = mismatch, x = never read ---------- */
-  var PRESETS=[
-    {text:"10/17/2022",pat:"MM/dd/yyyy",Y:2022,M:10,D:17,
-     segs:[["MM","10","m"],["/","/","s"],["dd","17","d"],["/","/","s"],["yyyy","2022","y"]],
-     outPat:"d MMM yyyy",out:[["d","17","d"],[" "," ","s"],["MMM","Oct","m"],[" "," ","s"],["yyyy","2022","y"]],
-     trapLines:['<span class="ty">DateTimeFormatter</span> wrong = <span class="ty">DateTimeFormatter</span>.<span class="fn">ofPattern</span>(<span class="st">"dd/MM/yyyy"</span>);',
-                '<span class="ty">LocalDate</span> oops = <span class="ty">LocalDate</span>.<span class="fn">parse</span>(userInput, wrong);'],
-     trapLab:"dd/MM/yyyy",trapSegs:[["dd","10","d"],["/","/","s"],["MM","17","bad","no month 17"],["/","/","s"],["yyyy","2022","y"]],
-     trapMsg:'Swap to <code>"dd/MM/yyyy"</code>: MM now reads 17, and there is no month 17. <b class="w">No LocalDate.</b>',
-     err:"Text '10/17/2022' could not be parsed: Invalid value for MonthOfYear (valid values 1 - 12): 17"},
-    {text:"7 Oct 2002",pat:"d MMM yyyy",Y:2002,M:10,D:7,
-     segs:[["d","7","d"],[" "," ","s"],["MMM","Oct","m"],[" "," ","s"],["yyyy","2002","y"]],
-     outPat:"MM/dd/yyyy",out:[["MM","10","m"],["/","/","s"],["dd","07","d"],["/","/","s"],["yyyy","2002","y"]],
-     trapLines:['<span class="ty">DateTimeFormatter</span> wrong = <span class="ty">DateTimeFormatter</span>.<span class="fn">ofPattern</span>(<span class="st">"dd MMM yyyy"</span>);',
-                '<span class="ty">LocalDate</span> oops = <span class="ty">LocalDate</span>.<span class="fn">parse</span>(userInput, wrong);'],
-     trapLab:"dd MMM yyyy",trapSegs:[["dd","7 ","bad","needs 2 digits"],[" MMM yyyy","Oct 2002","x","never read"]],
-     trapMsg:'Swap to <code>"dd MMM yyyy"</code>: dd needs two digits but finds 7 and a space. <b class="w">No LocalDate.</b>',
-     err:"Text '7 Oct 2002' could not be parsed at index 0"},
-    {text:"17/October/2002",pat:"d/MMMM/yyyy",Y:2002,M:10,D:17,
-     segs:[["d","17","d"],["/","/","s"],["MMMM","October","m"],["/","/","s"],["yyyy","2002","y"]],
-     outPat:"MMM d, yyyy",out:[["MMM","Oct","m"],[" "," ","s"],["d","17","d"],[", ",", ","s"],["yyyy","2002","y"]],
-     trapLines:['<span class="cm">// no formatter: parse expects yyyy-MM-dd</span>',
-                '<span class="ty">LocalDate</span> oops = <span class="ty">LocalDate</span>.<span class="fn">parse</span>(userInput);'],
-     trapLab:"yyyy-MM-dd",trapRow:"ISO",trapSegs:[["yyyy","17","bad","needs 4 digits"],["-MM-dd","/October/2002","x","never read"]],
-     trapMsg:'Leave the formatter out: parse expects yyyy-MM-dd, but finds only 17 for the year. <b class="w">No LocalDate.</b>',
-     err:"Text '17/October/2002' could not be parsed at index 0"}
-  ];
-  var P=PRESETS[0];
+  /* segments: [pattern piece, text piece, field, label] ; field m/d/y, s = literal, bad = mismatch, x = never read */
+  var ISO_SEGS=[["yyyy","2002","y"],["-","-","s"],["MM","10","m"],["-","-","s"],["dd","17","d"]];
+  var T={text:"17/October/2002",
+     dflt:[["yyyy","17","bad","needs 4 digits"],["-MM-dd","/October/2002","x","never read"]],
+     dErr:"Text '17/October/2002' could not be parsed at index 0",
+     dMsg:'The commented line has no formatter, so parse wants yyyy-MM-dd and finds only 17 for the year. <b class="w">DateTimeParseException.</b>',
+     fmt:[["d","17","d"],["/","/","s"],["MMMM","October","m"],["/","/","s"],["yyyy","2002","y"]],
+     fMsg:'With the formatter, pattern and text line up: <b class="g">d reads 17, MMMM reads October, yyyy reads 2002</b>. userDate is a LocalDate.'};
   var NAMES={m:"month",d:"day",y:"year"};
-  function iso(){ return P.Y+"-"+(P.M<10?"0":"")+P.M+"-"+(P.D<10?"0":"")+P.D; }
-  function isoSegs(){ var s=iso(); return [["yyyy",s.slice(0,4),"y"],["-","-","s"],["MM",s.slice(5,7),"m"],["-","-","s"],["dd",s.slice(8,10),"d"]]; }
-  function joinOut(){ return P.out.map(function(s){return s[1];}).join(""); }
+  var PROMPT="Please enter the date that you want (d/MMMM/yyyy)";
 
   function lines(){
     return [
-      '<span class="ty">String</span> userInput = <span class="st">"'+P.text+'"</span>;',
-      '<span class="ty">DateTimeFormatter</span> formatter = <span class="ty">DateTimeFormatter</span>.<span class="fn">ofPattern</span>(<span class="st">"'+P.pat+'"</span>);',
-      '<span class="ty">LocalDate</span> birthDay = <span class="ty">LocalDate</span>.<span class="fn">parse</span>(userInput, formatter);',
-      'System.out.<span class="fn">println</span>(birthDay);',
-      '',
-      '<span class="ty">DateTimeFormatter</span> display = <span class="ty">DateTimeFormatter</span>.<span class="fn">ofPattern</span>(<span class="st">"'+P.outPat+'"</span>);',
-      'System.out.<span class="fn">println</span>(birthDay.<span class="fn">format</span>(display));',
-      '',
-      P.trapLines[0],
-      P.trapLines[1]
+      '<span class="ty">Scanner</span> scanner = <span class="kw">new</span> <span class="ty">Scanner</span>(System.in);',
+      'System.out.<span class="fn">println</span>(<span class="st">"Please enter the date that you want (d/MMMM/yyyy)"</span>);',
+      '<span class="ty">String</span> dateInputFromUser = scanner.<span class="fn">nextLine</span>();',
+      '<span class="ty">DateTimeFormatter</span> formatter = <span class="ty">DateTimeFormatter</span>.<span class="fn">ofPattern</span>(<span class="st">"d/MMMM/yyyy"</span>);',
+      '<span class="cm">// LocalDate userDate = LocalDate.parse(dateInputFromUser);   // DateTimeParseException</span>',
+      '<span class="ty">LocalDate</span> userDate = <span class="ty">LocalDate</span>.<span class="fn">parse</span>(dateInputFromUser, formatter);',
+      'System.out.<span class="fn">println</span>(userDate);   <span class="cm">// always printed back as YYYY-MM-DD</span>'
     ];
   }
 
   /* ---------- the walk ---------- */
   function build(){
-    var reads=P.segs.filter(function(s){return s[2]!=="s";}).map(function(s){return s[0]+" reads "+s[1];}).join(", ");
-    var S=[];
-    S.push({line:[1,2],pic:"plain",cls:"",msg:'Two Strings: the input <code>"'+P.text+'"</code> and the pattern <code>"'+P.pat+'"</code>. Only characters so far.'});
-    S.push({line:[3],pic:"aligned",cls:"",msg:'parse lines the pattern up with the text: <b class="a">'+reads+'</b>.'});
-    S.push({line:[3],pic:"date",cls:"ok",msg:'The result is a LocalDate holding three numbers: year '+P.Y+', month '+P.M+', day '+P.D+'. <b class="g">No text inside.</b>',date:true});
-    S.push({line:[4],pic:"iso",cls:"",msg:'println has no pattern to follow, so it prints ISO order, year-month-day: <b class="a">'+iso()+'</b>.',date:true,out:iso()});
-    S.push({line:[6,7],pic:"fmt",cls:"left",msg:'A second pattern, <code>"'+P.outPat+'"</code>, turns the same date into new text: <b class="y">'+joinOut()+'</b>.',date:true,fmt:true,out:joinOut()});
-    S.push({line:[9,10],pic:"trap",cls:"cut",msg:P.trapMsg,date:true,fmt:true,err:true});
-    return S;
+    return [
+      {line:[1,2,3],pic:"u1",cls:"",msg:'The program asks for a date and nextLine hands back what was typed, <code>"'+T.text+'"</code>. Still a String.',out:[PROMPT],typed:true},
+      {line:[4],pic:"u2",cls:"",msg:'The formatter holds the pattern <code>d/MMMM/yyyy</code>: d the day, MMMM the full month name, yyyy the year, a <code>/</code> between each.'},
+      {line:[5],pic:"u3",cls:"cut",msg:T.dMsg},
+      {line:[6],pic:"u4",cls:"ok",msg:T.fMsg,user:true},
+      {line:[7],pic:"u5",cls:"ok",msg:'println prints userDate as yyyy-MM-dd, not in the typed shape: <b class="g">2002-10-17</b>.',user:true,out:["2002-10-17"]}
+    ];
   }
 
   /* ---------- picture ---------- */
   function cellsHTML(str,cls){
     var h='<div class="cells">';
-    for(var i=0;i<str.length;i++){ var ch=str.charAt(i), sp=ch===" ";
-      h+='<span class="c'+(cls?" "+cls:"")+(sp?" sp":"")+'">'+(sp?"·":ch)+'</span>'; }
+    for(var i=0;i<str.length;i++){ var ch=str.charAt(i);
+      h+='<span class="c'+(cls?" "+cls:"")+'">'+ch+'</span>'; }
     return h+'</div>';
+  }
+  function stringHTML(text){
+    return '<div class="al"><div class="rl one"><span>String</span></div><div class="seg">'+cellsHTML(text,"")+'</div></div>';
   }
   function alignHTML(segs,opts){
     var h='<div class="al'+(opts.split?" split":"")+(opts.dim?" dim":"")+'">';
@@ -302,29 +282,33 @@
     });
     return h+'</div>';
   }
-  function dateBox(){
-    return '<div class="box"><p class="h"><b>LocalDate</b> birthDay</p><div class="fields">'+
-      '<div class="f y"><div class="k">year</div><div class="v">'+P.Y+'</div></div>'+
-      '<div class="f m"><div class="k">month</div><div class="v">'+P.M+'</div></div>'+
-      '<div class="f d"><div class="k">day</div><div class="v">'+P.D+'</div></div></div></div>';
+  function dateBox(name){
+    return '<div class="box"><p class="h"><b>LocalDate</b> '+name+'</p><div class="fields">'+
+      '<div class="f y"><div class="k">year</div><div class="v">2002</div></div>'+
+      '<div class="f m"><div class="k">month</div><div class="v">10</div></div>'+
+      '<div class="f d"><div class="k">day</div><div class="v">17</div></div></div></div>';
   }
   function outBox(title,segs){
     return '<div class="box out"><p class="h">'+title+'</p>'+alignHTML(segs,{split:true,color:true})+'</div>';
   }
+  function errBox(title,msg){
+    return '<div class="box err"><p class="h">'+title+'</p><p>'+msg+'</p></div>';
+  }
+  function zone(t){ return '<span class="zone" style="left:22px;top:16px">'+t+'</span>'; }
   function renderPic(mode){
-    var h="";
-    if(mode==="none"){ $("#pic").innerHTML='<div class="start">"'+P.text+'" · press <b>Next</b></div>'; return; }
-    h+='<span class="zone" style="left:22px;top:16px">'+(mode==="trap"?"wrong pattern":"text and pattern")+'</span>';
-    if(mode==="plain") h+='<div class="top">'+alignHTML([[P.pat,P.text,""]],{rows:["pattern","String"]})+'</div>';
-    else if(mode==="trap") h+='<div class="top">'+alignHTML(P.trapSegs,{split:true,color:true,labels:true,rows:[P.trapRow||"pattern","String"]})+'</div>';
-    else h+='<div class="top">'+alignHTML(P.segs,{split:true,color:true,labels:true,dim:mode!=="aligned",rows:["pattern","String"]})+'</div>';
-    if(mode==="date"||mode==="iso"||mode==="fmt"){
-      h+='<div class="low">'+dateBox();
-      if(mode==="iso") h+='<div class="arrow"><b>\u2192</b>println</div>'+outBox("printed \u00b7 ISO",isoSegs());
-      if(mode==="fmt") h+='<div class="arrow"><b>\u2192</b>format</div>'+outBox("printed \u00b7 display",P.out);
-      h+='</div>';
+    var h="", PR=["pattern","String"], DF=["default","String"];
+    if(mode==="none"){ $("#pic").innerHTML='<div class="start">"'+T.text+'" · press\u00a0<b>Next</b></div>'; return; }
+    if(mode==="u1") h=zone("dateInputFromUser")+'<div class="top">'+stringHTML(T.text)+'</div>';
+    if(mode==="u2") h=zone("dateInputFromUser and formatter")+'<div class="top">'+alignHTML([["d/MMMM/yyyy",T.text,""]],{rows:PR})+'</div>';
+    if(mode==="u3"){
+      h=zone("commented line · no formatter")+'<div class="top">'+alignHTML(T.dflt,{split:true,color:true,labels:true,rows:DF})+'</div>';
+      h+='<div class="low">'+errBox("DateTimeParseException · if uncommented",T.dErr)+'</div>';
     }
-    if(mode==="trap") h+='<div class="low"><div class="box err"><p class="h">DateTimeParseException \u00b7 no LocalDate</p><p>'+P.err+'</p></div></div>';
+    if(mode==="u4"||mode==="u5"){
+      h=zone("parse with formatter")+'<div class="top">'+alignHTML(T.fmt,{split:true,color:true,labels:true,dim:mode==="u5",rows:PR})+'</div>';
+      if(mode==="u4") h+='<div class="low">'+dateBox("userDate")+'</div>';
+      if(mode==="u5") h+='<div class="low">'+dateBox("userDate")+'<div class="arrow"><b>→</b>println</div>'+outBox("printed",ISO_SEGS)+'</div>';
+    }
     $("#pic").innerHTML=h;
   }
 
@@ -336,8 +320,7 @@
   function renderCode(cur,cls){
     codeEl.innerHTML=lines().map(function(t,i){
       var n=i+1,c="ln";
-      if(cur&&cur.indexOf(n)>=0) c+=" "+(cls==="cut"?"cut":cls==="left"?"left":"cur");
-      else if(cur&&n>=9&&cur[0]<9) c+=" dim";
+      if(cur&&cur.indexOf(n)>=0) c+=" "+(cls==="cut"?"cut":"cur");
       return '<div class="'+c+'"><span class="n">'+n+'</span><span>'+(t||" ")+'</span></div>';
     }).join("");
   }
@@ -352,16 +335,19 @@
     if(i<0){
       renderCode(null); renderPic("none"); consEl.innerHTML=EMPTY;
       $("#caption").className="caption"; statusEl.innerHTML='Press <b class="a">Next</b>. The picture changes at every step.';
-      setStat("#stDate",null); setStat("#stFmt",null); $("#stepno").innerHTML="<small>step</small>0 / "+steps.length; setBtns(); return;
+      setStat("#stUser",null);
+      $("#stepno").innerHTML="<small>step</small>0 / "+steps.length; setBtns(); return;
     }
     var s=steps[i], out=[], k;
     $("#stepno").innerHTML="<small>step</small>"+(i+1)+" / "+steps.length;
     renderCode(s.line,s.cls); renderPic(s.pic);
-    for(k=0;k<=i;k++) if(steps[k].out) out.push('<div class="out">'+steps[k].out+'</div>');
-    if(s.err) out.push('<div class="out" style="color:#ff9b9b">Exception in thread "main" java.time.format.DateTimeParseException: '+P.err+'</div>');
+    for(k=0;k<=i;k++){
+      if(steps[k].out) steps[k].out.forEach(function(o){ out.push('<div class="out">'+o+'</div>'); });
+      if(steps[k].typed) out.push('<div class="out in">'+T.text+'</div>');
+    }
     consEl.innerHTML=out.join("")||EMPTY;
     $("#caption").className="caption "+s.cls; statusEl.innerHTML=s.msg;
-    setStat("#stDate",s.date?iso():null,"hot"); setStat("#stFmt",s.fmt?joinOut():null,"gold");
+    setStat("#stUser",s.user?"2002-10-17":null,"ok");
     setBtns();
   }
 
@@ -375,15 +361,6 @@
   function next(){ if(at<steps.length-1) show(at+1); }
   function back(){ if(at>=0) show(at-1); }
   function reset(){ steps=build(); show(-1); }
-  function pick(idx){
-    P=PRESETS[idx];
-    Array.prototype.forEach.call(document.querySelectorAll(".chip"),function(c,j){c.classList.toggle("on",j===idx);});
-    if(document.activeElement&&document.activeElement.blur) document.activeElement.blur();
-    reset();
-  }
-
-  $("#chips").innerHTML=PRESETS.map(function(p,j){return '<button class="chip'+(j===0?' on':'')+'" data-i="'+j+'">"'+p.text+'"</button>';}).join("");
-  $("#chips").addEventListener("click",function(e){ var b=e.target.closest(".chip"); if(b) pick(+b.getAttribute("data-i")); });
   $("#bNext").addEventListener("click",next);
   $("#bBack").addEventListener("click",back);
   $("#bReset").addEventListener("click",reset);
@@ -406,6 +383,6 @@
 </script>
 <script src="../manifest.js"></script>
 <script src="../../assets/rail.js"></script>
-<script>Rail.render(document.getElementById("rail"),{week:2,kind:"visuals",current:"05-string-to-date"});</script>
+<script>Rail.render(document.getElementById("rail"),{week:2,kind:"visuals",current:"04-string-to-date"});</script>
 </body>
 </html>

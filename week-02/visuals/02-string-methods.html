@@ -1,0 +1,509 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>String Methods | Week 2 Visual Hub</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Sora:wght@500;700&family=Inter:wght@400;500&family=JetBrains+Mono:wght@400;500&display=swap">
+<style>
+  :root{
+    --bg:#080c17; --bg2:#0c1428; --surface:rgba(255,255,255,.045); --line:rgba(255,255,255,.09);
+    --ink:#eef2fb; --muted:#8496b6; --accent:#6ea0ff; --accent2:#8b7bff; --good:#46d98a; --warn:#ff6a6a;
+    --gold:#ffc862; --disp:'Sora',system-ui,sans-serif; --body:'Inter',system-ui,sans-serif;
+    --mono:'JetBrains Mono',ui-monospace,monospace;
+  }
+  *{box-sizing:border-box}
+  body{margin:0;min-height:100vh;color:var(--ink);font-family:var(--body);
+    background:radial-gradient(1200px 700px at 70% -10%,#141d38 0%,transparent 55%),
+               radial-gradient(900px 600px at 10% 110%,#161233 0%,transparent 50%),#080c17;
+    overflow-x:hidden}
+  #amb{position:fixed;inset:0;z-index:0;pointer-events:none;opacity:.6}
+  .back{position:relative;z-index:2;display:block;max-width:1120px;margin:0 auto;padding:26px 24px 0;
+    width:100%;font-family:var(--mono);font-size:.8rem;letter-spacing:.04em;color:var(--muted);
+    text-decoration:none;transition:color .15s}
+  .back:hover{color:var(--accent)}
+  .wrap{position:relative;z-index:1;max-width:1120px;margin:0 auto;padding:22px 24px 70px}
+  .tag{font-family:var(--mono);font-size:.72rem;letter-spacing:.22em;text-transform:uppercase;color:var(--accent);margin:0 0 14px}
+  h1{font-family:var(--disp);font-weight:700;font-size:clamp(2.3rem,6vw,3.6rem);line-height:1;margin:0 0 12px;
+    letter-spacing:-.03em;background:linear-gradient(180deg,#fff,#b9c6e6);-webkit-background-clip:text;
+    background-clip:text;color:transparent}
+  .lede{color:var(--muted);max-width:64ch;font-size:1.05rem;margin:0 0 26px;line-height:1.5}
+  .lede b{color:var(--ink)}
+  .lede code,.take code,.caption code{font-family:var(--mono);font-size:.92em;color:#bcd0ff}
+
+  /* ---------- stage: picture first, one control, support below ---------- */
+  .stage{position:relative;background:linear-gradient(180deg,rgba(255,255,255,.03),rgba(255,255,255,.01));
+    border:1px solid var(--line);border-radius:24px;padding:18px 18px 14px;
+    box-shadow:0 1px 0 rgba(255,255,255,.06) inset,0 30px 80px -30px rgba(0,0,0,.8)}
+  .topbar{display:flex;align-items:center;gap:10px;margin:0 0 14px;flex-wrap:wrap}
+  .topbar .lab{margin:0 4px 0 0}
+  .lab{font-family:var(--mono);font-size:.7rem;letter-spacing:.12em;text-transform:uppercase;color:var(--muted);margin:0 0 10px}
+  .decl{font-family:var(--mono);font-size:.86rem;color:#c9d4ea;white-space:pre}
+  .focus{margin-left:auto;font-family:var(--mono);font-size:.68rem;letter-spacing:.1em;text-transform:uppercase;padding:6px 12px;
+    border-radius:999px;border:1px solid var(--line);background:rgba(0,0,0,.25);color:var(--muted);cursor:pointer;transition:.15s}
+  .focus:hover{border-color:var(--accent);color:var(--accent)}
+  body.solo .focus{border-color:rgba(255,200,98,.6);color:var(--gold);background:rgba(255,200,98,.1)}
+
+  /* hero picture: the call, the String as cells, what comes back */
+  .pic{position:relative;min-height:390px;border:1px solid var(--line);border-radius:18px;background:rgba(6,10,20,.5);
+    overflow:hidden;padding:22px 20px 20px;display:flex;flex-direction:column;gap:16px}
+  body.solo .pic{min-height:480px}
+  .call{font-family:var(--mono);font-size:1.25rem;color:#c9d4ea;text-align:center;min-height:1.8rem;word-break:break-word}
+  .call .vr{color:var(--ink)}
+  .rows{display:flex;flex-direction:column;gap:14px}
+  .row{display:flex;flex-direction:column;align-items:center;gap:5px;width:100%;overflow-x:auto}
+  .rh{font-family:var(--mono);font-size:.7rem;color:var(--muted);letter-spacing:.04em}
+  .rh b{font-weight:500;color:var(--ink)}
+  .cells,.idx,.marks{display:grid;grid-template-columns:repeat(var(--n),minmax(0,46px));gap:4px;justify-content:center;width:100%}
+  .cell{position:relative;height:46px;border-radius:9px;border:1px solid var(--line);background:rgba(255,255,255,.03);
+    display:flex;align-items:center;justify-content:center;font-family:var(--mono);font-size:1.12rem;color:var(--ink);
+    transition:background .3s,border-color .3s,color .3s,opacity .3s}
+  .tight .cell{height:40px;font-size:.92rem;border-radius:7px}
+  .cell.sp{color:rgba(132,150,182,.55)}
+  .cell.hit{background:rgba(110,160,255,.18);border-color:rgba(110,160,255,.75)}
+  .cell.p2{background:rgba(139,123,255,.2);border-color:rgba(139,123,255,.8)}
+  .cell.p3{background:rgba(70,217,138,.14);border-color:rgba(70,217,138,.7)}
+  .cell.scan{background:rgba(110,160,255,.05);border-color:rgba(110,160,255,.25);color:var(--muted)}
+  .cell.alt{border:1px dashed rgba(110,160,255,.5)}
+  .cell.gone{background:rgba(255,106,106,.1);border-color:rgba(255,106,106,.6);color:var(--warn);text-decoration:line-through}
+  .cell.end{border:1px dashed rgba(255,106,106,.75);background:rgba(255,106,106,.06);color:var(--warn)}
+  .cell.case{background:rgba(255,200,98,.14);border-color:rgba(255,200,98,.7);color:var(--gold)}
+  .cell.dim{opacity:.35}
+  .none{font-family:var(--mono);font-size:.74rem;color:var(--muted);border:1px dashed rgba(255,255,255,.2);border-radius:9px;padding:13px 18px}
+  .idx span{text-align:center;font-family:var(--mono);font-size:.64rem;color:rgba(132,150,182,.7)}
+  .idx span.on{color:var(--accent);font-weight:500}
+  .marks{height:16px}
+  .marks span{display:flex;justify-content:center;font-family:var(--mono);font-size:.64rem;white-space:nowrap;color:var(--accent)}
+  .marks span.w{color:var(--warn)} .marks span.v{color:var(--accent2)} .marks span.y{color:var(--gold)} .marks span.g{color:var(--good)}
+
+  .results{margin-top:auto;display:flex;align-items:flex-end;justify-content:center;gap:12px 18px;flex-wrap:wrap}
+  .results .rl{font-family:var(--mono);font-size:.66rem;letter-spacing:.14em;text-transform:uppercase;color:var(--muted);align-self:center}
+  .res{display:flex;flex-direction:column;align-items:center;gap:6px}
+  .res .to{font-family:var(--mono);font-size:.66rem;color:var(--muted)}
+  .res .to b{font-weight:500;color:var(--ink)}
+  .slot{min-width:84px;min-height:52px;padding:8px 16px;border-radius:14px;border:1px dashed rgba(110,160,255,.45);
+    background:rgba(110,160,255,.06);display:flex;align-items:center;justify-content:center;gap:8px}
+  .val{font-family:var(--mono);font-size:1.3rem;color:var(--ink);white-space:pre;
+    transition:transform .4s cubic-bezier(.2,.9,.3,1),opacity .4s}
+  .val.enter{transform:translateY(-26px);opacity:0;transition:none}
+  .val .q{color:#c3e88d} .val .t{color:var(--good)} .val .f{color:var(--warn)} .val .n{color:#f78c6c}
+  .mini{display:flex;gap:3px}
+  .mini .cell{width:28px;height:34px;font-size:.92rem;border-radius:7px}
+  .box{border:1px solid rgba(110,160,255,.5);border-radius:10px;padding:5px 11px;background:rgba(110,160,255,.1);font-size:1rem}
+  .box.b2{border-color:rgba(139,123,255,.7);background:rgba(139,123,255,.14)}
+  .box.b3{border-color:rgba(70,217,138,.6);background:rgba(70,217,138,.1)}
+  .box small{display:block;font-size:.58rem;color:var(--muted);letter-spacing:.1em}
+
+  /* caption: the sentence for the chosen method */
+  .caption{display:flex;gap:16px;align-items:flex-start;margin:14px 4px 0;min-height:56px}
+  .caption .n{flex-shrink:0;font-family:var(--disp);font-weight:700;font-size:1.35rem;color:var(--accent);line-height:1.2;min-width:5.6rem}
+  .caption .n small{display:block;font-family:var(--mono);font-weight:400;font-size:.58rem;letter-spacing:.14em;text-transform:uppercase;color:var(--muted)}
+  .caption .t{font-size:1.02rem;line-height:1.55;color:var(--ink);padding-left:16px;border-left:3px solid var(--accent)}
+  body.solo .caption .t{font-size:1.18rem}
+  .caption b.g{color:var(--good)} .caption b.a{color:var(--accent)} .caption b.y{color:var(--gold)} .caption b.w{color:var(--warn)}
+
+  /* toolbar: the one control, a row of method chips */
+  .toolbar{display:flex;align-items:center;gap:10px;margin:16px 0 0;padding-top:14px;border-top:1px solid var(--line);flex-wrap:wrap}
+  .chips{display:flex;flex-wrap:wrap;gap:6px}
+  .chip{font-family:var(--mono);font-size:.78rem;padding:6px 12px;border-radius:999px;cursor:pointer;
+    border:1px solid var(--line);background:rgba(0,0,0,.25);color:var(--muted);transition:.15s}
+  .chip:hover{border-color:var(--accent);color:var(--accent)}
+  .chip.on{border-color:rgba(110,160,255,.6);background:rgba(110,160,255,.14);color:var(--ink)}
+  .chip:focus-visible,.focus:focus-visible{outline:2px solid var(--accent);outline-offset:2px}
+  .hint{font-family:var(--mono);font-size:.68rem;color:var(--muted);margin:10px 4px 0;line-height:1.5}
+  .hint b{color:var(--accent)}
+
+  /* support: code, readouts, console. Hidden in focus */
+  .support{display:grid;grid-template-columns:minmax(0,1.3fr) minmax(0,1fr);gap:14px;margin-top:18px}
+  @media (max-width:860px){.support{grid-template-columns:1fr}}
+  body.solo .support,body.solo .take,body.solo .hint{display:none}
+  .code{min-width:0;font-family:var(--mono);font-size:.76rem;line-height:1.8;background:rgba(0,0,0,.35);border:1px solid var(--line);
+    border-radius:14px;padding:12px 0;overflow-x:auto}
+  .ln{display:flex;gap:12px;padding:0 14px;white-space:pre;color:#c9d4ea}
+  .ln .n{width:20px;text-align:right;color:rgba(132,150,182,.55);user-select:none;flex-shrink:0}
+  .ln.cur{background:rgba(110,160,255,.14);box-shadow:inset 3px 0 0 var(--accent)}
+  .ln.cur .n{color:var(--accent)}
+  .kw{color:#c792ea} .ty{color:#82aaff} .st{color:#c3e88d} .nm{color:#f78c6c} .cm{color:#5f6b85;font-style:italic} .fn{color:#ffcb6b}
+  .side{display:flex;flex-direction:column;gap:12px}
+  .readout{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+  .stat{background:rgba(255,255,255,.03);border:1px solid var(--line);border-radius:12px;padding:11px 13px;min-width:0}
+  .stat .k{font-family:var(--mono);font-size:.62rem;letter-spacing:.1em;text-transform:uppercase;color:var(--muted)}
+  .stat .k.code{text-transform:none;letter-spacing:.02em;font-size:.68rem}
+  .stat .v{font-family:var(--disp);font-weight:700;font-size:1.45rem;font-variant-numeric:tabular-nums;margin-top:2px;min-height:1.6em;
+    white-space:pre;overflow-x:auto}
+  .stat .v.s{font-family:var(--mono);font-weight:500;font-size:1rem;line-height:2.2;color:#c3e88d}
+  .console{font-family:var(--mono);font-size:.76rem;line-height:1.6;background:#05070e;border:1px solid var(--line);
+    border-radius:12px;padding:10px 14px;min-height:64px;color:#9fe3b6;flex:1}
+  .console .cl{font-size:.6rem;letter-spacing:.14em;text-transform:uppercase;color:rgba(132,150,182,.6);margin-bottom:4px}
+  .console .out{white-space:pre}
+
+  .take{margin-top:22px;background:linear-gradient(180deg,rgba(110,160,255,.08),rgba(139,123,255,.04));
+    border:1px solid var(--line);border-left:3px solid var(--accent);border-radius:12px;padding:16px 18px}
+  .take .tk{font-family:var(--mono);font-size:.66rem;letter-spacing:.14em;text-transform:uppercase;color:var(--accent);margin:0 0 8px}
+  .take p{margin:0;font-size:.95rem;color:var(--ink);line-height:1.55}
+  .take b{color:#fff}
+  @media (max-width:860px){.cell{font-size:.92rem;height:38px}.call{font-size:1rem}}
+  @media (prefers-reduced-motion:reduce){*{animation-duration:.01ms!important;transition-duration:.01ms!important}#amb{display:none}}
+</style>
+</head>
+<body>
+
+<a class="back" href="../index.html#02-string-methods">&#8592; Week 2 index</a>
+
+<canvas id="amb"></canvas>
+<div class="wrap">
+  <p class="tag">Workbook 2a &middot; Section 1-1 &middot; String Methods</p>
+  <h1>String Methods</h1>
+  <p class="lede"><b>A String method reads the characters and hands back a value: a number, true or false, a char, or a new String.</b></p>
+
+  <div class="stage">
+    <div class="topbar">
+      <span class="lab">Example</span>
+      <code class="decl" id="decl"></code>
+      <button class="focus" id="bFocus" title="Hide the code and notes, enlarge the picture">Focus</button>
+    </div>
+
+    <div class="pic" id="pic">
+      <div class="call" id="call"></div>
+      <div class="rows" id="rows"></div>
+      <div class="results" id="results"></div>
+    </div>
+
+    <div class="caption" id="caption">
+      <div class="n" id="rtype"><small>returns</small>int</div>
+      <div class="t" id="status"></div>
+    </div>
+
+    <div class="toolbar">
+      <div class="chips" id="chips" role="group" aria-label="Pick a method"></div>
+    </div>
+    <p class="hint">click a method &middot; spaces show as <b>&middot;</b> and count as characters</p>
+
+    <div class="support">
+      <div>
+        <p class="lab">Main.java</p>
+        <div class="code" id="code"></div>
+      </div>
+      <div class="side">
+        <div class="readout">
+          <div class="stat"><div class="k">return type</div><div class="v" id="stType"></div></div>
+          <div class="stat"><div class="k code" id="stAfterK">after the call</div><div class="v s" id="stAfter"></div></div>
+        </div>
+        <div class="console"><div class="cl">console</div><div id="console"></div></div>
+      </div>
+    </div>
+  </div>
+
+  <div class="take">
+    <p class="tk">The one idea</p>
+    <p><b>A String method never changes the String. It returns a new value.</b> Store it in a variable or use it right away,
+    as in <code>String trimmedUserName = username.trim();</code> Called on its own, the result is lost and the original stays as it was.</p>
+  </div>
+
+  <div id="rail"></div>
+</div>
+
+<script>
+(function(){
+  "use strict";
+  var $=function(s){return document.querySelector(s);};
+  var reduce=matchMedia("(prefers-reduced-motion: reduce)").matches;
+  var DOT="·";
+
+  function range(a,b){ var r=[]; for(var i=a;i<=b;i++) r.push(i); return r; }
+  function each(list,cls,map){ list.forEach(function(i){ map[i]=cls; }); return map; }
+  function java(s){ return s; } /* the example Strings hold no HTML characters */
+
+  /* ---------- the examples: Strings and code lines exactly as in Main.java ---------- */
+  var FULL="Raymond Maroun", USER="   danaw          ", CODE="ACME-12213-potato-123-567";
+  var SENT="Raymond teaches Java at Year Up", CITY="Dallas|Ft. Worth|Austin";
+  var lead=USER.length-USER.replace(/^ +/,"").length, tail=USER.length-USER.replace(/ +$/,"").length;
+  var sp=FULL.indexOf(" "), jv=SENT.indexOf("Java");
+  var parts=CITY.split("|"), bars=[]; for(var b=0;b<CITY.length;b++) if(CITY.charAt(b)==="|") bars.push(b);
+  var dashes=[]; for(var d=0;d<CODE.length;d++) if(CODE.charAt(d)==="-") dashes.push(d);
+
+  function str(v){ return {kind:"str",v:v}; }
+  function lit(v,cls){ return {kind:"lit",v:v,cls:cls}; }
+
+  var M=[
+    {id:"length",type:"int",vr:"fullName",val:FULL,
+     call:'<span class="vr">fullName</span>.<span class="fn">length</span>()',
+     code:['String fullName = "Raymond Maroun";',
+           'int length = fullName.length();  // the space counts as a character',
+           'System.out.println(length);'],cur:[2],
+     out:[String(FULL.length)],
+     rows:[{name:"fullName",s:FULL,cls:each([sp],"case",each(range(0,FULL.length-1),"hit",{})),
+            marks:(function(){var m={};m[sp]=["space",'y'];m[FULL.length-1]=[FULL.length+"th",'a'];return m;})()}],
+     res:[{to:"int length",r:lit(FULL.length,"n")}],
+     msg:'<code>length()</code> counts every character, the space included: <b class="a">'+FULL.length+'</b>.'},
+
+    {id:"trim",type:"String",vr:"username",val:USER,
+     call:'<span class="vr">username</span>.<span class="fn">trim</span>()',
+     code:['String username = "   danaw          ";',
+           'System.out.println("[" + username + "]");',
+           'String trimmedUserName = username.trim();  // removes spaces at both ends only',
+           'System.out.println("[" + trimmedUserName + "]");'],cur:[3],
+     out:["["+USER+"]","["+USER.trim()+"]"],
+     rows:[{name:"username",s:USER,cls:each(range(0,lead-1).concat(range(USER.length-tail,USER.length-1)),"gone",each(range(lead,USER.length-tail-1),"hit",{})),
+            marks:(function(){var m={};m[1]=[lead+" removed",'w'];m[USER.length-tail+4]=[tail+" removed",'w'];return m;})()}],
+     res:[{to:"String trimmedUserName",r:str(USER.trim())}],
+     msg:'<code>trim()</code> drops the <b class="w">'+lead+' spaces</b> in front and the <b class="w">'+tail+'</b> at the end. Spaces in the middle would stay.'},
+
+    {id:"toUpperCase",type:"String",vr:"name",val:"raymond",
+     call:'<span class="vr">name</span>.<span class="fn">toUpperCase</span>()',
+     code:['String name = "raymond";',
+           'System.out.println(name.toUpperCase());',
+           'System.out.println(name);  // the original never changes'],cur:[2],
+     out:["raymond".toUpperCase(),"raymond"],
+     rows:[{name:"name",s:"raymond",cls:each(range(0,6),"case",{})}],
+     res:[{to:"printed right away",r:str("raymond".toUpperCase())}],
+     msg:'A new String, <b class="y">"RAYMOND"</b>, is printed. The next line prints <code>name</code>: still "raymond".'},
+
+    {id:"toLowerCase",type:"String",vr:"studentName",val:"ADAM",
+     call:'<span class="vr">studentName</span>.<span class="fn">toLowerCase</span>()',
+     code:['String studentName = "ADAM";',
+           'System.out.println(studentName.toLowerCase());'],cur:[2],
+     out:["ADAM".toLowerCase()],
+     rows:[{name:"studentName",s:"ADAM",cls:each(range(0,3),"case",{})}],
+     res:[{to:"printed right away",r:str("ADAM".toLowerCase())}],
+     msg:'<code>toLowerCase()</code> returns <b class="y">"adam"</b>. <code>studentName</code> still holds "ADAM".'},
+
+    {id:"startsWith",type:"boolean",vr:"secondName",val:"Raymond",
+     call:'<span class="vr">secondName</span>.<span class="fn">toLowerCase</span>().<span class="fn">startsWith</span>(<span class="st">"ray"</span>)',
+     code:['String secondName = "Raymond";',
+           'if (secondName.toLowerCase().startsWith("ray")) { // lowercase first',
+           '    System.out.println("This is true!");',
+           '} else {',
+           '    System.out.println("This is false!");',
+           '}'],cur:[2,3],
+     out:["This is true!"],
+     rows:[{name:"secondName",s:"Raymond",cls:each([0],"case",{})},
+           {name:"toLowerCase() gives",s:"raymond",cls:each([0],"case",each(range(0,2),"hit",{})),
+            marks:{1:['"ray"','a']}}],
+     res:[{to:"used by the if",r:lit("Raymond".toLowerCase().indexOf("ray")===0,"t")}],
+     msg:'Lowercase first gives "raymond", so <b class="a">"ray"</b> matches the first 3 characters: <b class="g">true</b>.'},
+
+    {id:"endsWith",type:"boolean",vr:"discountCode",val:"SAVE-50",
+     call:'<span class="vr">discountCode</span>.<span class="fn">toLowerCase</span>().<span class="fn">endsWith</span>(<span class="st">"-50"</span>)',
+     code:['String discountCode = "SAVE-50";',
+           'if (discountCode.toLowerCase().endsWith("-50")) {',
+           '    System.out.println("This is true!");',
+           '} else {',
+           '    System.out.println("This is false!");',
+           '}'],cur:[2,3],
+     out:["This is true!"],
+     rows:[{name:"discountCode",s:"SAVE-50",cls:each(range(0,3),"case",{})},
+           {name:"toLowerCase() gives",s:"save-50",cls:each(range(4,6),"hit",{}),marks:{5:['"-50"','a']}}],
+     res:[{to:"used by the if",r:lit(/-50$/.test("save-50"),"t")}],
+     msg:'The last 3 characters are <b class="a">"-50"</b>, so <code>endsWith</code> gives <b class="g">true</b>.'},
+
+    {id:"charAt",type:"char",vr:"product",val:"Spaghetti",
+     call:'<span class="vr">product</span>.<span class="fn">charAt</span>(<span class="nm">5</span>)',
+     code:['String product = "Spaghetti";',
+           'char letter = product.charAt(5);  // positions start at 0',
+           'System.out.println(letter);'],cur:[2],
+     out:["Spaghetti".charAt(5)],
+     rows:[{name:"product",s:"Spaghetti",idx:[5],cls:each([5],"hit",each(range(0,4),"scan",{})),marks:{5:["index 5",'a']}}],
+     res:[{to:"char letter",r:lit("'"+"Spaghetti".charAt(5)+"'","q")}],
+     msg:'Indexes start at <b class="a">0</b>, so index 5 is the sixth character: <b class="a">\'e\'</b>, a char.'},
+
+    {id:"indexOf",type:"int",vr:"productCode",val:CODE,
+     call:'<span class="vr">productCode</span>.<span class="fn">indexOf</span>(<span class="st">"-"</span>)',
+     code:['String productCode = "ACME-12213-potato-123-567";',
+           'int dashPosition = productCode.indexOf("-");  // the first dash',
+           'System.out.println(dashPosition);',
+           'System.out.println(productCode.indexOf("#"));  // -1: not found'],cur:[2,4],
+     out:[String(CODE.indexOf("-")),String(CODE.indexOf("#"))],
+     rows:[{name:"productCode",s:CODE,idx:[dashes[0]],cls:each([dashes[0]],"hit",each(dashes,"alt",each(range(0,dashes[0]-1),"scan",{}))),
+            marks:(function(){var m={};m[dashes[0]]=["first",'a'];return m;})()}],
+     res:[{to:"int dashPosition",r:lit(CODE.indexOf("-"),"n")},{to:'indexOf("#")',r:lit(CODE.indexOf("#"),"n")}],
+     msg:'<code>indexOf</code> searches from the left and stops at the first "-": <b class="a">'+CODE.indexOf("-")+'</b>. No match gives <b class="w">-1</b>.'},
+
+    {id:"lastIndexOf",type:"int",vr:"productCode",val:CODE,
+     call:'<span class="vr">productCode</span>.<span class="fn">lastIndexOf</span>(<span class="st">"-"</span>)',
+     code:['String productCode = "ACME-12213-potato-123-567";',
+           'int dashPosition = productCode.lastIndexOf("-"); // the last dash',
+           'System.out.println(dashPosition);'],cur:[2],
+     out:[String(CODE.lastIndexOf("-"))],
+     rows:[{name:"productCode",s:CODE,idx:[CODE.lastIndexOf("-")],
+            cls:each([CODE.lastIndexOf("-")],"hit",each(dashes,"alt",each(range(CODE.lastIndexOf("-")+1,CODE.length-1),"scan",{}))),
+            marks:(function(){var m={};m[CODE.lastIndexOf("-")]=["last",'a'];return m;})()}],
+     res:[{to:"int dashPosition",r:lit(CODE.lastIndexOf("-"),"n")}],
+     msg:'<code>lastIndexOf</code> searches from the right and stops at the last "-": <b class="a">'+CODE.lastIndexOf("-")+'</b>.'},
+
+    {id:"substring",type:"String",vr:"secondStudentName",val:FULL,
+     call:'<span class="vr">secondStudentName</span>.<span class="fn">substring</span>(<span class="nm">0</span>, spaceIndex)',
+     code:['String secondStudentName = "Raymond Maroun";',
+           'int spaceIndex = secondStudentName.indexOf(" ");',
+           'String firstName = secondStudentName.substring(0, spaceIndex);  // end not included',
+           'System.out.println(firstName);',
+           'String lastName = secondStudentName.substring(spaceIndex + 1);  // to the end',
+           'System.out.println(lastName);',
+           'String personName = "raymond";',
+           'String fixedName = personName.substring(0, 1).toUpperCase() + personName.substring(1);',
+           'System.out.println(fixedName);'],cur:[2,3,5,8],
+     out:[FULL.substring(0,sp),FULL.substring(sp+1),"R"+"raymond".substring(1)],
+     rows:[{name:"secondStudentName",s:FULL,idx:[0,sp,sp+1],
+            cls:each(range(sp+1,FULL.length-1),"p2",each([sp],"end",each(range(0,sp-1),"hit",{}))),
+            marks:(function(){var m={};m[sp]=["spaceIndex",'y'];return m;})()},
+           {name:"personName: substring(0, 1) in capitals + substring(1)",s:"raymond",cls:each(range(1,6),"p2",each([0],"case",{}))}],
+     res:[{to:"String firstName",r:str(FULL.substring(0,sp))},{to:"String lastName",r:str(FULL.substring(sp+1)),c:"p2"},
+          {to:"String fixedName",r:str("raymond".substring(0,1).toUpperCase()+"raymond".substring(1))}],
+     msg:'The space sits at <b class="y">'+sp+'</b>. <code>substring(0, '+sp+')</code> stops before it; <code>substring('+(sp+1)+')</code> runs to the end.'},
+
+    {id:"isEmpty",type:"boolean",vr:"potato",val:" ",
+     call:'<span class="vr">potato</span>.<span class="fn">isEmpty</span>()',
+     code:['String potato = " ";',
+           'if (potato.isEmpty()) {  // a space is a character, so not empty',
+           '    System.out.println("This is empty!");',
+           '} else {',
+           '    System.out.println("This is not empty!");',
+           '}',
+           'String emptyPotato = "";',
+           'if (emptyPotato.isEmpty()) {  // "" has length 0',
+           '    System.out.println("This is empty!");',
+           '} else {',
+           '    System.out.println("This is not empty!");',
+           '}',
+           'System.out.println(potato.trim().isEmpty());  // true: trim first'],cur:[2,8,13],
+     out:["This is not empty!","This is empty!",String(" ".trim().length===0)],
+     rows:[{name:"potato",s:" ",cls:{0:"hit"},marks:{0:["1 char",'a']}},
+           {name:"emptyPotato",s:""}],
+     res:[{to:"potato.isEmpty()",r:lit(" ".length===0,"f")},{to:"emptyPotato.isEmpty()",r:lit("".length===0,"t")},
+          {to:"potato.trim().isEmpty()",r:lit(" ".trim().length===0,"t")}],
+     msg:'<code>" "</code> holds one character, a space, so it is <b class="w">not empty</b>. <code>""</code> holds none: <b class="g">true</b>.'},
+
+    {id:"replace",type:"String",vr:"startDate",val:"10-15-2026",
+     call:'<span class="vr">startDate</span>.<span class="fn">replace</span>(<span class="st">"-"</span>, <span class="st">"/"</span>)',
+     code:['String startDate = "10-15-2026";',
+           'System.out.println(startDate.replace("-", "/"));  // every match is replaced'],cur:[2],
+     out:["10-15-2026".split("-").join("/")],
+     rows:[{name:"startDate",s:"10-15-2026",cls:each([2,5],"gone",{})}],
+     res:[{to:"printed right away",r:str("10-15-2026".split("-").join("/")),mark:[2,5]}],
+     msg:'<code>replace</code> swaps <b class="a">every</b> "-" for "/", not just the first. <code>startDate</code> keeps its dashes.'},
+
+    {id:"contains",type:"boolean",vr:"sentence",val:SENT,
+     call:'<span class="vr">sentence</span>.<span class="fn">contains</span>(<span class="st">"Java"</span>)',
+     code:['String sentence = "Raymond teaches Java at Year Up";',
+           'System.out.println(sentence.contains("Java"));',
+           'System.out.println(sentence.contains("java"));  // false: case sensitive'],cur:[2,3],
+     out:[String(SENT.indexOf("Java")>=0),String(SENT.indexOf("java")>=0)],
+     rows:[{name:"sentence",s:SENT,cls:each(range(jv,jv+3),"hit",{}),
+            marks:(function(){var m={};m[jv]=['"Java" found here','a'];return m;})()}],
+     res:[{to:'contains("Java")',r:lit(SENT.indexOf("Java")>=0,"t")},{to:'contains("java")',r:lit(SENT.indexOf("java")>=0,"f")}],
+     msg:'<code>"Java"</code> is in the sentence: <b class="g">true</b>. <code>"java"</code> is not, because capitals count: <b class="w">false</b>.'}
+  ];
+
+  /* ---------- code panel: tiny Java highlighter ---------- */
+  function hl(line){
+    var code=line, cm="", inS=false;
+    for(var i=0;i<line.length-1;i++){
+      var ch=line.charAt(i);
+      if(ch==='"') inS=!inS;
+      if(!inS&&ch==="/"&&line.charAt(i+1)==="/"){ code=line.slice(0,i); cm=line.slice(i); break; }
+    }
+    code=code.replace(/("(?:[^"\\]|\\.)*")|\b(\d+)\b|\b(if|else)\b|\b(String|int|char|boolean|Pattern|System)\b|\.(\w+)(?=\()/g,
+      function(m,s,n,k,t,f){
+        if(s) return '<span class="st">'+s+'</span>';
+        if(n) return '<span class="nm">'+n+'</span>';
+        if(k) return '<span class="kw">'+k+'</span>';
+        if(t) return '<span class="ty">'+t+'</span>';
+        return '.<span class="fn">'+f+'</span>';
+      });
+    return code+(cm?'<span class="cm">'+cm+'</span>':"");
+  }
+
+  /* ---------- picture ---------- */
+  function cellsHtml(s,cls,mini){
+    var h="";
+    for(var i=0;i<s.length;i++){
+      var c=s.charAt(i), k="cell"+(c===" "?" sp":"")+(cls&&cls[i]?" "+cls[i]:"");
+      h+='<div class="'+k+'">'+(c===" "?DOT:java(c))+'</div>';
+    }
+    return mini?'<div class="mini">'+h+'</div>':h;
+  }
+  function rowHtml(r){
+    var n=r.s.length, h='<div class="row'+(n>18?" tight":"")+'"><div class="rh"><b>'+r.name+'</b></div>';
+    var g=' style="--n:'+n+'"';
+    if(!n) h+='<div class="none">"" '+DOT+' no characters, length 0</div>';
+    else h+='<div class="cells"'+g+'>'+cellsHtml(r.s,r.cls)+'</div>';
+    if(r.idx){
+      h+='<div class="idx"'+g+'>';
+      for(var i=0;i<n;i++) h+='<span class="'+(r.idx.indexOf(i)>=0?"on":"")+'">'+i+'</span>';
+      h+='</div>';
+    }
+    if(r.marks){
+      h+='<div class="marks"'+g+'>';
+      for(var j=0;j<n;j++){ var m=r.marks[j]; h+='<span class="'+(m?m[1]:"")+'">'+(m?m[0]:"")+'</span>'; }
+      h+='</div>';
+    }
+    return h+'</div>';
+  }
+  function resHtml(x){
+    var r=x.r, v;
+    if(r.kind==="lit") v='<span class="'+r.cls+'">'+r.v+'</span>';
+    else if(r.kind==="str"){
+      var cls={}, all=range(0,r.v.length-1);
+      if(x.mark) each(x.mark,"p3",cls); else each(all,x.c||"hit",cls);
+      v=cellsHtml(r.v,cls,true);
+    } else v=r.v.map(function(p,i){
+      return '<div class="box'+(i===1?" b2":i===2?" b3":"")+'"><small>['+i+']</small><span class="q">"'+java(p)+'"</span></div>';
+    }).join("");
+    return '<div class="res"><div class="slot"><div class="val enter">'+v+'</div></div><div class="to"><b>'+x.to+'</b></div></div>';
+  }
+  function declOf(m){ return '<span class="ty">String</span> '+m.vr+' = <span class="st">"'+java(m.val)+'"</span>;'; }
+
+  var codeEl=$("#code"), consEl=$("#console");
+  function show(idx){
+    var m=M[idx];
+    Array.prototype.forEach.call(document.querySelectorAll(".chip"),function(b,j){ b.classList.toggle("on",j===idx); b.setAttribute("aria-pressed",j===idx?"true":"false"); });
+    $("#decl").innerHTML=declOf(m);
+    $("#call").innerHTML=m.call;
+    $("#rows").innerHTML=m.rows.map(rowHtml).join("");
+    $("#results").innerHTML='<span class="rl">returns</span>'+m.res.map(resHtml).join("");
+    $("#rtype").innerHTML="<small>returns</small>"+m.type;
+    $("#status").innerHTML=m.msg;
+    codeEl.innerHTML=m.code.map(function(t,i){
+      return '<div class="ln'+(m.cur.indexOf(i+1)>=0?" cur":"")+'"><span class="n">'+(i+1)+'</span><span>'+hl(t)+'</span></div>';
+    }).join("");
+    consEl.innerHTML=m.out.map(function(o){ var e=document.createElement("div"); e.className="out"; e.textContent=o; return e.outerHTML; }).join("");
+    $("#stType").textContent=m.type;
+    $("#stAfterK").textContent=m.vr+" after the call";
+    $("#stAfter").textContent='"'+m.val+'"';
+    /* the returned value drops into its slot: it is a new value, the original row stays as it was */
+    requestAnimationFrame(function(){ requestAnimationFrame(function(){
+      Array.prototype.forEach.call(document.querySelectorAll(".val.enter"),function(v){ v.classList.remove("enter"); });
+    }); });
+  }
+
+  $("#chips").innerHTML=M.map(function(m,j){ return '<button class="chip" data-i="'+j+'" aria-pressed="false">'+m.id+'</button>'; }).join("");
+  $("#chips").addEventListener("click",function(e){ var b=e.target.closest(".chip"); if(b) show(+b.getAttribute("data-i")); });
+
+  /* focus: picture and caption only. Remembered per browser. */
+  function setFocus(on){ document.body.classList.toggle("solo",on); $("#bFocus").textContent=on?"Focus on":"Focus";
+    try{localStorage.setItem("hub-focus",on?"1":"0");}catch(e){} }
+  $("#bFocus").addEventListener("click",function(){ setFocus(!document.body.classList.contains("solo")); this.blur(); });
+  try{ if(localStorage.getItem("hub-focus")==="1") document.body.classList.add("solo"); }catch(e){}
+  if(document.body.classList.contains("solo")) $("#bFocus").textContent="Focus on";
+
+  /* ---------- ambient canvas ---------- */
+  var cv=$("#amb"),ctx=cv.getContext&&cv.getContext("2d"),pts=[];
+  function sizeC(){if(!ctx)return;cv.width=innerWidth;cv.height=innerHeight;}
+  function initPts(){pts=[];for(var i=0;i<46;i++)pts.push({x:Math.random(),y:Math.random(),
+    r:Math.random()*1.6+.3,s:Math.random()*.02+.004,o:Math.random()*.4+.1});}
+  function drawC(){if(!ctx)return;ctx.clearRect(0,0,cv.width,cv.height);
+    pts.forEach(function(p){p.y-=p.s/60;if(p.y<-.02)p.y=1.02;
+      ctx.beginPath();ctx.arc(p.x*cv.width,p.y*cv.height,p.r,0,7);
+      ctx.fillStyle="rgba(140,170,255,"+p.o+")";ctx.fill();});
+    requestAnimationFrame(drawC);}
+  if(ctx&&!reduce){sizeC();initPts();drawC();addEventListener("resize",sizeC);}
+
+  show(0);
+})();
+</script>
+<script src="../manifest.js"></script>
+<script src="../../assets/rail.js"></script>
+<script>Rail.render(document.getElementById("rail"),{week:2,kind:"visuals",current:"02-string-methods"});</script>
+</body>
+</html>

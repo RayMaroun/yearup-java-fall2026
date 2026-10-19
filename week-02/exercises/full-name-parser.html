@@ -98,7 +98,7 @@
 <div class="wrap">
   <p class="tag">Workbook 2a &middot; Section 1-1 &middot; Exercise 2</p>
   <h1>Full Name Parser</h1>
-  <p class="lede"><b>A program that reads a whole name on one line and splits it into first, middle and last name.</b></p>
+  <p class="lede"><b>A program that reads a whole name on one line and cuts it into first, middle and last name.</b></p>
 
   <div class="stage">
     <div class="cols">
@@ -128,7 +128,7 @@ Last name: Wyatt</div>
           <p class="lab">Where people get stuck</p>
           <ul class="stuck">
             <li><b>Index out of bounds.</b> Asking a two-word name for a third piece crashes. Check the count first.</li>
-            <li><b>Empty first name.</b> Splitting before trimming turns the leading spaces into an empty piece.</li>
+            <li><b>Empty first name.</b> Cutting before trimming makes the first piece empty, because the first space is at position 0.</li>
             <li><b>Off by one.</b> The first piece is at index 0, not 1.</li>
             <li><b>Two spaces between words</b> also make an empty piece. Type the name with single spaces.</li>
           </ul>
@@ -136,8 +136,8 @@ Last name: Wyatt</div>
         <div>
           <p class="lab">Pages that help</p>
           <div class="links">
-            <a href="../visuals/01-string-methods.html">trim and split</a>
-            <a href="../visuals/02-string-immutability.html">Keep the trimmed result</a>
+            <a href="../visuals/02-string-methods.html">trim, indexOf and substring</a>
+            <a href="../visuals/05-string-immutability.html">Keep the trimmed result</a>
             <a href="../reference/common-errors.html">What the red text means</a>
           </div>
         </div>
@@ -147,7 +147,7 @@ Last name: Wyatt</div>
 
   <div class="take">
     <p class="tk">The one idea</p>
-    <p><b>Trim, split, then count the pieces.</b> The count tells you which shape of name you got, and so where each part sits.</p>
+    <p><b>Trim, find the first space, cut, then look for a second space.</b> Whether that second space exists tells you if there is a middle name.</p>
   </div>
 
   <div id="rail"></div>
@@ -171,11 +171,11 @@ Last name: Wyatt</div>
     {t:"Ask for the name, read the whole line, then trim it.",
      d:"Print <b>Please enter your name:</b> and read with <code>nextLine()</code>, which keeps the spaces between words. Then <code>trim()</code> the spaces at both ends and keep the result.",
      ok:"spaces typed before and after Dana L. Wyatt are gone"},
-    {t:"Split the name into pieces on the space.",
-     d:"<code>split()</code> gives back an array of pieces, as the workbook shows in Section 1-1. Its <code>length</code> tells you which shape of name you got.",
-     ok:"Dana L. Wyatt gives 3 pieces, Dana Wyatt gives 2"},
+    {t:"Find the first space and cut the first name off.",
+     d:"<code>indexOf(\" \")</code> gives the position of the first space, and <code>substring</code> gives the text before it (the first name) and after it (the rest). Both are in Section 1-1.",
+     ok:"Dana L. Wyatt gives first name Dana and rest L. Wyatt"},
     {t:"Print the first, middle and last name, with <code>(none)</code> when there is no middle name.",
-     d:"Decide by the number of pieces: the last name is not in the same slot in both shapes. Use the workbook labels First name, Middle name, Last name.",
+     d:"Look for a space in the rest: none means it is the last name alone; one means middle name before it, last name after it. Use the workbook labels First name, Middle name, Last name.",
      ok:"both workbook traces come out exactly"},
     {t:"Commit and push to GitHub.",
      d:"Git > GitHub > Share Project on GitHub, keep the name full-name-parser, Share. After later changes: Git > Commit, a short message, <b>Commit and Push</b>.",

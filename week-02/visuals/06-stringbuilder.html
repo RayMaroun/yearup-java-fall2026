@@ -50,52 +50,44 @@
   .focus:hover{border-color:var(--accent);color:var(--accent)}
   body.solo .focus{border-color:rgba(255,200,98,.6);color:var(--gold);background:rgba(255,200,98,.1)}
 
-  /* hero picture: two halves, same text built two ways */
+  /* hero picture: one StringBuilder that grows in place, then one String made from it */
   .pic{position:relative;height:390px;border:1px solid var(--line);border-radius:18px;background:rgba(6,10,20,.5);overflow:hidden}
   body.solo .pic{height:480px}
-  .half{position:absolute;top:0;bottom:0;width:50%;overflow:hidden}
-  .half.l{left:0} .half.r{right:0;border-left:1px solid var(--line)}
-  .zone{position:absolute;left:18px;top:16px;font-family:var(--mono);font-size:.62rem;letter-spacing:.14em;text-transform:uppercase;
-    color:rgba(132,150,182,.7);transition:color .3s,opacity .3s}
-  .zone.on{color:var(--ink)}
-  .half.quiet .sbox.in:not(.old),.half.quiet .bbox,.half.quiet .vtag{opacity:.45}
-  .vtag{position:absolute;left:18px;height:34px;display:flex;align-items:center;font-family:var(--mono);font-size:.82rem;color:var(--accent);
-    opacity:0;transition:top .5s cubic-bezier(.2,.9,.3,1),opacity .3s}
-  .vtag.in{opacity:1}
-  .vtag.g{color:var(--good)}
-  .sbox{position:absolute;left:64px;height:34px;padding:0 12px;display:flex;align-items:center;border-radius:10px;font-family:var(--mono);
-    font-size:.8rem;white-space:pre;color:var(--ink);border:1px solid rgba(110,160,255,.55);background:rgba(110,160,255,.12);
-    opacity:0;transform:translateY(-8px);transition:opacity .45s,transform .45s,border-color .45s,background .45s,color .45s}
-  .sbox.in{opacity:1;transform:none}
-  .sbox.new{box-shadow:0 0 18px -6px rgba(110,160,255,.8)}
-  .sbox.old{opacity:.38;border-style:dashed;border-color:rgba(255,106,106,.55);background:rgba(255,106,106,.05);color:var(--muted)}
-  .sbox .gone{position:absolute;left:calc(100% + 8px);font-size:.6rem;letter-spacing:.06em;color:var(--warn);opacity:0;transition:opacity .4s}
-  .sbox.old .gone{opacity:1}
-  .bbox{position:absolute;left:64px;top:62px;min-width:64px;height:34px;padding:0 12px;display:flex;align-items:center;border-radius:10px;
-    font-family:var(--mono);font-size:.8rem;white-space:pre;color:var(--ink);border:1px solid rgba(70,217,138,.6);background:rgba(70,217,138,.08);
-    opacity:0;transition:opacity .4s,box-shadow .4s}
-  .bbox.in{opacity:1}
-  .bbox .add{color:#bff3d6;background:rgba(70,217,138,.25);border-radius:4px}
-  .bbox.empty::after{content:"(empty)";color:rgba(132,150,182,.6);font-size:.7rem}
-  .bbox .kind,.rbox .kind{position:absolute;left:0;top:-17px;font-size:.58rem;letter-spacing:.12em;text-transform:uppercase;color:rgba(132,150,182,.7)}
-  .lenb{position:absolute;left:64px;top:110px;font-family:var(--mono);font-size:.74rem;padding:4px 11px;border-radius:999px;color:var(--gold);
-    border:1px solid rgba(255,200,98,.6);background:rgba(255,200,98,.1);opacity:0;transition:opacity .4s}
-  .lenb.in{opacity:1}
-  .down{position:absolute;left:124px;top:150px;font-family:var(--mono);font-size:.7rem;color:var(--muted);opacity:0;transition:opacity .4s;line-height:1.3}
-  .down.in{opacity:1}
-  .rbox{position:absolute;left:104px;top:206px;height:34px;padding:0 12px;display:flex;align-items:center;border-radius:10px;font-family:var(--mono);
-    font-size:.8rem;white-space:pre;color:var(--ink);border:1px solid rgba(110,160,255,.55);background:rgba(110,160,255,.12);
-    box-shadow:0 0 18px -6px rgba(110,160,255,.8);opacity:0;transform:translateY(-8px);transition:opacity .45s,transform .45s}
-  .rbox.in{opacity:1;transform:none}
-  .count{position:absolute;left:18px;bottom:16px;font-family:var(--mono);font-size:.66rem;letter-spacing:.06em;color:var(--muted);opacity:0;transition:opacity .3s}
+  .board{position:absolute;inset:0;padding:26px 28px 40px;display:grid;grid-template-columns:150px minmax(0,1fr);
+    grid-template-rows:auto 50px auto;align-content:center}
+  .vars{display:flex;flex-direction:column;justify-content:center;align-items:flex-end;gap:10px;padding-right:14px}
+  .vt{font-family:var(--mono);font-size:.82rem;color:var(--accent);opacity:0;transition:opacity .35s}
+  .vt.in{opacity:1}
+  .vt.g{color:var(--good)}
+  .obj{position:relative;justify-self:start;min-width:280px;max-width:100%;border-radius:12px;padding:22px 16px 10px;
+    border:1px solid rgba(70,217,138,.6);background:rgba(70,217,138,.08);opacity:0;transform:translateY(-6px);
+    transition:opacity .4s,transform .4s,box-shadow .4s}
+  .obj.in{opacity:1;transform:none}
+  .obj.str{border-color:rgba(110,160,255,.55);background:rgba(110,160,255,.12)}
+  .obj.glow{box-shadow:0 0 22px -6px rgba(110,160,255,.8)}
+  .oh{position:absolute;left:14px;top:6px;font-family:var(--mono);font-size:.58rem;letter-spacing:.12em;text-transform:uppercase;color:rgba(132,150,182,.8)}
+  .oh i{font-style:normal;color:var(--good);margin-left:8px;letter-spacing:.06em;text-transform:none}
+  .txt{font-family:var(--mono);font-size:.84rem;line-height:1.6;color:var(--ink)}
+  .txt .row{white-space:pre;min-height:1.6em}
+  .txt .add{color:#bff3d6;background:rgba(70,217,138,.25);border-radius:4px}
+  .txt .nl{color:var(--gold);font-size:.8em;margin-left:2px}
+  .txt .none{color:rgba(132,150,182,.6);font-size:.78rem}
+  .conn{grid-column:2;display:flex;align-items:center;padding-left:40px;font-family:var(--mono);font-size:.78rem;color:var(--muted);
+    opacity:0;transition:opacity .35s}
+  .conn.in{opacity:1}
+  .conn.ok{color:var(--good)}
+  .conn.bad{color:var(--warn)}
+  .conn s{color:var(--warn);margin-right:10px}
+  .count{position:absolute;left:28px;bottom:12px;font-family:var(--mono);font-size:.66rem;letter-spacing:.06em;color:var(--muted);opacity:0;transition:opacity .3s}
   .count.in{opacity:1}
-  .count b{display:inline-block;font-family:var(--disp);font-weight:700;font-size:1.6rem;font-variant-numeric:tabular-nums;margin-right:6px;
-    vertical-align:-3px;color:var(--accent);transition:color .3s}
-  .count .w{color:var(--warn)} .count .g{color:var(--good)}
+  .count b{display:inline-block;font-family:var(--disp);font-weight:700;font-size:1.4rem;font-variant-numeric:tabular-nums;margin:0 6px 0 0;
+    vertical-align:-3px;color:var(--good)}
+  .count b.a{color:var(--accent);margin-left:10px}
   .pic .start{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;font-family:var(--mono);
     font-size:.8rem;color:var(--muted);pointer-events:none;transition:opacity .3s;z-index:2}
   .pic .start b{color:var(--accent);font-weight:500}
-  @media (max-width:620px){.sbox .gone{display:none}.sbox,.bbox{font-size:.68rem;left:54px}.rbox{font-size:.68rem}.lenb{left:54px}}
+  @media (max-width:700px){.board{grid-template-columns:96px minmax(0,1fr);padding:22px 12px 40px}.txt{font-size:.6rem}.obj{min-width:0;padding:22px 10px 8px}
+    .vt{font-size:.7rem}.conn{padding-left:10px;font-size:.68rem}}
 
   /* caption: the one sentence, right under the picture */
   .caption{display:flex;gap:16px;align-items:flex-start;margin:14px 4px 0;min-height:56px}
@@ -134,6 +126,7 @@
   .ln.cur .n{color:var(--accent)}
   .ln.cut{background:rgba(255,106,106,.12);box-shadow:inset 3px 0 0 var(--warn)}
   .ln.left{background:rgba(255,200,98,.12);box-shadow:inset 3px 0 0 var(--gold)}
+  .ln.ok{background:rgba(70,217,138,.1);box-shadow:inset 3px 0 0 var(--good)}
   .ln.dim{opacity:.4}
   .kw{color:#c792ea} .ty{color:#82aaff} .st{color:#c3e88d} .nm{color:#f78c6c} .cm{color:#5f6b85;font-style:italic} .fn{color:#ffcb6b}
   .side{display:flex;flex-direction:column;gap:12px}
@@ -164,36 +157,32 @@
 <div class="wrap">
   <p class="tag">Workbook 2a &middot; Section 1-4 &middot; Working with StringBuilder</p>
   <h1>StringBuilder</h1>
-  <p class="lede"><b>Every <code>+</code> on a String makes a brand new String. A StringBuilder keeps changing one object, and <code>toString()</code> hands you the String at the end.</b></p>
+  <p class="lede"><b><code>append()</code> changes one StringBuilder object in place, and <code>toString()</code> at the end gives you the String.</b></p>
 
   <div class="stage">
     <div class="topbar">
-      <span class="lab">Same text, two ways</span>
+      <span class="lab">One object, growing</span>
       <button class="focus" id="bFocus" title="Hide the code and notes, enlarge the picture">Focus</button>
     </div>
 
     <div class="pic" id="pic">
-      <div class="half l" id="hL">
-        <span class="zone" id="zL">String + String</span>
-        <span class="vtag" id="tagS">s &rarr;</span>
-        <div id="boxesL"></div>
-        <div class="count" id="cL"></div>
+      <div class="board">
+        <div class="vars">
+          <span class="vt g" id="vSkills">skills &rarr;</span>
+        </div>
+        <div class="obj" id="oSB"><span class="oh">StringBuilder object<i id="sbTag"></i></span><div class="txt" id="sbTxt"></div></div>
+        <div class="conn" id="conn"></div>
+        <div class="vars">
+          <span class="vt" id="vMy">mySkills &rarr;</span>
+        </div>
+        <div class="obj str" id="oStr"><span class="oh">String object</span><div class="txt" id="strTxt"></div></div>
       </div>
-      <div class="half r" id="hR">
-        <span class="zone" id="zR">StringBuilder</span>
-        <span class="vtag g" id="tagB" style="top:62px">sb &rarr;</span>
-        <div class="bbox" id="bbox"></div>
-        <span class="lenb" id="lenb">sb.length() = 24</span>
-        <div class="down" id="down">&darr; toString()<br>&darr;</div>
-        <span class="vtag" id="tagR" style="top:206px">result &rarr;</span>
-        <div class="rbox" id="rbox"><span class="kind">String</span></div>
-        <div class="count" id="cR"></div>
-      </div>
-      <div class="start" id="start">Git, HTML, CSS, and Java &middot; press&nbsp;<b>Next</b></div>
+      <div class="count" id="count"></div>
+      <div class="start" id="start">new StringBuilder() &middot; press&nbsp;<b>Next</b></div>
     </div>
 
     <div class="caption" id="caption">
-      <div class="n" id="stepno"><small>step</small>0 / 8</div>
+      <div class="n" id="stepno"><small>step</small>0 / 9</div>
       <div class="t" id="status">Press <b class="a">Next</b>. The picture changes at every step.</div>
     </div>
 
@@ -203,7 +192,7 @@
       <button class="btn primary" id="bNext">Next &rarr;</button>
       <button class="btn ghost" id="bReset">Reset</button>
     </div>
-    <p class="hint">space = next &middot; <b>count the objects on each side</b></p>
+    <p class="hint">space = next &middot; <b>watch the green box: it is the same object at every append</b></p>
 
     <div class="support">
       <div>
@@ -212,8 +201,8 @@
       </div>
       <div class="side">
         <div class="readout">
-          <div class="stat empty"><div class="k">String objects (left)</div><div class="v" id="stL"></div></div>
-          <div class="stat empty"><div class="k">objects (right)</div><div class="v" id="stR"></div></div>
+          <div class="stat empty"><div class="k">appends done</div><div class="v" id="stApp"></div></div>
+          <div class="stat empty"><div class="k">new String objects</div><div class="v" id="stStr"></div></div>
         </div>
         <div class="console"><div class="cl">console</div><div id="console"></div></div>
       </div>
@@ -222,9 +211,9 @@
 
   <div class="take">
     <p class="tk">The one idea</p>
-    <p><b>A String cannot change</b>, so every <code>s = s + ...</code> builds a new String and the old one becomes unreachable.
-    <b>A StringBuilder is one object you keep changing</b> with <code>append()</code>. When the text is done, call
-    <code>toString()</code> once to get the String you use.</p>
+    <p><b><code>append()</code> changes one object in place</b>: eleven appends, still one StringBuilder, and no new String
+    for each change. When the text is done, <b><code>toString()</code></b> hands back the String. A StringBuilder is not a
+    String, so <code>String mySkills = skills;</code> does not compile.</p>
   </div>
 
   <div id="rail"></div>
@@ -236,122 +225,121 @@
   var $=function(s){return document.querySelector(s);};
   var reduce=matchMedia("(prefers-reduced-motion: reduce)").matches;
 
-  /* ---------- the example: four pieces, built two ways ---------- */
-  var PIECES=["Git, ","HTML, ","CSS, ","and Java"];
-  var FULL=PIECES.join("");
-  /* every String the left side creates: "", "Git, ", "Git, HTML, ", ... */
-  var LEFT=[""]; PIECES.forEach(function(p){ LEFT.push(LEFT[LEFT.length-1]+p); });
+  /* ---------- the example: the eleven appends into skills, built in main ---------- */
+  var PIECES=["Git, ","HTML, ","CSS, ","and Bootstrap\n","JavaScript, ","ES6, ","jQuery, ","REST APIs, ","and Express\n","Angular\n","Java\n"];
+  var NL="\u21b5";  /* the mark drawn where a \n sits in the text */
 
-  var CODE=[
-    '<span class="cm">// String + String</span>',
-    '<span class="ty">String</span> s = <span class="st">""</span>;',
-    's = s + <span class="st">"Git, "</span>;',
-    's = s + <span class="st">"HTML, "</span>;',
-    's = s + <span class="st">"CSS, "</span>;',
-    's = s + <span class="st">"and Java"</span>;',
-    '',
-    '<span class="cm">// StringBuilder</span>',
-    '<span class="ty">StringBuilder</span> sb = <span class="kw">new</span> <span class="ty">StringBuilder</span>();',
-    'sb.<span class="fn">append</span>(<span class="st">"Git, "</span>);',
-    'sb.<span class="fn">append</span>(<span class="st">"HTML, "</span>);',
-    'sb.<span class="fn">append</span>(<span class="st">"CSS, "</span>);',
-    'sb.<span class="fn">append</span>(<span class="st">"and Java"</span>);',
-    '<span class="ty">int</span> size = sb.<span class="fn">length</span>();',
-    '<span class="ty">String</span> result = sb.<span class="fn">toString</span>();',
-    'System.out.<span class="fn">println</span>(result);'
-  ];
+  function st(t){ return '<span class="st">"'+t.replace(/\n/g,"\\n")+'"</span>'; }
+  var CODE=['<span class="ty">StringBuilder</span> skills = <span class="kw">new</span> <span class="ty">StringBuilder</span>();'];
+  PIECES.forEach(function(p,i){ CODE.push('skills.<span class="fn">append</span>('+st(p)+');'+
+    (i===0?'   <span class="cm">// append changes the same object in place</span>':'')); });
+  CODE.push('<span class="cm">// String mySkills = skills;   // error: a StringBuilder is not a String</span>');
+  CODE.push('<span class="ty">String</span> mySkills = skills.<span class="fn">toString</span>();   <span class="cm">// toString hands back the text as a String</span>');
+  CODE.push('System.out.<span class="fn">println</span>(mySkills);');
+  var L0=2; /* code line of the first append */
 
-  /* k = how many pieces are in so far (0 to 4); len/str/out = later steps */
+  /* k = appends done; from = first append of an animated step; conn = what sits between the two boxes */
   var steps=[
-    {k:0,line:[2,9],cls:"",msg:'Two starting points: <code>s</code> holds an empty String, <code>sb</code> an empty StringBuilder.'},
-    {k:1,line:[3,10],cls:"cut",msg:'A String cannot change, so <code>s + "Git, "</code> <b class="w">makes a new String</b>. <code>sb</code> just grows.'},
-    {k:2,line:[4,11],cls:"cut",msg:'Another <b class="w">new String</b> on the left; the old one is now unreachable. Right: still <b class="g">one object</b>.'},
-    {k:3,line:[5,12],cls:"cut",msg:'Every <code>+</code> copies all the text so far into a new String. <code>append()</code> adds to the end in place.'},
-    {k:4,line:[6,13],cls:"cut",msg:'Done. The left made <b class="w">5 Strings</b> and 4 are unreachable. The right made <b class="g">1 object</b>.'},
-    {k:4,len:true,line:[14],cls:"left",msg:'<code>sb.length()</code> counts the characters: <b class="y">24</b>. Asking a question changes nothing.'},
-    {k:4,len:true,str:true,line:[15],cls:"ok",msg:'<code>sb.toString()</code> copies the characters into <b class="g">one new String</b>. That is the one you use.'},
-    {k:4,len:true,str:true,out:true,line:[16],cls:"ok",msg:'println shows <code>result</code>: the same text as <code>s</code>, made with 2 objects instead of 5.'}
+    {k:0,line:[1],cls:"",
+     msg:'<code>new StringBuilder()</code> makes <b class="g">one empty object</b>. <code>skills</code> points at it.'},
+    {k:1,line:[L0],cls:"",
+     msg:'<code>append</code> adds <code>"Git, "</code> to that <b class="g">same object</b>.'},
+    {k:2,line:[L0+1],cls:"",
+     msg:'<code>"HTML, "</code> goes on the end of the <b class="g">same object</b>. No new String is made.'},
+    {k:3,line:[L0+2],cls:"",
+     msg:'<code>"CSS, "</code> joins it. Three appends, still <b class="g">one object</b>.'},
+    {k:4,line:[L0+3],cls:"left",
+     msg:'<code>"and Bootstrap\\n"</code> ends with <code>\\n</code>, a <b class="y">newline</b>: the next text starts a new line.'},
+    {k:11,from:4,line:[L0+4,L0+5,L0+6,L0+7,L0+8,L0+9,L0+10],cls:"",
+     msg:'Seven more appends, each on the end of the <b class="g">same object</b>. Each <code>\\n</code> starts a new line: it now holds four lines.'},
+    {k:11,line:[L0+11],cls:"cut",conn:"bad",
+     msg:'<code>String mySkills = skills;</code> <b class="w">does not compile</b>: <code>skills</code> is a StringBuilder, and a StringBuilder is not a String.'},
+    {k:11,str:true,my:true,line:[L0+12],cls:"ok",conn:"ok",
+     msg:'<code>toString()</code> copies the text into a <b class="a">new String object</b>. <code>mySkills</code> points at it.'},
+    {k:11,str:true,my:true,out:true,line:[L0+13],cls:"ok",conn:"ok",
+     msg:'println prints that String: <b class="g">four lines</b>.'}
   ];
 
-  var at=-1;
+  var at=-1,timer=null;
   var codeEl=$("#code"),consEl=$("#console"),statusEl=$("#status");
-  var BOX_TOP=62,BOX_GAP=44;
 
-  function esc(t){ return t; } /* the example text has no markup characters */
-  function quoted(t){ return '"'+esc(t)+'"'; }
-
-  /* left boxes built once; classes switch per step so the transitions show what changed */
-  $("#boxesL").innerHTML=LEFT.map(function(t,i){
-    return '<div class="sbox" id="sb'+i+'" style="top:'+(BOX_TOP+i*BOX_GAP)+'px">'+quoted(t)+'<span class="gone">unreachable</span></div>';
-  }).join("");
-  $("#rbox").insertAdjacentHTML("beforeend",quoted(FULL));
-  $("#lenb").textContent="sb.length() = "+FULL.length;
+  /* the text after k appends, one row per line; the piece hi is highlighted */
+  function rows(k,hi){
+    var out=[""],i,p,body,cls;
+    for(i=0;i<k;i++){
+      p=PIECES[i]; body=p.replace("\n",""); cls=(i===hi)?' class="add"':"";
+      out[out.length-1]+='<span'+cls+'>'+body+'</span>';
+      if(p.charAt(p.length-1)==="\n"){ out[out.length-1]+='<span class="nl">'+NL+'</span>'; out.push(""); }
+    }
+    while(out.length<4) out.push("");
+    out=out.slice(0,4);
+    if(k===0) out[0]='<span class="none">(empty)</span>';
+    return out.map(function(r){ return '<div class="row">'+(r||" ")+'</div>'; }).join("");
+  }
 
   function renderCode(cur,cls){
     codeEl.innerHTML=CODE.map(function(t,i){
       var n=i+1,c="ln";
-      if(cur&&cur.indexOf(n)>=0) c+=" "+(cls==="left"?"left":"cur");
+      if(cur&&cur.indexOf(n)>=0) c+=" "+(cls==="left"?"left":cls==="cut"?"cut":cls==="ok"?"ok":"cur");
       return '<div class="'+c+'"><span class="n">'+n+'</span><span>'+(t||" ")+'</span></div>';
     }).join("");
   }
 
-  function renderPic(s,prevK){
-    var on=!!s, k=on?s.k:-1, i;
+  /* one frame of the picture after k appends */
+  function renderPic(s,k){
+    var on=!!s;
     $("#start").style.opacity=on?0:1;
-    /* left: one box per String created so far; only the newest is still pointed to by s */
-    for(i=0;i<LEFT.length;i++){
-      var b=$("#sb"+i), c="sbox";
-      if(on&&i<=k) c+=" in";
-      if(on&&i<k) c+=" old";
-      if(on&&i===k&&!s.len) c+=" new";
-      b.className=c;
-    }
-    var tagS=$("#tagS"); tagS.className="vtag"+(on?" in":""); tagS.style.top=(BOX_TOP+Math.max(k,0)*BOX_GAP)+"px";
-    /* right: the same box every time; the piece just appended is highlighted */
-    var bb=$("#bbox");
-    if(on){
-      var before=PIECES.slice(0,k-1<0?0:(s.len?k:k-1)).join(""), added=(!s.len&&k>0)?PIECES[k-1]:"";
-      bb.innerHTML='<span class="kind">StringBuilder</span>'+(k===0?"":'"'+esc(before)+(added?'<span class="add">'+esc(added)+'</span>':"")+'"');
-      bb.className="bbox in"+(k===0?" empty":"");
-    } else { bb.className="bbox"; bb.innerHTML=""; }
-    $("#tagB").className="vtag g"+(on?" in":"");
-    $("#lenb").className="lenb"+(on&&s.len?" in":"");
-    $("#down").className="down"+(on&&s.str?" in":"");
-    $("#rbox").className="rbox"+(on&&s.str?" in":"");
-    $("#tagR").className="vtag"+(on&&s.str?" in":"");
-    /* the quiet side is the one the current line does not touch */
-    $("#hL").className="half l"+(on&&s.len?" quiet":"");
-    $("#zL").className="zone"+(on&&!s.len?" on":"");
-    $("#zR").className="zone"+(on?" on":"");
-    /* counters at the bottom of each half */
-    var cl=$("#cL"), cr=$("#cR");
-    if(on){
-      cl.innerHTML='<b>'+(k+1)+'</b>String object'+(k?'s':'')+(k?' \u00b7 <b class="w">'+k+'</b>unreachable':'');
-      cr.innerHTML='<b class="g">1</b>StringBuilder'+(s.str?' \u00b7 <b>1</b>String':'');
-      cl.className=cr.className="count in";
-    } else { cl.className=cr.className="count"; }
+    $("#vSkills").className="vt g"+(on?" in":"");
+    $("#oSB").className="obj"+(on?" in":"");
+    $("#sbTxt").innerHTML=rows(on?k:0,on&&!s.str&&!s.conn?k-1:-1);
+    $("#sbTag").textContent=on?(k===0?"empty":"same object, "+k+" append"+(k===1?"":"s")):"";
+    var c=$("#conn");
+    if(on&&s.conn==="bad"){ c.innerHTML='<s>String mySkills = skills;</s>a StringBuilder is not a String'; c.className="conn in bad"; }
+    else if(on&&s.conn==="ok"){ c.textContent="\u2193  toString() copies the text into a String"; c.className="conn in ok"; }
+    else { c.innerHTML=""; c.className="conn"; }
+    $("#oStr").className="obj str"+(on&&s.str?" in":"")+(on&&s.str&&!s.out?" glow":"");
+    $("#strTxt").innerHTML=rows(11,-1);
+    $("#vMy").className="vt"+(on&&s.my?" in":"");
+    var ct=$("#count");
+    if(on){ ct.innerHTML='<b>1</b>StringBuilder object'+(s.str?' <b class="a">1</b>String object':''); ct.className="count in"; }
+    else ct.className="count";
   }
 
   function setStat(id,v,c){ var e=$(id), box=e.parentNode;
     if(v===null){ e.textContent=""; e.className="v"; box.classList.add("empty"); }
     else { e.textContent=v; e.className="v "+(c||""); box.classList.remove("empty"); } }
 
+  function setConsole(s){
+    if(!s||!s.out){ consEl.innerHTML='<span style="color:rgba(132,150,182,.5)">(nothing printed yet)</span>'; return; }
+    var html=PIECES.join("").split("\n").slice(0,4).map(function(l){ return '<div class="out">'+l+'</div>'; }).join("");
+    consEl.innerHTML=html;
+  }
+
+  function frame(s,k){
+    renderPic(s,k);
+    setStat("#stApp",String(k)+" of 11","hot");
+    setStat("#stStr",s.str?"1":"0",s.str?"gold":"");
+  }
+
+  function stopAnim(){ if(timer){ clearInterval(timer); timer=null; } }
   function show(i){
-    at=i;
+    stopAnim(); at=i;
     if(i<0){
-      renderCode(null); renderPic(null);
-      consEl.innerHTML='<span style="color:rgba(132,150,182,.5)">(nothing printed yet)</span>';
+      renderCode(null); renderPic(null,0); setConsole(null);
       $("#caption").className="caption"; statusEl.innerHTML='Press <b class="a">Next</b>. The picture changes at every step.';
       $("#stepno").innerHTML="<small>step</small>0 / "+steps.length;
-      setStat("#stL",null); setStat("#stR",null); setBtns(); return;
+      setStat("#stApp",null); setStat("#stStr",null); setBtns(); return;
     }
     var s=steps[i];
     $("#stepno").innerHTML="<small>step</small>"+(i+1)+" / "+steps.length;
-    renderCode(s.line,s.cls); renderPic(s);
-    consEl.innerHTML=s.out?'<div class="out">'+esc(FULL)+'</div>':'<span style="color:rgba(132,150,182,.5)">(nothing printed yet)</span>';
+    renderCode(s.line,s.cls); setConsole(s);
     $("#caption").className="caption "+s.cls; statusEl.innerHTML=s.msg;
-    setStat("#stL",s.k+1,"hot"); setStat("#stR",s.str?2:1,s.str?"gold":"");
     setBtns();
+    if(s.from!==undefined&&!reduce){
+      /* the appends run one by one, all into the same box */
+      var k=s.from; frame(s,k);
+      timer=setInterval(function(){ k++; frame(s,k); if(k>=s.k) stopAnim(); },450);
+    } else frame(s,s.k);
   }
   function setBtns(){ $("#bNext").disabled=at>=steps.length-1; $("#bBack").disabled=at<0;
     var d=""; for(var k=0;k<steps.length;k++) d+='<i class="'+(k===at?"now":k<at?"done":"")+'"></i>'; $("#dots").innerHTML=d; }

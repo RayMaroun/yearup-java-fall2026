@@ -169,7 +169,7 @@
 </head>
 <body>
 
-<a class="back" href="../index.html#15-arrays-indexing">&#8592; Week 2 index</a>
+<a class="back" href="../index.html#14-arrays-indexing">&#8592; Week 2 index</a>
 
 <canvas id="amb"></canvas>
 <div class="wrap">
@@ -181,8 +181,10 @@
     <div class="topbar">
       <span class="lab">The array</span>
       <div class="chips" id="chips">
-        <button class="chip on" data-t="int">int[] temperatures</button>
-        <button class="chip" data-t="str">String[] cityNames</button>
+        <button class="chip on" data-t="nums">int[] listOfNumbers</button>
+        <button class="chip" data-t="newNums">int[] newArrayOfNumbers</button>
+        <button class="chip" data-t="names">String[] listOfNames</button>
+        <button class="chip" data-t="bools">boolean[] boolArray</button>
       </div>
       <button class="focus" id="bFocus" title="Hide the code and notes, enlarge the picture">Focus</button>
     </div>
@@ -202,7 +204,7 @@
 
     <div class="caption" id="caption">
       <div class="n" id="stepno"><small>step</small>0 / 0</div>
-      <div class="t" id="status">Press <b class="a">Step</b> to create the array, or <b class="a">Run</b> to watch the loop fill it.</div>
+      <div class="t" id="status">Press <b class="a">Step</b> to create the array, or <b class="a">Run</b> to watch it all.</div>
     </div>
 
     <div class="toolbar">
@@ -211,9 +213,9 @@
       <button class="btn" id="bBack">&larr; Back</button>
       <div class="dots" id="dots"></div>
       <button class="btn" id="bReset">Reset</button>
-      <button class="btn warn" id="bMut">Experiment: loop with i &lt;= length</button>
+      <button class="btn warn" id="bMut">Experiment: index = length</button>
     </div>
-    <p class="hint">space = step &middot; set the index to the size, or turn on the experiment. <b>What is past the last slot?</b></p>
+    <p class="hint">space = step &middot; set the index to the length, or turn on the experiment. <b>What is past the last slot?</b></p>
 
     <div class="support">
       <div>
@@ -223,16 +225,15 @@
       <div class="side">
         <p class="lab">Inputs</p>
         <div class="inputs">
-          <p class="ititle">Change these, then press Step</p>
-          <div class="irow"><span class="kk">size of the array (3 to 10)</span><input id="inN" type="number" min="3" max="10" value="7"></div>
-          <div class="irow"><span class="kk">index to read at the end</span><input id="inK" type="number" min="-1" max="12" value="6"></div>
-          <p class="inote">Edit while stopped. Every step is computed from these values.</p>
+          <p class="ititle">Change this, then press Step</p>
+          <div class="irow"><span class="kk" id="kK">index in the brackets (0 to 7)</span><input id="inK" type="number" min="0" max="7" value="1"></div>
+          <p class="inote">Edit while stopped. The last allowed value is the length itself, which has no slot.</p>
         </div>
         <div class="readout">
           <div class="stat empty"><div class="k">length</div><div class="v dim" id="stLen"></div></div>
           <div class="stat empty"><div class="k">last index</div><div class="v dim" id="stLast"></div></div>
-          <div class="stat empty"><div class="k">current i</div><div class="v dim" id="stI"></div></div>
-          <div class="stat empty"><div class="k">value</div><div class="v dim" id="stVal"></div></div>
+          <div class="stat empty"><div class="k" id="kIdx">index</div><div class="v dim" id="stI"></div></div>
+          <div class="stat empty"><div class="k">value in the slot</div><div class="v dim" id="stVal"></div></div>
         </div>
         <div class="console"><div class="cl">console</div><div id="console"></div></div>
       </div>
@@ -241,9 +242,9 @@
 
   <div class="take">
     <p class="tk">The one idea</p>
-    <p>An array has a <b>fixed number of slots</b>, set when it is created. <b>Indexes run from 0 to <code>length - 1</code></b>,
-    which is why the loop uses <code>i &lt; array.length</code>. A new array is never empty: int slots start at 0, String slots at null.
-    Ask for any index outside that range and Java stops with <b>ArrayIndexOutOfBoundsException</b>.</p>
+    <p><b>Indexes start at 0 and end at <code>length - 1</code></b>, so a loop runs while <code>i &lt; array.length</code>.
+    A new array is never empty: <b><code>new int[n]</code> starts at zeros, <code>String</code> at null, <code>boolean</code> at false</b>.
+    An index equal to the length has no slot, and Java stops with <b>ArrayIndexOutOfBoundsException</b>.</p>
   </div>
 
   <div id="rail"></div>
@@ -255,80 +256,84 @@
   var $=function(s){return document.querySelector(s);};
   var reduce=matchMedia("(prefers-reduced-motion: reduce)").matches;
 
-  /* ---------- the two arrays the page can build ---------- */
-  var TYPES={
-    int:{name:"temperatures",type:"int",def:0,defTxt:"0",
-      val:function(i){return 20+i;}, show:function(v){return String(v);},
-      fill:'<span class="nm">20</span> + i;   <span class="cm">// 20, 21, 22, ...</span>'},
-    str:{name:"cityNames",type:"String",def:null,defTxt:"null",
-      val:function(i){return "City "+i;}, show:function(v){return '"'+v+'"';},
-      fill:'<span class="st">"City "</span> + i;'}
-  };
-  var T=TYPES.int, mut=false;
-
-  function lines(inp){
-    var a=T.name, op=mut?'<span class="op"><=</span>':'<';
+  /* ---------- the four arrays ---------- */
+  function lit(v){ return '<span class="nm">'+v+'</span>'; }
+  function loopLines(a,cm4,cm3){
     return [
-      '<span class="ty">'+T.type+'</span>[] '+a+' = <span class="kw">new</span> <span class="ty">'+T.type+'</span>[<span class="nm">'+inp.N+'</span>];',
-      '<span class="kw">for</span> (<span class="ty">int</span> i = <span class="nm">0</span>; i '+op+' '+a+'.length; i++) {'+(mut?'   <span class="cm">// the experiment</span>':''),
-      '    '+a+'[i] = '+T.fill,
-      '}',
-      'System.out.println(<span class="st">"Last index: "</span> + ('+a+'.length - <span class="nm">1</span>));',
-      'System.out.println('+a+'[<span class="nm">'+inp.K+'</span>]);'
+      '<span class="kw">for</span> (<span class="ty">int</span> i = '+lit(0)+'; i < '+a+'.length; i++) {'+(cm3?'   <span class="cm">'+cm3+'</span>':''),
+      '    System.out.<span class="fn">print</span>('+a+'[i] + <span class="st">" "</span>);'+(cm4?'   <span class="cm">'+cm4+'</span>':''),
+      '}'
     ];
   }
+  var ARR={
+    nums:{name:"listOfNumbers",type:"int",literal:true,init:[63,123,234,123,545,23,64],defK:1,probe:"read",
+      lines:function(K,len){ return [
+        '<span class="ty">int</span>[] listOfNumbers = {'+[63,123,234,123,545,23,64].map(lit).join(", ")+'};   <span class="cm">// the size comes from the values</span>',
+        'System.out.<span class="fn">println</span>(listOfNumbers['+lit(K)+']);   <span class="cm">// indexes start at 0</span>'
+      ].concat(loopLines("listOfNumbers","","// last index is length - 1")); }},
+    newNums:{name:"newArrayOfNumbers",type:"int",len:5,def:0,defK:2,probe:"write",
+      wv:function(K,len){ return K>=len?1:15; },
+      lines:function(K,len){ return [
+        '<span class="ty">int</span>[] newArrayOfNumbers = <span class="kw">new</span> <span class="ty">int</span>['+lit(5)+'];   <span class="cm">// 5 slots, the size is fixed</span>',
+        K>=len ? 'newArrayOfNumbers['+lit(K)+'] = '+lit(1)+';   <span class="cm">// indexes go 0 to 4</span>'
+               : 'newArrayOfNumbers['+lit(K)+'] = '+lit(15)+';'+(K===2?'   <span class="cm">// writes into the third slot</span>':'')
+      ].concat(loopLines("newArrayOfNumbers","","")); }},
+    names:{name:"listOfNames",type:"String",len:5,def:null,defK:1,probe:"read",
+      lines:function(K,len){ return [
+        '<span class="ty">String</span>[] listOfNames = <span class="kw">new</span> <span class="ty">String</span>['+lit(5)+'];',
+        'System.out.<span class="fn">println</span>(listOfNames['+lit(K)+']);'
+      ].concat(loopLines("listOfNames","// String slots start at null","")); }},
+    bools:{name:"boolArray",type:"boolean",len:5,def:false,defK:1,probe:"write",
+      wv:function(){ return true; },
+      lines:function(K,len){ return [
+        '<span class="ty">boolean</span>[] boolArray = <span class="kw">new</span> <span class="ty">boolean</span>['+lit(5)+'];   <span class="cm">// boolean slots start at false</span>',
+        'boolArray['+lit(K)+'] = <span class="kw">true</span>;'
+      ].concat(loopLines("boolArray","","")); }}
+  };
+  var A=ARR.nums;
+  function lenOf(a){ return a.literal?a.init.length:a.len; }
+  function ord(n){ return ["first","second","third","fourth","fifth","sixth","seventh"][n]||(n+1)+"th"; }
 
-  /* ---------- the run, computed from the inputs ---------- */
+  /* ---------- the run, computed from the array and the index ---------- */
   function exc(idx,len){ return 'Exception in thread "main" java.lang.ArrayIndexOutOfBoundsException: Index '+idx+' out of bounds for length '+len; }
-  function build(inp){
-    var N=inp.N, K=inp.K, a=T.name, S=[], vals=[], filled=[], out=[], i;
-    for(i=0;i<N;i++){vals.push(T.def);filled.push(false);}
-    function snap(o){ o.vals=vals.slice(); o.filled=filled.slice(); o.out=out.slice(); S.push(o); }
-    var opTxt=mut?"<=":"<";
-    snap({line:[1],cls:"",len:true,
-      expr:'<span class="a">new '+T.type+'['+N+']</span>',
-      msg:'<code>new '+T.type+'['+N+']</code> makes <b class="a">'+N+' slots</b>, numbered 0 to '+(N-1)+'. Each starts at <b class="a">'+T.defTxt+'</b>, the default for '+T.type+'.'});
-    for(i=0;;i++){
-      var ok=mut?i<=N:i<N;
-      if(!ok){
-        snap({line:[2],cls:"ok",i:i,ptr:i,len:true,
-          expr:'i '+opTxt+' length <span class="m">\u2192</span> '+i+' '+opTxt+' '+N+' <span class="m">\u2192</span> <span class="a">false</span>',
-          msg:'i is '+i+': '+i+' '+opTxt+' '+N+' is <b class="g">false</b>. The loop stops just before the end of the array.'});
-        break;
-      }
-      if(i>=N){
-        out.push({err:exc(i,N)});
-        snap({line:[3],cls:"trouble",i:i,ptr:i,bad:i,len:true,val:"no slot",
-          expr:'i '+opTxt+' length <span class="m">\u2192</span> '+i+' '+opTxt+' '+N+' <span class="m">\u2192</span> <span class="w">true</span>',
-          msg:'i is '+i+': '+i+' <= '+N+' is true, but there is <b class="w">no slot '+i+'</b>. Java throws ArrayIndexOutOfBoundsException.'});
-        return S;
-      }
-      vals[i]=T.val(i); filled[i]=true;
-      var shown=T.show(vals[i]);
-      var m;
-      if(i===0) m='i starts at <b class="a">0</b>, the first index. 0 '+opTxt+' '+N+' is true, so '+a+'[0] gets '+shown+'.';
-      else if(i===N-1) m='i is '+i+', the <b class="a">last index</b>. '+i+' '+opTxt+' '+N+' is still true, so the last slot gets '+shown+'.';
-      else m='i is '+i+': '+i+' '+opTxt+' '+N+' is true, so '+a+'['+i+'] gets '+shown+'.';
-      snap({line:[2,3],cls:"write",i:i,ptr:i,cur:i,fresh:i,len:true,val:shown,
-        expr:'i '+opTxt+' length <span class="m">\u2192</span> '+i+' '+opTxt+' '+N+' <span class="m">\u2192</span> <span class="g">true</span>',
-        msg:m});
+  function build(K){
+    var N=lenOf(A), a=A.name, S=[], vals=[], set=[], buf="", err="", i;
+    for(i=0;i<N;i++){ vals.push(A.literal?A.init[i]:A.def); set.push(!!A.literal); }
+    function snap(o){ o.vals=vals.slice(); o.set=set.slice(); o.out=buf; o.err=err; S.push(o); }
+    snap({line:[1],cls:"",
+      expr:A.literal?'<span class="a">{ ... }</span> <span class="m">→</span> '+N+' values':'<span class="a">new '+A.type+'['+N+']</span>',
+      msg:A.literal?'The literal makes <b class="a">'+N+' slots</b>, numbered 0 to '+(N-1)+'. The size comes from the values.'
+        :'<code>new '+A.type+'['+N+']</code> makes <b class="a">'+N+' slots</b>, numbered 0 to '+(N-1)+'. Each starts at <b class="a">'+String(A.def)+'</b>.'});
+    if(K>=N){
+      err=exc(K,N);
+      snap({line:[2],cls:"trouble",ptr:K,bad:K,idx:K,val:"no slot",idxPtr:true,brace:true,
+        expr:a+'['+K+'] <span class="m">→</span> <span class="w">no slot '+K+'</span>',
+        msg:'There is <b class="w">no slot '+K+'</b>: indexes go 0 to '+(N-1)+'. Java throws ArrayIndexOutOfBoundsException and stops.'});
+      return S;
     }
-    out.push({txt:"Last index: "+(N-1)});
-    snap({line:[5],cls:"",len:true,brace:true,i:N,
-      expr:'length - 1 <span class="m">\u2192</span> '+N+' - 1 <span class="m">\u2192</span> <span class="a">'+(N-1)+'</span>',
-      msg:'The loop is done and every slot is filled. The last index is always <b class="a">length - 1</b>: '+N+' - 1 = '+(N-1)+'.'});
-    if(K>=0&&K<N){
-      var v=T.show(vals[K]);
-      out.push({txt:T.type==="int"?v:vals[K]});
-      snap({line:[6],cls:"read",idxPtr:true,len:true,brace:true,i:N,ptr:K,rd:K,val:v,
-        expr:a+'['+K+'] <span class="m">\u2192</span> <span class="y">'+v+'</span>',
-        msg:'<code>'+a+'['+K+']</code> goes straight to slot '+K+' and prints <b class="y">'+v+'</b>.'});
+    if(A.probe==="read"){
+      var v=String(vals[K]); buf+=v+"\n";
+      snap({line:[2],cls:"read",ptr:K,rd:K,idx:K,val:v,idxPtr:true,
+        expr:a+'['+K+'] <span class="m">→</span> <span class="y">'+v+'</span>',
+        msg:'<code>'+a+'['+K+']</code> goes straight to slot '+K+', the '+ord(K)+' slot, and prints <b class="y">'+v+'</b>.'});
     } else {
-      out.push({err:exc(K,N)});
-      snap({line:[6],cls:"trouble",idxPtr:true,len:true,brace:true,i:N,ptr:K,bad:K,val:"no slot",
-        expr:a+'['+K+'] <span class="m">\u2192</span> <span class="w">no slot '+K+'</span>',
-        msg:'There is <b class="w">no slot '+K+'</b>: valid indexes are 0 to '+(N-1)+'. Java throws ArrayIndexOutOfBoundsException.'});
+      var w=A.wv(K,N); vals[K]=w; set[K]=true;
+      snap({line:[2],cls:"write",ptr:K,cur:K,fresh:K,idx:K,val:String(w),idxPtr:true,
+        expr:a+'['+K+'] = <span class="a">'+w+'</span>',
+        msg:'<code>'+a+'['+K+'] = '+w+'</code> writes <b class="a">'+w+'</b> into slot '+K+', the '+ord(K)+' slot. The others keep their value.'});
     }
+    for(i=0;i<N;i++){
+      var p=String(vals[i]); buf+=p+" ";
+      var m;
+      if(i===0) m='i starts at <b class="a">0</b>, the first index. 0 < '+N+' is true, so it prints <b class="a">'+p+'</b>.';
+      else if(i===N-1) m='i is '+i+', the <b class="a">last index</b>. '+i+' < '+N+' is still true, so it prints <b class="a">'+p+'</b>.';
+      else m='i is '+i+': '+i+' < '+N+' is true, so it prints <b class="a">'+p+'</b>.';
+      snap({line:[3,4],cls:"write",ptr:i,cur:i,idx:i,val:p,
+        expr:'i < length <span class="m">→</span> '+i+' < '+N+' <span class="m">→</span> <span class="g">true</span>',msg:m});
+    }
+    snap({line:[3],cls:"ok",ptr:N,idx:N,brace:true,
+      expr:'i < length <span class="m">→</span> '+N+' < '+N+' <span class="m">→</span> <span class="a">false</span>',
+      msg:'i is '+N+': '+N+' < '+N+' is <b class="g">false</b>, so the loop stops. The last index is length - 1 = '+(N-1)+'.'});
     return S;
   }
 
@@ -336,11 +341,14 @@
   var steps=[], at=-1, timer=null;
   var codeEl=$("#code"), consEl=$("#console"), statusEl=$("#status");
 
-  function clampInt(v,lo,hi,d){ v=parseInt(v,10); if(isNaN(v)) v=d; return Math.max(lo,Math.min(hi,v)); }
-  function inputs(){ return {N:clampInt($("#inN").value,3,10,7), K:clampInt($("#inK").value,-1,12,6)}; }
+  function getK(){ var N=lenOf(A), v=parseInt($("#inK").value,10); if(isNaN(v)) v=A.defK; return Math.max(0,Math.min(N,v)); }
+  function syncInput(){ var N=lenOf(A);
+    $("#inK").max=N; $("#kK").textContent="index in the brackets (0 to "+N+")";
+    var on=getK()===N; $("#bMut").classList.toggle("on",on);
+    $("#bMut").textContent=on?"Experiment ON: index = length":"Experiment: index = length"; }
 
   function renderCode(cur,cls){
-    var L=lines(inputs());
+    var L=A.lines(getK(),lenOf(A));
     codeEl.innerHTML=L.map(function(t,i){
       var n=i+1, c="ln";
       if(cur&&cur.indexOf(n)>=0) c+=(cls==="trouble"?" mut":cls==="read"?" rd":" cur");
@@ -353,27 +361,25 @@
     return '<div class="slot'+cls+'" data-i="'+idx+'"><div class="box'+boxCls+'">'+box+'</div><div class="idx">'+idx+'</div></div>';
   }
   function renderPic(s){
-    var inp=inputs(), N=inp.N;
+    var N=lenOf(A);
     if(!s){
       $("#arr").style.display="none"; $("#start").style.display="flex";
-      $("#start").innerHTML=T.type+"["+N+"] · press <b>Step</b>";
+      $("#start").innerHTML=A.type+"[] "+A.name+" · press <b>Step</b>";
       return;
     }
     $("#start").style.display="none"; $("#arr").style.display="flex";
-    $("#aname").innerHTML=T.type+'[] <b>'+T.name+'</b> \u00b7 length '+N;
+    $("#aname").innerHTML=A.type+'[] <b>'+A.name+'</b> · length '+N;
     var expr=$("#expr"); expr.innerHTML=s.expr||""; expr.className="expr"+(s.bad!==undefined?" bad":"");
-    var leftIdx=(s.bad!==undefined&&s.bad<0)?s.bad:-1, rightIdx=(s.bad!==undefined&&s.bad>=N)?s.bad:N;
-    var h=slotHtml(leftIdx," ghost"+(s.bad!==undefined&&s.bad<0?" show":""),"no slot","");
+    var h=slotHtml(-1," ghost","","");
     for(var i=0;i<N;i++){
-      var v=s.vals[i], isDef=!s.filled[i], bc="";
-      if(isDef) bc+=" def"; else if(T.type==="String") bc+=" str";
+      var v=s.vals[i], bc="";
+      if(!s.set[i]) bc+=" def"; else if(A.type==="boolean") bc+=" str";
       if(s.cur===i) bc+=" cur";
       if(s.fresh===i) bc+=" newv";
       if(s.rd===i) bc+=" read";
-      var txt=isDef?T.defTxt:(T.type==="String"?'"'+v+'"':v);
-      h+=slotHtml(i,"",txt,bc);
+      h+=slotHtml(i,"",String(v),bc);
     }
-    h+=slotHtml(rightIdx," ghost"+(s.bad!==undefined&&s.bad>=N?" show":""),"no slot","");
+    h+=slotHtml(N," ghost"+(s.bad===N?" show":""),"no slot","");
     $("#row").innerHTML=h;
     Array.prototype.forEach.call(document.querySelectorAll("#row .slot"),function(el){
       var k=+el.getAttribute("data-i"), ix=el.querySelector(".idx");
@@ -383,7 +389,7 @@
   }
   function slotEl(k){ return document.querySelector('#row .slot[data-i="'+k+'"]'); }
   function placeOverlays(s){
-    var ptr=$("#ptr"), br=$("#brace"), N=inputs().N;
+    var ptr=$("#ptr"), br=$("#brace"), N=lenOf(A);
     var target=s.ptr!==undefined?slotEl(s.ptr):null;
     if(target){
       ptr.style.left=(target.offsetLeft+target.offsetWidth/2)+"px";
@@ -398,23 +404,29 @@
     } else { br.className="brace"; br.innerHTML=""; }
   }
 
+  function renderConsole(s){
+    var rows=s?s.out.split("\n"):[], h="";
+    if(rows.length&&rows[rows.length-1]==="") rows.pop();
+    rows.forEach(function(r){ h+='<div class="out">'+r+'</div>'; });
+    if(s&&s.err) h+='<div class="out err">'+s.err+'</div>';
+    consEl.innerHTML=h||'<span style="color:rgba(132,150,182,.5)">(nothing printed yet)</span>';
+  }
+
   function show(i){
     at=i;
     if(i<0){
-      renderCode(null); renderPic(null);
-      consEl.innerHTML='<span style="color:rgba(132,150,182,.5)">(nothing printed yet)</span>';
+      renderCode(null); renderPic(null); renderConsole(null);
       $("#caption").className="caption";
-      statusEl.innerHTML='Press <b class="a">Step</b> to create the array, or <b class="a">Run</b> to watch the loop fill it.';
+      statusEl.innerHTML='Press <b class="a">Step</b> to create the array, or <b class="a">Run</b> to watch it all.';
       setStat("#stLen",null); setStat("#stLast",null); setStat("#stI",null); setStat("#stVal",null);
       setBtns(); return;
     }
-    var s=steps[i], N=inputs().N;
-    renderCode(s.line,s.cls); renderPic(s);
-    consEl.innerHTML=s.out.map(function(o){ return o.err?'<div class="out err">'+o.err+'</div>':'<div class="out">'+o.txt+'</div>'; }).join("")
-      ||'<span style="color:rgba(132,150,182,.5)">(nothing printed yet)</span>';
+    var s=steps[i], N=lenOf(A);
+    renderCode(s.line,s.cls); renderPic(s); renderConsole(s);
     $("#caption").className="caption "+s.cls; statusEl.innerHTML=s.msg;
+    $("#kIdx").textContent=s.idxPtr?"index in the brackets":"current i";
     setStat("#stLen",N); setStat("#stLast",N-1,s.brace?"hot":"");
-    setStat("#stI",s.i===undefined?null:s.i,s.bad!==undefined&&s.i===s.bad?"bad":"hot");
+    setStat("#stI",s.idx===undefined?null:s.idx,s.bad!==undefined?"bad":"hot");
     setStat("#stVal",s.val===undefined?null:s.val,s.bad!==undefined?"bad":s.rd!==undefined?"gold":"");
     setBtns();
   }
@@ -427,13 +439,13 @@
     var dd=""; for(var k=0;k<steps.length;k++) dd+='<i class="'+(k===at?"now":k<at?"done":"")+'"></i>'; $("#dots").innerHTML=dd;
     $("#bStep").disabled=end; $("#bBack").disabled=at<0;
     $("#bRun").textContent=timer?"Pause":(end?"Run again":"Run");
-    ["#inN","#inK"].forEach(function(id){$(id).disabled=at>=0;});
+    $("#inK").disabled=at>=0;
     Array.prototype.forEach.call(document.querySelectorAll(".chip"),function(c){c.disabled=at>=0;});
   }
-  function rebuild(){ steps=build(inputs()); }
+  function rebuild(){ steps=build(getK()); }
   function step(){ if(at<0) rebuild(); if(at<steps.length-1) show(at+1); else stop(); }
   function back(){ if(at>=0) show(at-1); }
-  function reset(){ stop(); rebuild(); show(-1); }
+  function reset(){ stop(); syncInput(); rebuild(); show(-1); }
   function stop(){ if(timer){clearInterval(timer);timer=null;} setBtns(); }
   function run(){ if(timer){stop();return;} if(at>=steps.length-1&&steps.length) show(-1); step();
     timer=setInterval(function(){ if(at>=steps.length-1) stop(); else step(); }, reduce?400:1100); setBtns(); }
@@ -442,16 +454,14 @@
   $("#bBack").addEventListener("click",function(){stop();back();});
   $("#bReset").addEventListener("click",reset);
   $("#bRun").addEventListener("click",run);
-  $("#bMut").addEventListener("click",function(){ mut=!mut; this.classList.toggle("on",mut);
-    this.textContent=mut?"Experiment ON: i <= length":"Experiment: loop with i <= length"; reset(); });
+  $("#bMut").addEventListener("click",function(){ var N=lenOf(A);
+    $("#inK").value=(getK()===N)?A.defK:N; this.blur(); reset(); });
   $("#chips").addEventListener("click",function(e){ var b=e.target.closest(".chip"); if(!b||b.disabled) return;
-    T=TYPES[b.getAttribute("data-t")];
+    A=ARR[b.getAttribute("data-t")]; $("#inK").value=A.defK;
     Array.prototype.forEach.call(document.querySelectorAll(".chip"),function(c){c.classList.toggle("on",c===b);});
     b.blur(); reset(); });
-  ["#inN","#inK"].forEach(function(id){
-    $(id).addEventListener("input",function(){ if(at<0){ rebuild(); show(-1); } });
-    $(id).addEventListener("change",function(){ var inp=inputs(); $("#inN").value=inp.N; $("#inK").value=inp.K; if(at<0){ rebuild(); show(-1); } });
-  });
+  $("#inK").addEventListener("input",function(){ if(at<0){ syncInput(); rebuild(); show(-1); } });
+  $("#inK").addEventListener("change",function(){ $("#inK").value=getK(); if(at<0){ syncInput(); rebuild(); show(-1); } });
   document.addEventListener("keydown",function(e){ if(e.code==="Space"&&!/INPUT|BUTTON/.test(e.target.tagName)){e.preventDefault();stop();step();} });
   addEventListener("resize",function(){ if(at>=0) placeOverlays(steps[at]); });
   /* focus: picture and caption only. Remembered per browser. */
@@ -478,6 +488,6 @@
 </script>
 <script src="../manifest.js"></script>
 <script src="../../assets/rail.js"></script>
-<script>Rail.render(document.getElementById("rail"),{week:2,kind:"visuals",current:"15-arrays-indexing"});</script>
+<script>Rail.render(document.getElementById("rail"),{week:2,kind:"visuals",current:"14-arrays-indexing"});</script>
 </body>
 </html>

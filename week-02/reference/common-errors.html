@@ -142,7 +142,7 @@
         </article>
 
         <article class="card" data-cat="compile">
-          <div class="ch"><span class="cat">Compile</span><h2>No constructor matches the new</h2><a class="see" href="../visuals/12-constructor-overloading.html">See it</a></div>
+          <div class="ch"><span class="cat">Compile</span><h2>No constructor matches the new</h2><a class="see" href="../visuals/11-constructor-overloading.html">See it</a></div>
           <pre class="msg">java: constructor Person in class Person cannot be applied to given types;
   required: String,int
   found:    no arguments
@@ -153,7 +153,7 @@
         </article>
 
         <article class="card" data-cat="compile">
-          <div class="ch"><span class="cat">Compile</span><h2>No overload matches the call</h2><a class="see" href="../visuals/11-method-overloading.html">See it</a></div>
+          <div class="ch"><span class="cat">Compile</span><h2>No overload matches the call</h2><a class="see" href="../visuals/10-method-overloading.html">See it</a></div>
           <pre class="msg">java: no suitable method found for greet(no arguments)
     method Person.greet(String) is not applicable
       (actual and formal argument lists differ in length)
@@ -166,7 +166,7 @@ instructor.greet("Brandon", 3);</pre></div></div>
         </article>
 
         <article class="card" data-cat="compile">
-          <div class="ch"><span class="cat">Compile</span><h2>Running total with no starting value</h2><a class="see" href="../visuals/13-loop-types.html">See it</a></div>
+          <div class="ch"><span class="cat">Compile</span><h2>Running total with no starting value</h2><a class="see" href="../visuals/12-loop-types.html">See it</a></div>
           <pre class="msg">java: variable total might not have been initialized</pre>
           <p class="means"><code>total += week</code> reads <code>total</code> first, and a local variable has no value until you give it one.</p>
           <p class="fix"><b>Fix</b>Start the total at 0, before the loop.</p>
@@ -190,7 +190,7 @@ for (int week = 1; week &lt;= 10; week++) {
         </article>
 
         <article class="card" data-cat="compile">
-          <div class="ch"><span class="cat">Compile</span><h2>Return only inside the loop</h2><a class="see" href="../visuals/17-arrays-and-methods.html">See it</a></div>
+          <div class="ch"><span class="cat">Compile</span><h2>Return only inside the loop</h2><a class="see" href="../visuals/14-arrays-indexing.html">See it</a></div>
           <pre class="msg">java: missing return statement</pre>
           <p class="means">The method promises an <code>int</code>. If the loop ends without a match, nothing is returned, and the compiler refuses that path.</p>
           <p class="fix"><b>Fix</b>Return something after the loop too, like <code>-1</code> for "not found".</p>
@@ -220,7 +220,7 @@ for (int week = 1; week &lt;= 10; week++) {
 
         <!-- ================= RUNTIME ================= -->
         <article class="card" data-cat="runtime">
-          <div class="ch"><span class="cat">Runtime</span><h2>Text that is not a number</h2><a class="see" href="../visuals/04-string-to-number.html">See it</a></div>
+          <div class="ch"><span class="cat">Runtime</span><h2>Text that is not a number</h2><a class="see" href="../visuals/03-string-to-number.html">See it</a></div>
           <pre class="msg">Exception in thread "main" java.lang.NumberFormatException: For input string: " 12"
 	at java.base/java.lang.NumberFormatException.forInputString(NumberFormatException.java:67)
 	...
@@ -231,7 +231,7 @@ for (int week = 1; week &lt;= 10; week++) {
         </article>
 
         <article class="card" data-cat="runtime">
-          <div class="ch"><span class="cat">Runtime</span><h2>Date in the wrong format</h2><a class="see" href="../visuals/05-string-to-date.html">See it</a></div>
+          <div class="ch"><span class="cat">Runtime</span><h2>Date in the wrong format</h2><a class="see" href="../visuals/04-string-to-date.html">See it</a></div>
           <pre class="msg">Exception in thread "main" java.time.format.DateTimeParseException: Text '10/17/2002' could not be parsed at index 0
 	at java.base/java.time.format.DateTimeFormatter.parseResolved0(DateTimeFormatter.java:2052)
 	...
@@ -245,7 +245,7 @@ LocalDate birthday =
         </article>
 
         <article class="card" data-cat="runtime">
-          <div class="ch"><span class="cat">Runtime</span><h2>Position past the end of a String</h2><a class="see" href="../visuals/01-string-methods.html">See it</a></div>
+          <div class="ch"><span class="cat">Runtime</span><h2>Position past the end of a String</h2><a class="see" href="../visuals/02-string-methods.html">See it</a></div>
           <pre class="msg">Exception in thread "main" java.lang.StringIndexOutOfBoundsException: String index out of range: 20
 	at java.base/java.lang.StringLatin1.charAt(StringLatin1.java:48)
 	...
@@ -258,16 +258,16 @@ char hasShipped = trackingCode.charAt(10);</pre></div></div>
         </article>
 
         <article class="card" data-cat="runtime">
-          <div class="ch"><span class="cat">Runtime</span><h2>One slot too far in an array</h2><a class="see" href="../visuals/15-arrays-indexing.html">See it</a></div>
+          <div class="ch"><span class="cat">Runtime</span><h2>One slot too far in an array</h2><a class="see" href="../visuals/14-arrays-indexing.html">See it</a></div>
           <pre class="msg">Exception in thread "main" java.lang.ArrayIndexOutOfBoundsException: Index 7 out of bounds for length 7
 	at com.pluralsight.Main.main(Main.java:9)</pre>
           <p class="means">Seven slots means indexes 0 to 6. With <code>&lt;=</code> the loop asks for slot 7 on its last pass.</p>
           <p class="fix"><b>Fix</b>Loop while <code>i &lt; length</code>, or use a for-each loop.</p>
-          <div class="ba"><div class="bad"><span>Before</span><pre>for (int i = 0; i &lt;= temperatures.length; i++) {</pre></div><div class="good"><span>After</span><pre>for (int i = 0; i &lt; temperatures.length; i++) {</pre></div></div>
+          <div class="ba"><div class="bad"><span>Before</span><pre>for (int i = 0; i &lt;= listOfNumbers.length; i++) {</pre></div><div class="good"><span>After</span><pre>for (int i = 0; i &lt; listOfNumbers.length; i++) {</pre></div></div>
         </article>
 
         <article class="card" data-cat="runtime">
-          <div class="ch"><span class="cat">Runtime</span><h2>A field that was never set</h2><a class="see" href="../visuals/10-object-references.html">See it</a></div>
+          <div class="ch"><span class="cat">Runtime</span><h2>A field that was never set</h2><a class="see" href="../visuals/09-what-new-does.html">See it</a></div>
           <pre class="msg">Exception in thread "main" java.lang.NullPointerException: Cannot invoke "String.toUpperCase()" because the return value of "com.pluralsight.Person.getName()" is null
 	at com.pluralsight.Main.main(Main.java:23)</pre>
           <p class="means">The empty constructor never gave <code>name</code> a value, so it is still <code>null</code>, and you cannot call a method on nothing.</p>
@@ -279,7 +279,7 @@ char hasShipped = trackingCode.charAt(10);</pre></div></div>
         </article>
 
         <article class="card" data-cat="runtime">
-          <div class="ch"><span class="cat">Runtime</span><h2>== on Strings</h2><a class="see" href="../visuals/03-comparing-strings.html">See it</a></div>
+          <div class="ch"><span class="cat">Runtime</span><h2>== on Strings</h2><a class="see" href="../visuals/01-comparing-strings.html">See it</a></div>
           <p class="mk">No error. Console:</p>
           <pre class="msg out">Different text</pre>
           <p class="means"><code>builtLanguage</code> was made at run time, so it is a different object from <code>"Java"</code>. <code>==</code> compares objects, not text.</p>
@@ -288,7 +288,7 @@ char hasShipped = trackingCode.charAt(10);</pre></div></div>
         </article>
 
         <article class="card" data-cat="runtime">
-          <div class="ch"><span class="cat">Runtime</span><h2>A loop that never ends</h2><a class="see" href="../visuals/13-loop-types.html">See it</a></div>
+          <div class="ch"><span class="cat">Runtime</span><h2>A loop that never ends</h2><a class="see" href="../visuals/12-loop-types.html">See it</a></div>
           <p class="mk">No error. Console, forever:</p>
           <pre class="msg out">Week 1
 Week 1
@@ -317,7 +317,7 @@ while (week &lt;= 4) {
         </article>
 
         <article class="card" data-cat="ide">
-          <div class="ch"><span class="cat">IntelliJ</span><h2>The debugger never stops</h2><a class="see" href="../visuals/19-debugger.html">See it</a></div>
+          <div class="ch"><span class="cat">IntelliJ</span><h2>The debugger never stops</h2><a class="see" href="../visuals/17-debugger.html">See it</a></div>
           <p class="mk">No error. The program runs to the end.</p>
           <pre class="msg">Process finished with exit code 0</pre>
           <p class="means">Either the program was started with Run instead of Debug, or no breakpoint sits on a line that runs.</p>

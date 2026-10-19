@@ -69,8 +69,6 @@
   .pt.lit.ok{background:rgba(70,217,138,.15);box-shadow:0 0 0 1px rgba(70,217,138,.6)} .pt.lit.ok .pl{color:var(--good)}
   .pt.lit.no{background:rgba(255,106,106,.14);box-shadow:0 0 0 1px rgba(255,106,106,.65)} .pt.lit.no .pl{color:var(--warn)}
   .pt.lit.gold{background:rgba(255,200,98,.14);box-shadow:0 0 0 1px rgba(255,200,98,.65)} .pt.lit.gold .pl{color:var(--gold)}
-  .pt.skip{opacity:.35;text-decoration:line-through;text-decoration-color:var(--warn)}
-  .pt.after{border-bottom:none}
 
   .rside{display:flex;flex-direction:column;gap:16px;min-width:0}
   /* the order one pass runs in: four nodes, a loop-back under them, the exit above the check */
@@ -106,9 +104,9 @@
   .box.ok{border-color:rgba(70,217,138,.5)} .box.no{border-color:rgba(255,106,106,.5)} .box.gold{border-color:rgba(255,200,98,.5)}
   .box.cur{border-color:rgba(110,160,255,.55)}
   .prow{display:flex;flex-wrap:wrap;gap:8px;min-height:34px;align-items:center}
-  .lapc{font-family:var(--mono);font-size:.82rem;padding:6px 12px;border-radius:999px;border:1px solid rgba(110,160,255,.5);
+  .pc{font-family:var(--mono);font-size:.82rem;padding:6px 12px;border-radius:999px;border:1px solid rgba(110,160,255,.5);
     background:rgba(110,160,255,.12);color:var(--ink);animation:pop .3s}
-  .lapc.gold{border-color:rgba(255,200,98,.6);background:rgba(255,200,98,.12)}
+  .pc.gold{border-color:rgba(255,200,98,.6);background:rgba(255,200,98,.12)}
   .zero{font-family:var(--mono);font-size:.82rem;color:var(--warn)}
   .pic .start{font-family:var(--mono);font-size:.78rem;color:var(--muted)}
   .pic .start b{color:var(--accent);font-weight:500}
@@ -188,7 +186,7 @@
 </head>
 <body>
 
-<a class="back" href="../index.html#13-loop-types">&#8592; Week 2 index</a>
+<a class="back" href="../index.html#12-loop-types">&#8592; Week 2 index</a>
 
 <canvas id="amb"></canvas>
 <div class="wrap">
@@ -200,14 +198,12 @@
     <div class="topbar">
       <span class="lab">Form</span>
       <div class="seg" id="forms"></div>
-      <span class="lab" style="margin-left:10px">Start</span>
-      <div class="chips" id="chips"></div>
-      <button class="focus" id="bFocus" title="Hide the code table and notes, enlarge the picture">Focus</button>
+      <button class="focus" id="bFocus" title="Hide the table and notes, enlarge the picture">Focus</button>
     </div>
 
     <div class="pic" id="pic">
       <div style="min-width:0">
-        <p class="zl" id="codeLab">Main.java</p>
+        <p class="zl">Main.java</p>
         <div class="lcode" id="lcode"></div>
       </div>
       <div class="rside">
@@ -219,19 +215,19 @@
             <div class="back-arc"><span>repeat</span></div>
           </div>
         </div>
-        <div class="state">
-          <div class="box empty" id="bxLap"><div class="bk">lap</div><div class="bv" id="lapV">0</div><div class="bs" id="lapS"></div></div>
+        <div class="state" id="state">
+          <div class="box empty" id="bxVar"><div class="bk" id="varK">counter</div><div class="bv" id="varV">0</div><div class="bs" id="varS"></div></div>
           <div class="box empty" id="bxChk"><div class="bk">condition</div><div class="bx" id="chkV"></div><div class="bs" id="chkS"></div></div>
         </div>
         <div>
           <p class="zl">Printed</p>
-          <div class="prow" id="prow"><span class="start">press <b>Next</b></span></div>
+          <div class="prow" id="prow"></div>
         </div>
       </div>
     </div>
 
     <div class="caption" id="caption">
-      <div class="n" id="stepno"><small>step</small>0 / 8</div>
+      <div class="n" id="stepno"><small>step</small>0 / 6</div>
       <div class="t" id="status">Press <b class="a">Next</b>. Switch the form at any step: the same part lights up.</div>
     </div>
 
@@ -241,7 +237,7 @@
       <button class="btn primary" id="bNext">Next &rarr;</button>
       <button class="btn ghost" id="bReset">Reset</button>
     </div>
-    <p class="hint">space = next &middot; switching the form keeps your place &middot; <b>try lap starts at 4</b></p>
+    <p class="hint">space = next &middot; switching the form starts over &middot; every form prints 0 to 9</p>
 
     <div class="support">
       <div>
@@ -269,9 +265,9 @@
 
   <div class="take">
     <p class="tk">The one idea</p>
-    <p><b>Same four parts, different places.</b> while and for check the condition <b>before</b> every pass, so a false start
-    means the body runs zero times. do / while checks <b>after</b> the pass, so its body always runs <b>at least once</b>.
-    for packs start, condition and update into one header line, which makes it the usual pick when you know the count.</p>
+    <p><b>Same four parts, different places.</b> while and for check the condition <b>before</b> each pass;
+    do / while checks <b>after</b> the pass, so its body always runs <b>at least once</b>. for puts start, condition and update on one line:
+    <code>for (int i = 0; i &lt; 10; i++)</code>.</p>
   </div>
 
   <div id="rail"></div>
@@ -284,74 +280,67 @@
   var reduce=matchMedia("(prefers-reduced-motion: reduce)").matches;
 
   var FORMS=[["while","while"],["do","do / while"],["for","for"]];
-  var STARTS=[1,4];
-  var FORM="while", START=1, LIMIT=3;
+  var FORM="while";
 
-  /* ---------- the code of each form: parts are tagged so the same part can light up in every form ---------- */
-  var PL={start:"start",cond:"condition",body:"body",update:"update",after:""};
+  /* one example: count 0 to 9 in each form */
+  var LIM=10;
+  var NAMES={"while":"counter","do":"number","for":"i"};
+  function V(){ return NAMES[FORM]; }
+  function condTxt(x){ return x+" < "+LIM; }
+
+  /* ---------- the code of each form: parts are tagged so the same part lights up in every form ---------- */
+  var PL={start:"start",cond:"condition",body:"body",update:"update"};
   function P(p,h){ return {p:p,h:h}; }
+  var PR='System.out.<span class="fn">println</span>(';
   function lines(){
-    var st=P("start",'<span class="ty">int</span> lap = <span class="nm">'+START+'</span>');
-    var cd=P("cond",'lap <= <span class="nm">'+LIMIT+'</span>');
-    var bd=P("body",'System.out.<span class="fn">println</span>(<span class="st">"Lap "</span> + lap);');
-    var af=[P("after",'System.out.<span class="fn">println</span>(<span class="st">"Done"</span>);')];
-    if(FORM==="while") return [[st,";"],['<span class="kw">while</span> (',cd,") {"],["    ",bd],["    ",P("update","lap++;")],["}"],af];
-    if(FORM==="do") return [[st,";"],['<span class="kw">do</span> {'],["    ",bd],["    ",P("update","lap++;")],['} <span class="kw">while</span> (',cd,");"],af];
-    return [['<span class="kw">for</span> (',st,"; ",cd,"; ",P("update","lap++"),") {"],["    ",bd],["}"],af];
+    var v=V(), lim='<span class="nm">'+LIM+'</span>';
+    var st=P("start",'<span class="ty">int</span> '+v+' = <span class="nm">0</span>');
+    var cd=P("cond",v+" < "+lim);
+    var up=P("update",v+"++"+(FORM==="for"?"":";"));
+    var bd=P("body",PR+v+");");
+    if(FORM==="while") return [[st,";"],['<span class="kw">while</span> (',cd,") {"],["    ",bd],["    ",up],["}"]];
+    if(FORM==="do") return [[st,";"],['<span class="kw">do</span> {'],["    ",bd],["    ",up],['} <span class="kw">while</span> (',cd,");"]];
+    return [['<span class="kw">for</span> (',st,"; ",cd,"; ",up,") {"],["    ",bd],["}"]];
   }
 
-  /* ---------- the walk: computed by running the loop, pass by pass ---------- */
-  function where(p){
-    if(p==="cond") return FORM==="while"?"at the top":FORM==="do"?"at the bottom":"in the header";
-    return "";
-  }
+  /* ---------- the walk: computed by running the loop ---------- */
+  function where(){ return FORM==="while"?"at the top":FORM==="do"?"at the bottom":"in the header"; }
+  function c(x){ return "<code>"+x+"</code>"; }
   function build(){
-    var S=[], lap=START, printed=[], checks=0, runs=0, last=null, n, res, old;
-    function snap(o){ o.lap=lap; o.printed=printed.slice(); o.checks=checks; o.runs=runs; o.last=last; S.push(o); return o; }
-    snap({key:"start",parts:["start"],cls:"",msg:(FORM==="for"?'Start: <code>int lap = '+START+'</code> sits in the for header, but it runs only once.':
-      'Start: <code>int lap = '+START+'</code> runs once, before the loop. The counter holds '+START+'.')});
+    var S=[], v=0, printed=[], checks=0, runs=0, last=null, nm=V();
+    function snap(o){ o.v=v; o.printed=printed.slice(); o.checks=checks; o.runs=runs; o.last=last; o.cls=o.cls||""; S.push(o); }
+    function test(){ var r=v<LIM; checks++; last={v:v,res:r}; return r; }
+    snap({key:"start",parts:["start"],msg:FORM==="for"?"Start: "+c("int i = 0")+" sits in the for header, but it runs only once.":
+      "Start: "+c("int "+nm+" = 0")+" runs once, before the loop."});
     if(FORM!=="do"){
-      for(n=1;;n++){
-        res=lap<=LIMIT; checks++; last={v:lap,res:res};
-        if(!res){ snap({key:"exit",parts:["cond"],cls:"no",msg:'Check '+where("cond")+': <code>'+lap+' <= '+LIMIT+'</code> is <b class="w">false</b>. Java jumps past the loop.'}); break; }
-        if(n===1){
-          snap({key:"c1",parts:["cond"],cls:"ok",msg:'Check first, '+where("cond")+': <code>'+lap+' <= '+LIMIT+'</code> is <b class="g">true</b>, so the body may run.'});
-          printed.push(lap); runs++;
-          snap({key:"b1",parts:["body"],cls:"",msg:'Body: prints <b class="a">Lap '+lap+'</b>. This is the job the loop repeats.'});
-          old=lap; lap++;
-          snap({key:"u1",parts:["update"],cls:"",upd:old,msg:(FORM==="for"?'Update: <code>lap++</code> is in the header but runs after the body. lap: '+old+' to '+lap+'.':
-            'Update: <code>lap++</code> at the end of the body. lap goes from '+old+' to '+lap+'.')});
-        } else {
-          printed.push(lap); runs++; old=lap; lap++;
-          snap({key:"p"+n,parts:["cond","body","update"],cls:"ok",upd:old,msg:'Pass '+n+': <code>'+old+' <= '+LIMIT+'</code> is true, print Lap '+old+', lap becomes '+lap+'.'});
-        }
+      test();
+      snap({key:"c1",parts:["cond"],cls:"ok",msg:"Check first, "+where()+": "+c("0 < 10")+' is <b class="g">true</b>, so the body runs.'});
+      printed.push(v); runs++;
+      snap({key:"b1",parts:["body"],msg:'Body: prints <b class="a">0</b>. This is the job the loop repeats.'});
+      v++;
+      snap({key:"u1",parts:["update"],upd:0,msg:FORM==="for"?"Update: "+c("i++")+" is in the header, but it runs after the body. i: 0 to 1.":
+        "Update: "+c(nm+"++")+" at the end of the body. "+nm+" goes from 0 to 1."});
+      while(v<LIM){
+        var was=v; test(); printed.push(v); runs++; v++;
+        snap({key:"p"+v,parts:["cond","body","update"],cls:"ok",upd:was,msg:"Pass "+(v+1)+": "+c(was+" < 10")+' is <b class="g">true</b>, the body prints <b class="a">'+was+"</b>, "+nm+" goes from "+was+" to "+v+"."});
       }
-      if(runs===0) snap({key:"skip",parts:["body"],cls:"no",skip:true,msg:'The check came first and failed, so the body is skipped. <b class="w">Lap '+START+' never prints.</b>'});
+      test();
+      snap({key:"exit",parts:["cond"],cls:"no",end:true,msg:"Check "+where()+": "+c("10 < 10")+' is <b class="w">false</b>. The loop ends: 0 to 9 printed.'});
     } else {
-      for(n=1;;n++){
-        printed.push(lap); runs++;
-        if(n===1){
-          snap({key:"b1",parts:["body"],cls:"gold",msg:'do goes straight in, <b class="y">no check yet</b>. The body prints <b class="a">Lap '+lap+'</b>.'});
-          old=lap; lap++;
-          snap({key:"u1",parts:["update"],cls:"",upd:old,msg:'Update: <code>lap++</code> at the end of the body. lap goes from '+old+' to '+lap+'.'});
-          res=lap<=LIMIT; checks++; last={v:lap,res:res};
-          if(res){ snap({key:"c2",parts:["cond"],cls:"ok",msg:'Only now the check, at the bottom: <code>'+lap+' <= '+LIMIT+'</code> is <b class="g">true</b>. Back up.'}); continue; }
-        } else {
-          old=lap; lap++; res=lap<=LIMIT;
-          if(res){ checks++; last={v:lap,res:res};
-            snap({key:"p"+n,parts:["body","update","cond"],cls:"ok",upd:old,msg:'Pass '+n+': print Lap '+old+', lap becomes '+lap+', check <code>'+lap+' <= '+LIMIT+'</code>: true, again.'}); continue; }
-          snap({key:"p"+n,parts:["body","update"],cls:"",upd:old,msg:'Pass '+n+': print Lap '+old+', lap becomes '+lap+'. The check at the bottom comes next.'});
-          checks++; last={v:lap,res:res};
-        }
-        snap({key:"exit",parts:["cond"],cls:"no",msg:'Check at the bottom: <code>'+lap+' <= '+LIMIT+'</code> is <b class="w">false</b>. Java leaves the loop.'});
-        break;
+      printed.push(v); runs++;
+      snap({key:"b1",parts:["body"],cls:"gold",msg:'do goes straight in, <b class="y">no check yet</b>. The body prints <b class="a">0</b>.'});
+      v++;
+      snap({key:"u1",parts:["update"],upd:0,msg:"Update: "+c("number++")+" at the end of the body. number goes from 0 to 1."});
+      test();
+      snap({key:"c1",parts:["cond"],cls:"ok",msg:"Only now the check, at the bottom: "+c("1 < 10")+' is <b class="g">true</b>. Back to the top.'});
+      while(v<LIM){
+        var was=v; printed.push(v); runs++; v++;
+        if(v<LIM){ test(); snap({key:"p"+v,parts:["body","update","cond"],cls:"ok",upd:was,msg:"Pass "+(v+1)+": the body prints <b class=\"a\">"+was+"</b>, number goes from "+was+" to "+v+", then "+c(v+" < 10")+' is <b class="g">true</b>.'}); }
+        else { snap({key:"p"+v,parts:["body","update"],cls:"ok",upd:was,msg:"Pass "+(v+1)+": the body prints <b class=\"a\">"+was+"</b>, number goes from "+was+" to "+v+". Now the check."}); }
       }
+      test();
+      snap({key:"exit",parts:["cond"],cls:"no",end:true,msg:"Check at the bottom: "+c("10 < 10")+' is <b class="w">false</b>. The loop ends: 0 to 9 printed.'});
     }
-    var endMsg;
-    if(runs===0) endMsg='After the loop: Done. The body ran <b class="w">0 times</b>. Now switch the form to do / while.';
-    else if(FORM==="do"&&START>LIMIT) endMsg='Done. The body ran <b class="y">once</b>, and the condition was never true: do checks after.';
-    else endMsg='Done. Body ran '+runs+' times, condition checked '+checks+' times. Same output in every form.';
-    snap({key:"end",parts:["after"],cls:runs===0?"no":(FORM==="do"&&START>LIMIT)?"gold":"ok",end:true,msg:endMsg});
     return S;
   }
 
@@ -364,85 +353,96 @@
     $("#lcode").innerHTML=L.map(function(segs,i){
       var h=segs.map(function(g){
         if(typeof g==="string") return g;
-        var c="pt "+g.p;
-        if(lit.indexOf(g.p)>=0) c+=" lit "+(s.cls||"");
-        if(s&&s.skip&&g.p==="body") c+=" skip";
-        return '<span class="'+c+'">'+(PL[g.p]?'<span class="pl">'+PL[g.p]+'</span>':"")+g.h+'</span>';
+        var k="pt "+g.p;
+        if(lit.indexOf(g.p)>=0) k+=" lit "+s.cls;
+        return '<span class="'+k+'"><span class="pl">'+PL[g.p]+"</span>"+g.h+"</span>";
       }).join("");
-      return '<div class="cl"><span class="n">'+(i+1)+'</span><span>'+h+'</span></div>';
+      return '<div class="cl"><span class="n">'+(i+1)+"</span><span>"+h+"</span></div>";
     }).join("");
   }
   function order(){ return FORM==="do"?["start","body","update","cond"]:["start","cond","body","update"]; }
   function renderFlow(s){
     var o=order(), lit=s?s.parts:[];
     $("#nodes").innerHTML=o.map(function(p){
-      var c="node"+(p==="cond"?" chk":"");
-      if(lit.indexOf(p)>=0&&!(s.skip)) c+=" lit "+(s.cls||"");
-      return '<div class="'+c+'">'+(p==="cond"?"check":p)+'</div>';
+      var k="node"+(p==="cond"?" chk":"");
+      if(lit.indexOf(p)>=0) k+=" lit "+s.cls;
+      return '<div class="'+k+'">'+(p==="cond"?"check":p)+"</div>";
     }).join("");
-    var ci=o.indexOf("cond"), ex=$("#exit");
-    ex.style.left=(ci*25+12.5)+"%";
-    ex.className="exit"+(s&&(s.key==="exit"||s.skip||s.end)?" on":"");
+    var xe=$("#exit");
+    xe.style.left=(o.indexOf("cond")*25+12.5)+"%";
+    xe.className="exit"+(s&&s.last&&!s.last.res?" on":"");
+  }
+  function pop(el,val){
+    var prev=el.textContent; el.textContent=val;
+    if(String(val)!==prev&&!reduce){ el.classList.remove("pop"); void el.offsetWidth; el.classList.add("pop"); }
   }
   function renderState(s){
-    var bl=$("#bxLap"), bc=$("#bxChk"), lv=$("#lapV");
-    if(!s){ bl.className="box empty"; bc.className="box empty"; $("#chkV").innerHTML=""; $("#chkS").textContent=""; $("#lapS").textContent="";
-      $("#prow").innerHTML='<span class="start">lap starts at '+START+' '+String.fromCharCode(183)+' press <b>Next</b></span>'; return; }
-    var prev=lv.textContent;
-    lv.textContent=s.lap; bl.className="box"+(s.parts.indexOf("update")>=0||s.key==="start"?" cur":"");
-    if(String(s.lap)!==prev&&!reduce){ lv.classList.remove("pop"); void lv.offsetWidth; lv.classList.add("pop"); }
-    $("#lapS").textContent=s.upd!==undefined?"was "+s.upd:(s.key==="start"?"set once":"");
+    $("#varK").textContent=V();
+    var bv=$("#bxVar"), bc=$("#bxChk");
+    if(!s){ bv.className="box empty"; bc.className="box empty"; $("#chkV").innerHTML=""; $("#chkS").textContent="";
+      $("#varS").textContent="";
+      $("#prow").innerHTML='<span class="start">'+V()+" starts at 0 "+String.fromCharCode(183)+" press <b>Next</b></span>"; return; }
+    pop($("#varV"),s.v);
+    bv.className="box"+(s.parts.indexOf("update")>=0||s.key==="start"?" cur":"");
+    $("#varS").textContent=s.upd!==undefined?"was "+s.upd:(s.key==="start"?"set once":"");
     if(s.last){
       bc.className="box "+(s.last.res?"ok":"no");
-      $("#chkV").innerHTML=s.last.v+' <= '+LIMIT+'<span class="vd '+(s.last.res?"t":"f")+'">'+(s.last.res?"true":"false")+'</span>';
+      $("#chkV").innerHTML=condTxt(s.last.v)+'<span class="vd '+(s.last.res?"t":"f")+'">'+(s.last.res?"true":"false")+"</span>";
       $("#chkS").textContent=s.parts.indexOf("cond")>=0?"checked just now":"last check";
     } else if(FORM==="do"&&s.key!=="start"){
-      bc.className="box gold"; $("#chkV").innerHTML='lap <= '+LIMIT+'<span class="vd n">not yet</span>'; $("#chkS").textContent="do checks after the body";
+      bc.className="box gold"; $("#chkV").innerHTML=condTxt(V())+'<span class="vd n">not yet</span>'; $("#chkS").textContent="do checks after the body";
     } else { bc.className="box empty"; $("#chkV").innerHTML=""; $("#chkS").textContent=""; }
-    var pr=s.printed.map(function(v,k){ return '<span class="lapc'+(FORM==="do"&&k===0&&!s.last&&s.key!=="start"?" gold":"")+'">Lap '+v+'</span>'; }).join("");
-    if(!pr) pr=(s.key==="skip"||s.end||s.key==="exit")?'<span class="zero">nothing: 0 passes</span>':'<span class="start">nothing yet</span>';
-    $("#prow").innerHTML=pr;
+    var pr=s.printed.map(function(x,k){ return '<span class="pc'+(FORM==="do"&&k===0&&!s.last?" gold":"")+'">'+x+"</span>"; }).join("");
+    $("#prow").innerHTML=pr||'<span class="start">nothing printed yet</span>';
   }
   function renderSupport(s){
-    Array.prototype.forEach.call(document.querySelectorAll("#where [data-f]"),function(c){ c.classList.toggle("fc",c.getAttribute("data-f")===FORM); });
+    Array.prototype.forEach.call(document.querySelectorAll("#where [data-f]"),function(k){
+      k.classList.toggle("fc",k.getAttribute("data-f")===FORM); });
     Array.prototype.forEach.call(document.querySelectorAll("#where tbody tr"),function(r){
       var p=r.getAttribute("data-p"); r.classList.toggle("on",!!s&&(s.parts.indexOf(p)>=0||(p==="first"&&s.parts.indexOf("cond")>=0&&s.checks===1)));
     });
     setStat("#sRuns","#stRuns",s?s.runs:null); setStat("#sChecks","#stChecks",s?s.checks:null);
-    var out=s?s.printed.map(function(v){return "Lap "+v;}):[];
-    if(s&&s.end) out.push("Done");
-    consEl.innerHTML=out.map(function(o){return '<div class="out">'+o+'</div>';}).join("")||'<span style="color:rgba(132,150,182,.5)">(nothing printed yet)</span>';
+    var out=s?s.printed:[];
+    consEl.innerHTML=out.map(function(o){return '<div class="out">'+o+"</div>";}).join("")||'<span style="color:rgba(132,150,182,.5)">(nothing printed yet)</span>';
   }
   function setStat(box,id,v){ var e=$(id); if(v===null){e.textContent="";$(box).classList.add("empty");} else {e.textContent=v;$(box).classList.remove("empty");} }
 
+  var seqTimer=null;
   function show(i){
     at=i;
+    if(seqTimer){ clearTimeout(seqTimer); seqTimer=null; }
     var s=i>=0?steps[i]:null;
     $("#stepno").innerHTML="<small>step</small>"+(i+1)+" / "+steps.length;
-    renderCode(s); renderFlow(s); renderState(s); renderSupport(s);
-    if(!s){ $("#caption").className="caption"; statusEl.innerHTML='Press <b class="a">Next</b>. Switch the form at any step: the same part lights up.'; }
+    if(s&&s.parts.length>1&&!reduce){
+      /* a pass: light check, body, update one after another, so the highlight moves the way the program runs */
+      var full=s.parts, k=0;
+      var tick=function(){
+        var part={}; for(var q in s) part[q]=s[q]; part.parts=[full[k]];
+        renderCode(part); renderFlow(part);
+        k++;
+        if(k<full.length){ seqTimer=setTimeout(tick,420); }
+        else { seqTimer=null; renderState(s); renderSupport(s); }
+      };
+      renderState(steps[i-1]||null); renderSupport(steps[i-1]||null);
+      tick();
+    } else {
+      renderCode(s); renderFlow(s); renderState(s); renderSupport(s);
+    }
+    if(!s){ $("#caption").className="caption"; statusEl.innerHTML='Press <b class="a">Next</b>. The picture changes at every step.'; }
     else { $("#caption").className="caption "+(s.cls==="no"?"cut":s.cls==="gold"?"left":s.cls==="ok"?"ok":""); statusEl.innerHTML=s.msg; }
     setBtns();
   }
   function setBtns(){ $("#bNext").disabled=at>=steps.length-1; $("#bBack").disabled=at<0;
     var d=""; for(var k=0;k<steps.length;k++) d+='<i class="'+(k===at?"now":k<at?"done":"")+'"></i>'; $("#dots").innerHTML=d; }
 
-  /* switching the form keeps your place: same step key, or the closest match */
-  var NEAR={c1:"b1",c2:"p2",skip:"b1",b1:"skip"};
+  /* switching the form starts the walk over */
   function switchForm(f){
-    var key=at>=0?steps[at].key:null, old=at;
     FORM=f; steps=build();
-    var j=-1,k;
-    if(key){
-      for(k=0;k<steps.length;k++) if(steps[k].key===key) j=k;
-      if(j<0&&NEAR[key]) for(k=0;k<steps.length;k++) if(steps[k].key===NEAR[key]) j=k;
-      if(j<0) j=Math.min(old,steps.length-1);
-    }
-    markChips(); show(j);
+    markChips(); show(-1);
   }
   function markChips(){
-    Array.prototype.forEach.call(document.querySelectorAll("#forms .chip"),function(c){c.classList.toggle("on",c.getAttribute("data-f")===FORM);});
-    Array.prototype.forEach.call(document.querySelectorAll("#chips .chip"),function(c){c.classList.toggle("on",+c.getAttribute("data-s")===START);});
+    Array.prototype.forEach.call(document.querySelectorAll("#forms .chip"),function(b){
+      b.classList.toggle("on",b.getAttribute("data-f")===FORM); });
   }
 
   /* focus: picture and caption only. Remembered per browser. */
@@ -456,10 +456,8 @@
   function back(){ if(at>=0) show(at-1); }
   function reset(){ steps=build(); markChips(); show(-1); }
 
-  $("#forms").innerHTML=FORMS.map(function(f){return '<button class="chip" data-f="'+f[0]+'">'+f[1]+'</button>';}).join("");
-  $("#chips").innerHTML=STARTS.map(function(v){return '<button class="chip" data-s="'+v+'">lap starts at '+v+'</button>';}).join("");
+  $("#forms").innerHTML=FORMS.map(function(f){return '<button class="chip" data-f="'+f[0]+'">'+f[1]+"</button>";}).join("");
   $("#forms").addEventListener("click",function(e){ var b=e.target.closest(".chip"); if(!b) return; b.blur(); switchForm(b.getAttribute("data-f")); });
-  $("#chips").addEventListener("click",function(e){ var b=e.target.closest(".chip"); if(!b) return; b.blur(); START=+b.getAttribute("data-s"); reset(); });
   $("#bNext").addEventListener("click",next);
   $("#bBack").addEventListener("click",back);
   $("#bReset").addEventListener("click",reset);
@@ -482,6 +480,6 @@
 </script>
 <script src="../manifest.js"></script>
 <script src="../../assets/rail.js"></script>
-<script>Rail.render(document.getElementById("rail"),{week:2,kind:"visuals",current:"13-loop-types"});</script>
+<script>Rail.render(document.getElementById("rail"),{week:2,kind:"visuals",current:"12-loop-types"});</script>
 </body>
 </html>

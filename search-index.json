@@ -573,31 +573,21 @@
     "week": 2,
     "weekLabel": "Week 2",
     "section": "Visuals",
-    "title": "String Methods",
-    "desc": "",
-    "group": "Workbook 2a · Section 1-1",
-    "url": "week-02/visuals/01-string-methods.html",
-    "text": "← Week 2 index Workbook 2a · Section 1-1 · Strings String Methods Every character in a String has an index, starting at 0, and each method reads those characters and returns a value. Example String title = \" Spaghetti-Night \" ; compared with returns returns int click a method · spaces show as · and count as characters The one idea Index starts at 0, and spaces count. substring(begin, end) stops before end : the end index is exclusive. A method returns a new value and leaves title as it was, so keep the result: title = title.trim();"
-  },
-  {
-    "week": 2,
-    "weekLabel": "Week 2",
-    "section": "Visuals",
-    "title": "Strings Are Immutable",
-    "desc": "",
-    "group": "Workbook 2a · Section 1-1",
-    "url": "week-02/visuals/02-string-immutability.html",
-    "text": "← Week 2 index Workbook 2a · Section 1-1 · Strings Strings Are Immutable A String never changes: toUpperCase() returns a new String, and the variable keeps the old one until you assign the result. Method Focus step 0 / 6 Press Next . The picture changes at every step. ← Back Next → Reset space = next · watch the old object: its letters never change Main.java variable points to unreachable objects console The one idea A String object never changes. toUpperCase() , trim() and replace() leave it alone and hand back a brand new String. If you do not store that result, it is lost. Assign it , as in name = name.toUpperCase(); , to point the variable at the new object. The old one becomes unreachable."
-  },
-  {
-    "week": 2,
-    "weekLabel": "Week 2",
-    "section": "Visuals",
     "title": "Comparing Strings",
     "desc": "",
     "group": "Workbook 2a · Section 1-1",
-    "url": "week-02/visuals/03-comparing-strings.html",
-    "text": "← Week 2 index Workbook 2a · Section 1-1 · Comparing Strings Comparing Strings equals checks every character, equalsIgnoreCase lets case slide, and compareTo says which String sorts first. Strings Focus step 0 / 6 Press Next . The picture changes at every step. ← Back Next → Reset space = next · try different case Main.java equals ? ignoreCase ? compareTo ? console The one idea equals asks \"same text?\" by checking the characters in pairs; equalsIgnoreCase does the same with M and m counted as one letter. compareTo asks \"which comes first?\" : it stops at the first different pair and returns the gap between their codes. Negative means before, zero means same place, positive means after."
+    "url": "week-02/visuals/01-comparing-strings.html",
+    "text": "← Week 2 index Workbook 2a · Section 1-1 · Comparing Strings Comparing Strings == asks whether two variables point at the same object. equals asks whether the text is the same. s3 = Focus step 0 / 7 Press Next . The picture changes at every step. ← Back Next → Reset space = next · change s3 and watch steps 6 and 7 Main.java s1 == s2 s1.equals(s2) s1.equalsIgnoreCase(s3) console The one idea == asks \"same object?\" It compares the arrows, so two Strings with the same letters can still give false. equals asks \"same text?\" : same characters, same order. equalsIgnoreCase asks \"same text, ignoring capitals?\" To compare text, always use equals or equalsIgnoreCase ."
+  },
+  {
+    "week": 2,
+    "weekLabel": "Week 2",
+    "section": "Visuals",
+    "title": "String Methods",
+    "desc": "",
+    "group": "Workbook 2a · Section 1-1",
+    "url": "week-02/visuals/02-string-methods.html",
+    "text": "← Week 2 index Workbook 2a · Section 1-1 · String Methods String Methods A String method reads the characters and hands back a value: a number, true or false, a char, or a new String. Example Focus returns int click a method · spaces show as · and count as characters Main.java return type after the call console The one idea A String method never changes the String. It returns a new value. Store it in a variable or use it right away, as in String trimmedUserName = username.trim(); Called on its own, the result is lost and the original stays as it was."
   },
   {
     "week": 2,
@@ -606,8 +596,8 @@
     "title": "String to Number",
     "desc": "",
     "group": "Workbook 2a · Section 1-2",
-    "url": "week-02/visuals/04-string-to-number.html",
-    "text": "← Week 2 index Workbook 2a · Section 1-2 · Converting strings String to Number Typed input is text. Integer.parseInt turns its characters into a number, and one wrong character stops the program. Typed Focus step 0 / 7 Press Next . The picture changes at every step. ← Back Next → Reset space = next · try \" 25 \" and \"25 apples\" Main.java line (String) count (int) console The one idea Scanner gives you a String of characters. Read the whole line with nextLine() , trim() it, then convert: Integer.parseInt for whole numbers, Double.parseDouble for decimals. Every character must belong to the number , or Java throws a NumberFormatException . When the line holds more than a number, split it first and parse one piece."
+    "url": "week-02/visuals/03-string-to-number.html",
+    "text": "← Week 2 index Workbook 2a · Section 1-2 · Converting strings String to Number Text that looks like a number is still text. Integer.parseInt turns it into a real number. Text to number Focus step 0 / 5 Press Next . The picture changes at every step. ← Back Next → Reset space = next · watch the quotes: text has them, a number does not Main.java type now value console The one idea Text that looks like a number is still text : + glues it, it does not add. Integer.parseInt makes a real int, and then the math works ( Double.parseDouble does the same for decimals). A String that is not a number , like \"one hundred\" , crashes the program with a NumberFormatException ."
   },
   {
     "week": 2,
@@ -616,8 +606,18 @@
     "title": "String to Date",
     "desc": "",
     "group": "Workbook 2a · Section 1-2",
-    "url": "week-02/visuals/05-string-to-date.html",
-    "text": "← Week 2 index Workbook 2a · Section 1-2 · Converting a String to a date String to Date The pattern tells LocalDate.parse which characters are the month, the day and the year. Input Focus step 0 / 6 Press Next . The picture changes at every step. ← Back Next → Reset space = next · try another input : each one has its own pattern and its own trap Main.java birthDay format(display) console The one idea The pattern must describe the text exactly. MM reads a two digit month, d a day of one or two digits, MMM a short month name, yyyy a four digit year, and every / or space must match too. Without a formatter, LocalDate.parse expects yyyy-MM-dd . A LocalDate holds only three numbers: println shows them in ISO order, format shows them in any pattern you choose."
+    "url": "week-02/visuals/04-string-to-date.html",
+    "text": "← Week 2 index Workbook 2a · Section 1-2 · Converting a String to a date String to Date A String is not a date: a typed date like 17/October/2002 needs a formatter whose pattern matches it exactly. One typed date, one pattern Focus step 0 / 5 Press Next . The picture changes at every step. ← Back Next → Reset space = next · line up the pattern and the text: every piece must match Main.java userDate console The one idea A String is not a date. Only yyyy-MM-dd text parses with no formatter, so \"17/October/2002\" needs a DateTimeFormatter whose pattern matches it exactly: d the day, MMMM the full month name, yyyy the year, every / in its place. Once parsed, println shows the date as yyyy-MM-dd."
+  },
+  {
+    "week": 2,
+    "weekLabel": "Week 2",
+    "section": "Visuals",
+    "title": "Strings Are Immutable",
+    "desc": "",
+    "group": "Workbook 2a · Section 1-4",
+    "url": "week-02/visuals/05-string-immutability.html",
+    "text": "← Week 2 index Workbook 2a · Section 1-4 · Working with StringBuilder Strings Are Immutable A String object never changes: + builds a new one, and the old one becomes unreachable when you reassign. One String, one change Focus step 0 / 10 Press Next . The picture changes at every step. ← Back Next → Reset space = next · watch the old objects: their letters never change Main.java greeting points to unreachable objects console The one idea A String object never changes. Concatenation with + builds a new object. Assign it to keep it, and the old object becomes unreachable: no variable points to it any more. Every change to a String is a new object, which is why the next page introduces StringBuilder ."
   },
   {
     "week": 2,
@@ -627,7 +627,7 @@
     "desc": "",
     "group": "Workbook 2a · Section 1-4",
     "url": "week-02/visuals/06-stringbuilder.html",
-    "text": "← Week 2 index Workbook 2a · Section 1-4 · Working with StringBuilder StringBuilder Every + on a String makes a brand new String. A StringBuilder keeps changing one object, and toString() hands you the String at the end. Same text, two ways Focus String + String s → StringBuilder sb → sb.length() = 24 &darr; toString() &darr; result → String Git, HTML, CSS, and Java · press Next step 0 / 8 Press Next . The picture changes at every step. ← Back Next → Reset space = next · count the objects on each side Main.java String objects (left) objects (right) console The one idea A String cannot change , so every s = s + ... builds a new String and the old one becomes unreachable. A StringBuilder is one object you keep changing with append() . When the text is done, call toString() once to get the String you use."
+    "text": "← Week 2 index Workbook 2a · Section 1-4 · Working with StringBuilder StringBuilder append() changes one StringBuilder object in place, and toString() at the end gives you the String. One object, growing Focus skills → StringBuilder object mySkills → String object new StringBuilder() · press Next step 0 / 9 Press Next . The picture changes at every step. ← Back Next → Reset space = next · watch the green box: it is the same object at every append Main.java appends done new String objects console The one idea append() changes one object in place : eleven appends, still one StringBuilder, and no new String for each change. When the text is done, toString() hands back the String. A StringBuilder is not a String, so String mySkills = skills; does not compile."
   },
   {
     "week": 2,
@@ -637,7 +637,7 @@
     "desc": "",
     "group": "Workbook 2a · Section 2-1",
     "url": "week-02/visuals/07-class-vs-object.html",
-    "text": "← Week 2 index Workbook 2a · Section 2-1 · Classes and objects Class vs Object A class is one blueprint. Every new builds a separate object from it, with its own field values. Class Focus step 0 / 7 Press Next . The picture changes at every step. ← Back Next → Reset space = next · try Dog : same idea, another class Example classes objects console The one idea The class is the blueprint, the objects are the houses built from it. Every new builds a separate object with the same fields and its own values. Change one object and the others stay as they were. A method runs on the object you call it on, so it uses that object's values."
+    "text": "← Week 2 index Workbook 2a · Section 2-1 · Classes and objects Class vs Object A class is one blueprint. new builds an object from it, and the object holds its own field values. One class, one object Focus step 0 / 4 Press Next . The picture changes at every step. ← Back Next → Reset space = next · watch the object: it holds the values, the class holds none Example classes objects instructor energy console The one idea The class is the blueprint, the object is the house built from it. new builds an object with the class's fields and fills them with its own values. A method runs on the object you call it on, so it changes and reads that object's values."
   },
   {
     "week": 2,
@@ -647,7 +647,7 @@
     "desc": "",
     "group": "Workbook 2a · Section 2-1",
     "url": "week-02/visuals/08-encapsulation.html",
-    "text": "← Week 2 index Workbook 2a · Section 2-1 · Encapsulation Encapsulation Private fields are behind a wall: public getters and setters are the only doors, and a door can check what comes in. Example · Person p Focus p · a Person object private String name \"Raymond\" private int age 55 private int energy 100 getName() no setName() getAge() setAge(int) same package only Main.java Coach.java · package com.otherapp p.energy = 80; compile error Person p · press Next step 0 / 7 Press Next . The picture changes at every step. ← Back Next → Reset space = next · red = the compiler says no , gold = the setter says no Person.java age inside p a in main compiler The one idea Make the fields private and give the outside world methods. A setter is the only way in, so it can check every value. A getter hands out a copy. Leave out the setter and the field is read-only. With no keyword at all, a member is package-private : visible inside its package, hidden from every other. Be explicit: write private or public ."
+    "text": "← Week 2 index Workbook 2a · Section 2-1 · Encapsulation Encapsulation Private fields sit behind a wall: the only way in or out is a public method the class offers. Person Focus step 0 / 5 Press Next . The picture changes at every step. ← Back Next → Reset space = next · red = blocked by private, green = a getter reads, gold = a setter writes Main.java field name last access console The one idea Fields are private : only code inside Person can touch them, and private hides them from every other class, in any package. Getters read, setters write , and they are public, so every other class goes through them. That is encapsulation : the only way in is a method the class offers."
   },
   {
     "week": 2,
@@ -657,17 +657,7 @@
     "desc": "",
     "group": "Workbook 2a · Section 2-1",
     "url": "week-02/visuals/09-what-new-does.html",
-    "text": "← Week 2 index Workbook 2a · Section 2-1 · Instantiating an object What new Does new builds the object with default values first, then the constructor copies each parameter into a field. Values Focus step 0 / 8 Press Next . The picture changes at every step. ← Back Next → Reset space = next · watch the two boxes called name : the parameter and the field Main.java Person.java parameter name field this.name console The one idea new does three things in order: it reserves memory for the object with every field at its default value, it runs the constructor, and it hands back a reference that the variable stores. Inside the constructor, name alone is the parameter, a copy that disappears when the constructor ends. this.name is the field, which lives as long as the object. this.name = name copies one into the other."
-  },
-  {
-    "week": 2,
-    "weekLabel": "Week 2",
-    "section": "Visuals",
-    "title": "Two Names, One Object",
-    "desc": "",
-    "group": "Workbook 2a · Section 2-2",
-    "url": "week-02/visuals/10-object-references.html",
-    "text": "← Week 2 index Workbook 2a · Section 2-2 · Working with objects Two Names, One Object Person b = a; copies the reference, not the object: a and b now refer to the same Person. References Focus step 0 / 7 Press Next . The picture changes at every step. ← Back Next → Reset space = next · arrow = reference · box = object made by new Main.java objects made a.getAge() a == b a == c console The one idea A variable of a class type holds a reference to an object, not the object itself. b = a copies the reference, so a change made through b shows through a. Only new makes another object, and == is true only when both sides refer to the same one, whatever is inside."
+    "text": "← Week 2 index Workbook 2a · Section 2-1 · Instantiating an object What new Does new builds the object and runs the constructor; the variable gets back a reference, not the object. Typed in: \"Raymond\", 35 Focus step 0 / 8 Press Next . The picture changes at every step. ← Back Next → Reset space = next · name and age are typed in at the two prompts · watch instructor: it ends up holding an arrow Main.java Person.java instructor holds field this.name console The one idea new makes the object and runs the constructor , which fills the fields: this.name = name copies the parameter into the field. new hands back a reference, and the variable holds the reference, not the object : instructor.getName() follows that arrow."
   },
   {
     "week": 2,
@@ -676,8 +666,8 @@
     "title": "Method Overloading",
     "desc": "",
     "group": "Workbook 2a · Section 2-3",
-    "url": "week-02/visuals/11-method-overloading.html",
-    "text": "← Week 2 index Workbook 2a · Section 2-3 · Overloading methods Method Overloading One name, several parameter lists: the compiler reads the arguments and picks the one that fits. Person Focus the call 4 methods, 2 names · press Next step 0 / 7 Press Next . The picture changes at every step. ← Back Next → Reset space = next · type, count, order decide which door opens Person.java and Main.java argument types ? door that opens ? console The one idea A method's signature is its name plus its parameter types. Methods in one class may share a name as long as the signatures differ. At each call the compiler compares the arguments with every parameter list of that name, by type, count and order , and if none fits, the code does not compile. The return type is not part of the signature, so it cannot tell two methods apart."
+    "url": "week-02/visuals/10-method-overloading.html",
+    "text": "← Week 2 index Workbook 2a · Section 2-3 · Overloading methods Method Overloading One name, several parameter lists: the compiler reads the arguments and picks the one that fits. Person Focus the call 3 methods, 1 name · press Next step 0 / 5 Press Next . The picture changes at every step. ← Back Next → Reset space = next · type, count, order decide which door opens Person.java and Main.java argument types method that runs console The one idea Same name, different parameter list. A method's signature is its name plus its parameter types. At each call the compiler compares the arguments with every parameter list of that name, by type, count and order , and runs the one that fits. If none fits, the code does not compile."
   },
   {
     "week": 2,
@@ -686,8 +676,8 @@
     "title": "Constructor Overloading",
     "desc": "",
     "group": "Workbook 2a · Section 2-3",
-    "url": "week-02/visuals/12-constructor-overloading.html",
-    "text": "← Week 2 index Workbook 2a · Section 2-3 · Overloading constructors Constructor Overloading A class can have several constructors. Java opens the one whose parameter list matches your arguments. Call Focus step 0 / 8 Press Next . The picture changes at every step. ← Back Next → Reset space = next · try each call : two of them hop through this(...) Main.java Person.java matched ran console The one idea Overloaded constructors share one name and differ in their parameter lists. The compiler matches your arguments by count, type and order, and only that constructor runs. this(...) lets a short constructor hand its values to the full one, so the fields are set in one place. No match, no compile."
+    "url": "week-02/visuals/11-constructor-overloading.html",
+    "text": "← Week 2 index Workbook 2a · Section 2-3 · Overloading constructors Constructor Overloading A class can have several constructors. Java runs the one whose parameter list matches your arguments. Person Focus Person.java · seven constructors the new object seven constructors, four calls · press\\u00a0 Next step 0 / 7 Press Next . The picture changes at every step. ← Back Next → Reset space = next · match the argument types, in order, to one parameter list Main.java constructor picked fields set console The one idea Constructors overload like methods: same name, different parameter lists (number, types or order), and Java picks the one whose list matches your arguments. A field that constructor does not set keeps its default: null for a String, 0 for an int."
   },
   {
     "week": 2,
@@ -696,8 +686,8 @@
     "title": "Three Loops, One Job",
     "desc": "",
     "group": "Workbook 2a · Section 3-1",
-    "url": "week-02/visuals/13-loop-types.html",
-    "text": "← Week 2 index Workbook 2a · Section 3-1 · Loops Three Loops, One Job Every loop has the same four parts: start, condition, body, update. while, do / while and for only put them in different places. Form Start Focus Main.java The order of one pass false: exit repeat lap 0 condition Printed press Next step 0 / 8 Press Next . Switch the form at any step: the same part lights up. ← Back Next → Reset space = next · switching the form keeps your place · try lap starts at 4 Where each part lives while do / while for start before the loop before the loop header, slot 1 condition top bottom header, slot 2 body inside { } inside { } inside { } update end of body end of body header, slot 3 first check before pass 1 after pass 1 before pass 1 body ran condition checked console The one idea Same four parts, different places. while and for check the condition before every pass, so a false start means the body runs zero times. do / while checks after the pass, so its body always runs at least once . for packs start, condition and update into one header line, which makes it the usual pick when you know the count."
+    "url": "week-02/visuals/12-loop-types.html",
+    "text": "← Week 2 index Workbook 2a · Section 3-1 · Loops Three Loops, One Job Every loop has the same four parts: start, condition, body, update. while, do / while and for only put them in different places. Form Focus Main.java The order of one pass false: exit repeat counter 0 condition Printed step 0 / 6 Press Next . Switch the form at any step: the same part lights up. ← Back Next → Reset space = next · switching the form starts over · every form prints 0 to 9 Where each part lives while do / while for start before the loop before the loop header, slot 1 condition top bottom header, slot 2 body inside { } inside { } inside { } update end of body end of body header, slot 3 first check before pass 1 after pass 1 before pass 1 body ran condition checked console The one idea Same four parts, different places. while and for check the condition before each pass; do / while checks after the pass, so its body always runs at least once . for puts start, condition and update on one line: for (int i = 0; i < 10; i++) ."
   },
   {
     "week": 2,
@@ -706,8 +696,8 @@
     "title": "break vs continue",
     "desc": "",
     "group": "Workbook 2a · Section 3-1",
-    "url": "week-02/visuals/14-break-vs-continue.html",
-    "text": "← Week 2 index Workbook 2a · Section 3-1 · Loops break vs continue break leaves the loop for good. continue skips the rest of this pass and goes on to the next one. Version Focus passes, one per week inside the loop skipped 0 10 weeks · press Next step 0 / 6 Press Next . The picture changes at every step. ← Back Next → Reset space = next · same loop, same if : switch the version and compare the totals Main.java week ? total ? console The one idea break ends the whole loop: the passes after it never run. continue ends only the current pass: the lines below it are skipped, then the loop moves on to the next pass. Same loop, same if: break gives 3, continue gives 37. Some programmers avoid continue and write the if the other way: if (week % 3 != 0) adds only the weeks to keep."
+    "url": "week-02/visuals/13-break-vs-continue.html",
+    "text": "← Week 2 index Workbook 2a · Section 3-1 · Loops break vs continue break leaves the loop now. continue skips the rest of this pass. Version Focus passes, one per value of i inside the loop skipped 0 i = 1 to 10 · press Next step 0 / 6 Press Next . The picture changes at every step. ← Back Next → Reset space = next · same loop, i = 1 to 10 : switch between break and continue Main.java i ? sum ? console The one idea break leaves the loop now: only 1 and 2 are added, 4 to 10 never run, the sum is 3. continue skips the rest of this pass: 3, 6 and 9 are not added, the loop keeps going, the sum is 37. The same 37 also comes without continue, by writing the if the other way: if (i % 3 != 0) { sum += i; }"
   },
   {
     "week": 2,
@@ -716,8 +706,8 @@
     "title": "Arrays and Indexes",
     "desc": "",
     "group": "Workbook 2a · Section 3-2",
-    "url": "week-02/visuals/15-arrays-indexing.html",
-    "text": "← Week 2 index Workbook 2a · Section 3-2 · Arrays Arrays and Indexes An array is a fixed row of slots numbered from 0, so the last index is always length - 1 . The array int[] temperatures String[] cityNames Focus i step 0 / 0 Press Step to create the array, or Run to watch the loop fill it. Step → Run ← Back Reset Experiment: loop with i <= length space = step · set the index to the size, or turn on the experiment. What is past the last slot? Main.java Inputs Change these, then press Step size of the array (3 to 10) index to read at the end Edit while stopped. Every step is computed from these values. length last index current i value console The one idea An array has a fixed number of slots , set when it is created. Indexes run from 0 to length - 1 , which is why the loop uses i < array.length . A new array is never empty: int slots start at 0, String slots at null. Ask for any index outside that range and Java stops with ArrayIndexOutOfBoundsException ."
+    "url": "week-02/visuals/14-arrays-indexing.html",
+    "text": "← Week 2 index Workbook 2a · Section 3-2 · Arrays Arrays and Indexes An array is a fixed row of slots numbered from 0, so the last index is always length - 1 . The array int[] listOfNumbers int[] newArrayOfNumbers String[] listOfNames boolean[] boolArray Focus i step 0 / 0 Press Step to create the array, or Run to watch it all. Step → Run ← Back Reset Experiment: index = length space = step · set the index to the length, or turn on the experiment. What is past the last slot? Main.java Inputs Change this, then press Step index in the brackets (0 to 7) Edit while stopped. The last allowed value is the length itself, which has no slot. length last index index value in the slot console The one idea Indexes start at 0 and end at length - 1 , so a loop runs while i < array.length . A new array is never empty: new int[n] starts at zeros, String at null, boolean at false . An index equal to the length has no slot, and Java stops with ArrayIndexOutOfBoundsException ."
   },
   {
     "week": 2,
@@ -726,18 +716,8 @@
     "title": "for-each vs for",
     "desc": "",
     "group": "Workbook 2a · Section 3-2",
-    "url": "week-02/visuals/16-for-each-loop.html",
-    "text": "← Week 2 index Workbook 2a · Section 3-2 · Arrays for-each vs for for-each hands you every element in order, but no index, and it cannot change the array. Loop for (int i = 0; ...) for (String city : cities) Focus cities int i String city 5 cities · press Next step 0 / 7 Press Next . Switch the loop at any step to compare. ← Back Next → Reset space = next · switch the loop at any step : same step, other form Main.java pass cities[0] console The one idea for-each is the short way to read every element , in order, none skipped. The loop variable is its own variable that holds a copy of the current element, so assigning to it never reaches the array, and there is no index. Need the position, or need to change the array? Use the for loop with i ."
-  },
-  {
-    "week": 2,
-    "weekLabel": "Week 2",
-    "section": "Visuals",
-    "title": "Arrays In and Out of Methods",
-    "desc": "",
-    "group": "Workbook 2a · Section 3-2",
-    "url": "week-02/visuals/17-arrays-and-methods.html",
-    "text": "← Week 2 index Workbook 2a · Section 3-2 · Arrays and methods Arrays In and Out of Methods Passing an array copies the arrow, not the slots: the method changes the caller's array. Returning one hands an arrow back. References Focus step 0 / 7 Press Next . The picture changes at every step. ← Back Next → Reset space = next · arrow = reference · left: one frame per running method · right: the arrays Main.java temperatures[0] in main degrees in main console The one idea An array variable holds a reference, an arrow to the slots. Passing it to a method copies the arrow, so the method works on the caller's array and the changes stay after it returns. An int parameter is a copy of the value: changing it never reaches the caller. Returning an array hands the arrow back , and the array lives on after the method ends."
+    "url": "week-02/visuals/15-for-each-loop.html",
+    "text": "← Week 2 index Workbook 2a · Section 3-2 · Arrays for-each vs for for-each hands you each element directly, with no index. The indexed for loop gives you i as well. Two loops, one array Focus nameList for ( int i = 0 ; i < nameList.length; i++) a for loop with an index int i nameList[i] for ( String name : nameList) the for-each loop index not given String name 9 names · 2 loops · press Next step 0 / 21 Press Next to run the indexed loop, then the for-each loop. ← Back Next → Reset space = next · left lane : the indexed for · right lane : for-each Main2.java pass position known console The one idea Use for-each when you only need each element : it is shorter and visits every slot in order, no index to get wrong. Use the indexed for when you need the position , or when you want to change the slot itself with nameList[i] ."
   },
   {
     "week": 2,
@@ -746,8 +726,8 @@
     "title": "Sorting and Copying Arrays",
     "desc": "",
     "group": "Workbook 2a · Section 3-2",
-    "url": "week-02/visuals/18-sort-and-copy.html",
-    "text": "← Week 2 index Workbook 2a · Section 3-2 · Arrays Sorting and Copying Arrays Arrays.sort reorders the array itself, and copy = cities copies only the reference: a real copy is a second array. Copy with Focus step 0 / 10 Press Next . The picture changes at every step. ← Back Next → Reset space = next · arrow = reference · row of slots = one array · the chips change how step 6 copies Main.java arrays made names on array 1 cities == backup Arrays.equals console The one idea Arrays.sort changes the order inside the array you pass it. Assigning one array variable to another makes two names for the same array, so a change through one shows through the other. A loop, System.arraycopy or Arrays.copyOf makes a second array : == is false, Arrays.equals compares the values."
+    "url": "week-02/visuals/16-sort-and-copy.html",
+    "text": "← Week 2 index Workbook 2a · Section 3-2 · Arrays Sorting and Copying Arrays Arrays.sort reorders the array itself, and copy = colors would copy only the arrow: a real copy is a second array. Part Focus step 0 / 7 Press Next . The picture changes at every step. ← Back Next → Reset space = next · arrow = reference · row of slots = one array · the chips jump to each part Main2.java arrays in memory arrows into it nameList[0] nameList[8] console The one idea Arrays.sort sorts the array itself : same array, values moved to new slots. Assigning one array variable to another copies the reference, so you get two names for one array. new String[7] is a real second array and System.arraycopy fills it , and a change to colors does not reach the copy."
   },
   {
     "week": 2,
@@ -756,7 +736,7 @@
     "title": "The Debugger",
     "desc": "",
     "group": "Workbook 2b · Section 1-2",
-    "url": "week-02/visuals/19-debugger.html",
+    "url": "week-02/visuals/17-debugger.html",
     "text": "← Week 2 index Workbook 2b · Section 1-2 · Running the debugger The Debugger The debugger pauses your program on a line you choose, so you can run it one line at a time and watch the values change. IntelliJ in Debug mode Focus Main.java Debug gutter 1 public class Main { 2 public static void main ( String [] args) { 3 int week = 1 ; 4 double savings = 0 ; 5 while (savings < 100 ) { 6 savings = savings + 25 ; 7 System.out. println ( \"Week \" + week + \": saved \" + savings); 8 week++; 9 } 10 System.out. println ( \"Reached 100 after \" + (week - 1 ) + \" weeks\" ); 11 } 12 } Debug ▶ Resume ↷ Step Over ↘ Step Into ■ Stop Frames Variables a loop with a breakpoint · press Next step 0 / 8 Press Next . The picture changes at every step. ← Back Next → Reset space = next · the highlighted line is the next one to run , it has not run yet Paused on Loop pass You pressed console The one idea A breakpoint , the red dot in the gutter, is where Debug pauses. While paused, the highlighted line has not run yet. Step Over runs one line, Resume runs until the next breakpoint, the Variables pane shows the values right now and the Frames pane shows which method you are in. Reach for it when the code runs but the answer is wrong."
   },
   {
@@ -767,7 +747,7 @@
     "desc": "The syntax of the week on one page: String methods, parsing, StringBuilder, classes, loops, arrays.",
     "group": "Reference",
     "url": "week-02/reference/cheat-sheet.html",
-    "text": "← Week 2 index Week 2 · Reference Week 2 Cheat Sheet The syntax of the week, one line per idea. Pick a topic to see only that card; every card links to the page that shows it moving. Topic All Strings Converting StringBuilder Classes Overloading Loops Arrays Generate and debug String methods 2a · 1-1 length(): int \"Lina Fares\".length() // 10, the space counts trim(): String \" danaw \".trim() // \"danaw\", both ends only toUpperCase(): String \"New Mexico\".toUpperCase() // \"NEW MEXICO\" toLowerCase(): String \"New Mexico\".toLowerCase() // \"new mexico\" chain calls typedName.trim().toUpperCase() // trim, then uppercase startsWith(): boolean \"FAIR-15OFF\".startsWith(\"FAIR\") // true endsWith(): boolean \"SAVE-50\".endsWith(\"-50\") // true charAt(i): char \"USA-12981-Y-22\".charAt(10) // 'Y', positions start at 0 indexOf(): int \"ACME-12213\".indexOf(\"-\") // 4; -1 when not found substring(start, end) \"ACME-12213\".substring(0, 4) // \"ACME\", end not included substring(start) \"ACME-12213\".substring(5) // \"12213\", to the end replace(): String \"10-15-2026\".replace(\"-\", \"/\") // \"10/15/2026\", every match contains(): boolean sentence.contains(\"Java\") // case sensitive isEmpty(): boolean \"\".isEmpty() // true; \" \".trim().isEmpty() // true immutable city.toUpperCase(); // city unchanged city = city.toUpperCase(); // keep the new String See it: String Methods Strings Are Immutable Escape characters and comparing 2a · 1-1 quote inside text \"Big Tex says \\\"Howdy\\\"!\" single quote \"Let's go!\" // no escape neede"
+    "text": "← Week 2 index Week 2 · Reference Week 2 Cheat Sheet The syntax of the week, one line per idea. Pick a topic to see only that card; every card links to the page that shows it moving. Topic All Strings Converting StringBuilder Classes Overloading Loops Arrays Generate and debug String methods 2a · 1-1 length(): int \"Raymond Maroun\".length() // 14, the space counts trim(): String \" danaw \".trim() // \"danaw\", both ends only toUpperCase(): String \"raymond\".toUpperCase() // \"RAYMOND\" toLowerCase(): String \"ADAM\".toLowerCase() // \"adam\" chain calls instructorName.trim().toUpperCase() // trim, then uppercase startsWith(): boolean \"Raymond\".toLowerCase().startsWith(\"ray\") // true endsWith(): boolean \"SAVE-50\".toLowerCase().endsWith(\"-50\") // true charAt(i): char \"Spaghetti\".charAt(5) // 'e', positions start at 0 indexOf(): int \"ACME-12213-potato-123-567\".indexOf(\"-\") // 4; -1 when not found lastIndexOf(): int \"ACME-12213-potato-123-567\".lastIndexOf(\"-\") // 21, the last dash substring(start, end) \"Raymond Maroun\".substring(0, 7) // \"Raymond\", end not included substring(start) \"Raymond Maroun\".substring(8) // \"Maroun\", to the end capitalize personName.substring(0, 1).toUpperCase() + personName.substring(1) // \"raymond\" to \"Raymond\" replace(): String \"10-15-2026\".replace(\"-\", \"/\") // \"10/15/2026\", every match contains(): boolean sentence.contains(\"Java\") // true; sentence.contains(\"java\") // false, case sensitive isEmpty(): boolean \" \".isEmpty() // false, a space counts; \"\".isEmpty() //"
   },
   {
     "week": 2,
@@ -777,7 +757,7 @@
     "desc": "The words of the week, each in one sentence, with the page that shows it.",
     "group": "Reference",
     "url": "week-02/reference/glossary.html",
-    "text": "← Week 2 index Week 2 · Reference Glossary The words of the week, one sentence each. Type a word and the list narrows as you go. Filter / All Strings Converting StringBuilder Classes and objects Overloading Loops Arrays Generate and debug Strings String method A built-in action you call on a String with a dot; it reads the text or returns a new String. \"New Mexico\".toUpperCase() See it: String Methods Escape character A backslash that gives the next character a special meaning: \\\" a quote, \\n a new line, \\t a tab. \"Big Tex says \\\"Howdy\\\"!\" See it: String Methods Immutable A String can never change; every method that seems to change it returns a new String instead. city = city.toUpperCase(); See it: Strings Are Immutable Index (in a String) The position of a character, counted from 0, so the last one is at length() - 1. \"ACME\".charAt(0) // 'A' See it: String Methods Substring A piece of a String, from a start index up to, but not including, an end index. \"ACME-12213\".substring(0, 4) // ACME See it: String Methods Chaining Calling a method on the result of another method, read left to right. typedName.trim().toUpperCase() See it: String Methods Empty string A String with no characters at all; a String of spaces is not empty until you trim it. \"\".isEmpty() // true See it: String Methods equals() Compares two Strings character by character and returns true when the text matches. language.equals(builtLanguage) See it: Comparing Strings equalsIgnoreCase() Like equals(), but upper a"
+    "text": "← Week 2 index Week 2 · Reference Glossary The words of the week, one sentence each. Type a word and the list narrows as you go. Filter / All Strings Converting StringBuilder Classes and objects Overloading Loops Arrays Generate and debug Strings String method A built-in action you call on a String with a dot; it reads the text or returns a new String. \"New Mexico\".toUpperCase() See it: String Methods Escape character A backslash that gives the next character a special meaning: \\\" a quote, \\n a new line, \\t a tab. \"Raymond \\\"Maroun\\\"\" See it: String Methods Immutable A String can never change; every method that seems to change it returns a new String instead. city = city.toUpperCase(); See it: Strings Are Immutable Index (in a String) The position of a character, counted from 0, so the last one is at length() - 1. \"ACME\".charAt(0) // 'A' See it: String Methods Substring A piece of a String, from a start index up to, but not including, an end index. \"ACME-12213\".substring(0, 4) // ACME See it: String Methods Chaining Calling a method on the result of another method, read left to right. typedName.trim().toUpperCase() See it: String Methods Empty string A String with no characters at all; a String of spaces is not empty until you trim it. \"\".isEmpty() // true See it: String Methods equals() Compares two Strings character by character and returns true when the text matches. language.equals(builtLanguage) See it: Comparing Strings equalsIgnoreCase() Like equals(), but upper and lo"
   },
   {
     "week": 2,
@@ -817,7 +797,7 @@
     "desc": "One line in, first, middle and last name out, with (none) when there is no middle name.",
     "group": "Workbook 2a · Section 1-1",
     "url": "week-02/exercises/full-name-parser.html",
-    "text": "← Week 2 index Workbook 2a · Section 1-1 · Exercise 2 Full Name Parser A program that reads a whole name on one line and splits it into first, middle and last name. What you are building A program that asks one question and reads a name in one of two shapes: first last, or first middle last. It prints three lines : first, middle and last name, with (none) when there is no middle name. It is Full Name Generator in reverse. It does not handle suffixes or names of four words. Do these in order 0 of 7 done Clear ticks What a finished run looks like run Please enter your name: Dana L. Wyatt First name: Dana Middle name: L. Last name: Wyatt Yours will differ. With a two-word name the middle line reads Middle name: (none). Where people get stuck Index out of bounds. Asking a two-word name for a third piece crashes. Check the count first. Empty first name. Splitting before trimming turns the leading spaces into an empty piece. Off by one. The first piece is at index 0, not 1. Two spaces between words also make an empty piece. Type the name with single spaces. Pages that help trim and split Keep the trimmed result What the red text means The one idea Trim, split, then count the pieces. The count tells you which shape of name you got, and so where each part sits."
+    "text": "← Week 2 index Workbook 2a · Section 1-1 · Exercise 2 Full Name Parser A program that reads a whole name on one line and cuts it into first, middle and last name. What you are building A program that asks one question and reads a name in one of two shapes: first last, or first middle last. It prints three lines : first, middle and last name, with (none) when there is no middle name. It is Full Name Generator in reverse. It does not handle suffixes or names of four words. Do these in order 0 of 7 done Clear ticks What a finished run looks like run Please enter your name: Dana L. Wyatt First name: Dana Middle name: L. Last name: Wyatt Yours will differ. With a two-word name the middle line reads Middle name: (none). Where people get stuck Index out of bounds. Asking a two-word name for a third piece crashes. Check the count first. Empty first name. Cutting before trimming makes the first piece empty, because the first space is at position 0. Off by one. The first piece is at index 0, not 1. Two spaces between words also make an empty piece. Type the name with single spaces. Pages that help trim, indexOf and substring Keep the trimmed result What the red text means The one idea Trim, find the first space, cut, then look for a second space. Whether that second space exists tells you if there is a middle name."
   },
   {
     "week": 2,
@@ -837,7 +817,7 @@
     "desc": "Name, date and ticket count in, one confirmation line out, with the date parsed and reformatted.",
     "group": "Workbook 2a · Section 1-2",
     "url": "week-02/exercises/theater-reservations.html",
-    "text": "← Week 2 index Workbook 2a · Section 1-2 · Exercise 4 Theater Reservations A program that takes a name, a date and a ticket count, then prints one confirmation line. What you are building A program that asks three questions : full name, the show date as MM/dd/yyyy, and how many tickets. It prints one line : the count, the date, and the name turned around as Last, First. It does not check seats or prices. The details that matter: ticket or tickets, and a date read in one format and printed in another. Do these in order 0 of 9 done Clear ticks What a finished run looks like run Please enter your name: Geri Johnson What date will you be coming (MM/dd/yyyy): 05/13/2023 How many tickets would you like? 3 3 tickets reserved for 2023-05-13 under Johnson, Geri Yours will differ. With 1 ticket the line reads 1 ticket reserved for ... Where people get stuck DateTimeParseException. Pattern letters are case sensitive: MM is month, mm is minutes. 1 tickets. The s must depend on the count. Date looks different. The output shows 2023-05-13: that is how a LocalDate prints by itself. Name backward twice. The first piece is the first name; print the last name first. Pages that help Text to LocalDate Text to int split What the red text means The one idea Read text, convert it, then build the sentence. The date becomes a LocalDate, the count picks ticket or tickets, the name is split and turned around."
+    "text": "← Week 2 index Workbook 2a · Section 1-2 · Exercise 4 Theater Reservations A program that takes a name, a date and a ticket count, then prints one confirmation line. What you are building A program that asks three questions : full name, the show date as MM/dd/yyyy, and how many tickets. It prints one line : the count, the date, and the name turned around as Last, First. It does not check seats or prices. The details that matter: ticket or tickets, and a date read in one format and printed in another. Do these in order 0 of 9 done Clear ticks What a finished run looks like run Please enter your name: Geri Johnson What date will you be coming (MM/dd/yyyy): 05/13/2023 How many tickets would you like? 3 3 tickets reserved for 2023-05-13 under Johnson, Geri Yours will differ. With 1 ticket the line reads 1 ticket reserved for ... Where people get stuck DateTimeParseException. Pattern letters are case sensitive: MM is month, mm is minutes. 1 tickets. The s must depend on the count. Date looks different. The output shows 2023-05-13: that is how a LocalDate prints by itself. Name backward twice. The first piece is the first name; print the last name first. Pages that help Text to LocalDate Text to int indexOf and substring What the red text means The one idea Read text, convert it, then build the sentence. The date becomes a LocalDate, the count picks ticket or tickets, the name is cut at the space and turned around."
   },
   {
     "week": 2,
@@ -907,7 +887,7 @@
     "desc": "An array of ten scores: average, high, low, and the median as a bonus.",
     "group": "Workbook 2a · Section 3-2",
     "url": "week-02/exercises/test-statistics.html",
-    "text": "← Week 2 index Workbook 2a · Section 3-2 · Exercise 3 Test Statistics Ten test scores in an array, and three numbers about them: the average, the high score and the low score. What you are building A program with an array of 10 test scores written into the code, that prints the average , the high score and the low score . Bonus: the median , the middle value once the scores are sorted. It asks the user nothing. You pick the ten scores. Work the answers out by hand first, so you know what the program must print. Do these in order 0 of 6 done Clear ticks What a finished run looks like run Average: 82.3 High score: 98 Low score: 61 Median: 85.0 Process finished with exit code 0 These come from the scores 88, 92, 75, 61, 98, 84, 79, 90, 70, 86. Your scores and wording will differ. Where people get stuck Average 82.0 instead of 82.3. Integer division: both sides were int, so the decimals were dropped. Low score is 0. It started at 0, and no score is lower. Start at the first score. ArrayIndexOutOfBoundsException. The last index of 10 scores is 9, not 10. The order changed. Arrays.sort sorts the array itself. Sort a copy. Pages that help Arrays and indexes for-each vs for Arrays in methods Sorting and copying What the red text means The one idea Work it out on paper first. A statistic you have already computed by hand is one you can check; when the program disagrees, the paper tells you which number to look at."
+    "text": "← Week 2 index Workbook 2a · Section 3-2 · Exercise 3 Test Statistics Ten test scores in an array, and three numbers about them: the average, the high score and the low score. What you are building A program with an array of 10 test scores written into the code, that prints the average , the high score and the low score . Bonus: the median , the middle value once the scores are sorted. It asks the user nothing. You pick the ten scores. Work the answers out by hand first, so you know what the program must print. Do these in order 0 of 6 done Clear ticks What a finished run looks like run Average: 82.3 High score: 98 Low score: 61 Median: 85.0 Process finished with exit code 0 These come from the scores 88, 92, 75, 61, 98, 84, 79, 90, 70, 86. Your scores and wording will differ. Where people get stuck Average 82.0 instead of 82.3. Integer division: both sides were int, so the decimals were dropped. Low score is 0. It started at 0, and no score is lower. Start at the first score. ArrayIndexOutOfBoundsException. The last index of 10 scores is 9, not 10. The order changed. Arrays.sort sorts the array itself. Sort a copy. Pages that help Arrays and indexes for-each vs for Sorting and copying What the red text means The one idea Work it out on paper first. A statistic you have already computed by hand is one you can check; when the program disagrees, the paper tells you which number to look at."
   },
   {
     "week": 2,

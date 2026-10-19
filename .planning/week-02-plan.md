@@ -36,3 +36,5 @@ full-name-generator, full-name-parser, highscore-wins, theater-reservations, add
 Candidates from spring: string-method-match, parse-challenge, loop-tracer, index-inspector, class-builder, constructor-picker, break-or-continue, debug-detective, bug-hunter-2, access-denied. Dropped: array-index-quiz, flashcard-quiz-2 (flat quizzes).
 
 ## Size balance: 19 visuals = Glance 1 · Walk 17 · Model 1.
+
+- 2026-10-17 (Ray): page 10 Two Names, One Object DROPPED (no demo example for aliasing). Pages 11 to 19 renumbered to 10 to 18. 18 visuals now. One example per page applied to 03, 04, 05, 07, 08, 09, 11 (was 12), 12 (was 13), 17 (was 18); 06 follows the main version of demo-03.

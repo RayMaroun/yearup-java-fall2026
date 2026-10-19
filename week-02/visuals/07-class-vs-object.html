@@ -131,11 +131,12 @@
   .ln.dim{opacity:.4}
   .kw{color:#c792ea} .ty{color:#82aaff} .st{color:#c3e88d} .nm{color:#f78c6c} .cm{color:#5f6b85;font-style:italic} .fn{color:#ffcb6b}
   .side{display:flex;flex-direction:column;gap:12px}
-  .readout{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+  .readout{display:grid;grid-template-columns:1fr 1fr 1fr;gap:10px}
   .stat{background:rgba(255,255,255,.03);border:1px solid var(--line);border-radius:12px;padding:11px 13px;transition:opacity .3s}
   .stat.empty{opacity:.3}
   .stat .k{font-family:var(--mono);font-size:.62rem;letter-spacing:.1em;text-transform:uppercase;color:var(--muted)}
   .stat .v{font-family:var(--disp);font-weight:700;font-size:1.45rem;font-variant-numeric:tabular-nums;margin-top:2px;transition:color .3s;min-height:1.6em}
+  .stat .v.long{font-family:var(--mono);font-weight:500;font-size:.9rem;line-height:2.2em}
   .v.hot{color:var(--accent)} .v.gold{color:var(--gold)} .v.dim{color:rgba(132,150,182,.5)}
   .console{font-family:var(--mono);font-size:.76rem;line-height:1.6;background:#05070e;border:1px solid var(--line);
     border-radius:12px;padding:10px 14px;min-height:64px;color:#9fe3b6;flex:1}
@@ -157,19 +158,18 @@
 <div class="wrap">
   <p class="tag">Workbook 2a &middot; Section 2-1 &middot; Classes and objects</p>
   <h1>Class vs Object</h1>
-  <p class="lede"><b>A class is one blueprint. Every <code>new</code> builds a separate object from it, with its own field values.</b></p>
+  <p class="lede"><b>A class is one blueprint. <code>new</code> builds an object from it, and the object holds its own field values.</b></p>
 
   <div class="stage">
     <div class="topbar">
-      <span class="lab">Class</span>
-      <div class="chips" id="chips"></div>
+      <span class="lab">One class, one object</span>
       <button class="focus" id="bFocus" title="Hide the code and notes, enlarge the picture">Focus</button>
     </div>
 
     <div class="pic" id="pic"></div>
 
     <div class="caption" id="caption">
-      <div class="n" id="stepno"><small>step</small>0 / 7</div>
+      <div class="n" id="stepno"><small>step</small>0 / 4</div>
       <div class="t" id="status">Press <b class="a">Next</b>. The picture changes at every step.</div>
     </div>
 
@@ -179,7 +179,7 @@
       <button class="btn primary" id="bNext">Next &rarr;</button>
       <button class="btn ghost" id="bReset">Reset</button>
     </div>
-    <p class="hint">space = next &middot; <b>try Dog</b>: same idea, another class</p>
+    <p class="hint">space = next &middot; <b>watch the object: it holds the values, the class holds none</b></p>
 
     <div class="support">
       <div>
@@ -188,8 +188,9 @@
       </div>
       <div class="side">
         <div class="readout">
-          <div class="stat empty"><div class="k">classes</div><div class="v dim" id="stCls"></div></div>
-          <div class="stat empty"><div class="k">objects</div><div class="v dim" id="stObj"></div></div>
+          <div class="stat empty"><div class="k" id="kA">classes</div><div class="v dim" id="stA"></div></div>
+          <div class="stat empty"><div class="k" id="kB">objects</div><div class="v dim" id="stB"></div></div>
+          <div class="stat empty"><div class="k" id="kC">instructor energy</div><div class="v dim" id="stC"></div></div>
         </div>
         <div class="console"><div class="cl">console</div><div id="console"></div></div>
       </div>
@@ -198,9 +199,9 @@
 
   <div class="take">
     <p class="tk">The one idea</p>
-    <p><b>The class is the blueprint, the objects are the houses built from it.</b> Every <code>new</code> builds a separate
-    object with the same fields and its own values. Change one object and the others stay as they were. A method runs on
-    the object you call it on, so it uses <b>that object's</b> values.</p>
+    <p><b>The class is the blueprint, the object is the house built from it.</b> <code>new</code> builds an object with the
+    class's fields and fills them with its own values. A method runs on the object you call it on, so it changes and reads
+    <b>that object's</b> values.</p>
   </div>
 
   <div id="rail"></div>
@@ -212,100 +213,56 @@
   var $=function(s){return document.querySelector(s);};
   var reduce=matchMedia("(prefers-reduced-motion: reduce)").matches;
 
-  /* ---------- the two examples: same line numbers, same seven steps ---------- */
-  var EX=[
+  /* ---------- the example ----------
+     each step: line = code lines (first is the call), cls = caption color, n = objects on the board,
+     v = field values per object, chg = [obj, field, old value],
+     act = object the call runs on, f = field it reads, m = class method lit, say = bubble, out = new console lines */
+  var ex=
     { cls:"Person", fields:[["String","name"],["int","age"],["int","energy"]],
       methods:["work(int hours)","greet()"],
-      objs:[{v:"raymond",vals:['"Raymond"',"55","100"]},{v:"brandon",vals:['"Brandon"',"35","100"]}],
-      change:{obj:1,field:2,to:"50",method:0}, read:0,
-      say:function(o){ return o.vals[0].replace(/"/g,"")+" is saying Hi to Everyone!"; },
+      names:["instructor"],
+      tiles:["classes","objects","instructor energy"],
       code:[
         "public class Person {",
         "    private String name;",
         "    private int age;",
         "    private int energy;",
-        "",
         "    public Person(String name, int age) {",
         "        this.name = name;",
         "        this.age = age;",
         "        this.energy = 100;",
         "    }",
         "    public void work(int hours) {",
-        "        this.energy -= hours * 10;",
+        "        this.energy -= (hours * 10);",
         "    }",
         "    public void greet() {",
         "        System.out.println(this.name + \" is saying Hi to Everyone!\");",
         "    }",
         "}",
         "// in Main.java, inside main",
-        "Person raymond = new Person(\"Raymond\", 55);",
-        "Person brandon = new Person(\"Brandon\", 35);",
-        "brandon.work(5);",
-        "raymond.greet();",
-        "brandon.greet();"
+        "String name = scanner.nextLine();",
+        "int age = scanner.nextInt();",
+        "Person instructor = new Person(name, age);",
+        "System.out.println(\"Energy level before work: \" + instructor.getEnergy());",
+        "instructor.work(5);",
+        "System.out.println(\"Energy level after work: \" + instructor.getEnergy());",
+        "instructor.greet();"
       ],
-      msg:[
-        "<code>Person</code> is a class: a blueprint. It lists the fields every person has, but holds <b class=\"a\">no values</b>.",
-        "<code>new</code> builds <b class=\"g\">object 1</b> from the blueprint, with its own values: Raymond, 55, energy 100.",
-        "<code>new</code> again builds <b class=\"g\">object 2</b>: same fields, its own values. The blueprint is not used up.",
-        "<b class=\"a\">One class, two objects.</b> The same three fields in each, different values. The class still holds none.",
-        "<code>brandon.work(5)</code> drops <b class=\"y\">Brandon's energy to 50</b>. Raymond's energy is still 100.",
-        "<code>raymond.greet()</code> runs the method on Raymond, so it reads <b class=\"a\">Raymond's own name</b>.",
-        "<code>brandon.greet()</code>: same method, other object, so it reads <b class=\"a\">Brandon's name</b>."
-      ]
-    },
-    { cls:"Dog", fields:[["String","breed"],["int","age"],["String","color"]],
-      methods:["setAge(int age)","getAge()"],
-      objs:[{v:"clifford",vals:['"Pitbull"',"3",'"Brown"']},{v:"rex",vals:['"Beagle"',"5",'"White"']}],
-      change:{obj:1,field:1,to:"6",method:0}, read:1,
-      say:function(o,i,ex){ return ex.cur[i][1]; },
-      code:[
-        "public class Dog {",
-        "    private String breed;",
-        "    private int age;",
-        "    private String color;",
-        "",
-        "    public Dog(String breed, int age, String color) {",
-        "        this.breed = breed;",
-        "        this.age = age;",
-        "        this.color = color;",
-        "    }",
-        "    public void setAge(int age) {",
-        "        this.age = age;",
-        "    }",
-        "    public int getAge() {",
-        "        return this.age;",
-        "    }",
-        "}",
-        "// in Main.java, inside main",
-        "Dog clifford = new Dog(\"Pitbull\", 3, \"Brown\");",
-        "Dog rex = new Dog(\"Beagle\", 5, \"White\");",
-        "rex.setAge(6);",
-        "System.out.println(clifford.getAge());",
-        "System.out.println(rex.getAge());"
+      steps:[
+        {line:[1,2,3,4],cls:"",n:0,
+         msg:"<code>Person</code> is a class: a blueprint. It lists the fields every person has, but holds <b class=\"a\">no values</b>."},
+        {line:[20,18,19,5,6,7,8],cls:"ok",n:1,stamp:1,v:[['"Raymond"',"35","100"]],
+         msg:"<code>new Person(name, age)</code> builds <b class=\"g\">one object</b>, instructor, from the typed-in values, Raymond and 35. Energy starts at 100."},
+        {line:[22,21,23,10,11],cls:"left",n:1,v:[['"Raymond"',"35","50"]],chg:[0,2,"100"],act:0,m:0,
+         out:["Energy level before work: 100","Energy level after work: 50"],
+         msg:"<code>instructor.work(5)</code> takes 5 × 10 off this object's energy: <b class=\"y\">100 → 50</b>."},
+        {line:[24,13,14],cls:"",n:1,v:[['"Raymond"',"35","50"]],act:0,f:0,m:1,
+         say:[0,"prints","Raymond is saying Hi to Everyone!"],out:["Raymond is saying Hi to Everyone!"],
+         msg:"<code>instructor.greet()</code> runs on the instructor, so it prints <b class=\"a\">its own name</b>: Raymond."}
       ],
-      msg:[
-        "<code>Dog</code> is a class: a blueprint. It lists the fields every dog has, but holds <b class=\"a\">no values</b>.",
-        "<code>new</code> builds <b class=\"g\">object 1</b> from the blueprint, with its own values: Pitbull, 3, Brown.",
-        "<code>new</code> again builds <b class=\"g\">object 2</b>: same fields, its own values: Beagle, 5, White.",
-        "<b class=\"a\">One class, two objects.</b> The same three fields in each, different values. The class still holds none.",
-        "<code>rex.setAge(6)</code> changes <b class=\"y\">Rex's age to 6</b>. Clifford's age is still 3.",
-        "<code>clifford.getAge()</code> runs on Clifford, so it returns <b class=\"a\">Clifford's own age: 3</b>.",
-        "<code>rex.getAge()</code>: same method, other object, so it returns <b class=\"a\">Rex's age: 6</b>."
-      ]
-    }
-  ];
-  /* per step: code lines, caption color. Line numbers are the same for both examples. */
-  var STEPS=[
-    {line:[1,2,3,4],cls:""},
-    {line:[19,6,7,8,9],cls:"ok"},
-    {line:[20,6,7,8,9],cls:"ok"},
-    {line:[2,3,4],cls:""},
-    {line:[21,12],cls:"left"},
-    {line:[22,15],cls:""},
-    {line:[23,15],cls:""}
-  ];
-  var ex=EX[0],at=-1;
+      tile:function(s){ return [s.v?String(s.n):null, s.v?s.v[0][2]:null]; }
+    };
+  var at=-1;
   var codeEl=$("#code"),picEl=$("#pic"),consEl=$("#console"),statusEl=$("#status");
 
   /* ---------- code listing ---------- */
@@ -313,7 +270,7 @@
     if(/^\s*\/\//.test(t)) return '<span class="cm">'+t+'</span>';
     return t.split(/("[^"]*")/).map(function(p){
       if(p.charAt(0)==='"') return '<span class="st">'+p+'</span>';
-      return p.replace(/\b(public|class|private|void|return|new|this)\b|\b(int|String|Person|Dog|System)\b|\b(\d+)\b/g,function(m,k,ty,n){
+      return p.replace(/\b(public|class|private|void|return|new|this)\b|\b(int|String|Person|System)\b|\b(\d+)\b/g,function(m,k,ty,n){
         return k?'<span class="kw">'+k+'</span>':ty?'<span class="ty">'+ty+'</span>':'<span class="nm">'+n+'</span>';
       });
     }).join("");
@@ -330,87 +287,80 @@
   /* ---------- the picture: built once per example, then classes toggle ---------- */
   function fmt(v){ return '<span class="val'+(v.charAt(0)==='"'?' s':'')+'">'+v+'</span>'; }
   function buildPic(){
-    var h='<div class="board">';
-    h+='<div class="card cls" id="cCls"><p class="hd">class \u00b7 blueprint</p><p class="who">'+ex.cls+'</p>';
+    var one=ex.names.length===1;
+    var h='<div class="board"'+(one?' style="grid-template-columns:minmax(0,1fr) 54px minmax(0,1fr)"':'')+'>';
+    h+='<div class="card cls" id="cCls"><p class="hd">class · blueprint</p><p class="who">'+ex.cls+'</p>';
     ex.fields.forEach(function(f,j){ h+='<div class="row" id="cf'+j+'"><span class="f"><i>'+f[0]+'</i> '+f[1]+'</span><span class="slot"></span></div>'; });
     h+='<div class="mt">';
     ex.methods.forEach(function(m,j){ h+='<div class="row" id="cm'+j+'"><span class="f">'+m+'</span></div>'; });
     h+='</div></div>';
-    h+='<div class="stamp" id="stamp"><b>\u2192</b>new</div>';
-    ex.objs.forEach(function(o,k){
-      h+='<div class="card obj" id="o'+k+'"><p class="hd">object '+(k+1)+' \u00b7 '+ex.cls+'</p><p class="who">'+o.v+'</p>';
+    h+='<div class="stamp" id="stamp"><b>→</b>new</div>';
+    ex.names.forEach(function(nm,k){
+      h+='<div class="card obj" id="o'+k+'"><p class="hd">object '+(k+1)+' · '+ex.cls+'</p><p class="who">'+nm+'</p>';
       ex.fields.forEach(function(f,j){ h+='<div class="row" id="o'+k+'f'+j+'"><span class="f">'+f[1]+'</span><span class="vv"></span></div>'; });
       h+='<div class="say" id="say'+k+'"></div></div>';
     });
-    h+='</div><div class="start" id="start">'+ex.cls+' \u00b7 press\u00a0<b>Next</b></div>';
+    h+='</div><div class="start" id="start">'+ex.cls+' · press <b>Next</b></div>';
     picEl.innerHTML=h;
   }
-  /* current field values of each object after step i (the change lands at step 4) */
-  function values(i){
-    ex.cur=ex.objs.map(function(o,k){
-      var v=o.vals.slice();
-      if(i>=4&&k===ex.change.obj) v[ex.change.field]=ex.change.to;
-      return v;
-    });
-    return ex.cur;
-  }
   function renderPic(i){
-    var cur=values(i),ch=ex.change,j,k;
+    var s=i>=0?ex.steps[i]:{n:0},j,k;
     $("#start").style.opacity=i<0?1:0;
     $("#cCls").className="card cls"+(i>=0?" show":"");
-    for(j=0;j<ex.fields.length;j++) $("#cf"+j).className="row"+(i===3?" lit":"");
-    for(j=0;j<ex.methods.length;j++){
-      var m=(i===4&&j===ch.method)||(i>=5&&j===1);
-      $("#cm"+j).className="row"+(m?" lit":"");
-    }
-    var st=$("#stamp"); st.className="stamp"+(i>=1?" show":"")+((i===1||i===2)?" on":"");
-    for(k=0;k<ex.objs.length;k++){
-      var card=$("#o"+k), callee=(i===5&&k===0)||(i===6&&k===1);
-      var c="card obj"+(i>=1+k?" show":"");
-      if(callee) c+=" act"; else if(i>=5&&i>=1+k) c+=" calm";
-      card.className=c;
+    for(j=0;j<ex.fields.length;j++) $("#cf"+j).className="row";
+    for(j=0;j<ex.methods.length;j++) $("#cm"+j).className="row"+(s.m===j?" lit":"");
+    $("#stamp").className="stamp"+(s.n>=1?" show":"")+(s.stamp?" on":"");
+    for(k=0;k<ex.names.length;k++){
+      var shown=k<s.n,callee=s.act===k;
+      var c="card obj"+(shown?" show":"");
+      if(callee) c+=" act"; else if(shown&&s.act!=null) c+=" calm";
+      $("#o"+k).className=c;
       for(j=0;j<ex.fields.length;j++){
-        var row=$("#o"+k+"f"+j),rc="row",vv=fmt(cur[k][j]);
-        if(i===3) rc+=" lit";
-        if(i===4&&j===ch.field){
-          if(k===ch.obj){ rc+=" chg"; vv='<span class="val"><s>'+ex.objs[k].vals[j]+'</s>'+cur[k][j]+'</span>'; }
-          else { rc+=" same"; vv='<span class="tg">unchanged</span>'+fmt(cur[k][j]); }
+        var row=$("#o"+k+"f"+j),rc="row",vv="";
+        if(shown){
+          vv=fmt(s.v[k][j]);
+          if(s.chg&&s.chg[0]===k&&s.chg[1]===j){ rc+=" chg"; vv='<span class="val"><s>'+s.chg[2]+'</s>'+s.v[k][j]+'</span>'; }
+          else if(s.same&&s.same[0]===k&&s.same[1]===j){ rc+=" same"; vv='<span class="tg">unchanged</span>'+fmt(s.v[k][j]); }
+          if(callee&&s.f===j) rc+=" lit";
         }
-        if(callee&&j===ex.read) rc+=" lit";
         row.className=rc; row.querySelector(".vv").innerHTML=vv;
       }
-      var say=$("#say"+k), said=i>=5+k;
-      if(said) say.innerHTML='<small>'+(ex.cls==="Person"?"prints":"returns")+'</small>'+ex.say(ex.objs[k],k,ex);
+      var say=$("#say"+k),said=s.say&&s.say[0]===k;
+      if(said) say.innerHTML='<small>'+s.say[1]+'</small>'+s.say[2];
       say.className="say"+(said?" show":"");
     }
   }
   function outputs(i){
-    var o=[]; for(var k=0;k<ex.objs.length;k++) if(i>=5+k) o.push(ex.say(ex.objs[k],k,ex)); return o;
+    var o=[]; for(var k=0;k<=i;k++) if(ex.steps[k].out) o=o.concat(ex.steps[k].out); return o;
   }
 
   function show(i){
     at=i;
+    var N=ex.steps.length;
     renderPic(i);
     var out=outputs(i);
     consEl.innerHTML=out.map(function(o){return '<div class="out">'+o+'</div>';}).join("")||'<span style="color:rgba(132,150,182,.5)">(nothing printed yet)</span>';
-    setStat("#stCls",i>=0?"1":null,"hot");
-    setStat("#stObj",i>=1?String(Math.min(i,2)):null,"gold");
+    var t=i>=0?ex.tile(ex.steps[i]):[null,null];
+    setStat("#stA",i>=0?"1":null,"hot");
+    setStat("#stB",t[0],"gold");
+    setStat("#stC",t[1],"hot");
     if(i<0){
       renderCode(null); $("#caption").className="caption";
       statusEl.innerHTML='Press <b class="a">Next</b>. The picture changes at every step.';
-      $("#stepno").innerHTML="<small>step</small>0 / "+STEPS.length;
+      $("#stepno").innerHTML="<small>step</small>0 / "+N;
     } else {
-      renderCode(STEPS[i].line,STEPS[i].cls);
-      $("#caption").className="caption "+STEPS[i].cls; statusEl.innerHTML=ex.msg[i];
-      $("#stepno").innerHTML="<small>step</small>"+(i+1)+" / "+STEPS.length;
+      var s=ex.steps[i];
+      renderCode(s.line,s.cls);
+      $("#caption").className="caption "+s.cls; statusEl.innerHTML=s.msg;
+      $("#stepno").innerHTML="<small>step</small>"+(i+1)+" / "+N;
     }
     setBtns();
   }
   function setStat(id,v,c){ var e=$(id),box=e.parentNode;
     if(v===null){e.textContent="";e.className="v dim";box.classList.add("empty");}
-    else{e.textContent=v;e.className="v "+(c||"");box.classList.remove("empty");} }
-  function setBtns(){ $("#bNext").disabled=at>=STEPS.length-1; $("#bBack").disabled=at<0;
-    var d=""; for(var k=0;k<STEPS.length;k++) d+='<i class="'+(k===at?"now":k<at?"done":"")+'"></i>'; $("#dots").innerHTML=d; }
+    else{e.textContent=v;e.className="v "+(c||"")+(v.length>6?" long":"");box.classList.remove("empty");} }
+  function setBtns(){ var N=ex.steps.length; $("#bNext").disabled=at>=N-1; $("#bBack").disabled=at<0;
+    var d=""; for(var k=0;k<N;k++) d+='<i class="'+(k===at?"now":k<at?"done":"")+'"></i>'; $("#dots").innerHTML=d; }
 
   /* focus: picture and caption only. Remembered per browser. */
   function setFocus(on){ document.body.classList.toggle("solo",on); $("#bFocus").textContent=on?"Focus on":"Focus";
@@ -419,17 +369,13 @@
   try{ if(localStorage.getItem("hub-focus")==="1") document.body.classList.add("solo"); }catch(e){}
   if(document.body.classList.contains("solo")) $("#bFocus").textContent="Focus on";
 
-  function next(){ if(at<STEPS.length-1) show(at+1); }
+  function next(){ if(at<ex.steps.length-1) show(at+1); }
   function back(){ if(at>=0) show(at-1); }
-  function reset(){ buildPic(); show(-1); }
-  function pick(idx){
-    ex=EX[idx];
-    Array.prototype.forEach.call(document.querySelectorAll(".chip"),function(c,j){c.classList.toggle("on",j===idx);});
-    if(document.activeElement&&document.activeElement.blur) document.activeElement.blur();
-    reset();
+  function reset(){
+    buildPic();
+    ["#kA","#kB","#kC"].forEach(function(id,j){ $(id).textContent=ex.tiles[j]; });
+    show(-1);
   }
-  $("#chips").innerHTML=EX.map(function(e,j){return '<button class="chip'+(j===0?' on':'')+'" data-i="'+j+'">'+e.cls+'</button>';}).join("");
-  $("#chips").addEventListener("click",function(e){ var b=e.target.closest(".chip"); if(b) pick(+b.getAttribute("data-i")); });
   $("#bNext").addEventListener("click",next);
   $("#bBack").addEventListener("click",back);
   $("#bReset").addEventListener("click",reset);

@@ -1,0 +1,502 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Comparing Strings | Week 2 Visual Hub</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Sora:wght@500;700&family=Inter:wght@400;500&family=JetBrains+Mono:wght@400;500&display=swap">
+<style>
+  :root{
+    --bg:#080c17; --bg2:#0c1428; --surface:rgba(255,255,255,.045); --line:rgba(255,255,255,.09);
+    --ink:#eef2fb; --muted:#8496b6; --accent:#6ea0ff; --accent2:#8b7bff; --good:#46d98a; --warn:#ff6a6a;
+    --gold:#ffc862; --disp:'Sora',system-ui,sans-serif; --body:'Inter',system-ui,sans-serif;
+    --mono:'JetBrains Mono',ui-monospace,monospace;
+  }
+  *{box-sizing:border-box}
+  body{margin:0;min-height:100vh;color:var(--ink);font-family:var(--body);
+    background:radial-gradient(1200px 700px at 70% -10%,#141d38 0%,transparent 55%),
+               radial-gradient(900px 600px at 10% 110%,#161233 0%,transparent 50%),#080c17;
+    overflow-x:hidden}
+  #amb{position:fixed;inset:0;z-index:0;pointer-events:none;opacity:.6}
+  .back{position:relative;z-index:2;display:block;max-width:1120px;margin:0 auto;padding:26px 24px 0;
+    width:100%;font-family:var(--mono);font-size:.8rem;letter-spacing:.04em;color:var(--muted);
+    text-decoration:none;transition:color .15s}
+  .back:hover{color:var(--accent)}
+  .wrap{position:relative;z-index:1;max-width:1120px;margin:0 auto;padding:22px 24px 70px}
+  .tag{font-family:var(--mono);font-size:.72rem;letter-spacing:.22em;text-transform:uppercase;color:var(--accent);margin:0 0 14px}
+  h1{font-family:var(--disp);font-weight:700;font-size:clamp(2.3rem,6vw,3.6rem);line-height:1;margin:0 0 12px;
+    letter-spacing:-.03em;background:linear-gradient(180deg,#fff,#b9c6e6);-webkit-background-clip:text;
+    background-clip:text;color:transparent}
+  .lede{color:var(--muted);max-width:64ch;font-size:1.05rem;margin:0 0 26px;line-height:1.5}
+  .lede b{color:var(--ink)}
+  .lede code,.take code,.caption code{font-family:var(--mono);font-size:.92em;color:#bcd0ff}
+
+  /* ---------- stage: picture first, one toolbar, support below ---------- */
+  .stage{position:relative;background:linear-gradient(180deg,rgba(255,255,255,.03),rgba(255,255,255,.01));
+    border:1px solid var(--line);border-radius:24px;padding:18px 18px 14px;
+    box-shadow:0 1px 0 rgba(255,255,255,.06) inset,0 30px 80px -30px rgba(0,0,0,.8)}
+  .topbar{display:flex;align-items:center;gap:10px;margin:0 0 14px;flex-wrap:wrap}
+  .topbar .lab{margin:0 4px 0 0}
+  .lab{font-family:var(--mono);font-size:.7rem;letter-spacing:.12em;text-transform:uppercase;color:var(--muted);margin:0 0 10px}
+  .chips{display:flex;flex-wrap:wrap;gap:6px}
+  .chip{font-family:var(--mono);font-size:.74rem;padding:5px 11px;border-radius:999px;cursor:pointer;
+    border:1px solid var(--line);background:rgba(0,0,0,.25);color:var(--muted);transition:.15s}
+  .chip:hover{border-color:var(--accent);color:var(--accent)}
+  .chip.on{border-color:rgba(110,160,255,.6);background:rgba(110,160,255,.14);color:var(--ink)}
+  .chip:focus-visible,.btn:focus-visible,.focus:focus-visible{outline:2px solid var(--accent);outline-offset:2px}
+  .focus{margin-left:auto;font-family:var(--mono);font-size:.68rem;letter-spacing:.1em;text-transform:uppercase;padding:6px 12px;
+    border-radius:999px;border:1px solid var(--line);background:rgba(0,0,0,.25);color:var(--muted);cursor:pointer;transition:.15s}
+  .focus:hover{border-color:var(--accent);color:var(--accent)}
+  body.solo .focus{border-color:rgba(255,200,98,.6);color:var(--gold);background:rgba(255,200,98,.1)}
+
+  /* hero picture: variables on the left, String objects on the right */
+  .pic{position:relative;height:390px;border:1px solid var(--line);border-radius:18px;background:rgba(6,10,20,.5);overflow:hidden}
+  body.solo .pic{height:480px}
+  .pic .zone{position:absolute;font-family:var(--mono);font-size:.62rem;letter-spacing:.14em;text-transform:uppercase;
+    color:rgba(132,150,182,.55);opacity:0;transition:opacity .3s}
+  .pic .zone.show{opacity:1}
+  .var{position:absolute;width:104px;height:50px;border-radius:12px;border:1px solid rgba(110,160,255,.5);background:rgba(110,160,255,.08);
+    display:flex;align-items:center;justify-content:space-between;padding:0 12px;opacity:0;transition:opacity .4s,border-color .3s,background .3s}
+  .var.show{opacity:1}
+  .var.dim{opacity:.3}
+  .var .vn{font-family:var(--mono);font-size:1.05rem;color:var(--ink)}
+  .var .rf{font-family:var(--mono);font-size:.66rem;color:var(--muted);padding:2px 6px;border-radius:999px;border:1px solid var(--line);transition:.3s}
+  .var.hot{border-color:rgba(255,106,106,.75);background:rgba(255,106,106,.1)}
+  .var.hot .rf{color:var(--warn);border-color:rgba(255,106,106,.6);background:rgba(255,106,106,.12)}
+  .obj{position:absolute;border-radius:14px;border:1px solid rgba(255,255,255,.14);background:rgba(255,255,255,.02);opacity:0;
+    transition:opacity .4s,border-color .3s,box-shadow .3s}
+  .obj.show{opacity:1}
+  .obj.dim{opacity:.3}
+  .obj.new{border-color:rgba(110,160,255,.7);box-shadow:0 0 22px -8px rgba(110,160,255,.8)}
+  .obj.hot{border-color:rgba(255,106,106,.7)}
+  .obj .ol{position:absolute;right:12px;top:50%;transform:translateY(-50%);font-family:var(--mono);font-size:.62rem;letter-spacing:.1em;
+    text-transform:uppercase;color:var(--muted);text-align:right;line-height:1.5;white-space:nowrap}
+  .obj .ol b{display:block;font-weight:500;color:var(--ink);font-size:.7rem}
+  .obj.hot .ol b{color:var(--warn)}
+  .col{position:absolute;border-radius:14px;border:1px solid transparent;transition:all .35s}
+  .col.match{border-color:rgba(70,217,138,.55);background:rgba(70,217,138,.08)}
+  .col.miss{border-color:rgba(255,106,106,.75);background:rgba(255,106,106,.12);box-shadow:0 0 18px -6px rgba(255,106,106,.7)}
+  .col.skip{border-color:rgba(255,255,255,.07);border-style:dashed}
+  .tile{position:absolute;width:58px;height:58px;border-radius:11px;border:1px solid rgba(110,160,255,.4);background:rgba(110,160,255,.08);
+    display:flex;align-items:center;justify-content:center;opacity:0;transition:opacity .35s,border-color .3s,background .3s}
+  .tile.in{opacity:1}
+  .tile .ch{font-family:var(--mono);font-size:1.55rem;color:var(--ink);line-height:1}
+  .tile.folded{border-color:var(--gold);background:rgba(255,200,98,.14)}
+  .tile.folded .ch{color:#ffe6b0}
+  .tile.faded{opacity:.3}
+  svg.arrows{position:absolute;inset:0;width:100%;height:100%;pointer-events:none;overflow:visible}
+  .arr{fill:none;stroke:rgba(110,160,255,.6);stroke-width:2;opacity:0;transition:opacity .4s,stroke .3s}
+  .head{fill:rgba(110,160,255,.8);opacity:0;transition:opacity .4s,fill .3s}
+  .arr.show,.head.show{opacity:1}
+  .arr.dim,.head.dim{opacity:.25}
+  .arr.hot{stroke:var(--warn);stroke-width:2.5} .head.hot{fill:var(--warn)}
+  .arr.lit{stroke:var(--accent);stroke-width:2.5} .head.lit{fill:var(--accent)}
+  .cmp{position:absolute;font-family:var(--mono);font-size:.72rem;line-height:1.5;color:var(--warn);padding:6px 11px;border-radius:12px;
+    border:1px solid rgba(255,106,106,.6);background:rgba(255,106,106,.1);opacity:0;transition:opacity .4s;white-space:nowrap}
+  .cmp.show{opacity:1}
+  .answer{position:absolute;right:18px;bottom:14px;font-family:var(--disp);font-weight:700;font-size:1.7rem;color:var(--ink);
+    font-variant-numeric:tabular-nums;opacity:0;transition:opacity .4s;text-align:right;line-height:1.1}
+  .answer.show{opacity:1}
+  .answer small{display:block;font-family:var(--mono);font-weight:400;font-size:.6rem;letter-spacing:.06em;color:var(--muted);margin-bottom:2px}
+  .answer .g{color:var(--good)} .answer .w{color:var(--warn)}
+  .pic .start{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;font-family:var(--mono);
+    font-size:.8rem;color:var(--muted);pointer-events:none;transition:opacity .3s}
+  .pic .start b{color:var(--accent);font-weight:500}
+
+  /* caption: the one sentence, right under the picture */
+  .caption{display:flex;gap:16px;align-items:flex-start;margin:14px 4px 0;min-height:56px}
+  .caption .n{flex-shrink:0;font-family:var(--disp);font-weight:700;font-size:1.35rem;color:var(--accent);font-variant-numeric:tabular-nums;
+    line-height:1.2;min-width:3.2rem}
+  .caption .n small{display:block;font-family:var(--mono);font-weight:400;font-size:.58rem;letter-spacing:.14em;text-transform:uppercase;color:var(--muted)}
+  .caption .t{font-size:1.02rem;line-height:1.55;color:var(--ink);padding-left:16px;border-left:3px solid var(--accent);transition:border-color .3s}
+  body.solo .caption .t{font-size:1.18rem}
+  .caption.cut .t{border-left-color:var(--warn)} .caption.left .t{border-left-color:var(--gold)} .caption.ok .t{border-left-color:var(--good)}
+  .caption b.g{color:var(--good)} .caption b.w{color:var(--warn)} .caption b.a{color:var(--accent)} .caption b.y{color:var(--gold)}
+
+  /* toolbar: same on every page */
+  .toolbar{display:flex;align-items:center;gap:10px;margin:16px 0 0;padding-top:14px;border-top:1px solid var(--line)}
+  .btn{font-family:var(--body);font-weight:500;font-size:.86rem;padding:9px 16px;border-radius:11px;cursor:pointer;
+    border:1px solid var(--line);background:var(--surface);color:var(--ink);transition:.15s}
+  .btn:hover{border-color:var(--accent);color:var(--accent)}
+  .btn.primary{border-color:rgba(110,160,255,.5);background:rgba(110,160,255,.12);padding:9px 22px}
+  .btn:disabled{opacity:.35;cursor:not-allowed}
+  .btn.ghost{background:transparent;color:var(--muted);margin-left:auto}
+  .dots{display:flex;gap:5px;align-items:center;margin:0 6px}
+  .dots i{display:block;width:8px;height:8px;border-radius:50%;background:rgba(255,255,255,.12);transition:.2s}
+  .dots i.done{background:rgba(110,160,255,.45)}
+  .dots i.now{background:var(--accent);transform:scale(1.35);box-shadow:0 0 10px rgba(110,160,255,.7)}
+  .hint{font-family:var(--mono);font-size:.68rem;color:var(--muted);margin:10px 4px 0;line-height:1.5}
+  .hint b{color:var(--accent)}
+
+  /* support: code, console, readouts. Below the picture, hidden in focus */
+  .support{display:grid;grid-template-columns:minmax(0,1.3fr) minmax(0,1fr);gap:14px;margin-top:18px}
+  @media (max-width:860px){.support{grid-template-columns:1fr}}
+  body.solo .support,body.solo .take,body.solo .hint{display:none}
+  .code{min-width:0;font-family:var(--mono);font-size:.76rem;line-height:1.8;background:rgba(0,0,0,.35);border:1px solid var(--line);
+    border-radius:14px;padding:12px 0;overflow-x:auto}
+  .ln{display:flex;gap:12px;padding:0 14px;white-space:pre;color:#c9d4ea;transition:background .2s,opacity .3s}
+  .ln .n{width:20px;text-align:right;color:rgba(132,150,182,.55);user-select:none;flex-shrink:0}
+  .ln.cur{background:rgba(110,160,255,.14);box-shadow:inset 3px 0 0 var(--accent)}
+  .ln.cur .n{color:var(--accent)}
+  .ln.cut{background:rgba(255,106,106,.12);box-shadow:inset 3px 0 0 var(--warn)}
+  .ln.ok{background:rgba(70,217,138,.12);box-shadow:inset 3px 0 0 var(--good)}
+  .kw{color:#c792ea} .ty{color:#82aaff} .st{color:#c3e88d} .nm{color:#f78c6c} .cm{color:#5f6b85;font-style:italic} .fn{color:#ffcb6b}
+  .side{display:flex;flex-direction:column;gap:12px}
+  .readout{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+  .readout .wide{grid-column:1 / -1}
+  .stat{background:rgba(255,255,255,.03);border:1px solid var(--line);border-radius:12px;padding:11px 13px;transition:opacity .3s}
+  .stat.empty{opacity:.3}
+  .stat .k{font-family:var(--mono);font-size:.62rem;letter-spacing:.1em;text-transform:uppercase;color:var(--muted)}
+  .stat .k.code{text-transform:none;letter-spacing:.02em;font-size:.68rem}
+  .stat .v{font-family:var(--disp);font-weight:700;font-size:1.45rem;font-variant-numeric:tabular-nums;margin-top:2px;transition:color .3s;min-height:1.6em}
+  .v.good{color:var(--good)} .v.warn{color:var(--warn)} .v.dim{color:rgba(132,150,182,.5)}
+  .console{font-family:var(--mono);font-size:.76rem;line-height:1.6;background:#05070e;border:1px solid var(--line);
+    border-radius:12px;padding:10px 14px;min-height:64px;color:#9fe3b6;flex:1}
+  .console .cl{font-size:.6rem;letter-spacing:.14em;text-transform:uppercase;color:rgba(132,150,182,.6);margin-bottom:4px}
+  .console .out{animation:pop .3s}
+  @keyframes pop{from{transform:scale(.6);opacity:0}to{transform:scale(1);opacity:1}}
+  .take{margin-top:22px;background:linear-gradient(180deg,rgba(110,160,255,.08),rgba(139,123,255,.04));
+    border:1px solid var(--line);border-left:3px solid var(--accent);border-radius:12px;padding:16px 18px}
+  .take .tk{font-family:var(--mono);font-size:.66rem;letter-spacing:.14em;text-transform:uppercase;color:var(--accent);margin:0 0 8px}
+  .take p{margin:0;font-size:.95rem;color:var(--ink);line-height:1.55}
+  .take b{color:#fff}
+  @media (prefers-reduced-motion:reduce){*{animation-duration:.01ms!important;transition-duration:.01ms!important}#amb{display:none}}
+</style>
+</head>
+<body>
+
+<a class="back" href="../index.html#01-comparing-strings">&#8592; Week 2 index</a>
+
+<canvas id="amb"></canvas>
+<div class="wrap">
+  <p class="tag">Workbook 2a &middot; Section 1-1 &middot; Comparing Strings</p>
+  <h1>Comparing Strings</h1>
+  <p class="lede"><b><code>==</code> asks whether two variables point at the same object. <code>equals</code> asks whether the text is the same.</b></p>
+
+  <div class="stage">
+    <div class="topbar">
+      <span class="lab">s3 =</span>
+      <div class="chips" id="chips"></div>
+      <button class="focus" id="bFocus" title="Hide the code and notes, enlarge the picture">Focus</button>
+    </div>
+
+    <div class="pic" id="pic"></div>
+
+    <div class="caption" id="caption">
+      <div class="n" id="stepno"><small>step</small>0 / 7</div>
+      <div class="t" id="status">Press <b class="a">Next</b>. The picture changes at every step.</div>
+    </div>
+
+    <div class="toolbar">
+      <button class="btn" id="bBack">&larr; Back</button>
+      <div class="dots" id="dots"></div>
+      <button class="btn primary" id="bNext">Next &rarr;</button>
+      <button class="btn ghost" id="bReset">Reset</button>
+    </div>
+    <p class="hint">space = next &middot; <b>change s3 and watch steps 6 and 7</b></p>
+
+    <div class="support">
+      <div>
+        <p class="lab">Main.java</p>
+        <div class="code" id="code"></div>
+      </div>
+      <div class="side">
+        <div class="readout">
+          <div class="stat empty"><div class="k code">s1 == s2</div><div class="v dim" id="stSame"></div></div>
+          <div class="stat empty"><div class="k code">s1.equals(s2)</div><div class="v dim" id="stEq"></div></div>
+          <div class="stat empty wide"><div class="k code">s1.equalsIgnoreCase(s3)</div><div class="v dim" id="stIc"></div></div>
+        </div>
+        <div class="console"><div class="cl">console</div><div id="console"></div></div>
+      </div>
+    </div>
+  </div>
+
+  <div class="take">
+    <p class="tk">The one idea</p>
+    <p><b><code>==</code> asks "same object?"</b> It compares the arrows, so two Strings with the same letters can still give false.
+    <b><code>equals</code> asks "same text?"</b>: same characters, same order. <b><code>equalsIgnoreCase</code> asks "same text, ignoring capitals?"</b>
+    To compare text, always use <code>equals</code> or <code>equalsIgnoreCase</code>.</p>
+  </div>
+
+  <div id="rail"></div>
+</div>
+
+<script>
+(function(){
+  "use strict";
+  var $=function(s){return document.querySelector(s);};
+  var reduce=matchMedia("(prefers-reduced-motion: reduce)").matches;
+
+  /* ---------- presets: the text of s3 ---------- */
+  var PRESETS=["abc","ABC","ABD"];
+  var S1="ABC", S2="ABC", S3=PRESETS[0];
+
+  /* ---------- what Java computes ---------- */
+  function firstMismatch(x,y){
+    var n=Math.min(x.length,y.length);
+    for(var i=0;i<n;i++) if(x.charAt(i)!==y.charAt(i)) return i;
+    return x.length===y.length?-1:n;
+  }
+  function facts(){
+    var mis=firstMismatch(S1,S3), misF=firstMismatch(S1.toLowerCase(),S3.toLowerCase());
+    /* a literal with the same text as s1 is the same object: Java reuses String literals */
+    return {shared:S3===S1, mis:mis, misF:misF, eq:mis<0, ic:misF<0,
+      caseOnly:mis>=0&&misF<0};
+  }
+
+  function q(s){return '<span class="st">"'+s+'"</span>';}
+  function pl(s){return 'System.out.<span class="fn">println</span>('+s+');';}
+  function lines(){
+    var F=facts();
+    var eqC=F.eq?"true: same characters":F.caseOnly?"false: capitals count":"false: different letters";
+    var icC=F.ic?(F.eq?"true: same characters":"true: capitals do not matter"):"false: different letters, even ignoring capitals";
+    return [
+      '<span class="ty">String</span> s1 = '+q("ABC")+';',
+      '<span class="ty">String</span> prefix = '+q("A")+';',
+      '<span class="ty">String</span> s2 = prefix + '+q("BC")+';  <span class="cm">// built at run time, a new String object</span>',
+      '<span class="kw">if</span> (s1 == s2) {  <span class="cm">// ==: same object in memory, not same text</span>',
+      '    '+pl(q("Both strings are the same!")),
+      '} <span class="kw">else</span> {',
+      '    '+pl(q("Both strings are not the same!")),
+      '}',
+      '<span class="kw">if</span> (s1.<span class="fn">equals</span>(s2)) {  <span class="cm">// equals: same characters, same order</span>',
+      '    '+pl(q("Both strings are the same!")),
+      '} <span class="kw">else</span> {',
+      '    '+pl(q("Both strings are not the same!")),
+      '}',
+      '<span class="ty">String</span> s3 = '+q(S3)+';',
+      pl('s1.<span class="fn">equals</span>(s3)')+'  <span class="cm">// '+eqC+'</span>',
+      pl('s1.<span class="fn">equalsIgnoreCase</span>(s3)')+'  <span class="cm">// '+icC+'</span>'
+    ];
+  }
+
+  function c(s){return '<code>'+s+'</code>';}
+  function build(){
+    var F=facts(), S=[], m=F.mis, mf=F.misF;
+    S.push({line:[1],cls:"",
+      msg:c("s1")+' holds an <b class="a">arrow</b> to a String object with the letters A, B, C.'});
+    S.push({line:[2,3],cls:"",
+      msg:c('prefix + "BC"')+' is built while the program runs, so '+c("s2")+' gets a <b class="a">new object</b> with the same letters.'});
+    S.push({line:[4,7],cls:"cut",out:"Both strings are not the same!",same:false,
+      msg:c("==")+' compares the <b class="a">arrows</b>, not the letters: they point at different objects, so it is <b class="w">false</b>.'});
+    S.push({line:[9,10],cls:"ok",out:"Both strings are the same!",same:false,eq2:true,
+      msg:c("equals")+' lines up the letters in pairs: A = A, B = B, C = C, so it is <b class="g">true</b>.'});
+    S.push({line:[14],cls:"",same:false,eq2:true,
+      msg:F.shared?'"ABC" is the same literal as s1, so Java reuses it: '+c("s3")+' points at <b class="a">the same object</b>.'
+                  :c("s3")+' points at a third object, holding '+c('"'+S3+'"')+'.'});
+    S.push({line:[15],cls:F.eq?"ok":"cut",out:String(F.eq),same:false,eq2:true,
+      msg:F.eq?(F.shared?c("s3")+' is the same object, so every pair matches: <b class="g">true</b>.'
+                        :'Every pair matches: <b class="g">true</b>.')
+        :c("equals")+' stops at the first different pair, '+c(S1.charAt(m))+' vs '+c(S3.charAt(m))+
+          (F.caseOnly?': capitals count, so <b class="w">false</b>.':', so it is <b class="w">false</b>.')});
+    S.push({line:[16],cls:F.ic?"ok":"cut",out:String(F.ic),same:false,eq2:true,ic:F.ic,
+      msg:F.ic?(F.eq?'Folding the capitals changes nothing here, every pair still matches: <b class="g">true</b>.'
+                    :c("equalsIgnoreCase")+' reads A and a as the same letter, so every pair matches: <b class="g">true</b>.')
+        :c("equalsIgnoreCase")+' lets capitals slide, but '+c(S1.charAt(mf))+' vs '+c(S3.charAt(mf))+' still differ: <b class="w">false</b>.'});
+    return S;
+  }
+
+  /* ---------- state ---------- */
+  var steps=[],at=-1;
+  var codeEl=$("#code"),picEl=$("#pic"),consEl=$("#console"),statusEl=$("#status");
+
+  function renderCode(cur,cls){
+    codeEl.innerHTML=lines().map(function(t,i){
+      var n=i+1,k="ln";
+      if(cur&&cur.indexOf(n)>=0) k+=" "+(cls==="cut"?"cut":cls==="ok"?"ok":"cur");
+      return '<div class="'+k+'"><span class="n">'+n+'</span><span>'+(t||" ")+'</span></div>';
+    }).join("");
+  }
+
+  /* ---------- the picture ----------
+     rows, top to bottom: s2, s1, s3. s1 sits in the middle so each comparison is between neighbors. */
+  var TW=58,GAP=12,VW=104,VH=50,ROWS={s2:0,s1:1,s3:2};
+  var G={};
+  function geo(){
+    var w=picEl.clientWidth||900, h=picEl.clientHeight||390, t0=Math.max(0,Math.round((h-390)/2));
+    var vx=Math.max(20,Math.round(w*0.03)), ox=Math.max(vx+VW+110,Math.round(w*0.3));
+    G={w:w,t0:t0,vx:vx,ox:ox,row:[t0+52,t0+164,t0+276],fw:3*(TW+GAP)-GAP+28+132};
+  }
+  function colX(i){return G.ox+i*(TW+GAP);}
+  function rowY(r){return G.row[r];}
+
+  function buildPic(){
+    var h="",r,i;
+    h+='<span class="zone" id="zv"></span><span class="zone" id="zo"></span>';
+    h+='<svg class="arrows" id="svg"></svg>';
+    for(r=1;r<=3;r++) h+='<div class="obj" id="o'+r+'"><span class="ol"></span></div>';
+    for(i=0;i<3;i++) h+='<div class="col" id="c'+i+'"></div>';
+    ["s1","s2","s3"].forEach(function(v){ h+='<div class="var" id="v'+v+'"><span class="vn">'+v+'</span><span class="rf"></span></div>'; });
+    for(r=1;r<=3;r++) for(i=0;i<3;i++) h+='<div class="tile" id="t'+r+'_'+i+'"><span class="ch"></span></div>';
+    h+='<div class="cmp" id="cmp">different objects<br>#1 vs #2</div>';
+    h+='<div class="start" id="start">s1 and s2 both hold "ABC" · press <b>Next</b></div>';
+    h+='<div class="answer" id="ans"></div>';
+    picEl.innerHTML=h;
+  }
+  function px(el,x,y,w,hh){ el.style.left=x+"px"; el.style.top=y+"px"; if(w!==undefined) el.style.width=w+"px"; if(hh!==undefined) el.style.height=hh+"px"; }
+  function arrowPath(x1,y1,x2,y2){
+    if(Math.abs(y1-y2)<2) return "M"+x1+" "+y1+" L"+(x2-9)+" "+y2;
+    return "M"+x1+" "+y1+" C"+(x1+70)+" "+y1+" "+(x2-80)+" "+y2+" "+(x2-9)+" "+y2;
+  }
+  function head(x,y){ return "M"+x+" "+y+" L"+(x-11)+" "+(y-6)+" L"+(x-11)+" "+(y+6)+" Z"; }
+
+  /* objects: #1 is s1's "ABC", #2 is s2's "ABC", #3 is s3 (absent when s3 shares #1) */
+  function objRow(n){ return n===1?ROWS.s1:n===2?ROWS.s2:ROWS.s3; }
+
+  function renderPic(k){
+    geo();
+    var F=facts(), i, r, n;
+    $("#start").style.opacity=k<0?1:0;
+    var zv=$("#zv"), zo=$("#zo");
+    px(zv,G.vx,G.t0+16); zv.textContent="variables"; zv.className="zone"+(k>=0?" show":"");
+    px(zo,G.ox-14,G.t0+16); zo.textContent="String objects in memory"; zo.className="zone"+(k>=0?" show":"");
+
+    /* which things exist at this step */
+    var hasV={s1:k>=0,s2:k>=1,s3:k>=4};
+    var hasO={1:k>=0,2:k>=1,3:k>=4&&!F.shared};
+    var s3To=F.shared?1:3;
+    var dimS2=k>=4;
+    /* which pair of rows is being compared, and how */
+    var pair=null, fold=false, stop=-1;
+    if(k===3){ pair=[ROWS.s2,ROWS.s1]; stop=-1; }
+    if(k===5){ pair=F.shared?[ROWS.s1,ROWS.s1]:[ROWS.s1,ROWS.s3]; stop=F.mis; }
+    if(k===6){ pair=F.shared?[ROWS.s1,ROWS.s1]:[ROWS.s1,ROWS.s3]; stop=F.misF; fold=true; }
+
+    /* object frames */
+    for(n=1;n<=3;n++){
+      var o=$("#o"+n), y=rowY(objRow(n));
+      px(o,G.ox-14,y-10,G.fw,TW+20);
+      var txt=n===1?(F.shared&&k>=4?"<b>object #1</b>s1 and s3":"<b>object #1</b>"):n===2?"<b>object #2</b>built at run time":"<b>object #3</b>";
+      o.querySelector(".ol").innerHTML=txt;
+      var cl="obj"+(hasO[n]?" show":"");
+      if((k===0&&n===1)||(k===1&&n===2)||(k===4&&n===3)) cl+=" new";
+      if(k===2&&(n===1||n===2)) cl+=" hot";
+      if(n===2&&dimS2) cl+=" dim";
+      if(k===4&&F.shared&&n===1) cl+=" new";
+      o.className=cl;
+    }
+    /* tiles */
+    var text={1:S1,2:S2,3:S3};
+    for(n=1;n<=3;n++){
+      var ry=rowY(objRow(n)), inPair=pair&&(objRow(n)===pair[0]||objRow(n)===pair[1]);
+      for(i=0;i<3;i++){
+        var t=$("#t"+n+"_"+i), ch=text[n].charAt(i);
+        var shown=(fold&&inPair)?ch.toLowerCase():ch;
+        px(t,colX(i),ry);
+        var tc="tile"+(hasO[n]?" in":"");
+        if(fold&&inPair&&shown!==ch) tc+=" folded";
+        if(k===2) tc+=" faded";
+        if(n===2&&dimS2) tc+=" faded";
+        if(pair&&inPair&&stop>=0&&i>stop) tc+=" faded";
+        t.className=tc; t.querySelector(".ch").textContent=shown;
+      }
+    }
+    /* comparison columns */
+    for(i=0;i<3;i++){
+      var col=$("#c"+i);
+      if(pair){
+        var top=rowY(pair[0])-6, bot=rowY(pair[1])+TW+6;
+        px(col,colX(i)-5,top,TW+10,bot-top);
+        col.className="col "+(stop<0||i<stop?"match":i===stop?"miss":"skip");
+      } else col.className="col";
+    }
+    /* variables and arrows */
+    var svg="";
+    ["s1","s2","s3"].forEach(function(v){
+      var el=$("#v"+v), y=rowY(ROWS[v]);
+      px(el,G.vx,y+(TW-VH)/2);
+      var target=v==="s1"?1:v==="s2"?2:s3To;
+      el.querySelector(".rf").textContent="#"+target;
+      var cl="var"+(hasV[v]?" show":"");
+      if(k===2&&v!=="s3") cl+=" hot";
+      if(v==="s2"&&dimS2) cl+=" dim";
+      el.className=cl;
+      var x1=G.vx+VW, y1=y+TW/2, x2=G.ox-14, ty=rowY(objRow(target))+TW/2;
+      if(v==="s3"&&F.shared) ty+=14;
+      var ac=hasV[v]?" show":"";
+      if(k===2&&v!=="s3") ac+=" hot";
+      else if((k===0&&v==="s1")||(k===1&&v==="s2")||(k===4&&v==="s3")) ac+=" lit";
+      if(v==="s2"&&dimS2) ac+=" dim";
+      svg+='<path class="arr'+ac+'" d="'+arrowPath(x1,y1,x2,ty)+'"/>';
+      svg+='<path class="head'+ac+'" d="'+head(x2,ty)+'"/>';
+    });
+    $("#svg").innerHTML=svg;
+    /* the == verdict, next to the two objects it compared */
+    var cmp=$("#cmp");
+    px(cmp,G.ox-14+G.fw+22,rowY(ROWS.s2)+TW/2+12);
+    cmp.className="cmp"+(k===2?" show":"");
+    /* answer */
+    var ans=$("#ans"), a="";
+    if(k===2) a='<small>s1 == s2</small><span class="w">false</span>';
+    if(k===3) a='<small>s1.equals(s2)</small><span class="g">true</span>';
+    if(k===5) a='<small>s1.equals(s3)</small><span class="'+(F.eq?"g":"w")+'">'+F.eq+'</span>';
+    if(k===6) a='<small>s1.equalsIgnoreCase(s3)</small><span class="'+(F.ic?"g":"w")+'">'+F.ic+'</span>';
+    ans.innerHTML=a; ans.className="answer"+(a?" show":"");
+  }
+
+  function setStat(id,v){ var e=$(id), box=e.parentNode;
+    if(v===undefined){e.textContent="";e.className="v dim";box.classList.add("empty");}
+    else {e.textContent=String(v);e.className="v "+(v?"good":"warn");box.classList.remove("empty");} }
+
+  function show(i){
+    at=i;
+    var s=i>=0?steps[i]:null, out=[], k;
+    $("#stepno").innerHTML="<small>step</small>"+(i+1)+" / "+steps.length;
+    renderCode(s?s.line:null,s?s.cls:"");
+    renderPic(i);
+    for(k=0;k<=i;k++) if(steps[k].out) out.push(steps[k].out);
+    consEl.innerHTML=out.map(function(o){return '<div class="out">'+o+'</div>';}).join("")||'<span style="color:rgba(132,150,182,.5)">(nothing printed yet)</span>';
+    $("#caption").className="caption"+(s&&s.cls?" "+s.cls:"");
+    statusEl.innerHTML=s?s.msg:'Press <b class="a">Next</b>. The picture changes at every step.';
+    setStat("#stSame",s?s.same:undefined); setStat("#stEq",s?s.eq2:undefined); setStat("#stIc",s?s.ic:undefined);
+    setBtns();
+  }
+  function setBtns(){ $("#bNext").disabled=at>=steps.length-1; $("#bBack").disabled=at<0;
+    var d=""; for(var k=0;k<steps.length;k++) d+='<i class="'+(k===at?"now":k<at?"done":"")+'"></i>'; $("#dots").innerHTML=d; }
+
+  /* focus: picture and caption only. Remembered per browser. */
+  function setFocus(on){ document.body.classList.toggle("solo",on); $("#bFocus").textContent=on?"Focus on":"Focus";
+    try{localStorage.setItem("hub-focus",on?"1":"0");}catch(e){} renderPic(at); }
+  $("#bFocus").addEventListener("click",function(){ setFocus(!document.body.classList.contains("solo")); this.blur(); });
+  try{ if(localStorage.getItem("hub-focus")==="1") document.body.classList.add("solo"); }catch(e){}
+  if(document.body.classList.contains("solo")) $("#bFocus").textContent="Focus on";
+
+  function next(){ if(at<steps.length-1) show(at+1); }
+  function back(){ if(at>=0) show(at-1); }
+  function reset(){ steps=build(); buildPic(); show(-1); }
+  function pick(idx){
+    S3=PRESETS[idx];
+    Array.prototype.forEach.call(document.querySelectorAll(".chip"),function(b,j){b.classList.toggle("on",j===idx);});
+    if(document.activeElement&&document.activeElement.blur) document.activeElement.blur();
+    reset();
+  }
+
+  $("#chips").innerHTML=PRESETS.map(function(p,j){return '<button class="chip'+(j===0?' on':'')+'" data-i="'+j+'">"'+p+'"</button>';}).join("");
+  $("#chips").addEventListener("click",function(e){ var b=e.target.closest(".chip"); if(b) pick(+b.getAttribute("data-i")); });
+  $("#bNext").addEventListener("click",next);
+  $("#bBack").addEventListener("click",back);
+  $("#bReset").addEventListener("click",reset);
+  document.addEventListener("keydown",function(e){ if(e.code==="Space"&&!/INPUT|BUTTON/.test(e.target.tagName)){e.preventDefault();next();} });
+  addEventListener("resize",function(){ renderPic(at); });
+
+  /* ---------- ambient canvas ---------- */
+  var cv=$("#amb"),ctx=cv.getContext&&cv.getContext("2d"),parts=[];
+  function sizeC(){if(!ctx)return;cv.width=innerWidth;cv.height=innerHeight;}
+  function initParts(){parts=[];for(var i=0;i<46;i++)parts.push({x:Math.random(),y:Math.random(),
+    r:Math.random()*1.6+.3,s:Math.random()*.02+.004,o:Math.random()*.4+.1});}
+  function drawC(){if(!ctx)return;ctx.clearRect(0,0,cv.width,cv.height);
+    parts.forEach(function(p){p.y-=p.s/60;if(p.y<-.02)p.y=1.02;
+      ctx.beginPath();ctx.arc(p.x*cv.width,p.y*cv.height,p.r,0,7);
+      ctx.fillStyle="rgba(140,170,255,"+p.o+")";ctx.fill();});
+    requestAnimationFrame(drawC);}
+  if(ctx&&!reduce){sizeC();initParts();drawC();addEventListener("resize",sizeC);}
+
+  reset();
+})();
+</script>
+<script src="../manifest.js"></script>
+<script src="../../assets/rail.js"></script>
+<script>Rail.render(document.getElementById("rail"),{week:2,kind:"visuals",current:"01-comparing-strings"});</script>
+</body>
+</html>

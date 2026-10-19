@@ -168,3 +168,12 @@ fonts link present; rail present on every content page; no exercise solution any
 
 ## Demos are a source, never a subject (Ray, 2026-10-13)
 Examples come from the week's demos (`04.Weeks/Week NN/demos/`), never from exercises. But the page never says so: no "from the X demo", no "(invented)", no "names from Raymond's demo". Labels say "Example", not "Example from the demo". The learner sees code, not its provenance.
+
+## One example per page (Ray, 2026-10-17)
+A visual takes ONE example from the demo and shows ONE idea with it. It never walks the whole demo block: no second example, no "and here is the loop version", no hand-over to the next page's topic. If the demo has three examples for an idea, the page uses the first one that carries the idea. Ray: "the visuals should not have everything the demos have; we only need to show one example."
+
+## Loops run one pass per step (Ray, 2026-10-18)
+When a page walks a loop, every pass is its own step, with the counter, the check and the printed value changing on each one. Never "passes 2 to 10 repeat". If a pass has several parts (check, body, update), they light one after another inside the step. A Walk that loops ten times has ten or more steps; that is fine. Switching a preset or form restarts the walk from step 0.
+
+## The visual explains the concept (Ray, 2026-10-18)
+A page exists to make ONE concept clear to a learner. The demo is a source of examples, not a script: use a demo example when it fits the concept, invent or adapt one when it does not, and never put something on the page only because the demo has it. "The visual is not responsible for the demo. If an example from the demo fits, fine. If not, we care about explaining the concept visually." Together with the rules above: one idea, one example, the example from the demo when it fits.

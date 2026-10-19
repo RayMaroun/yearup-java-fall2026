@@ -75,13 +75,13 @@
   .card .sum b{color:var(--ink);font-weight:500}
   .card.bad .sum b{color:var(--warn)} .card.ok .sum b{color:var(--good)}
   /* the doors */
-  .doors{display:grid;grid-template-rows:1fr 1fr;gap:14px;min-width:0}
+  .doors{display:grid;grid-template-rows:1fr;gap:14px;min-width:0}
   .row{display:flex;flex-direction:column;min-height:0}
   .pair{display:grid;grid-template-columns:1fr 1fr;gap:14px;flex:1;min-height:0}
   .door{position:relative;border:1px solid rgba(110,160,255,.35);background:linear-gradient(180deg,rgba(110,160,255,.08),rgba(110,160,255,.02));
-    border-radius:16px 16px 5px 5px;padding:12px 30px 10px 14px;display:flex;flex-direction:column;gap:8px;min-width:0;
+    border-radius:16px 16px 5px 5px;padding:11px 22px 9px 12px;display:flex;flex-direction:column;gap:7px;min-width:0;
     opacity:0;transition:opacity .35s,border-color .3s,background .3s,box-shadow .3s}
-  .door::after{content:"";position:absolute;right:12px;top:52%;width:7px;height:7px;border-radius:50%;background:rgba(110,160,255,.5);transition:background .3s}
+  .door::after{content:"";position:absolute;right:9px;top:52%;width:7px;height:7px;border-radius:50%;background:rgba(110,160,255,.5);transition:background .3s}
   .door.show{opacity:1}
   .door.name{opacity:.16}
   .door.dark{opacity:.5;border-color:var(--line);background:rgba(255,255,255,.02)}
@@ -92,12 +92,12 @@
   .door.bad::after{background:var(--warn)}
   .door .hd{font-family:var(--mono);font-size:.84rem;color:var(--ink);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
   .door .hd i{font-style:normal;color:var(--muted)}
-  .slots{display:flex;align-items:center;gap:5px;font-family:var(--mono);font-size:.8rem;color:var(--muted);flex-wrap:wrap}
+  .slots{display:flex;align-items:center;gap:4px;font-family:var(--mono);font-size:.8rem;color:var(--muted);flex-wrap:wrap}
   .slot{font-size:.72rem;padding:3px 8px;border-radius:7px;border:1px dashed rgba(110,160,255,.45);color:#bcd0ff;transition:.3s}
   .slot.ok{border-style:solid;border-color:var(--good);color:var(--good);background:rgba(70,217,138,.1)}
   .slot.bad{border-style:solid;border-color:var(--warn);color:var(--warn);background:rgba(255,106,106,.1)}
   .slots .none{font-size:.7rem;font-style:italic}
-  .sig{font-family:var(--mono);font-size:.64rem;color:rgba(132,150,182,.75);margin-top:auto}
+  .sig{font-family:var(--mono);font-size:.64rem;color:rgba(132,150,182,.75);margin-top:auto;overflow-wrap:anywhere}
   .why{font-family:var(--mono);font-size:.64rem;color:var(--muted);min-height:1em}
   .door.open .why{color:var(--good)} .door.bad .why{color:var(--warn)}
   .pic .start{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;font-family:var(--mono);
@@ -168,7 +168,7 @@
 </head>
 <body>
 
-<a class="back" href="../index.html#11-method-overloading">&#8592; Week 2 index</a>
+<a class="back" href="../index.html#10-method-overloading">&#8592; Week 2 index</a>
 
 <canvas id="amb"></canvas>
 <div class="wrap">
@@ -190,11 +190,11 @@
         </div>
         <div class="doors" id="doors"></div>
       </div>
-      <div class="start" id="start">4 methods, 2 names &middot; press&nbsp;<b>Next</b></div>
+      <div class="start" id="start">3 methods, 1 name &middot; press&nbsp;<b>Next</b></div>
     </div>
 
     <div class="caption" id="caption">
-      <div class="n" id="stepno"><small>step</small>0 / 7</div>
+      <div class="n" id="stepno"><small>step</small>0 / 5</div>
       <div class="t" id="status">Press <b class="a">Next</b>. The picture changes at every step.</div>
     </div>
 
@@ -213,8 +213,8 @@
       </div>
       <div class="side">
         <div class="readout">
-          <div class="stat empty"><div class="k">argument types</div><div class="v dim" id="stArgs">?</div></div>
-          <div class="stat empty"><div class="k">door that opens</div><div class="v dim" id="stDoor">?</div></div>
+          <div class="stat empty"><div class="k">argument types</div><div class="v dim" id="stArgs"></div></div>
+          <div class="stat empty"><div class="k">method that runs</div><div class="v dim" id="stDoor"></div></div>
         </div>
         <div class="console"><div class="cl">console</div><div id="console"></div></div>
       </div>
@@ -223,10 +223,9 @@
 
   <div class="take">
     <p class="tk">The one idea</p>
-    <p><b>A method's signature is its name plus its parameter types.</b> Methods in one class may share a name as long as
-    the signatures differ. At each call the compiler compares the arguments with every parameter list of that name,
-    by <b>type, count and order</b>, and if none fits, the code does not compile. The return type is not part of the
-    signature, so it cannot tell two methods apart.</p>
+    <p><b>Same name, different parameter list.</b> A method's signature is its name plus its parameter types. At each
+    call the compiler compares the arguments with every parameter list of that name, by <b>type, count and order</b>,
+    and runs the one that fits. If none fits, the code does not compile.</p>
   </div>
 
   <div id="rail"></div>
@@ -238,63 +237,65 @@
   var $=function(s){return document.querySelector(s);};
   var reduce=matchMedia("(prefers-reduced-motion: reduce)").matches;
 
-  /* ---------- the four methods (doors), as in Person.java ---------- */
+  /* ---------- the three methods (doors), as in Person.java ---------- */
   var DOORS=[
-    {id:"e0",name:"eat",params:[],sig:"eat",line:2},
-    {id:"e1",name:"eat",params:["int"],sig:"eat_int",line:3},
-    {id:"g0",name:"greet",params:["String"],sig:"greet_String",line:4},
-    {id:"g1",name:"greet",params:["String","int"],sig:"greet_String_int",line:5}
+    {id:"g0",name:"greet",params:[],sig:"greet",line:2,body:[2,3,4]},
+    {id:"g1",name:"greet",params:["String"],sig:"greet_String",line:5,body:[5,6,7]},
+    {id:"g2",name:"greet",params:["String","int"],sig:"greet_String_int",line:8,body:[8,9,10,11]}
   ];
 
   var CODE=[
     '<span class="cm">// Person.java</span>',
-    '<span class="kw">public void</span> <span class="fn">eat</span>() { ... }',
-    '<span class="kw">public void</span> <span class="fn">eat</span>(<span class="ty">int</span> amount) { ... }',
-    '<span class="kw">public void</span> <span class="fn">greet</span>(<span class="ty">String</span> otherName) { ... }',
-    '<span class="kw">public void</span> <span class="fn">greet</span>(<span class="ty">String</span> otherName, <span class="ty">int</span> times) { ... }',
-    '',
+    '<span class="kw">public void</span> <span class="fn">greet</span>() {',
+    '    <span class="ty">System</span>.out.<span class="fn">println</span>(<span class="kw">this</span>.name + <span class="st">" is saying Hi to Everyone!"</span>);',
+    '}',
+    '<span class="kw">public void</span> <span class="fn">greet</span>(<span class="ty">String</span> personToGreet) {',
+    '    <span class="ty">System</span>.out.<span class="fn">println</span>(<span class="kw">this</span>.name + <span class="st">" is saying Hi to "</span> + personToGreet + <span class="st">"!"</span>);',
+    '}',
+    '<span class="kw">public void</span> <span class="fn">greet</span>(<span class="ty">String</span> studentName, <span class="ty">int</span> age) {',
+    '    <span class="ty">System</span>.out.<span class="fn">println</span>(<span class="st">"Hello Student: "</span> + studentName);',
+    '    <span class="ty">System</span>.out.<span class="fn">println</span>(<span class="st">"Your age: "</span> + age);',
+    '}',
     '',
     '<span class="cm">// Main.java</span>',
-    '<span class="ty">Person</span> instructor = <span class="kw">new</span> <span class="ty">Person</span>(<span class="st">"Raymond"</span>, <span class="nm">80</span>);',
-    'instructor.<span class="fn">eat</span>();',
-    'instructor.<span class="fn">eat</span>(<span class="nm">15</span>);',
-    'instructor.<span class="fn">greet</span>(<span class="st">"Brandon"</span>, <span class="nm">3</span>);',
-    'instructor.<span class="fn">greet</span>(<span class="nm">3</span>, <span class="st">"Brandon"</span>);   <span class="cm">// does not compile</span>'
+    '<span class="ty">Person</span> instructor = <span class="kw">new</span> <span class="ty">Person</span>(<span class="st">"Raymond"</span>, <span class="nm">35</span>);',
+    'instructor.<span class="fn">greet</span>();                             <span class="cm">// greet</span>',
+    'instructor.<span class="fn">greet</span>(<span class="st">"Brandon"</span>);                    <span class="cm">// greet_String</span>',
+    'instructor.<span class="fn">greet</span>(<span class="st">"Brandon"</span>, <span class="nm">35</span>);                <span class="cm">// greet_String_int</span>',
+    '<span class="cm">// instructor.greet(35, "Brandon");  // error: no greet(int, String)</span>'
   ];
-  var LINE6='<span class="kw">public</span> <span class="ty">int</span> <span class="fn">eat</span>() { ... }   <span class="cm">// does not compile</span>';
 
   /* ---------- matching: computed from the call, never hard-coded ---------- */
-  /* returns {st, slots, why} for one door against one call */
-  function judge(d,call,nameOnly){
-    if(d.name!==call.name) return {st:"name",slots:[],why:"other name"};
-    if(nameOnly) return {st:"show",slots:[],why:"same name"};
+  function judge(d,call){
     var types=call.args.map(function(a){return a.t;});
     if(types.length!==d.params.length){
       return {st:"dark",slots:[],why:d.params.length===0?"wants no arguments":"wants "+d.params.length+" argument"+(d.params.length>1?"s":"")};
     }
     var slots=d.params.map(function(p,i){return p===types[i]?"ok":"bad";});
-    var ok=slots.every(function(s){return s==="ok";});
-    if(ok) return {st:"open",slots:slots,why:"fits"};
+    if(slots.every(function(s){return s==="ok";})) return {st:"open",slots:slots,why:"fits"};
     var first=-1; slots.forEach(function(s,i){ if(s==="bad"&&first<0) first=i; });
     return {st:"dark",slots:slots,why:"wants "+d.params[first]+(first===0?" first":" at "+(first+1))};
   }
+  function opened(call){ return DOORS.filter(function(d){return judge(d,call).st==="open";})[0]; }
 
   var CALLS={
-    eat0:{name:"eat",args:[],line:10},
-    eat1:{name:"eat",args:[{v:"15",t:"int"}],line:11},
-    gr2:{name:"greet",args:[{v:'"Brandon"',t:"String"},{v:"3",t:"int"}],line:12,out:"Raymond says hi to Brandon 3 times!"},
-    grX:{name:"greet",args:[{v:"3",t:"int"},{v:'"Brandon"',t:"String"}],line:13}
+    gr0:{name:"greet",args:[],line:15},
+    gr1:{name:"greet",args:[{v:'"Brandon"',t:"String"}],line:16},
+    gr2:{name:"greet",args:[{v:'"Brandon"',t:"String"},{v:"35",t:"int"}],line:17},
+    grX:{name:"greet",args:[{v:"35",t:"int"},{v:'"Brandon"',t:"String"}],line:18}
   };
 
-  /* ---------- the walk ---------- */
+  /* ---------- the walk: out = what that step prints ---------- */
   var steps=[
-    {kind:"doors",msg:'Four methods, two names. Each door shows its <b class="a">signature</b>: the name plus the parameter types.'},
-    {kind:"call",call:"eat0",nameOnly:true,msg:'The call <code>instructor.eat()</code> arrives. First the name: only the <b class="a">eat</b> doors stay in play.'},
-    {kind:"call",call:"eat0",msg:'No arguments, an empty list. Only <code>eat()</code> has an empty parameter list, so <b class="g">that door opens</b>.'},
-    {kind:"call",call:"eat1",msg:'<code>eat(15)</code> passes one int. <code>eat()</code> wants nothing, so <b class="g">eat(int)</b> opens.'},
-    {kind:"call",call:"gr2",msg:'A String then an int: two arguments, in that order. <b class="g">greet(String, int)</b> opens.'},
-    {kind:"call",call:"grX",msg:'An int then a String. No door takes that order: <b class="w">compile error</b>, the program never runs.'},
-    {kind:"dup",msg:'A new <code>int eat()</code> fails: its signature is still eat. <b class="w">Return type alone is not an overload.</b>'}
+    {kind:"doors",msg:'Three methods, one name. Each door is one <b class="a">parameter list</b>: name plus parameter types is the signature.'},
+    {kind:"call",call:"gr0",out:["Raymond is saying Hi to Everyone!"],
+     msg:'<code>instructor.greet()</code> passes no arguments. Only one door takes nothing, so <b class="g">greet() opens</b>.'},
+    {kind:"call",call:"gr1",out:["Raymond is saying Hi to Brandon!"],
+     msg:'One String. The other doors want zero or two arguments, so <b class="g">greet(String) opens</b>.'},
+    {kind:"call",call:"gr2",out:["Hello Student: Brandon","Your age: 35"],
+     msg:'A String then an int, in that order: <b class="g">greet(String, int) opens</b>.'},
+    {kind:"call",call:"grX",
+     msg:'An int then a String. No door takes that order: <b class="w">compile error</b>, the program never runs.'}
   ];
 
   var at=-1;
@@ -305,12 +306,13 @@
 
   function buildDoors(){
     var html="";
-    ["eat","greet"].forEach(function(nm){
-      html+='<div class="row"><p class="zone" id="z'+nm+'">name: '+nm+'</p><div class="pair">';
-      DOORS.filter(function(d){return d.name===nm;}).forEach(function(d){
-        html+='<div class="door" id="'+d.id+'"><div class="hd"><i id="'+d.id+'r">void </i>'+d.name+'</div>'+
+    ["greet"].forEach(function(nm){
+      var mine=DOORS.filter(function(d){return d.name===nm;});
+      html+='<div class="row"><p class="zone" id="z'+nm+'">name: '+nm+'</p><div class="pair" style="grid-template-columns:repeat('+mine.length+',minmax(0,1fr))">';
+      mine.forEach(function(d){
+        html+='<div class="door" id="'+d.id+'"><div class="hd"><i>void </i>'+d.name+'</div>'+
           '<div class="slots" id="'+d.id+'s"></div><div class="why" id="'+d.id+'w"></div>'+
-          '<div class="sig">signature: '+d.sig+'</div></div>';
+          '<div class="sig">'+d.sig+'</div></div>';
       });
       html+='</div></div>';
     });
@@ -325,65 +327,53 @@
     var started=!!s;
     $("#start").style.opacity=started?0:1;
     $("#arena").style.opacity=started?1:0;
-    var verdicts={},call=null;
-    if(s&&s.kind==="call"){ call=CALLS[s.call]; DOORS.forEach(function(d){ verdicts[d.id]=judge(d,call,s.nameOnly); }); }
+    var verdicts={},call=null,open=null;
+    if(s&&s.kind==="call"){
+      call=CALLS[s.call]; DOORS.forEach(function(d){ verdicts[d.id]=judge(d,call); });
+      open=opened(call);
+    }
     DOORS.forEach(function(d){
       var v=verdicts[d.id]||{st:"show",slots:[],why:""};
-      if(s&&s.kind==="dup") v=d.id==="e0"?{st:"bad",slots:[],why:"same signature: eat"}:{st:"name",slots:[],why:""};
-      if(call&&!s.nameOnly&&v.st==="dark"&&!Object.keys(verdicts).some(function(k){return verdicts[k].st==="open";})) v.st="bad";
-      var el=$("#"+d.id);
-      el.className="door"+(s?" show":"")+(v.st!=="show"?" "+v.st:"");
+      /* no door fits: the doors with the right count but the wrong types turn red */
+      if(call&&!open&&v.st==="dark"&&v.slots.length) v.st="bad";
+      $("#"+d.id).className="door"+(s?" show":"")+(v.st!=="show"?" "+v.st:"");
       $("#"+d.id+"s").innerHTML=slotsHtml(d,v.slots);
       $("#"+d.id+"w").textContent=v.why;
     });
-    ["eat","greet"].forEach(function(nm){ $("#z"+nm).className="zone"+(call&&call.name===nm?" on":""); });
-    /* the card: the call that arrives, or the new method */
-    if(!s||s.kind==="doors"){ cardEl.className="card"; $("#zCall").style.opacity=s?1:0; cardEl.innerHTML=""; return; }
+    ["greet"].forEach(function(nm){ $("#z"+nm).className="zone"+(call&&call.name===nm?" on":""); });
+    if(!call){ cardEl.className="card"; $("#zCall").style.opacity=0; cardEl.innerHTML=""; return; }
     $("#zCall").style.opacity=1;
-    var html,cls;
-    if(s.kind==="dup"){
-      $("#zCall").textContent="a new method";
-      html='<div class="who">added to Person.java</div><div class="call"><span class="p">public <b style="color:var(--warn);font-weight:500">int</b> eat()</span></div>'+
-        '<div class="sum">signature: <b>eat</b>, already taken</div>';
-      cls="bad";
-    } else {
-      $("#zCall").textContent="the call";
-      var open=DOORS.filter(function(d){return verdicts[d.id].st==="open";})[0];
-      html='<div class="who">instructor.'+call.name+'</div><div class="call"><span class="p">'+call.name+'(</span>'+
-        call.args.map(function(a){return '<span class="arg"><span class="val">'+a.v+'</span><span class="ty">'+a.t+'</span></span>';}).join('<span class="p">,</span>')+
-        '<span class="p">)</span></div>'+
-        '<div class="sum">arguments <b>'+(call.args.length?argList(call.args):"(none)")+'</b>'+
-        (s.nameOnly?'':open?' \u2192 <b>'+header(open)+'</b>':' \u2192 <b>no match</b>')+'</div>';
-      cls=s.nameOnly?"":open?"ok":"bad";
-    }
-    var wasIn=cardEl.classList.contains("in")&&cardEl.getAttribute("data-k")===(s.call||s.kind);
-    cardEl.innerHTML=html; cardEl.setAttribute("data-k",s.call||s.kind);
+    var html='<div class="who">instructor.'+call.name+'</div><div class="call"><span class="p">'+call.name+'(</span>'+
+      call.args.map(function(a){return '<span class="arg"><span class="val">'+a.v+'</span><span class="ty">'+a.t+'</span></span>';}).join('<span class="p">,</span>')+
+      '<span class="p">)</span></div>'+
+      '<div class="sum">arguments <b>'+(call.args.length?argList(call.args):"(none)")+'</b>'+
+      (open?' → <b>'+header(open)+'</b>':' → <b>no match</b>')+'</div>';
+    var cls=open?"ok":"bad";
+    var wasIn=cardEl.classList.contains("in")&&cardEl.getAttribute("data-k")===s.call;
+    cardEl.innerHTML=html; cardEl.setAttribute("data-k",s.call);
     if(wasIn||reduce){ cardEl.className="card in "+cls; }
     else { cardEl.className="card"; void cardEl.offsetWidth; cardEl.className="card in "+cls; }
   }
 
   function renderCode(s){
-    var marks={},show6=false;
+    var marks={};
     if(s){
-      if(s.kind==="doors"){ [2,3,4,5].forEach(function(n){marks[n]="cur";}); }
+      if(s.kind==="doors"){ DOORS.forEach(function(d){ marks[d.line]="cur"; }); }
       if(s.kind==="call"){
-        var c=CALLS[s.call]; marks[c.line]="cur";
-        if(!s.nameOnly){
-          var open=DOORS.filter(function(d){return judge(d,c).st==="open";})[0];
-          if(open) marks[open.line]="ok"; else marks[c.line]="cut";
-        }
+        var c=CALLS[s.call];
+        var open=opened(c);
+        if(open){ open.body.forEach(function(n){ marks[n]="ok"; }); marks[c.line]="cur"; }
+        else marks[c.line]="cut";
       }
-      if(s.kind==="dup"){ show6=true; marks[6]="cut"; marks[2]="cut"; }
     }
     codeEl.innerHTML=CODE.map(function(t,i){
-      var n=i+1; if(n===6&&show6) t=LINE6;
-      var c="ln"+(marks[n]?" "+marks[n]:"");
+      var n=i+1, c="ln"+(marks[n]?" "+marks[n]:"");
       return '<div class="'+c+'"><span class="n">'+n+'</span><span>'+(t||" ")+'</span></div>';
     }).join("");
   }
 
   function setStat(id,v,c){ var e=$(id), box=e.parentNode;
-    if(v===null){e.textContent="?";e.className="v dim";box.classList.add("empty");}
+    if(v===null){e.textContent="";e.className="v dim";box.classList.add("empty");}
     else {e.textContent=v;e.className="v "+(c||"");box.classList.remove("empty");} }
 
   function show(i){
@@ -394,24 +384,19 @@
     var cap="",args=null,door=null,dc="";
     if(s&&s.kind==="call"){
       var c=CALLS[s.call]; args=c.args.length?argList(c.args):"none";
-      if(!s.nameOnly){
-        var open=DOORS.filter(function(d){return judge(d,c).st==="open";})[0];
-        door=open?header(open):"none"; dc=open?"hot":""; cap=open?"ok":"cut";
-      }
+      var open=opened(c); door=open?header(open):"none"; dc=open?"hot":""; cap=open?"ok":"cut";
     }
-    if(s&&s.kind==="dup"){ cap="cut"; }
-    /* console: what a run would print. A compile error means nothing runs at all */
-    var errs={5:"error: no suitable method found for greet(int,String)",6:"error: method eat() is already defined in class Person"};
-    if(errs[i]!==undefined) consEl.innerHTML='<div class="out err">'+errs[i]+'</div>';
-    else {
-      var out=[]; for(var k=0;k<=i;k++){ var st=steps[k]; if(st.kind==="call"&&!st.nameOnly&&CALLS[st.call].out) out.push(CALLS[st.call].out); }
+    /* console: what the run prints so far. A compile error means nothing runs at all */
+    if(s&&s.kind==="call"&&!opened(CALLS[s.call])){
+      consEl.innerHTML='<div class="out err">error: no suitable method found for greet(int,String)</div>';
+    } else {
+      var out=[]; for(var k=0;k<=i;k++){ if(steps[k].out) out=out.concat(steps[k].out); }
       consEl.innerHTML=out.map(function(o){return '<div class="out">'+o+'</div>';}).join("")||'<span style="color:rgba(132,150,182,.5)">(nothing printed yet)</span>';
     }
     $("#caption").className="caption "+cap;
     statusEl.innerHTML=s?s.msg:'Press <b class="a">Next</b>. The picture changes at every step.';
     setStat("#stArgs",args); setStat("#stDoor",door,dc);
-    if(door==="none"){ $("#stDoor").style.color="var(--warn)"; } else { $("#stDoor").style.color=""; }
-    if(s&&s.kind==="dup"){ setStat("#stDoor","none"); $("#stDoor").style.color="var(--warn)"; }
+    $("#stDoor").style.color=door==="none"?"var(--warn)":"";
     setBtns();
   }
   function setBtns(){ $("#bNext").disabled=at>=steps.length-1; $("#bBack").disabled=at<0;
@@ -450,6 +435,6 @@
 </script>
 <script src="../manifest.js"></script>
 <script src="../../assets/rail.js"></script>
-<script>Rail.render(document.getElementById("rail"),{week:2,kind:"visuals",current:"11-method-overloading"});</script>
+<script>Rail.render(document.getElementById("rail"),{week:2,kind:"visuals",current:"10-method-overloading"});</script>
 </body>
 </html>

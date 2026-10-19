@@ -131,7 +131,7 @@
   .ln.cur .n{color:var(--accent)}
   .ln.ok{background:rgba(70,217,138,.12);box-shadow:inset 3px 0 0 var(--good)}
   .ln.left{background:rgba(255,200,98,.12);box-shadow:inset 3px 0 0 var(--gold)}
-  .kw{color:#c792ea} .ty{color:#82aaff} .st{color:#c3e88d} .nm{color:#f78c6c} .fn{color:#ffcb6b}
+  .cm{color:#5f7090} .kw{color:#c792ea} .ty{color:#82aaff} .st{color:#c3e88d} .nm{color:#f78c6c} .fn{color:#ffcb6b}
   .codes{display:flex;flex-direction:column;gap:10px;min-width:0}
   .codes .lab{margin:4px 0 6px}
   .side{display:flex;flex-direction:column;gap:12px}
@@ -162,12 +162,11 @@
 <div class="wrap">
   <p class="tag">Workbook 2a &middot; Section 2-1 &middot; Instantiating an object</p>
   <h1>What new Does</h1>
-  <p class="lede"><b><code>new</code> builds the object with default values first, then the constructor copies each parameter into a field.</b></p>
+  <p class="lede"><b><code>new</code> builds the object and runs the constructor; the variable gets back a reference, not the object.</b></p>
 
   <div class="stage">
     <div class="topbar">
-      <span class="lab">Values</span>
-      <div class="chips" id="chips"></div>
+      <span class="lab">Typed in: "Raymond", 35</span>
       <button class="focus" id="bFocus" title="Hide the code and notes, enlarge the picture">Focus</button>
     </div>
 
@@ -184,7 +183,7 @@
       <button class="btn primary" id="bNext">Next &rarr;</button>
       <button class="btn ghost" id="bReset">Reset</button>
     </div>
-    <p class="hint">space = next &middot; <b>watch the two boxes called name</b>: the parameter and the field</p>
+    <p class="hint">space = next &middot; name and age are typed in at the two prompts &middot; <b>watch instructor: it ends up holding an arrow</b></p>
 
     <div class="support">
       <div class="codes">
@@ -193,7 +192,7 @@
       </div>
       <div class="side">
         <div class="readout">
-          <div class="stat empty"><div class="k">parameter name</div><div class="v dim" id="stParam"></div></div>
+          <div class="stat empty"><div class="k">instructor holds</div><div class="v dim" id="stParam"></div></div>
           <div class="stat empty"><div class="k">field this.name</div><div class="v dim" id="stField"></div></div>
         </div>
         <div class="console"><div class="cl">console</div><div id="console"></div></div>
@@ -203,10 +202,9 @@
 
   <div class="take">
     <p class="tk">The one idea</p>
-    <p><b><code>new</code> does three things in order:</b> it reserves memory for the object with every field at its default value,
-    it runs the constructor, and it hands back a reference that the variable stores. Inside the constructor, <code>name</code> alone is
-    the parameter, a copy that disappears when the constructor ends. <code>this.name</code> is the field, which lives as long as the
-    object. <b><code>this.name = name</code> copies one into the other.</b></p>
+    <p><b><code>new</code> makes the object and runs the constructor</b>, which fills the fields: <code>this.name = name</code>
+    copies the parameter into the field. <code>new</code> hands back a reference, and
+    <b>the variable holds the reference, not the object</b>: <code>instructor.getName()</code> follows that arrow.</p>
   </div>
 
   <div id="rail"></div>
@@ -218,16 +216,23 @@
   var $=function(s){return document.querySelector(s);};
   var reduce=matchMedia("(prefers-reduced-motion: reduce)").matches;
 
-  /* ---------- presets ---------- */
-  var PRESETS=[["Raymond",55],["Ray",33]];
-  var NAME="Raymond",AGE=55;
+  /* ---------- the values typed at the two Scanner prompts ---------- */
+  var NAME="Raymond",AGE=35;
   function q(s){return '"'+s+'"';}
 
+  function cm(t){return '<span class="cm">'+t+'</span>';}
   function mainLines(){
     return [
-      '<span class="ty">String</span> name = <span class="st">"'+NAME+'"</span>;',
-      '<span class="ty">int</span> age = <span class="nm">'+AGE+'</span>;',
-      '<span class="ty">Person</span> instructor = <span class="kw">new</span> <span class="fn">Person</span>(name, age);',
+      'System.out.println(<span class="st">"Please enter the name of the instructor:"</span>);',
+      '<span class="ty">String</span> name = scanner.<span class="fn">nextLine</span>();',
+      'System.out.println(<span class="st">"Please enter the age of the instructor:"</span>);',
+      '<span class="ty">int</span> age = scanner.<span class="fn">nextInt</span>();',
+      '',
+      cm('/*'),
+      cm('Person instructor;                  // declare: no object yet'),
+      cm('instructor = new Person(name, age); // instantiate'),
+      cm('*/'),
+      '<span class="ty">Person</span> instructor = <span class="kw">new</span> <span class="fn">Person</span>(name, age);  '+cm('// both steps in one line'),
       'System.out.println(instructor.<span class="fn">getName</span>());'
     ];
   }
@@ -238,32 +243,41 @@
     '    <span class="kw">private</span> <span class="ty">int</span> energy;',
     '',
     '    <span class="kw">public</span> <span class="fn">Person</span>(<span class="ty">String</span> name, <span class="ty">int</span> age) {',
-    '        <span class="kw">this</span>.name = name;',
+    '        <span class="kw">this</span>.name = name;   '+cm('// this.name is the field'),
     '        <span class="kw">this</span>.age = age;',
-    '        <span class="kw">this</span>.energy = <span class="nm">100</span>;',
+    '        <span class="kw">this</span>.energy = <span class="nm">100</span>;  '+cm('// full energy'),
     '    }',
     '}'
   ];
 
+  /* console text after each step (typed input in gold) */
+  function said(i){
+    var o=[];
+    if(i>=0){ o.push("Please enter the name of the instructor:"); o.push('<span style="color:#ffc862">'+NAME+'</span>');
+              o.push("Please enter the age of the instructor:"); o.push('<span style="color:#ffc862">'+AGE+'</span>'); }
+    if(i>=7) o.push(NAME);
+    return o;
+  }
+
   /* ---------- the walk: one entry per step ---------- */
   function build(){
     return [
-      {m:[1,2],p:[],mc:"cur",pc:"cur",cls:"",
-       msg:'main has two variables: <code>name</code> holds '+q(NAME)+' and <code>age</code> holds '+AGE+'. No Person exists yet.'},
-      {m:[3],p:[2,3,4],mc:"cur",pc:"left",cls:"left",
-       msg:'<code>new</code> reserves memory for one Person. Each field starts at its default: <b class="y">null</b> for String, <b class="y">0</b> for int.'},
-      {m:[],p:[6],pc:"cur",cls:"",
-       msg:'The constructor runs. Its parameters <code>name</code> and <code>age</code> get <b class="a">copies</b> of the values you passed.'},
-      {m:[],p:[7],pc:"ok",cls:"ok",
-       msg:'<code>this.name</code> is the field in the object, <code>name</code> is the parameter. This line <b class="g">copies one into the other</b>.'},
+      {m:[1,2,3,4],p:[],mc:"cur",cls:"",
+       msg:'At the two prompts the user <b class="a">typed in</b> '+q(NAME)+' and '+AGE+', so <code>name</code> and <code>age</code> hold them.'},
+      {m:[7,10],p:[],mc:"cur",cls:"",
+       msg:'<code>Person instructor;</code> declares the variable, and it holds <b class="a">no object yet</b>.'},
+      {m:[8,10],p:[2,3,4],mc:"cur",pc:"left",cls:"left",
+       msg:'<code>new</code> makes one Person object in memory, every field at its default: <b class="y">null</b> for String, <b class="y">0</b> for int.'},
+      {m:[],p:[6,7],pc:"ok",cls:"ok",
+       msg:'The constructor runs with <b class="a">copies</b> of name and age as parameters, and <code>this.name = name</code> <b class="g">copies the parameter into the field</b>.'},
       {m:[],p:[8],pc:"ok",cls:"ok",
        msg:'Same move for age: the parameter <code>age</code> is copied into the field <code>this.age</code>.'},
       {m:[],p:[9],pc:"ok",cls:"ok",
        msg:'No parameter for energy: the constructor puts <b class="g">100</b> in <code>this.energy</code> by itself.'},
-      {m:[3],p:[10],mc:"cur",pc:"cur",cls:"",
-       msg:'The constructor ends and its parameters are gone. <code>new</code> hands back a <b class="a">reference</b>, stored in <code>instructor</code>.'},
-      {m:[4],p:[],mc:"cur",cls:"ok",out:NAME,
-       msg:'The parameters are gone, but the field kept its copy: <code>getName()</code> returns <b class="g">'+q(NAME)+'</b>.'}
+      {m:[8,10],p:[10],mc:"cur",pc:"cur",cls:"",
+       msg:'The constructor ends, its parameters are gone, and <code>new</code> hands back a <b class="a">reference</b> that <code>instructor</code> stores.'},
+      {m:[11],p:[],mc:"cur",cls:"ok",
+       msg:'<code>getName()</code> follows the arrow from <code>instructor</code> to the object and returns <b class="g">'+q(NAME)+'</b>.'}
     ];
   }
 
@@ -302,7 +316,7 @@
     h+=cell("fEnergy","o",12,ROW.c,'this.energy');
     h+='<svg class="arrows" id="arrows"></svg>';
     h+='</div>';
-    h+='<div class="start" id="start">'+q(NAME)+' and '+AGE+' · press <b>Next</b></div>';
+    h+='<div class="start" id="start">typed in: '+q(NAME)+' and '+AGE+' \u00b7 press\u00a0<b>Next</b></div>';
     h+='<div class="answer" id="ans"></div>';
     picEl.innerHTML=h;
   }
@@ -345,24 +359,23 @@
     /* main */
     setCell("mName",i>=0,q(NAME),i===0?"lit":"");
     setCell("mAge",i>=0,String(AGE),i===0?"lit":"");
-    setCell("mInst",i>=6,{t:"●",c:"ref"},i===6?"lit":"");
+    setCell("mInst",i>=1,i>=6?{t:"●",c:"ref"}:null,(i===1||i===6)?"lit":"");
     /* the object: fields start at their defaults */
-    var o=$("#obj"); o.className="obj"+(i>=1?" show":"")+(i===1||i===6?" lit":"");
-    setCell("fName",i>=1,i>=3?{t:q(NAME),c:""}:def("null"),i===1?"lity":(i===3||i===7)?"litg":"");
-    setCell("fAge",i>=1,i>=4?{t:String(AGE),c:""}:def("0"),i===1?"lity":i===4?"litg":"");
-    setCell("fEnergy",i>=1,i>=5?{t:"100",c:""}:def("0"),i===1?"lity":i===5?"litg":"");
+    var o=$("#obj"); o.className="obj"+(i>=2?" show":"")+(i===2||i===6||i===7?" lit":"");
+    setCell("fName",i>=2,i>=3?{t:q(NAME),c:""}:def("null"),i===2?"lity":(i===3||i===7)?"litg":"");
+    setCell("fAge",i>=2,i>=4?{t:String(AGE),c:""}:def("0"),i===2?"lity":i===4?"litg":"");
+    setCell("fEnergy",i>=2,i>=5?{t:"100",c:""}:def("0"),i===2?"lity":i===5?"litg":"");
     /* constructor frame: parameters exist only while it runs */
-    var f=$("#frame"); f.className="frame"+(i>=2&&i<=6?" show":"")+(i===6?" gone":"");
-    setCell("pName",i>=2&&i<=6,q(NAME),(i===2||i===3)?"lit":i===6?"gone":"");
-    setCell("pAge",i>=2&&i<=6,String(AGE),(i===2||i===4)?"lit":i===6?"gone":"");
+    var f=$("#frame"); f.className="frame"+(i>=3&&i<=6?" show":"")+(i===6?" gone":"");
+    setCell("pName",i>=3&&i<=6,q(NAME),i===3?"lit":i===6?"gone":"");
+    setCell("pAge",i>=3&&i<=6,String(AGE),(i===3||i===4)?"lit":i===6?"gone":"");
     /* zones */
-    $("#zM").className="zone"+((i===0||i>=6)?" on":"");
-    $("#zC").className="zone"+((i>=2&&i<=5)?" on":"");
-    $("#zO").className="zone"+(i===1?" on":"");
+    $("#zM").className="zone"+((i<=1||i>=6)?" on":"");
+    $("#zC").className="zone"+((i>=3&&i<=5)?" on":"");
+    $("#zO").className="zone"+(i===2?" on":"");
     /* arrows */
     var A=[];
-    if(i===2) A=[["mName","pName","a"],["mAge","pAge","a"]];
-    if(i===3) A=[["pName","fName","g"]];
+    if(i===3) A=[["mName","pName","a"],["mAge","pAge","a"],["pName","fName","g"]];
     if(i===4) A=[["pAge","fAge","g"]];
     if(i>=6) A=[["mInst","obj","a"]];
     drawArrows(A,animate&&i!==7);
@@ -388,11 +401,12 @@
     }
     var s=steps[i];
     renderCode($("#codeM"),mainLines(),s.m,s.mc); renderCode($("#codeP"),PERSON,s.p,s.pc);
-    consEl.innerHTML=s.out?'<div class="out">'+s.out+'</div>':'<span style="color:rgba(132,150,182,.5)">(nothing printed yet)</span>';
+    var lines=said(i), prev=animate===false?lines.length:said(i-1).length;
+    consEl.innerHTML=lines.length?lines.map(function(t,k){return '<div'+(k>=prev?' class="out"':'')+'>'+t+'</div>';}).join(""):'<span style="color:rgba(132,150,182,.5)">(nothing printed yet)</span>';
     $("#caption").className="caption "+s.cls; statusEl.innerHTML=s.msg;
     $("#stepno").innerHTML="<small>step</small>"+(i+1)+" / "+n;
-    setStat("#stParam",i<2?null:i>=6?"gone":q(NAME),i>=6?"dim":"hot");
-    setStat("#stField",i<1?null:i<3?"null":q(NAME),i<3?"gold":"good");
+    setStat("#stParam",i<6?null:"a reference","hot");
+    setStat("#stField",i<2?null:i<3?"null":q(NAME),i<3?"gold":"good");
     setBtns();
   }
   function setBtns(){ $("#bNext").disabled=at>=steps.length-1; $("#bBack").disabled=at<0;
@@ -408,15 +422,7 @@
   function next(){ if(at<steps.length-1) show(at+1); }
   function back(){ if(at>=0) show(at-1); }
   function reset(){ steps=build(); buildPic(); show(-1); }
-  function pick(idx){
-    NAME=PRESETS[idx][0]; AGE=PRESETS[idx][1];
-    Array.prototype.forEach.call(document.querySelectorAll(".chip"),function(c,j){c.classList.toggle("on",j===idx);});
-    if(document.activeElement&&document.activeElement.blur) document.activeElement.blur();
-    reset();
-  }
 
-  $("#chips").innerHTML=PRESETS.map(function(p,j){return '<button class="chip'+(j===0?' on':'')+'" data-i="'+j+'">"'+p[0]+'", '+p[1]+'</button>';}).join("");
-  $("#chips").addEventListener("click",function(e){ var b=e.target.closest(".chip"); if(b) pick(+b.getAttribute("data-i")); });
   $("#bNext").addEventListener("click",next);
   $("#bBack").addEventListener("click",back);
   $("#bReset").addEventListener("click",reset);

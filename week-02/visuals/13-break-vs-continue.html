@@ -61,16 +61,16 @@
   .pic .start{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;font-family:var(--mono);
     font-size:.8rem;color:var(--muted);pointer-events:none;transition:opacity .3s}
   .pic .start b{color:var(--accent);font-weight:500}
-  /* the passes: one box per week */
+  /* the passes: one box per value of i */
   .weeks{position:absolute;left:24px;right:24px;top:40px;display:flex;gap:8px}
   .wk{flex:1;min-width:0;height:60px;border-radius:10px;border:1px solid var(--line);background:rgba(255,255,255,.025);
     display:flex;flex-direction:column;align-items:center;justify-content:center;gap:3px;transition:all .35s}
   .wk .k{font-family:var(--mono);font-size:.58rem;letter-spacing:.06em;color:var(--muted);white-space:nowrap}
   .wk .v{font-family:var(--disp);font-weight:700;font-size:1rem;font-variant-numeric:tabular-nums;min-height:1.2em;color:transparent;transition:color .3s}
   .wk.cur{border-color:rgba(110,160,255,.7);background:rgba(110,160,255,.12);box-shadow:0 0 16px -6px rgba(110,160,255,.7)}
-  .wk.add{border-color:rgba(70,217,138,.5);background:rgba(70,217,138,.08)} .wk.add .v{color:var(--good)}
-  .wk.hit{border-color:var(--gold);background:rgba(255,200,98,.12);box-shadow:0 0 16px -6px rgba(255,200,98,.8)} .wk.hit .v{color:var(--gold);font-family:var(--mono);font-weight:500;font-size:.64rem;white-space:nowrap}
-  .wk.skip{border-style:dashed;border-color:rgba(255,106,106,.6);background:rgba(255,106,106,.06)} .wk.skip .v{color:var(--warn);font-family:var(--mono);font-weight:500;font-size:.7rem}
+  .wk.add{border-color:rgba(70,217,138,.5);background:rgba(70,217,138,.08)} .wk.add .v{color:var(--good)} .wk.add .v.sm{font-family:var(--mono);font-weight:500;font-size:.66rem}
+  .wk.hit{border-color:var(--gold);background:rgba(255,200,98,.12);box-shadow:0 0 16px -6px rgba(255,200,98,.8)} .wk.hit .v{color:var(--gold);font-family:var(--mono);font-weight:500;font-size:.62rem;white-space:nowrap}
+  .wk.skip{border-style:dashed;border-color:rgba(132,150,182,.45);background:rgba(132,150,182,.06)} .wk.skip .k{color:rgba(132,150,182,.6)} .wk.skip .v{color:var(--muted);font-family:var(--mono);font-weight:500;font-size:.66rem}
   .wk.stop{border-color:var(--gold);background:rgba(255,200,98,.08)} .wk.stop .v{color:var(--gold);font-family:var(--mono);font-weight:500;font-size:.7rem}
   .wk.never{opacity:.28;border-style:dashed} .wk.never .v{color:var(--muted);font-family:var(--mono);font-weight:400;font-size:.62rem}
   /* the loop, drawn as its lines, with the jump arrow beside it */
@@ -162,13 +162,13 @@
 </head>
 <body>
 
-<a class="back" href="../index.html#14-break-vs-continue">&#8592; Week 2 index</a>
+<a class="back" href="../index.html#13-break-vs-continue">&#8592; Week 2 index</a>
 
 <canvas id="amb"></canvas>
 <div class="wrap">
   <p class="tag">Workbook 2a &middot; Section 3-1 &middot; Loops</p>
   <h1>break vs continue</h1>
-  <p class="lede"><b><code>break</code> leaves the loop for good. <code>continue</code> skips the rest of this pass and goes on to the next one.</b></p>
+  <p class="lede"><b><code>break</code> leaves the loop now. <code>continue</code> skips the rest of this pass.</b></p>
 
   <div class="stage">
     <div class="topbar">
@@ -179,7 +179,7 @@
 
     <div class="pic" id="pic">
       <div class="scene off" id="scene">
-        <span class="zone" style="left:24px;top:18px">passes, one per week</span>
+        <span class="zone" style="left:24px;top:18px">passes, one per value of i</span>
         <div class="weeks" id="weeks"></div>
         <span class="zone" id="zLoop" style="left:24px">inside the loop</span>
         <div class="loop" id="loop">
@@ -191,7 +191,7 @@
         <div class="tot" id="tot"><div class="k" id="totK"></div><div class="v" id="totV">0</div><div class="x" id="totX"></div></div>
         <svg id="jump" aria-hidden="true"></svg>
       </div>
-      <div class="start" id="start">10 weeks &middot; press&nbsp;<b>Next</b></div>
+      <div class="start" id="start">i = 1 to 10 &middot; press&nbsp;<b>Next</b></div>
     </div>
 
     <div class="caption" id="caption">
@@ -205,7 +205,7 @@
       <button class="btn primary" id="bNext">Next &rarr;</button>
       <button class="btn ghost" id="bReset">Reset</button>
     </div>
-    <p class="hint">space = next &middot; <b>same loop, same if</b>: switch the version and compare the totals</p>
+    <p class="hint">space = next &middot; <b>same loop, i = 1 to 10</b>: switch between break and continue</p>
 
     <div class="support">
       <div>
@@ -214,8 +214,8 @@
       </div>
       <div class="side">
         <div class="readout">
-          <div class="stat empty"><div class="k" id="kWeek">week</div><div class="v dim" id="stWeek">?</div></div>
-          <div class="stat empty"><div class="k" id="kTot">total</div><div class="v dim" id="stTot">?</div></div>
+          <div class="stat empty"><div class="k" id="kWeek">i</div><div class="v dim" id="stWeek">?</div></div>
+          <div class="stat empty"><div class="k" id="kTot">sum</div><div class="v dim" id="stTot">?</div></div>
         </div>
         <div class="console"><div class="cl">console</div><div id="console"></div></div>
       </div>
@@ -224,9 +224,9 @@
 
   <div class="take">
     <p class="tk">The one idea</p>
-    <p><b><code>break</code> ends the whole loop:</b> the passes after it never run. <b><code>continue</code> ends only the current pass:</b>
-    the lines below it are skipped, then the loop moves on to the next pass. Same loop, same if: break gives 3, continue gives 37.
-    Some programmers avoid continue and write the if the other way: <code>if (week % 3 != 0)</code> adds only the weeks to keep.</p>
+    <p><b><code>break</code> leaves the loop now:</b> only 1 and 2 are added, 4 to 10 never run, the sum is 3.
+    <b><code>continue</code> skips the rest of this pass:</b> 3, 6 and 9 are not added, the loop keeps going, the sum is 37.
+    The same 37 also comes without continue, by writing the if the other way: <code>if (i % 3 != 0) { sum += i; }</code></p>
   </div>
 
   <div id="rail"></div>
@@ -239,77 +239,60 @@
   var reduce=matchMedia("(prefers-reduced-motion: reduce)").matches;
   var SVGNS="http://www.w3.org/2000/svg";
 
-  /* ---------- the two versions of the same loop ---------- */
+  /* ---------- the two loops: same loop, same if, only the keyword differs ---------- */
+  function codeFor(kw,note){ return [
+    'sum = <span class="nm">0</span>;   <span class="cm">// reset, declared above</span>',
+    '<span class="kw">for</span> (<span class="ty">int</span> i = <span class="nm">1</span>; i <= <span class="nm">10</span>; i++) {',
+    '    <span class="kw">if</span> (i % <span class="nm">3</span> == <span class="nm">0</span>) {',
+    '        <span class="kw">'+kw+'</span>;   <span class="cm">// '+note+'</span>',
+    '    }',
+    '    sum += i;',
+    '}',
+    'System.out.<span class="fn">println</span>(<span class="st">"The sum is: "</span> + sum);'
+  ]; }
+  function rowsFor(kw){ return ['for (int i = 1; i <= 10; i++)','if (i % 3 == 0) { '+kw+'; }','sum += i;','System.out.println("The sum is: " + sum);']; }
   var V={
-    "break":{week:"breakWeek",tot:"piggyBank",
-      code:[
-        '<span class="ty">int</span> piggyBank = <span class="nm">0</span>;',
-        '<span class="kw">for</span> (<span class="ty">int</span> breakWeek = <span class="nm">1</span>; breakWeek <= <span class="nm">10</span>; breakWeek++) {',
-        '    <span class="kw">if</span> (breakWeek % <span class="nm">3</span> == <span class="nm">0</span>) {',
-        '        System.out.<span class="fn">println</span>(<span class="st">"Week "</span> + breakWeek + <span class="st">": piggy bank is full, stop saving"</span>);',
-        '        <span class="kw">break</span>;                <span class="cm">// leave the loop now</span>',
-        '    }',
-        '    piggyBank += breakWeek;',
-        '}',
-        'System.out.<span class="fn">println</span>(<span class="st">"Piggy bank: "</span> + piggyBank);'
-      ],
-      rows:['for (int breakWeek = 1; breakWeek <= 10; breakWeek++)','if (breakWeek % 3 == 0)  break;','piggyBank += breakWeek;','System.out.println("Piggy bank: " + piggyBank);']
-    },
-    "continue":{week:"skipWeek",tot:"holidaySavings",
-      code:[
-        '<span class="ty">int</span> holidaySavings = <span class="nm">0</span>;',
-        '<span class="kw">for</span> (<span class="ty">int</span> skipWeek = <span class="nm">1</span>; skipWeek <= <span class="nm">10</span>; skipWeek++) {',
-        '    <span class="kw">if</span> (skipWeek % <span class="nm">3</span> == <span class="nm">0</span>) {',
-        '        <span class="kw">continue</span>;             <span class="cm">// skip the rest of this pass, go to the next week</span>',
-        '    }',
-        '    holidaySavings += skipWeek;',
-        '}',
-        'System.out.<span class="fn">println</span>(<span class="st">"Saved, skipping every third week: "</span> + holidaySavings);'
-      ],
-      rows:['for (int skipWeek = 1; skipWeek <= 10; skipWeek++)','if (skipWeek % 3 == 0)  continue;','holidaySavings += skipWeek;','System.out.println("Saved: " + holidaySavings);']
-    }
+    "break":{tot:"sum",code:codeFor("break","leave the loop now, 4 to 10 never run"),rows:rowsFor("break")},
+    "continue":{tot:"sum",code:codeFor("continue","skip the rest of this pass, go to the next i"),rows:rowsFor("continue")}
   };
   var mode="break";
-
-  /* box states for the 10 weeks: "" waiting, add, hit, stop, skip, never */
+  /* box states for i = 1 to 10: "" waiting, add, hit, stop, skip, never */
   function wk(list){ var w=[]; for(var i=0;i<10;i++) w.push(list[i]||""); return w; }
-
+  /* one step per pass. seq = the code lines that light one after another inside the step (check, if, then += or the keyword) */
   function build(){
-    if(mode==="break") return [
-      {code:[1],cls:"",weeks:wk([]),rows:["","","",""],week:null,total:0,expr:"",
-        msg:'<code>piggyBank</code> starts at 0. The loop is set up for 10 passes, one per week.'},
-      {code:[2,3,7],cls:"",weeks:wk(["add","add"]),cur:1,rows:["cur","cur","cur",""],week:2,total:3,expr:"1 + 2",
-        msg:'Weeks 1 and 2: the if is false, so each pass reaches the <code>+=</code> line. Total <b class="g">3</b>.'},
-      {code:[3,4],cls:"left",weeks:wk(["add","add","hit"]),cur:2,hitTxt:"3 % 3 == 0",rows:["","hit","",""],week:3,total:3,expr:"1 + 2",
-        out:"Week 3: piggy bank is full, stop saving",
-        msg:'Week 3: <code>3 % 3 == 0</code> is <b class="y">true</b>, so the if runs. It prints a line and reaches break.'},
-      {code:[5],skip:[7],cls:"cut",weeks:wk(["add","add","stop"]),cur:2,rows:["","hit","skip","land"],jump:"break",anim:true,week:3,total:3,expr:"1 + 2",
-        msg:'<b class="y">break</b> jumps out of the loop at once. The <code>+=</code> line below it is <b class="w">skipped</b>.'},
-      {code:[2],cls:"cut",weeks:wk(["add","add","stop","never","never","never","never","never","never","never"]),rows:["dim","dim","dim","land"],jump:"break",week:3,total:3,expr:"1 + 2",
-        msg:'Weeks 4 to 10 <b class="w">never run</b>. The loop is over; its condition is not even checked again.'},
-      {code:[9],cls:"ok",weeks:wk(["add","add","stop","never","never","never","never","never","never","never"]),rows:["dim","dim","dim","cur"],week:3,total:3,expr:"1 + 2",final:true,
-        out:"Piggy bank: 3",
-        msg:'After the loop: <b class="g">Piggy bank: 3</b>. Only weeks 1 and 2 were added.'}
-    ];
-    return [
-      {code:[1],cls:"",weeks:wk([]),rows:["","","",""],week:null,total:0,expr:"",
-        msg:'<code>holidaySavings</code> starts at 0. The loop is set up for 10 passes, one per week.'},
-      {code:[2,3,6],cls:"",weeks:wk(["add","add"]),cur:1,rows:["cur","cur","cur",""],week:2,total:3,expr:"1 + 2",
-        msg:'Weeks 1 and 2: the if is false, so each pass reaches the <code>+=</code> line. Total <b class="g">3</b>.'},
-      {code:[3],cls:"left",weeks:wk(["add","add","hit"]),cur:2,hitTxt:"3 % 3 == 0",rows:["","hit","",""],week:3,total:3,expr:"1 + 2",
-        msg:'Week 3: <code>3 % 3 == 0</code> is <b class="y">true</b>, so the if runs and reaches continue.'},
-      {code:[4],skip:[6],cls:"cut",weeks:wk(["add","add","skip"]),cur:2,rows:["land","hit","skip",""],jump:"continue",anim:true,week:3,total:3,expr:"1 + 2",
-        msg:'<b class="y">continue</b> skips the rest of this pass: <code>+=</code> is <b class="w">skipped</b>, and the loop goes to week 4.'},
-      {code:[2,3,6],cls:"",weeks:wk(["add","add","skip","add","add"]),cur:4,rows:["cur","cur","cur",""],week:5,total:12,expr:"1 + 2 + 4 + 5",
-        msg:'The loop is still running. Weeks 4 and 5: the if is false again, both are added. Total <b class="g">12</b>.'},
-      {code:[4],skip:[6],cls:"cut",weeks:wk(["add","add","skip","add","add","skip","add","add","skip","add"]),cur:9,rows:["land","hit","skip",""],jump:"continue",anim:true,week:10,total:37,expr:"1 + 2 + 4 + 5 + 7 + 8 + 10",
-        msg:'Weeks 6 and 9 jump back the same way. Weeks 7, 8 and 10 are added. Total <b class="g">37</b>.'},
-      {code:[8],cls:"ok",weeks:wk(["add","add","skip","add","add","skip","add","add","skip","add"]),rows:["dim","dim","dim","cur"],week:11,total:37,expr:"1 + 2 + 4 + 5 + 7 + 8 + 10",final:true,
-        out:"Saved, skipping every third week: 37",
-        msg:'Week 11 fails <code>skipWeek <= 10</code>, so the loop ends on its own. Saved: <b class="g">37</b>.'}
-    ];
+    var S=[], boxes=[], added=[], sum=0;
+    function ex(){ return added.length?"= "+added.join(" + "):""; }
+    S.push({code:[1],cls:"",weeks:wk([]),rows:["","","",""],week:null,total:0,expr:"",
+      msg:'<code>sum</code> is reset to 0 and the loop is set up to run i = 1 to 10.'});
+    for(var i=1;i<=10;i++){
+      if(i%3===0){
+        if(mode==="break"){
+          S.push({seq:[[2],[3],[4]],code:[2,3,4],cls:"left",weeks:wk(boxes.concat(["hit"])),cur:i-1,hitTxt:i+" % 3 == 0",rows:["","hit","",""],week:i,total:sum,expr:ex(),
+            msg:'Pass 3: <code>3 % 3 == 0</code> is <b class="y">true</b>, so the if runs and reaches <code>break</code>.'});
+          var nv=boxes.concat(["stop"]); while(nv.length<10) nv.push("never");
+          S.push({code:[4],skip:[6],cls:"cut",weeks:wk(nv),cur:i-1,rows:["dim","hit","skip","land"],jump:"break",anim:true,week:i,total:sum,expr:ex(),
+            msg:'<b class="y">break</b> leaves the loop now: 3 is <b class="w">never added</b> and passes 4 to 10 <b class="w">never run</b>.'});
+          S.push({seq:[[8]],code:[8],cls:"ok",weeks:wk(nv),rows:["dim","dim","dim","cur"],week:i,total:sum,expr:ex(),final:true,
+            out:["The sum is: "+sum],
+            msg:'After the loop: <b class="g">The sum is: '+sum+'</b>, because only 1 and 2 were added.'});
+          return S;
+        }
+        boxes.push("skip");
+        S.push({seq:[[2],[3],[4]],code:[2,3,4],skip:[6],cls:"cut",weeks:wk(boxes),cur:i-1,rows:["land","hit","skip",""],jump:"continue",anim:true,week:i,total:sum,expr:ex(),
+          msg:'Pass '+i+': <code>'+i+' % 3 == 0</code> is <b class="y">true</b>, so <b class="y">continue</b> skips <code>+=</code> and sum stays <b class="w">'+sum+'</b>.'});
+      } else {
+        sum+=i; added.push(i); boxes.push("add");
+        S.push({seq:[[2],[3],[6]],code:[2,3,6],cls:"",weeks:wk(boxes),cur:i-1,rows:["cur","cur","cur",""],week:i,total:sum,expr:ex(),
+          msg:'Pass '+i+': <code>'+i+' % 3</code> is '+(i%3)+', not 0, so the if is false and <code>sum += '+i+'</code> makes sum <b class="g">'+sum+'</b>.'});
+      }
+    }
+    S.push({code:[2],cls:"left",weeks:wk(boxes),rows:["hit","dim","dim",""],week:11,total:sum,expr:ex(),
+      msg:'i becomes 11 and <code>i <= 10</code> is <b class="y">false</b>, so the loop ends on its own.'});
+    S.push({code:[8],cls:"ok",weeks:wk(boxes),rows:["dim","dim","dim","cur"],week:11,total:sum,expr:ex(),final:true,
+      out:["The sum is: "+sum],
+      msg:'After the loop: <b class="g">The sum is: '+sum+'</b>, because 3, 6 and 9 were skipped.'});
+    return S;
   }
-
   /* ---------- state ---------- */
   var steps=[],at=-1;
   var codeEl=$("#code"),consEl=$("#console"),statusEl=$("#status"),svg=$("#jump");
@@ -326,12 +309,12 @@
 
   function buildPic(){
     var v=V[mode], h="";
-    for(var i=0;i<10;i++) h+='<div class="wk" id="w'+i+'"><span class="k">week '+(i+1)+'</span><span class="v"></span></div>';
+    for(var i=0;i<10;i++) h+='<div class="wk" id="w'+i+'"><span class="k">i = '+(i+1)+'</span><span class="v"></span></div>';
     $("#weeks").innerHTML=h;
     $("#rA").innerHTML=v.rows[0]; $("#rB").innerHTML=v.rows[1];
     $("#rC").innerHTML=v.rows[2]+'<span class="tg">skipped</span>'; $("#rD").innerHTML=v.rows[3];
     $("#totK").textContent=v.tot;
-    $("#kWeek").textContent=v.week; $("#kTot").textContent=v.tot;
+    $("#kWeek").textContent="i"; $("#kTot").textContent=v.tot;
   }
 
   /* the jump arrow: from the if line, around the right side of the loop, to where the program goes next */
@@ -372,17 +355,19 @@
       else if(st==="skip") val="skipped";
       else if(st==="never") val="not run";
       e.className="wk"+(st?" "+st:"")+(s.cur===i&&st!=="hit"?" cur":"");
-      e.querySelector(".v").textContent=val;
+      e.querySelector(".v").textContent=val; e.querySelector(".v").className="v";
     }
     ["rA","rB","rC","rD"].forEach(function(id,k){ $("#"+id).className="row"+(k===1||k===2?" in":"")+(s.rows[k]?" "+s.rows[k]:""); });
     var zl=$("#zLoop"); zl.style.top=($("#loop").offsetTop-16)+"px";
     $("#totV").textContent=s.total; $("#totV").className="v"+(s.final?" g":"");
-    $("#totX").textContent=s.expr?"= "+s.expr:"";
+    $("#totX").textContent=s.expr;
     drawJump(s.jump,anim);
   }
 
+  var seqTimer=null;
   function show(i,anim){
     at=i;
+    if(seqTimer){ clearTimeout(seqTimer); seqTimer=null; }
     var k,out=[];
     if(i<0){
       renderCode(null); renderPic(null); consEl.innerHTML='<span style="color:rgba(132,150,182,.5)">(nothing printed yet)</span>';
@@ -391,8 +376,22 @@
     }
     var s=steps[i];
     $("#stepno").innerHTML="<small>step</small>"+(i+1)+" / "+steps.length;
-    renderCode(s); renderPic(s,anim&&s.anim);
-    for(k=0;k<=i;k++) if(steps[k].out) out.push(steps[k].out);
+    if(seqTimer){ clearTimeout(seqTimer); seqTimer=null; }
+    if(anim&&!reduce&&s.seq&&s.seq.length>1){
+      /* light the lines of this pass one after another, in the code AND in the picture, then leave the pass fully drawn */
+      var prev=i>0?steps[i-1]:null;
+      var rowFor={2:["cur","","",""],3:["","cur","",""],4:s.rows,6:["","","cur",""],8:["","","","cur"]};
+      var q=0, tick=function(){
+        var ln=s.seq[q][0], part={}; for(var p in s) part[p]=s[p];
+        part.code=s.seq[q]; part.skip=null; part.rows=rowFor[ln]||s.rows;
+        if(ln!==4&&ln!==6&&prev){ part.weeks=prev.weeks; part.cur=i-1>=0?prev.cur:null; part.hitTxt=prev.hitTxt; part.total=prev.total; part.expr=prev.expr; part.jump=null; }
+        else if(ln===4){ part.jump=null; }
+        renderCode(part); renderPic(part,false); q++;
+        seqTimer=setTimeout(q<s.seq.length?tick:function(){ seqTimer=null; renderCode(s); renderPic(s,s.anim); },420);
+      };
+      tick();
+    } else { renderCode(s); renderPic(s,anim&&s.anim); }
+    for(k=0;k<=i;k++) if(steps[k].out) out=out.concat(steps[k].out);
     consEl.innerHTML=out.map(function(o){return '<div class="out">'+o+'</div>';}).join("")||'<span style="color:rgba(132,150,182,.5)">(nothing printed yet)</span>';
     $("#caption").className="caption "+s.cls; statusEl.innerHTML=s.msg;
     setStat("#stWeek",s.week,""); setStat("#stTot",s.total,s.final?"hot":"");
@@ -444,6 +443,6 @@
 </script>
 <script src="../manifest.js"></script>
 <script src="../../assets/rail.js"></script>
-<script>Rail.render(document.getElementById("rail"),{week:2,kind:"visuals",current:"14-break-vs-continue"});</script>
+<script>Rail.render(document.getElementById("rail"),{week:2,kind:"visuals",current:"13-break-vs-continue"});</script>
 </body>
 </html>

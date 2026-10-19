@@ -55,7 +55,9 @@
   body.solo .pic{height:480px}
   .pic .zone{position:absolute;font-family:var(--mono);font-size:.62rem;letter-spacing:.14em;text-transform:uppercase;
     color:rgba(132,150,182,.55);transition:color .3s,opacity .3s}
-  /* variable box, String objects, the reference arrow */
+  .scene{position:absolute;inset:0;pointer-events:none;opacity:0;transition:opacity .3s}
+  .scene.on{opacity:1}
+  /* the variable box and its reference */
   .var{position:absolute;width:170px;transition:opacity .4s,transform .4s;opacity:0;transform:translateY(6px)}
   .var.show{opacity:1;transform:none}
   .var .vl{font-family:var(--mono);font-size:.7rem;color:var(--muted);margin:0 0 6px}
@@ -64,35 +66,43 @@
     display:flex;align-items:center;justify-content:flex-end;padding-right:14px;font-family:var(--mono);font-size:.62rem;
     letter-spacing:.12em;text-transform:uppercase;color:rgba(188,208,255,.7)}
   .var .vb:after{content:"";width:12px;height:12px;border-radius:50%;background:var(--accent);margin-left:10px;box-shadow:0 0 10px rgba(110,160,255,.8)}
+  /* String objects */
   .obj{position:absolute;padding:8px 10px 10px;border-radius:12px;border:1px solid rgba(255,255,255,.14);background:rgba(255,255,255,.035);
     opacity:0;transform:scale(.92);transition:opacity .45s,transform .45s,border-color .3s,background .3s,box-shadow .3s}
   .obj.show{opacity:1;transform:none}
-  .obj .oh{display:block;font-family:var(--mono);font-size:.58rem;letter-spacing:.14em;text-transform:uppercase;color:var(--muted);margin:0 0 6px}
-  .obj .cells{display:flex;gap:2px}
-  .obj .c{width:30px;height:36px;display:flex;align-items:center;justify-content:center;border-radius:6px;background:rgba(0,0,0,.35);
-    border:1px solid rgba(255,255,255,.08);font-family:var(--mono);font-size:1.02rem;color:var(--ink)}
+  .obj .oh{display:flex;align-items:center;gap:10px;font-family:var(--mono);font-size:.58rem;letter-spacing:.14em;text-transform:uppercase;color:var(--muted);margin:0 0 6px;white-space:nowrap}
+  .obj .cells{display:flex;gap:2px;min-height:34px}
+  .obj .c{width:var(--cw,28px);height:34px;display:flex;align-items:center;justify-content:center;border-radius:6px;background:rgba(0,0,0,.35);
+    border:1px solid rgba(255,255,255,.08);font-family:var(--mono);font-size:.98rem;color:var(--ink);transition:background .3s,border-color .3s}
   .obj .c.sp{color:rgba(132,150,182,.45)}
+  .obj .c.add{border-color:rgba(255,200,98,.7);background:rgba(255,200,98,.12)}
   .obj.new{border-style:dashed;border-color:rgba(110,160,255,.6);background:rgba(110,160,255,.07)}
   .obj.cur{border-color:rgba(110,160,255,.7);background:rgba(110,160,255,.1);box-shadow:0 0 18px -6px rgba(110,160,255,.6)}
-  .obj.readw{border-color:rgba(255,106,106,.8);background:rgba(255,106,106,.08);box-shadow:0 0 20px -6px rgba(255,106,106,.7)}
   .obj.readg{border-color:rgba(70,217,138,.8);background:rgba(70,217,138,.08);box-shadow:0 0 20px -6px rgba(70,217,138,.7)}
   .obj.gone{opacity:.32;border-style:dashed;transform:none}
-  .obj .otag{position:absolute;left:calc(100% + 12px);top:50%;transform:translateY(-50%);white-space:nowrap;font-family:var(--mono);
-    font-size:.64rem;padding:3px 9px;border-radius:999px;border:1px solid var(--line);color:var(--muted);opacity:0;transition:opacity .3s}
-  .obj .otag.on{opacity:1}
-  .obj .otag.a{color:var(--accent);border-color:rgba(110,160,255,.5);background:rgba(110,160,255,.08)}
-  .obj .otag.y{color:var(--gold);border-color:rgba(255,200,98,.55);background:rgba(255,200,98,.08)}
-  .obj .otag.w{color:var(--warn);border-color:rgba(255,106,106,.6);background:rgba(255,106,106,.1)}
-  .obj.gone .otag{opacity:1}
+  .otag{font-family:var(--mono);font-size:.6rem;letter-spacing:.06em;text-transform:none;padding:2px 8px;border-radius:999px;
+    border:1px solid var(--line);color:var(--muted);opacity:0;transition:opacity .3s}
+  .otag.on{opacity:1}
+  .otag.a{color:var(--accent);border-color:rgba(110,160,255,.5);background:rgba(110,160,255,.08)}
+  .otag.y{color:var(--gold);border-color:rgba(255,200,98,.55);background:rgba(255,200,98,.08)}
+  .otag.g{color:var(--good);border-color:rgba(70,217,138,.55);background:rgba(70,217,138,.08)}
+  /* the countdown pile: one row per object */
+  .row{position:absolute;display:flex;align-items:center;gap:12px;padding:0 12px;border-radius:9px;border:1px solid rgba(255,255,255,.14);
+    background:rgba(255,255,255,.035);font-family:var(--mono);font-size:.8rem;color:var(--ink);white-space:pre;opacity:0;
+    transition:opacity .35s,border-color .3s,background .3s,box-shadow .3s}
+  .row .rn{font-size:.6rem;color:var(--muted);min-width:22px}
+  .row .q{color:rgba(132,150,182,.6)} .row .sp{color:rgba(132,150,182,.45)}
+  .row.show{opacity:1}
+  .row.cur{border-color:rgba(110,160,255,.7);background:rgba(110,160,255,.1);box-shadow:0 0 16px -6px rgba(110,160,255,.6)}
+  .row.gone{opacity:.32;border-style:dashed}
   #arrows{position:absolute;inset:0;width:100%;height:100%;pointer-events:none;overflow:visible}
   #ref{fill:none;stroke:var(--accent);stroke-width:2.5;transition:d .7s cubic-bezier(.2,.9,.3,1),stroke .3s,opacity .3s;opacity:0}
-  #ref.show{opacity:1} #ref.w{stroke:var(--warn)} #ref.g{stroke:var(--good)}
-  #head{fill:var(--accent);transition:fill .3s} #head.w{fill:var(--warn)} #head.g{fill:var(--good)}
+  #ref.show{opacity:1} #ref.g{stroke:var(--good)} #ref.still{transition:none}
+  #head{fill:var(--accent);transition:fill .3s} #head.g{fill:var(--good)}
   .answer{position:absolute;left:24px;bottom:16px;font-family:var(--mono);font-size:1.05rem;color:var(--ink);opacity:0;transition:opacity .4s;
     white-space:pre;line-height:1.3}
   .answer.show{opacity:1}
   .answer small{display:block;font-weight:400;font-size:.6rem;letter-spacing:.14em;text-transform:uppercase;color:var(--muted);margin-bottom:4px;white-space:normal}
-  .answer .w{color:var(--warn);background:rgba(255,106,106,.1);padding:2px 6px;border-radius:6px}
   .answer .g{color:var(--good);background:rgba(70,217,138,.1);padding:2px 6px;border-radius:6px}
   .pic .start{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;font-family:var(--mono);
     font-size:.8rem;color:var(--muted);pointer-events:none;transition:opacity .3s}
@@ -133,21 +143,23 @@
   .ln .n{width:20px;text-align:right;color:rgba(132,150,182,.55);user-select:none;flex-shrink:0}
   .ln.cur{background:rgba(110,160,255,.14);box-shadow:inset 3px 0 0 var(--accent)}
   .ln.cur .n{color:var(--accent)}
-  .ln.cut{background:rgba(255,106,106,.12);box-shadow:inset 3px 0 0 var(--warn)}
   .ln.left{background:rgba(255,200,98,.12);box-shadow:inset 3px 0 0 var(--gold)}
+  .ln.ok{background:rgba(70,217,138,.1);box-shadow:inset 3px 0 0 var(--good)}
   .ln.dim{opacity:.4}
   .kw{color:#c792ea} .ty{color:#82aaff} .st{color:#c3e88d} .nm{color:#f78c6c} .cm{color:#5f6b85;font-style:italic} .fn{color:#ffcb6b}
   .side{display:flex;flex-direction:column;gap:12px}
   .readout{display:grid;grid-template-columns:1fr 1fr;gap:10px}
-  .stat{background:rgba(255,255,255,.03);border:1px solid var(--line);border-radius:12px;padding:11px 13px;transition:opacity .3s}
+  .stat{min-width:0;background:rgba(255,255,255,.03);border:1px solid var(--line);border-radius:12px;padding:11px 13px;transition:opacity .3s}
   .stat.empty{opacity:.3}
   .stat .k{font-family:var(--mono);font-size:.62rem;letter-spacing:.1em;text-transform:uppercase;color:var(--muted)}
-  .stat .v{font-family:var(--disp);font-weight:700;font-size:1.45rem;font-variant-numeric:tabular-nums;margin-top:2px;transition:color .3s;min-height:1.6em}
+  .stat .v{font-family:var(--disp);font-weight:700;font-size:1.45rem;font-variant-numeric:tabular-nums;margin-top:2px;transition:color .3s;min-height:1.6em;
+    white-space:pre;overflow:hidden;text-overflow:ellipsis}
+  .stat .v.long{font-family:var(--mono);font-weight:500;font-size:.9rem;line-height:2.2em}
   .v.hot{color:var(--accent)} .v.gold{color:var(--gold)} .v.dim{color:rgba(132,150,182,.5)}
   .console{font-family:var(--mono);font-size:.76rem;line-height:1.6;background:#05070e;border:1px solid var(--line);
     border-radius:12px;padding:10px 14px;min-height:64px;color:#9fe3b6;flex:1}
   .console .cl{font-size:.6rem;letter-spacing:.14em;text-transform:uppercase;color:rgba(132,150,182,.6);margin-bottom:4px}
-  .console .out{animation:pop .3s}
+  .console .out{animation:pop .3s;white-space:pre}
   @keyframes pop{from{transform:scale(.6);opacity:0}to{transform:scale(1);opacity:1}}
   .take{margin-top:22px;background:linear-gradient(180deg,rgba(110,160,255,.08),rgba(139,123,255,.04));
     border:1px solid var(--line);border-left:3px solid var(--accent);border-radius:12px;padding:16px 18px}
@@ -159,25 +171,24 @@
 </head>
 <body>
 
-<a class="back" href="../index.html#02-string-immutability">&#8592; Week 2 index</a>
+<a class="back" href="../index.html#05-string-immutability">&#8592; Week 2 index</a>
 
 <canvas id="amb"></canvas>
 <div class="wrap">
-  <p class="tag">Workbook 2a &middot; Section 1-1 &middot; Strings</p>
+  <p class="tag">Workbook 2a &middot; Section 1-4 &middot; Working with StringBuilder</p>
   <h1>Strings Are Immutable</h1>
-  <p class="lede"><b>A String never changes: <code>toUpperCase()</code> returns a new String, and the variable keeps the old one until you assign the result.</b></p>
+  <p class="lede"><b>A String object never changes: <code>+</code> builds a new one, and the old one becomes unreachable when you reassign.</b></p>
 
   <div class="stage">
     <div class="topbar">
-      <span class="lab">Method</span>
-      <div class="chips" id="chips"></div>
+      <span class="lab">One String, one change</span>
       <button class="focus" id="bFocus" title="Hide the code and notes, enlarge the picture">Focus</button>
     </div>
 
     <div class="pic" id="pic"></div>
 
     <div class="caption" id="caption">
-      <div class="n" id="stepno"><small>step</small>0 / 6</div>
+      <div class="n" id="stepno"><small>step</small>0 / 10</div>
       <div class="t" id="status">Press <b class="a">Next</b>. The picture changes at every step.</div>
     </div>
 
@@ -187,7 +198,7 @@
       <button class="btn primary" id="bNext">Next &rarr;</button>
       <button class="btn ghost" id="bReset">Reset</button>
     </div>
-    <p class="hint">space = next &middot; <b>watch the old object: its letters never change</b></p>
+    <p class="hint">space = next &middot; <b>watch the old objects: their letters never change</b></p>
 
     <div class="support">
       <div>
@@ -196,7 +207,7 @@
       </div>
       <div class="side">
         <div class="readout">
-          <div class="stat empty"><div class="k" id="kPts">variable points to</div><div class="v dim" id="stPts"></div></div>
+          <div class="stat empty"><div class="k" id="kPts">greeting points to</div><div class="v dim" id="stPts"></div></div>
           <div class="stat empty"><div class="k">unreachable objects</div><div class="v dim" id="stUnr"></div></div>
         </div>
         <div class="console"><div class="cl">console</div><div id="console"></div></div>
@@ -206,9 +217,9 @@
 
   <div class="take">
     <p class="tk">The one idea</p>
-    <p><b>A String object never changes.</b> <code>toUpperCase()</code>, <code>trim()</code> and <code>replace()</code> leave it alone and
-    hand back a brand new String. If you do not store that result, it is lost. <b>Assign it</b>, as in
-    <code>name = name.toUpperCase();</code>, to point the variable at the new object. The old one becomes unreachable.</p>
+    <p><b>A String object never changes.</b> Concatenation with <code>+</code> builds a new object. <b>Assign it</b> to keep it,
+    and the old object becomes unreachable: no variable points to it any more. Every change to a String is a new object, which is
+    why the next page introduces <b>StringBuilder</b>.</p>
   </div>
 
   <div id="rail"></div>
@@ -220,159 +231,230 @@
   var $=function(s){return document.querySelector(s);};
   var reduce=matchMedia("(prefers-reduced-motion: reduce)").matches;
 
-  /* ---------- presets: one variable, one method that returns a new String ---------- */
-  var PRESETS=[
-    {v:"name",val:"raymond",m:"toUpperCase",args:"",f:function(s){return s.toUpperCase();}},
-    {v:"code",val:"SAVE-50",m:"replace",args:'<span class="st">"50"</span>, <span class="st">"75"</span>',f:function(s){return s.replace("50","75");}},
-    {v:"username",val:"  danaw  ",m:"trim",args:"",f:function(s){return s.trim();}}
-  ];
-  var P=PRESETS[0];
-
-  function q(s){return '"'+(s)+'"';}
-  function call(){return P.v+'.<span class="fn">'+P.m+'</span>('+P.args+')';}
+  /* ---------- the one setting: how many passes the loop makes ---------- */
+  var PRESETS=[3,5,10];
+  var N=5;
+  function seq(p){ var s=""; for(var k=0;k<p;k++) s+=(N-k)+" "; return s; }  /* countdown after p passes */
+  function q(s){ return '"'+s+'"'; }
 
   function lines(){
     return [
-      '<span class="ty">String</span> '+P.v+' = <span class="st">'+q(P.val)+'</span>;',
-      call()+';',
-      'System.out.println('+P.v+');',
-      '',
-      P.v+' = '+call()+';',
-      'System.out.println('+P.v+');'
+      '<span class="ty">String</span> greeting = <span class="st">"Hello"</span>;',
+      'System.out.<span class="fn">println</span>(greeting + <span class="st">", Raymond"</span>);',
+      'System.out.<span class="fn">println</span>(greeting);',
+      'greeting = greeting + <span class="st">", Raymond"</span>;',
+      'System.out.<span class="fn">println</span>(greeting);',
+
     ];
   }
 
   /* ---------- the walk ---------- */
   function build(){
-    var v='<code>'+P.v+'</code>', m='<code>'+P.m+'()</code>', o=q(P.val), r=q(P.f(P.val));
+    var hr='<code>"Hello, Raymond"</code>', last=seq(N);
     return [
-      {line:[1],cls:"",arrow:"A",objs:{A:"cur"},pts:P.val,unr:0,
-       msg:v+' holds a <b class="a">reference</b> (the arrow) to the String object '+o+', not the letters.'},
-      {line:[2],cls:"",arrow:"A",objs:{A:"cur",B:"new"},tags:{A:["not changed","y"],B:["result, not stored","a"]},pts:P.val,unr:0,
-       msg:m+' builds a <b class="a">new</b> object '+r+'. The old object is <b class="y">not touched</b>.'},
-      {line:[3],cls:"cut",arrow:"A",read:"w",objs:{A:"readw",B:"gone"},pts:P.val,unr:1,out:P.val,
-       msg:'The arrow never moved, so this prints <b class="w">'+o+'</b>. The new object was never stored.'},
-      {line:[5],cls:"",arrow:"A",objs:{A:"cur",B:"gone",C:"new"},tags:{C:["result","a"]},pts:P.val,unr:1,
-       msg:'Now the result is assigned. First '+m+' builds another new object '+r+'.'},
-      {line:[5],cls:"left",arrow:"C",objs:{A:"gone",B:"gone",C:"cur"},pts:P.f(P.val),unr:2,
-       msg:'The <code>=</code> moves the arrow. Nothing points at '+o+' now: it is <b class="y">unreachable</b>.'},
-      {line:[6],cls:"ok",arrow:"C",read:"g",objs:{A:"gone",B:"gone",C:"readg"},pts:P.f(P.val),unr:2,out:P.f(P.val),
-       msg:'println follows the arrow and prints <b class="g">'+r+'</b>. Same variable, different object.'}
+      {sc:"g",line:[1],cls:"",arrow:"A",objs:{A:"cur"},pts:"Hello",unr:0,
+       msg:'<code>greeting</code> holds a <b class="a">reference</b> (the arrow) to one String object, <code>"Hello"</code>.'},
+      {sc:"g",line:[2],cls:"",arrow:"A",objs:{A:"cur",B:"new"},tags:{A:["not changed","y"],B:["result, not stored","a"]},pts:"Hello",unr:0,
+       out:"Hello, Raymond",ans:'println(greeting + ", Raymond")',
+       msg:'<code>+</code> builds a <b class="a">new</b> object for println. <code>"Hello"</code> is <b class="y">not changed</b> and the arrow stays.'},
+      {sc:"g",line:[3],cls:"ok",arrow:"A",read:"g",objs:{A:"readg",B:"gone"},pts:"Hello",unr:1,out:"Hello",ans:"println(greeting)",
+       msg:'println follows the arrow: <b class="g">Hello</b>. No variable ever pointed at the new object: it is unreachable.'},
+      {sc:"g",line:[4],cls:"",arrow:"A",objs:{A:"cur",B:"gone",C:"new"},tags:{C:["built first","a"]},pts:"Hello",unr:1,
+       msg:'The right side of <code>=</code> runs first: it builds another new object, '+hr+'.'},
+      {sc:"g",line:[4],cls:"left",arrow:"C",objs:{A:"gone",B:"gone",C:"cur"},pts:"Hello, Raymond",unr:2,
+       msg:'The <code>=</code> moves the arrow. Nothing points at <code>"Hello"</code> now: it is <b class="y">unreachable</b>.'},
+      {sc:"g",line:[5],cls:"ok",arrow:"C",read:"g",objs:{A:"gone",B:"gone",C:"readg"},pts:"Hello, Raymond",unr:2,
+       out:"Hello, Raymond",ans:"println(greeting)",
+       msg:'println follows the moved arrow: <b class="g">Hello, Raymond</b>. Same variable, different object.'}
     ];
   }
 
   /* ---------- state ---------- */
-  var steps=[],at=-1;
+  var steps=[],at=-1,timer=null,lastScene=null;
   var codeEl=$("#code"),picEl=$("#pic"),consEl=$("#console"),statusEl=$("#status");
 
   function renderCode(cur,cls){
     codeEl.innerHTML=lines().map(function(t,i){
       var n=i+1,c="ln";
-      if(cur&&cur.indexOf(n)>=0) c+=" "+(cls==="cut"?"cut":cls==="left"?"left":"cur");
+      if(cur&&cur.indexOf(n)>=0) c+=" "+(cls==="left"?"left":cls==="ok"?"ok":"cur");
+      else if(cur&&cur.length===0) c+=" dim";
       return '<div class="'+c+'"><span class="n">'+n+'</span><span>'+(t||" ")+'</span></div>';
     }).join("");
   }
 
   /* ---------- the picture ---------- */
-  function cells(s){
-    return s.split("").map(function(ch){
-      return ch===" "?'<span class="c sp">·</span>':'<span class="c">'+(ch)+'</span>';
+  function cells(s,newFrom){
+    return s.split("").map(function(ch,i){
+      var add=(newFrom!==undefined&&i>=newFrom)?" add":"";
+      return ch===" "?'<span class="c sp'+add+'">·</span>':'<span class="c'+add+'">'+ch+'</span>';
     }).join("");
   }
+  function rowText(s){
+    return '<span class="q">"</span>'+s.split("").map(function(ch){return ch===" "?'<span class="sp">·</span>':ch;}).join("")+'<span class="q">"</span>';
+  }
   function buildPic(){
-    var res=P.f(P.val), html="";
-    html+='<span class="zone" id="zv" style="left:24px;top:22px">variable</span>';
-    html+='<span class="zone" id="zo" style="top:22px">String objects</span>';
+    var html="", k;
+    html+='<span class="zone" id="zv" style="left:24px;top:22px;opacity:0">variable</span>';
+    html+='<span class="zone" id="zo" style="top:22px;opacity:0">String objects</span>';
     html+='<svg id="arrows"><defs><marker id="mk" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse">'+
           '<path id="head" d="M0,0 L10,5 L0,10 z"/></marker></defs><path id="ref" marker-end="url(#mk)" d="M0,0 C0,0 0,0 0,0"/></svg>';
-    html+='<div class="var" id="var"><p class="vl"><b>String</b> <i>'+P.v+'</i></p><div class="vb">ref</div></div>';
-    [["A",P.val],["B",res],["C",res]].forEach(function(o,i){
-      html+='<div class="obj" id="o'+o[0]+'"><span class="oh">String object #'+(i+1)+'</span><div class="cells">'+cells(o[1])+'</div><span class="otag"></span></div>';
+    html+='<div class="var" id="var"><p class="vl" id="vname"></p><div class="vb">ref</div></div>';
+    /* scene g: greeting */
+    html+='<div class="scene" id="sc-g">';
+    [["A","Hello"],["B","Hello, Raymond"],["C","Hello, Raymond"]].forEach(function(o,i){
+      html+='<div class="obj" id="o'+o[0]+'"><span class="oh">String object #'+(i+1)+'<span class="otag"></span></span><div class="cells">'+cells(o[1])+'</div></div>';
     });
-    html+='<div class="start" id="start">'+P.v+' = '+q(P.val)+' · press <b>Next</b></div>';
+    html+='</div>';
+    /* scene c: the countdown pile, one row per object */
+    html+='<div class="scene" id="sc-c">';
+    for(k=0;k<=N;k++) html+='<div class="row" id="r'+k+'"><span class="rn">#'+(k+1)+'</span>'+rowText(seq(k))+'</div>';
+    html+='</div>';
+    /* scene s: one StringBuilder */
+    html+='<div class="scene" id="sc-s"><div class="obj" id="oS"><span class="oh">StringBuilder object #1<span class="otag on g" id="sbTag"></span></span><div class="cells" id="sbCells"></div></div></div>';
+    html+='<div class="start" id="start">greeting = "Hello" · press <b>Next</b></div>';
     html+='<div class="answer" id="ans"></div>';
     picEl.innerHTML=html;
   }
-  function layout(){
-    var W=picEl.clientWidth||900, H=picEl.clientHeight||390;
+
+  /* one frame of the picture. p = pass number for the loop scenes */
+  function renderPic(s,p){
+    var W=picEl.clientWidth||900, H=picEl.clientHeight||390, sc=s?s.sc:"g", k, e, end;
     var vx=Math.max(24,Math.round(W*.05)), vy=Math.round(H/2)-44;
-    var ox=Math.max(vx+170+110,Math.round(W*.36)), top=56, slot=(H-top-14)/3;
-    var ve=$("#var"); ve.style.left=vx+"px"; ve.style.top=vy+"px";
-    $("#zo").style.left=ox+"px";
-    var pos={};
-    ["A","B","C"].forEach(function(k,i){
-      var e=$("#o"+k), y=Math.round(top+i*slot+(slot-e.offsetHeight)/2);
-      e.style.left=ox+"px"; e.style.top=y+"px"; pos[k]={x:ox,y:y+e.offsetHeight/2};
-    });
-    return {sx:vx+170-14-6,sy:vy+ve.querySelector(".vb").offsetTop+28,pos:pos};
-  }
-  function renderPic(s){
-    var L=layout(), k;
-    var st=$("#start"); st.style.opacity=s?0:1;
-    $("#var").className="var"+(s?" show":"");
-    $("#zv").style.opacity=s?1:0; $("#zo").style.opacity=s?1:0;
-    ["A","B","C"].forEach(function(k){
-      var e=$("#o"+k), state=s&&s.objs[k], tag=e.querySelector(".otag"), t=s&&s.tags&&s.tags[k];
-      e.className="obj"+(state?" show "+state:"");
-      if(state==="gone"){tag.textContent="unreachable";tag.className="otag w";}
-      else if(t){tag.textContent=t[0];tag.className="otag on "+t[1];}
-      else {tag.textContent="";tag.className="otag";}
-    });
+    var ox=Math.max(vx+170+110,Math.round(W*.36)), room=W-ox-30;
+    var ve=$("#var"); ve.style.left=vx+"px"; ve.style.top=vy+"px"; ve.className="var"+(s?" show":"");
+    $("#vname").innerHTML=sc==="s"?'<b>StringBuilder</b> <i>sb</i>':'<b>String</b> <i>'+(sc==="c"?"countdown":"greeting")+'</i>';
+    $("#start").style.opacity=s?0:1;
+    $("#zv").style.opacity=s?1:0;
+    var zo=$("#zo"); zo.style.opacity=s?1:0; zo.style.left=ox+"px";
+    zo.textContent=sc==="s"?"one object, changed in place":sc==="c"?"String objects · faded = unreachable":"String objects";
+    ["g","c","s"].forEach(function(x){ $("#sc-"+x).className="scene"+(s&&x===sc?" on":""); });
+
+    if(sc==="g"){
+      var top=56, slot=(H-top-14)/3;
+      ["A","B","C"].forEach(function(key,i){
+        e=$("#o"+key);
+        var len=e.querySelectorAll(".c").length, cw=Math.max(16,Math.min(28,Math.floor(room/len)-3));
+        e.style.setProperty("--cw",cw+"px");
+        var y=Math.round(top+i*slot+(slot-e.offsetHeight)/2);
+        e.style.left=ox+"px"; e.style.top=y+"px";
+        var st=s&&s.objs[key], tag=e.querySelector(".otag"), t=s&&s.tags&&s.tags[key];
+        e.className="obj"+(st?" show "+st:"");
+        if(st==="gone"){tag.textContent="unreachable";tag.className="otag on y";}
+        else if(t){tag.textContent=t[0];tag.className="otag on "+t[1];}
+        else {tag.textContent="";tag.className="otag";}
+        if(key===(s?s.arrow:"A")) end={x:ox,y:y+e.offsetHeight/2};
+      });
+    } else if(sc==="c"){
+      var rowH=Math.min(46,Math.floor((H-70)/(N+1))), bh=rowH-6, t0=Math.max(50,Math.round((H-(N+1)*rowH)/2)+12);
+      var rw=Math.min(room,Math.round((seq(N).length+2)*8.2+70));
+      for(k=0;k<=N;k++){
+        e=$("#r"+k); var yy=t0+k*rowH;
+        e.style.left=ox+"px"; e.style.top=yy+"px"; e.style.height=bh+"px"; e.style.width=rw+"px";
+        e.className="row"+(k<=p?" show":"")+(k===p?" cur":k<p?" gone":"");
+        if(k===p) end={x:ox,y:yy+bh/2};
+      }
+    } else {
+      var ob=$("#oS"), txt=seq(p), cw2=Math.max(14,Math.min(28,Math.floor(room/Math.max(1,seq(N).length))-3));
+      ob.style.setProperty("--cw",cw2+"px");
+      $("#sbCells").innerHTML=cells(txt,p>0?seq(p-1).length:undefined);
+      $("#sbTag").textContent=p===0?"empty, ready":"pass "+p+" of "+N+", same object";
+      ob.className="obj show cur";
+      var sy=Math.round(H/2-ob.offsetHeight/2)+6;
+      ob.style.left=ox+"px"; ob.style.top=sy+"px";
+      end={x:ox,y:sy+ob.offsetHeight/2};
+    }
+
+    /* the reference arrow: from the variable to the object it points at */
     var ref=$("#ref"), head=$("#head");
-    var p=L.pos[s?s.arrow:"A"], ex=p.x-4, mx=(L.sx+ex)/2;
-    var d="M"+L.sx+","+L.sy+" C"+mx+","+L.sy+" "+mx+","+p.y+" "+ex+","+p.y;
+    var sx=vx+170-14-6, sy0=vy+ve.querySelector(".vb").offsetTop+28;
+    if(!end) end={x:ox,y:sy0};
+    var ex=end.x-4, mx=(sx+ex)/2;
+    var d="M"+sx+","+sy0+" C"+mx+","+sy0+" "+mx+","+end.y+" "+ex+","+end.y;
+    var jump=lastScene!==sc; lastScene=sc;
+    var rc=s&&s.read?s.read:"";
+    ref.setAttribute("class",(s?"show ":"")+rc+(jump?" still":""));
     ref.setAttribute("d",d); ref.style.d='path("'+d+'")';
-    k=s&&s.read?s.read:"";
-    ref.setAttribute("class",(s?"show ":"")+k); head.setAttribute("class",k);
-    var ans=$("#ans");
-    if(s&&s.out!==undefined){ ans.innerHTML='<small>println('+P.v+')</small><span class="'+s.read+'">'+(s.out)+'</span>'; ans.className="answer show"; }
-    else { ans.className="answer"; }
+    if(jump){ void ref.getBoundingClientRect(); ref.setAttribute("class",(s?"show ":"")+rc); }
+    head.setAttribute("class",rc);
   }
 
+  function setAnswer(s,done){
+    var ans=$("#ans");
+    if(s&&s.out!==undefined&&done){ ans.innerHTML='<small>'+s.ans+'</small><span class="g">'+s.out+'</span>'; ans.className="answer show"; }
+    else ans.className="answer";
+  }
+  function setConsole(upto,withCur){
+    var out=[],k;
+    for(k=0;k<upto;k++) if(steps[k].out!==undefined) out.push(steps[k].out);
+    if(withCur&&steps[upto]&&steps[upto].out!==undefined) out.push(steps[upto].out);
+    consEl.innerHTML=out.map(function(o){return '<div class="out">'+o+'</div>';}).join("")||'<span style="color:rgba(132,150,182,.5)">(nothing printed yet)</span>';
+  }
+  /* readouts and picture for one frame */
+  function frame(s,p,done){
+    renderPic(s,p);
+    var pts,unr,label;
+    if(s.sc==="g"){ label="greeting points to"; pts=q(s.pts); unr=s.unr; }
+    else if(s.sc==="c"){ label="countdown points to"; pts=q(seq(p)); unr=p; }
+    else { label="sb holds"; pts=q(seq(p)); unr=0; }
+    $("#kPts").textContent=label;
+    setStat("#stPts",pts,"hot"); setStat("#stUnr",String(unr),unr?"gold":"");
+    setAnswer(s,done);
+  }
+
+  function stopAnim(){ if(timer){ clearInterval(timer); timer=null; } }
   function show(i){
-    at=i;
+    stopAnim(); at=i;
     if(i<0){
-      renderCode(null); renderPic(null);
-      consEl.innerHTML='<span style="color:rgba(132,150,182,.5)">(nothing printed yet)</span>';
+      renderCode(null); renderPic(null,0); setAnswer(null);
+      setConsole(0,false);
       $("#caption").className="caption"; statusEl.innerHTML='Press <b class="a">Next</b>. The picture changes at every step.';
+      $("#kPts").textContent="greeting points to";
       setStat("#stPts",null); setStat("#stUnr",null); $("#stepno").innerHTML="<small>step</small>0 / "+steps.length; setBtns(); return;
     }
-    var s=steps[i], out=[], k;
+    var s=steps[i];
     $("#stepno").innerHTML="<small>step</small>"+(i+1)+" / "+steps.length;
-    renderCode(s.line,s.cls); renderPic(s);
-    for(k=0;k<=i;k++) if(steps[k].out!==undefined) out.push(steps[k].out);
-    consEl.innerHTML=out.map(function(o){return '<div class="out" style="white-space:pre">'+(o)+'</div>';}).join("")||'<span style="color:rgba(132,150,182,.5)">(nothing printed yet)</span>';
+    renderCode(s.line,s.cls);
     $("#caption").className="caption "+s.cls; statusEl.innerHTML=s.msg;
-    setStat("#stPts",q(s.pts),s.read==="w"?"":"hot"); setStat("#stUnr",s.unr,s.unr?"gold":"");
     setBtns();
+    if(s.from!==undefined&&!reduce){
+      /* the loop runs pass by pass: one new object per pass */
+      var p=s.from; setConsole(i,false); frame(s,p,false);
+      timer=setInterval(function(){
+        p++; frame(s,p,p>=s.pass);
+        if(p>=s.pass){ stopAnim(); setConsole(i,true); }
+      },600);
+    } else {
+      frame(s,s.pass!==undefined?s.pass:0,true); setConsole(i,true);
+    }
   }
-  function setStat(id,v,c){ var e=$(id), box=e.parentNode; if(v===null){e.innerHTML="";e.className="v dim";box.classList.add("empty");} else {e.innerHTML=v;e.className="v "+(c||"");box.classList.remove("empty");} }
+  function setStat(id,v,c){ var e=$(id), box=e.parentNode; if(v===null){e.textContent="";e.className="v dim";box.classList.add("empty");}
+    else {e.textContent=v;e.className="v "+(c||"")+(v.length>9?" long":"");box.classList.remove("empty");} }
   function setBtns(){ $("#bNext").disabled=at>=steps.length-1; $("#bBack").disabled=at<0;
     var d=""; for(var k=0;k<steps.length;k++) d+='<i class="'+(k===at?"now":k<at?"done":"")+'"></i>'; $("#dots").innerHTML=d; }
-  function redraw(){ renderPic(at>=0?steps[at]:null); }
+  function redraw(){ if(at<0){ renderPic(null,0); return; } show(at); }
+
   /* focus: picture and caption only. Remembered per browser. */
   function setFocus(on){ document.body.classList.toggle("solo",on); $("#bFocus").textContent=on?"Focus on":"Focus";
     try{localStorage.setItem("hub-focus",on?"1":"0");}catch(e){} redraw(); }
   $("#bFocus").addEventListener("click",function(){ setFocus(!document.body.classList.contains("solo")); this.blur(); });
   try{ if(localStorage.getItem("hub-focus")==="1") document.body.classList.add("solo"); }catch(e){}
   if(document.body.classList.contains("solo")) $("#bFocus").textContent="Focus on";
+
   function next(){ if(at<steps.length-1) show(at+1); }
   function back(){ if(at>=0) show(at-1); }
-  function reset(){ steps=build(); buildPic(); $("#kPts").textContent=P.v+" points to"; show(-1); }
+  function reset(){ stopAnim(); steps=build(); lastScene=null; buildPic(); show(-1); }
   function pick(idx){
-    P=PRESETS[idx];
+    N=PRESETS[idx];
     Array.prototype.forEach.call(document.querySelectorAll(".chip"),function(c,j){c.classList.toggle("on",j===idx);});
     if(document.activeElement&&document.activeElement.blur) document.activeElement.blur();
     reset();
   }
 
-  $("#chips").innerHTML=PRESETS.map(function(p,j){return '<button class="chip'+(j===0?' on':'')+'" data-i="'+j+'">'+p.m+'()</button>';}).join("");
-  $("#chips").addEventListener("click",function(e){ var b=e.target.closest(".chip"); if(b) pick(+b.getAttribute("data-i")); });
   $("#bNext").addEventListener("click",next);
   $("#bBack").addEventListener("click",back);
   $("#bReset").addEventListener("click",reset);
   document.addEventListener("keydown",function(e){ if(e.code==="Space"&&!/INPUT|BUTTON/.test(e.target.tagName)){e.preventDefault();next();} });
-  addEventListener("resize",redraw);
+  addEventListener("resize",function(){ if(at>=0&&!timer){ var s=steps[at]; frame(s,s.pass!==undefined?s.pass:0,true); } else if(at<0) renderPic(null,0); });
 
   /* ---------- ambient canvas ---------- */
   var cv=$("#amb"),ctx=cv.getContext&&cv.getContext("2d"),parts=[];
@@ -391,6 +473,6 @@
 </script>
 <script src="../manifest.js"></script>
 <script src="../../assets/rail.js"></script>
-<script>Rail.render(document.getElementById("rail"),{week:2,kind:"visuals",current:"02-string-immutability"});</script>
+<script>Rail.render(document.getElementById("rail"),{week:2,kind:"visuals",current:"05-string-immutability"});</script>
 </body>
 </html>

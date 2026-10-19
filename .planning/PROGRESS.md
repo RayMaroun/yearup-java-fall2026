@@ -28,3 +28,6 @@
 - [x] Reference 4 pages built and opened in Chrome (glossary: 84 entries, every chip resolves).
 - [x] search-index.json rebuilt (101 items, 2 weeks). Committed locally 7b0a73d. NOT PUSHED: push on Mon 19 Oct after Ray's review (git push origin main).
 - Notes for Ray's review: page 03 teaches compareTo (not in the fall workbook, Ray decides); page 19 is the 2b debugger (2b skipped in spring); page 05 uses the workbook's own date example, not the theater one; page 15's exception name is from the demo, the workbook never names it.
+
+- 2026-10-17: week 2 visuals 01 to 18 rebuilt on the rebuilt demos (Ray: demo examples over workbook examples), reordered to the fall TOC, cheat sheet / glossary / common-errors re-valued, search index rebuilt (101 items). All 18 verified in Chrome. Uncommitted; commit with the demo rebuild after Ray's review. Still Ray's call: 19 debugger (2b skipped).
+- 2026-10-17 later: page 10 object-references removed on Ray's word, 11 to 19 renumbered to 10 to 18, links and index fixed, search index 100 items. Trims to one example per page done and verified. Modules 1 and 2 reviewed by Ray; learner copies demo-01 to demo-05.

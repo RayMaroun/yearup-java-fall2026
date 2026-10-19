@@ -1,0 +1,464 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Constructor Overloading | Week 2 Visual Hub</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Sora:wght@500;700&family=Inter:wght@400;500&family=JetBrains+Mono:wght@400;500&display=swap">
+<style>
+  :root{
+    --bg:#080c17; --bg2:#0c1428; --surface:rgba(255,255,255,.045); --line:rgba(255,255,255,.09);
+    --ink:#eef2fb; --muted:#8496b6; --accent:#6ea0ff; --accent2:#8b7bff; --good:#46d98a; --warn:#ff6a6a;
+    --gold:#ffc862; --disp:'Sora',system-ui,sans-serif; --body:'Inter',system-ui,sans-serif;
+    --mono:'JetBrains Mono',ui-monospace,monospace;
+  }
+  *{box-sizing:border-box}
+  body{margin:0;min-height:100vh;color:var(--ink);font-family:var(--body);
+    background:radial-gradient(1200px 700px at 70% -10%,#141d38 0%,transparent 55%),
+               radial-gradient(900px 600px at 10% 110%,#161233 0%,transparent 50%),#080c17;
+    overflow-x:hidden}
+  #amb{position:fixed;inset:0;z-index:0;pointer-events:none;opacity:.6}
+  .back{position:relative;z-index:2;display:block;max-width:1120px;margin:0 auto;padding:26px 24px 0;
+    width:100%;font-family:var(--mono);font-size:.8rem;letter-spacing:.04em;color:var(--muted);
+    text-decoration:none;transition:color .15s}
+  .back:hover{color:var(--accent)}
+  .wrap{position:relative;z-index:1;max-width:1120px;margin:0 auto;padding:22px 24px 70px}
+  .tag{font-family:var(--mono);font-size:.72rem;letter-spacing:.22em;text-transform:uppercase;color:var(--accent);margin:0 0 14px}
+  h1{font-family:var(--disp);font-weight:700;font-size:clamp(2.3rem,6vw,3.6rem);line-height:1;margin:0 0 12px;
+    letter-spacing:-.03em;background:linear-gradient(180deg,#fff,#b9c6e6);-webkit-background-clip:text;
+    background-clip:text;color:transparent}
+  .lede{color:var(--muted);max-width:64ch;font-size:1.05rem;margin:0 0 26px;line-height:1.5}
+  .lede b{color:var(--ink)}
+  .lede code,.take code,.caption code{font-family:var(--mono);font-size:.92em;color:#bcd0ff}
+
+  /* ---------- stage: picture first, one toolbar, support below ---------- */
+  .stage{position:relative;background:linear-gradient(180deg,rgba(255,255,255,.03),rgba(255,255,255,.01));
+    border:1px solid var(--line);border-radius:24px;padding:18px 18px 14px;
+    box-shadow:0 1px 0 rgba(255,255,255,.06) inset,0 30px 80px -30px rgba(0,0,0,.8)}
+  .topbar{display:flex;align-items:center;gap:10px;margin:0 0 14px;flex-wrap:wrap}
+  .topbar .lab{margin:0 4px 0 0}
+  .lab{font-family:var(--mono);font-size:.7rem;letter-spacing:.12em;text-transform:uppercase;color:var(--muted);margin:0 0 10px}
+  .btn:focus-visible,.focus:focus-visible{outline:2px solid var(--accent);outline-offset:2px}
+  .focus{margin-left:auto;font-family:var(--mono);font-size:.68rem;letter-spacing:.1em;text-transform:uppercase;padding:6px 12px;
+    border-radius:999px;border:1px solid var(--line);background:rgba(0,0,0,.25);color:var(--muted);cursor:pointer;transition:.15s}
+  .focus:hover{border-color:var(--accent);color:var(--accent)}
+  body.solo .focus{border-color:rgba(255,200,98,.6);color:var(--gold);background:rgba(255,200,98,.1)}
+
+  /* hero picture: the call on top, the seven constructors left, the object right */
+  .pic{position:relative;height:390px;border:1px solid var(--line);border-radius:18px;background:rgba(6,10,20,.5);overflow:hidden;
+    display:flex;flex-direction:column;gap:12px;padding:14px 18px 16px}
+  body.solo .pic{height:480px}
+  .zone{font-family:var(--mono);font-size:.6rem;letter-spacing:.14em;text-transform:uppercase;color:rgba(132,150,182,.55);margin:0 0 6px}
+  .callbar{flex:none;height:62px;display:flex;align-items:center;gap:6px;padding:0 16px;border-radius:12px;border:1px solid var(--line);
+    background:rgba(255,255,255,.03);font-family:var(--mono);font-size:1rem;color:#c9d4ea;white-space:nowrap;overflow:hidden;
+    transition:opacity .3s,border-color .3s}
+  .callbar .cz{font-size:.6rem;letter-spacing:.14em;text-transform:uppercase;color:rgba(132,150,182,.6);margin-right:12px}
+  .callbar .vn{color:var(--ink)}
+  .callbar>span{white-space:pre}
+  .arg{display:inline-flex;flex-direction:column;align-items:center;gap:3px;padding:0 2px}
+  .arg .av{color:#c3e88d} .arg .av.nm{color:#f78c6c}
+  .arg .at{font-size:.58rem;letter-spacing:.06em;padding:1px 7px;border-radius:999px;border:1px solid rgba(110,160,255,.5);
+    background:rgba(110,160,255,.1);color:var(--accent)}
+  .arg .at.w{border-color:rgba(255,106,106,.6);background:rgba(255,106,106,.1);color:var(--warn)}
+  .callbar.err{border-color:rgba(255,106,106,.45)}
+  .pbody{flex:1;min-height:0;display:grid;grid-template-columns:minmax(0,1.3fr) minmax(0,1fr);gap:18px;transition:opacity .3s}
+  .ctors{display:flex;flex-direction:column;gap:4px;min-height:0}
+  .ctors .list{flex:1;display:flex;flex-direction:column;gap:4px;min-height:0}
+  .ctor{flex:1;min-height:0;display:flex;align-items:center;gap:12px;padding:0 12px;border-radius:9px;border:1px solid rgba(255,255,255,.1);
+    background:rgba(255,255,255,.03);font-family:var(--mono);font-size:.78rem;color:#c9d4ea;white-space:nowrap;overflow:hidden;
+    transition:opacity .3s,border-color .3s,background .3s,box-shadow .3s}
+  .ctor .lbl{flex:none;width:140px;font-size:.6rem;color:var(--muted);overflow:hidden;text-overflow:ellipsis}
+  .ctor .sig{overflow:hidden;text-overflow:ellipsis}
+  .ctor .pt{color:#82aaff;border-radius:5px;padding:0 2px;transition:background .3s,color .3s}
+  .ctor .utag{margin-left:auto;flex:none;font-size:.58rem;padding:1px 8px;border-radius:999px;border:1px solid var(--line);color:var(--muted);
+    opacity:0;transition:opacity .3s}
+  .ctor .utag.on{opacity:1}
+  .ctor.dim{opacity:.32}
+  .ctor.pick{opacity:1;border-color:rgba(110,160,255,.75);background:rgba(110,160,255,.12);box-shadow:0 0 18px -6px rgba(110,160,255,.7)}
+  .ctor.pick .pt{background:rgba(110,160,255,.22);color:var(--ink)}
+  .ctor.pick .lbl{color:var(--accent)}
+  .ctor.pick .utag{color:var(--accent);border-color:rgba(110,160,255,.5)}
+  .ctor.miss{opacity:.4;border-style:dashed;border-color:rgba(255,106,106,.35)}
+  /* the object */
+  .objs{min-width:0;min-height:0;display:flex;flex-direction:column}
+  .ovar{font-family:var(--mono);font-size:.72rem;color:var(--muted);margin:0 0 6px}
+  .ovar b{color:#82aaff;font-weight:500} .ovar i{font-style:normal;color:var(--ink)}
+  .obox{border-radius:12px;border:1px solid rgba(110,160,255,.55);background:rgba(110,160,255,.06);padding:10px 12px 12px;animation:pop .35s}
+  .obox .oh{font-family:var(--mono);font-size:.58rem;letter-spacing:.14em;text-transform:uppercase;color:var(--muted);margin:0 0 8px}
+  .f{display:flex;align-items:center;gap:12px;height:44px;padding:0 12px;margin-top:6px;border-radius:9px;background:rgba(0,0,0,.3);
+    border:1px solid rgba(255,255,255,.08);font-family:var(--mono)}
+  .f .fk{width:56px;font-size:.72rem;color:var(--muted)}
+  .f .fv{min-width:80px;font-size:1.1rem;color:rgba(132,150,182,.55)}
+  .f .fs{margin-left:auto;font-size:.66rem;color:rgba(132,150,182,.6);white-space:nowrap}
+  .f.set{border-color:rgba(70,217,138,.6);background:rgba(70,217,138,.08)}
+  .f.set .fv{color:var(--ink);animation:pop .4s}
+  .f.set .fs{color:var(--good)}
+  .minis{display:grid;grid-template-columns:1fr 1fr;gap:10px;flex:1;align-content:start}
+  .mini{border-radius:12px;border:1px solid rgba(255,255,255,.14);background:rgba(255,255,255,.035);padding:10px 12px;animation:pop .35s}
+  .mini .ml{font-family:var(--mono);font-size:.95rem;color:var(--ink);white-space:nowrap}
+  .mini .ml .d{color:rgba(132,150,182,.6)}
+  .errbox{border-radius:12px;border:1px dashed rgba(255,106,106,.6);background:rgba(255,106,106,.07);padding:14px 16px;animation:pop .35s}
+  .errbox .eh{font-family:var(--mono);font-size:.6rem;letter-spacing:.14em;text-transform:uppercase;color:var(--warn);margin:0 0 8px}
+  .errbox code{font-family:var(--mono);font-size:.9rem;color:var(--ink);white-space:normal}
+  .noobj{font-family:var(--mono);font-size:.74rem;color:var(--muted);padding:14px 0}
+  .pic .start{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;font-family:var(--mono);
+    font-size:.8rem;color:var(--muted);pointer-events:none;transition:opacity .3s}
+  .pic .start b{color:var(--accent);font-weight:500}
+  .pic.idle .callbar,.pic.idle .pbody{opacity:0}
+  @media (max-width:1000px){
+    .ctor{flex-direction:column;align-items:flex-start;justify-content:center;gap:1px;font-size:.7rem;position:relative}
+    .ctor .lbl{width:auto;font-size:.55rem}
+    .ctor .utag{position:absolute;right:8px;top:50%;transform:translateY(-50%);background:#0b1020}
+    .f .fs{display:none}
+  }
+  @media (max-width:700px){
+    .pic,body.solo .pic{height:auto;min-height:390px}
+    .pbody{grid-template-columns:1fr}
+    .ctor{min-height:36px}
+  }
+
+  /* caption: the one sentence, right under the picture */
+  .caption{display:flex;gap:16px;align-items:flex-start;margin:14px 4px 0;min-height:56px}
+  .caption .n{flex-shrink:0;font-family:var(--disp);font-weight:700;font-size:1.35rem;color:var(--accent);font-variant-numeric:tabular-nums;
+    line-height:1.2;min-width:3.2rem}
+  .caption .n small{display:block;font-family:var(--mono);font-weight:400;font-size:.58rem;letter-spacing:.14em;text-transform:uppercase;color:var(--muted)}
+  .caption .t{font-size:1.02rem;line-height:1.55;color:var(--ink);padding-left:16px;border-left:3px solid var(--accent);transition:border-color .3s}
+  body.solo .caption .t{font-size:1.18rem}
+  .caption.cut .t{border-left-color:var(--warn)} .caption.ok .t{border-left-color:var(--good)}
+  .caption b.g{color:var(--good)} .caption b.w{color:var(--warn)} .caption b.a{color:var(--accent)} .caption b.y{color:var(--gold)}
+
+  /* toolbar: same on every page */
+  .toolbar{display:flex;align-items:center;gap:10px;margin:16px 0 0;padding-top:14px;border-top:1px solid var(--line)}
+  .btn{font-family:var(--body);font-weight:500;font-size:.86rem;padding:9px 16px;border-radius:11px;cursor:pointer;
+    border:1px solid var(--line);background:var(--surface);color:var(--ink);transition:.15s}
+  .btn:hover{border-color:var(--accent);color:var(--accent)}
+  .btn.primary{border-color:rgba(110,160,255,.5);background:rgba(110,160,255,.12);padding:9px 22px}
+  .btn:disabled{opacity:.35;cursor:not-allowed}
+  .btn.ghost{background:transparent;color:var(--muted);margin-left:auto}
+  .dots{display:flex;gap:5px;align-items:center;margin:0 6px}
+  .dots i{display:block;width:8px;height:8px;border-radius:50%;background:rgba(255,255,255,.12);transition:.2s}
+  .dots i.done{background:rgba(110,160,255,.45)}
+  .dots i.now{background:var(--accent);transform:scale(1.35);box-shadow:0 0 10px rgba(110,160,255,.7)}
+  .hint{font-family:var(--mono);font-size:.68rem;color:var(--muted);margin:10px 4px 0;line-height:1.5}
+  .hint b{color:var(--accent)}
+
+  /* support: code, console, readouts. Below the picture, hidden in focus */
+  .support{display:grid;grid-template-columns:minmax(0,1.3fr) minmax(0,1fr);gap:14px;margin-top:18px}
+  @media (max-width:860px){.support{grid-template-columns:1fr}}
+  body.solo .support,body.solo .take,body.solo .hint{display:none}
+  .code{min-width:0;font-family:var(--mono);font-size:.76rem;line-height:1.8;background:rgba(0,0,0,.35);border:1px solid var(--line);
+    border-radius:14px;padding:12px 0;overflow-x:auto}
+  .ln{display:flex;gap:12px;padding:0 14px;white-space:pre;color:#c9d4ea;transition:background .2s,opacity .3s}
+  .ln .n{width:20px;text-align:right;color:rgba(132,150,182,.55);user-select:none;flex-shrink:0}
+  .ln.cur{background:rgba(110,160,255,.14);box-shadow:inset 3px 0 0 var(--accent)}
+  .ln.cur .n{color:var(--accent)}
+  .ln.ok{background:rgba(70,217,138,.1);box-shadow:inset 3px 0 0 var(--good)}
+  .ln.err{background:rgba(255,106,106,.1);box-shadow:inset 3px 0 0 var(--warn)}
+  .ln.dim{opacity:.4}
+  .kw{color:#c792ea} .ty{color:#82aaff} .st{color:#c3e88d} .nm{color:#f78c6c} .cm{color:#5f6b85;font-style:italic} .fn{color:#ffcb6b}
+  .side{display:flex;flex-direction:column;gap:12px}
+  .readout{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+  .stat{min-width:0;background:rgba(255,255,255,.03);border:1px solid var(--line);border-radius:12px;padding:11px 13px;transition:opacity .3s}
+  .stat.empty{opacity:.3}
+  .stat .k{font-family:var(--mono);font-size:.62rem;letter-spacing:.1em;text-transform:uppercase;color:var(--muted)}
+  .stat .v{font-family:var(--disp);font-weight:700;font-size:1.45rem;font-variant-numeric:tabular-nums;margin-top:2px;transition:color .3s;min-height:1.6em;
+    white-space:pre;overflow:hidden;text-overflow:ellipsis}
+  .stat .v.long{font-family:var(--mono);font-weight:500;font-size:.9rem;line-height:2.2em}
+  .v.hot{color:var(--accent)} .v.good{color:var(--good)} .v.bad{color:var(--warn)} .v.dim{color:rgba(132,150,182,.5)}
+  .console{font-family:var(--mono);font-size:.76rem;line-height:1.6;background:#05070e;border:1px solid var(--line);
+    border-radius:12px;padding:10px 14px;min-height:64px;color:#9fe3b6;flex:1}
+  .console .cl{font-size:.6rem;letter-spacing:.14em;text-transform:uppercase;color:rgba(132,150,182,.6);margin-bottom:4px}
+  .console .out{animation:pop .3s;white-space:pre}
+  @keyframes pop{from{transform:scale(.6);opacity:0}to{transform:scale(1);opacity:1}}
+  .take{margin-top:22px;background:linear-gradient(180deg,rgba(110,160,255,.08),rgba(139,123,255,.04));
+    border:1px solid var(--line);border-left:3px solid var(--accent);border-radius:12px;padding:16px 18px}
+  .take .tk{font-family:var(--mono);font-size:.66rem;letter-spacing:.14em;text-transform:uppercase;color:var(--accent);margin:0 0 8px}
+  .take p{margin:0;font-size:.95rem;color:var(--ink);line-height:1.55}
+  .take b{color:#fff}
+  @media (prefers-reduced-motion:reduce){*{animation-duration:.01ms!important;transition-duration:.01ms!important}#amb{display:none}}
+</style>
+</head>
+<body>
+
+<a class="back" href="../index.html#11-constructor-overloading">&#8592; Week 2 index</a>
+
+<canvas id="amb"></canvas>
+<div class="wrap">
+  <p class="tag">Workbook 2a &middot; Section 2-3 &middot; Overloading constructors</p>
+  <h1>Constructor Overloading</h1>
+  <p class="lede"><b>A class can have several constructors. Java runs the one whose parameter list matches your arguments.</b></p>
+
+  <div class="stage">
+    <div class="topbar">
+      <span class="lab">Person</span>
+      <button class="focus" id="bFocus" title="Hide the code and notes, enlarge the picture">Focus</button>
+    </div>
+
+    <div class="pic idle" id="pic">
+      <div class="callbar" id="callbar"></div>
+      <div class="pbody">
+        <div class="ctors"><p class="zone">Person.java &middot; seven constructors</p><div class="list" id="ctors"></div></div>
+        <div class="objs"><p class="zone" id="zObj">the new object</p><div id="objs"></div></div>
+      </div>
+      <div class="start" id="start">seven constructors, four calls &middot; press\u00a0<b>Next</b></div>
+    </div>
+
+    <div class="caption" id="caption">
+      <div class="n" id="stepno"><small>step</small>0 / 7</div>
+      <div class="t" id="status">Press <b class="a">Next</b>. The picture changes at every step.</div>
+    </div>
+
+    <div class="toolbar">
+      <button class="btn" id="bBack">&larr; Back</button>
+      <div class="dots" id="dots"></div>
+      <button class="btn primary" id="bNext">Next &rarr;</button>
+      <button class="btn ghost" id="bReset">Reset</button>
+    </div>
+    <p class="hint">space = next &middot; <b>match the argument types, in order, to one parameter list</b></p>
+
+    <div class="support">
+      <div>
+        <p class="lab">Main.java</p>
+        <div class="code" id="code"></div>
+      </div>
+      <div class="side">
+        <div class="readout">
+          <div class="stat empty"><div class="k">constructor picked</div><div class="v dim" id="stPick"></div></div>
+          <div class="stat empty"><div class="k">fields set</div><div class="v dim" id="stSet"></div></div>
+        </div>
+        <div class="console"><div class="cl">console</div><div id="console"></div></div>
+      </div>
+    </div>
+  </div>
+
+  <div class="take">
+    <p class="tk">The one idea</p>
+    <p><b>Constructors overload like methods:</b> same name, different parameter lists (number, types or order), and Java
+    picks the one whose list matches your arguments. <b>A field that constructor does not set keeps its default:</b>
+    <code>null</code> for a String, <code>0</code> for an int.</p>
+  </div>
+
+  <div id="rail"></div>
+</div>
+
+<script>
+(function(){
+  "use strict";
+  var $=function(s){return document.querySelector(s);};
+  var reduce=matchMedia("(prefers-reduced-motion: reduce)").matches;
+
+  /* ---------- the seven constructors of Person, in file order ---------- */
+  var CTORS=[
+    {id:"person",                p:[],                                            sets:{}},
+    {id:"person_string_int",     p:[["String","name"],["int","age"]],             sets:{name:"name",age:"age",energy:"100"}},
+    {id:"person_int_string",     p:[["int","age"],["String","name"]],             sets:{age:"age",name:"name"}},
+    {id:"person_string_int_int", p:[["String","name"],["int","age"],["int","energy"]], sets:{name:"name",age:"age",energy:"energy"}},
+    {id:"person_string",         p:[["String","name"]],                           sets:{name:"name"}},
+    {id:"person_int",            p:[["int","age"]],                               sets:{age:"age"}},
+    {id:"person_int_string_int", p:[["int","age"],["String","name"],["int","energy"]], sets:{age:"age",name:"name",energy:"energy"}}
+  ];
+  var DEF={name:"null",age:"0",energy:"0"};
+  var FIELDS=["name","age","energy"];
+
+  /* ---------- the four calls ---------- */
+  var OBJS={
+    person1:   {ctor:0,args:[],                                       vals:{}},
+    person2:   {ctor:4,args:[['"Ray"',"String"]],                     vals:{name:'"Ray"'}},
+    instructor:{ctor:1,args:[['"Raymond"',"String"],["35","int"]],    vals:{name:'"Raymond"',age:"35",energy:"100"}},
+    student:   {ctor:2,args:[["35","int"],['"Brandon"',"String"]],    vals:{age:"35",name:'"Brandon"'}}
+  };
+  var ORDER=["person1","person2","instructor","student"];
+  function plain(v){ return v.replace(/"/g,""); }
+  function line(o){ var r=OBJS[o]; return FIELDS.map(function(f){ return r.vals[f]!==undefined?plain(r.vals[f]):DEF[f]; }).join(", "); }
+
+  var CODE=[
+    'System.out.<span class="fn">println</span>(<span class="st">"========== Overloaded constructors =========="</span>);',
+    '<span class="cm">// Java picks the constructor whose parameter list matches the arguments</span>',
+    '<span class="ty">Person</span> person1 = <span class="kw">new</span> <span class="ty">Person</span>();                  <span class="cm">// person: nothing set yet</span>',
+    '<span class="ty">Person</span> person2 = <span class="kw">new</span> <span class="ty">Person</span>(<span class="st">"Ray"</span>);             <span class="cm">// person_string</span>',
+    '<span class="ty">Person</span> instructor = <span class="kw">new</span> <span class="ty">Person</span>(<span class="st">"Raymond"</span>, <span class="nm">35</span>);  <span class="cm">// person_string_int</span>',
+    '<span class="ty">Person</span> student = <span class="kw">new</span> <span class="ty">Person</span>(<span class="nm">35</span>, <span class="st">"Brandon"</span>);     <span class="cm">// person_int_string: order matters</span>',
+    '<span class="cm">// Person guest = new Person(50.5);             // error: no constructor takes a double</span>'
+  ];
+  ORDER.forEach(function(o){
+    CODE.push('System.out.<span class="fn">println</span>('+o+'.<span class="fn">getName</span>() + <span class="st">", "</span> + '+o+'.<span class="fn">getAge</span>() + <span class="st">", "</span> + '+o+'.<span class="fn">getEnergy</span>());');
+  });
+
+  /* ---------- the walk ---------- */
+  var STEPS=[
+    {kind:"intro",line:[1,2],cls:"",out:["========== Overloaded constructors =========="],
+     msg:'<code>Person</code> has <b class="a">seven constructors</b>. Same name every time: only the parameter list differs.'},
+    {kind:"call",obj:"person1",line:[3],cls:"",
+     msg:'<code>new Person()</code> passes nothing, so Java picks <code>Person()</code>. All three fields keep their <b class="y">defaults</b>.'},
+    {kind:"call",obj:"person2",line:[4],cls:"",
+     msg:'One String: <code>Person(String name)</code> runs and sets <b class="g">name</b>. age and energy stay 0.'},
+    {kind:"call",obj:"instructor",line:[5],cls:"",
+     msg:'A String, then an int: <b class="a">person_string_int</b> sets name, age, and energy = 100.'},
+    {kind:"call",obj:"student",line:[6],cls:"",
+     msg:'An int, then a String. <b class="a">Order matters</b>: a different constructor, and energy stays 0.'},
+    {kind:"print",line:[8,9,10,11],cls:"ok",out:ORDER.map(line),
+     msg:'The four println lines read each object back. Fields no constructor set print as <b class="y">null</b> or <b class="y">0</b>.'},
+    {kind:"error",line:[7],cls:"cut",
+     msg:'Remove the <code>//</code> and <code>new Person(50.5)</code> passes a double: <b class="w">no list matches</b>, it does not compile.'}
+  ];
+
+  var at=-1;
+  var codeEl=$("#code"),consEl=$("#console"),statusEl=$("#status"),picEl=$("#pic");
+
+  function renderCode(cur,cls){
+    codeEl.innerHTML=CODE.map(function(t,i){
+      var n=i+1,c="ln";
+      if(cur&&cur.indexOf(n)>=0) c+=" "+(cls==="ok"?"ok":cls==="cut"?"err":"cur");
+      return '<div class="'+c+'"><span class="n">'+n+'</span><span>'+(t||" ")+'</span></div>';
+    }).join("");
+  }
+
+  /* ---------- the picture ---------- */
+  function sigHtml(c){
+    return 'Person('+c.p.map(function(q){ return '<span class="pt">'+q[0]+'</span> '+q[1]; }).join(", ")+')';
+  }
+  function buildCtors(){
+    $("#ctors").innerHTML=CTORS.map(function(c,i){
+      return '<div class="ctor" id="c'+i+'"><span class="lbl">'+c.id+'</span><span class="sig">'+sigHtml(c)+'</span><span class="utag"></span></div>';
+    }).join("");
+  }
+  function argHtml(a,bad){
+    var num=/^[0-9.]+$/.test(a[0]);
+    return '<span class="arg"><span class="av'+(num?" nm":"")+'">'+a[0]+'</span><span class="at'+(bad?" w":"")+'">'+a[1]+'</span></span>';
+  }
+  function callHtml(v,args,bad){
+    var parts=[];
+    args.forEach(function(a,i){ if(i) parts.push('<span>, </span>'); parts.push(argHtml(a,bad)); });
+    return '<span class="cz">call</span><span><span class="ty">Person</span> <span class="vn">'+v+'</span> = <span class="kw">new</span> <span class="ty">Person</span>(</span>'+parts.join("")+'<span>);</span>';
+  }
+
+  function objHtml(o){
+    var r=OBJS[o], c=CTORS[r.ctor];
+    var rows=FIELDS.map(function(f){
+      var set=r.vals[f]!==undefined;
+      var src=set?'this.'+f+' = '+c.sets[f]+';':'default';
+      return '<div class="f'+(set?" set":"")+'"><span class="fk">'+f+'</span><span class="fv">'+(set?r.vals[f]:DEF[f])+'</span><span class="fs">'+src+'</span></div>';
+    }).join("");
+    return '<p class="ovar"><b>Person</b> <i>'+o+'</i></p><div class="obox"><div class="oh">Person object</div>'+rows+'</div>';
+  }
+  function minisHtml(){
+    return '<div class="minis">'+ORDER.map(function(o){
+      var r=OBJS[o];
+      var ml=FIELDS.map(function(f){ return r.vals[f]!==undefined?plain(r.vals[f]):'<span class="d">'+DEF[f]+'</span>'; }).join(", ");
+      return '<div class="mini"><p class="ovar"><i>'+o+'</i></p><div class="ml">'+ml+'</div></div>';
+    }).join("")+'</div>';
+  }
+
+  /* used[i] = variable name that was built with constructor i, up to the current step */
+  function usedUpTo(i){
+    var u={};
+    for(var k=0;k<=i;k++){ var s=STEPS[k]; if(s.kind==="call") u[OBJS[s.obj].ctor]=s.obj; }
+    return u;
+  }
+
+  function renderPic(i){
+    picEl.className="pic"+(i<0?" idle":"");
+    $("#start").style.opacity=i<0?1:0;
+    if(i<0){ return; }
+    var s=STEPS[i], used=usedUpTo(i), pick=s.kind==="call"?OBJS[s.obj].ctor:-1;
+    CTORS.forEach(function(c,k){
+      var e=$("#c"+k), tag=e.querySelector(".utag"), cls="ctor";
+      if(s.kind==="call") cls+=(k===pick?" pick":" dim");
+      else if(s.kind==="print") cls+=(used[k]!==undefined?"":" dim");
+      else if(s.kind==="error") cls+=" miss";
+      e.className=cls;
+      if(used[k]!==undefined&&s.kind!=="error"){ tag.textContent=used[k]; tag.className="utag on"; }
+      else { tag.textContent=""; tag.className="utag"; }
+    });
+    var cb=$("#callbar"), ob=$("#objs"), z=$("#zObj");
+    cb.className="callbar";
+    if(s.kind==="intro"){
+      cb.innerHTML='<span class="cz">class</span><span><span class="kw">public class</span> <span class="ty">Person</span> <span style="color:var(--muted)">{ String name; int age; int energy; }</span></span>';
+      z.textContent="the new object"; ob.innerHTML='<div class="noobj">no object yet</div>';
+    } else if(s.kind==="call"){
+      var r=OBJS[s.obj];
+      cb.innerHTML=callHtml(s.obj,r.args,false);
+      z.textContent="the new object"; ob.innerHTML=objHtml(s.obj);
+    } else if(s.kind==="print"){
+      cb.innerHTML='<span class="cz">print</span><span><span class="fn">getName</span>() + <span class="st">", "</span> + <span class="fn">getAge</span>() + <span class="st">", "</span> + <span class="fn">getEnergy</span>()</span>';
+      z.textContent="four objects, read back"; ob.innerHTML=minisHtml();
+    } else {
+      cb.className="callbar err";
+      cb.innerHTML=callHtml("guest",[["50.5","double"]],true);
+      z.textContent="no object";
+      ob.innerHTML='<div class="errbox"><div class="eh">compile error</div><code>no suitable constructor found for Person(double)</code></div>';
+    }
+  }
+
+  function setConsole(i){
+    var out=[];
+    for(var k=0;k<=i;k++) if(STEPS[k].out) out=out.concat(STEPS[k].out.map(function(t){ return {t:t,k:k}; }));
+    consEl.innerHTML=out.map(function(o){ return '<div class="'+(o.k===i?"out":"")+'">'+o.t+'</div>'; }).join("")||'<span style="color:rgba(132,150,182,.5)">(nothing printed yet)</span>';
+  }
+  function setStat(id,v,c){ var e=$(id), box=e.parentNode; if(v===null){e.textContent="";e.className="v dim";box.classList.add("empty");}
+    else {e.textContent=v;e.className="v "+(c||"")+(v.length>9?" long":"");box.classList.remove("empty");} }
+  function readouts(i){
+    if(i<0){ setStat("#stPick",null); setStat("#stSet",null); return; }
+    var s=STEPS[i];
+    if(s.kind==="intro"){ setStat("#stPick",null); setStat("#stSet",null); }
+    else if(s.kind==="call"){
+      var r=OBJS[s.obj], set=FIELDS.filter(function(f){ return r.vals[f]!==undefined; });
+      setStat("#stPick",CTORS[r.ctor].id,"hot"); setStat("#stSet",set.length?set.join(", "):"none",set.length?"good":"dim");
+    } else if(s.kind==="print"){ setStat("#stPick","4 of the 7","hot"); setStat("#stSet","0 to 3 each","good"); }
+    else { setStat("#stPick","none","bad"); setStat("#stSet","no object","bad"); }
+  }
+
+  function show(i){
+    at=i;
+    $("#stepno").innerHTML="<small>step</small>"+(i+1)+" / "+STEPS.length;
+    renderPic(i); readouts(i); setConsole(i); setBtns();
+    if(i<0){
+      renderCode(null);
+      $("#caption").className="caption"; statusEl.innerHTML='Press <b class="a">Next</b>. The picture changes at every step.';
+      return;
+    }
+    var s=STEPS[i];
+    renderCode(s.line,s.cls);
+    $("#caption").className="caption "+s.cls; statusEl.innerHTML=s.msg;
+  }
+  function setBtns(){ $("#bNext").disabled=at>=STEPS.length-1; $("#bBack").disabled=at<0;
+    var d=""; for(var k=0;k<STEPS.length;k++) d+='<i class="'+(k===at?"now":k<at?"done":"")+'"></i>'; $("#dots").innerHTML=d; }
+
+  /* focus: picture and caption only. Remembered per browser. */
+  function setFocus(on){ document.body.classList.toggle("solo",on); $("#bFocus").textContent=on?"Focus on":"Focus";
+    try{localStorage.setItem("hub-focus",on?"1":"0");}catch(e){} }
+  $("#bFocus").addEventListener("click",function(){ setFocus(!document.body.classList.contains("solo")); this.blur(); });
+  try{ if(localStorage.getItem("hub-focus")==="1") document.body.classList.add("solo"); }catch(e){}
+  if(document.body.classList.contains("solo")) $("#bFocus").textContent="Focus on";
+
+  function next(){ if(at<STEPS.length-1) show(at+1); }
+  function back(){ if(at>=0) show(at-1); }
+  function reset(){ show(-1); }
+
+  $("#bNext").addEventListener("click",next);
+  $("#bBack").addEventListener("click",back);
+  $("#bReset").addEventListener("click",reset);
+  document.addEventListener("keydown",function(e){ if(e.code==="Space"&&!/INPUT|BUTTON/.test(e.target.tagName)){e.preventDefault();next();} });
+
+  /* ---------- ambient canvas ---------- */
+  var cv=$("#amb"),ctx=cv.getContext&&cv.getContext("2d"),parts=[];
+  function sizeC(){if(!ctx)return;cv.width=innerWidth;cv.height=innerHeight;}
+  function initParts(){parts=[];for(var i=0;i<46;i++)parts.push({x:Math.random(),y:Math.random(),
+    r:Math.random()*1.6+.3,s:Math.random()*.02+.004,o:Math.random()*.4+.1});}
+  function drawC(){if(!ctx)return;ctx.clearRect(0,0,cv.width,cv.height);
+    parts.forEach(function(p){p.y-=p.s/60;if(p.y<-.02)p.y=1.02;
+      ctx.beginPath();ctx.arc(p.x*cv.width,p.y*cv.height,p.r,0,7);
+      ctx.fillStyle="rgba(140,170,255,"+p.o+")";ctx.fill();});
+    requestAnimationFrame(drawC);}
+  if(ctx&&!reduce){sizeC();initParts();drawC();addEventListener("resize",sizeC);}
+
+  buildCtors();
+  reset();
+})();
+</script>
+<script src="../manifest.js"></script>
+<script src="../../assets/rail.js"></script>
+<script>Rail.render(document.getElementById("rail"),{week:2,kind:"visuals",current:"11-constructor-overloading"});</script>
+</body>
+</html>

@@ -37,19 +37,13 @@
     border:1px solid var(--line);border-radius:24px;padding:18px 18px 14px;
     box-shadow:0 1px 0 rgba(255,255,255,.06) inset,0 30px 80px -30px rgba(0,0,0,.8)}
   .topbar{display:flex;align-items:center;gap:10px;margin:0 0 14px;flex-wrap:wrap}
-  .topbar .lab{margin:0 4px 0 0}
   .lab{font-family:var(--mono);font-size:.7rem;letter-spacing:.12em;text-transform:uppercase;color:var(--muted);margin:0 0 10px}
-  .chips{display:flex;flex-wrap:wrap;gap:6px}
-  .chip{font-family:var(--mono);font-size:.74rem;padding:5px 11px;border-radius:999px;cursor:pointer;
-    border:1px solid var(--line);background:rgba(0,0,0,.25);color:var(--muted);transition:.15s}
-  .chip:hover{border-color:var(--accent);color:var(--accent)}
-  .chip.on{border-color:rgba(110,160,255,.6);background:rgba(110,160,255,.14);color:var(--ink)}
-  .chip:focus-visible,.btn:focus-visible,.focus:focus-visible{outline:2px solid var(--accent);outline-offset:2px}
+  .topbar .lab{margin:0 4px 0 0}
   .focus{margin-left:auto;font-family:var(--mono);font-size:.68rem;letter-spacing:.1em;text-transform:uppercase;padding:6px 12px;
     border-radius:999px;border:1px solid var(--line);background:rgba(0,0,0,.25);color:var(--muted);cursor:pointer;transition:.15s}
   .focus:hover{border-color:var(--accent);color:var(--accent)}
+  .btn:focus-visible,.focus:focus-visible{outline:2px solid var(--accent);outline-offset:2px}
   body.solo .focus{border-color:rgba(255,200,98,.6);color:var(--gold);background:rgba(255,200,98,.1)}
-
   /* hero picture */
   .pic{position:relative;height:390px;border:1px solid var(--line);border-radius:18px;background:rgba(6,10,20,.5);overflow:hidden}
   body.solo .pic{height:480px}
@@ -60,40 +54,49 @@
   .pic .start b{color:var(--accent);font-weight:500}
   .scene{position:absolute;inset:0;transition:opacity .35s}
   .scene.off{opacity:0}
-  .arr{position:absolute;left:40px;right:40px;top:70px;display:flex;gap:10px}
-  .slot{position:relative;flex:1;min-width:0;height:62px;border-radius:12px;border:1px solid rgba(110,160,255,.25);
+  .arr{position:absolute;left:24px;right:24px;top:64px;display:flex;gap:8px}
+  .slot{position:relative;flex:1;min-width:0;height:56px;border-radius:12px;border:1px solid rgba(110,160,255,.25);
     background:rgba(110,160,255,.04);display:flex;align-items:center;justify-content:center;font-family:var(--mono);
-    font-size:clamp(.72rem,1.6vw,1rem);color:#c3e88d;transition:border-color .3s,background .3s,box-shadow .3s,color .3s,opacity .3s}
+    font-size:clamp(.62rem,1.2vw,.84rem);color:#c3e88d;transition:border-color .3s,background .3s,box-shadow .3s,color .3s}
+  .slot .nmv{overflow:hidden;text-overflow:ellipsis;white-space:nowrap;padding:0 4px}
   .slot.done{border-color:rgba(110,160,255,.4);background:rgba(110,160,255,.09)}
   .slot.lit{border-color:rgba(110,160,255,.85);background:rgba(110,160,255,.2);box-shadow:0 0 22px -6px rgba(110,160,255,.8)}
-  .slot.kept{border-color:rgba(255,106,106,.7);background:rgba(255,106,106,.08)}
-  .slot.chg{border-color:rgba(255,200,98,.8);background:rgba(255,200,98,.12);color:var(--gold);box-shadow:0 0 18px -6px rgba(255,200,98,.8)}
-  .slot .ix{position:absolute;bottom:-24px;left:0;right:0;text-align:center;font-size:.72rem;color:var(--muted);transition:opacity .3s}
-  .pic.each .slot .ix{opacity:.28}
-  .slot .ps{position:absolute;top:-26px;left:50%;transform:translateX(-50%);font-size:.62rem;letter-spacing:.1em;text-transform:uppercase;
+  .slot.ok{border-color:rgba(70,217,138,.55);background:rgba(70,217,138,.08)}
+  .slot .ix{position:absolute;bottom:-24px;left:0;right:0;text-align:center;font-size:.72rem;color:var(--muted);transition:opacity .3s,color .3s}
+  .pic.each .slot .ix{opacity:.25}
+  .pic.both .slot .ix{color:var(--gold)}
+  .slot .ps{position:absolute;top:-24px;left:50%;transform:translateX(-50%);font-size:.6rem;letter-spacing:.1em;text-transform:uppercase;
     color:var(--accent);white-space:nowrap;opacity:0;transition:opacity .3s}
   .slot.lit .ps{opacity:1}
-  .slot.chg .ps,.slot.kept .ps{opacity:0}
-  .verdict{position:absolute;right:40px;top:26px;font-family:var(--mono);font-size:.66rem;padding:3px 10px;border-radius:999px;
+  .verdict{position:absolute;right:24px;top:22px;font-family:var(--mono);font-size:.66rem;padding:3px 10px;border-radius:999px;
     opacity:0;transition:opacity .4s;white-space:nowrap}
   .verdict.show{opacity:1}
+  .verdict.g{color:var(--good);border:1px solid rgba(70,217,138,.6);background:rgba(70,217,138,.1)}
   .verdict.w{color:var(--warn);border:1px solid rgba(255,106,106,.6);background:rgba(255,106,106,.1)}
-  .verdict.y{color:var(--gold);border:1px solid rgba(255,200,98,.6);background:rgba(255,200,98,.1)}
-  .vars{position:absolute;left:16px;right:16px;top:240px;display:flex;justify-content:center;gap:26px}
-  body.solo .vars{top:300px}
-  .var{width:210px;max-width:44%;border-radius:14px;border:1px solid rgba(110,160,255,.4);background:rgba(110,160,255,.07);
-    padding:10px 14px;transition:border-color .3s,background .3s,opacity .3s}
-  .var .vk{font-family:var(--mono);font-size:.64rem;letter-spacing:.1em;color:var(--muted)}
-  .var .vv{font-family:var(--mono);font-size:1.3rem;margin-top:4px;min-height:1.6em;color:var(--ink);font-variant-numeric:tabular-nums;
+  .lanes{position:absolute;left:24px;right:24px;top:196px;display:flex;gap:16px}
+  body.solo .lanes{top:250px}
+  .lane{flex:1;min-width:0;border:1px solid var(--line);border-radius:16px;padding:12px 14px 14px;background:rgba(255,255,255,.02);
+    transition:opacity .3s,border-color .3s,background .3s}
+  .lane.idle{opacity:.38}
+  .lane.act{border-color:rgba(110,160,255,.5);background:rgba(110,160,255,.05)}
+  .lane.fin{border-color:rgba(70,217,138,.45);background:rgba(70,217,138,.04)}
+  .lane .lh{font-family:var(--mono);font-size:.72rem;color:#c9d4ea;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;margin:0 0 4px}
+  .lane .lh .kw{color:#c792ea} .lane .lh .ty{color:#82aaff} .lane .lh .nm{color:#f78c6c}
+  .lane .ls{font-family:var(--mono);font-size:.6rem;letter-spacing:.12em;text-transform:uppercase;color:var(--muted);margin:0 0 10px}
+  .vrow{display:flex;gap:10px}
+  .var{flex:1;min-width:0;border-radius:12px;border:1px solid rgba(110,160,255,.4);background:rgba(110,160,255,.07);
+    padding:8px 12px;transition:border-color .3s,background .3s,opacity .3s}
+  .var .vk{font-family:var(--mono);font-size:.64rem;letter-spacing:.08em;color:var(--muted)}
+  .var .vv{font-family:var(--mono);font-size:1.1rem;margin-top:4px;min-height:1.5em;color:var(--ink);font-variant-numeric:tabular-nums;
     white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
   .var .vv.s{color:#c3e88d}
-  .var.none{border-style:dashed;border-color:rgba(132,150,182,.35);background:transparent;opacity:.6}
-  .var.none .vv{font-size:.82rem;color:var(--muted);padding-top:6px}
-  .var.idle{opacity:.4}
+  .var .vv.end{color:var(--warn)}
+  .var.none{border-style:dashed;border-color:rgba(132,150,182,.35);background:transparent}
+  .var.none .vv{font-size:.8rem;color:var(--muted);padding-top:5px}
+  .var.idle{opacity:.45}
   .var.hot{border-color:rgba(110,160,255,.85);background:rgba(110,160,255,.16)}
   .var.w{border-color:rgba(255,106,106,.7);background:rgba(255,106,106,.08)}
-  .var.y{border-color:rgba(255,200,98,.8);background:rgba(255,200,98,.1)}
-  .var .vv.end{color:var(--warn)}
+  .var.ok{border-color:rgba(70,217,138,.6);background:rgba(70,217,138,.08)}
   svg.links{position:absolute;inset:0;width:100%;height:100%;pointer-events:none}
   svg.links path{fill:none;stroke-width:2}
   svg.links .lab2{font-family:var(--mono);font-size:11px}
@@ -116,7 +119,7 @@
   .btn.primary{border-color:rgba(110,160,255,.5);background:rgba(110,160,255,.12);padding:9px 22px}
   .btn:disabled{opacity:.35;cursor:not-allowed}
   .btn.ghost{background:transparent;color:var(--muted);margin-left:auto}
-  .dots{display:flex;gap:5px;align-items:center;margin:0 6px}
+  .dots{display:flex;gap:5px;align-items:center;margin:0 6px;flex-wrap:wrap}
   .dots i{display:block;width:8px;height:8px;border-radius:50%;background:rgba(255,255,255,.12);transition:.2s}
   .dots i.done{background:rgba(110,160,255,.45)}
   .dots i.now{background:var(--accent);transform:scale(1.35);box-shadow:0 0 10px rgba(110,160,255,.7)}
@@ -145,10 +148,11 @@
   .stat .v{font-family:var(--disp);font-weight:700;font-size:1.45rem;font-variant-numeric:tabular-nums;margin-top:2px;transition:color .3s;min-height:1.6em}
   .v.hot{color:var(--accent)} .v.gold{color:var(--gold)} .v.dim{color:rgba(132,150,182,.5)}
   .console{font-family:var(--mono);font-size:.76rem;line-height:1.6;background:#05070e;border:1px solid var(--line);
-    border-radius:12px;padding:10px 14px;min-height:64px;color:#9fe3b6;flex:1}
+    border-radius:12px;padding:10px 14px;min-height:64px;max-height:300px;overflow:auto;color:#9fe3b6;flex:1}
+  #console div{white-space:pre;min-height:1.6em}
   .console .cl{font-size:.6rem;letter-spacing:.14em;text-transform:uppercase;color:rgba(132,150,182,.6);margin-bottom:4px}
   .console .out{animation:pop .3s}
-  @keyframes pop{from{transform:scale(.6);opacity:0}to{transform:scale(1);opacity:1}}
+  @keyframes pop{from{opacity:0}to{opacity:1}}
   .take{margin-top:22px;background:linear-gradient(180deg,rgba(110,160,255,.08),rgba(139,123,255,.04));
     border:1px solid var(--line);border-left:3px solid var(--accent);border-radius:12px;padding:16px 18px}
   .take .tk{font-family:var(--mono);font-size:.66rem;letter-spacing:.14em;text-transform:uppercase;color:var(--accent);margin:0 0 8px}
@@ -159,41 +163,52 @@
 </head>
 <body>
 
-<a class="back" href="../index.html#16-for-each-loop">&#8592; Week 2 index</a>
+
+<a class="back" href="../index.html#15-for-each-loop">&#8592; Week 2 index</a>
 
 <canvas id="amb"></canvas>
 <div class="wrap">
   <p class="tag">Workbook 2a &middot; Section 3-2 &middot; Arrays</p>
   <h1>for-each vs for</h1>
-  <p class="lede"><b>for-each hands you every element in order, but no index, and it cannot change the array.</b></p>
+  <p class="lede"><b>for-each hands you each element directly, with no index. The indexed for loop gives you i as well.</b></p>
 
   <div class="stage">
     <div class="topbar">
-      <span class="lab">Loop</span>
-      <div class="chips" id="chips">
-        <button class="chip" data-m="idx">for (int i = 0; ...)</button>
-        <button class="chip on" data-m="each">for (String city : cities)</button>
-      </div>
+      <span class="lab">Two loops, one array</span>
       <button class="focus" id="bFocus" title="Hide the code and notes, enlarge the picture">Focus</button>
     </div>
 
-    <div class="pic each" id="pic">
+    <div class="pic" id="pic">
       <svg class="links" id="links"></svg>
       <div class="scene off" id="scene">
-        <span class="zone" style="left:40px;top:26px">cities</span>
+        <span class="zone" style="left:24px;top:24px">nameList</span>
         <span class="verdict" id="verdict"></span>
         <div class="arr" id="arr"></div>
-        <div class="vars">
-          <div class="var" id="vI"><div class="vk" id="kI">int i</div><div class="vv" id="vvI"></div></div>
-          <div class="var" id="vE"><div class="vk" id="kE">String city</div><div class="vv s" id="vvE"></div></div>
+        <div class="lanes">
+          <div class="lane idle" id="lA">
+            <div class="lh"><span class="kw">for</span> (<span class="ty">int</span> i = <span class="nm">0</span>; i &lt; nameList.length; i++)</div>
+            <div class="ls">a for loop with an index</div>
+            <div class="vrow">
+              <div class="var idle" id="aI"><div class="vk">int i</div><div class="vv" id="aIv"></div></div>
+              <div class="var idle" id="aE"><div class="vk">nameList[i]</div><div class="vv s" id="aEv"></div></div>
+            </div>
+          </div>
+          <div class="lane idle" id="lB">
+            <div class="lh"><span class="kw">for</span> (<span class="ty">String</span> name : nameList)</div>
+            <div class="ls">the for-each loop</div>
+            <div class="vrow">
+              <div class="var none" id="bI"><div class="vk">index</div><div class="vv">not given</div></div>
+              <div class="var idle" id="bE"><div class="vk">String name</div><div class="vv s" id="bEv"></div></div>
+            </div>
+          </div>
         </div>
       </div>
-      <div class="start" id="start">5 cities &middot; press&nbsp;<b>Next</b></div>
+      <div class="start" id="start">9 names &middot; 2 loops &middot; press&nbsp;<b>Next</b></div>
     </div>
 
     <div class="caption" id="caption">
-      <div class="n" id="stepno"><small>step</small>0 / 7</div>
-      <div class="t" id="status">Press <b class="a">Next</b>. Switch the loop at any step to compare.</div>
+      <div class="n" id="stepno"><small>step</small>0 / 21</div>
+      <div class="t" id="status">Press <b class="a">Next</b> to run the indexed loop, then the for-each loop.</div>
     </div>
 
     <div class="toolbar">
@@ -202,17 +217,17 @@
       <button class="btn primary" id="bNext">Next &rarr;</button>
       <button class="btn ghost" id="bReset">Reset</button>
     </div>
-    <p class="hint">space = next &middot; <b>switch the loop at any step</b>: same step, other form</p>
+    <p class="hint">space = next &middot; <b>left lane</b>: the indexed for &middot; <b>right lane</b>: for-each</p>
 
     <div class="support">
       <div>
-        <p class="lab">Main.java</p>
+        <p class="lab">Main2.java</p>
         <div class="code" id="code"></div>
       </div>
       <div class="side">
         <div class="readout">
           <div class="stat empty"><div class="k">pass</div><div class="v dim" id="stPass"></div></div>
-          <div class="stat empty"><div class="k">cities[0]</div><div class="v dim" id="stC0"></div></div>
+          <div class="stat empty"><div class="k">position known</div><div class="v dim" id="stPos"></div></div>
         </div>
         <div class="console"><div class="cl">console</div><div id="console"></div></div>
       </div>
@@ -221,9 +236,9 @@
 
   <div class="take">
     <p class="tk">The one idea</p>
-    <p><b>for-each is the short way to read every element</b>, in order, none skipped. The loop variable is its own
-    variable that holds a copy of the current element, so assigning to it never reaches the array, and there is no index.
-    <b>Need the position, or need to change the array? Use the for loop with <code>i</code>.</b></p>
+    <p><b>Use for-each when you only need each element</b>: it is shorter and visits every slot in order, no index to
+    get wrong. <b>Use the indexed for when you need the position</b>, or when you want to change the slot itself with
+    <code>nameList[i]</code>.</p>
   </div>
 
   <div id="rail"></div>
@@ -235,124 +250,122 @@
   var $=function(s){return document.querySelector(s);};
   var reduce=matchMedia("(prefers-reduced-motion: reduce)").matches;
 
-  var CITIES=["Beirut","Boston","Chicago","Atlanta","Denver"];
-  var UP=CITIES.map(function(c){return c.toUpperCase();});
-  var mode="each", at=-1;
+  var NAMES=["Natalie","Brittany","Zachary","Ezra","Ian","Siddalee","Elisha","Pursalane","Zephaniah"];
+  var N=NAMES.length, at=-1;
+  var HA="========== A for loop with an index ==========";
+  var HB="========== The for-each loop ==========";
 
   function q(s){ return '"'+s+'"'; }
-  function code(){
-    var S='<span class="ty">String</span>', head=mode==="each"
-      ?'<span class="kw">for</span> ('+S+' city : cities) {'
-      :'<span class="kw">for</span> (<span class="ty">int</span> i = <span class="nm">0</span>; i \u003c cities.length; i++) {';
-    return [
-      S+'[] cities = {'+CITIES.map(function(c){return '<span class="st">"'+c+'"</span>';}).join(", ")+'};',
-      '',
-      head,
-      mode==="each"?'    System.out.println(city);':'    System.out.println(i + <span class="st">": "</span> + cities[i]);',
-      '}',
-      '',
-      head,
-      mode==="each"?'    city = city.<span class="fn">toUpperCase</span>();':'    cities[i] = cities[i].<span class="fn">toUpperCase</span>();',
-      '}',
-      'System.out.println(Arrays.<span class="fn">toString</span>(cities));'
-    ];
-  }
-  function printed(k){ return mode==="each"?CITIES[k]:k+": "+CITIES[k]; }
+  function st(s){ return '<span class="st">"'+s+'"</span>'; }
+  var P='System.out.<span class="fn">println</span>';
+  var CODE=[
+    '<span class="ty">String</span>[] nameList = {',
+    '        '+NAMES.slice(0,5).map(st).join(", ")+",",
+    '        '+NAMES.slice(5).map(st).join(", "),
+    '};',
+    '',
+    '<span class="cm">// A for loop with an index</span>',
+    P+'('+st(HA.slice(0))+');',
+    '<span class="kw">for</span> (<span class="ty">int</span> i = <span class="nm">0</span>; i < nameList.length; i++) {',
+    '    '+P+'(nameList[i]);   <span class="cm">// the index i is available</span>',
+    '}',
+    P+'();',
+    '',
+    '<span class="cm">// The for-each loop</span>',
+    P+'('+st(HB)+');',
+    '<span class="kw">for</span> (<span class="ty">String</span> name : nameList) {',
+    '    '+P+'(name);   <span class="cm">// the element directly, no index</span>',
+    '}',
+    P+'();'
+  ];
 
-  /* one snapshot per step; same step number in both forms so the switch compares like with like */
+  /* console lines printed after the indexed loop has done k passes, and after the for-each has done m passes */
+  function outA(k){ var o=[HA]; for(var j=0;j<k;j++) o.push(NAMES[j]); return o; }
+  function outB(m){ var o=outA(N).concat([""],[HB]); for(var j=0;j<m;j++) o.push(NAMES[j]); return o; }
+
+  /* one snapshot per step */
   function snap(n){
-    var E=mode==="each", s={lit:-1,done:0,vals:CITIES,i:null,el:null,link:null,out:[],line:[],cls:"",verdict:null};
-    var k;
-    if(n===0){ s.line=[1]; s.msg=E?'Five cities in one array. for-each will hand them to you <b class="a">one at a time, in order</b>.'
-      :'Five cities in one array, at <b class="a">indexes 0 to 4</b>. The for loop counts i up to reach each one.'; }
-    if(n>=1&&n<=3){
-      s.lit=n===1?0:n===2?1:4; s.done=s.lit; s.link="read"; s.line=[3,4];
-      for(k=0;k<=s.lit;k++) s.out.push(printed(k));
-      s.i=E?null:s.lit; s.el=CITIES[s.lit]; s.pass=s.lit+1;
-      if(n===1) s.msg=E?'Pass 1: Java puts the first element into city. city is <b class="a">"Beirut"</b>. No index anywhere.'
-        :'Pass 1: i is 0, so cities[i] reads slot 0: <b class="a">"Beirut"</b>. You hold the index and the element.';
-      if(n===2) s.msg=E?'Pass 2: city now holds <b class="a">"Boston"</b>. The loop moved to the next slot by itself.'
-        :'Pass 2: i++ made i 1, so cities[1] is <b class="a">"Boston"</b>. The index moves the loop along.';
-      if(n===3) s.msg=E?'Passes 3 to 5: Chicago, Atlanta, Denver. <b class="g">Every element, in order, none skipped.</b>'
-        :'Passes 3 to 5: i is 2, 3, then 4. <b class="g">Same elements, same order</b> as for-each.';
+    var s={lane:null,lit:-1,done:0,i:null,iEnd:false,a:null,b:null,out:[],line:[],cls:"",verdict:null,pass:null,pos:null};
+    if(n===0){ s.line=[1,2,3,4];
+      s.msg='Nine names in nameList, at <b class="a">indexes 0 to 8</b>. Two loops will print them all.'; }
+    if(n>=1&&n<=N){
+      var k=n-1;
+      s.lane="A"; s.lit=k; s.done=k; s.i=k; s.a=NAMES[k];
+      s.out=outA(k+1); s.line=[8,9]; s.pass=k+1; s.pos="i = "+k;
+      s.msg=k===0
+        ?'Indexed loop, pass 1: i is 0, 0 < 9, so nameList[0] prints <b class="a">"Natalie"</b>.'
+        :'Pass '+(k+1)+': i++ makes i '+k+', '+k+' < 9, so nameList['+k+'] prints <b class="a">"'+NAMES[k]+'"</b>.';
     }
-    if(n===4){
-      s.done=5; s.line=[3]; for(k=0;k<5;k++) s.out.push(printed(k)); s.pass="end";
-      if(E){ s.msg='No elements left, so the loop ends. You saw every value but <b class="a">never its position</b>.'; }
-      else { s.i=5; s.iEnd=true; s.msg='i becomes 5, and 5 \u003c 5 is false: the loop ends. i gave you <b class="a">each position</b>.'; }
+    if(n===N+1){
+      s.lane="A"; s.done=N; s.i=9; s.iEnd=true; s.out=outA(N).concat([""]); s.line=[8,11]; s.pass="end"; s.pos="i = 9";
+      s.msg='i becomes 9, and 9 < 9 is false: the loop ends. <b class="a">println()</b> adds a blank line.';
     }
-    if(n===5){
-      s.lit=0; s.done=0; s.line=[7,8]; for(k=0;k<5;k++) s.out.push(printed(k)); s.pass=1;
-      if(E){ s.el="BEIRUT"; s.link="blocked"; s.cls="cut"; s.kept=[0];
-        s.msg='Now change it: city becomes "BEIRUT". <b class="w">Slot 0 still says "Beirut"</b>: only city changed.'; }
-      else { s.i=0; s.el="BEIRUT"; s.link="write"; s.cls="left"; s.vals=["BEIRUT"].concat(CITIES.slice(1)); s.chg=[0];
-        s.msg='Now change it: cities[i] = ... writes into the slot itself. <b class="y">Slot 0 now says "BEIRUT"</b>.'; }
+    if(n>=N+2&&n<=2*N+1){
+      var m=n-N-2;
+      s.lane="B"; s.lit=m; s.done=m; s.b=NAMES[m];
+      s.out=outB(m+1); s.line=[15,16]; s.pass=m+1; s.pos="no";
+      s.msg=m===0
+        ?'for-each, pass 1: Java puts the first element into name: <b class="a">"Natalie"</b>, no i anywhere.'
+        :m===N-1
+        ?'Pass 9: name is <b class="a">"Zephaniah"</b>, the last element, so the loop is done.'
+        :'Pass '+(m+1)+': the loop moves on by itself, name is <b class="a">"'+NAMES[m]+'"</b>.';
     }
-    if(n===6){
-      s.line=[10]; for(k=0;k<5;k++) s.out.push(printed(k)); s.pass="end";
-      if(E){ s.kept=[0,1,2,3,4]; s.cls="cut"; s.verdict=["w","array unchanged"];
-        s.out.push("["+CITIES.join(", ")+"]");
-        s.msg='city was a copy every pass, so the array is <b class="w">unchanged</b>. To change elements, use the index.'; }
-      else { s.vals=UP; s.chg=[0,1,2,3,4]; s.cls="ok"; s.verdict=["y","array changed"];
-        s.out.push("["+UP.join(", ")+"]");
-        s.msg='Every slot was rewritten through its index. <b class="g">Use for with i when the array must change.</b>'; }
+    if(n===2*N+2){
+      s.lane="both"; s.done=N; s.out=outB(N).concat([""]); s.line=[9,16]; s.cls="ok"; s.pass="9 + 9"; s.pos="for only";
+      s.i="0 to 8"; s.a="all 9"; s.b="all 9"; s.verdict=["g","same nine lines"];
+      s.msg='Same nine lines both times. <b class="g">Only the indexed loop told you where each name sits.</b>';
     }
-    s.c0=s.vals[0];
     return s;
   }
-  var TOTAL=7;
+  var TOTAL=2*N+3;
 
   var picEl=$("#pic"), svg=$("#links"), codeEl=$("#code");
   function renderCode(cur,cls){
-    codeEl.innerHTML=code().map(function(t,i){
-      var c="ln"; if(cur&&cur.indexOf(i+1)>=0) c+=" "+(cls==="cut"?"cut":cls==="left"?"left":"cur");
+    codeEl.innerHTML=CODE.map(function(t,i){
+      var c="ln"; if(cur&&cur.indexOf(i+1)>=0) c+=" cur";
       return '<div class="'+c+'"><span class="n">'+(i+1)+'</span><span>'+(t||" ")+'</span></div>';
     }).join("");
   }
+  function setVar(id,vid,val,cls){ $(id).className="var"+(cls?" "+cls:""); $(vid).textContent=val===null?"":val; }
   function renderPic(s){
-    var E=mode==="each";
-    picEl.className="pic "+mode;
+    var L=s?s.lane:null;
+    picEl.className="pic"+(L==="B"?" each":L==="both"?" both":"");
     $("#scene").className="scene"+(s?"":" off"); $("#start").style.opacity=s?0:1;
-    var vals=s?s.vals:CITIES, h="";
-    for(var k=0;k<5;k++){
+    var h="";
+    for(var k=0;k<N;k++){
       var c="slot";
-      if(s){ if(k<s.done) c+=" done"; if(k===s.lit) c+=" lit";
-        if(s.kept&&s.kept.indexOf(k)>=0) c+=" kept"; if(s.chg&&s.chg.indexOf(k)>=0) c+=" chg"; }
-      h+='<div class="'+c+'" id="s'+k+'"><span class="ps">pass '+(k+1)+'</span>'+q(vals[k])+'<span class="ix">['+k+']</span></div>';
+      if(s){ if(L==="both") c+=" ok"; else { if(k<s.done) c+=" done"; if(k===s.lit) c+=" lit"; } }
+      h+='<div class="slot'+c.slice(4)+'" id="s'+k+'"><span class="ps">pass '+(k+1)+'</span><span class="nmv">'+NAMES[k]+'</span><span class="ix">['+k+']</span></div>';
     }
     $("#arr").innerHTML=h;
-    var vI=$("#vI"), vE=$("#vE");
-    $("#kI").textContent=E?"index":"int i";
-    $("#kE").textContent=E?"String city":"cities[i]";
-    if(E){ vI.className="var none"; $("#vvI").textContent="not given"; $("#vvI").className="vv"; }
-    else { vI.className="var"+(s&&s.i!==null?(s.iEnd?" w":" hot"):" idle"); $("#vvI").textContent=s&&s.i!==null?String(s.i):"";
-      $("#vvI").className="vv"+(s&&s.iEnd?" end":""); }
-    var ec="var"; if(!s||s.el===null) ec+=" idle"; else if(s.link==="blocked") ec+=" w"; else if(s.link==="write") ec+=" y"; else ec+=" hot";
-    vE.className=ec; $("#vvE").textContent=s&&s.el!==null?q(s.el):"";
+    var fin=L==="both";
+    $("#lA").className="lane "+(fin?"fin":L==="A"?"act":"idle");
+    $("#lB").className="lane "+(fin?"fin":L==="B"?"act":"idle");
+    /* indexed lane */
+    if(s&&(L==="A"||fin)){
+      setVar("#aI","#aIv",String(s.i),fin?"ok":s.iEnd?"w":"hot");
+      $("#aIv").className="vv"+(s.iEnd?" end":"");
+      setVar("#aE","#aEv",s.a===null?null:(fin?s.a:q(s.a)),s.a===null?"idle":fin?"ok":"hot");
+    } else if(s&&(L==="B")){
+      setVar("#aI","#aIv",null,"idle"); $("#aIv").className="vv"; setVar("#aE","#aEv",null,"idle");
+    } else { setVar("#aI","#aIv",null,"idle"); $("#aIv").className="vv"; setVar("#aE","#aEv",null,"idle"); }
+    /* for-each lane: the index box is always "not given" */
+    if(s&&(L==="B"||fin)) setVar("#bE","#bEv",fin?s.b:q(s.b),fin?"ok":"hot");
+    else setVar("#bE","#bEv",null,"idle");
     var v=$("#verdict"); if(s&&s.verdict){ v.className="verdict show "+s.verdict[0]; v.textContent=s.verdict[1]; } else v.className="verdict";
     drawLinks(s);
   }
-  /* the arrow between the slot and the loop variable: read (down), write (up), blocked (up, stops) */
+  /* the arrow from the current slot down to the loop variable that receives it */
   function drawLinks(s){
-    var defs='<defs>'+
-      '<marker id="mA" markerWidth="8" markerHeight="8" refX="6" refY="4" orient="auto"><path d="M0,0 L8,4 L0,8 z" fill="#6ea0ff"/></marker>'+
-      '<marker id="mY" markerWidth="8" markerHeight="8" refX="6" refY="4" orient="auto"><path d="M0,0 L8,4 L0,8 z" fill="#ffc862"/></marker></defs>';
-    if(!s||!s.link||s.lit<0){ svg.innerHTML=defs; return; }
-    var pr=picEl.getBoundingClientRect(), sr=$("#s"+s.lit).getBoundingClientRect(), br=$("#vE").getBoundingClientRect();
-    var sx=sr.left+sr.width/2-pr.left, sy=sr.bottom-pr.top+28, bx=br.left+br.width/2-pr.left, by=br.top-pr.top-6;
-    var p, mid=(sy+by)/2;
-    if(s.link==="read"){
-      svg.innerHTML=defs+'<path d="M'+sx+','+sy+' C'+sx+','+mid+' '+bx+','+mid+' '+bx+','+by+'" stroke="#6ea0ff" stroke-opacity=".8" marker-end="url(#mA)"/>'+
-        '<text class="lab2" x="'+((sx+bx)/2+8)+'" y="'+(mid-4)+'" fill="#6ea0ff">copy in</text>';
-    } else if(s.link==="write"){
-      svg.innerHTML=defs+'<path d="M'+bx+','+by+' C'+bx+','+mid+' '+sx+','+mid+' '+sx+','+sy+'" stroke="#ffc862" marker-end="url(#mY)"/>'+
-        '<text class="lab2" x="'+((sx+bx)/2+8)+'" y="'+(mid-4)+'" fill="#ffc862">writes slot 0</text>';
-    } else {
-      var hx=(sx+bx)/2, hy=mid;
-      svg.innerHTML=defs+'<path d="M'+bx+','+by+' C'+bx+','+mid+' '+hx+','+mid+' '+hx+','+hy+'" stroke="#ff6a6a" stroke-dasharray="5 5"/>'+
-        '<path d="M'+(hx-8)+','+(hy-8)+' L'+(hx+8)+','+(hy+8)+' M'+(hx+8)+','+(hy-8)+' L'+(hx-8)+','+(hy+8)+'" stroke="#ff6a6a" stroke-width="2.5"/>'+
-        '<text class="lab2" x="'+(hx+14)+'" y="'+(hy+4)+'" fill="#ff6a6a">no way back to the slot</text>';
-    }
+    var defs='<defs><marker id="mA" markerWidth="8" markerHeight="8" refX="6" refY="4" orient="auto"><path d="M0,0 L8,4 L0,8 z" fill="#6ea0ff"/></marker></defs>';
+    if(!s||s.lit<0||(s.lane!=="A"&&s.lane!=="B")){ svg.innerHTML=defs; return; }
+    var A=s.lane==="A";
+    var pr=picEl.getBoundingClientRect(), sr=$("#s"+s.lit).getBoundingClientRect();
+    var br=$(A?"#aE":"#bE").getBoundingClientRect(), lr=$(A?"#lA":"#lB").getBoundingClientRect();
+    var sx=sr.left+sr.width/2-pr.left, sy=sr.bottom-pr.top+26, bx=br.left+br.width/2-pr.left, by=lr.top-pr.top-4;
+    var mid=(sy+by)/2, lab=A?"nameList["+s.lit+"]":"next element";
+    svg.innerHTML=defs+'<path d="M'+sx+','+sy+' C'+sx+','+mid+' '+bx+','+mid+' '+bx+','+by+'" stroke="#6ea0ff" stroke-opacity=".8" marker-end="url(#mA)"/>'+
+      '<text class="lab2" x="'+((sx+bx)/2+8)+'" y="'+(mid-4)+'" fill="#6ea0ff">'+lab+'</text>';
   }
   function setStat(id,v,c){ var e=$(id), box=e.parentNode;
     if(v===null||v===undefined){ e.textContent=""; e.className="v dim"; box.classList.add("empty"); }
@@ -363,23 +376,19 @@
     renderCode(s?s.line:null,s?s.cls:""); renderPic(s);
     $("#stepno").innerHTML="<small>step</small>"+(i+1)+" / "+TOTAL;
     $("#caption").className="caption"+(s&&s.cls?" "+s.cls:"");
-    $("#status").innerHTML=s?s.msg:'Press <b class="a">Next</b>. Switch the loop at any step to compare.';
-    $("#console").innerHTML=s&&s.out.length?s.out.map(function(o){return '<div>'+o+'</div>';}).join("")
+    $("#status").innerHTML=s?s.msg:'Press <b class="a">Next</b> to run the indexed loop, then the for-each loop.';
+    var con=$("#console");
+    con.innerHTML=s&&s.out.length?s.out.map(function(o){return '<div>'+o+'</div>';}).join("")
       :'<span style="color:rgba(132,150,182,.5)">(nothing printed yet)</span>';
+    con.parentNode.scrollTop=con.parentNode.scrollHeight;
     setStat("#stPass",s?s.pass:null,"hot");
-    setStat("#stC0",s?q(s.c0):null,s&&s.c0!==CITIES[0]?"gold":"");
+    setStat("#stPos",s?s.pos:null,s&&s.pos==="no"?"dim":"gold");
     $("#bNext").disabled=at>=TOTAL-1; $("#bBack").disabled=at<0;
     var d=""; for(var k=0;k<TOTAL;k++) d+='<i class="'+(k===at?"now":k<at?"done":"")+'"></i>'; $("#dots").innerHTML=d;
   }
   function next(){ if(at<TOTAL-1) show(at+1); }
   function back(){ if(at>=0) show(at-1); }
   function reset(){ show(-1); }
-  function setMode(m){
-    mode=m;
-    Array.prototype.forEach.call(document.querySelectorAll(".chip"),function(c){ c.classList.toggle("on",c.getAttribute("data-m")===m); });
-    if(document.activeElement&&document.activeElement.blur) document.activeElement.blur();
-    show(at);
-  }
 
   function setFocus(on){ document.body.classList.toggle("solo",on); $("#bFocus").textContent=on?"Focus on":"Focus";
     try{localStorage.setItem("hub-focus",on?"1":"0");}catch(e){} show(at); }
@@ -387,7 +396,6 @@
   try{ if(localStorage.getItem("hub-focus")==="1") document.body.classList.add("solo"); }catch(e){}
   if(document.body.classList.contains("solo")) $("#bFocus").textContent="Focus on";
 
-  $("#chips").addEventListener("click",function(e){ var b=e.target.closest(".chip"); if(b) setMode(b.getAttribute("data-m")); });
   $("#bNext").addEventListener("click",next);
   $("#bBack").addEventListener("click",back);
   $("#bReset").addEventListener("click",reset);
@@ -412,6 +420,6 @@
 </script>
 <script src="../manifest.js"></script>
 <script src="../../assets/rail.js"></script>
-<script>Rail.render(document.getElementById("rail"),{week:2,kind:"visuals",current:"16-for-each-loop"});</script>
+<script>Rail.render(document.getElementById("rail"),{week:2,kind:"visuals",current:"15-for-each-loop"});</script>
 </body>
 </html>
