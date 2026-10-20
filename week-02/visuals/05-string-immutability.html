@@ -188,7 +188,7 @@
     <div class="pic" id="pic"></div>
 
     <div class="caption" id="caption">
-      <div class="n" id="stepno"><small>step</small>0 / 10</div>
+      <div class="n" id="stepno"><small>step</small>0 / 0</div>
       <div class="t" id="status">Press <b class="a">Next</b>. The picture changes at every step.</div>
     </div>
 
@@ -240,8 +240,6 @@
   function lines(){
     return [
       '<span class="ty">String</span> greeting = <span class="st">"Hello"</span>;',
-      'System.out.<span class="fn">println</span>(greeting + <span class="st">", Raymond"</span>);',
-      'System.out.<span class="fn">println</span>(greeting);',
       'greeting = greeting + <span class="st">", Raymond"</span>;',
       'System.out.<span class="fn">println</span>(greeting);',
 
@@ -254,16 +252,11 @@
     return [
       {sc:"g",line:[1],cls:"",arrow:"A",objs:{A:"cur"},pts:"Hello",unr:0,
        msg:'<code>greeting</code> holds a <b class="a">reference</b> (the arrow) to one String object, <code>"Hello"</code>.'},
-      {sc:"g",line:[2],cls:"",arrow:"A",objs:{A:"cur",B:"new"},tags:{A:["not changed","y"],B:["result, not stored","a"]},pts:"Hello",unr:0,
-       out:"Hello, Raymond",ans:'println(greeting + ", Raymond")',
-       msg:'<code>+</code> builds a <b class="a">new</b> object for println. <code>"Hello"</code> is <b class="y">not changed</b> and the arrow stays.'},
-      {sc:"g",line:[3],cls:"ok",arrow:"A",read:"g",objs:{A:"readg",B:"gone"},pts:"Hello",unr:1,out:"Hello",ans:"println(greeting)",
-       msg:'println follows the arrow: <b class="g">Hello</b>. No variable ever pointed at the new object: it is unreachable.'},
-      {sc:"g",line:[4],cls:"",arrow:"A",objs:{A:"cur",B:"gone",C:"new"},tags:{C:["built first","a"]},pts:"Hello",unr:1,
-       msg:'The right side of <code>=</code> runs first: it builds another new object, '+hr+'.'},
-      {sc:"g",line:[4],cls:"left",arrow:"C",objs:{A:"gone",B:"gone",C:"cur"},pts:"Hello, Raymond",unr:2,
+      {sc:"g",line:[2],cls:"",arrow:"A",objs:{A:"cur",C:"new"},tags:{A:["not changed","y"],C:["built first","a"]},pts:"Hello",unr:0,
+       msg:'The right side of <code>=</code> runs first: <code>+</code> builds a <b class="a">new</b> object, '+hr+'. <code>"Hello"</code> is <b class="y">not changed</b>.'},
+      {sc:"g",line:[2],cls:"left",arrow:"C",objs:{A:"gone",C:"cur"},pts:"Hello, Raymond",unr:1,
        msg:'The <code>=</code> moves the arrow. Nothing points at <code>"Hello"</code> now: it is <b class="y">unreachable</b>.'},
-      {sc:"g",line:[5],cls:"ok",arrow:"C",read:"g",objs:{A:"gone",B:"gone",C:"readg"},pts:"Hello, Raymond",unr:2,
+      {sc:"g",line:[3],cls:"ok",arrow:"C",read:"g",objs:{A:"gone",C:"readg"},pts:"Hello, Raymond",unr:1,
        out:"Hello, Raymond",ans:"println(greeting)",
        msg:'println follows the moved arrow: <b class="g">Hello, Raymond</b>. Same variable, different object.'}
     ];
@@ -301,7 +294,7 @@
     html+='<div class="var" id="var"><p class="vl" id="vname"></p><div class="vb">ref</div></div>';
     /* scene g: greeting */
     html+='<div class="scene" id="sc-g">';
-    [["A","Hello"],["B","Hello, Raymond"],["C","Hello, Raymond"]].forEach(function(o,i){
+    [["A","Hello"],["C","Hello, Raymond"]].forEach(function(o,i){
       html+='<div class="obj" id="o'+o[0]+'"><span class="oh">String object #'+(i+1)+'<span class="otag"></span></span><div class="cells">'+cells(o[1])+'</div></div>';
     });
     html+='</div>';
@@ -330,8 +323,8 @@
     ["g","c","s"].forEach(function(x){ $("#sc-"+x).className="scene"+(s&&x===sc?" on":""); });
 
     if(sc==="g"){
-      var top=56, slot=(H-top-14)/3;
-      ["A","B","C"].forEach(function(key,i){
+      var top=56, slot=(H-top-14)/2;
+      ["A","C"].forEach(function(key,i){
         e=$("#o"+key);
         var len=e.querySelectorAll(".c").length, cw=Math.max(16,Math.min(28,Math.floor(room/len)-3));
         e.style.setProperty("--cw",cw+"px");
