@@ -30,343 +30,314 @@
     background-clip:text;color:transparent}
   .lede{color:var(--muted);max-width:64ch;font-size:1.05rem;margin:0 0 26px;line-height:1.5}
   .lede b{color:var(--ink)}
-  .lede code,.take code,.caption code{font-family:var(--mono);font-size:.92em;color:#bcd0ff}
+  code{font-family:var(--mono);font-size:.92em;color:#bcd0ff}
 
-  /* ---------- stage: picture first, one toolbar, support below ---------- */
+  /* ---------- the stage IS the picture ---------- */
   .stage{position:relative;background:linear-gradient(180deg,rgba(255,255,255,.03),rgba(255,255,255,.01));
-    border:1px solid var(--line);border-radius:24px;padding:18px 18px 14px;
+    border:1px solid var(--line);border-radius:24px;padding:22px;
     box-shadow:0 1px 0 rgba(255,255,255,.06) inset,0 30px 80px -30px rgba(0,0,0,.8)}
-  .topbar{display:flex;align-items:center;gap:10px;margin:0 0 14px;flex-wrap:wrap}
-  .topbar .lab{margin:0 4px 0 0}
-  .lab{font-family:var(--mono);font-size:.7rem;letter-spacing:.12em;text-transform:uppercase;color:var(--muted);margin:0 0 10px}
-  .chips{display:flex;flex-wrap:wrap;gap:6px}
-  .chip{font-family:var(--mono);font-size:.74rem;padding:5px 11px;border-radius:999px;cursor:pointer;
-    border:1px solid var(--line);background:rgba(0,0,0,.25);color:var(--muted);transition:.15s}
-  .chip:hover{border-color:var(--accent);color:var(--accent)}
-  .chip.on{border-color:rgba(110,160,255,.6);background:rgba(110,160,255,.14);color:var(--ink)}
-  .chip:focus-visible,.btn:focus-visible,.focus:focus-visible{outline:2px solid var(--accent);outline-offset:2px}
-  .focus{margin-left:auto;font-family:var(--mono);font-size:.68rem;letter-spacing:.1em;text-transform:uppercase;padding:6px 12px;
-    border-radius:999px;border:1px solid var(--line);background:rgba(0,0,0,.25);color:var(--muted);cursor:pointer;transition:.15s}
-  .focus:hover{border-color:var(--accent);color:var(--accent)}
-  body.solo .focus{border-color:rgba(255,200,98,.6);color:var(--gold);background:rgba(255,200,98,.1)}
+  .board{display:grid;grid-template-columns:minmax(0,1fr) 230px minmax(0,1fr);gap:18px;align-items:center;min-height:330px}
+  @media (max-width:820px){.board{grid-template-columns:1fr}.mid .arr{transform:rotate(90deg)}}
 
-  /* hero picture */
-  .pic{position:relative;height:390px;border:1px solid var(--line);border-radius:18px;background:rgba(6,10,20,.5);overflow:hidden}
-  body.solo .pic{height:480px}
-  .pic .zone{position:absolute;font-family:var(--mono);font-size:.62rem;letter-spacing:.14em;text-transform:uppercase;
-    color:rgba(132,150,182,.55);transition:color .3s,opacity .3s}
-  .pic .start{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;font-family:var(--mono);
-    font-size:.8rem;color:var(--muted);pointer-events:none;transition:opacity .3s}
-  .pic .start b{color:var(--accent);font-weight:500}
-  .top{position:absolute;left:0;right:0;top:40px;display:flex;justify-content:center}
-  body.solo .top{top:60px}
-  .low{position:absolute;left:0;right:0;top:214px;display:flex;justify-content:center;align-items:center;gap:22px;padding:0 16px}
-  body.solo .low{top:270px}
-  .al{display:flex;align-items:flex-start}
-  .rl{display:flex;flex-direction:column;margin-right:14px}
-  .rl span{height:40px;display:flex;align-items:center;justify-content:flex-end;font-family:var(--mono);font-size:.62rem;
-    letter-spacing:.12em;text-transform:uppercase;color:var(--muted)}
-  .rl span+span{margin-top:8px}
-  .seg{display:flex;flex-direction:column;align-items:center;transition:margin .3s,opacity .3s}
-  .al.split .seg{margin:0 6px}
-  .cells{display:flex;gap:3px;height:40px}
-  .cells+.cells{margin-top:8px}
-  .c{width:28px;height:40px;border-radius:7px;display:flex;align-items:center;justify-content:center;font-family:var(--mono);
-    font-size:1.12rem;background:rgba(255,255,255,.04);border:1px solid var(--line);color:var(--ink);transition:.3s}
-  .c.p{color:#bcd0ff;font-size:1rem}
-  .c.sp{color:rgba(132,150,182,.45)}
-  .fl{margin-top:7px;font-family:var(--mono);font-size:.6rem;letter-spacing:.12em;text-transform:uppercase;height:14px}
-  .seg.m .c{border-color:rgba(110,160,255,.6);background:rgba(110,160,255,.12)} .seg.m .fl{color:var(--accent)}
-  .seg.d .c{border-color:rgba(70,217,138,.6);background:rgba(70,217,138,.1)} .seg.d .fl{color:var(--good)}
-  .seg.y .c{border-color:rgba(255,200,98,.6);background:rgba(255,200,98,.1)} .seg.y .fl{color:var(--gold)}
-  .seg.bad .c{border-color:rgba(255,106,106,.8);background:rgba(255,106,106,.14)} .seg.bad .fl{color:var(--warn)}
-  .seg.x{opacity:.3}
-  .al.dim{opacity:.45;transition:opacity .3s}
-  .box{border:1px solid var(--line);border-radius:14px;background:rgba(255,255,255,.03);padding:10px 14px 12px;animation:pop .35s}
-  .box .h{font-family:var(--mono);font-size:.62rem;letter-spacing:.12em;text-transform:uppercase;color:var(--muted);margin:0 0 8px}
-  .box .h b{color:var(--ink);font-weight:500}
-  .fields{display:flex;gap:8px}
-  .f{min-width:74px;border-radius:10px;padding:7px 10px;text-align:center;border:1px solid var(--line)}
-  .f .k{font-family:var(--mono);font-size:.58rem;letter-spacing:.12em;text-transform:uppercase}
-  .f .v{font-family:var(--disp);font-weight:700;font-size:1.5rem;font-variant-numeric:tabular-nums}
-  .f.y{border-color:rgba(255,200,98,.55)} .f.y .k,.f.y .v{color:var(--gold)}
-  .f.m{border-color:rgba(110,160,255,.55)} .f.m .k,.f.m .v{color:var(--accent)}
-  .f.d{border-color:rgba(70,217,138,.55)} .f.d .k,.f.d .v{color:var(--good)}
-  .arrow{font-family:var(--mono);font-size:.7rem;color:var(--muted);text-align:center;line-height:1.4}
-  .arrow b{display:block;font-size:1.3rem;color:var(--accent);font-weight:400}
-  .box.out .c{width:22px;height:32px;font-size:.95rem}
-  .box.out .cells{height:32px}
-  .box.out .fl{display:none}
-  .box.err{border-color:rgba(255,106,106,.7);background:rgba(255,106,106,.08);max-width:560px}
-  .box.err .h{color:var(--warn)}
-  .box.err p{margin:0;font-family:var(--mono);font-size:.78rem;line-height:1.5;color:#ffb3b3}
-  /* caption: the one sentence, right under the picture */
-  .caption{display:flex;gap:16px;align-items:flex-start;margin:14px 4px 0;min-height:56px}
-  .caption .n{flex-shrink:0;font-family:var(--disp);font-weight:700;font-size:1.35rem;color:var(--accent);font-variant-numeric:tabular-nums;
-    line-height:1.2;min-width:3.2rem}
-  .caption .n small{display:block;font-family:var(--mono);font-weight:400;font-size:.58rem;letter-spacing:.14em;text-transform:uppercase;color:var(--muted)}
-  .caption .t{font-size:1.02rem;line-height:1.55;color:var(--ink);padding-left:16px;border-left:3px solid var(--accent);transition:border-color .3s}
-  body.solo .caption .t{font-size:1.18rem}
-  .caption.cut .t{border-left-color:var(--warn)} .caption.left .t{border-left-color:var(--gold)} .caption.ok .t{border-left-color:var(--good)}
-  .caption b.g{color:var(--good)} .caption b.w{color:var(--warn)} .caption b.a{color:var(--accent)} .caption b.y{color:var(--gold)}
+  .card{position:relative;border-radius:16px;padding:16px 18px 16px}
+  .hd{font-family:var(--mono);font-size:.62rem;letter-spacing:.16em;text-transform:uppercase;color:var(--muted);margin:0 0 4px}
+  .who{font-family:var(--disp);font-weight:700;font-size:1.35rem;margin:0 0 12px;color:var(--ink);letter-spacing:-.01em}
 
-  /* toolbar: same on every page */
-  .toolbar{display:flex;align-items:center;gap:10px;margin:16px 0 0;padding-top:14px;border-top:1px solid var(--line)}
-  .btn{font-family:var(--body);font-weight:500;font-size:.86rem;padding:9px 16px;border-radius:11px;cursor:pointer;
-    border:1px solid var(--line);background:var(--surface);color:var(--ink);transition:.15s}
-  .btn:hover{border-color:var(--accent);color:var(--accent)}
-  .btn.primary{border-color:rgba(110,160,255,.5);background:rgba(110,160,255,.12);padding:9px 22px}
-  .btn:disabled{opacity:.35;cursor:not-allowed}
-  .btn.ghost{background:transparent;color:var(--muted);margin-left:auto}
-  .dots{display:flex;gap:5px;align-items:center;margin:0 6px}
-  .dots i{display:block;width:8px;height:8px;border-radius:50%;background:rgba(255,255,255,.12);transition:.2s}
-  .dots i.done{background:rgba(110,160,255,.45)}
-  .dots i.now{background:var(--accent);transform:scale(1.35);box-shadow:0 0 10px rgba(110,160,255,.7)}
-  .hint{font-family:var(--mono);font-size:.68rem;color:var(--muted);margin:10px 4px 0;line-height:1.5}
-  .hint b{color:var(--accent)}
+  /* the String box */
+  .str{border:1px solid rgba(195,232,141,.35);background:rgba(195,232,141,.04)}
+  .str .who{color:#c3e88d}
+  .str input{width:100%;font-family:var(--mono);font-size:1.05rem;padding:11px 12px;border-radius:10px;border:1px solid var(--line);
+    background:rgba(0,0,0,.3);color:#c3e88d;outline:none;transition:border-color .15s}
+  .str input:focus{border-color:var(--accent)}
+  .tape{display:flex;flex-wrap:wrap;gap:3px;margin-top:12px;min-height:32px}
+  .ch{font-family:var(--mono);font-size:.86rem;min-width:20px;height:30px;padding:0 3px;display:flex;align-items:center;justify-content:center;
+    border-radius:6px;border:1px solid var(--line);background:rgba(255,255,255,.03);color:#c9d4ea;transition:background .3s,border-color .3s,color .3s,opacity .3s}
+  .ch.y{border-color:rgba(110,160,255,.7);color:#bcd0ff} .ch.m{border-color:rgba(255,200,98,.7);color:var(--gold)} .ch.d{border-color:rgba(70,217,138,.7);color:#9fe3b6}
+  .ch.sep{color:var(--muted)} .ch.gone{opacity:.25}
+  .ch.bad{border-color:var(--warn);background:rgba(255,106,106,.14);color:var(--warn);animation:bounce .5s}
+  .note{font-family:var(--mono);font-size:.68rem;color:var(--muted);margin:10px 0 0;line-height:1.5}
 
-  /* support: code, console, readouts. Below the picture, hidden in focus */
-  .support{display:grid;grid-template-columns:minmax(0,1.3fr) minmax(0,1fr);gap:14px;margin-top:18px}
-  @media (max-width:860px){.support{grid-template-columns:1fr}}
-  body.solo .support,body.solo .take,body.solo .hint{display:none}
-  .code{min-width:0;font-family:var(--mono);font-size:.76rem;line-height:1.8;background:rgba(0,0,0,.35);border:1px solid var(--line);
-    border-radius:14px;padding:12px 0;overflow-x:auto}
-  .ln{display:flex;gap:12px;padding:0 14px;white-space:pre;color:#c9d4ea;transition:background .2s,opacity .3s}
-  .ln .n{width:20px;text-align:right;color:rgba(132,150,182,.55);user-select:none;flex-shrink:0}
-  .ln.cur{background:rgba(110,160,255,.14);box-shadow:inset 3px 0 0 var(--accent)}
-  .ln.cur .n{color:var(--accent)}
-  .ln.cut{background:rgba(255,106,106,.12);box-shadow:inset 3px 0 0 var(--warn)}
-  .ln.left{background:rgba(255,200,98,.12);box-shadow:inset 3px 0 0 var(--gold)}
-  .ln.dim{opacity:.4}
-  .kw{color:#c792ea} .ty{color:#82aaff} .st{color:#c3e88d} .nm{color:#f78c6c} .cm{color:#5f6b85;font-style:italic} .fn{color:#ffcb6b}
-  .side{display:flex;flex-direction:column;gap:12px}
-  .readout{display:grid;grid-template-columns:1fr 1fr;gap:10px}
-  .stat{background:rgba(255,255,255,.03);border:1px solid var(--line);border-radius:12px;padding:11px 13px;transition:opacity .3s}
-  .stat.empty{opacity:.3}
-  .stat .k{font-family:var(--mono);font-size:.62rem;letter-spacing:.1em;text-transform:uppercase;color:var(--muted)}
-  .stat .v{font-family:var(--disp);font-weight:700;font-size:1.45rem;font-variant-numeric:tabular-nums;margin-top:2px;transition:color .3s;min-height:1.6em}
-  .v.hot{color:var(--accent)} .v.gold{color:var(--gold)} .v.dim{color:rgba(132,150,182,.5)}
-  .console{font-family:var(--mono);font-size:.76rem;line-height:1.6;background:#05070e;border:1px solid var(--line);
-    border-radius:12px;padding:10px 14px;min-height:64px;color:#9fe3b6;flex:1}
-  .console .cl{font-size:.6rem;letter-spacing:.14em;text-transform:uppercase;color:rgba(132,150,182,.6);margin-bottom:4px}
-  .console .out{animation:pop .3s}
+  /* middle: pattern chips, arrow, parse */
+  .mid{display:flex;flex-direction:column;align-items:center;gap:12px}
+  .chips{display:flex;flex-wrap:wrap;justify-content:center;gap:6px}
+  .chip{font-family:var(--mono);font-size:.72rem;padding:6px 11px;border-radius:999px;cursor:pointer;border:1px solid var(--line);
+    background:rgba(0,0,0,.25);color:var(--muted);transition:.15s}
+  .chip:hover{border-color:var(--accent);color:var(--ink)}
+  .chip.on{border-color:var(--accent);background:rgba(110,160,255,.16);color:#dbe6ff}
+  .arr{font-family:var(--mono);font-size:1.8rem;line-height:1;color:rgba(132,150,182,.45);transition:color .3s}
+  .arr.on{color:var(--gold)} .arr.no{color:var(--warn)}
+  .parse{font-family:var(--mono);font-weight:500;font-size:.92rem;padding:12px 14px;border-radius:12px;cursor:pointer;width:100%;
+    border:1px solid rgba(110,160,255,.55);background:rgba(110,160,255,.14);color:#dbe6ff;transition:.15s}
+  .parse:hover{background:rgba(110,160,255,.26);border-color:var(--accent)}
+  .parse:disabled{opacity:.35;cursor:not-allowed}
+  .parse b{font-weight:500;color:var(--gold)}
+
+  /* the LocalDate calendar page */
+  .cal{padding:0;overflow:hidden;border:1px solid rgba(255,255,255,.18);background:rgba(255,255,255,.045);transition:border-color .3s,box-shadow .3s}
+  .cal .band{background:linear-gradient(180deg,rgba(110,160,255,.3),rgba(110,160,255,.12));padding:12px 18px 10px;border-bottom:1px solid var(--line);position:relative}
+  .cal .band::before,.cal .band::after{content:"";position:absolute;top:-6px;width:10px;height:16px;border-radius:5px;background:#0c1428;border:1px solid var(--line)}
+  .cal .band::before{left:26%} .cal .band::after{right:26%}
+  .cal .band .who{margin:0;font-size:1.15rem}
+  .cal.good{border-color:rgba(70,217,138,.6);box-shadow:0 0 30px -8px rgba(70,217,138,.6)}
+  .cal.warn{border-color:var(--warn);box-shadow:0 0 34px -6px rgba(255,106,106,.75);animation:flash .5s}
+  .slots{display:grid;grid-template-columns:1.5fr 1fr 1fr;gap:10px;padding:16px 18px 6px}
+  .slot{border-radius:12px;border:1px dashed rgba(132,150,182,.5);min-height:92px;display:flex;flex-direction:column;align-items:center;justify-content:center;
+    gap:4px;transition:border-color .3s,background .3s,box-shadow .3s}
+  .slot .k{font-family:var(--mono);font-size:.58rem;letter-spacing:.14em;text-transform:uppercase;color:var(--muted)}
+  .slot .v{font-family:var(--disp);font-weight:700;font-size:1.7rem;font-variant-numeric:tabular-nums;color:rgba(132,150,182,.35)}
+  .slot .s{font-family:var(--mono);font-size:.58rem;color:var(--muted);min-height:.9em}
+  .slot.full{border-style:solid} .slot.full .v{color:var(--ink);animation:pop .45s}
+  #sy.full{border-color:rgba(110,160,255,.7)} #sm.full{border-color:rgba(255,200,98,.7)} #sd.full{border-color:rgba(70,217,138,.7)}
+  .slot.lit{background:rgba(255,200,98,.1);box-shadow:0 0 22px -8px rgba(255,200,98,.9)}
+  .foot{padding:8px 18px 16px}
+  .wk{font-family:var(--mono);font-size:.78rem;color:#9fe3b6;background:#05070e;border:1px solid var(--line);border-radius:10px;padding:8px 10px;
+    min-height:36px;margin-bottom:10px;opacity:0;transition:opacity .35s}
+  .wk.show{opacity:1}
+  .wk small{display:block;font-size:.54rem;letter-spacing:.12em;text-transform:uppercase;color:rgba(132,150,182,.7)}
+  .meth{width:100%;font-family:var(--mono);font-size:.76rem;padding:9px 6px;border-radius:9px;cursor:pointer;
+    border:1px solid var(--line);background:rgba(0,0,0,.25);color:#ffcb6b;transition:.15s}
+  .meth:hover{border-color:var(--gold);background:rgba(255,200,98,.1)}
+  .meth:disabled{opacity:.3;cursor:not-allowed}
+  .fly{position:fixed;z-index:20;pointer-events:none;font-family:var(--mono);font-size:.95rem;padding:4px 8px;border-radius:7px;
+    background:#0c1428;border:1px solid var(--gold);color:var(--gold);transition:transform .5s cubic-bezier(.2,.9,.3,1),opacity .5s}
+
+  /* the one sentence */
+  .caption{display:flex;gap:14px;align-items:flex-start;margin:18px 2px 0;padding-top:16px;border-top:1px solid var(--line)}
+  .caption .t{flex:1;font-size:1.05rem;line-height:1.55;color:var(--ink);padding-left:16px;border-left:3px solid var(--accent);transition:border-color .3s}
+  .caption .t .line{display:block;margin-top:6px;font-family:var(--mono);font-size:.8rem;color:#bcd0ff;opacity:.9;overflow-wrap:anywhere}
+  .caption.y .t{border-left-color:var(--gold)} .caption.g .t{border-left-color:var(--good)} .caption.w .t{border-left-color:var(--warn)}
+  .caption.w .t .line{color:var(--warn)}
+  .caption b.a{color:var(--accent)} .caption b.y{color:var(--gold)} .caption b.g{color:var(--good)} .caption b.w{color:var(--warn)}
+  .reset{font-family:var(--body);font-weight:500;font-size:.84rem;padding:8px 14px;border-radius:11px;cursor:pointer;
+    border:1px solid var(--line);background:transparent;color:var(--muted);transition:.15s;flex-shrink:0}
+  .reset:hover{border-color:var(--accent);color:var(--accent)}
+  button:focus-visible,input:focus-visible{outline:2px solid var(--accent);outline-offset:2px}
+
   @keyframes pop{from{transform:scale(.6);opacity:0}to{transform:scale(1);opacity:1}}
+  @keyframes bounce{0%{transform:none}40%{transform:translateX(16px)}70%{transform:translateX(-5px)}100%{transform:none}}
+  @keyframes flash{0%,100%{background:rgba(255,255,255,.045)}40%{background:rgba(255,106,106,.16)}}
   .take{margin-top:22px;background:linear-gradient(180deg,rgba(110,160,255,.08),rgba(139,123,255,.04));
     border:1px solid var(--line);border-left:3px solid var(--accent);border-radius:12px;padding:16px 18px}
   .take .tk{font-family:var(--mono);font-size:.66rem;letter-spacing:.14em;text-transform:uppercase;color:var(--accent);margin:0 0 8px}
   .take p{margin:0;font-size:.95rem;color:var(--ink);line-height:1.55}
   .take b{color:#fff}
-  .rl.one span{height:40px}
-  .f .v.w{font-size:1.25rem}
-  .v.ok{color:var(--good)} .v.bad{color:var(--warn)}
-  .stat.wide{grid-column:1/-1}
-  .console .in{color:var(--ink)}
-  .console .err{color:#ff9b9b}
   @media (prefers-reduced-motion:reduce){*{animation-duration:.01ms!important;transition-duration:.01ms!important}#amb{display:none}}
 </style>
 </head>
 <body>
-
 <a class="back" href="../index.html#04-string-to-date">&#8592; Week 2 index</a>
-
 <canvas id="amb"></canvas>
 <div class="wrap">
   <p class="tag">Workbook 2a &middot; Section 1-2 &middot; Converting a String to a date</p>
   <h1>String to Date</h1>
-  <p class="lede"><b>A String is not a date: a typed date like 17/October/2002 needs a formatter whose pattern matches it exactly.</b></p>
+  <p class="lede"><b>A date is text until Java reads it with the right pattern. Pick one and parse.</b></p>
 
   <div class="stage">
-    <div class="topbar">
-      <span class="lab">One typed date, one pattern</span>
-      <button class="focus" id="bFocus" title="Hide the code and notes, enlarge the picture">Focus</button>
-    </div>
-
-    <div class="pic" id="pic"></div>
-
-    <div class="caption" id="caption">
-      <div class="n" id="stepno"><small>step</small>0 / 5</div>
-      <div class="t" id="status">Press <b class="a">Next</b>. The picture changes at every step.</div>
-    </div>
-
-    <div class="toolbar">
-      <button class="btn" id="bBack">&larr; Back</button>
-      <div class="dots" id="dots"></div>
-      <button class="btn primary" id="bNext">Next &rarr;</button>
-      <button class="btn ghost" id="bReset">Reset</button>
-    </div>
-    <p class="hint">space = next &middot; <b>line up the pattern and the text: every piece must match</b></p>
-
-    <div class="support">
-      <div>
-        <p class="lab">Main.java</p>
-        <div class="code" id="code"></div>
+    <div class="board">
+      <div class="card str">
+        <p class="hd">String &middot; just characters</p>
+        <p class="who" id="sName">userInput</p>
+        <input id="inText" value="2002-10-17" maxlength="24" spellcheck="false" autocomplete="off" aria-label="date text">
+        <div class="tape" id="tape"></div>
+        <p class="note" id="note">Java sees ten characters, not a date.</p>
       </div>
-      <div class="side">
-        <div class="readout">
-          <div class="stat wide empty"><div class="k">userDate</div><div class="v dim" id="stUser"></div></div>
+
+      <div class="mid">
+        <p class="hd">pattern</p>
+        <div class="chips">
+          <button class="chip on" data-p="iso">yyyy-MM-dd</button>
+          <button class="chip" data-p="fmt">d/MMMM/yyyy</button>
         </div>
-        <div class="console"><div class="cl">console</div><div id="console"></div></div>
+        <div class="arr" id="arr">&rarr;</div>
+        <button class="parse" id="bParse"><b>LocalDate</b>.parse(...)</button>
       </div>
+
+      <div class="card cal" id="cal">
+        <div class="band"><p class="hd">LocalDate</p><p class="who" id="dName">birthDay</p></div>
+        <div class="slots">
+          <div class="slot" id="sy"><span class="k">year</span><span class="v">----</span><span class="s"></span></div>
+          <div class="slot" id="sm"><span class="k">month</span><span class="v">--</span><span class="s"></span></div>
+          <div class="slot" id="sd"><span class="k">day</span><span class="v">--</span><span class="s"></span></div>
+        </div>
+        <div class="foot">
+          <div class="wk" id="wk"></div>
+          <button class="meth" id="bDow" disabled>.getDayOfWeek()</button>
+        </div>
+      </div>
+    </div>
+    <div class="caption" id="caption">
+      <div class="t" id="status">On the left is a <b class="a">String</b>. The calendar page on the right is <b class="a">empty</b> until Java parses the text.</div>
+      <button class="reset" id="bReset">Reset</button>
     </div>
   </div>
 
   <div class="take">
     <p class="tk">The one idea</p>
-    <p><b>A String is not a date.</b> Only <code>yyyy-MM-dd</code> text parses with no formatter, so
-    <code>"17/October/2002"</code> needs a <code>DateTimeFormatter</code> whose pattern matches it exactly: <code>d</code> the day,
-    <code>MMMM</code> the full month name, <code>yyyy</code> the year, every <code>/</code> in its place. Once parsed,
-    println shows the date as yyyy-MM-dd.</p>
+    <p><b>A typed date is only text.</b> <code>LocalDate.parse(text)</code> reads <code>yyyy-MM-dd</code> and nothing else. Any other shape
+    needs a <code>DateTimeFormatter</code> whose pattern matches the text piece by piece, or Java throws a <code>DateTimeParseException</code>.
+    Once parsed, it is a real date you can ask questions, like which day of the week it was.</p>
   </div>
-
   <div id="rail"></div>
 </div>
-
 <script>
 (function(){
   "use strict";
   var $=function(s){return document.querySelector(s);};
   var reduce=matchMedia("(prefers-reduced-motion: reduce)").matches;
+  var MONTHS=["January","February","March","April","May","June","July","August","September","October","November","December"];
+  var DAYS=["SUNDAY","MONDAY","TUESDAY","WEDNESDAY","THURSDAY","FRIDAY","SATURDAY"];
+  var MODES={
+    iso:{str:"userInput",date:"birthDay",line:"LocalDate birthDay = LocalDate.parse(userInput);",sample:"2002-10-17",
+      order:["y","m","d"],name:"yyyy-MM-dd"},
+    fmt:{str:"dateInputFromUser",date:"userDate",line:"LocalDate userDate = LocalDate.parse(dateInputFromUser, formatter);",sample:"17/October/2002",
+      order:["d","m","y"],name:"d/MMMM/yyyy"}
+  };
+  var mode="iso", busy=false, parsed=null, timers=[];
+  var input=$("#inText"),tape=$("#tape"),cal=$("#cal"),arr=$("#arr"),caption=$("#caption"),status=$("#status");
+  var SLOT={y:$("#sy"),m:$("#sm"),d:$("#sd")}, WORD={y:"year",m:"month",d:"day"};
 
-  /* segments: [pattern piece, text piece, field, label] ; field m/d/y, s = literal, bad = mismatch, x = never read */
-  var ISO_SEGS=[["yyyy","2002","y"],["-","-","s"],["MM","10","m"],["-","-","s"],["dd","17","d"]];
-  var T={text:"17/October/2002",
-     dflt:[["yyyy","17","bad","needs 4 digits"],["-MM-dd","/October/2002","x","never read"]],
-     dErr:"Text '17/October/2002' could not be parsed at index 0",
-     dMsg:'The commented line has no formatter, so parse wants yyyy-MM-dd and finds only 17 for the year. <b class="w">DateTimeParseException.</b>',
-     fmt:[["d","17","d"],["/","/","s"],["MMMM","October","m"],["/","/","s"],["yyyy","2002","y"]],
-     fMsg:'With the formatter, pattern and text line up: <b class="g">d reads 17, MMMM reads October, yyyy reads 2002</b>. userDate is a LocalDate.'};
-  var NAMES={m:"month",d:"day",y:"year"};
-  var PROMPT="Please enter the date that you want (d/MMMM/yyyy)";
+  function say(html,tone,line){
+    caption.className="caption"+(tone?" "+tone:"");
+    status.innerHTML=html+(line?'<span class="line">'+line+'</span>':"");
+  }
+  function esc(s){return s.replace(/[&<>"]/g,function(c){return {"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c];});}
+  function later(fn,ms){timers.push(setTimeout(fn,reduce?0:ms));}
+  function daysIn(y,m){return new Date(Date.UTC(y,m,0)).getUTCDate();}
 
-  function lines(){
-    return [
-      '<span class="ty">Scanner</span> scanner = <span class="kw">new</span> <span class="ty">Scanner</span>(System.in);',
-      'System.out.<span class="fn">println</span>(<span class="st">"Please enter the date that you want (d/MMMM/yyyy)"</span>);',
-      '<span class="ty">String</span> dateInputFromUser = scanner.<span class="fn">nextLine</span>();',
-      '<span class="ty">DateTimeFormatter</span> formatter = <span class="ty">DateTimeFormatter</span>.<span class="fn">ofPattern</span>(<span class="st">"d/MMMM/yyyy"</span>);',
-      '<span class="cm">// LocalDate userDate = LocalDate.parse(dateInputFromUser);   // DateTimeParseException</span>',
-      '<span class="ty">LocalDate</span> userDate = <span class="ty">LocalDate</span>.<span class="fn">parse</span>(dateInputFromUser, formatter);',
-      'System.out.<span class="fn">println</span>(userDate);   <span class="cm">// always printed back as YYYY-MM-DD</span>'
-    ];
+  function drawTape(){
+    var t=input.value; tape.innerHTML="";
+    for(var i=0;i<t.length;i++){var c=document.createElement("span");c.className="ch";c.textContent=t[i]===" "?" ":t[i];tape.appendChild(c);}
+    $("#note").textContent="Java sees "+t.length+" character"+(t.length===1?"":"s")+", not a date.";
   }
+  function digitsAt(t,i){var j=i;while(j<t.length&&t[j]>="0"&&t[j]<="9")j++;return j;}
+  function lettersAt(t,i){var j=i;while(j<t.length&&/[A-Za-z]/.test(t[j]))j++;return j;}
 
-  /* ---------- the walk ---------- */
-  function build(){
-    return [
-      {line:[1,2,3],pic:"u1",cls:"",msg:'The program asks for a date and nextLine hands back what was typed, <code>"'+T.text+'"</code>. Still a String.',out:[PROMPT],typed:true},
-      {line:[4],pic:"u2",cls:"",msg:'The formatter holds the pattern <code>d/MMMM/yyyy</code>: d the day, MMMM the full month name, yyyy the year, a <code>/</code> between each.'},
-      {line:[5],pic:"u3",cls:"cut",msg:T.dMsg},
-      {line:[6],pic:"u4",cls:"ok",msg:T.fMsg,user:true},
-      {line:[7],pic:"u5",cls:"ok",msg:'println prints userDate as yyyy-MM-dd, not in the typed shape: <b class="g">2002-10-17</b>.',user:true,out:["2002-10-17"]}
-    ];
-  }
-
-  /* ---------- picture ---------- */
-  function cellsHTML(str,cls){
-    var h='<div class="cells">';
-    for(var i=0;i<str.length;i++){ var ch=str.charAt(i);
-      h+='<span class="c'+(cls?" "+cls:"")+'">'+ch+'</span>'; }
-    return h+'</div>';
-  }
-  function stringHTML(text){
-    return '<div class="al"><div class="rl one"><span>String</span></div><div class="seg">'+cellsHTML(text,"")+'</div></div>';
-  }
-  function alignHTML(segs,opts){
-    var h='<div class="al'+(opts.split?" split":"")+(opts.dim?" dim":"")+'">';
-    if(opts.rows) h+='<div class="rl"><span>'+opts.rows[0]+'</span><span>'+opts.rows[1]+'</span></div>';
-    segs.forEach(function(s){
-      var f=opts.color?s[2]:"";
-      h+='<div class="seg '+f+'">'+cellsHTML(s[0],"p")+cellsHTML(s[1],"");
-      if(opts.labels) h+='<div class="fl">'+(s[3]||NAMES[s[2]]||"")+'</div>';
-      h+='</div>';
-    });
-    return h+'</div>';
-  }
-  function dateBox(name){
-    return '<div class="box"><p class="h"><b>LocalDate</b> '+name+'</p><div class="fields">'+
-      '<div class="f y"><div class="k">year</div><div class="v">2002</div></div>'+
-      '<div class="f m"><div class="k">month</div><div class="v">10</div></div>'+
-      '<div class="f d"><div class="k">day</div><div class="v">17</div></div></div></div>';
-  }
-  function outBox(title,segs){
-    return '<div class="box out"><p class="h">'+title+'</p>'+alignHTML(segs,{split:true,color:true})+'</div>';
-  }
-  function errBox(title,msg){
-    return '<div class="box err"><p class="h">'+title+'</p><p>'+msg+'</p></div>';
-  }
-  function zone(t){ return '<span class="zone" style="left:22px;top:16px">'+t+'</span>'; }
-  function renderPic(mode){
-    var h="", PR=["pattern","String"], DF=["default","String"];
-    if(mode==="none"){ $("#pic").innerHTML='<div class="start">"'+T.text+'" · press\u00a0<b>Next</b></div>'; return; }
-    if(mode==="u1") h=zone("dateInputFromUser")+'<div class="top">'+stringHTML(T.text)+'</div>';
-    if(mode==="u2") h=zone("dateInputFromUser and formatter")+'<div class="top">'+alignHTML([["d/MMMM/yyyy",T.text,""]],{rows:PR})+'</div>';
-    if(mode==="u3"){
-      h=zone("commented line · no formatter")+'<div class="top">'+alignHTML(T.dflt,{split:true,color:true,labels:true,rows:DF})+'</div>';
-      h+='<div class="low">'+errBox("DateTimeParseException · if uncommented",T.dErr)+'</div>';
+  /* returns {fields:[{k,a,b,v}], fail:{a,b,why}|null, seps:[i]} */
+  function read(t){
+    var f=[],seps=[],i=0,j;
+    function fail(a,b,why){return {fields:f,seps:seps,fail:{a:a,b:Math.max(b,a+1),why:why}};}
+    function sep(ch,what){if(t[i]!==ch)return fail(i,i+1,"Java expected a <b class=\"w\">"+ch+"</b> after the "+what+" here");seps.push(i);i++;return null;}
+    var r;
+    if(mode==="iso"){
+      j=digitsAt(t,0); if(j!==4) return fail(0,Math.max(j,1),"the year needs <b class=\"w\">exactly 4 digits</b> at the start");
+      f.push({k:"y",a:0,b:4,v:+t.slice(0,4)}); i=4;
+      if((r=sep("-","year")))return r;
+      j=digitsAt(t,i); if(j-i!==2) return fail(i,Math.max(j,i+1),"the month needs <b class=\"w\">2 digits</b>, like 10");
+      var mo=+t.slice(i,j); if(mo<1||mo>12) return fail(i,j,"there is <b class=\"w\">no month "+mo+"</b>");
+      f.push({k:"m",a:i,b:j,v:mo}); i=j;
+      if((r=sep("-","month")))return r;
+      j=digitsAt(t,i); if(j-i!==2) return fail(i,Math.max(j,i+1),"the day needs <b class=\"w\">2 digits</b>, like 17");
+      var dy=+t.slice(i,j); if(dy<1||dy>daysIn(f[0].v,mo)) return fail(i,j,"that month has <b class=\"w\">no day "+dy+"</b>");
+      f.push({k:"d",a:i,b:j,v:dy}); i=j;
+    } else {
+      j=digitsAt(t,0); if(j<1||j>2) return fail(0,Math.max(j,1),"<b class=\"w\">d</b> wants the day first, 1 or 2 digits");
+      var d=+t.slice(0,j); if(d<1||d>31) return fail(0,j,"there is <b class=\"w\">no day "+d+"</b>");
+      f.push({k:"d",a:0,b:j,v:d}); i=j;
+      if((r=sep("/","day")))return r;
+      j=lettersAt(t,i); var nm=t.slice(i,j), m=MONTHS.indexOf(nm)+1;
+      if(!m) return fail(i,Math.max(j,i+1),"<b class=\"w\">MMMM</b> wants a full month name with a capital, like October");
+      f.push({k:"m",a:i,b:j,v:m,n:nm}); i=j;
+      if((r=sep("/","month")))return r;
+      j=digitsAt(t,i); if(j-i!==4) return fail(i,Math.max(j,i+1),"<b class=\"w\">yyyy</b> wants 4 digits for the year");
+      f.push({k:"y",a:i,b:j,v:+t.slice(i,j)}); i=j;
+      var last=daysIn(f[2].v,m); if(f[0].v>last){f[0].was=f[0].v;f[0].v=last;}
     }
-    if(mode==="u4"||mode==="u5"){
-      h=zone("parse with formatter")+'<div class="top">'+alignHTML(T.fmt,{split:true,color:true,labels:true,dim:mode==="u5",rows:PR})+'</div>';
-      if(mode==="u4") h+='<div class="low">'+dateBox("userDate")+'</div>';
-      if(mode==="u5") h+='<div class="low">'+dateBox("userDate")+'<div class="arrow"><b>→</b>println</div>'+outBox("printed",ISO_SEGS)+'</div>';
-    }
-    $("#pic").innerHTML=h;
+    if(i<t.length) return fail(i,t.length,"there is <b class=\"w\">extra text</b> the pattern does not cover");
+    return {fields:f,seps:seps,fail:null};
   }
 
-  /* ---------- state ---------- */
-  var steps=[],at=-1;
-  var codeEl=$("#code"),consEl=$("#console"),statusEl=$("#status");
-  var EMPTY='<span style="color:rgba(132,150,182,.5)">(nothing printed yet)</span>';
-
-  function renderCode(cur,cls){
-    codeEl.innerHTML=lines().map(function(t,i){
-      var n=i+1,c="ln";
-      if(cur&&cur.indexOf(n)>=0) c+=" "+(cls==="cut"?"cut":"cur");
-      return '<div class="'+c+'"><span class="n">'+n+'</span><span>'+(t||" ")+'</span></div>';
-    }).join("");
+  function clearCard(){
+    parsed=null; cal.classList.remove("good","warn"); $("#bDow").disabled=true;
+    $("#wk").classList.remove("show"); $("#wk").innerHTML="";
+    ["y","m","d"].forEach(function(k){var s=SLOT[k];s.classList.remove("full","lit");
+      s.querySelector(".v").textContent=k==="y"?"----":"--"; s.querySelector(".s").textContent="";});
   }
-  function setStat(id,v,c){ var e=$(id), box=e.parentNode;
-    if(v===null){ e.textContent=""; e.className="v dim"; box.classList.add("empty"); }
-    else { e.textContent=v; e.className="v "+(c||""); box.classList.remove("empty"); } }
-  function setBtns(){ $("#bNext").disabled=at>=steps.length-1; $("#bBack").disabled=at<0;
-    var d=""; for(var k=0;k<steps.length;k++) d+='<i class="'+(k===at?"now":k<at?"done":"")+'"></i>'; $("#dots").innerHTML=d; }
-
-  function show(i){
-    at=i;
-    if(i<0){
-      renderCode(null); renderPic("none"); consEl.innerHTML=EMPTY;
-      $("#caption").className="caption"; statusEl.innerHTML='Press <b class="a">Next</b>. The picture changes at every step.';
-      setStat("#stUser",null);
-      $("#stepno").innerHTML="<small>step</small>0 / "+steps.length; setBtns(); return;
-    }
-    var s=steps[i], out=[], k;
-    $("#stepno").innerHTML="<small>step</small>"+(i+1)+" / "+steps.length;
-    renderCode(s.line,s.cls); renderPic(s.pic);
-    for(k=0;k<=i;k++){
-      if(steps[k].out) steps[k].out.forEach(function(o){ out.push('<div class="out">'+o+'</div>'); });
-      if(steps[k].typed) out.push('<div class="out in">'+T.text+'</div>');
-    }
-    consEl.innerHTML=out.join("")||EMPTY;
-    $("#caption").className="caption "+s.cls; statusEl.innerHTML=s.msg;
-    setStat("#stUser",s.user?"2002-10-17":null,"ok");
-    setBtns();
+  function fill(k,f){
+    var s=SLOT[k]; s.classList.add("full");
+    s.querySelector(".v").textContent=k==="y"?String(f.v):(f.v<10?"0":"")+f.v;
+    s.querySelector(".s").textContent=k==="m"?MONTHS[f.v-1].toUpperCase():"";
+  }
+  function flyTo(f,k){
+    var chs=tape.children; for(var i=f.a;i<f.b;i++){chs[i].classList.add(f.k);}
+    if(reduce){fill(k,f);return;}
+    var a=chs[f.a].getBoundingClientRect(), t=SLOT[k].getBoundingClientRect();
+    var el=document.createElement("div"); el.className="fly"; el.textContent=input.value.slice(f.a,f.b);
+    el.style.left=a.left+"px"; el.style.top=a.top+"px"; document.body.appendChild(el);
+    var w=el.getBoundingClientRect();
+    var dx=t.left+t.width/2-w.width/2-a.left, dy=t.top+t.height/2-w.height/2-a.top;
+    requestAnimationFrame(function(){requestAnimationFrame(function(){el.style.transform="translate("+dx+"px,"+dy+"px)";});});
+    later(function(){el.remove();fill(k,f);for(var i=f.a;i<f.b;i++)chs[i].classList.add("gone");},500);
   }
 
-  /* focus: picture and caption only. Remembered per browser. */
-  function setFocus(on){ document.body.classList.toggle("solo",on); $("#bFocus").textContent=on?"Focus on":"Focus";
-    try{localStorage.setItem("hub-focus",on?"1":"0");}catch(e){} }
-  $("#bFocus").addEventListener("click",function(){ setFocus(!document.body.classList.contains("solo")); this.blur(); });
-  try{ if(localStorage.getItem("hub-focus")==="1") document.body.classList.add("solo"); }catch(e){}
-  if(document.body.classList.contains("solo")) $("#bFocus").textContent="Focus on";
+  function parse(){
+    if(busy) return; busy=true; $("#bParse").disabled=true;
+    timers.forEach(clearTimeout); timers=[]; clearCard(); drawTape();
+    var t=input.value, M=MODES[mode], res=read(t), chs=tape.children;
+    res.seps.forEach(function(i){chs[i].classList.add("sep");});
+    arr.className="arr on";
+    if(res.fail){
+      var steps=res.fields.length;
+      res.fields.forEach(function(f){for(var i=f.a;i<f.b;i++)chs[i].classList.add(f.k);});
+      later(function(){
+        for(var i=res.fail.a;i<Math.min(res.fail.b,chs.length);i++)chs[i].classList.add("bad");
+        if(!chs.length) tape.innerHTML='<span class="ch bad">empty</span>';
+        cal.classList.add("warn"); arr.className="arr no";
+        say('"'+esc(t)+'" does not fit <b class="w">'+M.name+'</b>: '+res.fail.why+'. Nothing reaches the calendar page.',"w",
+          "DateTimeParseException: Text '"+esc(t)+"' could not be parsed");
+        busy=false; $("#bParse").disabled=false;
+      },steps?300:0);
+      return;
+    }
+    var by={}; res.fields.forEach(function(f){by[f.k]=f;});
+    M.order.forEach(function(k,n){later(function(){flyTo(by[k],k);},n*560);});
+    later(function(){
+      var y=by.y.v,m=by.m.v,d=by.d.v;
+      parsed={y:y,m:m,d:d}; cal.classList.add("good"); arr.className="arr";
+      $("#bDow").disabled=false; busy=false; $("#bParse").disabled=false;
+      var ord=M.order.map(function(k){return "the "+WORD[k];}).join(", then ");
+      var moved=by.d.was?' Day '+by.d.was+' does not exist, so Java moved it to '+d+'.':"";
+      var iso=y+"-"+(m<10?"0":"")+m+"-"+(d<10?"0":"")+d;
+      say('The pattern read '+ord+'. <b class="g">'+M.date+'</b> is a real LocalDate now and prints as <b class="g">'+iso+'</b>.'+moved,"g",M.line);
+    },M.order.length*560+80);
+  }
 
-  function next(){ if(at<steps.length-1) show(at+1); }
-  function back(){ if(at>=0) show(at-1); }
-  function reset(){ steps=build(); show(-1); }
-  $("#bNext").addEventListener("click",next);
-  $("#bBack").addEventListener("click",back);
+  function dow(){
+    if(!parsed) return;
+    var n=new Date(Date.UTC(parsed.y,parsed.m-1,parsed.d)).getUTCDay(), M=MODES[mode];
+    ["y","m","d"].forEach(function(k){SLOT[k].classList.add("lit");});
+    later(function(){["y","m","d"].forEach(function(k){SLOT[k].classList.remove("lit");});},900);
+    $("#wk").innerHTML="<small>returns</small>"+DAYS[n]; $("#wk").classList.add("show");
+    say('<b class="y">getDayOfWeek()</b> reads all three slots and works out <b class="y">'+DAYS[n]+'</b>. Plain text could never answer that.',"y",
+      "System.out.println("+M.date+".getDayOfWeek());");
+  }
+
+  function setMode(p){
+    if(busy) return; mode=p; var M=MODES[p];
+    document.querySelectorAll(".chip").forEach(function(c){c.classList.toggle("on",c.getAttribute("data-p")===p);});
+    $("#sName").textContent=M.str; $("#dName").textContent=M.date;
+    timers.forEach(clearTimeout); timers=[]; clearCard(); drawTape(); arr.className="arr";
+    say(p==="fmt"
+      ? 'Pattern <b class="a">d/MMMM/yyyy</b>: the day, a slash, the full month name, a slash, the year. Text like <b class="a">'+M.sample+'</b> fits it.'
+      : 'No formatter: <b class="a">parse</b> only reads <b class="a">yyyy-MM-dd</b>, text like <b class="a">'+M.sample+'</b>.',"",
+      p==="fmt"?'DateTimeFormatter formatter = DateTimeFormatter.ofPattern("d/MMMM/yyyy");':null);
+  }
+
+  function reset(){
+    timers.forEach(clearTimeout); timers=[]; busy=false; $("#bParse").disabled=false;
+    document.querySelectorAll(".fly").forEach(function(e){e.remove();});
+    input.value="2002-10-17"; setMode("iso");
+    say('On the left is a <b class="a">String</b>. The calendar page on the right is <b class="a">empty</b> until Java parses the text.');
+  }
+
+  input.addEventListener("input",function(){ if(!busy){clearCard();drawTape();arr.className="arr";} });
+  input.addEventListener("keydown",function(e){ if(e.key==="Enter") parse(); });
+  $("#bParse").addEventListener("click",parse);
+  $("#bDow").addEventListener("click",dow);
   $("#bReset").addEventListener("click",reset);
-  document.addEventListener("keydown",function(e){ if(e.code==="Space"&&!/INPUT|BUTTON/.test(e.target.tagName)){e.preventDefault();next();} });
+  document.querySelectorAll(".chip").forEach(function(c){c.addEventListener("click",function(){setMode(c.getAttribute("data-p"));});});
+  drawTape();
 
-  /* ---------- ambient canvas ---------- */
+  /* ambient canvas */
   var cv=$("#amb"),ctx=cv.getContext&&cv.getContext("2d"),parts=[];
   function sizeC(){if(!ctx)return;cv.width=innerWidth;cv.height=innerHeight;}
   function initParts(){parts=[];for(var i=0;i<46;i++)parts.push({x:Math.random(),y:Math.random(),
@@ -377,8 +348,6 @@
       ctx.fillStyle="rgba(140,170,255,"+p.o+")";ctx.fill();});
     requestAnimationFrame(drawC);}
   if(ctx&&!reduce){sizeC();initParts();drawC();addEventListener("resize",sizeC);}
-
-  reset();
 })();
 </script>
 <script src="../manifest.js"></script>

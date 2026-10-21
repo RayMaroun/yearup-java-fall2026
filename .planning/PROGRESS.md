@@ -31,3 +31,9 @@
 
 - 2026-10-17: week 2 visuals 01 to 18 rebuilt on the rebuilt demos (Ray: demo examples over workbook examples), reordered to the fall TOC, cheat sheet / glossary / common-errors re-valued, search index rebuilt (101 items). All 18 verified in Chrome. Uncommitted; commit with the demo rebuild after Ray's review. Still Ray's call: 19 debugger (2b skipped).
 - 2026-10-17 later: page 10 object-references removed on Ray's word, 11 to 19 renumbered to 10 to 18, links and index fixed, search index 100 items. Trims to one example per page done and verified. Modules 1 and 2 reviewed by Ray; learner copies demo-01 to demo-05.
+
+## 2026-10-21 Assessment 1 Practice (local, NOT pushed, awaiting Ray's review)
+- New folder assessment-reviews/, page assessment-1-practice.html: mock paper (13 recognise / 8 predict / 4 bug drawn from an 81-question bank, every topic at least twice), optional 25-minute clock, results with an 8-tile topic map linking to week 1 and 2 visuals, review list, retry-only-missed round. Bank verified on JDK 17 (scratchpad assess/a1-pool.json). Landing index.html has an Assessment practice block (1 live, 2 and 3 greyed with dates). Built by one Opus agent, verified in Chrome by the lead.
+
+## 2026-10-21 — Week 2 visuals rebuilt as "one picture you touch"
+All 17 week 2 visuals rebuilt to the new rule (CLAUDE.md "ONE PICTURE YOU TOUCH"): no code listing, no readouts/console/steps/dots/Focus; the learner acts on the picture, one sentence answers. Calibration page 07 by hand (approved by Ray), 16 pages by Opus agents, every page verified in Chrome by the lead (every press, failure cases, console clean). Old pages in `~/.Trash/hub-week02-old-visuals-2026-10-21/`. Not committed, awaiting Ray's review of the set. Week 1 visuals: same treatment after Assessment 1 (Mon Oct 26). Manifest `size` field is now unused (kept, harmless).

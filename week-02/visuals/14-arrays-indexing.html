@@ -30,134 +30,86 @@
     background-clip:text;color:transparent}
   .lede{color:var(--muted);max-width:64ch;font-size:1.05rem;margin:0 0 26px;line-height:1.5}
   .lede b{color:var(--ink)}
-  .lede code,.take code,.caption code{font-family:var(--mono);font-size:.92em;color:#bcd0ff}
+  code{font-family:var(--mono);font-size:.92em;color:#bcd0ff}
 
-  /* ---------- stage: picture first, one toolbar, support below ---------- */
+  /* ---------- the stage IS the picture ---------- */
   .stage{position:relative;background:linear-gradient(180deg,rgba(255,255,255,.03),rgba(255,255,255,.01));
-    border:1px solid var(--line);border-radius:24px;padding:18px 18px 14px;
+    border:1px solid var(--line);border-radius:24px;padding:22px;
     box-shadow:0 1px 0 rgba(255,255,255,.06) inset,0 30px 80px -30px rgba(0,0,0,.8)}
-  .topbar{display:flex;align-items:center;gap:10px;margin:0 0 14px;flex-wrap:wrap}
-  .topbar .lab{margin:0 4px 0 0}
-  .lab{font-family:var(--mono);font-size:.7rem;letter-spacing:.12em;text-transform:uppercase;color:var(--muted);margin:0 0 10px}
-  .chips{display:flex;flex-wrap:wrap;gap:6px}
-  .chip{font-family:var(--mono);font-size:.74rem;padding:5px 11px;border-radius:999px;cursor:pointer;
-    border:1px solid var(--line);background:rgba(0,0,0,.25);color:var(--muted);transition:.15s}
-  .chip:hover{border-color:var(--accent);color:var(--accent)}
-  .chip.on{border-color:rgba(110,160,255,.6);background:rgba(110,160,255,.14);color:var(--ink)}
-  .chip:disabled{opacity:.4;cursor:not-allowed}
-  .chip:focus-visible,.btn:focus-visible,.focus:focus-visible{outline:2px solid var(--accent);outline-offset:2px}
-  .focus{margin-left:auto;font-family:var(--mono);font-size:.68rem;letter-spacing:.1em;text-transform:uppercase;padding:6px 12px;
-    border-radius:999px;border:1px solid var(--line);background:rgba(0,0,0,.25);color:var(--muted);cursor:pointer;transition:.15s}
-  .focus:hover{border-color:var(--accent);color:var(--accent)}
-  body.solo .focus{border-color:rgba(255,200,98,.6);color:var(--gold);background:rgba(255,200,98,.1)}
+  .board{display:grid;grid-template-columns:150px minmax(0,1fr) 96px;gap:14px;align-items:start;padding:26px 6px 6px;min-height:330px}
+  .name{padding-top:22px;font-family:var(--mono);text-align:right}
+  .name .ty{display:block;font-size:.72rem;color:#82aaff;margin-bottom:4px}
+  .name .nm{font-family:var(--disp);font-weight:700;font-size:1.15rem;color:var(--ink);word-break:break-all}
+  .len{padding-top:30px;font-family:var(--mono);font-size:.78rem;color:rgba(132,150,182,.6);white-space:nowrap}
+  .len b{font-weight:500;color:rgba(188,208,255,.75)}
 
-  /* hero picture: the array as a row of slots, i walks along it */
-  .pic{position:relative;height:390px;border:1px solid var(--line);border-radius:18px;background:rgba(6,10,20,.5);overflow:hidden}
-  body.solo .pic{height:480px}
-  .pic .start{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;font-family:var(--mono);
-    font-size:.8rem;color:var(--muted);pointer-events:none}
-  .pic .start b{color:var(--accent);font-weight:500}
-  .arr{position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center;padding:0 24px;gap:22px}
-  .aname{font-family:var(--mono);font-size:.95rem;color:var(--muted)}
-  .aname b{color:var(--accent);font-weight:500}
-  .expr{font-family:var(--mono);font-size:1.25rem;min-height:1.7em;padding:6px 18px;border-radius:999px;border:1px solid var(--line);
-    background:rgba(0,0,0,.3);color:var(--ink);transition:border-color .3s,background .3s;white-space:nowrap}
-  .expr:empty{visibility:hidden}
-  .expr .g{color:var(--good)} .expr .w{color:var(--warn)} .expr .a{color:var(--accent)} .expr .y{color:var(--gold)} .expr .m{color:var(--muted)}
-  .expr.bad{border-color:rgba(255,106,106,.6);background:rgba(255,106,106,.1)}
-  .rowwrap{position:relative;width:100%;max-width:1000px;padding:40px 0 46px}
-  .row{display:flex;justify-content:center;gap:8px;width:100%}
-  .slot{width:min(80px,calc((100% - 88px) / 12));display:flex;flex-direction:column;align-items:center;gap:7px}
-  .box{width:100%;height:66px;border-radius:12px;border:1px solid rgba(110,160,255,.35);background:rgba(110,160,255,.06);
-    display:flex;align-items:center;justify-content:center;font-family:var(--disp);font-weight:700;font-size:1.2rem;color:var(--ink);
-    font-variant-numeric:tabular-nums;transition:border-color .3s,background .3s,box-shadow .3s,color .3s;text-align:center;line-height:1.1;padding:2px}
-  .box.str{font-family:var(--mono);font-weight:500;font-size:.74rem}
-  .box.def{color:rgba(132,150,182,.6);font-family:var(--mono);font-weight:400;font-size:.9rem;font-style:italic}
-  .box.cur{border-color:var(--accent);background:rgba(110,160,255,.18);box-shadow:0 0 22px -6px rgba(110,160,255,.8)}
-  .box.newv{animation:pop .35s cubic-bezier(.2,1.4,.4,1)}
-  .box.read{border-color:var(--gold);background:rgba(255,200,98,.14);box-shadow:0 0 22px -6px rgba(255,200,98,.8);color:#ffe6b0}
-  .idx{font-family:var(--mono);font-size:.82rem;color:var(--muted);transition:color .3s}
-  .idx.on{color:var(--accent)} .idx.rd{color:var(--gold)}
-  .slot.ghost{visibility:hidden}
-  .slot.ghost .box{border:2px dashed rgba(255,106,106,.75);background:rgba(255,106,106,.08);color:var(--warn);font-family:var(--mono);
-    font-weight:500;font-size:.72rem}
-  .slot.ghost .idx{color:var(--warn)}
-  .slot.ghost.show{visibility:visible;animation:pop .35s}
-  .ptr{position:absolute;top:0;left:50%;transform:translateX(-50%);display:flex;flex-direction:column;align-items:center;
-    font-family:var(--mono);font-size:.9rem;color:var(--accent);opacity:0;transition:left .45s cubic-bezier(.2,.9,.3,1),opacity .25s,color .3s;white-space:nowrap}
-  .ptr::after{content:"";width:0;height:0;border-left:7px solid transparent;border-right:7px solid transparent;border-top:9px solid currentColor;margin-top:3px}
-  .ptr.show{opacity:1}
-  .ptr.bad{color:var(--warn)} .ptr.rd{color:var(--gold)}
-  .brace{position:absolute;bottom:4px;height:30px;border:1px solid rgba(132,150,182,.4);border-top:none;border-radius:0 0 10px 10px;
-    opacity:0;transition:opacity .3s}
-  .brace.show{opacity:1}
-  .brace span{position:absolute;top:100%;margin-top:4px;font-family:var(--mono);font-size:.72rem;color:var(--muted);white-space:nowrap}
-  .brace .l{left:0} .brace .r{right:0} .brace .c{left:50%;transform:translateX(-50%)}
-  .brace b{color:var(--ink);font-weight:500}
+  .track{position:relative}
+  .row{display:grid;grid-template-columns:repeat(9,minmax(0,1fr));gap:6px;padding:8px;border-radius:16px;border:1px solid transparent;transition:border-color .3s,box-shadow .3s}
+  .row.flash{animation:warnflash .55s ease-out 2}
+  @keyframes warnflash{0%{border-color:var(--warn);box-shadow:0 0 0 3px rgba(255,106,106,.18),0 0 34px -6px rgba(255,106,106,.7)}100%{border-color:transparent;box-shadow:none}}
+  .cell{display:flex;flex-direction:column;align-items:center;gap:8px;min-width:0}
+  .box{width:100%;aspect-ratio:1/1;max-height:84px;display:flex;align-items:center;justify-content:center;flex-direction:column;
+    border-radius:12px;border:1px solid rgba(110,160,255,.35);background:rgba(110,160,255,.07);cursor:pointer;
+    font-family:var(--mono);font-size:1.05rem;color:#f78c6c;font-variant-numeric:tabular-nums;padding:0;
+    transition:background .3s,border-color .3s,box-shadow .3s,transform .3s}
+  .box:hover{border-color:var(--accent)}
+  .box.on{background:rgba(110,160,255,.22);border-color:var(--accent);box-shadow:0 0 26px -6px rgba(110,160,255,.85);transform:translateY(-3px)}
+  .box.chg{border-color:var(--gold);background:rgba(255,200,98,.12)}
+  .box.chg .v{color:var(--gold);animation:pop .45s}
+  .box s{font-size:.7rem;color:var(--muted);line-height:1}
+  .ghost{cursor:default;border:1px dashed rgba(255,106,106,.0);background:transparent;color:transparent;transition:border-color .35s,color .35s}
+  .ghost:hover{border-color:rgba(255,106,106,.0)}
+  .ghost.out{border-color:var(--warn);color:var(--warn);background:rgba(255,106,106,.06)}
+  .ix{font-family:var(--mono);font-size:.74rem;color:var(--muted)}
+  .ix.g{color:transparent;transition:color .35s} .ix.g.out{color:var(--warn)}
 
-  /* caption: the one sentence, right under the picture */
-  .caption{display:flex;gap:16px;align-items:flex-start;margin:14px 4px 0;min-height:56px}
-  .caption .n{flex-shrink:0;font-family:var(--disp);font-weight:700;font-size:1.35rem;color:var(--accent);font-variant-numeric:tabular-nums;
-    line-height:1.2;min-width:3.2rem}
-  .caption .n small{display:block;font-family:var(--mono);font-weight:400;font-size:.58rem;letter-spacing:.14em;text-transform:uppercase;color:var(--muted)}
-  .caption .t{font-size:1.02rem;line-height:1.55;color:var(--ink);padding-left:16px;border-left:3px solid var(--accent);transition:border-color .3s}
-  body.solo .caption .t{font-size:1.18rem}
-  .caption.write .t{border-left-color:var(--accent)} .caption.read .t{border-left-color:var(--gold)} .caption.ok .t{border-left-color:var(--good)} .caption.trouble .t{border-left-color:var(--warn)}
-  .caption b.g{color:var(--good)} .caption b.w{color:var(--warn)} .caption b.a{color:var(--accent)} .caption b.y{color:var(--gold)}
+  .hand{position:absolute;top:100%;margin-top:4px;width:0;display:flex;flex-direction:column;align-items:center;
+    transition:left .45s cubic-bezier(.2,.9,.3,1),opacity .3s;opacity:0;pointer-events:none}
+  .hand.show{opacity:1}
+  .hand .tri{width:0;height:0;border-left:9px solid transparent;border-right:9px solid transparent;border-bottom:13px solid var(--accent);transition:border-color .3s}
+  .hand .hi{margin-top:4px;font-family:var(--mono);font-size:.74rem;white-space:nowrap;color:var(--accent);transition:color .3s}
+  .hand.bad .tri{border-bottom-color:var(--warn)} .hand.bad .hi{color:var(--warn)}
+  .hand.w .tri{border-bottom-color:var(--gold)} .hand.w .hi{color:var(--gold)}
 
-  /* toolbar: Step, Run, Back, dots, Reset, Experiment */
-  .toolbar{display:flex;align-items:center;gap:10px;margin:16px 0 0;padding-top:14px;border-top:1px solid var(--line);flex-wrap:wrap}
-  .btn{font-family:var(--body);font-weight:500;font-size:.86rem;padding:9px 16px;border-radius:11px;cursor:pointer;
-    border:1px solid var(--line);background:var(--surface);color:var(--ink);transition:.15s}
-  .btn:hover{border-color:var(--accent);color:var(--accent)}
-  .btn.primary{border-color:rgba(110,160,255,.5);background:rgba(110,160,255,.12);padding:9px 22px}
-  .btn:disabled{opacity:.35;cursor:not-allowed}
-  .btn.warn{margin-left:auto}
-  .btn.warn:hover{border-color:var(--warn);color:var(--warn)}
-  .btn.on{border-color:var(--warn);color:var(--warn);background:rgba(255,106,106,.1)}
-  .dots{display:flex;gap:5px;align-items:center;margin:0 6px;flex-wrap:wrap}
-  .dots i{display:block;width:8px;height:8px;border-radius:50%;background:rgba(255,255,255,.12);transition:.2s}
-  .dots i.done{background:rgba(110,160,255,.45)}
-  .dots i.now{background:var(--accent);transform:scale(1.35);box-shadow:0 0 10px rgba(110,160,255,.7)}
-  .hint{font-family:var(--mono);font-size:.68rem;color:var(--muted);margin:10px 4px 0;line-height:1.5}
-  .hint b{color:var(--accent)}
+  .lower{display:grid;grid-template-columns:minmax(0,1fr) 220px;gap:16px;align-items:end;margin-top:64px}
+  .strip{display:flex;flex-wrap:wrap;align-items:center;gap:8px;font-family:var(--mono);font-size:.82rem;color:var(--muted)}
+  .strip label{display:flex;align-items:center;gap:6px}
+  .strip input{width:76px;font-family:var(--mono);font-size:.9rem;padding:9px 10px;border-radius:10px;border:1px solid var(--line);
+    background:rgba(0,0,0,.3);color:var(--ink);outline:none;transition:border-color .15s}
+  .strip input:focus{border-color:var(--accent)}
+  .strip button{font-family:var(--mono);font-weight:500;font-size:.88rem;padding:9px 16px;border-radius:11px;cursor:pointer;transition:.15s}
+  .rd{border:1px solid rgba(110,160,255,.55);background:rgba(110,160,255,.14);color:#dbe6ff}
+  .rd:hover{background:rgba(110,160,255,.26);border-color:var(--accent)}
+  .wr{border:1px solid rgba(255,200,98,.5);background:rgba(255,200,98,.1);color:var(--gold)}
+  .wr:hover{background:rgba(255,200,98,.2);border-color:var(--gold)}
+  .big{text-align:right;min-height:78px;visibility:hidden}
+  .big.show{visibility:visible}
+  .big .k{font-family:var(--mono);font-size:.62rem;letter-spacing:.16em;text-transform:uppercase;color:var(--muted)}
+  .big .n{font-family:var(--disp);font-weight:700;font-size:2.8rem;line-height:1.1;color:var(--ink);font-variant-numeric:tabular-nums;transition:color .3s}
+  .big.w .n{color:var(--gold)} .big.bad .n{color:var(--warn);font-size:1.6rem;line-height:1.6}
 
-  /* support: code left; inputs, readouts and console right. Hidden in focus */
-  .support{display:grid;grid-template-columns:minmax(0,1.3fr) minmax(0,1fr);gap:14px;margin-top:18px}
-  @media (max-width:860px){.support{grid-template-columns:1fr}}
-  body.solo .support,body.solo .take,body.solo .hint{display:none}
-  .code{min-width:0;font-family:var(--mono);font-size:.76rem;line-height:1.8;background:rgba(0,0,0,.35);border:1px solid var(--line);
-    border-radius:14px;padding:12px 0;overflow-x:auto}
-  .ln{display:flex;gap:12px;padding:0 14px;white-space:pre-wrap;word-break:break-word;color:#c9d4ea;transition:background .2s}
-  .ln .n{width:20px;text-align:right;color:rgba(132,150,182,.55);user-select:none;flex-shrink:0}
-  .ln.cur{background:rgba(110,160,255,.14);box-shadow:inset 3px 0 0 var(--accent)}
-  .ln.cur .n{color:var(--accent)}
-  .ln.rd{background:rgba(255,200,98,.12);box-shadow:inset 3px 0 0 var(--gold)}
-  .ln.mut{background:rgba(255,106,106,.12);box-shadow:inset 3px 0 0 var(--warn)}
-  .kw{color:#c792ea} .ty{color:#82aaff} .st{color:#c3e88d} .nm{color:#f78c6c} .cm{color:#5f6b85;font-style:italic} .fn{color:#ffcb6b}
-  .op{color:var(--warn);font-weight:500}
-  .side{display:flex;flex-direction:column;gap:12px}
-  .side .lab{margin:0}
-  .inputs{background:rgba(0,0,0,.32);border:1px solid var(--line);border-radius:14px;padding:14px 16px}
-  .ititle{font-family:var(--mono);font-size:.64rem;letter-spacing:.1em;text-transform:uppercase;color:var(--gold);margin:0 0 10px}
-  .irow{display:flex;align-items:center;justify-content:space-between;font-family:var(--mono);font-size:.85rem;margin:7px 0;gap:10px}
-  .irow .kk{color:var(--muted)}
-  .irow input{width:90px;font-family:var(--mono);font-size:.85rem;color:var(--ink);background:rgba(255,255,255,.05);
-    border:1px solid var(--line);border-radius:8px;padding:5px 8px;text-align:right;transition:.15s}
-  .irow input:focus{outline:none;border-color:var(--gold)}
-  .irow input:disabled{opacity:.5}
-  .inote{font-size:.78rem;color:var(--muted);margin:8px 0 0;line-height:1.45}
-  .readout{display:grid;grid-template-columns:1fr 1fr;gap:10px}
-  .stat{background:rgba(255,255,255,.03);border:1px solid var(--line);border-radius:12px;padding:11px 13px;transition:opacity .3s}
-  .stat.empty{opacity:.3}
-  .stat .k{font-family:var(--mono);font-size:.62rem;letter-spacing:.1em;text-transform:uppercase;color:var(--muted)}
-  .stat .v{font-family:var(--disp);font-weight:700;font-size:1.45rem;font-variant-numeric:tabular-nums;margin-top:2px;transition:color .3s;min-height:1.6em}
-  .v.hot{color:var(--accent)} .v.gold{color:var(--gold)} .v.bad{color:var(--warn)} .v.dim{color:rgba(132,150,182,.5)}
-  .console{font-family:var(--mono);font-size:.76rem;line-height:1.6;background:#05070e;border:1px solid var(--line);
-    border-radius:12px;padding:10px 14px;min-height:64px;color:#9fe3b6;flex:1;word-break:break-word}
-  .console .cl{font-size:.6rem;letter-spacing:.14em;text-transform:uppercase;color:rgba(132,150,182,.6);margin-bottom:4px}
-  .console .out{animation:pop .3s}
-  .console .err{color:#ff9d9d}
+  /* the one sentence */
+  .caption{display:flex;gap:14px;align-items:flex-start;margin:18px 2px 0;padding-top:16px;border-top:1px solid var(--line)}
+  .caption .t{flex:1;font-size:1.05rem;line-height:1.55;color:var(--ink);padding-left:16px;border-left:3px solid var(--accent);transition:border-color .3s}
+  .caption .t .line{display:block;margin-top:6px;font-family:var(--mono);font-size:.8rem;color:#bcd0ff;opacity:.9;word-break:break-word}
+  .caption.y .t{border-left-color:var(--gold)} .caption.g .t{border-left-color:var(--good)} .caption.w .t{border-left-color:var(--warn)}
+  .caption.w .t .line{color:#ffb0b0}
+  .caption b.a{color:var(--accent)} .caption b.y{color:var(--gold)} .caption b.g{color:var(--good)} .caption b.w{color:var(--warn)}
+  .reset{font-family:var(--body);font-weight:500;font-size:.84rem;padding:8px 14px;border-radius:11px;cursor:pointer;
+    border:1px solid var(--line);background:transparent;color:var(--muted);transition:.15s;flex-shrink:0}
+  .reset:hover{border-color:var(--accent);color:var(--accent)}
+  button:focus-visible,input:focus-visible{outline:2px solid var(--accent);outline-offset:2px}
+
+  @media (max-width:820px){
+    .board{grid-template-columns:minmax(0,1fr);padding:6px 0 0;gap:10px}
+    .name,.len{text-align:left;padding-top:0}
+    .row{gap:3px;padding:4px}
+    .box{font-size:.74rem;border-radius:8px}
+    .ix{font-size:.62rem}
+    .lower{grid-template-columns:1fr;margin-top:58px}
+    .big{text-align:left}
+  }
+
   @keyframes pop{from{transform:scale(.6);opacity:0}to{transform:scale(1);opacity:1}}
   .take{margin-top:22px;background:linear-gradient(180deg,rgba(110,160,255,.08),rgba(139,123,255,.04));
     border:1px solid var(--line);border-left:3px solid var(--accent);border-radius:12px;padding:16px 18px}
@@ -168,310 +120,147 @@
 </style>
 </head>
 <body>
-
 <a class="back" href="../index.html#14-arrays-indexing">&#8592; Week 2 index</a>
-
 <canvas id="amb"></canvas>
 <div class="wrap">
   <p class="tag">Workbook 2a &middot; Section 3-2 &middot; Arrays</p>
   <h1>Arrays and Indexes</h1>
-  <p class="lede"><b>An array is a fixed row of slots numbered from 0, so the last index is always <code>length - 1</code>.</b></p>
+  <p class="lede"><b>Boxes in a row, counted from 0. Click one. Then ask for one too many.</b></p>
 
   <div class="stage">
-    <div class="topbar">
-      <span class="lab">The array</span>
-      <div class="chips" id="chips">
-        <button class="chip on" data-t="nums">int[] listOfNumbers</button>
-        <button class="chip" data-t="newNums">int[] newArrayOfNumbers</button>
-        <button class="chip" data-t="names">String[] listOfNames</button>
-        <button class="chip" data-t="bools">boolean[] boolArray</button>
-      </div>
-      <button class="focus" id="bFocus" title="Hide the code and notes, enlarge the picture">Focus</button>
-    </div>
-
-    <div class="pic" id="pic">
-      <div class="start" id="start"></div>
-      <div class="arr" id="arr" style="display:none">
-        <div class="aname" id="aname"></div>
-        <div class="expr" id="expr"></div>
-        <div class="rowwrap" id="rowwrap">
-          <div class="ptr" id="ptr">i</div>
-          <div class="row" id="row"></div>
-          <div class="brace" id="brace"></div>
-        </div>
-      </div>
-    </div>
-
-    <div class="caption" id="caption">
-      <div class="n" id="stepno"><small>step</small>0 / 0</div>
-      <div class="t" id="status">Press <b class="a">Step</b> to create the array, or <b class="a">Run</b> to watch it all.</div>
-    </div>
-
-    <div class="toolbar">
-      <button class="btn primary" id="bStep">Step &rarr;</button>
-      <button class="btn" id="bRun">Run</button>
-      <button class="btn" id="bBack">&larr; Back</button>
-      <div class="dots" id="dots"></div>
-      <button class="btn" id="bReset">Reset</button>
-      <button class="btn warn" id="bMut">Experiment: index = length</button>
-    </div>
-    <p class="hint">space = step &middot; set the index to the length, or turn on the experiment. <b>What is past the last slot?</b></p>
-
-    <div class="support">
+    <div class="board">
+      <div class="name"><span class="ty">int[]</span><span class="nm">listOfNumbers</span></div>
       <div>
-        <p class="lab">Main.java</p>
-        <div class="code" id="code"></div>
-      </div>
-      <div class="side">
-        <p class="lab">Inputs</p>
-        <div class="inputs">
-          <p class="ititle">Change this, then press Step</p>
-          <div class="irow"><span class="kk" id="kK">index in the brackets (0 to 7)</span><input id="inK" type="number" min="0" max="7" value="1"></div>
-          <p class="inote">Edit while stopped. The last allowed value is the length itself, which has no slot.</p>
+        <div class="track" id="track">
+          <div class="row" id="row"></div>
+          <div class="hand" id="hand"><span class="tri"></span><span class="hi" id="hi"></span></div>
         </div>
-        <div class="readout">
-          <div class="stat empty"><div class="k">length</div><div class="v dim" id="stLen"></div></div>
-          <div class="stat empty"><div class="k">last index</div><div class="v dim" id="stLast"></div></div>
-          <div class="stat empty"><div class="k" id="kIdx">index</div><div class="v dim" id="stI"></div></div>
-          <div class="stat empty"><div class="k">value in the slot</div><div class="v dim" id="stVal"></div></div>
+        <div class="lower">
+          <div class="strip">
+            <label>index <input id="inI" value="1" inputmode="numeric" maxlength="4" aria-label="index"></label>
+            <button class="rd" id="bRead">read</button>
+            <label>value <input id="inV" value="15" inputmode="numeric" maxlength="6" aria-label="value"></label>
+            <button class="wr" id="bWrite">write</button>
+          </div>
+          <div class="big" id="big"><div class="k" id="bigK">value</div><div class="n" id="bigN">&nbsp;</div></div>
         </div>
-        <div class="console"><div class="cl">console</div><div id="console"></div></div>
       </div>
+      <div class="len"><b>.length</b> = 7</div>
+    </div>
+    <div class="caption" id="caption">
+      <div class="t" id="status">Seven boxes, one value each. The number <b class="a">under</b> a box is its index, and it <b class="a">starts at 0</b>.</div>
+      <button class="reset" id="bReset">Reset</button>
     </div>
   </div>
 
   <div class="take">
     <p class="tk">The one idea</p>
-    <p><b>Indexes start at 0 and end at <code>length - 1</code></b>, so a loop runs while <code>i &lt; array.length</code>.
-    A new array is never empty: <b><code>new int[n]</code> starts at zeros, <code>String</code> at null, <code>boolean</code> at false</b>.
-    An index equal to the length has no slot, and Java stops with <b>ArrayIndexOutOfBoundsException</b>.</p>
+    <p><b>An array is a fixed row of boxes, numbered from 0.</b> <code>listOfNumbers[i]</code> reads or writes box <code>i</code>.
+    With 7 boxes the last index is 6, which is <code>length - 1</code>. Index 7, or -1, is not a box, so Java stops with
+    <code>ArrayIndexOutOfBoundsException</code>.</p>
   </div>
-
   <div id="rail"></div>
 </div>
-
 <script>
 (function(){
   "use strict";
   var $=function(s){return document.querySelector(s);};
   var reduce=matchMedia("(prefers-reduced-motion: reduce)").matches;
+  var NAME="listOfNumbers", INIT=[63,123,234,123,545,23,64], N=INIT.length, COLS=N+2;
+  var vals=INIT.slice();
+  var row=$("#row"),hand=$("#hand"),hi=$("#hi"),status=$("#status"),caption=$("#caption"),big=$("#big"),bigK=$("#bigK"),bigN=$("#bigN");
+  var ORD=["first","second","third","fourth","fifth","sixth","seventh"];
 
-  /* ---------- the four arrays ---------- */
-  function lit(v){ return '<span class="nm">'+v+'</span>'; }
-  function loopLines(a,cm4,cm3){
-    return [
-      '<span class="kw">for</span> (<span class="ty">int</span> i = '+lit(0)+'; i < '+a+'.length; i++) {'+(cm3?'   <span class="cm">'+cm3+'</span>':''),
-      '    System.out.<span class="fn">print</span>('+a+'[i] + <span class="st">" "</span>);'+(cm4?'   <span class="cm">'+cm4+'</span>':''),
-      '}'
-    ];
+  function cell(k,ghost){
+    return '<div class="cell"><button class="box'+(ghost?' ghost':'')+'" '+(ghost?'tabindex="-1" aria-hidden="true" id="g'+(k<0?'L':'R')+'"':'data-k="'+k+'" id="b'+k+'" aria-label="index '+k+'"')+'>'
+      +(ghost?'?':'<span class="v">'+vals[k]+'</span>')+'</button>'
+      +'<span class="ix'+(ghost?' g':'')+'" id="'+(ghost?'x'+(k<0?'L':'R'):'i'+k)+'">'+(ghost?'':k)+'</span></div>';
   }
-  var ARR={
-    nums:{name:"listOfNumbers",type:"int",literal:true,init:[63,123,234,123,545,23,64],defK:1,probe:"read",
-      lines:function(K,len){ return [
-        '<span class="ty">int</span>[] listOfNumbers = {'+[63,123,234,123,545,23,64].map(lit).join(", ")+'};   <span class="cm">// the size comes from the values</span>',
-        'System.out.<span class="fn">println</span>(listOfNumbers['+lit(K)+']);   <span class="cm">// indexes start at 0</span>'
-      ].concat(loopLines("listOfNumbers","","// last index is length - 1")); }},
-    newNums:{name:"newArrayOfNumbers",type:"int",len:5,def:0,defK:2,probe:"write",
-      wv:function(K,len){ return K>=len?1:15; },
-      lines:function(K,len){ return [
-        '<span class="ty">int</span>[] newArrayOfNumbers = <span class="kw">new</span> <span class="ty">int</span>['+lit(5)+'];   <span class="cm">// 5 slots, the size is fixed</span>',
-        K>=len ? 'newArrayOfNumbers['+lit(K)+'] = '+lit(1)+';   <span class="cm">// indexes go 0 to 4</span>'
-               : 'newArrayOfNumbers['+lit(K)+'] = '+lit(15)+';'+(K===2?'   <span class="cm">// writes into the third slot</span>':'')
-      ].concat(loopLines("newArrayOfNumbers","","")); }},
-    names:{name:"listOfNames",type:"String",len:5,def:null,defK:1,probe:"read",
-      lines:function(K,len){ return [
-        '<span class="ty">String</span>[] listOfNames = <span class="kw">new</span> <span class="ty">String</span>['+lit(5)+'];',
-        'System.out.<span class="fn">println</span>(listOfNames['+lit(K)+']);'
-      ].concat(loopLines("listOfNames","// String slots start at null","")); }},
-    bools:{name:"boolArray",type:"boolean",len:5,def:false,defK:1,probe:"write",
-      wv:function(){ return true; },
-      lines:function(K,len){ return [
-        '<span class="ty">boolean</span>[] boolArray = <span class="kw">new</span> <span class="ty">boolean</span>['+lit(5)+'];   <span class="cm">// boolean slots start at false</span>',
-        'boolArray['+lit(K)+'] = <span class="kw">true</span>;'
-      ].concat(loopLines("boolArray","","")); }}
-  };
-  var A=ARR.nums;
-  function lenOf(a){ return a.literal?a.init.length:a.len; }
-  function ord(n){ return ["first","second","third","fourth","fifth","sixth","seventh"][n]||(n+1)+"th"; }
-
-  /* ---------- the run, computed from the array and the index ---------- */
-  function exc(idx,len){ return 'Exception in thread "main" java.lang.ArrayIndexOutOfBoundsException: Index '+idx+' out of bounds for length '+len; }
-  function build(K){
-    var N=lenOf(A), a=A.name, S=[], vals=[], set=[], buf="", err="", i;
-    for(i=0;i<N;i++){ vals.push(A.literal?A.init[i]:A.def); set.push(!!A.literal); }
-    function snap(o){ o.vals=vals.slice(); o.set=set.slice(); o.out=buf; o.err=err; S.push(o); }
-    snap({line:[1],cls:"",
-      expr:A.literal?'<span class="a">{ ... }</span> <span class="m">→</span> '+N+' values':'<span class="a">new '+A.type+'['+N+']</span>',
-      msg:A.literal?'The literal makes <b class="a">'+N+' slots</b>, numbered 0 to '+(N-1)+'. The size comes from the values.'
-        :'<code>new '+A.type+'['+N+']</code> makes <b class="a">'+N+' slots</b>, numbered 0 to '+(N-1)+'. Each starts at <b class="a">'+String(A.def)+'</b>.'});
-    if(K>=N){
-      err=exc(K,N);
-      snap({line:[2],cls:"trouble",ptr:K,bad:K,idx:K,val:"no slot",idxPtr:true,brace:true,
-        expr:a+'['+K+'] <span class="m">→</span> <span class="w">no slot '+K+'</span>',
-        msg:'There is <b class="w">no slot '+K+'</b>: indexes go 0 to '+(N-1)+'. Java throws ArrayIndexOutOfBoundsException and stops.'});
-      return S;
-    }
-    if(A.probe==="read"){
-      var v=String(vals[K]); buf+=v+"\n";
-      snap({line:[2],cls:"read",ptr:K,rd:K,idx:K,val:v,idxPtr:true,
-        expr:a+'['+K+'] <span class="m">→</span> <span class="y">'+v+'</span>',
-        msg:'<code>'+a+'['+K+']</code> goes straight to slot '+K+', the '+ord(K)+' slot, and prints <b class="y">'+v+'</b>.'});
-    } else {
-      var w=A.wv(K,N); vals[K]=w; set[K]=true;
-      snap({line:[2],cls:"write",ptr:K,cur:K,fresh:K,idx:K,val:String(w),idxPtr:true,
-        expr:a+'['+K+'] = <span class="a">'+w+'</span>',
-        msg:'<code>'+a+'['+K+'] = '+w+'</code> writes <b class="a">'+w+'</b> into slot '+K+', the '+ord(K)+' slot. The others keep their value.'});
-    }
-    for(i=0;i<N;i++){
-      var p=String(vals[i]); buf+=p+" ";
-      var m;
-      if(i===0) m='i starts at <b class="a">0</b>, the first index. 0 < '+N+' is true, so it prints <b class="a">'+p+'</b>.';
-      else if(i===N-1) m='i is '+i+', the <b class="a">last index</b>. '+i+' < '+N+' is still true, so it prints <b class="a">'+p+'</b>.';
-      else m='i is '+i+': '+i+' < '+N+' is true, so it prints <b class="a">'+p+'</b>.';
-      snap({line:[3,4],cls:"write",ptr:i,cur:i,idx:i,val:p,
-        expr:'i < length <span class="m">→</span> '+i+' < '+N+' <span class="m">→</span> <span class="g">true</span>',msg:m});
-    }
-    snap({line:[3],cls:"ok",ptr:N,idx:N,brace:true,
-      expr:'i < length <span class="m">→</span> '+N+' < '+N+' <span class="m">→</span> <span class="a">false</span>',
-      msg:'i is '+N+': '+N+' < '+N+' is <b class="g">false</b>, so the loop stops. The last index is length - 1 = '+(N-1)+'.'});
-    return S;
+  function build(){
+    var h=cell(-1,true); for(var k=0;k<N;k++) h+=cell(k,false); h+=cell(N,true);
+    row.innerHTML=h;
   }
-
-  /* ---------- state ---------- */
-  var steps=[], at=-1, timer=null;
-  var codeEl=$("#code"), consEl=$("#console"), statusEl=$("#status");
-
-  function getK(){ var N=lenOf(A), v=parseInt($("#inK").value,10); if(isNaN(v)) v=A.defK; return Math.max(0,Math.min(N,v)); }
-  function syncInput(){ var N=lenOf(A);
-    $("#inK").max=N; $("#kK").textContent="index in the brackets (0 to "+N+")";
-    var on=getK()===N; $("#bMut").classList.toggle("on",on);
-    $("#bMut").textContent=on?"Experiment ON: index = length":"Experiment: index = length"; }
-
-  function renderCode(cur,cls){
-    var L=A.lines(getK(),lenOf(A));
-    codeEl.innerHTML=L.map(function(t,i){
-      var n=i+1, c="ln";
-      if(cur&&cur.indexOf(n)>=0) c+=(cls==="trouble"?" mut":cls==="read"?" rd":" cur");
-      return '<div class="'+c+'"><span class="n">'+n+'</span><span>'+(t||" ")+'</span></div>';
-    }).join("");
+  function say(html,tone,line){
+    caption.className="caption"+(tone?" "+tone:"");
+    status.innerHTML=html+(line?'<span class="line">'+line+'</span>':"");
   }
-
-  /* ---------- the picture ---------- */
-  function slotHtml(idx,cls,box,boxCls){
-    return '<div class="slot'+cls+'" data-i="'+idx+'"><div class="box'+boxCls+'">'+box+'</div><div class="idx">'+idx+'</div></div>';
+  function clearMarks(){
+    row.querySelectorAll(".box").forEach(function(b){ b.classList.remove("on","out"); });
+    row.querySelectorAll(".ix.g").forEach(function(x){ x.classList.remove("out"); x.textContent=""; });
   }
-  function renderPic(s){
-    var N=lenOf(A);
-    if(!s){
-      $("#arr").style.display="none"; $("#start").style.display="flex";
-      $("#start").innerHTML=A.type+"[] "+A.name+" · press <b>Step</b>";
-      return;
-    }
-    $("#start").style.display="none"; $("#arr").style.display="flex";
-    $("#aname").innerHTML=A.type+'[] <b>'+A.name+'</b> · length '+N;
-    var expr=$("#expr"); expr.innerHTML=s.expr||""; expr.className="expr"+(s.bad!==undefined?" bad":"");
-    var h=slotHtml(-1," ghost","","");
-    for(var i=0;i<N;i++){
-      var v=s.vals[i], bc="";
-      if(!s.set[i]) bc+=" def"; else if(A.type==="boolean") bc+=" str";
-      if(s.cur===i) bc+=" cur";
-      if(s.fresh===i) bc+=" newv";
-      if(s.rd===i) bc+=" read";
-      h+=slotHtml(i,"",String(v),bc);
-    }
-    h+=slotHtml(N," ghost"+(s.bad===N?" show":""),"no slot","");
-    $("#row").innerHTML=h;
-    Array.prototype.forEach.call(document.querySelectorAll("#row .slot"),function(el){
-      var k=+el.getAttribute("data-i"), ix=el.querySelector(".idx");
-      if(s.cur===k) ix.classList.add("on"); if(s.rd===k) ix.classList.add("rd");
-    });
-    placeOverlays(s);
+  function point(col,label,tone){
+    hand.style.left=((col+0.5)/COLS*100)+"%";
+    hand.className="hand show"+(tone?" "+tone:"");
+    hi.textContent=label;
   }
-  function slotEl(k){ return document.querySelector('#row .slot[data-i="'+k+'"]'); }
-  function placeOverlays(s){
-    var ptr=$("#ptr"), br=$("#brace"), N=lenOf(A);
-    var target=s.ptr!==undefined?slotEl(s.ptr):null;
-    if(target){
-      ptr.style.left=(target.offsetLeft+target.offsetWidth/2)+"px";
-      ptr.textContent=s.idxPtr?"["+s.ptr+"]":"i = "+s.ptr;
-      ptr.className="ptr show"+(s.bad!==undefined?" bad":s.rd!==undefined?" rd":"");
-    } else ptr.className="ptr";
-    var f=slotEl(0), l=slotEl(N-1);
-    if(s.brace&&f&&l){
-      br.style.left=f.offsetLeft+"px"; br.style.width=(l.offsetLeft+l.offsetWidth-f.offsetLeft)+"px";
-      br.innerHTML='<span class="l">first <b>0</b></span><span class="r">last <b>'+(N-1)+'</b> = length - 1</span>';
-      br.className="brace show";
-    } else { br.className="brace"; br.innerHTML=""; }
+  function showBig(k,v,tone){
+    big.className="big show"+(tone?" "+tone:"");
+    bigK.textContent=k; bigN.textContent=v;
   }
-
-  function renderConsole(s){
-    var rows=s?s.out.split("\n"):[], h="";
-    if(rows.length&&rows[rows.length-1]==="") rows.pop();
-    rows.forEach(function(r){ h+='<div class="out">'+r+'</div>'; });
-    if(s&&s.err) h+='<div class="out err">'+s.err+'</div>';
-    consEl.innerHTML=h||'<span style="color:rgba(132,150,182,.5)">(nothing printed yet)</span>';
+  function outOfBounds(i,isWrite){
+    clearMarks();
+    var left=i<0, side=left?"L":"R", g=$("#g"+side), x=$("#x"+side);
+    g.classList.add("out"); x.classList.add("out"); x.textContent=i;
+    point(left?0:COLS-1,"i = "+i,"bad");
+    row.classList.remove("flash"); void row.offsetWidth; if(!reduce) row.classList.add("flash");
+    showBig(NAME+"["+i+"]","no box","bad");
+    var why=left?'Indexes <b class="w">start at 0</b>, so there is nothing to the left of box 0.'
+                :'There are 7 boxes, so the <b class="w">last index is 6</b>. Box '+i+' does not exist.';
+    say((isWrite?'Writing':'Reading')+' index <b class="w">'+i+'</b> runs off the row. '+why,"w",
+      'ArrayIndexOutOfBoundsException: Index '+i+' out of bounds for length '+N);
   }
-
-  function show(i){
-    at=i;
-    if(i<0){
-      renderCode(null); renderPic(null); renderConsole(null);
-      $("#caption").className="caption";
-      statusEl.innerHTML='Press <b class="a">Step</b> to create the array, or <b class="a">Run</b> to watch it all.';
-      setStat("#stLen",null); setStat("#stLast",null); setStat("#stI",null); setStat("#stVal",null);
-      setBtns(); return;
-    }
-    var s=steps[i], N=lenOf(A);
-    renderCode(s.line,s.cls); renderPic(s); renderConsole(s);
-    $("#caption").className="caption "+s.cls; statusEl.innerHTML=s.msg;
-    $("#kIdx").textContent=s.idxPtr?"index in the brackets":"current i";
-    setStat("#stLen",N); setStat("#stLast",N-1,s.brace?"hot":"");
-    setStat("#stI",s.idx===undefined?null:s.idx,s.bad!==undefined?"bad":"hot");
-    setStat("#stVal",s.val===undefined?null:s.val,s.bad!==undefined?"bad":s.rd!==undefined?"gold":"");
-    setBtns();
+  function readAt(i){
+    if(i<0||i>=N){ outOfBounds(i,false); return; }
+    clearMarks();
+    $("#b"+i).classList.add("on");
+    point(i+1,"i = "+i,"");
+    showBig(NAME+"["+i+"]",vals[i],"");
+    say('Index <b class="a">'+i+'</b> is the <b class="a">'+ORD[i]+' box</b>, and it holds <b class="a">'+vals[i]+'</b>.'
+      +(i===N-1?' It is the last one: length - 1.':''),"",NAME+"["+i+"]");
   }
-  function setStat(id,v,c){ var e=$(id), box=e.parentNode;
-    if(v===null){e.textContent="";e.className="v dim";box.classList.add("empty");}
-    else {e.textContent=v;e.className="v "+(c||"");box.classList.remove("empty");} }
-  function setBtns(){
-    var end=steps.length>0&&at>=steps.length-1;
-    $("#stepno").innerHTML="<small>step</small>"+(at+1)+" / "+steps.length;
-    var dd=""; for(var k=0;k<steps.length;k++) dd+='<i class="'+(k===at?"now":k<at?"done":"")+'"></i>'; $("#dots").innerHTML=dd;
-    $("#bStep").disabled=end; $("#bBack").disabled=at<0;
-    $("#bRun").textContent=timer?"Pause":(end?"Run again":"Run");
-    $("#inK").disabled=at>=0;
-    Array.prototype.forEach.call(document.querySelectorAll(".chip"),function(c){c.disabled=at>=0;});
+  function writeAt(i,v){
+    if(i<0||i>=N){ outOfBounds(i,true); return; }
+    clearMarks();
+    var b=$("#b"+i), old=vals[i]; vals[i]=v;
+    b.classList.remove("chg"); void b.offsetWidth; b.classList.add("chg","on");
+    b.innerHTML='<s>'+old+'</s><span class="v">'+v+'</span>';
+    point(i+1,"i = "+i,"w");
+    showBig(NAME+"["+i+"]",v,"w");
+    say('Box <b class="y">'+i+'</b> now holds <b class="y">'+v+'</b>. The old '+old+' is gone; the other boxes did not move.',"y",
+      NAME+"["+i+"] = "+v+";");
   }
-  function rebuild(){ steps=build(getK()); }
-  function step(){ if(at<0) rebuild(); if(at<steps.length-1) show(at+1); else stop(); }
-  function back(){ if(at>=0) show(at-1); }
-  function reset(){ stop(); syncInput(); rebuild(); show(-1); }
-  function stop(){ if(timer){clearInterval(timer);timer=null;} setBtns(); }
-  function run(){ if(timer){stop();return;} if(at>=steps.length-1&&steps.length) show(-1); step();
-    timer=setInterval(function(){ if(at>=steps.length-1) stop(); else step(); }, reduce?400:1100); setBtns(); }
-
-  $("#bStep").addEventListener("click",function(){stop();step();});
-  $("#bBack").addEventListener("click",function(){stop();back();});
+  function readInt(el){
+    var s=el.value.trim();
+    if(!/^-?\d+$/.test(s)) return null;
+    return parseInt(s,10);
+  }
+  function badInput(what){
+    say('Type a <b class="w">whole number</b> for the '+what+', like 3 or -1.',"w");
+  }
+  function doRead(){ var i=readInt($("#inI")); if(i===null){ badInput("index"); return; } readAt(i); }
+  function doWrite(){
+    var i=readInt($("#inI")); if(i===null){ badInput("index"); return; }
+    var v=readInt($("#inV")); if(v===null){ badInput("value"); return; }
+    writeAt(i,v);
+  }
+  function reset(){
+    vals=INIT.slice(); build(); hand.className="hand"; row.classList.remove("flash");
+    $("#inI").value="1"; $("#inV").value="15";
+    big.className="big";
+    say('Seven boxes, one value each. The number <b class="a">under</b> a box is its index, and it <b class="a">starts at 0</b>.');
+  }
+  row.addEventListener("click",function(e){
+    var b=e.target.closest("button[data-k]"); if(!b) return;
+    var k=+b.getAttribute("data-k"); $("#inI").value=k; readAt(k);
+  });
+  $("#bRead").addEventListener("click",doRead);
+  $("#bWrite").addEventListener("click",doWrite);
   $("#bReset").addEventListener("click",reset);
-  $("#bRun").addEventListener("click",run);
-  $("#bMut").addEventListener("click",function(){ var N=lenOf(A);
-    $("#inK").value=(getK()===N)?A.defK:N; this.blur(); reset(); });
-  $("#chips").addEventListener("click",function(e){ var b=e.target.closest(".chip"); if(!b||b.disabled) return;
-    A=ARR[b.getAttribute("data-t")]; $("#inK").value=A.defK;
-    Array.prototype.forEach.call(document.querySelectorAll(".chip"),function(c){c.classList.toggle("on",c===b);});
-    b.blur(); reset(); });
-  $("#inK").addEventListener("input",function(){ if(at<0){ syncInput(); rebuild(); show(-1); } });
-  $("#inK").addEventListener("change",function(){ $("#inK").value=getK(); if(at<0){ syncInput(); rebuild(); show(-1); } });
-  document.addEventListener("keydown",function(e){ if(e.code==="Space"&&!/INPUT|BUTTON/.test(e.target.tagName)){e.preventDefault();stop();step();} });
-  addEventListener("resize",function(){ if(at>=0) placeOverlays(steps[at]); });
-  /* focus: picture and caption only. Remembered per browser. */
-  function setFocus(on){ document.body.classList.toggle("solo",on); $("#bFocus").textContent=on?"Focus on":"Focus";
-    try{localStorage.setItem("hub-focus",on?"1":"0");}catch(e){} if(at>=0) placeOverlays(steps[at]); }
-  $("#bFocus").addEventListener("click",function(){ setFocus(!document.body.classList.contains("solo")); this.blur(); });
-  try{ if(localStorage.getItem("hub-focus")==="1") document.body.classList.add("solo"); }catch(e){}
-  if(document.body.classList.contains("solo")) $("#bFocus").textContent="Focus on";
+  $("#inI").addEventListener("keydown",function(e){ if(e.key==="Enter") doRead(); });
+  $("#inV").addEventListener("keydown",function(e){ if(e.key==="Enter") doWrite(); });
+  build();
 
-  /* ---------- ambient canvas ---------- */
+  /* ambient canvas */
   var cv=$("#amb"),ctx=cv.getContext&&cv.getContext("2d"),parts=[];
   function sizeC(){if(!ctx)return;cv.width=innerWidth;cv.height=innerHeight;}
   function initParts(){parts=[];for(var i=0;i<46;i++)parts.push({x:Math.random(),y:Math.random(),
@@ -482,8 +271,6 @@
       ctx.fillStyle="rgba(140,170,255,"+p.o+")";ctx.fill();});
     requestAnimationFrame(drawC);}
   if(ctx&&!reduce){sizeC();initParts();drawC();addEventListener("resize",sizeC);}
-
-  reset();
 })();
 </script>
 <script src="../manifest.js"></script>

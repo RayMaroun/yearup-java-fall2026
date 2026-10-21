@@ -30,136 +30,87 @@
     background-clip:text;color:transparent}
   .lede{color:var(--muted);max-width:64ch;font-size:1.05rem;margin:0 0 26px;line-height:1.5}
   .lede b{color:var(--ink)}
-  .lede code,.take code,.caption code{font-family:var(--mono);font-size:.92em;color:#bcd0ff}
+  code{font-family:var(--mono);font-size:.92em;color:#bcd0ff}
 
-  /* ---------- stage: picture first, one toolbar, support below ---------- */
+  /* ---------- the stage IS the picture ---------- */
   .stage{position:relative;background:linear-gradient(180deg,rgba(255,255,255,.03),rgba(255,255,255,.01));
-    border:1px solid var(--line);border-radius:24px;padding:18px 18px 14px;
+    border:1px solid var(--line);border-radius:24px;padding:22px;
     box-shadow:0 1px 0 rgba(255,255,255,.06) inset,0 30px 80px -30px rgba(0,0,0,.8)}
-  .topbar{display:flex;align-items:center;gap:10px;margin:0 0 14px;flex-wrap:wrap}
-  .topbar .lab{margin:0 4px 0 0}
-  .lab{font-family:var(--mono);font-size:.7rem;letter-spacing:.12em;text-transform:uppercase;color:var(--muted);margin:0 0 10px}
-  .chips{display:flex;flex-wrap:wrap;gap:6px}
-  .chip{font-family:var(--mono);font-size:.74rem;padding:5px 11px;border-radius:999px;cursor:pointer;
-    border:1px solid var(--line);background:rgba(0,0,0,.25);color:var(--muted);transition:.15s}
-  .chip:hover{border-color:var(--accent);color:var(--accent)}
-  .chip.on{border-color:rgba(110,160,255,.6);background:rgba(110,160,255,.14);color:var(--ink)}
-  .chip:focus-visible,.btn:focus-visible,.focus:focus-visible{outline:2px solid var(--accent);outline-offset:2px}
-  .focus{margin-left:auto;font-family:var(--mono);font-size:.68rem;letter-spacing:.1em;text-transform:uppercase;padding:6px 12px;
-    border-radius:999px;border:1px solid var(--line);background:rgba(0,0,0,.25);color:var(--muted);cursor:pointer;transition:.15s}
-  .focus:hover{border-color:var(--accent);color:var(--accent)}
-  body.solo .focus{border-color:rgba(255,200,98,.6);color:var(--gold);background:rgba(255,200,98,.1)}
+  .board{position:relative;display:grid;grid-template-columns:minmax(0,300px) minmax(120px,1fr) minmax(0,380px);gap:16px;align-items:center;min-height:360px}
+  @media (max-width:820px){.board{grid-template-columns:1fr}.lane,.board .hand{display:none}.obj{margin-left:14px}}
 
-  /* hero picture */
-  .pic{position:relative;height:390px;border:1px solid var(--line);border-radius:18px;background:rgba(6,10,20,.5);overflow:hidden}
-  body.solo .pic{height:480px}
-  .pic .zone{position:absolute;font-family:var(--mono);font-size:.62rem;letter-spacing:.14em;text-transform:uppercase;
-    color:rgba(132,150,182,.55);transition:color .3s,opacity .3s}
-  /* outside: the class that makes the call */
-  .caller{position:absolute;width:var(--cw,280px);padding:12px 14px 14px;border-radius:14px;border:1px solid rgba(255,255,255,.14);
-    background:rgba(255,255,255,.035);opacity:0;transform:translateY(6px);transition:opacity .4s,transform .4s}
-  .caller.show{opacity:1;transform:none}
-  .caller .ch{font-family:var(--mono);font-size:.8rem;color:var(--ink);margin:0}
-  .caller .ch b{color:#c792ea;font-weight:500}
-  .caller .pk{font-family:var(--mono);font-size:.62rem;letter-spacing:.06em;color:var(--muted);margin:2px 0 12px}
-  .call{font-family:var(--mono);font-size:.8rem;line-height:1.6;color:var(--ink);padding:7px 10px;border-radius:9px;white-space:pre;
-    border:1px solid rgba(110,160,255,.5);background:rgba(110,160,255,.1);overflow:hidden;text-overflow:ellipsis}
-  .call.g{border-color:rgba(70,217,138,.6);background:rgba(70,217,138,.08)}
-  .call.y{border-color:rgba(255,200,98,.6);background:rgba(255,200,98,.08)}
-  .call.w{border-color:rgba(255,106,106,.65);background:rgba(255,106,106,.08)}
-  /* inside: the object and its wall */
-  .wall{position:absolute;border:6px solid rgba(132,150,182,.42);border-radius:18px;background:rgba(255,255,255,.02);
-    opacity:0;transition:opacity .4s}
-  .wall.show{opacity:1}
-  .wall .wh{position:absolute;right:16px;top:10px;font-family:var(--mono);font-size:.6rem;letter-spacing:.14em;text-transform:uppercase;color:var(--muted)}
-  .wall .wh i{font-style:normal;color:var(--ink);text-transform:none;letter-spacing:.02em}
-  .fld{position:absolute;display:flex;align-items:center;justify-content:space-between;gap:12px;padding:0 12px;border-radius:11px;
-    border:1px solid rgba(255,255,255,.1);background:rgba(0,0,0,.28);font-family:var(--mono);font-size:.78rem;color:#c9d4ea;
-    opacity:0;transition:opacity .4s,border-color .3s,background .3s,box-shadow .3s}
-  .fld.show{opacity:1}
-  .fld .fv{font-size:.95rem;color:var(--ink);padding:4px 10px;border-radius:8px;background:rgba(255,255,255,.05);white-space:nowrap;transition:background .3s,color .3s}
-  .fld.a{border-color:rgba(110,160,255,.6);background:rgba(110,160,255,.08)}
-  .fld.g{border-color:rgba(70,217,138,.7);background:rgba(70,217,138,.08);box-shadow:0 0 18px -6px rgba(70,217,138,.7)}
-  .fld.g .fv{color:var(--good)}
-  .fld.y{border-color:rgba(255,200,98,.7);background:rgba(255,200,98,.08);box-shadow:0 0 18px -6px rgba(255,200,98,.7)}
-  .fld.y .fv{color:var(--gold);background:rgba(255,200,98,.14)}
-  .fld.w{border-color:rgba(255,106,106,.5)}
-  /* the doors: public methods, cut into the wall */
-  .door{position:absolute;transform:translate(-50%,-50%);font-family:var(--mono);font-size:.64rem;padding:3px 9px;border-radius:999px;white-space:nowrap;
-    border:1px solid rgba(110,160,255,.4);background:#0b1226;color:#9fb6e6;opacity:0;transition:opacity .4s,border-color .3s,color .3s,background .3s,box-shadow .3s}
-  .door.show{opacity:1}
-  .door.a{border-color:var(--accent);color:var(--ink);background:#14224a;box-shadow:0 0 14px -4px rgba(110,160,255,.8)}
-  .door.g{border-color:var(--good);color:var(--good);background:#0d2a20;box-shadow:0 0 14px -4px rgba(70,217,138,.8)}
-  .door.y{border-color:var(--gold);color:var(--gold);background:#2d2512;box-shadow:0 0 14px -4px rgba(255,200,98,.8)}
-  .door.off{opacity:.45}
-  #arrows{position:absolute;inset:0;width:100%;height:100%;pointer-events:none;overflow:visible}
-  #arrows path.ar{fill:none;stroke-width:2.5}
-  .ar.a{stroke:var(--accent)} .ar.g{stroke:var(--good)} .ar.y{stroke:var(--gold)} .ar.w{stroke:var(--warn)}
-  #arrows .x{stroke:var(--warn);stroke-width:3;stroke-linecap:round}
-  .answer{position:absolute;left:24px;bottom:16px;font-family:var(--mono);font-size:.95rem;color:var(--ink);opacity:0;transition:opacity .4s;
-    white-space:pre;line-height:1.3}
-  .answer.show{opacity:1}
-  .answer small{display:block;font-weight:400;font-size:.6rem;letter-spacing:.14em;text-transform:uppercase;color:var(--muted);margin-bottom:4px;white-space:normal}
-  .answer .g{color:var(--good);background:rgba(70,217,138,.1);padding:2px 6px;border-radius:6px}
-  .answer .y{color:var(--gold);background:rgba(255,200,98,.1);padding:2px 6px;border-radius:6px}
-  .answer .w{color:var(--warn);background:rgba(255,106,106,.1);padding:2px 6px;border-radius:6px}
-  .pic .start{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;font-family:var(--mono);
-    font-size:.8rem;color:var(--muted);pointer-events:none;transition:opacity .3s}
-  .pic .start b{color:var(--accent);font-weight:500}
+  .card{position:relative;border-radius:16px;padding:16px 18px 14px}
+  .hd{font-family:var(--mono);font-size:.62rem;letter-spacing:.16em;text-transform:uppercase;color:var(--muted);margin:0 0 4px}
+  .who{font-family:var(--disp);font-weight:700;font-size:1.35rem;margin:0 0 12px;color:var(--ink);letter-spacing:-.01em}
+  .row{display:flex;align-items:center;justify-content:space-between;gap:10px;font-family:var(--mono);font-size:.82rem;
+    padding:8px 10px;border-radius:9px;margin-bottom:5px;border:1px solid transparent;transition:background .3s,border-color .3s}
+  .row .f{color:#c9d4ea;white-space:nowrap;display:flex;align-items:center;gap:9px} .row .f i{font-style:normal;color:#82aaff}
+  .sect{font-family:var(--mono);font-size:.58rem;letter-spacing:.14em;text-transform:uppercase;color:rgba(132,150,182,.7);margin:12px 0 6px 2px}
 
-  /* caption: the one sentence, right under the picture */
-  .caption{display:flex;gap:16px;align-items:flex-start;margin:14px 4px 0;min-height:56px}
-  .caption .n{flex-shrink:0;font-family:var(--disp);font-weight:700;font-size:1.35rem;color:var(--accent);font-variant-numeric:tabular-nums;
-    line-height:1.2;min-width:3.2rem}
-  .caption .n small{display:block;font-family:var(--mono);font-weight:400;font-size:.58rem;letter-spacing:.14em;text-transform:uppercase;color:var(--muted)}
-  .caption .t{font-size:1.02rem;line-height:1.55;color:var(--ink);padding-left:16px;border-left:3px solid var(--accent);transition:border-color .3s}
-  body.solo .caption .t{font-size:1.18rem}
-  .caption.cut .t{border-left-color:var(--warn)} .caption.left .t{border-left-color:var(--gold)} .caption.ok .t{border-left-color:var(--good)}
-  .caption b.g{color:var(--good)} .caption b.w{color:var(--warn)} .caption b.a{color:var(--accent)} .caption b.y{color:var(--gold)}
+  /* Main, the caller */
+  .main{border:1px solid var(--line);background:rgba(110,160,255,.05)}
+  .call{display:block;width:100%;text-align:left;font-family:var(--mono);font-size:.8rem;padding:11px 12px;border-radius:11px;cursor:pointer;
+    border:1px solid var(--line);background:rgba(0,0,0,.25);color:#c9d4ea;margin-bottom:8px;transition:.15s}
+  .call:hover{border-color:var(--accent);background:rgba(110,160,255,.1)}
+  .call.m{color:#ffcb6b} .call.m:hover{border-color:var(--gold);background:rgba(255,200,98,.1)}
+  .call.wr:hover{border-color:var(--warn);background:rgba(255,106,106,.08)}
+  .call:disabled{opacity:.35;cursor:not-allowed}
+  .setw{display:grid;grid-template-columns:1fr 64px;gap:8px;align-items:start}
+  .setw input{width:100%;font-family:var(--mono);font-size:.84rem;padding:10px 8px;border-radius:10px;border:1px solid var(--line);
+    background:rgba(0,0,0,.3);color:var(--ink);outline:none;text-align:center;transition:border-color .15s}
+  .setw input:focus{border-color:var(--accent)}
 
-  /* toolbar: same on every page */
-  .toolbar{display:flex;align-items:center;gap:10px;margin:16px 0 0;padding-top:14px;border-top:1px solid var(--line)}
-  .btn{font-family:var(--body);font-weight:500;font-size:.86rem;padding:9px 16px;border-radius:11px;cursor:pointer;
-    border:1px solid var(--line);background:var(--surface);color:var(--ink);transition:.15s}
-  .btn:hover{border-color:var(--accent);color:var(--accent)}
-  .btn.primary{border-color:rgba(110,160,255,.5);background:rgba(110,160,255,.12);padding:9px 22px}
-  .btn:disabled{opacity:.35;cursor:not-allowed}
-  .btn.ghost{background:transparent;color:var(--muted);margin-left:auto}
-  .dots{display:flex;gap:5px;align-items:center;margin:0 6px}
-  .dots i{display:block;width:8px;height:8px;border-radius:50%;background:rgba(255,255,255,.12);transition:.2s}
-  .dots i.done{background:rgba(110,160,255,.45)}
-  .dots i.now{background:var(--accent);transform:scale(1.35);box-shadow:0 0 10px rgba(110,160,255,.7)}
-  .hint{font-family:var(--mono);font-size:.68rem;color:var(--muted);margin:10px 4px 0;line-height:1.5}
-  .hint b{color:var(--accent)}
+  /* the lane and the hand */
+  .lane{align-self:stretch}
+  .hand{position:absolute;left:0;top:0;z-index:3;display:flex;align-items:center;gap:6px;pointer-events:none;
+    transition:transform .5s cubic-bezier(.2,.9,.3,1)}
+  .hand .palm{position:relative;font-family:var(--mono);font-size:.7rem;letter-spacing:.08em;color:#dbe6ff;padding:6px 14px 6px 10px;
+    border-radius:999px 6px 6px 999px;border:1px solid rgba(110,160,255,.6);background:rgba(110,160,255,.18)}
+  .hand .palm::after{content:"";position:absolute;right:-9px;top:50%;margin-top:-7px;border-left:9px solid rgba(110,160,255,.6);
+    border-top:7px solid transparent;border-bottom:7px solid transparent}
+  .hand.no .palm{border-color:var(--warn);background:rgba(255,106,106,.16)} .hand.no .palm::after{border-left-color:var(--warn)}
+  .chip{order:-1;font-family:var(--mono);font-size:.78rem;padding:3px 8px;border-radius:999px;color:#f78c6c;background:#05070e;
+    border:1px solid rgba(247,140,108,.5);opacity:0;transform:scale(.6);transition:opacity .3s,transform .3s}
+  .chip.on{opacity:1;transform:none}
+  .chip.g{color:var(--good);border-color:rgba(70,217,138,.6)}
 
-  /* support: code, console, readouts. Below the picture, hidden in focus */
-  .support{display:grid;grid-template-columns:minmax(0,1.5fr) minmax(0,1fr);gap:14px;margin-top:18px}
-  @media (max-width:860px){.support{grid-template-columns:1fr}}
-  body.solo .support,body.solo .take,body.solo .hint{display:none}
-  .code{min-width:0;font-family:var(--mono);font-size:.76rem;line-height:1.8;background:rgba(0,0,0,.35);border:1px solid var(--line);
-    border-radius:14px;padding:12px 0;overflow-x:auto}
-  .ln{display:flex;gap:12px;padding:0 14px;white-space:pre;color:#c9d4ea;transition:background .2s,opacity .3s}
-  .ln .n{width:20px;text-align:right;color:rgba(132,150,182,.55);user-select:none;flex-shrink:0}
-  .ln.cur{background:rgba(110,160,255,.14);box-shadow:inset 3px 0 0 var(--accent)}
-  .ln.cur .n{color:var(--accent)}
-  .ln.left{background:rgba(255,200,98,.12);box-shadow:inset 3px 0 0 var(--gold)}
-  .ln.ok{background:rgba(70,217,138,.1);box-shadow:inset 3px 0 0 var(--good)}
-  .ln.dim{opacity:.4}
-  .kw{color:#c792ea} .ty{color:#82aaff} .st{color:#c3e88d} .nm{color:#f78c6c} .cm{color:#5f6b85;font-style:italic} .fn{color:#ffcb6b}
-  .side{display:flex;flex-direction:column;gap:12px}
-  .readout{display:grid;grid-template-columns:1fr 1fr;gap:10px}
-  .stat{min-width:0;background:rgba(255,255,255,.03);border:1px solid var(--line);border-radius:12px;padding:11px 13px;transition:opacity .3s}
-  .stat.empty{opacity:.3}
-  .stat .k{font-family:var(--mono);font-size:.62rem;letter-spacing:.1em;text-transform:uppercase;color:var(--muted)}
-  .stat .v{font-family:var(--disp);font-weight:700;font-size:1.45rem;font-variant-numeric:tabular-nums;margin-top:2px;transition:color .3s;min-height:1.6em;
-    white-space:pre;overflow:hidden;text-overflow:ellipsis}
-  .stat .v.long{font-family:var(--mono);font-weight:500;font-size:.9rem;line-height:2.2em}
-  .v.hot{color:var(--accent)} .v.gold{color:var(--gold)} .v.dim{color:rgba(132,150,182,.5)}
-  .console{font-family:var(--mono);font-size:.76rem;line-height:1.6;background:#05070e;border:1px solid var(--line);
-    border-radius:12px;padding:10px 14px;min-height:64px;color:#9fe3b6;flex:1}
-  .console .cl{font-size:.6rem;letter-spacing:.14em;text-transform:uppercase;color:rgba(132,150,182,.6);margin-bottom:4px}
-  .console .out{animation:pop .3s;white-space:pre}
+  /* the object, locked fields, doors */
+  .obj{border:1px solid rgba(255,255,255,.18);background:rgba(255,255,255,.045)}
+  .obj .val{color:#f78c6c;white-space:nowrap;font-variant-numeric:tabular-nums}
+  .obj .val.s{color:#c3e88d}
+  .obj .val s{color:var(--muted);margin-right:6px}
+  .lock{position:relative;display:inline-block;width:11px;height:8px;margin-top:5px;border-radius:2px;background:#8496b6;flex-shrink:0;transition:background .3s}
+  .lock::before{content:"";position:absolute;left:2px;top:-6px;width:7px;height:7px;border:2px solid #8496b6;border-bottom:0;border-radius:5px 5px 0 0;box-sizing:border-box;transition:border-color .3s}
+  .row.w{background:rgba(255,106,106,.12);border-color:rgba(255,106,106,.6)}
+  .row.w .lock{background:var(--warn);animation:shake .4s} .row.w .lock::before{border-color:var(--warn)}
+  .row.chg{background:rgba(255,200,98,.12);border-color:rgba(255,200,98,.55)}
+  .row.chg .val{color:var(--gold);animation:pop .45s}
+  .row.rd{background:rgba(70,217,138,.1);border-color:rgba(70,217,138,.5)}
+  .door{position:relative;padding-left:18px}
+  .door .f{color:#ffcb6b} .door.get .f{color:#9fe3b6}
+  .door .frame{position:absolute;left:-26px;top:50%;margin-top:-15px;width:18px;height:30px;border:2px solid rgba(255,200,98,.7);border-radius:4px 4px 0 0;
+    background:#05070e;perspective:120px}
+  .door.get .frame{border-color:rgba(70,217,138,.7)}
+  .door .leaf{position:absolute;inset:0;background:rgba(255,200,98,.35);transform-origin:left center;transition:transform .45s}
+  .door.get .leaf{background:rgba(70,217,138,.3)}
+  .door .leaf::after{content:"";position:absolute;right:3px;top:13px;width:3px;height:3px;border-radius:50%;background:#05070e}
+  .door.open .leaf{transform:rotateY(-75deg)}
+  .door .note{font-size:.62rem;color:var(--muted);letter-spacing:.06em}
+
+  /* the one sentence */
+  .caption{display:flex;gap:14px;align-items:flex-start;margin:18px 2px 0;padding-top:16px;border-top:1px solid var(--line)}
+  .caption .t{flex:1;font-size:1.05rem;line-height:1.55;color:var(--ink);padding-left:16px;border-left:3px solid var(--accent);transition:border-color .3s}
+  .caption .t .line{display:block;margin-top:6px;font-family:var(--mono);font-size:.8rem;color:#bcd0ff;opacity:.9}
+  .caption.y .t{border-left-color:var(--gold)} .caption.g .t{border-left-color:var(--good)} .caption.w .t{border-left-color:var(--warn)}
+  .caption.w .t .line{color:var(--warn)}
+  .caption b.a{color:var(--accent)} .caption b.y{color:var(--gold)} .caption b.g{color:var(--good)} .caption b.w{color:var(--warn)}
+  .reset{font-family:var(--body);font-weight:500;font-size:.84rem;padding:8px 14px;border-radius:11px;cursor:pointer;
+    border:1px solid var(--line);background:transparent;color:var(--muted);transition:.15s;flex-shrink:0}
+  .reset:hover{border-color:var(--accent);color:var(--accent)}
+  button:focus-visible,input:focus-visible{outline:2px solid var(--accent);outline-offset:2px}
+
   @keyframes pop{from{transform:scale(.6);opacity:0}to{transform:scale(1);opacity:1}}
+  @keyframes shake{0%,100%{transform:none}25%{transform:translateX(-3px)}75%{transform:translateX(3px)}}
   .take{margin-top:22px;background:linear-gradient(180deg,rgba(110,160,255,.08),rgba(139,123,255,.04));
     border:1px solid var(--line);border-left:3px solid var(--accent);border-radius:12px;padding:16px 18px}
   .take .tk{font-family:var(--mono);font-size:.66rem;letter-spacing:.14em;text-transform:uppercase;color:var(--accent);margin:0 0 8px}
@@ -169,254 +120,140 @@
 </style>
 </head>
 <body>
-
 <a class="back" href="../index.html#08-encapsulation">&#8592; Week 2 index</a>
-
 <canvas id="amb"></canvas>
 <div class="wrap">
   <p class="tag">Workbook 2a &middot; Section 2-1 &middot; Encapsulation</p>
   <h1>Encapsulation</h1>
-  <p class="lede"><b>Private fields sit behind a wall: the only way in or out is a public method the class offers.</b></p>
+  <p class="lede"><b>The fields are locked. The doors are the methods.</b> Try each of Main's three calls.</p>
 
   <div class="stage">
-    <div class="topbar">
-      <span class="lab">Person</span>
-      <button class="focus" id="bFocus" title="Hide the code and notes, enlarge the picture">Focus</button>
-    </div>
-
-    <div class="pic" id="pic"></div>
-
-    <div class="caption" id="caption">
-      <div class="n" id="stepno"><small>step</small>0 / 5</div>
-      <div class="t" id="status">Press <b class="a">Next</b>. The picture changes at every step.</div>
-    </div>
-
-    <div class="toolbar">
-      <button class="btn" id="bBack">&larr; Back</button>
-      <div class="dots" id="dots"></div>
-      <button class="btn primary" id="bNext">Next &rarr;</button>
-      <button class="btn ghost" id="bReset">Reset</button>
-    </div>
-    <p class="hint">space = next &middot; <b>red = blocked by private, green = a getter reads, gold = a setter writes</b></p>
-
-    <div class="support">
-      <div>
-        <p class="lab" id="codeLab">Main.java</p>
-        <div class="code" id="code"></div>
-      </div>
-      <div class="side">
-        <div class="readout">
-          <div class="stat empty"><div class="k">field name</div><div class="v dim" id="stName"></div></div>
-          <div class="stat empty"><div class="k">last access</div><div class="v dim" id="stLast"></div></div>
+    <div class="board" id="board">
+      <div class="card main" id="main">
+        <p class="hd">class Main &middot; the caller</p>
+        <p class="who">Main</p>
+        <button class="call wr" id="bDirect">instructor.age = -5</button>
+        <div class="setw">
+          <button class="call m" id="bSet">instructor.setAge(<span id="sv">-5</span>)</button>
+          <input id="inV" value="-5" inputmode="numeric" maxlength="4" aria-label="value for setAge">
         </div>
-        <div class="console"><div class="cl" id="consLab">console</div><div id="console"></div></div>
+        <button class="call m" id="bGet">instructor.getAge()</button>
       </div>
+      <div class="lane" aria-hidden="true"></div>
+      <div class="card obj" id="obj">
+        <p class="hd">object &middot; Person</p>
+        <p class="who">instructor</p>
+        <p class="sect">private fields</p>
+        <div class="row"><span class="f"><span class="lock"></span>name</span><span class="val s">"Raymond"</span></div>
+        <div class="row" id="rAge"><span class="f"><span class="lock"></span>age</span><span class="val" id="vAge">55</span></div>
+        <div class="row"><span class="f"><span class="lock"></span>energy</span><span class="val">100</span></div>
+        <p class="sect">public methods &middot; the doors</p>
+        <div class="row door" id="dSet"><span class="frame"><span class="leaf"></span></span><span class="f">setAge(int age)</span><span class="note">writes age</span></div>
+        <div class="row door get" id="dGet"><span class="frame"><span class="leaf"></span></span><span class="f">getAge()</span><span class="note">reads age</span></div>
+      </div>
+      <div class="hand" id="hand" aria-hidden="true"><span class="palm">Main</span><span class="chip" id="chip"></span></div>
+    </div>
+    <div class="caption" id="caption">
+      <div class="t" id="status">The age of <b class="a">instructor</b> sits behind a lock. Main can only reach it through two doors: <b class="y">setAge</b> and <b class="g">getAge</b>.</div>
+      <button class="reset" id="bReset">Reset</button>
     </div>
   </div>
 
   <div class="take">
     <p class="tk">The one idea</p>
-    <p><b>Fields are private</b>: only code inside Person can touch them, and private hides them from every other class, in any package.
-    <b>Getters read, setters write</b>, and they are public, so every other class goes through them. That is <b>encapsulation</b>: the only way in is a method the class offers.</p>
+    <p><b>The fields are locked. The doors are the methods.</b> A <code>private</code> field can only be touched by code inside its own class,
+    and the compiler rejects any other class that tries. Public getters and setters are the way in and out, so the setter is the one place
+    where a value can be checked before it lands.</p>
   </div>
-
   <div id="rail"></div>
 </div>
-
 <script>
 (function(){
   "use strict";
   var $=function(s){return document.querySelector(s);};
   var reduce=matchMedia("(prefers-reduced-motion: reduce)").matches;
+  var T=reduce?0:1;
+  var age=55, timers=[], busy=false;
+  var board=$("#board"),hand=$("#hand"),chip=$("#chip"),status=$("#status"),caption=$("#caption");
+  var rAge=$("#rAge"),vAge=$("#vAge"),dSet=$("#dSet"),dGet=$("#dGet"),inV=$("#inV");
 
-  /* ---------- the code: Main.java ---------- */
-  var CODE={
-    m:{lines:[
-      '<span class="kw">package</span> com.pluralsight;',
-      '',
-      '<span class="ty">Person</span> instructor = <span class="kw">new</span> <span class="fn">Person</span>(name, age);',
-      '',
-      '<span class="cm">// Getters</span>',
-      'System.out.<span class="fn">println</span>(instructor.<span class="fn">getName</span>());',
-      'System.out.<span class="fn">println</span>(instructor.<span class="fn">getAge</span>());',
-      '<span class="cm">/*</span>',
-      '<span class="cm">System.out.println(instructor.name); // error: name has private access</span>',
-      '<span class="cm">System.out.println(instructor.age);  // error: age has private access</span>',
-      '<span class="cm">*/</span>',
-      '',
-      '<span class="cm">// Setters</span>',
-      'instructor.<span class="fn">setName</span>(<span class="st">"Ray"</span>); <span class="cm">// change a private field through its setter</span>',
-      'System.out.<span class="fn">println</span>(instructor.<span class="fn">getName</span>());'
-    ]}
-  };
-  var LAB={m:"Main.java · package com.pluralsight"};
-  var CALLER={m:["Main","com.pluralsight","instructor"]};
-  var FIELDS=[["name","String"],["age","int"],["energy","int"]];
-  var DOORS={name:["getName()","setName()"],age:["getAge()","setAge()"],energy:["getEnergy()","setEnergy()"]};
-  var ERR="error: name has private access in Person";
-
-  /* ---------- the walk ---------- */
-  var steps=[
-    {sc:"m",line:[3],cls:"",call:"new Person(name, age)",ck:"",to:[["ctor","a"]],flds:{name:"a",age:"a",energy:"a"},
-     vals:{name:'"Raymond"',age:"55",energy:"100"},last:"constructor",
-     msg:'<code>instructor</code> is one Person object. Its fields are <b class="a">private</b>: a wall goes around all three.'},
-    {sc:"m",line:[9],cls:"cut",call:"instructor.name",ck:"w",to:[["wall:name","w"]],flds:{name:"w"},
-     vals:{name:'"Raymond"',age:"55",energy:"100"},last:".name blocked",ans:["println(instructor.name)",ERR,"w"],
-     msg:'Main reaches for <code>instructor.name</code> directly. The wall stops it: <b class="w">the code does not compile</b>.'},
-    {sc:"m",line:[6,7],cls:"ok",call:"instructor.getName()\ninstructor.getAge()",ck:"g",to:[["get:name","g"],["get:age","g"]],flds:{name:"g",age:"g"},
-     vals:{name:'"Raymond"',age:"55",energy:"100"},last:"getName()",out:["Raymond","55"],ans:["getName(), getAge()","Raymond  55","g"],
-     msg:'<code>getName()</code> and <code>getAge()</code> are public doors. Through them Main <b class="g">reads</b> Raymond and 55.'},
-    {sc:"m",line:[14],cls:"left",call:'instructor.setName("Ray")',ck:"y",to:[["set:name","y"]],flds:{name:"y"},
-     vals:{name:'"Ray"',age:"55",energy:"100"},last:'setName("Ray")',ans:['setName("Ray")','name is now "Ray"',"y"],
-     msg:'<code>setName("Ray")</code> is the door for <b class="y">writing</b>: it carries "Ray" in and the field changes.'},
-    {sc:"m",line:[15],cls:"ok",call:"instructor.getName()",ck:"g",to:[["get:name","g"]],flds:{name:"g"},
-     vals:{name:'"Ray"',age:"55",energy:"100"},last:"getName()",out:["Ray"],ans:["getName()","Ray","g"],
-     msg:'<code>getName()</code> again reads the field as it is now: <b class="g">Ray</b>. The setter changed it.'}
-  ];
-
-  /* ---------- state ---------- */
-  var at=-1;
-  var picEl=$("#pic"),codeEl=$("#code"),consEl=$("#console"),statusEl=$("#status");
-
-  function renderCode(sc,cur,cls){
-    $("#codeLab").textContent=LAB[sc];
-    codeEl.innerHTML=CODE[sc].lines.map(function(t,i){
-      var n=i+1,c="ln";
-      if(cur&&cur.indexOf(n)>=0) c+=" "+(cls==="left"?"left":cls==="ok"?"ok":"cur");
-      return '<div class="'+c+'"><span class="n">'+n+'</span><span>'+(t||" ")+'</span></div>';
-    }).join("");
+  function say(html,tone,line){
+    caption.className="caption"+(tone?" "+tone:"");
+    status.innerHTML=html+(line?'<span class="line">'+line+'</span>':"");
   }
+  function later(fn,ms){ timers.push(setTimeout(fn,ms*T)); }
+  function clearAll(){ timers.forEach(clearTimeout); timers=[]; busy=false; setBusy(false); }
+  function setBusy(b){ busy=b; ["#bDirect","#bSet","#bGet"].forEach(function(id){ $(id).disabled=b; }); }
+  function flash(el,cls){ el.classList.remove("w","chg","rd"); void el.offsetWidth; el.classList.add(cls); }
+  function calm(){ [rAge,dSet,dGet].forEach(function(e){ e.classList.remove("w","chg","rd","open"); }); hand.classList.remove("no"); }
 
-  /* ---------- the picture ---------- */
-  function buildPic(){
-    var html='<span class="zone" id="zOut" style="left:24px;top:18px;opacity:0">outside the class</span>';
-    html+='<span class="zone" id="zIn" style="top:18px;opacity:0">inside Person</span>';
-    html+='<svg id="arrows"><defs>';
-    ["a","g","y","w"].forEach(function(k){
-      html+='<marker id="mk'+k+'" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse">'+
-            '<path class="hd'+k+'" d="M0,0 L10,5 L0,10 z"/></marker>';
-    });
-    html+='</defs><g id="paths"></g></svg>';
-    html+='<div class="caller" id="caller"><p class="ch" id="cName"></p><p class="pk" id="cPkg"></p><div class="call" id="call"></div></div>';
-    html+='<div class="wall" id="wall"><span class="wh">Person object \u00b7 <i id="oName"></i></span></div>';
-    FIELDS.forEach(function(f){
-      html+='<div class="fld" id="f-'+f[0]+'"><span><span class="kw">private</span> <span class="ty">'+f[1]+'</span> '+f[0]+'</span><span class="fv" id="v-'+f[0]+'"></span></div>';
-      html+='<span class="door" id="get-'+f[0]+'">'+DOORS[f[0]][0]+'</span><span class="door" id="set-'+f[0]+'">'+DOORS[f[0]][1]+'</span>';
-    });
-    html+='<span class="door" id="ctor">Person(name, age)</span>';
-    html+='<div class="start" id="start">Person instructor \u00b7 press\u00a0<b>Next</b></div>';
-    html+='<div class="answer" id="ans"></div>';
-    picEl.innerHTML=html;
+  /* place the hand: at the caller button, or against the card edge in front of a row */
+  function place(target,atCard){
+    var b=board.getBoundingClientRect(), t=target.getBoundingClientRect(), h=hand.getBoundingClientRect();
+    var y=t.top-b.top+t.height/2-h.height/2, x;
+    if(atCard){ var o=$("#obj").getBoundingClientRect(); x=o.left-b.left-h.width-(target.classList.contains("door")?30:4); }
+    else { x=$("#main").getBoundingClientRect().right-b.left+12; }
+    hand.style.transform="translate("+Math.round(x)+"px,"+Math.round(y)+"px)";
   }
+  var home=$("#bSet");
+  function goHome(btn){ home=btn; place(btn,false); }
 
-  var COL={a:"#6ea0ff",g:"#46d98a",y:"#ffc862",w:"#ff6a6a"};
-  function renderPic(s){
-    var W=picEl.clientWidth||900,H=picEl.clientHeight||390,sc=s?s.sc:"m";
-    var cx=24,cw=Math.round(Math.min(290,Math.max(200,W*.28)));
-    var ox=Math.round(Math.max(cx+cw+130,W*.46)),ow=W-ox-24,oy=46,oh=H-oy-56;
-    $("#start").style.opacity=s?0:1;
-    $("#zOut").style.opacity=s?1:0;
-    var zi=$("#zIn"); zi.style.opacity=s?1:0; zi.style.left=(ox+6)+"px";
+  function readV(){ var v=parseInt(inV.value,10); return isNaN(v)?null:v; }
+  inV.addEventListener("input",function(){ var v=readV(); $("#sv").textContent=v===null?"?":v; });
 
-    /* caller */
-    var ce=$("#caller"); ce.style.setProperty("--cw",cw+"px"); ce.style.left=cx+"px";
-    $("#cName").innerHTML='<b>class</b> '+CALLER[sc][0];
-    $("#cPkg").textContent="package "+CALLER[sc][1];
-    var call=$("#call"); call.textContent=s?s.call:""; call.className="call"+(s&&s.ck?" "+s.ck:"");
-    ce.className="caller"+(s?" show":"");
-    var cy=Math.round(oy+oh/2-ce.offsetHeight/2); ce.style.top=cy+"px";
-    var sx=cx+cw, sy=cy+call.offsetTop+call.offsetHeight/2;
-
-    /* wall and fields */
-    var wl=$("#wall"); wl.style.left=ox+"px"; wl.style.top=oy+"px"; wl.style.width=ow+"px"; wl.style.height=oh+"px";
-    wl.className="wall"+(s?" show":""); $("#oName").textContent=CALLER[sc][2];
-    var wx=ox+3, top=oy+34, rowH=(oh-44)/3, pts={};
-    FIELDS.forEach(function(f,i){
-      var k=f[0], ry=Math.round(top+(i+.5)*rowH), fe=$("#f-"+k), fh=Math.min(46,rowH-12);
-      fe.style.left=(ox+52)+"px"; fe.style.width=(ow-74)+"px"; fe.style.top=(ry-fh/2)+"px"; fe.style.height=fh+"px";
-      var st=s&&s.flds[k];
-      fe.className="fld"+(s?" show":"")+(st?" "+st:"");
-      $("#v-"+k).textContent=s?s.vals[k]:"";
-      var g=$("#get-"+k), t=$("#set-"+k);
-      g.style.left=wx+"px"; g.style.top=(ry-15)+"px"; t.style.left=wx+"px"; t.style.top=(ry+15)+"px";
-      g.className="door"+(s?" show":""); t.className="door"+(s?" show":"");
-      pts["get:"+k]={el:g,y:ry-15}; pts["set:"+k]={el:t,y:ry+15}; pts["wall:"+k]={y:ry};
-    });
-    var ct=$("#ctor"); ct.style.left=Math.round(ox+ow*.3)+"px"; ct.style.top=oy+3+"px"; ct.className="door"+(s?" show":"");
-    pts.ctor={el:ct,y:oy+3};
-
-    /* arrows: one per call, from the call to its door, or to the wall when blocked */
-    var g2="";
-    if(s){
-      s.to.forEach(function(a,j){
-        var p=pts[a[0]], k=a[1], ex, ey=p.y, y0=sy+(s.to.length>1?(j?9:-9):0);
-        if(p.el){ p.el.className="door show "+k; ex=p.el.offsetLeft-p.el.offsetWidth/2-3; }
-        else ex=ox-4;
-        var mx=(sx+ex)/2, d="M"+sx+","+y0+" C"+mx+","+y0+" "+mx+","+ey+" "+ex+","+ey;
-        g2+='<path class="ar '+k+'" d="'+d+'"'+(p.el?' marker-end="url(#mk'+k+')"':'')+'/>';
-        if(!p.el) g2+='<path class="x" d="M'+(ex-7)+','+(ey-7)+' L'+(ex+7)+','+(ey+7)+' M'+(ex+7)+','+(ey-7)+' L'+(ex-7)+','+(ey+7)+'"/>';
-      });
-      Array.prototype.forEach.call(picEl.querySelectorAll(".door"),function(e){ if(e.className==="door show") e.className="door show off"; });
-    }
-    $("#paths").innerHTML=g2;
-    ["a","g","y","w"].forEach(function(k){ var h=picEl.querySelector(".hd"+k); if(h) h.setAttribute("fill",COL[k]); });
-
-    var ans=$("#ans");
-    if(s&&s.ans){ ans.innerHTML='<small>'+s.ans[0]+'</small><span class="'+s.ans[2]+'">'+s.ans[1]+'</span>'; ans.className="answer show"; }
-    else ans.className="answer";
+  function direct(){
+    if(busy) return; calm(); setBusy(true);
+    goHome($("#bDirect")); chip.textContent="-5"; chip.className="chip on";
+    later(function(){ place(rAge,true); },60);
+    later(function(){ hand.classList.add("no"); flash(rAge,"w");
+      say('<b class="w">Blocked at the lock.</b> This is a compile error: age is private, so the compiler refuses any line outside Person that touches it, and the program never runs.',
+        "w","error: age has private access in Person"); },600);
+    later(function(){ goHome($("#bDirect")); chip.className="chip"; },1150);
+    later(function(){ setBusy(false); },1650);
   }
-
-  function setConsole(i){
-    var sc=steps[i]?steps[i].sc:"m", out=[], k;
-    if(steps[i].cls==="cut"){ $("#consLab").textContent="compiler · Main.java";
-      consEl.innerHTML='<div class="out" style="color:#ff8a8a">'+ERR+'</div>'; return; }
-    $("#consLab").textContent="console · Main";
-    for(k=0;k<=i;k++) if(steps[k].sc===sc&&steps[k].out) out=out.concat(steps[k].out);
-    consEl.innerHTML=out.map(function(o){return '<div class="out">'+o+'</div>';}).join("")||'<span style="color:rgba(132,150,182,.5)">(nothing printed yet)</span>';
+  function setter(){
+    if(busy) return; var v=readV();
+    if(v===null){ say('Type a whole number next to <b class="y">setAge</b> first.',"y"); inV.focus(); return; }
+    calm(); setBusy(true);
+    goHome($("#bSet")); chip.textContent=v; chip.className="chip on";
+    later(function(){ place(dSet,true); },60);
+    later(function(){ dSet.classList.add("open"); chip.className="chip"; },600);
+    later(function(){
+      var old=age; age=v; flash(rAge,"chg"); vAge.innerHTML="<s>"+old+"</s>"+age;
+      if(v<0) say('The door let <b class="y">'+v+'</b> in: age went from '+old+' to '+v+'. This setter has no check, so <b class="y">the door is where a check could live</b>, such as refusing an age below 0.',
+        "y","instructor.setAge("+v+");");
+      else say('<b class="y">setAge</b> went through the door and changed age from '+old+' to '+v+'. Only the method touched the locked field.',
+        "y","instructor.setAge("+v+");");
+    },950);
+    later(function(){ goHome($("#bSet")); dSet.classList.remove("open"); },1300);
+    later(function(){ setBusy(false); },1800);
   }
-  function setStat(id,v,c){ var e=$(id), box=e.parentNode; if(v===null){e.textContent="";e.className="v dim";box.classList.add("empty");}
-    else {e.textContent=v;e.className="v "+(c||"")+(v.length>9?" long":"");box.classList.remove("empty");} }
-  function setBtns(){ $("#bNext").disabled=at>=steps.length-1; $("#bBack").disabled=at<0;
-    var d=""; for(var k=0;k<steps.length;k++) d+='<i class="'+(k===at?"now":k<at?"done":"")+'"></i>'; $("#dots").innerHTML=d; }
-
-  function show(i){
-    at=i;
-    if(i<0){
-      renderCode("m",null); renderPic(null);
-      $("#consLab").textContent="console"; consEl.innerHTML='<span style="color:rgba(132,150,182,.5)">(nothing printed yet)</span>';
-      $("#caption").className="caption"; statusEl.innerHTML='Press <b class="a">Next</b>. The picture changes at every step.';
-      setStat("#stName",null); setStat("#stLast",null);
-      $("#stepno").innerHTML="<small>step</small>0 / "+steps.length; setBtns(); return;
-    }
-    var s=steps[i];
-    $("#stepno").innerHTML="<small>step</small>"+(i+1)+" / "+steps.length;
-    renderCode(s.sc,s.line,s.cls);
-    $("#caption").className="caption "+s.cls; statusEl.innerHTML=s.msg;
-    renderPic(s); setConsole(i);
-    setStat("#stName",s.vals.name.replace(/"/g,""),s.flds.name==="y"?"gold":"hot");
-    setStat("#stLast",s.last,s.ck==="w"?"":s.ck==="y"?"gold":"hot");
-    if(s.ck==="w") $("#stLast").style.color="var(--warn)"; else $("#stLast").style.color="";
-    setBtns();
+  function getter(){
+    if(busy) return; calm(); setBusy(true);
+    goHome($("#bGet")); chip.className="chip";
+    later(function(){ place(dGet,true); },60);
+    later(function(){ dGet.classList.add("open"); flash(rAge,"rd"); vAge.textContent=age; },600);
+    later(function(){ chip.textContent=age; chip.className="chip g on"; },900);
+    later(function(){ goHome($("#bGet")); dGet.classList.remove("open");
+      say('The <b class="g">getAge</b> door opened and handed Main a copy of the value: <b class="g">'+age+'</b>. The field itself stayed locked inside.',
+        "g","instructor.getAge();"); },1150);
+    later(function(){ setBusy(false); },1650);
   }
-
-  /* focus: picture and caption only. Remembered per browser. */
-  function setFocus(on){ document.body.classList.toggle("solo",on); $("#bFocus").textContent=on?"Focus on":"Focus";
-    try{localStorage.setItem("hub-focus",on?"1":"0");}catch(e){} show(at); }
-  $("#bFocus").addEventListener("click",function(){ setFocus(!document.body.classList.contains("solo")); this.blur(); });
-  try{ if(localStorage.getItem("hub-focus")==="1") document.body.classList.add("solo"); }catch(e){}
-  if(document.body.classList.contains("solo")) $("#bFocus").textContent="Focus on";
-
-  function next(){ if(at<steps.length-1) show(at+1); }
-  function back(){ if(at>=0) show(at-1); }
-  function reset(){ buildPic(); show(-1); }
-
-  $("#bNext").addEventListener("click",next);
-  $("#bBack").addEventListener("click",back);
+  function reset(){
+    clearAll(); calm(); age=55; vAge.textContent="55"; inV.value="-5"; $("#sv").textContent="-5";
+    chip.className="chip"; goHome($("#bSet"));
+    say('The age of <b class="a">instructor</b> sits behind a lock. Main can only reach it through two doors: <b class="y">setAge</b> and <b class="g">getAge</b>.');
+  }
+  $("#bDirect").addEventListener("click",direct);
+  $("#bSet").addEventListener("click",setter);
+  $("#bGet").addEventListener("click",getter);
   $("#bReset").addEventListener("click",reset);
-  document.addEventListener("keydown",function(e){ if(e.code==="Space"&&!/INPUT|BUTTON/.test(e.target.tagName)){e.preventDefault();next();} });
-  addEventListener("resize",function(){ renderPic(at>=0?steps[at]:null); });
+  inV.addEventListener("keydown",function(e){ if(e.key==="Enter") setter(); });
+  addEventListener("resize",function(){ if(!busy) place(home,false); });
+  hand.style.transition="none"; goHome(home); void hand.offsetWidth; hand.style.transition="";
+  if(document.fonts&&document.fonts.ready) document.fonts.ready.then(function(){ if(!busy) place(home,false); });
 
-  /* ---------- ambient canvas ---------- */
+  /* ambient canvas */
   var cv=$("#amb"),ctx=cv.getContext&&cv.getContext("2d"),parts=[];
   function sizeC(){if(!ctx)return;cv.width=innerWidth;cv.height=innerHeight;}
   function initParts(){parts=[];for(var i=0;i<46;i++)parts.push({x:Math.random(),y:Math.random(),
@@ -427,8 +264,6 @@
       ctx.fillStyle="rgba(140,170,255,"+p.o+")";ctx.fill();});
     requestAnimationFrame(drawC);}
   if(ctx&&!reduce){sizeC();initParts();drawC();addEventListener("resize",sizeC);}
-
-  reset();
 })();
 </script>
 <script src="../manifest.js"></script>

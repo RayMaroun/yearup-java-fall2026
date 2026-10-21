@@ -14,6 +14,7 @@
     --mono:'JetBrains Mono',ui-monospace,monospace;
   }
   *{box-sizing:border-box}
+  [hidden]{display:none!important}
   body{margin:0;min-height:100vh;color:var(--ink);font-family:var(--body);
     background:radial-gradient(1200px 700px at 70% -10%,#141d38 0%,transparent 55%),
                radial-gradient(900px 600px at 10% 110%,#161233 0%,transparent 50%),#080c17;
@@ -30,142 +31,70 @@
     background-clip:text;color:transparent}
   .lede{color:var(--muted);max-width:64ch;font-size:1.05rem;margin:0 0 26px;line-height:1.5}
   .lede b{color:var(--ink)}
-  .lede code,.take code,.caption code{font-family:var(--mono);font-size:.92em;color:#bcd0ff}
+  code{font-family:var(--mono);font-size:.92em;color:#bcd0ff}
 
-  /* ---------- stage: picture first, one toolbar, support below ---------- */
+  /* ---------- the stage IS the picture ---------- */
   .stage{position:relative;background:linear-gradient(180deg,rgba(255,255,255,.03),rgba(255,255,255,.01));
-    border:1px solid var(--line);border-radius:24px;padding:18px 18px 14px;
+    border:1px solid var(--line);border-radius:24px;padding:22px;
     box-shadow:0 1px 0 rgba(255,255,255,.06) inset,0 30px 80px -30px rgba(0,0,0,.8)}
-  .topbar{display:flex;align-items:center;gap:10px;margin:0 0 14px;flex-wrap:wrap}
-  .topbar .lab{margin:0 4px 0 0}
-  .lab{font-family:var(--mono);font-size:.7rem;letter-spacing:.12em;text-transform:uppercase;color:var(--muted);margin:0 0 10px}
-  .chips{display:flex;flex-wrap:wrap;gap:6px}
-  .chip{font-family:var(--mono);font-size:.74rem;padding:5px 11px;border-radius:999px;cursor:pointer;
-    border:1px solid var(--line);background:rgba(0,0,0,.25);color:var(--muted);transition:.15s}
-  .chip:hover{border-color:var(--accent);color:var(--accent)}
-  .chip.on{border-color:rgba(110,160,255,.6);background:rgba(110,160,255,.14);color:var(--ink)}
-  .chip:focus-visible,.btn:focus-visible,.focus:focus-visible{outline:2px solid var(--accent);outline-offset:2px}
-  .focus{margin-left:auto;font-family:var(--mono);font-size:.68rem;letter-spacing:.1em;text-transform:uppercase;padding:6px 12px;
-    border-radius:999px;border:1px solid var(--line);background:rgba(0,0,0,.25);color:var(--muted);cursor:pointer;transition:.15s}
-  .focus:hover{border-color:var(--accent);color:var(--accent)}
-  body.solo .focus{border-color:rgba(255,200,98,.6);color:var(--gold);background:rgba(255,200,98,.1)}
+  .board{display:flex;flex-direction:column;gap:18px;min-height:360px}
+  .lane{display:grid;grid-template-columns:200px minmax(0,1fr);gap:16px;align-items:center}
+  @media (max-width:820px){.lane{grid-template-columns:1fr;gap:10px}}
 
-  /* hero picture */
-  .pic{position:relative;height:390px;border:1px solid var(--line);border-radius:18px;background:rgba(6,10,20,.5);overflow:hidden}
-  body.solo .pic{height:480px}
-  .pic .zone{position:absolute;top:14px;font-family:var(--mono);font-size:.62rem;letter-spacing:.14em;text-transform:uppercase;
-    color:rgba(132,150,182,.55);transition:opacity .3s}
-  .pic svg{position:absolute;inset:0;width:100%;height:100%;pointer-events:none;overflow:visible}
-  .arr{fill:none;stroke-width:2.2;stroke:rgba(110,160,255,.55);stroke-dasharray:1;stroke-dashoffset:1;opacity:0;
-    transition:stroke-dashoffset .7s cubic-bezier(.2,.9,.3,1),opacity .3s,stroke .3s,stroke-width .3s,d .6s cubic-bezier(.45,0,.25,1)}
-  .arr.show{stroke-dashoffset:0;opacity:1}
-  .arr.acc{stroke:var(--accent);stroke-width:2.8} .arr.gold{stroke:var(--gold);stroke-width:2.8}
-  .arr.ok{stroke:var(--good);stroke-width:2.8} .arr.warn{stroke:var(--warn);stroke-width:2.8}
-  .arr.dim{opacity:.28}
-  .var{position:absolute;display:flex;align-items:center;gap:8px;padding:0 12px;border-radius:12px;
-    border:1px solid rgba(110,160,255,.35);background:rgba(110,160,255,.07);opacity:0;transform:translateX(-10px);
-    transition:opacity .4s,transform .4s,border-color .3s,background .3s}
+  /* variable labels */
+  .vars{display:flex;flex-direction:column;gap:8px}
+  .var{display:flex;flex-direction:column;gap:7px;padding:10px 12px;border-radius:12px;border:1px solid rgba(255,255,255,.18);
+    background:rgba(255,255,255,.045);opacity:0;transform:translateY(-10px);transition:opacity .4s,transform .45s cubic-bezier(.2,.9,.3,1),border-color .3s,box-shadow .3s}
   .var.show{opacity:1;transform:none}
-  .var .nmv{font-family:var(--mono);font-size:1rem;color:var(--ink);font-weight:500}
-  .var .ref{margin-left:auto;flex-shrink:0;width:11px;height:11px;border-radius:50%;background:rgba(110,160,255,.6);transition:background .3s}
-  .var.acc{border-color:rgba(110,160,255,.8);background:rgba(110,160,255,.15)} .var.acc .ref{background:var(--accent)}
-  .var.gold{border-color:rgba(255,200,98,.7);background:rgba(255,200,98,.1)} .var.gold .ref{background:var(--gold)}
-  .var.ok{border-color:rgba(70,217,138,.7);background:rgba(70,217,138,.1)} .var.ok .ref{background:var(--good)}
-  .var.warn{border-color:rgba(255,106,106,.7);background:rgba(255,106,106,.1)} .var.warn .ref{background:var(--warn)}
-  .var.dim{opacity:.4}
-  /* an array: a frame of slots with indexes under them */
-  .row{position:absolute;border-radius:14px;border:1px solid rgba(255,255,255,.16);background:rgba(255,255,255,.03);
-    opacity:0;transform:scale(.96);transition:opacity .45s,transform .45s,border-color .3s,box-shadow .3s}
-  .row.show{opacity:1;transform:none}
-  .row.acc{border-color:rgba(110,160,255,.7);box-shadow:0 0 22px -8px rgba(110,160,255,.8)}
-  .row.gold{border-color:rgba(255,200,98,.7);box-shadow:0 0 22px -8px rgba(255,200,98,.8)}
-  .row.ok{border-color:rgba(70,217,138,.7);box-shadow:0 0 22px -8px rgba(70,217,138,.8)}
-  .row.warn{border-color:rgba(255,106,106,.7);box-shadow:0 0 22px -8px rgba(255,106,106,.8)}
-  .rh{position:absolute;font-family:var(--mono);font-size:.62rem;letter-spacing:.12em;text-transform:uppercase;color:var(--accent);
-    opacity:0;transition:opacity .4s;white-space:nowrap}
-  .rh.show{opacity:1}
-  .slot{position:absolute;border-radius:9px;border:1px dashed rgba(255,255,255,.14)}
-  .ix{position:absolute;text-align:center;font-family:var(--mono);font-size:.6rem;color:rgba(132,150,182,.7)}
-  .rh.warn{color:var(--warn)} .rh.dim{color:var(--muted)}
-  .row.lost{opacity:.4;border-style:dashed}
-  .val{position:absolute;display:flex;align-items:center;justify-content:center;border-radius:9px;font-family:var(--mono);
-    font-size:.84rem;color:var(--ink);background:rgba(110,160,255,.1);border:1px solid rgba(110,160,255,.4);opacity:0;
-    transition:left .6s cubic-bezier(.45,0,.25,1),top .6s cubic-bezier(.45,0,.25,1),transform .28s cubic-bezier(.2,.9,.3,1),opacity .4s,background .3s,border-color .3s,color .3s}
-  .val.show{opacity:1}
-  .val.lift{transform:translateY(-22px);z-index:3;box-shadow:0 10px 24px -8px rgba(0,0,0,.8)}
-  .val.lift.far{transform:translateY(-44px);z-index:4}
-  .val.nul{background:transparent;border:1px dashed rgba(132,150,182,.35);color:rgba(132,150,182,.7)}
-  .val.gold{background:rgba(255,200,98,.16);border-color:var(--gold);color:var(--gold)}
-  .val.ok{background:rgba(70,217,138,.14);border-color:var(--good);color:var(--good)}
-  .val.warn{background:rgba(255,106,106,.12);border-color:var(--warn);color:var(--ink)}
-  .val.nul.ok{background:rgba(70,217,138,.06);border-style:dashed}
-  .val.dim{opacity:.3}
-  .val.small{font-size:.7rem}
-  .look{position:absolute;font-family:var(--mono);font-size:.6rem;letter-spacing:.06em;color:var(--gold);text-align:center;
-    opacity:0;transition:opacity .3s;white-space:nowrap}
-  .look.show{opacity:1}
-  .answer{position:absolute;left:18px;bottom:14px;font-family:var(--disp);font-weight:700;font-size:1.3rem;color:var(--ink);
-    opacity:0;transition:opacity .4s;line-height:1.15;max-width:calc(100% - 36px)}
-  .answer.show{opacity:1}
-  .answer small{display:block;font-family:var(--mono);font-weight:400;font-size:.6rem;letter-spacing:.14em;text-transform:uppercase;color:var(--muted);margin-bottom:3px}
-  .answer .g{color:var(--good)} .answer .w{color:var(--warn)} .answer .y{color:var(--gold)}
-  .answer .p{font-family:var(--mono);font-weight:500;font-size:.82rem;color:var(--good);background:rgba(70,217,138,.1);padding:3px 8px;border-radius:6px}
-  .pic .start{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;font-family:var(--mono);
-    font-size:.8rem;color:var(--muted);pointer-events:none;transition:opacity .3s}
-  .pic .start b{color:var(--accent);font-weight:500}
-  /* caption: the one sentence, right under the picture */
-  .caption{display:flex;gap:16px;align-items:flex-start;margin:14px 4px 0;min-height:56px}
-  .caption .n{flex-shrink:0;font-family:var(--disp);font-weight:700;font-size:1.35rem;color:var(--accent);font-variant-numeric:tabular-nums;
-    line-height:1.2;min-width:3.2rem}
-  .caption .n small{display:block;font-family:var(--mono);font-weight:400;font-size:.58rem;letter-spacing:.14em;text-transform:uppercase;color:var(--muted)}
-  .caption .t{font-size:1.02rem;line-height:1.55;color:var(--ink);padding-left:16px;border-left:3px solid var(--accent);transition:border-color .3s}
-  body.solo .caption .t{font-size:1.18rem}
-  .caption.cut .t{border-left-color:var(--warn)} .caption.left .t{border-left-color:var(--gold)} .caption.ok .t{border-left-color:var(--good)}
-  .caption b.g{color:var(--good)} .caption b.w{color:var(--warn)} .caption b.a{color:var(--accent)} .caption b.y{color:var(--gold)}
+  .var.act{border-color:rgba(255,200,98,.75);box-shadow:0 0 22px -8px rgba(255,200,98,.8)}
+  .var .nm{display:flex;align-items:center;justify-content:space-between;gap:8px;font-family:var(--mono);font-size:.9rem;color:var(--ink)}
+  .var .nm i{font-style:normal;color:#82aaff;font-size:.74rem;margin-right:6px}
+  .var .nm b{font-weight:500;color:var(--accent);font-size:1.15rem}
+  .var.al{border-style:dashed}
+  .hd{font-family:var(--mono);font-size:.6rem;letter-spacing:.16em;text-transform:uppercase;color:var(--muted);margin:0}
 
-  /* toolbar: same on every page */
-  .toolbar{display:flex;align-items:center;gap:10px;margin:16px 0 0;padding-top:14px;border-top:1px solid var(--line)}
-  .btn{font-family:var(--body);font-weight:500;font-size:.86rem;padding:9px 16px;border-radius:11px;cursor:pointer;
-    border:1px solid var(--line);background:var(--surface);color:var(--ink);transition:.15s}
-  .btn:hover{border-color:var(--accent);color:var(--accent)}
-  .btn.primary{border-color:rgba(110,160,255,.5);background:rgba(110,160,255,.12);padding:9px 22px}
-  .btn:disabled{opacity:.35;cursor:not-allowed}
-  .btn.ghost{background:transparent;color:var(--muted);margin-left:auto}
-  .dots{display:flex;gap:5px;align-items:center;margin:0 6px}
-  .dots i{display:block;width:8px;height:8px;border-radius:50%;background:rgba(255,255,255,.12);transition:.2s}
-  .dots i.done{background:rgba(110,160,255,.45)}
-  .dots i.now{background:var(--accent);transform:scale(1.35);box-shadow:0 0 10px rgba(110,160,255,.7)}
-  .hint{font-family:var(--mono);font-size:.68rem;color:var(--muted);margin:10px 4px 0;line-height:1.5}
-  .hint b{color:var(--accent)}
+  /* the row of boxes */
+  .arr{position:relative;border-radius:16px;padding:12px 10px 8px;border:1px solid var(--line);background:rgba(0,0,0,.18);
+    transition:border-color .3s,box-shadow .3s}
+  .arr.flash{border-color:rgba(255,200,98,.6);box-shadow:0 0 30px -10px rgba(255,200,98,.7)}
+  .arr.cp{border-color:rgba(70,217,138,.45)}
+  .slots{position:relative;height:92px}
+  .box{position:absolute;top:0;height:92px;width:calc(100% / 7 - 8px);margin-left:4px;border-radius:11px;
+    border:1px solid rgba(255,255,255,.16);background:rgba(255,255,255,.05);display:flex;flex-direction:column;align-items:center;
+    justify-content:flex-end;gap:7px;padding:8px 4px;transition:left .5s cubic-bezier(.2,.9,.3,1),border-color .3s,background .3s}
+  .box .sw{width:72%;flex:1;border-radius:7px;border:1px solid rgba(255,255,255,.2);transition:background .3s}
+  .box .w{font-family:var(--mono);font-size:.74rem;color:#c3e88d;max-width:100%;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+  .box.chg{border-color:rgba(255,200,98,.8);background:rgba(255,200,98,.12)}
+  .ghost b{color:var(--accent);font-weight:500}
+  .box.chg .w{color:var(--gold);animation:pop .45s}
+  .idx{display:grid;grid-template-columns:repeat(7,1fr);margin-top:6px;font-family:var(--mono);font-size:.66rem;color:var(--muted);text-align:center}
+  .ghost{display:flex;align-items:center;justify-content:center;min-height:120px;border:1px dashed rgba(255,255,255,.08);border-radius:16px;
+    font-family:var(--mono);font-size:.8rem;color:var(--muted);text-align:center;padding:10px}
+  .lane.cpl .arr{opacity:0;transform:translateY(-16px);transition:opacity .45s,transform .5s cubic-bezier(.2,.9,.3,1),border-color .3s,box-shadow .3s}
+  .lane.cpl.on .arr{opacity:1;transform:none}
 
-  /* support: code, console, readouts. Below the picture, hidden in focus */
-  .support{display:grid;grid-template-columns:minmax(0,1.45fr) minmax(0,1fr);gap:14px;margin-top:18px}
-  @media (max-width:860px){.support{grid-template-columns:1fr}}
-  body.solo .support,body.solo .take,body.solo .hint{display:none}
-  .code{min-width:0;font-family:var(--mono);font-size:.76rem;line-height:1.8;background:rgba(0,0,0,.35);border:1px solid var(--line);
-    border-radius:14px;padding:12px 0;overflow-x:auto}
-  .ln{display:flex;gap:12px;padding:0 14px;white-space:pre;color:#c9d4ea;transition:background .2s,opacity .3s}
-  .ln .n{width:20px;text-align:right;color:rgba(132,150,182,.55);user-select:none;flex-shrink:0}
-  .ln.cur{background:rgba(110,160,255,.14);box-shadow:inset 3px 0 0 var(--accent)}
-  .ln.cur .n{color:var(--accent)}
-  .ln.cut{background:rgba(255,106,106,.12);box-shadow:inset 3px 0 0 var(--warn)}
-  .ln.left{background:rgba(255,200,98,.12);box-shadow:inset 3px 0 0 var(--gold)}
-  .ln.ok{background:rgba(70,217,138,.1);box-shadow:inset 3px 0 0 var(--good)}
-  .ln.dim{opacity:.4}
-  .kw{color:#c792ea} .ty{color:#82aaff} .st{color:#c3e88d} .nm{color:#f78c6c} .cm{color:#5f6b85;font-style:italic} .fn{color:#ffcb6b}
-  .side{display:flex;flex-direction:column;gap:12px}
-  .readout{display:grid;grid-template-columns:1fr 1fr;gap:10px}
-  .stat{min-width:0;background:rgba(255,255,255,.03);border:1px solid var(--line);border-radius:12px;padding:11px 13px;transition:opacity .3s}
-  .stat.empty{opacity:.3}
-  .stat .k{font-family:var(--mono);font-size:.62rem;letter-spacing:.1em;text-transform:uppercase;color:var(--muted)}
-  .stat .v{font-family:var(--disp);font-weight:700;font-size:1.45rem;font-variant-numeric:tabular-nums;margin-top:2px;transition:color .3s;min-height:1.6em;
-    white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
-  .v.hot{color:var(--accent)} .v.gold{color:var(--gold)} .v.warn{color:var(--warn)} .v.ok{color:var(--good)} .v.dim{color:rgba(132,150,182,.5)}
-  .console{font-family:var(--mono);font-size:.76rem;line-height:1.6;background:#05070e;border:1px solid var(--line);
-    border-radius:12px;padding:10px 14px;min-height:64px;max-height:290px;overflow-y:auto;color:#9fe3b6;flex:1}
-  .console .cl{font-size:.6rem;letter-spacing:.14em;text-transform:uppercase;color:rgba(132,150,182,.6);margin-bottom:4px}
-  .console .out{white-space:pre}
-  .console .out.new{animation:pop .3s}
+  /* buttons on the picture */
+  .acts{display:flex;flex-wrap:wrap;gap:8px}
+  .acts button,.var button{font-family:var(--mono);font-size:.76rem;padding:8px 10px;border-radius:9px;cursor:pointer;
+    border:1px solid var(--line);background:rgba(0,0,0,.25);color:#ffcb6b;transition:.15s;text-align:left}
+  .acts button:hover,.var button:hover{border-color:var(--gold);background:rgba(255,200,98,.1)}
+  .acts button.nw{color:#dbe6ff;border-color:rgba(110,160,255,.55);background:rgba(110,160,255,.12)}
+  .acts button.nw:hover{border-color:var(--accent);background:rgba(110,160,255,.24)}
+  button:disabled{opacity:.3;cursor:not-allowed}
+  .acts button b{font-weight:500;color:var(--gold)}
+  @media (max-width:820px){.box .w{font-size:.56rem}.box{width:calc(100% / 7 - 4px);margin-left:2px;padding:6px 1px}.box .sw{width:80%}.acts button{flex:1 1 100%}}
+
+  /* the one sentence */
+  .caption{display:flex;gap:14px;align-items:flex-start;margin:18px 2px 0;padding-top:16px;border-top:1px solid var(--line)}
+  .caption .t{flex:1;font-size:1.05rem;line-height:1.55;color:var(--ink);padding-left:16px;border-left:3px solid var(--accent);transition:border-color .3s}
+  .caption .t .line{display:block;margin-top:6px;font-family:var(--mono);font-size:.8rem;color:#bcd0ff;opacity:.9}
+  .caption.y .t{border-left-color:var(--gold)} .caption.g .t{border-left-color:var(--good)} .caption.w .t{border-left-color:var(--warn)}
+  .caption b.a{color:var(--accent)} .caption b.y{color:var(--gold)} .caption b.g{color:var(--good)} .caption b.w{color:var(--warn)}
+  .reset{font-family:var(--body);font-weight:500;font-size:.84rem;padding:8px 14px;border-radius:11px;cursor:pointer;
+    border:1px solid var(--line);background:transparent;color:var(--muted);transition:.15s;flex-shrink:0}
+  .reset:hover{border-color:var(--accent);color:var(--accent)}
+  button:focus-visible,input:focus-visible{outline:2px solid var(--accent);outline-offset:2px}
+
   @keyframes pop{from{transform:scale(.6);opacity:0}to{transform:scale(1);opacity:1}}
   .take{margin-top:22px;background:linear-gradient(180deg,rgba(110,160,255,.08),rgba(139,123,255,.04));
     border:1px solid var(--line);border-left:3px solid var(--accent);border-radius:12px;padding:16px 18px}
@@ -176,340 +105,153 @@
 </style>
 </head>
 <body>
-
 <a class="back" href="../index.html#16-sort-and-copy">&#8592; Week 2 index</a>
-
 <canvas id="amb"></canvas>
 <div class="wrap">
   <p class="tag">Workbook 2a &middot; Section 3-2 &middot; Arrays</p>
   <h1>Sorting and Copying Arrays</h1>
-  <p class="lede"><b><code>Arrays.sort</code> reorders the array itself, and <code>copy = colors</code> would copy only the arrow: a real copy is a second array.</b></p>
+  <p class="lede"><b>Sort the boxes, copy the boxes, or just give them a second name.</b></p>
 
   <div class="stage">
-    <div class="topbar">
-      <span class="lab">Part</span>
-      <div class="chips" id="chips"></div>
-      <button class="focus" id="bFocus" title="Hide the code and notes, enlarge the picture">Focus</button>
-    </div>
-
-    <div class="pic" id="pic"></div>
-
-    <div class="caption" id="caption">
-      <div class="n" id="stepno"><small>step</small>0 / 7</div>
-      <div class="t" id="status">Press <b class="a">Next</b>. The picture changes at every step.</div>
-    </div>
-
-    <div class="toolbar">
-      <button class="btn" id="bBack">&larr; Back</button>
-      <div class="dots" id="dots"></div>
-      <button class="btn primary" id="bNext">Next &rarr;</button>
-      <button class="btn ghost" id="bReset">Reset</button>
-    </div>
-    <p class="hint">space = next &middot; <b>arrow</b> = reference &middot; <b>row of slots</b> = one array &middot; sort and copy are two separate walks</p>
-
-    <div class="support">
-      <div>
-        <p class="lab" id="file">Main2.java</p>
-        <div class="code" id="code"></div>
-      </div>
-      <div class="side">
-        <div class="readout">
-          <div class="stat empty"><div class="k">arrays in memory</div><div class="v dim" id="t0"></div></div>
-          <div class="stat empty"><div class="k" id="k1">arrows into it</div><div class="v dim" id="t1"></div></div>
-          <div class="stat empty"><div class="k" id="k2">nameList[0]</div><div class="v dim" id="t2"></div></div>
-          <div class="stat empty"><div class="k" id="k3">nameList[8]</div><div class="v dim" id="t3"></div></div>
+    <div class="board">
+      <div class="lane">
+        <div class="vars">
+          <div class="var show" id="vColors"><p class="hd">variable</p><span class="nm"><span><i>String[]</i>colors</span><b>&rarr;</b></span></div>
+          <div class="var al" id="vAlias"><p class="hd">second name</p><span class="nm"><span><i>String[]</i>alias</span><b>&rarr;</b></span>
+            <button id="bAliasSet">alias[1] = "black";</button></div>
         </div>
-        <div class="console" id="cbox"><div class="cl">console</div><div id="console"></div></div>
+        <div>
+          <div class="arr" id="rowA"><div class="slots" id="slotsA"></div><div class="idx" id="idxA"></div></div>
+        </div>
       </div>
+      <div class="acts" id="acts">
+        <button id="bSort">Arrays.<b>sort</b>(colors)</button>
+        <button class="nw" id="bCopy">String[] fullCopy = Arrays.<b>copyOf</b>(colors, colors.length)</button>
+        <button class="nw" id="bAlias">String[] alias = colors</button>
+      </div>
+      <div class="lane cpl" id="laneB">
+        <div class="vars">
+          <div class="var" id="vCopy"><p class="hd">its own array</p><span class="nm"><span><i>String[]</i>fullCopy</span><b>&rarr;</b></span>
+            <button id="bCopySet">fullCopy[1] = "black";</button></div>
+        </div>
+        <div>
+          <div class="ghost" id="ghostB"><span>No second array yet. Only <b>copyOf</b> makes new boxes.</span></div>
+          <div class="arr cp" id="rowB" hidden><div class="slots" id="slotsB"></div><div class="idx" id="idxB"></div></div>
+        </div>
+      </div>
+    </div>
+    <div class="caption" id="caption">
+      <div class="t" id="status">One array of seven colors, and one variable, <b class="a">colors</b>, that points at it.</div>
+      <button class="reset" id="bReset">Reset</button>
     </div>
   </div>
 
   <div class="take">
     <p class="tk">The one idea</p>
-    <p><b><code>Arrays.sort</code> sorts the array itself</b>: same array, values moved to new slots. Assigning one array
-    variable to another copies the reference, so you get two names for one array. <b><code>new String[7]</code> is a real second
-    array and <code>System.arraycopy</code> fills it</b>, and a change to <code>colors</code> does not reach the copy.</p>
+    <p><b><code>Arrays.sort</code> reorders the same boxes</b>; the variable still points at them. <b><code>Arrays.copyOf</code> builds
+    a second row of boxes</b>, so a change to one leaves the other alone. <b><code>alias = colors</code> copies only the arrow</b>:
+    two names, one array, and a change through either name shows in both.</p>
   </div>
-
   <div id="rail"></div>
 </div>
-
 <script>
 (function(){
   "use strict";
   var $=function(s){return document.querySelector(s);};
   var reduce=matchMedia("(prefers-reduced-motion: reduce)").matches;
+  var START=["red","white","blue","yellow","orange","green","brown"];
+  var HEX={red:"#ff6a6a",white:"#eef2fb",blue:"#6ea0ff",yellow:"#ffc862",orange:"#ff9a52",green:"#46d98a",brown:"#9c6a43",black:"#0b0b10"};
+  var rowA,rowB,hasCopy,hasAlias;
+  var status=$("#status"),caption=$("#caption");
 
-  /* ---------- the values ---------- */
-  var NAMES=["Natalie","Brittany","Zachary","Ezra","Ian","Siddalee","Elisha","Pursalane","Zephaniah"];
-  var START=[0,1,2,3,4,5,6,7,8];
-  var AZ=START.slice().sort(function(a,b){return NAMES[a]<NAMES[b]?-1:1;});
-  var ORD={start:START,az:AZ};
-  function names(o){ return ORD[o].map(function(k){return NAMES[k];}); }
-  var COLORS=["red","white","blue","yellow","orange","green","brown"];
-  var AFTER=COLORS.slice(); AFTER[1]="black";
-  var COPIED=[null,null,"blue","yellow","orange",null,null];
-
-  /* ---------- code: two files, each line keyed for the steps ---------- */
-  var S='<span class="st">', E='</span>', TY='<span class="ty">String</span>[]', AR='<span class="ty">Arrays</span>.';
-  var PR='System.out.<span class="fn">println</span>(', FE='<span class="kw">for</span> (<span class="ty">String</span> ';
-  function q(w){ return S+'"'+w+'"'+E; }
-  function cm(t){ return '  <span class="cm">// '+t+'</span>'; }
-  var CODE={
-    s:[
-      ["decl",TY+' nameList = {'],
-      ["decl",'        '+["Natalie","Brittany","Zachary","Ezra","Ian"].map(q).join(", ")+','],
-      ["decl",'        '+["Siddalee","Elisha","Pursalane","Zephaniah"].map(q).join(", ")],
-      ["decl",'};'],
-      ["",""],
-      ["sort",AR+'<span class="fn">sort</span>(nameList);'+cm("sorts the array itself, A to Z")],
-      ["sort",FE+'name : nameList) {'],
-      ["sort",'    '+PR+'name);'],
-      ["sort",'}']
-    ],
-    c:[
-      ["decl",TY+' colors = {'+["red","white","blue","yellow"].map(q).join(", ")+','],
-      ["decl",'        '+["orange","green","brown"].map(q).join(", ")+'};'],
-      ["new",TY+' copy = <span class="kw">new</span> <span class="ty">String</span>[<span class="nm">7</span>];'],
-      ["alias",'<span class="cm">//copy = colors;  // not a copy: two names for the same array</span>'],
-      ["ac",'System.<span class="fn">arraycopy</span>(colors, <span class="nm">2</span>, copy, <span class="nm">2</span>, <span class="nm">3</span>);'+cm("source, from, dest, to, how many")],
-      ["chg",'colors[<span class="nm">1</span>] = '+q("black")+';'+cm("changes colors only")],
-      ["pr",PR+q("Colors:")+');'],
-      ["pr",FE+'color : colors) {'],
-      ["pr",'    '+PR+'color);'],
-      ["pr",'}'],
-      ["pr",PR+q("Copy:")+');'],
-      ["pr",FE+'copyElement : copy) {'],
-      ["pr",'    '+PR+'copyElement);'+cm("slots not copied stay null")],
-      ["pr",'}']
-    ]
-  };
-  var FILE={s:"Main2.java",c:"Main3.java"};
-
-  /* ---------- the walk ---------- */
-  var B2={2:"gold",3:"gold",4:"gold"};
-  var ALL=[
-    {sc:"s",keys:["decl"],cls:"",ord:"start",row:"acc",v:"acc",t:["1","1",NAMES[0],NAMES[8]],
-     msg:'<code>nameList</code> holds <b class="a">a reference</b> (the arrow) to one array of nine names, in the order written.'},
-    {sc:"s",keys:["sort"],cls:"left",ord:"az",anim:true,row:"gold",v:"",out:names("az"),t:["1","1",names("az")[0],names("az")[8]],hot:[2,3],
-     badge:'<small>Arrays.sort(nameList)</small><span class="y">same array, new order</span>',
-     msg:'<code>Arrays.sort</code> moves the names A to Z <b class="y">inside the same array</b>. No new array, same arrow.'},
-
-    {sc:"c",keys:["decl","new"],cls:"",vars:{colors:"acc",copy:"acc"},to:"B",A:{st:"acc"},B:{st:"acc"},t:["2","1","white","null"],hot:[0],
-     msg:'<code>colors</code> points at seven values. <code>new String[7]</code> makes <b class="a">a second array</b>: seven slots, all null.'},
-    {sc:"c",keys:["alias"],cls:"cut",vars:{colors:"warn",copy:"warn"},to:"A",A:{st:"warn"},B:{lost:true},t:["2","2","white","white"],hot:[1],
-     badge:'<small>if copy = colors; ran</small><span class="w">2 arrows, 1 array</span>',
-     msg:'<code>copy = colors;</code> would copy the arrow, not the values: <b class="w">two names, one array</b>. So it stays commented out.'},
-    {sc:"c",keys:["ac"],cls:"left",vars:{colors:"",copy:"gold"},to:"B",A:{slots:B2},B:{st:"gold",filled:true,slots:B2},fly:"B",looks:true,
-     t:["2","1","white","null"],
-     badge:'<small>arraycopy(colors, 2, copy, 2, 3)</small><span class="y">3 values copied</span>',
-     msg:'<code>arraycopy</code> copies <b class="y">3 values</b>: from index 2 of colors into copy, starting at index 2.'},
-    {sc:"c",keys:["chg"],cls:"left",vars:{colors:"gold",copy:""},to:"B",A:{slots:{1:"gold"}},black:true,B:{filled:true,slots:{1:"ok"}},
-     t:["2","1","black","null"],hot:[2],
-     msg:'<code>colors[1] = "black"</code> changes colors only. <code>copy[1]</code> is still <b class="g">null</b>: a separate array.'},
-    {sc:"c",keys:["pr"],cls:"ok",vars:{colors:"ok",copy:"ok"},to:"B",A:{st:"ok",all:"ok"},black:true,B:{st:"ok",filled:true,all:"ok"},
-     out:["Colors:"].concat(AFTER,["Copy:"],COPIED.map(String)),t:["2","1","black","null"],
-     msg:'The two loops print both arrays. The slots <code>arraycopy</code> did not fill print <b class="g">null</b>.'}
-  ];
-  var PART="s";
-  var STEPS=ALL.filter(function(x){ return x.sc===PART; });
-  var FIRST={s:0,c:2};
-  var LABELS={s:["arrows into it","nameList[0]","nameList[8]"],c:["arrows into colors' array","colors[1]","copy[1]"]};
-
-  var at=-1, token=0;
-  var picEl=$("#pic"),codeEl=$("#code"),consEl=$("#console"),statusEl=$("#status");
-
-  function renderCode(sc,keys,cls){
-    $("#file").textContent=FILE[sc];
-    codeEl.innerHTML=CODE[sc].map(function(l,i){
-      var n=i+1,c="ln";
-      if(keys&&l[0]&&keys.indexOf(l[0])>=0) c+=" "+(cls==="cut"?"cut":cls==="left"?"left":cls==="ok"?"ok":"cur");
-      return '<div class="'+c+'"><span class="n">'+n+'</span><span>'+(l[1]||" ")+'</span></div>';
-    }).join("");
+  function say(html,tone,line){
+    caption.className="caption"+(tone?" "+tone:"");
+    status.innerHTML=html+(line?'<span class="line">'+line+'</span>':"");
   }
-
-  /* ---------- the picture ---------- */
-  var VARS=["nameList","colors","copy"];
-  var ROWS={S:9,A:7,B:7};
-  var RNAME={S:"array 1",A:"array 1",B:"array 2"};
-  function buildPic(){
-    var h='<span class="zone" id="zv">variables</span><span class="zone" id="zo">arrays</span>';
-    h+='<svg id="svg"><defs>';
-    [["mN","rgba(110,160,255,.55)"],["macc","#6ea0ff"],["mgold","#ffc862"],["mok","#46d98a"],["mwarn","#ff6a6a"]].forEach(function(m){
-      h+='<marker id="'+m[0]+'" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse">'+
-         '<path d="M0,0 L10,5 L0,10 z" fill="'+m[1]+'"/></marker>';
+  function idx(el){ var h=""; for(var i=0;i<7;i++) h+="<span>["+i+"]</span>"; el.innerHTML=h; }
+  function place(b){ b.el.style.left="calc("+b.slot+" * 100% / 7)"; }
+  function paint(b){ b.el.querySelector(".sw").style.background=HEX[b.v]||"#555"; b.el.querySelector(".w").textContent='"'+b.v+'"'; }
+  function build(host,vals){
+    host.innerHTML=""; var list=[];
+    vals.forEach(function(v,i){
+      var el=document.createElement("div"); el.className="box";
+      el.innerHTML='<span class="sw"></span><span class="w"></span>';
+      host.appendChild(el); var b={el:el,v:v,slot:i}; place(b); paint(b); list.push(b);
     });
-    h+='</defs>';
-    VARS.forEach(function(v){ h+='<path class="arr" id="arr-'+v+'" pathLength="1"/>'; });
-    h+='</svg>';
-    VARS.forEach(function(v){ h+='<div class="var" id="var-'+v+'"><span class="nmv">'+v+'</span><span class="ref"></span></div>'; });
-    Object.keys(ROWS).forEach(function(r){
-      h+='<span class="rh" id="rh'+r+'"></span><div class="row" id="row'+r+'"></div>';
-      for(var i=0;i<ROWS[r];i++) h+='<div class="slot" id="s'+r+i+'"></div><span class="ix" id="ix'+r+i+'">'+i+'</span>';
-    });
-    var i;
-    for(i=0;i<9;i++) h+='<div class="val" id="n'+i+'">'+NAMES[i]+'</div>';
-    for(i=0;i<7;i++) h+='<div class="val" id="a'+i+'"></div><div class="val" id="b'+i+'"></div>';
-    h+='<span class="look" id="lk1">from index 2</span><span class="look" id="lk2">to index 2</span>';
-    h+='<div class="start" id="start">nine names \u00b7 press\u00a0<b>Next</b></div><div class="answer" id="ans"></div>';
-    picEl.innerHTML=h;
+    return list;
   }
-  function place(el,x,y,w,hh){ el.style.left=x+"px"; el.style.top=y+"px"; if(w) el.style.width=w+"px"; if(hh) el.style.height=hh+"px"; }
-  function geo(){
-    var W=picEl.clientWidth||900,H=picEl.clientHeight||390,gap=8,g={W:W,H:H,gap:gap,vh:44};
-    g.vx=Math.max(16,Math.round(W*0.025));
-    /* sort part: one wide row of nine, the variable above it */
-    g.sv={x:g.vx,y:Math.round(H*0.1),w:150};
-    g.S={x:g.vx,y:Math.round(H*0.4),sh:46};
-    g.S.sw=Math.min(118,(W-2*g.vx-20-8*gap)/9);
-    /* copy part: variables on the left, two rows of seven */
-    g.vw=Math.min(150,Math.max(118,Math.round(W*0.14)));
-    g.rx=g.vx+g.vw+Math.max(44,Math.round(W*0.06));
-    g.csw=Math.min(118,(W-g.rx-24-20-6*gap)/7);
-    g.ry={A:Math.round(H*0.12)+4,B:Math.round(H*0.48)+4};
-    return g;
-  }
-  function slotX(g,r,i){ return (r==="S"?g.S.x:g.rx)+10+i*((r==="S"?g.S.sw:g.csw)+g.gap); }
-  function rowY(g,r){ return r==="S"?g.S.y:g.ry[r]; }
-  function sw(g,r){ return r==="S"?g.S.sw:g.csw; }
-  function sh(r){ return r==="S"?46:40; }
-  var LAND={colors:-8,copy:12};
+  function vals(row){ var out=[]; row.forEach(function(b){ out[b.slot]=b.v; }); return out; }
+  function at(row,i){ for(var k=0;k<row.length;k++) if(row[k].slot===i) return row[k]; return null; }
+  function flash(el){ el.classList.remove("flash"); void el.offsetWidth; el.classList.add("flash"); setTimeout(function(){ el.classList.remove("flash"); },900); }
+  function act(ids){ ["#vColors","#vAlias","#vCopy"].forEach(function(s){ $(s).classList.toggle("act",ids.indexOf(s)>=0); }); }
+  function clearChg(row){ row.forEach(function(b){ b.el.classList.remove("chg"); }); }
 
-  function drawRow(g,r,R,label,lc){
-    var n=ROWS[r], w=sw(g,r), x0=r==="S"?g.S.x:g.rx, y=rowY(g,r), show=!!R, i;
-    place($("#row"+r),x0,y,n*w+(n-1)*g.gap+20,sh(r)+34);
-    $("#row"+r).className="row"+(show?" show"+(R.st?" "+R.st:"")+(R.lost?" lost":""):"");
-    var rh=$("#rh"+r); place(rh,x0+4,y-17); rh.textContent=label||RNAME[r]; rh.className="rh"+(show?" show"+(lc?" "+lc:""):"");
-    for(i=0;i<n;i++){
-      place($("#s"+r+i),slotX(g,r,i),y+10,w,sh(r)); $("#s"+r+i).style.opacity=show?1:0;
-      place($("#ix"+r+i),slotX(g,r,i),y+sh(r)+14,w); $("#ix"+r+i).style.opacity=show?1:0;
+  function sort(){
+    var before=vals(rowA).join(), order=rowA.slice().sort(function(a,b){ return a.v<b.v?-1:a.v>b.v?1:a.slot-b.slot; });
+    clearChg(rowA);
+    if(order.map(function(b){return b.v;}).join()===before){
+      act(["#vColors"]);
+      say('The boxes are <b class="a">already A to Z</b>, so nothing moves. Same array, same order.',"","Arrays.sort(colors);");
+      return;
     }
+    order.forEach(function(b,i){ b.slot=i; place(b); });
+    flash($("#rowA")); act(hasAlias?["#vColors","#vAlias"]:["#vColors"]);
+    var tail=hasAlias?' <b class="y">alias</b> sees the new order too, it is the same row.'
+      :(hasCopy?' <b class="g">fullCopy</b> keeps the old order, it is its own row.':' No new array was made.');
+    say('<b class="y">Arrays.sort</b> slid <b class="y">the same seven boxes</b> into A to Z order; <b class="a">colors</b> still points at this row.'+tail,
+      "y","Arrays.sort(colors);");
   }
-  function arrow(v,st,d){
-    var p=$("#arr-"+v), shown=st!==undefined;
-    if(d){ p.setAttribute("d",d); p.style.d='path("'+d+'")'; }
-    p.setAttribute("marker-end","url(#m"+(st&&st!=="dim"?st:"N")+")");
-    p.setAttribute("class","arr"+(shown?" show"+(st?" "+st:""):""));
+  function copy(){
+    if(hasCopy) return; hasCopy=true;
+    rowB=build($("#slotsB"),vals(rowA));
+    $("#ghostB").hidden=true; $("#rowB").hidden=false;
+    $("#laneB").classList.add("on"); $("#vCopy").classList.add("show");
+    if(reduce) $("#laneB").classList.add("on");
+    $("#bCopy").disabled=true; $("#bCopySet").disabled=false; act(["#vCopy"]);
+    say('<b class="g">copyOf</b> built <b class="g">seven new boxes</b> with the same values, and <b class="g">fullCopy</b> points at them, not at colors.',
+      "g","String[] fullCopy = Arrays.copyOf(colors, colors.length);");
   }
-  function setVal(e,text,cls,small){ e.textContent=text; e.className="val show"+(text==="null"?" nul":"")+(cls?" "+cls:"")+(small?" small":""); }
-
-  function renderPic(s,animate){
-    var g=geo(), i, my=++token, sc=s?s.sc:"s";
-    $("#svg").setAttribute("viewBox","0 0 "+g.W+" "+g.H);
-    $("#start").style.opacity=s?0:1;
-    $("#zv").style.opacity=$("#zo").style.opacity=(s&&sc==="c")?1:0;
-    place($("#zv"),g.vx,14,g.vw); place($("#zo"),g.rx,14,200);
-
-    /* ----- sort part ----- */
-    var on=s&&sc==="s";
-    var ve=$("#var-nameList"); place(ve,g.sv.x,g.sv.y,g.sv.w,g.vh);
-    ve.className="var"+(on?" show"+(s.v?" "+s.v:""):"");
-    var sx=g.sv.x+g.sv.w-17, sy=g.sv.y+g.vh/2, ex=g.sv.x+g.sv.w+60, ey=g.S.y-4;
-    arrow("nameList",on?(s.v||""):undefined,"M"+sx+","+sy+" C"+ex+","+sy+" "+ex+","+sy+" "+ex+","+ey);
-    drawRow(g,"S",on?{st:s.row}:null);
-    var order=on?ORD[s.ord]:START, w=g.S.sw, small=w<92;
-    var movers=[];
-    order.forEach(function(id,j){
-      var e=$("#n"+id);
-      e.style.top=(g.S.y+10)+"px"; e.style.width=w+"px"; e.style.height="46px";
-      e.className="val"+(on?" show":"")+(on&&s.all?" "+s.all:"")+(small?" small":"");
-      if(animate&&on&&s.anim) movers.push([e,j]); else e.style.left=slotX(g,"S",j)+"px";
-    });
-    if(movers.length){
-      /* lift the names, slide each one to its new slot, set them down: same slots, new order */
-      movers.forEach(function(m){ m[0].classList.add("lift"); if(m[1]%2) m[0].classList.add("far"); });
-      setTimeout(function(){ if(my!==token) return;
-        movers.forEach(function(m){ m[0].style.left=slotX(g,"S",m[1])+"px"; });
-        setTimeout(function(){ if(my!==token) return; movers.forEach(function(m){ m[0].classList.remove("lift","far"); }); },700);
-      },reduce?0:300);
+  function alias(){
+    if(hasAlias) return; hasAlias=true;
+    $("#vAlias").classList.add("show"); $("#bAlias").disabled=true; $("#bAliasSet").disabled=false;
+    flash($("#rowA")); act(["#vColors","#vAlias"]);
+    say('No new boxes: <b class="y">alias</b> is <b class="y">a second name</b> with an arrow to the same row as colors.',
+      "y","String[] alias = colors;");
+  }
+  function setBlack(which){
+    var row=which==="copy"?rowB:rowA, b=at(row,1), old=b.v;
+    clearChg(rowA); if(rowB) clearChg(rowB);
+    b.v="black"; paint(b); void b.el.offsetWidth; b.el.classList.add("chg");
+    if(which==="copy"){
+      $("#bCopySet").disabled=true; act(["#vCopy"]);
+      say('Box [1] of <b class="g">fullCopy</b> went from "'+old+'" to "black"; <b class="a">colors</b> is untouched because the copy is <b class="g">its own boxes</b>.',
+        "g",'fullCopy[1] = "black";');
     } else {
-      for(i=0;i<9;i++) $("#n"+i).classList.remove("lift","far");
+      $("#bAliasSet").disabled=true; flash($("#rowA")); act(["#vColors","#vAlias"]);
+      var c=hasCopy?' fullCopy did not change.':'';
+      say('Box [1] went from "'+old+'" to "black" through <b class="y">alias</b>, and <b class="y">colors[1] is "black" too</b>: one row, two names.'+c,
+        "y",'alias[1] = "black";');
     }
-
-    /* ----- copy part ----- */
-    on=s&&sc==="c";
-    var vars=on?s.vars:{};
-    ["colors","copy"].forEach(function(v){
-      var r={colors:"A",copy:"B"}[v], el=$("#var-"+v), st=vars[v];
-      var vy=g.ry[r]+10+20-g.vh/2;
-      place(el,g.vx,vy,g.vw,g.vh);
-      el.className="var"+(st!==undefined?" show"+(st?" "+st:""):"");
-      var tr=v==="copy"&&on?s.to:r, x1=g.vx+g.vw-17, y1=vy+g.vh/2, x2=g.rx-4, y2=g.ry[tr]+30+(tr==="A"?(LAND[v]||0):0), dx=(x2-x1)*0.5;
-      arrow(v,st,"M"+x1+","+y1+" C"+(x1+dx)+","+y1+" "+(x2-dx)+","+y2+" "+x2+","+y2);
-    });
-    var A=on?s.A:null, B=on?s.B:null, cw=g.csw, sm=cw<70;
-    drawRow(g,"A",A);
-    drawRow(g,"B",B,B&&B.lost?"array 2 · nothing points here":null,B&&B.lost?"warn":"");
-    for(i=0;i<7;i++){
-      var a=$("#a"+i), b=$("#b"+i);
-      [a,b].forEach(function(e,k){ place(e,slotX(g,"A",i),g.ry[["A","B"][k]]+10,cw,40); });
-      if(A) setVal(a,(s.black?AFTER:COLORS)[i],(A.slots&&A.slots[i])||A.all||"",sm); else a.className="val";
-      if(B) setVal(b,B.filled&&COPIED[i]?COPIED[i]:"null",(B.slots&&B.slots[i])||B.all||(B.dim||B.lost?"dim":""),sm); else b.className="val";
-    }
-    /* arraycopy: the three copied values start in colors and travel to the copy */
-    if(animate&&on&&s.fly&&!reduce){
-      var idx=[2,3,4];
-      idx.forEach(function(k){ var e=$("#b"+k); e.style.transition="none"; e.style.top=(g.ry.A+10)+"px"; });
-      void picEl.offsetWidth;
-      idx.forEach(function(k){ var e=$("#b"+k); e.style.transition=""; e.style.top=(g.ry.B+10)+"px"; });
-    }
-    var look=on&&s.looks;
-    place($("#lk1"),slotX(g,"A",2),g.ry.A-17,cw); place($("#lk2"),slotX(g,"B",2),g.ry.B-17,cw);
-    $("#lk1").className="look"+(look?" show":""); $("#lk2").className="look"+(look?" show":"");
-
-    var ans=$("#ans"); ans.innerHTML=s&&s.badge?s.badge:""; ans.className="answer"+(ans.innerHTML?" show":"");
-    ans.style.left=(on?g.rx:g.vx)+"px";
   }
-
-  function setStat(id,v,c){ var e=$(id), box=e.parentNode;
-    if(v===undefined||v===null){e.textContent="";e.className="v dim";box.classList.add("empty");}
-    else {e.textContent=v;e.className="v "+(c||"");box.classList.remove("empty");} }
-
-  function show(i){
-    var from=at; at=i;
-    var s=i<0?null:STEPS[i], sc=PART, k, out=[], fresh=0;
-    $("#stepno").innerHTML="<small>step</small>"+(i+1)+" / "+STEPS.length;
-    renderCode(sc,s?s.keys:null,s?s.cls:"");
-    renderPic(s,!!(s&&from===i-1));
-    /* console: what this program has printed so far */
-    if(s) for(k=0;k<=i;k++) if(STEPS[k].out){ out=out.concat(STEPS[k].out); if(k===i) fresh=STEPS[k].out.length; }
-    consEl.innerHTML=out.map(function(o,j){return '<div class="out'+(j>=out.length-fresh?" new":"")+'">'+o+'</div>';}).join("")||'<span style="color:rgba(132,150,182,.5)">(nothing printed yet)</span>';
-    $("#cbox").scrollTop=$("#cbox").scrollHeight;
-    $("#caption").className="caption"+(s&&s.cls?" "+s.cls:"");
-    statusEl.innerHTML=s?s.msg:'Press <b class="a">Next</b>. The picture changes at every step.';
-    for(k=1;k<4;k++) $("#k"+k).textContent=LABELS[sc][k-1];
-    for(k=0;k<4;k++){
-      var hot=s&&s.hot&&s.hot.indexOf(k)>=0, v=s?s.t[k]:null;
-      setStat("#t"+k,v,hot?(s.cls==="cut"?"warn":s.cls==="left"?"gold":"hot"):(v==="null"?"dim":""));
-    }
-    Array.prototype.forEach.call(document.querySelectorAll(".chip"),function(c){ c.classList.toggle("on",!!s&&c.getAttribute("data-p")===sc); });
-    $("#bNext").disabled=at>=STEPS.length-1; $("#bBack").disabled=at<0;
-    var d=""; for(k=0;k<STEPS.length;k++) d+='<i class="'+(k===at?"now":k<at?"done":"")+'"></i>'; $("#dots").innerHTML=d;
+  function reset(){
+    hasCopy=false; hasAlias=false; rowB=null;
+    rowA=build($("#slotsA"),START);
+    $("#slotsB").innerHTML=""; $("#rowB").hidden=true; $("#ghostB").hidden=false;
+    $("#laneB").classList.remove("on"); $("#vCopy").classList.remove("show"); $("#vAlias").classList.remove("show");
+    $("#bCopy").disabled=false; $("#bAlias").disabled=false; $("#bCopySet").disabled=true; $("#bAliasSet").disabled=true;
+    act([]);
+    say('One array of seven colors, and one variable, <b class="a">colors</b>, that points at it.');
   }
-
-  /* focus: picture and caption only. Remembered per browser. */
-  function setFocus(on){ document.body.classList.toggle("solo",on); $("#bFocus").textContent=on?"Focus on":"Focus";
-    try{localStorage.setItem("hub-focus",on?"1":"0");}catch(e){} renderPic(at<0?null:STEPS[at],false); }
-  $("#bFocus").addEventListener("click",function(){ setFocus(!document.body.classList.contains("solo")); this.blur(); });
-  try{ if(localStorage.getItem("hub-focus")==="1") document.body.classList.add("solo"); }catch(e){}
-  if(document.body.classList.contains("solo")) $("#bFocus").textContent="Focus on";
-
-  /* chips: two separate walks, each starts at step 1; switching starts over */
-  $("#chips").innerHTML='<button class="chip on" data-p="s">sort</button><button class="chip" data-p="c">copy</button>';
-  function markChips(){ Array.prototype.forEach.call(document.querySelectorAll("#chips .chip"),function(c){ c.classList.toggle("on",c.getAttribute("data-p")===PART); }); }
-  $("#chips").addEventListener("click",function(e){ var b=e.target.closest(".chip"); if(!b) return;
-    b.blur(); PART=b.getAttribute("data-p"); STEPS=ALL.filter(function(x){ return x.sc===PART; }); markChips(); show(-1); });
-
-  function next(){ if(at<STEPS.length-1) show(at+1); }
-  function back(){ if(at>=0) show(at-1); }
-  function reset(){ show(-1); }
-  $("#bNext").addEventListener("click",next);
-  $("#bBack").addEventListener("click",back);
+  idx($("#idxA")); idx($("#idxB"));
+  $("#bSort").addEventListener("click",sort);
+  $("#bCopy").addEventListener("click",copy);
+  $("#bAlias").addEventListener("click",alias);
+  $("#bCopySet").addEventListener("click",function(){ setBlack("copy"); });
+  $("#bAliasSet").addEventListener("click",function(){ setBlack("alias"); });
   $("#bReset").addEventListener("click",reset);
-  document.addEventListener("keydown",function(e){ if(e.code==="Space"&&!/INPUT|BUTTON/.test(e.target.tagName)){e.preventDefault();next();} });
-  addEventListener("resize",function(){ renderPic(at<0?null:STEPS[at],false); });
+  reset();
 
-  /* ---------- ambient canvas ---------- */
+  /* ambient canvas */
   var cv=$("#amb"),ctx=cv.getContext&&cv.getContext("2d"),parts=[];
   function sizeC(){if(!ctx)return;cv.width=innerWidth;cv.height=innerHeight;}
   function initParts(){parts=[];for(var i=0;i<46;i++)parts.push({x:Math.random(),y:Math.random(),
@@ -520,9 +262,6 @@
       ctx.fillStyle="rgba(140,170,255,"+p.o+")";ctx.fill();});
     requestAnimationFrame(drawC);}
   if(ctx&&!reduce){sizeC();initParts();drawC();addEventListener("resize",sizeC);}
-
-  buildPic();
-  reset();
 })();
 </script>
 <script src="../manifest.js"></script>

@@ -2,8 +2,8 @@
 <html lang="en">
 <head>
 <meta charset="UTF-8">
-<title>What new Does | Week 2 Visual Hub</title>
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>What new Does | Week 2 Visual Hub</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Sora:wght@500;700&family=Inter:wght@400;500&family=JetBrains+Mono:wght@400;500&display=swap">
 <style>
@@ -30,121 +30,69 @@
     background-clip:text;color:transparent}
   .lede{color:var(--muted);max-width:64ch;font-size:1.05rem;margin:0 0 26px;line-height:1.5}
   .lede b{color:var(--ink)}
-  .lede code,.take code,.caption code{font-family:var(--mono);font-size:.92em;color:#bcd0ff}
+  code{font-family:var(--mono);font-size:.92em;color:#bcd0ff}
 
-  /* ---------- stage: picture first, one toolbar, support below ---------- */
+  /* ---------- the stage IS the picture ---------- */
   .stage{position:relative;background:linear-gradient(180deg,rgba(255,255,255,.03),rgba(255,255,255,.01));
-    border:1px solid var(--line);border-radius:24px;padding:18px 18px 14px;
+    border:1px solid var(--line);border-radius:24px;padding:22px;
     box-shadow:0 1px 0 rgba(255,255,255,.06) inset,0 30px 80px -30px rgba(0,0,0,.8)}
-  .topbar{display:flex;align-items:center;gap:10px;margin:0 0 14px;flex-wrap:wrap}
-  .topbar .lab{margin:0 4px 0 0}
-  .lab{font-family:var(--mono);font-size:.7rem;letter-spacing:.12em;text-transform:uppercase;color:var(--muted);margin:0 0 10px}
-  .chips{display:flex;flex-wrap:wrap;gap:6px}
-  .chip{font-family:var(--mono);font-size:.74rem;padding:5px 11px;border-radius:999px;cursor:pointer;
-    border:1px solid var(--line);background:rgba(0,0,0,.25);color:var(--muted);transition:.15s}
-  .chip:hover{border-color:var(--accent);color:var(--accent)}
-  .chip.on{border-color:rgba(110,160,255,.6);background:rgba(110,160,255,.14);color:var(--ink)}
-  .chip:focus-visible,.btn:focus-visible,.focus:focus-visible{outline:2px solid var(--accent);outline-offset:2px}
+  .board{position:relative;display:grid;grid-template-columns:minmax(0,300px) minmax(0,1fr);gap:56px;align-items:stretch;min-height:400px}
+  @media (max-width:820px){.board{grid-template-columns:1fr;gap:40px}.mem{grid-template-columns:1fr}}
+  .zone{border-radius:16px;padding:14px 16px 16px;min-width:0}
+  .hd{font-family:var(--mono);font-size:.62rem;letter-spacing:.16em;text-transform:uppercase;color:var(--muted);margin:0 0 10px}
+  .vars{border:1px solid var(--line);background:rgba(110,160,255,.04);display:flex;flex-direction:column}
+  .slots{display:flex;flex-direction:column;gap:10px;min-height:160px}
+  .none{font-family:var(--mono);font-size:.76rem;color:rgba(132,150,182,.6);border:1px dashed rgba(255,255,255,.08);border-radius:12px;
+    padding:18px 10px;text-align:center}
+  .slot{display:flex;align-items:center;justify-content:space-between;gap:10px;font-family:var(--mono);font-size:.84rem;
+    padding:9px 10px 9px 12px;border-radius:11px;border:1px solid rgba(255,255,255,.14);background:rgba(0,0,0,.25);
+    opacity:0;transform:translateY(-10px);transition:opacity .4s,transform .45s cubic-bezier(.2,.9,.3,1),border-color .3s}
+  .slot.show{opacity:1;transform:none}
+  .slot .n{color:var(--ink);white-space:nowrap} .slot .n i{font-style:normal;color:#82aaff;margin-right:6px}
+  .slot .box{flex:0 0 46px;height:24px;border-radius:7px;border:1px solid rgba(110,160,255,.5);display:flex;align-items:center;
+    justify-content:center;font-size:.66rem;color:var(--accent);position:relative}
+  .slot .box::after{content:"";width:8px;height:8px;border-radius:50%;background:var(--accent)}
+  .slot.nul{border-color:rgba(255,200,98,.55)}
+  .slot.nul .box{border-color:rgba(255,200,98,.55);color:var(--gold)} .slot.nul .box::after{display:none}
+  .slot.nul .box::before{content:"null"}
+  .steps{display:flex;flex-direction:column;gap:7px;margin-top:auto;padding-top:14px;border-top:1px solid var(--line)}
+  .steps button{text-align:left;font-family:var(--mono);font-size:.78rem;padding:9px 11px;border-radius:11px;cursor:pointer;
+    border:1px solid var(--line);background:rgba(0,0,0,.25);color:#ffcb6b;transition:.15s;line-height:1.45}
+  .steps button.nw{border-color:rgba(110,160,255,.55);background:rgba(110,160,255,.14);color:#dbe6ff}
+  .steps button.nw b{font-weight:500;color:var(--gold)}
+  .steps button:hover:not(:disabled){border-color:var(--gold);background:rgba(255,200,98,.1)}
+  .steps button.nw:hover:not(:disabled){border-color:var(--accent);background:rgba(110,160,255,.26)}
+  .steps button:disabled{opacity:.3;cursor:not-allowed}
+  .steps button.done{opacity:.45}
+  .mem{border:1px dashed rgba(255,255,255,.1);background:rgba(6,10,20,.5);display:grid;grid-template-columns:minmax(0,380px);
+    gap:18px;align-content:start}
+  .mem .hd{grid-column:1/-1;margin:0}
+  .mem .none{grid-column:1/-1;min-height:260px;display:flex;align-items:center;justify-content:center}
+  .obj{border-radius:14px;padding:14px 14px 12px;border:1px solid rgba(255,255,255,.18);background:rgba(255,255,255,.045);
+    opacity:0;transform:translateX(-40px) scale(.9);transition:opacity .45s,transform .55s cubic-bezier(.2,.9,.3,1),border-color .3s,box-shadow .3s}
+  .obj.show{opacity:1;transform:none}
+  .obj.act{border-color:rgba(110,160,255,.75);box-shadow:0 0 26px -8px rgba(110,160,255,.8)}
+  .obj .who{font-family:var(--disp);font-weight:700;font-size:1.15rem;margin:0 0 10px;color:var(--ink)}
+  .row{display:flex;align-items:center;justify-content:space-between;gap:10px;font-family:var(--mono);font-size:.82rem;
+    padding:7px 10px;border-radius:9px;margin-bottom:5px;border:1px solid transparent;transition:background .3s,border-color .3s}
+  .row .f{color:#c9d4ea} .row .v{color:#f78c6c;white-space:nowrap} .row .v.s{color:#c3e88d}
+  .row .v s{color:var(--muted);margin-right:6px}
+  .row.chg{background:rgba(255,200,98,.12);border-color:rgba(255,200,98,.55)} .row.chg .v{color:var(--gold);animation:pop .45s}
+  .refs{margin-top:8px;padding-top:8px;border-top:1px solid var(--line);font-family:var(--mono);font-size:.68rem;color:var(--muted)}
+  .refs b{font-weight:500;color:var(--accent)}
+  #wires{position:absolute;inset:0;width:100%;height:100%;pointer-events:none;overflow:visible;z-index:3}
+  #wires path{fill:none;stroke:var(--accent);stroke-width:2.2;stroke-linecap:round}
+  /* the one sentence */
+  .caption{display:flex;gap:14px;align-items:flex-start;margin:18px 2px 0;padding-top:16px;border-top:1px solid var(--line)}
+  .caption .t{flex:1;font-size:1.05rem;line-height:1.55;color:var(--ink);padding-left:16px;border-left:3px solid var(--accent);transition:border-color .3s}
+  .caption .t .line{display:block;margin-top:6px;font-family:var(--mono);font-size:.8rem;color:#bcd0ff;opacity:.9}
+  .caption.y .t{border-left-color:var(--gold)} .caption.g .t{border-left-color:var(--good)}
+  .caption b.a{color:var(--accent)} .caption b.y{color:var(--gold)} .caption b.g{color:var(--good)}
+  .reset{font-family:var(--body);font-weight:500;font-size:.84rem;padding:8px 14px;border-radius:11px;cursor:pointer;
+    border:1px solid var(--line);background:transparent;color:var(--muted);transition:.15s;flex-shrink:0}
+  .reset:hover{border-color:var(--accent);color:var(--accent)}
+  button:focus-visible,input:focus-visible{outline:2px solid var(--accent);outline-offset:2px}
 
-  /* hero picture */
-  .pic{position:relative;height:390px;border:1px solid var(--line);border-radius:18px;background:rgba(6,10,20,.5);overflow:hidden}
-  body.solo .pic{height:480px}
-  .inner{position:absolute;left:0;right:0;top:50%;height:390px;margin-top:-195px}
-  .zone{position:absolute;top:18px;font-family:var(--mono);font-size:.62rem;letter-spacing:.14em;text-transform:uppercase;
-    color:rgba(132,150,182,.55);transition:color .3s,opacity .3s;white-space:nowrap}
-  .zone.on{color:var(--accent)}
-  .frame{position:absolute;border-radius:14px;border:1px dashed rgba(110,160,255,.45);background:rgba(110,160,255,.05);
-    opacity:0;transition:opacity .4s,border-color .3s}
-  .frame.show{opacity:1}
-  .frame.gone{opacity:.28;border-color:rgba(132,150,182,.4);background:transparent}
-  .frame .fl{position:absolute;left:12px;top:8px;font-family:var(--mono);font-size:.64rem;color:#bcd0ff;white-space:nowrap}
-  .frame .fg{position:absolute;right:12px;bottom:8px;font-family:var(--mono);font-size:.6rem;color:var(--muted);opacity:0;transition:opacity .3s}
-  .frame.gone .fg{opacity:1}
-  .obj{position:absolute;border-radius:14px;border:1px solid rgba(110,160,255,.4);background:rgba(110,160,255,.07);
-    opacity:0;transform:scale(.92);transition:opacity .45s,transform .45s cubic-bezier(.2,.9,.3,1),box-shadow .3s}
-  .obj.show{opacity:1;transform:scale(1)}
-  .obj.lit{box-shadow:0 0 24px -8px rgba(110,160,255,.7)}
-  .obj .fl{position:absolute;left:12px;top:8px;font-family:var(--disp);font-weight:700;font-size:.8rem;color:var(--ink)}
-  .cell{position:absolute;height:48px;display:flex;align-items:center;justify-content:space-between;gap:8px;padding:0 12px;
-    border-radius:11px;border:1px solid var(--line);background:rgba(0,0,0,.35);opacity:0;
-    transition:opacity .4s,border-color .3s,background .3s,box-shadow .3s}
-  .cell.show{opacity:1}
-  .cell .k{font-family:var(--mono);font-size:.74rem;color:var(--muted);white-space:nowrap}
-  .cell .k small{font-size:.58rem;letter-spacing:.08em;color:rgba(132,150,182,.7)}
-  .cell .k em{font-style:normal;color:#bcd0ff}
-  .cell .v{font-family:var(--mono);font-size:.92rem;color:var(--ink);white-space:nowrap;transition:color .3s}
-  .cell .v.def{color:var(--gold);opacity:.85}
-  .cell .v.def::after{content:"default";margin-left:8px;font-size:.56rem;letter-spacing:.1em;text-transform:uppercase;color:rgba(255,200,98,.6)}
-  .cell .v.ref{color:var(--accent)}
-  .cell.lit{border-color:rgba(110,160,255,.7);background:rgba(110,160,255,.14);box-shadow:0 0 16px -6px rgba(110,160,255,.7)}
-  .cell.litg{border-color:rgba(70,217,138,.7);background:rgba(70,217,138,.12);box-shadow:0 0 16px -6px rgba(70,217,138,.7)}
-  .cell.litg .v{color:var(--good)}
-  .cell.lity{border-color:rgba(255,200,98,.6);background:rgba(255,200,98,.08)}
-  .cell.gone{opacity:.28}
-  .cell.gone .v{text-decoration:line-through;color:var(--muted)}
-  svg.arrows{position:absolute;inset:0;width:100%;height:100%;pointer-events:none;overflow:visible}
-  svg.arrows path{fill:none;stroke-width:2;stroke-linecap:round}
-  svg.arrows .a{stroke:var(--accent)} svg.arrows .g{stroke:var(--good)}
-  svg.arrows .draw{stroke-dasharray:var(--len);stroke-dashoffset:var(--len);animation:draw .5s ease-out forwards}
-  @keyframes draw{to{stroke-dashoffset:0}}
-  .answer{position:absolute;right:18px;bottom:14px;font-family:var(--disp);font-weight:700;font-size:1.5rem;color:var(--good);
-    opacity:0;transition:opacity .4s;text-align:right;line-height:1.1}
-  .answer.show{opacity:1}
-  .answer small{display:block;font-family:var(--mono);font-weight:400;font-size:.6rem;letter-spacing:.14em;text-transform:uppercase;color:var(--muted);margin-bottom:2px}
-  .pic .start{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;font-family:var(--mono);
-    font-size:.8rem;color:var(--muted);pointer-events:none;transition:opacity .3s}
-  .pic .start b{color:var(--accent);font-weight:500}
-
-  /* caption: the one sentence, right under the picture */
-  .caption{display:flex;gap:16px;align-items:flex-start;margin:14px 4px 0;min-height:56px}
-  .caption .n{flex-shrink:0;font-family:var(--disp);font-weight:700;font-size:1.35rem;color:var(--accent);font-variant-numeric:tabular-nums;
-    line-height:1.2;min-width:3.2rem}
-  .caption .n small{display:block;font-family:var(--mono);font-weight:400;font-size:.58rem;letter-spacing:.14em;text-transform:uppercase;color:var(--muted)}
-  .caption .t{font-size:1.02rem;line-height:1.55;color:var(--ink);padding-left:16px;border-left:3px solid var(--accent);transition:border-color .3s}
-  body.solo .caption .t{font-size:1.18rem}
-  .caption.left .t{border-left-color:var(--gold)} .caption.ok .t{border-left-color:var(--good)}
-  .caption b.g{color:var(--good)} .caption b.a{color:var(--accent)} .caption b.y{color:var(--gold)}
-  /* toolbar: same on every page */
-  .toolbar{display:flex;align-items:center;gap:10px;margin:16px 0 0;padding-top:14px;border-top:1px solid var(--line)}
-  .btn{font-family:var(--body);font-weight:500;font-size:.86rem;padding:9px 16px;border-radius:11px;cursor:pointer;
-    border:1px solid var(--line);background:var(--surface);color:var(--ink);transition:.15s}
-  .btn:hover{border-color:var(--accent);color:var(--accent)}
-  .btn.primary{border-color:rgba(110,160,255,.5);background:rgba(110,160,255,.12);padding:9px 22px}
-  .btn:disabled{opacity:.35;cursor:not-allowed}
-  .btn.ghost{background:transparent;color:var(--muted);margin-left:auto}
-  .dots{display:flex;gap:5px;align-items:center;margin:0 6px}
-  .dots i{display:block;width:8px;height:8px;border-radius:50%;background:rgba(255,255,255,.12);transition:.2s}
-  .dots i.done{background:rgba(110,160,255,.45)}
-  .dots i.now{background:var(--accent);transform:scale(1.35);box-shadow:0 0 10px rgba(110,160,255,.7)}
-  .hint{font-family:var(--mono);font-size:.68rem;color:var(--muted);margin:10px 4px 0;line-height:1.5}
-  .hint b{color:var(--accent)}
-
-  /* support: code, console, readouts. Below the picture, hidden in focus */
-  .support{display:grid;grid-template-columns:minmax(0,1.3fr) minmax(0,1fr);gap:14px;margin-top:18px}
-  @media (max-width:860px){.support{grid-template-columns:1fr}}
-  body.solo .support,body.solo .take,body.solo .hint{display:none}
-  .code{min-width:0;font-family:var(--mono);font-size:.76rem;line-height:1.8;background:rgba(0,0,0,.35);border:1px solid var(--line);
-    border-radius:14px;padding:12px 0;overflow-x:auto}
-  .ln{display:flex;gap:12px;padding:0 14px;white-space:pre;color:#c9d4ea;transition:background .2s,opacity .3s}
-  .ln .n{width:20px;text-align:right;color:rgba(132,150,182,.55);user-select:none;flex-shrink:0}
-  .ln.cur{background:rgba(110,160,255,.14);box-shadow:inset 3px 0 0 var(--accent)}
-  .ln.cur .n{color:var(--accent)}
-  .ln.ok{background:rgba(70,217,138,.12);box-shadow:inset 3px 0 0 var(--good)}
-  .ln.left{background:rgba(255,200,98,.12);box-shadow:inset 3px 0 0 var(--gold)}
-  .cm{color:#5f7090} .kw{color:#c792ea} .ty{color:#82aaff} .st{color:#c3e88d} .nm{color:#f78c6c} .fn{color:#ffcb6b}
-  .codes{display:flex;flex-direction:column;gap:10px;min-width:0}
-  .codes .lab{margin:4px 0 6px}
-  .side{display:flex;flex-direction:column;gap:12px}
-  .readout{display:grid;grid-template-columns:1fr 1fr;gap:10px}
-  .stat{background:rgba(255,255,255,.03);border:1px solid var(--line);border-radius:12px;padding:11px 13px;transition:opacity .3s}
-  .stat.empty{opacity:.3}
-  .stat .k{font-family:var(--mono);font-size:.62rem;letter-spacing:.1em;text-transform:uppercase;color:var(--muted)}
-  .stat .v{font-family:var(--disp);font-weight:700;font-size:1.45rem;font-variant-numeric:tabular-nums;margin-top:2px;transition:color .3s;min-height:1.6em}
-  .v.hot{color:var(--accent)} .v.gold{color:var(--gold)} .v.good{color:var(--good)} .v.dim{color:rgba(132,150,182,.5)}
-  .console{font-family:var(--mono);font-size:.76rem;line-height:1.6;background:#05070e;border:1px solid var(--line);
-    border-radius:12px;padding:10px 14px;min-height:64px;color:#9fe3b6;flex:1}
-  .console .cl{font-size:.6rem;letter-spacing:.14em;text-transform:uppercase;color:rgba(132,150,182,.6);margin-bottom:4px}
-  .console .out{animation:pop .3s}
   @keyframes pop{from{transform:scale(.6);opacity:0}to{transform:scale(1);opacity:1}}
   .take{margin-top:22px;background:linear-gradient(180deg,rgba(110,160,255,.08),rgba(139,123,255,.04));
     border:1px solid var(--line);border-left:3px solid var(--accent);border-radius:12px;padding:16px 18px}
@@ -155,281 +103,158 @@
 </style>
 </head>
 <body>
-
 <a class="back" href="../index.html#09-what-new-does">&#8592; Week 2 index</a>
-
 <canvas id="amb"></canvas>
 <div class="wrap">
   <p class="tag">Workbook 2a &middot; Section 2-1 &middot; Instantiating an object</p>
   <h1>What new Does</h1>
-  <p class="lede"><b><code>new</code> builds the object and runs the constructor; the variable gets back a reference, not the object.</b></p>
+  <p class="lede"><b>new builds the object. The variable only points at it.</b> Press each line in order.</p>
 
   <div class="stage">
-    <div class="topbar">
-      <span class="lab">Typed in: "Raymond", 35</span>
-      <button class="focus" id="bFocus" title="Hide the code and notes, enlarge the picture">Focus</button>
-    </div>
-
-    <div class="pic" id="pic"></div>
-
-    <div class="caption" id="caption">
-      <div class="n" id="stepno"><small>step</small>0 / 8</div>
-      <div class="t" id="status">Press <b class="a">Next</b>. The picture changes at every step.</div>
-    </div>
-
-    <div class="toolbar">
-      <button class="btn" id="bBack">&larr; Back</button>
-      <div class="dots" id="dots"></div>
-      <button class="btn primary" id="bNext">Next &rarr;</button>
-      <button class="btn ghost" id="bReset">Reset</button>
-    </div>
-    <p class="hint">space = next &middot; name and age are typed in at the two prompts &middot; <b>watch instructor: it ends up holding an arrow</b></p>
-
-    <div class="support">
-      <div class="codes">
-        <div><p class="lab">Main.java</p><div class="code" id="codeM"></div></div>
-        <div><p class="lab">Person.java</p><div class="code" id="codeP"></div></div>
-      </div>
-      <div class="side">
-        <div class="readout">
-          <div class="stat empty"><div class="k">instructor holds</div><div class="v dim" id="stParam"></div></div>
-          <div class="stat empty"><div class="k">field this.name</div><div class="v dim" id="stField"></div></div>
+    <div class="board" id="board">
+      <div class="zone vars">
+        <p class="hd">variables</p>
+        <div class="slots" id="slots"><div class="none" id="vNone">no variables yet</div></div>
+        <div class="steps" id="steps">
+          <button class="nw" data-s="0">Person instructor = <b>new</b> Person("Raymond", 35);</button>
+          <button data-s="1" disabled>Person teacher = instructor;</button>
+          <button data-s="2" disabled>teacher.setName("Ray");</button>
+          <button class="nw" data-s="3" disabled>Person student = <b>new</b> Person("Brandon", 35);</button>
+          <button data-s="4" disabled>instructor = null;</button>
         </div>
-        <div class="console"><div class="cl">console</div><div id="console"></div></div>
       </div>
+      <div class="zone mem" id="mem">
+        <p class="hd">objects in memory</p>
+        <div class="none" id="mNone">empty</div>
+      </div>
+      <svg id="wires" aria-hidden="true">
+        <defs><marker id="tip" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+          <path d="M0,0 L10,5 L0,10 z" style="fill:var(--accent);stroke:none"/></marker></defs>
+      </svg>
+    </div>
+    <div class="caption" id="caption">
+      <div class="t" id="status">Nothing yet: <b class="a">no variables</b> on the left, <b class="a">no objects</b> in memory on the right.</div>
+      <button class="reset" id="bReset">Reset</button>
     </div>
   </div>
 
   <div class="take">
     <p class="tk">The one idea</p>
-    <p><b><code>new</code> makes the object and runs the constructor</b>, which fills the fields: <code>this.name = name</code>
-    copies the parameter into the field. <code>new</code> hands back a reference, and
-    <b>the variable holds the reference, not the object</b>: <code>instructor.getName()</code> follows that arrow.</p>
+    <p><b>Only <code>new</code> builds an object.</b> A Person variable holds an arrow to it, not the object itself.
+    Copying the variable copies the arrow, so two names can share one object and both see its changes.
+    Setting a variable to <code>null</code> removes its arrow, not the object.</p>
   </div>
-
   <div id="rail"></div>
 </div>
-
 <script>
 (function(){
   "use strict";
   var $=function(s){return document.querySelector(s);};
   var reduce=matchMedia("(prefers-reduced-motion: reduce)").matches;
+  var NS="http://www.w3.org/2000/svg";
+  var board=$("#board"),svg=$("#wires"),slotsEl=$("#slots"),mem=$("#mem"),status=$("#status"),caption=$("#caption");
+  var vars={},cards=[],wires=[],step=0;
 
-  /* ---------- the values typed at the two Scanner prompts ---------- */
-  var NAME="Raymond",AGE=35;
-  function q(s){return '"'+s+'"';}
-
-  function cm(t){return '<span class="cm">'+t+'</span>';}
-  function mainLines(){
-    return [
-      'System.out.println(<span class="st">"Please enter the name of the instructor:"</span>);',
-      '<span class="ty">String</span> name = scanner.<span class="fn">nextLine</span>();',
-      'System.out.println(<span class="st">"Please enter the age of the instructor:"</span>);',
-      '<span class="ty">int</span> age = scanner.<span class="fn">nextInt</span>();',
-      '',
-      cm('/*'),
-      cm('Person instructor;                  // declare: no object yet'),
-      cm('instructor = new Person(name, age); // instantiate'),
-      cm('*/'),
-      '<span class="ty">Person</span> instructor = <span class="kw">new</span> <span class="fn">Person</span>(name, age);  '+cm('// both steps in one line'),
-      'System.out.println(instructor.<span class="fn">getName</span>());'
-    ];
-  }
-  var PERSON=[
-    '<span class="kw">public class</span> <span class="ty">Person</span> {',
-    '    <span class="kw">private</span> <span class="ty">String</span> name;',
-    '    <span class="kw">private</span> <span class="ty">int</span> age;',
-    '    <span class="kw">private</span> <span class="ty">int</span> energy;',
-    '',
-    '    <span class="kw">public</span> <span class="fn">Person</span>(<span class="ty">String</span> name, <span class="ty">int</span> age) {',
-    '        <span class="kw">this</span>.name = name;   '+cm('// this.name is the field'),
-    '        <span class="kw">this</span>.age = age;',
-    '        <span class="kw">this</span>.energy = <span class="nm">100</span>;  '+cm('// full energy'),
-    '    }',
-    '}'
-  ];
-
-  /* console text after each step (typed input in gold) */
-  function said(i){
-    var o=[];
-    if(i>=0){ o.push("Please enter the name of the instructor:"); o.push('<span style="color:#ffc862">'+NAME+'</span>');
-              o.push("Please enter the age of the instructor:"); o.push('<span style="color:#ffc862">'+AGE+'</span>'); }
-    if(i>=7) o.push(NAME);
-    return o;
+  function say(html,tone,line){
+    caption.className="caption"+(tone?" "+tone:"");
+    status.innerHTML=html+(line?'<span class="line">'+line+'</span>':"");
   }
 
-  /* ---------- the walk: one entry per step ---------- */
-  function build(){
-    return [
-      {m:[1,2,3,4],p:[],mc:"cur",cls:"",
-       msg:'At the two prompts the user <b class="a">typed in</b> '+q(NAME)+' and '+AGE+', so <code>name</code> and <code>age</code> hold them.'},
-      {m:[7,10],p:[],mc:"cur",cls:"",
-       msg:'<code>Person instructor;</code> declares the variable, and it holds <b class="a">no object yet</b>.'},
-      {m:[8,10],p:[2,3,4],mc:"cur",pc:"left",cls:"left",
-       msg:'<code>new</code> makes one Person object in memory, every field at its default: <b class="y">null</b> for String, <b class="y">0</b> for int.'},
-      {m:[],p:[6,7],pc:"ok",cls:"ok",
-       msg:'The constructor runs with <b class="a">copies</b> of name and age as parameters, and <code>this.name = name</code> <b class="g">copies the parameter into the field</b>.'},
-      {m:[],p:[8],pc:"ok",cls:"ok",
-       msg:'Same move for age: the parameter <code>age</code> is copied into the field <code>this.age</code>.'},
-      {m:[],p:[9],pc:"ok",cls:"ok",
-       msg:'No parameter for energy: the constructor puts <b class="g">100</b> in <code>this.energy</code> by itself.'},
-      {m:[8,10],p:[10],mc:"cur",pc:"cur",cls:"",
-       msg:'The constructor ends, its parameters are gone, and <code>new</code> hands back a <b class="a">reference</b> that <code>instructor</code> stores.'},
-      {m:[11],p:[],mc:"cur",cls:"ok",
-       msg:'<code>getName()</code> follows the arrow from <code>instructor</code> to the object and returns <b class="g">'+q(NAME)+'</b>.'}
-    ];
+  function addSlot(name){
+    $("#vNone").style.display="none";
+    var el=document.createElement("div"); el.className="slot"; el.id="v-"+name;
+    el.innerHTML='<span class="n"><i>Person</i>'+name+'</span><span class="box"></span>';
+    slotsEl.appendChild(el); vars[name]={el:el,card:null};
+    setTimeout(function(){ el.classList.add("show"); },reduce?0:20);
   }
-
-  /* ---------- state ---------- */
-  var steps=[],at=-1;
-  var picEl=$("#pic"),consEl=$("#console"),statusEl=$("#status");
-
-  function renderCode(el,L,cur,cls){
-    el.innerHTML=L.map(function(t,i){
-      var n=i+1,c="ln"+(cur&&cur.indexOf(n)>=0?" "+(cls||"cur"):"");
-      return '<div class="'+c+'"><span class="n">'+n+'</span><span>'+(t||" ")+'</span></div>';
-    }).join("");
+  function addCard(name,age){
+    $("#mNone").style.display="none";
+    var k=cards.length, el=document.createElement("div"); el.className="obj"; el.id="c"+k;
+    el.innerHTML='<p class="hd">object '+(k+1)+'</p><p class="who">Person</p>'
+      +'<div class="row" id="nm'+k+'"><span class="f">name</span><span class="v s">"'+name+'"</span></div>'
+      +'<div class="row"><span class="f">age</span><span class="v">'+age+'</span></div>'
+      +'<div class="row"><span class="f">energy</span><span class="v">100</span></div>'
+      +'<div class="refs" id="r'+k+'"></div>';
+    mem.appendChild(el); cards.push({el:el});
+    setTimeout(function(){ el.classList.add("show"); },reduce?0:20);
+    return k;
   }
-
-  /* ---------- the picture: main | constructor | the object in memory ---------- */
-  var COL={m:[3,26],c:[35,28],o:[68,29]}; /* left %, width % */
-  var ROW={a:74,b:140,c:206,i:292};
-  function box(col,inset){ var c=COL[col]; return 'left:calc('+c[0]+'% + '+inset+'px);width:calc('+c[1]+'% - '+(2*inset)+'px);'; }
-  function cell(id,col,inset,top,label){
-    return '<div class="cell" id="'+id+'" style="'+box(col,inset)+'top:'+top+'px"><span class="k">'+label+'</span><span class="v"></span></div>';
-  }
-  function buildPic(){
-    var h='<div class="inner" id="inner">';
-    h+='<span class="zone" id="zM" style="left:3%">main</span>';
-    h+='<span class="zone" id="zC" style="left:35%">constructor</span>';
-    h+='<span class="zone" id="zO" style="left:68%">memory \u00b7 the new object</span>';
-    h+='<div class="frame" id="frame" style="'+box("c",0)+'top:44px;height:158px"><span class="fl">Person(String name, int age)</span><span class="fg">finished</span></div>';
-    h+='<div class="obj" id="obj" style="'+box("o",0)+'top:44px;height:220px"><span class="fl">Person object</span></div>';
-    h+=cell("mName","m",0,ROW.a,'name');
-    h+=cell("mAge","m",0,ROW.b,'age');
-    h+=cell("mInst","m",0,ROW.i,'instructor');
-    h+=cell("pName","c",12,ROW.a,'<em>name</em> <small>param</small>');
-    h+=cell("pAge","c",12,ROW.b,'<em>age</em> <small>param</small>');
-    h+=cell("fName","o",12,ROW.a,'this.name');
-    h+=cell("fAge","o",12,ROW.b,'this.age');
-    h+=cell("fEnergy","o",12,ROW.c,'this.energy');
-    h+='<svg class="arrows" id="arrows"></svg>';
-    h+='</div>';
-    h+='<div class="start" id="start">typed in: '+q(NAME)+' and '+AGE+' \u00b7 press\u00a0<b>Next</b></div>';
-    h+='<div class="answer" id="ans"></div>';
-    picEl.innerHTML=h;
-  }
-
-  function setCell(id,show,val,cls){
-    var e=$("#"+id); e.className="cell"+(show?" show":"")+(cls?" "+cls:"");
-    var v=e.querySelector(".v"); v.className="v"; v.textContent="";
-    if(val===undefined||val===null) return;
-    if(typeof val==="object"){ v.textContent=val.t; v.className="v "+val.c; } else v.textContent=val;
-  }
-
-  function edge(id,side){
-    var e=$("#"+id), y=e.offsetTop+e.offsetHeight/2;
-    if(side==="r") return {x:e.offsetLeft+e.offsetWidth,y:y};
-    return {x:e.offsetLeft,y:y};
-  }
-  function drawArrows(list,animate){
-    var svg=$("#arrows"), h='<defs>'+
-      '<marker id="mA" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto"><path d="M0 0L10 5L0 10z" fill="#6ea0ff"/></marker>'+
-      '<marker id="mG" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto"><path d="M0 0L10 5L0 10z" fill="#46d98a"/></marker></defs>';
-    list.forEach(function(a){
-      var s=edge(a[0],"r"), d, t, mk=a[2]==="g"?"mG":"mA";
-      if(a[1]==="obj"){
-        var o=$("#obj"); t={x:o.offsetLeft,y:o.offsetTop+o.offsetHeight-30};
-        d="M"+(s.x+2)+" "+s.y+" C"+(s.x+70)+" "+s.y+" "+(t.x-70)+" "+t.y+" "+(t.x-2)+" "+t.y;
-      } else { t=edge(a[1],"l"); d="M"+(s.x+4)+" "+s.y+" L"+(t.x-4)+" "+t.y; }
-      h+='<path class="'+(a[2]||"a")+'" d="'+d+'" marker-end="url(#'+mk+')"/>';
+  function lit(k){ cards.forEach(function(c,i){ c.el.classList.toggle("act",i===k); }); }
+  function refs(){
+    cards.forEach(function(c,i){
+      var who=Object.keys(vars).filter(function(n){ return vars[n].card===i; });
+      $("#r"+i).innerHTML=who.length?'arrows in: <b>'+who.join(", ")+'</b>':'arrows in: none';
     });
-    svg.innerHTML=h;
-    if(animate&&!reduce){
-      Array.prototype.forEach.call(svg.querySelectorAll("path[marker-end]"),function(p){
-        var len=Math.ceil(p.getTotalLength()); p.style.setProperty("--len",len); p.classList.add("draw");
-      });
-    }
   }
 
-  function renderPic(i,animate){
-    var st=$("#start"); st.style.opacity=i<0?1:0;
-    var def=function(t){return {t:t,c:"def"};};
-    /* main */
-    setCell("mName",i>=0,q(NAME),i===0?"lit":"");
-    setCell("mAge",i>=0,String(AGE),i===0?"lit":"");
-    setCell("mInst",i>=1,i>=6?{t:"●",c:"ref"}:null,(i===1||i===6)?"lit":"");
-    /* the object: fields start at their defaults */
-    var o=$("#obj"); o.className="obj"+(i>=2?" show":"")+(i===2||i===6||i===7?" lit":"");
-    setCell("fName",i>=2,i>=3?{t:q(NAME),c:""}:def("null"),i===2?"lity":(i===3||i===7)?"litg":"");
-    setCell("fAge",i>=2,i>=4?{t:String(AGE),c:""}:def("0"),i===2?"lity":i===4?"litg":"");
-    setCell("fEnergy",i>=2,i>=5?{t:"100",c:""}:def("0"),i===2?"lity":i===5?"litg":"");
-    /* constructor frame: parameters exist only while it runs */
-    var f=$("#frame"); f.className="frame"+(i>=3&&i<=6?" show":"")+(i===6?" gone":"");
-    setCell("pName",i>=3&&i<=6,q(NAME),i===3?"lit":i===6?"gone":"");
-    setCell("pAge",i>=3&&i<=6,String(AGE),(i===3||i===4)?"lit":i===6?"gone":"");
-    /* zones */
-    $("#zM").className="zone"+((i<=1||i>=6)?" on":"");
-    $("#zC").className="zone"+((i>=3&&i<=5)?" on":"");
-    $("#zO").className="zone"+(i===2?" on":"");
-    /* arrows */
-    var A=[];
-    if(i===3) A=[["mName","pName","a"],["mAge","pAge","a"],["pName","fName","g"]];
-    if(i===4) A=[["pAge","fAge","g"]];
-    if(i>=6) A=[["mInst","obj","a"]];
-    drawArrows(A,animate&&i!==7);
-    var ans=$("#ans");
-    if(i===7){ ans.innerHTML='<small>instructor.getName()</small>'+q(NAME); ans.className="answer show"; }
-    else { ans.innerHTML=""; ans.className="answer"; }
+  /* arrows: SVG paths from a slot to a card, tweened in JS so they follow moving cards */
+  function anchors(w){
+    var b=board.getBoundingClientRect(), s=vars[w.name].el.getBoundingClientRect(), c=cards[w.card].el.getBoundingClientRect();
+    var sx=s.right-b.left-4, sy=s.top+s.height/2-b.top, ex, ey;
+    if(c.left>=s.right-2){ ex=c.left-b.left-2; ey=Math.min(Math.max(sy,c.top-b.top+24),c.bottom-b.top-24); }
+    else{ ex=c.right-b.left+2; ey=c.top-b.top+40+w.lane*24; return {sx:sx,sy:sy,ex:ex,ey:ey,side:1}; }
+    return {sx:sx,sy:sy,ex:ex,ey:ey};
+  }
+  function shape(a,p){
+    var ex=a.sx+(a.ex-a.sx)*p, ey=a.sy+(a.ey-a.sy)*p, mx=(a.sx+ex)/2;
+    if(a.side){ var bx=Math.max(a.sx,a.ex)+20;
+      return "M"+a.sx+","+a.sy+" C"+bx+","+a.sy+" "+bx+","+ey+" "+ex+","+ey; }
+    return "M"+a.sx+","+a.sy+" C"+mx+","+a.sy+" "+mx+","+ey+" "+ex+","+ey;
+  }
+  function draw(){ wires.forEach(function(w){ w.el.style.display=w.p<.03?"none":""; w.el.setAttribute("d",shape(anchors(w),w.p)); }); }
+  function tween(w,to,done){
+    if(reduce){ w.p=to; draw(); if(done) done(); return; }
+    var from=w.p,t0=null,D=480;
+    requestAnimationFrame(function f(t){ if(t0===null) t0=t; var k=Math.max(0,Math.min(1,(t-t0)/D)), e=1-Math.pow(1-k,3);
+      w.p=from+(to-from)*e; draw(); if(k<1) requestAnimationFrame(f); else if(done) done(); });
+  }
+  function link(name,k){
+    vars[name].card=k;
+    var el=document.createElementNS(NS,"path"); el.setAttribute("marker-end","url(#tip)"); svg.appendChild(el);
+    var w={name:name,card:k,p:0,el:el,lane:wires.filter(function(x){return x.card===k;}).length}; wires.push(w);
+    setTimeout(function(){ tween(w,1,function(){ setTimeout(draw,120); }); },reduce?0:180);
+  }
+  function unlink(name){
+    var w=wires.filter(function(x){ return x.name===name; })[0]; vars[name].card=null; if(!w) return;
+    tween(w,0,function(){ w.el.remove(); wires.splice(wires.indexOf(w),1); });
   }
 
-  function setStat(id,v,c){ var e=$(id), b=e.parentNode;
-    if(v===null){ e.textContent=""; e.className="v dim"; b.classList.add("empty"); }
-    else { e.textContent=v; e.className="v "+(c||""); b.classList.remove("empty"); } }
+  var acts=[
+    function(){ addSlot("instructor"); var k=addCard("Raymond",35); link("instructor",k); lit(k); refs();
+      say('<b class="g">new</b> built one Person object in memory. <b class="a">instructor</b> holds only an arrow to it.',"g",
+        'Person instructor = new Person("Raymond", 35);'); },
+    function(){ addSlot("teacher"); link("teacher",0); lit(0); refs();
+      say('No second object was built. <b class="a">teacher</b> copied the arrow, so both point at the same card.',"",
+        'Person teacher = instructor;'); },
+    function(){ var row=$("#nm0"); row.classList.remove("chg"); void row.offsetWidth; row.classList.add("chg");
+      row.querySelector(".v").innerHTML='<s>"Raymond"</s>"Ray"'; lit(0);
+      say('The one card changed, so <b class="y">instructor and teacher both see "Ray"</b>: it is one object.',"y",
+        'teacher.setName("Ray");'); },
+    function(){ addSlot("student"); var k=addCard("Brandon",35); link("student",k); lit(k); refs();
+      say('<b class="g">new</b> again, so a second, separate object. <b class="a">student</b> points at it; the first card did not move.',"g",
+        'Person student = new Person("Brandon", 35);'); },
+    function(){ unlink("instructor"); vars.instructor.el.classList.add("nul"); lit(0); refs();
+      say('<b class="y">instructor</b> lost its arrow and holds null. The first object still exists: <b class="a">teacher</b> still points at it.',"y",
+        'instructor = null;'); }
+  ];
+  var btns=[].slice.call(document.querySelectorAll("#steps button"));
+  btns.forEach(function(b,i){ b.addEventListener("click",function(){
+    if(i!==step) return; acts[i](); b.disabled=true; b.classList.add("done"); step++;
+    if(btns[step]) btns[step].disabled=false;
+  }); });
 
-  function show(i,animate){
-    at=i;
-    var n=steps.length;
-    renderPic(i,animate!==false);
-    if(i<0){
-      renderCode($("#codeM"),mainLines(),null); renderCode($("#codeP"),PERSON,null);
-      consEl.innerHTML='<span style="color:rgba(132,150,182,.5)">(nothing printed yet)</span>';
-      $("#caption").className="caption"; statusEl.innerHTML='Press <b class="a">Next</b>. The picture changes at every step.';
-      $("#stepno").innerHTML="<small>step</small>0 / "+n;
-      setStat("#stParam",null); setStat("#stField",null); setBtns(); return;
-    }
-    var s=steps[i];
-    renderCode($("#codeM"),mainLines(),s.m,s.mc); renderCode($("#codeP"),PERSON,s.p,s.pc);
-    var lines=said(i), prev=animate===false?lines.length:said(i-1).length;
-    consEl.innerHTML=lines.length?lines.map(function(t,k){return '<div'+(k>=prev?' class="out"':'')+'>'+t+'</div>';}).join(""):'<span style="color:rgba(132,150,182,.5)">(nothing printed yet)</span>';
-    $("#caption").className="caption "+s.cls; statusEl.innerHTML=s.msg;
-    $("#stepno").innerHTML="<small>step</small>"+(i+1)+" / "+n;
-    setStat("#stParam",i<6?null:"a reference","hot");
-    setStat("#stField",i<2?null:i<3?"null":q(NAME),i<3?"gold":"good");
-    setBtns();
+  function reset(){
+    wires.forEach(function(w){ w.el.remove(); }); wires=[]; vars={}; cards=[]; step=0;
+    slotsEl.querySelectorAll(".slot").forEach(function(e){ e.remove(); });
+    mem.querySelectorAll(".obj").forEach(function(e){ e.remove(); });
+    $("#vNone").style.display=""; $("#mNone").style.display="";
+    btns.forEach(function(b,i){ b.disabled=i>0; b.classList.remove("done"); });
+    say('Nothing yet: <b class="a">no variables</b> on the left, <b class="a">no objects</b> in memory on the right.');
   }
-  function setBtns(){ $("#bNext").disabled=at>=steps.length-1; $("#bBack").disabled=at<0;
-    var d=""; for(var k=0;k<steps.length;k++) d+='<i class="'+(k===at?"now":k<at?"done":"")+'"></i>'; $("#dots").innerHTML=d; }
-
-  /* focus: picture and caption only. Remembered per browser. */
-  function setFocus(on){ document.body.classList.toggle("solo",on); $("#bFocus").textContent=on?"Focus on":"Focus";
-    try{localStorage.setItem("hub-focus",on?"1":"0");}catch(e){} renderPic(at,false); }
-  $("#bFocus").addEventListener("click",function(){ setFocus(!document.body.classList.contains("solo")); this.blur(); });
-  try{ if(localStorage.getItem("hub-focus")==="1") document.body.classList.add("solo"); }catch(e){}
-  if(document.body.classList.contains("solo")) $("#bFocus").textContent="Focus on";
-
-  function next(){ if(at<steps.length-1) show(at+1); }
-  function back(){ if(at>=0) show(at-1); }
-  function reset(){ steps=build(); buildPic(); show(-1); }
-
-  $("#bNext").addEventListener("click",next);
-  $("#bBack").addEventListener("click",back);
   $("#bReset").addEventListener("click",reset);
-  document.addEventListener("keydown",function(e){ if(e.code==="Space"&&!/INPUT|BUTTON|SELECT|TEXTAREA/.test(e.target.tagName)){e.preventDefault();next();} });
-  addEventListener("resize",function(){ renderPic(at,false); });
+  addEventListener("resize",draw);
 
-  /* ---------- ambient canvas ---------- */
+  /* ambient canvas */
   var cv=$("#amb"),ctx=cv.getContext&&cv.getContext("2d"),parts=[];
   function sizeC(){if(!ctx)return;cv.width=innerWidth;cv.height=innerHeight;}
   function initParts(){parts=[];for(var i=0;i<46;i++)parts.push({x:Math.random(),y:Math.random(),
@@ -440,8 +265,6 @@
       ctx.fillStyle="rgba(140,170,255,"+p.o+")";ctx.fill();});
     requestAnimationFrame(drawC);}
   if(ctx&&!reduce){sizeC();initParts();drawC();addEventListener("resize",sizeC);}
-
-  reset();
 })();
 </script>
 <script src="../manifest.js"></script>

@@ -30,151 +30,73 @@
     background-clip:text;color:transparent}
   .lede{color:var(--muted);max-width:64ch;font-size:1.05rem;margin:0 0 26px;line-height:1.5}
   .lede b{color:var(--ink)}
-  .lede code,.take code,.caption code{font-family:var(--mono);font-size:.92em;color:#bcd0ff}
+  code{font-family:var(--mono);font-size:.92em;color:#bcd0ff}
 
-  /* ---------- stage: picture first, one toolbar, support below ---------- */
+  /* ---------- the stage IS the picture ---------- */
   .stage{position:relative;background:linear-gradient(180deg,rgba(255,255,255,.03),rgba(255,255,255,.01));
-    border:1px solid var(--line);border-radius:24px;padding:18px 18px 14px;
+    border:1px solid var(--line);border-radius:24px;padding:22px;
     box-shadow:0 1px 0 rgba(255,255,255,.06) inset,0 30px 80px -30px rgba(0,0,0,.8)}
-  .topbar{display:flex;align-items:center;gap:10px;margin:0 0 14px;flex-wrap:wrap}
-  .topbar .lab{margin:0 4px 0 0}
-  .lab{font-family:var(--mono);font-size:.7rem;letter-spacing:.12em;text-transform:uppercase;color:var(--muted);margin:0 0 10px}
-  .chips{display:flex;flex-wrap:wrap;gap:6px}
-  .chip{font-family:var(--mono);font-size:.74rem;padding:5px 11px;border-radius:999px;cursor:pointer;
-    border:1px solid var(--line);background:rgba(0,0,0,.25);color:var(--muted);transition:.15s}
-  .chip:hover{border-color:var(--accent);color:var(--accent)}
-  .chip.on{border-color:rgba(110,160,255,.6);background:rgba(110,160,255,.14);color:var(--ink)}
-  .chip:focus-visible,.btn:focus-visible,.focus:focus-visible{outline:2px solid var(--accent);outline-offset:2px}
-  .focus{margin-left:auto;font-family:var(--mono);font-size:.68rem;letter-spacing:.1em;text-transform:uppercase;padding:6px 12px;
-    border-radius:999px;border:1px solid var(--line);background:rgba(0,0,0,.25);color:var(--muted);cursor:pointer;transition:.15s}
-  .focus:hover{border-color:var(--accent);color:var(--accent)}
-  body.solo .focus{border-color:rgba(255,200,98,.6);color:var(--gold);background:rgba(255,200,98,.1)}
+  .ctl{display:flex;flex-wrap:wrap;align-items:center;gap:10px;margin:0 0 16px}
+  .ctl label{font-family:var(--mono);font-size:.62rem;letter-spacing:.16em;text-transform:uppercase;color:var(--muted)}
+  .ctl input{width:74px;font-family:var(--mono);font-size:.9rem;padding:8px 10px;border-radius:10px;border:1px solid var(--line);
+    background:rgba(0,0,0,.3);color:var(--ink);outline:none;transition:border-color .15s;text-align:center}
+  .ctl input:focus{border-color:var(--accent)}
+  .ctl .lim{font-family:var(--mono);font-size:.78rem;color:var(--muted);margin-right:auto}
+  .ctl .lim b{color:#bcd0ff;font-weight:500}
+  .go{font-family:var(--mono);font-weight:500;font-size:.9rem;padding:10px 16px;border-radius:12px;cursor:pointer;
+    border:1px solid rgba(110,160,255,.55);background:rgba(110,160,255,.14);color:#dbe6ff;transition:.15s}
+  .go:hover{background:rgba(110,160,255,.26);border-color:var(--accent)}
+  .go.all{border-color:rgba(255,200,98,.5);background:rgba(255,200,98,.08);color:var(--gold)}
+  .go.all:hover{background:rgba(255,200,98,.16);border-color:var(--gold)}
+  .go:disabled{opacity:.35;cursor:not-allowed}
 
-  /* hero picture: the loop code on the left, what one pass does on the right */
-  .pic{position:relative;height:390px;border:1px solid var(--line);border-radius:18px;background:rgba(6,10,20,.5);overflow:hidden;
-    display:grid;grid-template-columns:minmax(0,1.08fr) minmax(0,1fr);gap:18px;padding:22px 24px}
-  body.solo .pic{height:480px}
-  @media (max-width:860px){.pic,body.solo .pic{height:auto;grid-template-columns:1fr}}
-  .zl{font-family:var(--mono);font-size:.62rem;letter-spacing:.14em;text-transform:uppercase;color:rgba(132,150,182,.65);margin:0 0 8px}
-  .lcode{font-family:var(--mono);font-size:.9rem;line-height:2.55;color:#c9d4ea;background:rgba(0,0,0,.3);border:1px solid var(--line);
-    border-radius:14px;padding:14px 16px 10px;overflow-x:auto;min-width:0}
-  body.solo .lcode{font-size:1.02rem;line-height:2.8}
-  .cl{white-space:pre;display:flex;gap:12px}
-  .cl .n{width:14px;text-align:right;color:rgba(132,150,182,.45);user-select:none;flex-shrink:0}
-  .pt{position:relative;border-radius:6px;padding:2px 3px;margin:0 -3px;border-bottom:1px dashed rgba(132,150,182,.35);transition:background .25s,box-shadow .25s,opacity .25s}
-  .pt .pl{position:absolute;left:3px;top:-1.35em;font-size:.56rem;letter-spacing:.12em;text-transform:uppercase;color:rgba(132,150,182,.55);
-    line-height:1;white-space:nowrap;transition:color .25s}
-  .pt.lit{background:rgba(110,160,255,.18);box-shadow:0 0 0 1px rgba(110,160,255,.6);border-bottom-color:transparent}
-  .pt.lit .pl{color:var(--accent)}
-  .pt.lit.ok{background:rgba(70,217,138,.15);box-shadow:0 0 0 1px rgba(70,217,138,.6)} .pt.lit.ok .pl{color:var(--good)}
-  .pt.lit.no{background:rgba(255,106,106,.14);box-shadow:0 0 0 1px rgba(255,106,106,.65)} .pt.lit.no .pl{color:var(--warn)}
-  .pt.lit.gold{background:rgba(255,200,98,.14);box-shadow:0 0 0 1px rgba(255,200,98,.65)} .pt.lit.gold .pl{color:var(--gold)}
+  .board{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:14px}
+  @media (max-width:820px){.board{grid-template-columns:1fr}}
+  .card{position:relative;border-radius:16px;padding:16px 18px 14px;border:1px solid rgba(255,255,255,.14);
+    background:rgba(255,255,255,.035);transition:border-color .3s,opacity .3s;min-width:0}
+  .card.done{border-color:rgba(255,106,106,.45)}
+  .hd{font-family:var(--mono);font-size:.62rem;letter-spacing:.16em;text-transform:uppercase;color:var(--muted);margin:0 0 4px}
+  .who{font-family:var(--disp);font-weight:700;font-size:1.35rem;margin:0;color:#bcd0ff;letter-spacing:-.01em}
 
-  .rside{display:flex;flex-direction:column;gap:16px;min-width:0}
-  /* the order one pass runs in: four nodes, a loop-back under them, the exit above the check */
-  .flow{position:relative;padding:18px 0 30px}
-  .nodes{display:grid;grid-template-columns:repeat(4,1fr);gap:8px;position:relative;z-index:1}
-  .node{font-family:var(--mono);font-size:.74rem;text-align:center;padding:9px 4px;border-radius:10px;border:1px solid var(--line);
-    background:rgba(255,255,255,.03);color:var(--muted);transition:all .3s}
-  .node.lit{color:var(--ink);border-color:rgba(110,160,255,.7);background:rgba(110,160,255,.16);box-shadow:0 0 16px -6px rgba(110,160,255,.7)}
-  .node.lit.ok{border-color:rgba(70,217,138,.7);background:rgba(70,217,138,.14);box-shadow:0 0 16px -6px rgba(70,217,138,.7)}
-  .node.lit.no{border-color:rgba(255,106,106,.7);background:rgba(255,106,106,.13);box-shadow:0 0 16px -6px rgba(255,106,106,.7)}
-  .node.lit.gold{border-color:rgba(255,200,98,.7);background:rgba(255,200,98,.13);box-shadow:0 0 16px -6px rgba(255,200,98,.7)}
-  .node.chk{border-style:dashed}
-  .back-arc{position:absolute;left:37.5%;width:50%;bottom:8px;height:22px;border:1.5px solid rgba(132,150,182,.4);border-top:none;
-    border-radius:0 0 12px 12px}
-  .back-arc::before{content:"";position:absolute;left:-5px;top:-2px;border:5px solid transparent;border-bottom:7px solid rgba(132,150,182,.6);border-top:none}
-  .back-arc span{position:absolute;left:50%;bottom:-7px;transform:translateX(-50%);font-family:var(--mono);font-size:.56rem;letter-spacing:.12em;
-    text-transform:uppercase;color:rgba(132,150,182,.7);background:#0a0f1d;padding:0 6px}
-  .exit{position:absolute;top:-4px;font-family:var(--mono);font-size:.58rem;letter-spacing:.08em;color:rgba(132,150,182,.6);transform:translateX(-50%);
-    white-space:nowrap;transition:color .3s,left .3s}
-  .exit.on{color:var(--warn)}
-  .state{display:grid;grid-template-columns:1fr 1.5fr;gap:12px}
-  .box{border:1px solid var(--line);border-radius:14px;background:rgba(255,255,255,.03);padding:10px 14px;min-height:92px;transition:border-color .3s,background .3s}
-  .box .bk{font-family:var(--mono);font-size:.6rem;letter-spacing:.14em;text-transform:uppercase;color:var(--muted)}
-  .box .bv{font-family:var(--disp);font-weight:700;font-size:2.1rem;font-variant-numeric:tabular-nums;line-height:1.15;margin-top:4px}
-  .box .bv.pop{animation:pop .35s}
-  .box .bs{font-family:var(--mono);font-size:.68rem;color:var(--muted);margin-top:2px;min-height:1.1em}
-  .box .bx{font-family:var(--mono);font-size:1.05rem;margin-top:8px;color:var(--ink)}
-  .box .vd{display:inline-block;margin-left:8px;font-size:.78rem;padding:2px 9px;border-radius:999px;border:1px solid}
-  .vd.t{color:var(--good);border-color:rgba(70,217,138,.6);background:rgba(70,217,138,.1)}
-  .vd.f{color:var(--warn);border-color:rgba(255,106,106,.6);background:rgba(255,106,106,.1)}
-  .vd.n{color:var(--gold);border-color:rgba(255,200,98,.6);background:rgba(255,200,98,.1)}
-  .box.empty .bv,.box.empty .bx,.box.empty .bs{opacity:0}
-  .box.ok{border-color:rgba(70,217,138,.5)} .box.no{border-color:rgba(255,106,106,.5)} .box.gold{border-color:rgba(255,200,98,.5)}
-  .box.cur{border-color:rgba(110,160,255,.55)}
-  .prow{display:flex;flex-wrap:wrap;gap:8px;min-height:34px;align-items:center}
-  .pc{font-family:var(--mono);font-size:.82rem;padding:6px 12px;border-radius:999px;border:1px solid rgba(110,160,255,.5);
-    background:rgba(110,160,255,.12);color:var(--ink);animation:pop .3s}
-  .pc.gold{border-color:rgba(255,200,98,.6);background:rgba(255,200,98,.12)}
-  .zero{font-family:var(--mono);font-size:.82rem;color:var(--warn)}
-  .pic .start{font-family:var(--mono);font-size:.78rem;color:var(--muted)}
-  .pic .start b{color:var(--accent);font-weight:500}
-  .seg{display:inline-flex;border:1px solid var(--line);border-radius:999px;padding:3px;background:rgba(0,0,0,.25);gap:2px}
-  .seg .chip{border-color:transparent;background:transparent}
-  .seg .chip.on{border-color:rgba(110,160,255,.6);background:rgba(110,160,255,.14)}
+  /* the track */
+  .loop{position:relative;width:260px;height:260px;margin:4px auto 8px;max-width:100%}
+  .ring{position:absolute;inset:50px;border-radius:50%;border:2px dashed rgba(132,150,182,.35)}
+  .arm{position:absolute;inset:50px;border-radius:50%;transition:transform .45s cubic-bezier(.4,.1,.3,1)}
+  .arm i{position:absolute;left:50%;top:-8px;width:14px;height:14px;margin-left:-7px;border-radius:50%;
+    background:var(--accent);box-shadow:0 0 14px rgba(110,160,255,.9);transition:background .3s,box-shadow .3s}
+  .card.done .arm i{background:var(--warn);box-shadow:0 0 14px rgba(255,106,106,.9)}
+  .mid{position:absolute;left:50%;top:50%;transform:translate(-50%,-50%);text-align:center;font-family:var(--mono)}
+  .mid small{display:block;font-size:.6rem;letter-spacing:.12em;text-transform:uppercase;color:var(--muted)}
+  .mid b{display:inline-block;font-weight:500;font-size:1.9rem;color:#f78c6c;font-variant-numeric:tabular-nums}
+  .mid b.pop{animation:pop .4s}
+  .st{position:absolute;transform:translate(-50%,-50%);font-family:var(--mono);text-align:center;white-space:nowrap;
+    padding:5px 9px;border-radius:10px;border:1px solid var(--line);background:#0b1122;color:#c9d4ea;font-size:.76rem;
+    transition:border-color .3s,background .3s,box-shadow .3s}
+  .st small{display:block;font-size:.56rem;letter-spacing:.14em;text-transform:uppercase;color:var(--muted)}
+  .st.on{border-color:rgba(110,160,255,.75);background:#12203f;box-shadow:0 0 18px -6px rgba(110,160,255,.8)}
+  .st.ok{border-color:rgba(70,217,138,.75);background:#0f2a22;box-shadow:0 0 18px -6px rgba(70,217,138,.8)}
+  .st.ok small{color:var(--good)}
+  .st.no{border-color:rgba(255,106,106,.8);background:#2a1218;box-shadow:0 0 18px -6px rgba(255,106,106,.8)}
+  .st.no small{color:var(--warn)}
+  .st.y{border-color:rgba(255,200,98,.75);background:#2a2312;box-shadow:0 0 18px -6px rgba(255,200,98,.8)}
+  .st.y small{color:var(--gold)}
+  .out{font-family:var(--mono);font-size:.78rem;line-height:1.5;color:#9fe3b6;background:#05070e;border:1px solid var(--line);
+    border-radius:10px;padding:7px 10px;min-height:48px;word-break:break-word}
+  .out small{display:block;font-size:.54rem;letter-spacing:.12em;text-transform:uppercase;color:rgba(132,150,182,.7)}
+  .out span{display:inline-block;margin-right:8px;animation:pop .35s}
+  .out em{font-style:normal;color:var(--muted)}
 
-  /* support: where each part lives in each form */
-  .where{width:100%;border-collapse:separate;border-spacing:0;font-size:.8rem;background:rgba(0,0,0,.3);border:1px solid var(--line);border-radius:14px;overflow:hidden}
-  .where th,.where td{padding:8px 10px;text-align:left;border-bottom:1px solid var(--line);transition:background .25s,color .25s}
-  .where tr:last-child th,.where tr:last-child td{border-bottom:none}
-  .where thead th{font-family:var(--mono);font-size:.66rem;letter-spacing:.08em;color:var(--muted);font-weight:500}
-  .where tbody th{font-family:var(--mono);font-size:.7rem;color:var(--muted);font-weight:500;white-space:nowrap}
-  .where td{font-family:var(--mono);font-size:.72rem;color:rgba(201,212,234,.55)}
-  .where .fc{color:var(--ink);background:rgba(110,160,255,.07)}
-  .where thead th.fc{color:var(--accent)}
-  .where tr.on th{color:var(--accent)}
-  .where tr.on td.fc{background:rgba(110,160,255,.2)}
-  /* caption: the one sentence, right under the picture */
-  .caption{display:flex;gap:16px;align-items:flex-start;margin:14px 4px 0;min-height:56px}
-  .caption .n{flex-shrink:0;font-family:var(--disp);font-weight:700;font-size:1.35rem;color:var(--accent);font-variant-numeric:tabular-nums;
-    line-height:1.2;min-width:3.2rem}
-  .caption .n small{display:block;font-family:var(--mono);font-weight:400;font-size:.58rem;letter-spacing:.14em;text-transform:uppercase;color:var(--muted)}
-  .caption .t{font-size:1.02rem;line-height:1.55;color:var(--ink);padding-left:16px;border-left:3px solid var(--accent);transition:border-color .3s}
-  body.solo .caption .t{font-size:1.18rem}
-  .caption.cut .t{border-left-color:var(--warn)} .caption.left .t{border-left-color:var(--gold)} .caption.ok .t{border-left-color:var(--good)}
-  .caption b.g{color:var(--good)} .caption b.w{color:var(--warn)} .caption b.a{color:var(--accent)} .caption b.y{color:var(--gold)}
+  /* the one sentence */
+  .caption{display:flex;gap:14px;align-items:flex-start;margin:18px 2px 0;padding-top:16px;border-top:1px solid var(--line)}
+  .caption .t{flex:1;font-size:1.05rem;line-height:1.55;color:var(--ink);padding-left:16px;border-left:3px solid var(--accent);transition:border-color .3s}
+  .caption .t .line{display:block;margin-top:6px;font-family:var(--mono);font-size:.8rem;color:#bcd0ff;opacity:.9}
+  .caption.y .t{border-left-color:var(--gold)} .caption.g .t{border-left-color:var(--good)} .caption.w .t{border-left-color:var(--warn)}
+  .caption b.a{color:var(--accent)} .caption b.y{color:var(--gold)} .caption b.g{color:var(--good)} .caption b.w{color:var(--warn)}
+  .reset{font-family:var(--body);font-weight:500;font-size:.84rem;padding:8px 14px;border-radius:11px;cursor:pointer;
+    border:1px solid var(--line);background:transparent;color:var(--muted);transition:.15s;flex-shrink:0}
+  .reset:hover{border-color:var(--accent);color:var(--accent)}
+  button:focus-visible,input:focus-visible{outline:2px solid var(--accent);outline-offset:2px}
 
-  /* toolbar: same on every page */
-  .toolbar{display:flex;align-items:center;gap:10px;margin:16px 0 0;padding-top:14px;border-top:1px solid var(--line)}
-  .btn{font-family:var(--body);font-weight:500;font-size:.86rem;padding:9px 16px;border-radius:11px;cursor:pointer;
-    border:1px solid var(--line);background:var(--surface);color:var(--ink);transition:.15s}
-  .btn:hover{border-color:var(--accent);color:var(--accent)}
-  .btn.primary{border-color:rgba(110,160,255,.5);background:rgba(110,160,255,.12);padding:9px 22px}
-  .btn:disabled{opacity:.35;cursor:not-allowed}
-  .btn.ghost{background:transparent;color:var(--muted);margin-left:auto}
-  .dots{display:flex;gap:5px;align-items:center;margin:0 6px}
-  .dots i{display:block;width:8px;height:8px;border-radius:50%;background:rgba(255,255,255,.12);transition:.2s}
-  .dots i.done{background:rgba(110,160,255,.45)}
-  .dots i.now{background:var(--accent);transform:scale(1.35);box-shadow:0 0 10px rgba(110,160,255,.7)}
-  .hint{font-family:var(--mono);font-size:.68rem;color:var(--muted);margin:10px 4px 0;line-height:1.5}
-  .hint b{color:var(--accent)}
-
-  /* support: code, console, readouts. Below the picture, hidden in focus */
-  .support{display:grid;grid-template-columns:minmax(0,1.3fr) minmax(0,1fr);gap:14px;margin-top:18px}
-  @media (max-width:860px){.support{grid-template-columns:1fr}}
-  body.solo .support,body.solo .take,body.solo .hint{display:none}
-  .code{min-width:0;font-family:var(--mono);font-size:.76rem;line-height:1.8;background:rgba(0,0,0,.35);border:1px solid var(--line);
-    border-radius:14px;padding:12px 0;overflow-x:auto}
-  .ln{display:flex;gap:12px;padding:0 14px;white-space:pre;color:#c9d4ea;transition:background .2s,opacity .3s}
-  .ln .n{width:20px;text-align:right;color:rgba(132,150,182,.55);user-select:none;flex-shrink:0}
-  .ln.cur{background:rgba(110,160,255,.14);box-shadow:inset 3px 0 0 var(--accent)}
-  .ln.cur .n{color:var(--accent)}
-  .ln.cut{background:rgba(255,106,106,.12);box-shadow:inset 3px 0 0 var(--warn)}
-  .ln.left{background:rgba(255,200,98,.12);box-shadow:inset 3px 0 0 var(--gold)}
-  .ln.dim{opacity:.4}
-  .kw{color:#c792ea} .ty{color:#82aaff} .st{color:#c3e88d} .nm{color:#f78c6c} .cm{color:#5f6b85;font-style:italic} .fn{color:#ffcb6b}
-  .side{display:flex;flex-direction:column;gap:12px}
-  .readout{display:grid;grid-template-columns:1fr 1fr;gap:10px}
-  .stat{background:rgba(255,255,255,.03);border:1px solid var(--line);border-radius:12px;padding:11px 13px;transition:opacity .3s}
-  .stat.empty{opacity:.3}
-  .stat .k{font-family:var(--mono);font-size:.62rem;letter-spacing:.1em;text-transform:uppercase;color:var(--muted)}
-  .stat .v{font-family:var(--disp);font-weight:700;font-size:1.45rem;font-variant-numeric:tabular-nums;margin-top:2px;transition:color .3s;min-height:1.6em}
-  .v.hot{color:var(--accent)} .v.gold{color:var(--gold)} .v.dim{color:rgba(132,150,182,.5)}
-  .console{font-family:var(--mono);font-size:.76rem;line-height:1.6;background:#05070e;border:1px solid var(--line);
-    border-radius:12px;padding:10px 14px;min-height:64px;color:#9fe3b6;flex:1}
-  .console .cl{font-size:.6rem;letter-spacing:.14em;text-transform:uppercase;color:rgba(132,150,182,.6);margin-bottom:4px}
-  .console .out{animation:pop .3s}
   @keyframes pop{from{transform:scale(.6);opacity:0}to{transform:scale(1);opacity:1}}
   .take{margin-top:22px;background:linear-gradient(180deg,rgba(110,160,255,.08),rgba(139,123,255,.04));
     border:1px solid var(--line);border-left:3px solid var(--accent);border-radius:12px;padding:16px 18px}
@@ -185,285 +107,175 @@
 </style>
 </head>
 <body>
-
 <a class="back" href="../index.html#12-loop-types">&#8592; Week 2 index</a>
-
 <canvas id="amb"></canvas>
 <div class="wrap">
   <p class="tag">Workbook 2a &middot; Section 3-1 &middot; Loops</p>
   <h1>Three Loops, One Job</h1>
-  <p class="lede"><b>Every loop has the same four parts: start, condition, body, update. while, do / while and for only put them in different places.</b></p>
+  <p class="lede"><b>Three loops run the same job. Watch where each one checks.</b></p>
 
   <div class="stage">
-    <div class="topbar">
-      <span class="lab">Form</span>
-      <div class="seg" id="forms"></div>
-      <button class="focus" id="bFocus" title="Hide the table and notes, enlarge the picture">Focus</button>
+    <div class="ctl">
+      <label for="inStart">start value</label>
+      <input id="inStart" value="0" inputmode="numeric" maxlength="3" aria-label="start value">
+      <span class="lim">runs while the value is <b>&lt; 10</b></span>
+      <button class="go" id="bOne">Run one pass</button>
+      <button class="go all" id="bAll">Run all</button>
     </div>
-
-    <div class="pic" id="pic">
-      <div style="min-width:0">
-        <p class="zl">Main.java</p>
-        <div class="lcode" id="lcode"></div>
-      </div>
-      <div class="rside">
-        <div>
-          <p class="zl">The order of one pass</p>
-          <div class="flow">
-            <span class="exit" id="exit">false: exit</span>
-            <div class="nodes" id="nodes"></div>
-            <div class="back-arc"><span>repeat</span></div>
-          </div>
-        </div>
-        <div class="state" id="state">
-          <div class="box empty" id="bxVar"><div class="bk" id="varK">counter</div><div class="bv" id="varV">0</div><div class="bs" id="varS"></div></div>
-          <div class="box empty" id="bxChk"><div class="bk">condition</div><div class="bx" id="chkV"></div><div class="bs" id="chkS"></div></div>
-        </div>
-        <div>
-          <p class="zl">Printed</p>
-          <div class="prow" id="prow"></div>
-        </div>
-      </div>
-    </div>
-
+    <div class="board" id="board"></div>
     <div class="caption" id="caption">
-      <div class="n" id="stepno"><small>step</small>0 / 6</div>
-      <div class="t" id="status">Press <b class="a">Next</b>. Switch the form at any step: the same part lights up.</div>
-    </div>
-
-    <div class="toolbar">
-      <button class="btn" id="bBack">&larr; Back</button>
-      <div class="dots" id="dots"></div>
-      <button class="btn primary" id="bNext">Next &rarr;</button>
-      <button class="btn ghost" id="bReset">Reset</button>
-    </div>
-    <p class="hint">space = next &middot; switching the form starts over &middot; every form prints 0 to 9</p>
-
-    <div class="support">
-      <div>
-        <p class="lab">Where each part lives</p>
-        <table class="where" id="where">
-          <thead><tr><th></th><th data-f="while">while</th><th data-f="do">do / while</th><th data-f="for">for</th></tr></thead>
-          <tbody>
-            <tr data-p="start"><th>start</th><td data-f="while">before the loop</td><td data-f="do">before the loop</td><td data-f="for">header, slot 1</td></tr>
-            <tr data-p="cond"><th>condition</th><td data-f="while">top</td><td data-f="do">bottom</td><td data-f="for">header, slot 2</td></tr>
-            <tr data-p="body"><th>body</th><td data-f="while">inside { }</td><td data-f="do">inside { }</td><td data-f="for">inside { }</td></tr>
-            <tr data-p="update"><th>update</th><td data-f="while">end of body</td><td data-f="do">end of body</td><td data-f="for">header, slot 3</td></tr>
-            <tr data-p="first"><th>first check</th><td data-f="while">before pass 1</td><td data-f="do">after pass 1</td><td data-f="for">before pass 1</td></tr>
-          </tbody>
-        </table>
-      </div>
-      <div class="side">
-        <div class="readout">
-          <div class="stat empty" id="sRuns"><div class="k">body ran</div><div class="v" id="stRuns"></div></div>
-          <div class="stat empty" id="sChecks"><div class="k">condition checked</div><div class="v" id="stChecks"></div></div>
-        </div>
-        <div class="console"><div class="cl">console</div><div id="console"></div></div>
-      </div>
+      <div class="t" id="status"></div>
+      <button class="reset" id="bReset">Reset</button>
     </div>
   </div>
 
   <div class="take">
     <p class="tk">The one idea</p>
-    <p><b>Same four parts, different places.</b> while and for check the condition <b>before</b> each pass;
-    do / while checks <b>after</b> the pass, so its body always runs <b>at least once</b>. for puts start, condition and update on one line:
-    <code>for (int i = 0; i &lt; 10; i++)</code>.</p>
+    <p><b>while</b> and <b>for</b> check before the body, so they can run zero times. <b>do-while</b> checks after the body,
+    so it always runs at least once. Pick <b>for</b> when you know the count, <b>while</b> when you do not.</p>
   </div>
-
   <div id="rail"></div>
 </div>
-
 <script>
 (function(){
   "use strict";
   var $=function(s){return document.querySelector(s);};
   var reduce=matchMedia("(prefers-reduced-motion: reduce)").matches;
+  var LIM=10, STEP=reduce?150:520, GAP=600;
+  /* stations: angle on the track, clockwise from the top */
+  var LANES=[
+    {id:"while",name:"while",hd:"checks at the top",v:"counter",
+      st:[{k:"gate",a:0,lab:"check",txt:"counter < 10"},{k:"body",a:180,lab:"body",txt:"print, counter++"}]},
+    {id:"do",name:"do-while",hd:"checks at the bottom",v:"number",
+      st:[{k:"body",a:0,lab:"body",txt:"print, number++"},{k:"gate",a:180,lab:"check",txt:"number < 10"}]},
+    {id:"for",name:"for",hd:"checks in the header",v:"i",
+      st:[{k:"gate",a:0,lab:"check",txt:"i < 10"},{k:"body",a:120,lab:"body",txt:"print"},{k:"update",a:240,lab:"update",txt:"i++"}]}
+  ];
+  var start=0, pass=0, busy=false, token=0, timers=[];
+  var board=$("#board"), status=$("#status"), caption=$("#caption");
 
-  var FORMS=[["while","while"],["do","do / while"],["for","for"]];
-  var FORM="while";
-
-  /* one example: count 0 to 9 in each form */
-  var LIM=10;
-  var NAMES={"while":"counter","do":"number","for":"i"};
-  function V(){ return NAMES[FORM]; }
-  function condTxt(x){ return x+" < "+LIM; }
-
-  /* ---------- the code of each form: parts are tagged so the same part lights up in every form ---------- */
-  var PL={start:"start",cond:"condition",body:"body",update:"update"};
-  function P(p,h){ return {p:p,h:h}; }
-  var PR='System.out.<span class="fn">println</span>(';
-  function lines(){
-    var v=V(), lim='<span class="nm">'+LIM+'</span>';
-    var st=P("start",'<span class="ty">int</span> '+v+' = <span class="nm">0</span>');
-    var cd=P("cond",v+" < "+lim);
-    var up=P("update",v+"++"+(FORM==="for"?"":";"));
-    var bd=P("body",PR+v+");");
-    if(FORM==="while") return [[st,";"],['<span class="kw">while</span> (',cd,") {"],["    ",bd],["    ",up],["}"]];
-    if(FORM==="do") return [[st,";"],['<span class="kw">do</span> {'],["    ",bd],["    ",up],['} <span class="kw">while</span> (',cd,");"]];
-    return [['<span class="kw">for</span> (',st,"; ",cd,"; ",up,") {"],["    ",bd],["}"]];
+  function say(html,tone,line){
+    caption.className="caption"+(tone?" "+tone:"");
+    status.innerHTML=html+(line?'<span class="line">'+line+'</span>':"");
   }
+  function later(fn,ms){ var t=token; timers.push(setTimeout(function(){ if(t===token) fn(); },ms)); }
 
-  /* ---------- the walk: computed by running the loop ---------- */
-  function where(){ return FORM==="while"?"at the top":FORM==="do"?"at the bottom":"in the header"; }
-  function c(x){ return "<code>"+x+"</code>"; }
   function build(){
-    var S=[], v=0, printed=[], checks=0, runs=0, last=null, nm=V();
-    function snap(o){ o.v=v; o.printed=printed.slice(); o.checks=checks; o.runs=runs; o.last=last; o.cls=o.cls||""; S.push(o); }
-    function test(){ var r=v<LIM; checks++; last={v:v,res:r}; return r; }
-    snap({key:"start",parts:["start"],msg:FORM==="for"?"Start: "+c("int i = 0")+" sits in the for header, but it runs only once.":
-      "Start: "+c("int "+nm+" = 0")+" runs once, before the loop."});
-    if(FORM!=="do"){
-      test();
-      snap({key:"c1",parts:["cond"],cls:"ok",msg:"Check first, "+where()+": "+c("0 < 10")+' is <b class="g">true</b>, so the body runs.'});
-      printed.push(v); runs++;
-      snap({key:"b1",parts:["body"],msg:'Body: prints <b class="a">0</b>. This is the job the loop repeats.'});
-      v++;
-      snap({key:"u1",parts:["update"],upd:0,msg:FORM==="for"?"Update: "+c("i++")+" is in the header, but it runs after the body. i: 0 to 1.":
-        "Update: "+c(nm+"++")+" at the end of the body. "+nm+" goes from 0 to 1."});
-      while(v<LIM){
-        var was=v; test(); printed.push(v); runs++; v++;
-        snap({key:"p"+v,parts:["cond","body","update"],cls:"ok",upd:was,msg:"Pass "+(v+1)+": "+c(was+" < 10")+' is <b class="g">true</b>, the body prints <b class="a">'+was+"</b>, "+nm+" goes from "+was+" to "+v+"."});
-      }
-      test();
-      snap({key:"exit",parts:["cond"],cls:"no",end:true,msg:"Check "+where()+": "+c("10 < 10")+' is <b class="w">false</b>. The loop ends: 0 to 9 printed.'});
-    } else {
-      printed.push(v); runs++;
-      snap({key:"b1",parts:["body"],cls:"gold",msg:'do goes straight in, <b class="y">no check yet</b>. The body prints <b class="a">0</b>.'});
-      v++;
-      snap({key:"u1",parts:["update"],upd:0,msg:"Update: "+c("number++")+" at the end of the body. number goes from 0 to 1."});
-      test();
-      snap({key:"c1",parts:["cond"],cls:"ok",msg:"Only now the check, at the bottom: "+c("1 < 10")+' is <b class="g">true</b>. Back to the top.'});
-      while(v<LIM){
-        var was=v; printed.push(v); runs++; v++;
-        if(v<LIM){ test(); snap({key:"p"+v,parts:["body","update","cond"],cls:"ok",upd:was,msg:"Pass "+(v+1)+": the body prints <b class=\"a\">"+was+"</b>, number goes from "+was+" to "+v+", then "+c(v+" < 10")+' is <b class="g">true</b>.'}); }
-        else { snap({key:"p"+v,parts:["body","update"],cls:"ok",upd:was,msg:"Pass "+(v+1)+": the body prints <b class=\"a\">"+was+"</b>, number goes from "+was+" to "+v+". Now the check."}); }
-      }
-      test();
-      snap({key:"exit",parts:["cond"],cls:"no",end:true,msg:"Check at the bottom: "+c("10 < 10")+' is <b class="w">false</b>. The loop ends: 0 to 9 printed.'});
-    }
-    return S;
-  }
-
-  /* ---------- state ---------- */
-  var steps=[],at=-1;
-  var statusEl=$("#status"),consEl=$("#console");
-
-  function renderCode(s){
-    var L=lines(), lit=s?s.parts:[];
-    $("#lcode").innerHTML=L.map(function(segs,i){
-      var h=segs.map(function(g){
-        if(typeof g==="string") return g;
-        var k="pt "+g.p;
-        if(lit.indexOf(g.p)>=0) k+=" lit "+s.cls;
-        return '<span class="'+k+'"><span class="pl">'+PL[g.p]+"</span>"+g.h+"</span>";
-      }).join("");
-      return '<div class="cl"><span class="n">'+(i+1)+"</span><span>"+h+"</span></div>";
-    }).join("");
-  }
-  function order(){ return FORM==="do"?["start","body","update","cond"]:["start","cond","body","update"]; }
-  function renderFlow(s){
-    var o=order(), lit=s?s.parts:[];
-    $("#nodes").innerHTML=o.map(function(p){
-      var k="node"+(p==="cond"?" chk":"");
-      if(lit.indexOf(p)>=0) k+=" lit "+s.cls;
-      return '<div class="'+k+'">'+(p==="cond"?"check":p)+"</div>";
-    }).join("");
-    var xe=$("#exit");
-    xe.style.left=(o.indexOf("cond")*25+12.5)+"%";
-    xe.className="exit"+(s&&s.last&&!s.last.res?" on":"");
-  }
-  function pop(el,val){
-    var prev=el.textContent; el.textContent=val;
-    if(String(val)!==prev&&!reduce){ el.classList.remove("pop"); void el.offsetWidth; el.classList.add("pop"); }
-  }
-  function renderState(s){
-    $("#varK").textContent=V();
-    var bv=$("#bxVar"), bc=$("#bxChk");
-    if(!s){ bv.className="box empty"; bc.className="box empty"; $("#chkV").innerHTML=""; $("#chkS").textContent="";
-      $("#varS").textContent="";
-      $("#prow").innerHTML='<span class="start">'+V()+" starts at 0 "+String.fromCharCode(183)+" press <b>Next</b></span>"; return; }
-    pop($("#varV"),s.v);
-    bv.className="box"+(s.parts.indexOf("update")>=0||s.key==="start"?" cur":"");
-    $("#varS").textContent=s.upd!==undefined?"was "+s.upd:(s.key==="start"?"set once":"");
-    if(s.last){
-      bc.className="box "+(s.last.res?"ok":"no");
-      $("#chkV").innerHTML=condTxt(s.last.v)+'<span class="vd '+(s.last.res?"t":"f")+'">'+(s.last.res?"true":"false")+"</span>";
-      $("#chkS").textContent=s.parts.indexOf("cond")>=0?"checked just now":"last check";
-    } else if(FORM==="do"&&s.key!=="start"){
-      bc.className="box gold"; $("#chkV").innerHTML=condTxt(V())+'<span class="vd n">not yet</span>'; $("#chkS").textContent="do checks after the body";
-    } else { bc.className="box empty"; $("#chkV").innerHTML=""; $("#chkS").textContent=""; }
-    var pr=s.printed.map(function(x,k){ return '<span class="pc'+(FORM==="do"&&k===0&&!s.last?" gold":"")+'">'+x+"</span>"; }).join("");
-    $("#prow").innerHTML=pr||'<span class="start">nothing printed yet</span>';
-  }
-  function renderSupport(s){
-    Array.prototype.forEach.call(document.querySelectorAll("#where [data-f]"),function(k){
-      k.classList.toggle("fc",k.getAttribute("data-f")===FORM); });
-    Array.prototype.forEach.call(document.querySelectorAll("#where tbody tr"),function(r){
-      var p=r.getAttribute("data-p"); r.classList.toggle("on",!!s&&(s.parts.indexOf(p)>=0||(p==="first"&&s.parts.indexOf("cond")>=0&&s.checks===1)));
+    board.innerHTML="";
+    LANES.forEach(function(L){
+      L.val=start; L.done=false; L.lap=0; L.printed=0;
+      var el=document.createElement("div"); el.className="card"; el.id="L"+L.id;
+      var h='<p class="hd">'+L.hd+'</p><p class="who">'+L.name+'</p><div class="loop"><div class="ring"></div>'
+        +'<div class="arm" id="A'+L.id+'"><i></i></div>'
+        +'<div class="mid"><small>'+L.v+'</small><b id="V'+L.id+'">'+start+'</b></div>';
+      L.st.forEach(function(s){
+        var r=s.a*Math.PI/180, x=50+40*Math.sin(r), y=50-40*Math.cos(r);
+        h+='<div class="st" id="S'+L.id+s.k+'" style="left:'+x.toFixed(1)+'%;top:'+y.toFixed(1)+'%"><small>'+s.lab+'</small>'+s.txt+'</div>';
+      });
+      h+='</div><div class="out" id="O'+L.id+'"><small>prints</small></div>';
+      el.innerHTML=h; board.appendChild(el);
+      L.angle=-50; turn(L,true);
     });
-    setStat("#sRuns","#stRuns",s?s.runs:null); setStat("#sChecks","#stChecks",s?s.checks:null);
-    var out=s?s.printed:[];
-    consEl.innerHTML=out.map(function(o){return '<div class="out">'+o+"</div>";}).join("")||'<span style="color:rgba(132,150,182,.5)">(nothing printed yet)</span>';
   }
-  function setStat(box,id,v){ var e=$(id); if(v===null){e.textContent="";$(box).classList.add("empty");} else {e.textContent=v;$(box).classList.remove("empty");} }
+  function turn(L,instant){
+    var a=$("#A"+L.id);
+    if(instant){ a.style.transition="none"; a.style.transform="rotate("+L.angle+"deg)"; void a.offsetWidth; a.style.transition=""; }
+    else a.style.transform="rotate("+L.angle+"deg)";
+  }
+  function light(L,k,cls){
+    L.st.forEach(function(s){ $("#S"+L.id+s.k).className="st"+(s.k===k?" "+cls:""); });
+  }
+  function setVal(L){ var b=$("#V"+L.id); b.textContent=L.val; b.classList.remove("pop"); void b.offsetWidth; b.classList.add("pop"); }
+  function print(L){
+    var o=$("#O"+L.id), s=document.createElement("span"); s.textContent=L.val; o.appendChild(s); L.printed++;
+  }
 
-  var seqTimer=null;
-  function show(i){
-    at=i;
-    if(seqTimer){ clearTimeout(seqTimer); seqTimer=null; }
-    var s=i>=0?steps[i]:null;
-    $("#stepno").innerHTML="<small>step</small>"+(i+1)+" / "+steps.length;
-    if(s&&s.parts.length>1&&!reduce){
-      /* a pass: light check, body, update one after another, so the highlight moves the way the program runs */
-      var full=s.parts, k=0;
-      var tick=function(){
-        var part={}; for(var q in s) part[q]=s[q]; part.parts=[full[k]];
-        renderCode(part); renderFlow(part);
-        k++;
-        if(k<full.length){ seqTimer=setTimeout(tick,420); }
-        else { seqTimer=null; renderState(s); renderSupport(s); }
-      };
-      renderState(steps[i-1]||null); renderSupport(steps[i-1]||null);
-      tick();
+  /* one pass: every lane walks its own stations in its own order */
+  function runPass(done){
+    var live=LANES.filter(function(L){ return !L.done; });
+    if(!live.length){ if(done) done(); return; }
+    busy=true; sync(); pass++;
+    var r={};
+    live.forEach(function(L){
+      var base=360*(L.lap++), plan=[], v=L.val, ok, stopped=false;
+      L.st.forEach(function(s){
+        if(stopped) return;
+        if(s.k==="gate"){
+          ok=v<LIM;
+          plan.push({s:s,fn:(function(ok){ return function(){ light(L,"gate",ok?"ok":"no"); if(!ok){ L.done=true; $("#L"+L.id).classList.add("done"); } }; })(ok)});
+          r[L.id]={test:v,ok:ok,printed:r[L.id]&&r[L.id].printed};
+          if(!ok) stopped=true;
+        } else if(s.k==="body"){
+          var p=v; if(L.id!=="for") v++;
+          r[L.id]=r[L.id]||{}; r[L.id].printed=p;
+          plan.push({s:s,fn:function(){ light(L,"body","y"); print(L); if(L.id!=="for"){ L.val++; setVal(L); } }});
+        } else {
+          v++;
+          plan.push({s:s,fn:function(){ light(L,"update","on"); L.val++; setVal(L); }});
+        }
+      });
+      plan.forEach(function(step,i){
+        later(function(){ L.angle=base+step.s.a; turn(L); },i*STEP);
+        later(step.fn,i*STEP+(reduce?0:420));
+      });
+    });
+    later(function(){ answer(r); busy=false; sync(); if(done) done(); },3*STEP+(reduce?0:300));
+    say("Pass "+pass+" is running.","");
+  }
+
+  function answer(r){
+    var w=r["while"], d=r["do"], ran=w&&w.ok;
+    if(ran && d && d.ok){
+      say("Pass "+pass+': <b class="a">while</b> and <b class="a">for</b> checked '+w.test+" < 10 first, then printed "+w.test
+        +'. <b class="y">do-while</b> printed '+d.printed+" first and checked "+d.test+" < 10 after.","",
+        "while (counter < 10)   // "+w.test+" < 10 is true");
+    } else if(ran && d){
+      say("Pass "+pass+': <b class="y">do-while</b> printed '+d.printed+", then its check "+d.test
+        +' < 10 at the bottom is <b class="w">false</b>, so it stops. while and for printed '+w.test+" too; their check comes next.","y",
+        "} while (number < 10);   // "+d.test+" < 10 is false");
+    } else if(!ran && d && d.printed!==undefined){
+      say(w.test+' < 10 is <b class="w">false from the start</b>: <b class="a">while</b> and <b class="a">for</b> stop at the gate with nothing printed. <b class="y">do-while</b> ran its body once and printed '
+        +d.printed+" before it checked.","w","while (counter < 10)   // "+w.test+" < 10 is false, the body never runs");
+    } else if(!ran){
+      var n=LANES[0].printed;
+      say('<b class="a">while</b> and <b class="a">for</b> check '+w.test+' < 10 at the gate: <b class="w">false</b>, they stop. All three printed the same '
+        +n+" line"+(n===1?"":"s")+"; only the place of the check differs.","g","for (int i = "+start+"; i < 10; i++)   // "+w.test+" < 10 is false");
     } else {
-      renderCode(s); renderFlow(s); renderState(s); renderSupport(s);
+      say("Pass "+pass+": while and for printed "+w.test+".","",null);
     }
-    if(!s){ $("#caption").className="caption"; statusEl.innerHTML='Press <b class="a">Next</b>. The picture changes at every step.'; }
-    else { $("#caption").className="caption "+(s.cls==="no"?"cut":s.cls==="gold"?"left":s.cls==="ok"?"ok":""); statusEl.innerHTML=s.msg; }
-    setBtns();
-  }
-  function setBtns(){ $("#bNext").disabled=at>=steps.length-1; $("#bBack").disabled=at<0;
-    var d=""; for(var k=0;k<steps.length;k++) d+='<i class="'+(k===at?"now":k<at?"done":"")+'"></i>'; $("#dots").innerHTML=d; }
-
-  /* switching the form starts the walk over */
-  function switchForm(f){
-    FORM=f; steps=build();
-    markChips(); show(-1);
-  }
-  function markChips(){
-    Array.prototype.forEach.call(document.querySelectorAll("#forms .chip"),function(b){
-      b.classList.toggle("on",b.getAttribute("data-f")===FORM); });
+    if(LANES.every(function(L){ return L.done; })) LANES.forEach(function(L){ $("#O"+L.id).insertAdjacentHTML("beforeend",L.printed?"":"<em>nothing</em>"); });
   }
 
-  /* focus: picture and caption only. Remembered per browser. */
-  function setFocus(on){ document.body.classList.toggle("solo",on); $("#bFocus").textContent=on?"Focus on":"Focus";
-    try{localStorage.setItem("hub-focus",on?"1":"0");}catch(e){} }
-  $("#bFocus").addEventListener("click",function(){ setFocus(!document.body.classList.contains("solo")); this.blur(); });
-  try{ if(localStorage.getItem("hub-focus")==="1") document.body.classList.add("solo"); }catch(e){}
-  if(document.body.classList.contains("solo")) $("#bFocus").textContent="Focus on";
+  function sync(){
+    var over=LANES.every(function(L){ return L.done; });
+    $("#bOne").disabled=busy||over; $("#bAll").disabled=busy||over;
+  }
+  function runAll(){
+    if(busy) return;
+    (function next(){
+      runPass(function(){
+        if(LANES.every(function(L){ return L.done; })) return;
+        busy=true; sync(); later(function(){ busy=false; next(); },GAP);
+      });
+    })();
+  }
+  function reset(){
+    token++; timers.forEach(clearTimeout); timers=[]; busy=false; pass=0;
+    var v=parseInt($("#inStart").value,10); if(isNaN(v)) v=0; v=Math.max(-5,Math.min(20,v));
+    $("#inStart").value=v; start=v;
+    build(); sync();
+    say("All three start at "+start+' and print while the value is <b class="a">< 10</b>. Each runner sits before its first station.',"",
+      start<LIM?null:"start value "+start+" is already 10 or more");
+  }
 
-  function next(){ if(at<steps.length-1) show(at+1); }
-  function back(){ if(at>=0) show(at-1); }
-  function reset(){ steps=build(); markChips(); show(-1); }
+  $("#bOne").addEventListener("click",function(){ if(!busy) runPass(); });
+  $("#bAll").addEventListener("click",runAll);
+  $("#bReset").addEventListener("click",function(){ $("#inStart").value=0; reset(); });
+  $("#inStart").addEventListener("keydown",function(e){ if(e.key==="Enter") reset(); });
+  $("#inStart").addEventListener("change",reset);
+  reset();
 
-  $("#forms").innerHTML=FORMS.map(function(f){return '<button class="chip" data-f="'+f[0]+'">'+f[1]+"</button>";}).join("");
-  $("#forms").addEventListener("click",function(e){ var b=e.target.closest(".chip"); if(!b) return; b.blur(); switchForm(b.getAttribute("data-f")); });
-  $("#bNext").addEventListener("click",next);
-  $("#bBack").addEventListener("click",back);
-  $("#bReset").addEventListener("click",reset);
-  document.addEventListener("keydown",function(e){ if(e.code==="Space"&&!/INPUT|BUTTON/.test(e.target.tagName)){e.preventDefault();next();} });
-
-  /* ---------- ambient canvas ---------- */
+  /* ambient canvas */
   var cv=$("#amb"),ctx=cv.getContext&&cv.getContext("2d"),parts=[];
   function sizeC(){if(!ctx)return;cv.width=innerWidth;cv.height=innerHeight;}
   function initParts(){parts=[];for(var i=0;i<46;i++)parts.push({x:Math.random(),y:Math.random(),
@@ -474,8 +286,6 @@
       ctx.fillStyle="rgba(140,170,255,"+p.o+")";ctx.fill();});
     requestAnimationFrame(drawC);}
   if(ctx&&!reduce){sizeC();initParts();drawC();addEventListener("resize",sizeC);}
-
-  reset();
 })();
 </script>
 <script src="../manifest.js"></script>

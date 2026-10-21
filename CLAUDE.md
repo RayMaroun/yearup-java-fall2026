@@ -59,64 +59,52 @@ search.js, build-search-index.js, search-index.json
   `week-09/index.html`, `capstone/08-the-pipeline.html` (header + rail), `capstone/assets/rail.js`.
 - NOT taken from the capstone set: the SVG system map. It was capstone-specific.
 
-## Every visual page: the HERO LAYOUT (approved by the instructor 2026-10-12; reference `week-01/visuals/16-integer-division.html`)
-The picture is the page. Everything else supports it and sits below it. Order, top to bottom:
+## Every visual page: ONE PICTURE YOU TOUCH (Ray, 2026-10-21; calibration page `week-02/visuals/07-class-vs-object.html`)
+This replaces the hero layout and the Glance / Walk / Model sizes. The old shape (code listing, readouts, console,
+step counter, dots, hint line, Focus button, Next and Back) made the learner read code and look in five places
+while one thing happened. Ray: "the visuals are there to make things easier, not harder."
+
+**The rule: a page is one drawn thing the learner touches, and one sentence that answers. Nothing else.**
 1. `<a class="back" href="../index.html#NN-slug">← Week N index</a>`
-2. `.tag` eyebrow (workbook section), `h1`, `.lede` = ONE line, the bold claim only (under ~140 characters).
-3. `.stage` (padding 18px, no inner panel split):
-   - `.topbar`: a `.lab` word, the preset `.chips` (Walk/Model), and the `.focus` button on the right (always present).
-   - `.pic`: the hero picture, full width, 390px tall (480px in Focus). It is the ONLY thing the eye should land on.
-     Glance: the diagram itself. Walk: the thing that changes per step. Model: the live model (stack, buffer, ...).
-     Empty state shows a small centered mono hint ("10 and 3 · press Next").
-   - `.caption`: the one sentence for the current step, directly under the picture: `.n` step number ("3 / 9", Sora,
-     accent) and `.t` the sentence (Inter 1.02rem, left border 3px that takes the step color). Glance: the sentence that
-     describes the current state of the control.
-   - `.toolbar` (border-top): Walk = Back · `.dots` (one per step, current marked) · Next · Reset (ghost, right).
-     Model = Step · Run · Back · Reset · Experiment. Glance = its ONE control (segmented switch, slider, ...) lives here.
-   - `.hint` one mono line (keys, where the example comes from).
-   - `.support` (2 columns, hidden in Focus): left the code (`.code`), right `.side` with `.readout` stat tiles and the
-     `.console`. Readouts carry class `empty` (faded) until they hold a value. Model inputs go here too, above the readouts.
-4. Exactly one `.take` (hidden in Focus).
+2. `.tag` eyebrow (workbook section), `h1`, `.lede` = ONE line, an invitation, under ~90 characters
+   ("One class, many objects. Build a few and press their buttons.").
+3. `.stage` (padding 22px): the picture fills it. There is no panel split, no top bar, no toolbar.
+   - The picture is the idea drawn big with the design system: a blueprint card and object cards, a locked box,
+     a row of numbered boxes with a hand on one, a track with a gate. Fields and methods are rows on a card, never
+     a listing. **No code listing anywhere on the page.** At most one mono line per action, the Java statement
+     that the press stands for (`instructor.work(5);`), and it lives in the sentence, not in a panel.
+   - The action is on the picture itself: a button on the card, a clickable box, one or two small inputs on the
+     thing they fill. One press, one visible consequence. Up to three playgrounds stacked on a page when the
+     idea has two or three faces (String vs StringBuilder side by side counts as one).
+   - `.caption` under the picture, separated by a border-top: `.t` the one sentence (Inter 1.05rem, left border 3px
+     taking the tone: accent, `.y` gold for a change, `.g` good for a build, `.w` warn for a failure), with the
+     optional `.line` mono statement under it; a ghost Reset button on the right. The sentence answers the last
+     press. Before any press it states what is on screen.
+   - Motion only where the idea moves: the card slides out of the blueprint, the hand is blocked at the lock, the
+     pointer steps along the row, the old value is struck through next to the new one. Nothing else moves.
+   - A loop page advances one pass per press (never "passes 2 to 10 repeat"); the counter, the check and the printed
+     value change on each press.
+   - A failure (out of bounds, parse error, private access) is shown on the picture in `--warn` with the exception
+     name in the mono line; the page never crashes or freezes.
+4. Exactly one `.take` at the end, one paragraph.
 5. `<div id="rail"></div>` + manifest + rail scripts, exactly as before.
-- **Focus** (`body.solo`): hides `.support`, `.take`, `.hint`; enlarges `.pic` and the caption text. Only on pages that HAVE a `.support` area (instructor, 2026-10-12): a Focus button that visibly does nothing is worse than none. Glance pages without support get no button. Toggled by `#bFocus`,
-  stored in `localStorage["hub-focus"]`, read on load. Full view is the default. The button label flips "Focus" / "Focus on".
-  Never name the body class `focus` (it collides with the button class).
-- Nothing appears before it has a value; no "?" tiles in the eye line. One accent color per step state, not several.
-- Keyboard: ← / → = prev/next page (rail), Esc = index, space = next step (Walk/Model) when focus is not on a control.
+- Text budget: under ~700 visible characters of prose outside the picture.
+- `localStorage` is not used on visuals. Keyboard: Enter in an input presses its button; ← / → = prev/next page (rail), Esc = index.
+- Reduced motion: transitions off, the picture still responds.
 - `<title>Title | Week N Visual Hub</title>`. One `<style>`, one inline `<script>` for the page.
+- Design system values, header, `.take`, rail and ambient canvas unchanged (see above). Buttons on the picture use
+  mono, gold text for method calls, accent tint for `new` and builds; inputs mono with accent focus ring.
 
-## THE DOCTRINE — adapted for this cohort (set 2026-10-11 with the instructor)
+## THE DOCTRINE — adapted for this cohort (set 2026-10-11, reshaped 2026-10-21 with the instructor)
 The audience is beginners, most of them not developers yet. The hub is a whiteboard that moves while the
-instructor talks: a visual **complements the live explanation**, it is not a lab the learner has to work
-through, and it must not overload them. The Expeditors doctrine (richness bar, mini-simulators) was written
-for experienced engineers; here it applies only to the few pages where the hidden mechanism IS the lesson.
+instructor talks and a toy the learner can poke at home. A visual **complements the live explanation**, it is
+not a lab and not a narrated walk. The learner acts, the page answers.
 
-**Rules that stay from Expeditors:** one idea per page; the thing on screen is what you interact with;
-minimal prose (one `.lede`, one `.take`, under ~1200 visible non-code characters); never replay the demo in
-a browser; the gate is idea by idea from the workbook's learning objectives, not section by section; a
-visual exists only when something is hidden, too big, or too abstract to see, or when the mental model
-itself is the invisible thing (foundations exception, which applies often with beginners).
-
-**Three sizes. The size is a floor, not a ceiling: pick the size that makes the idea clear to someone meeting it
-for the first time. Anything with a "how it works" gets a Walk at least. Glance is only for ideas with no process
-in them. The idea list names the size for every page. NOTHING on this hub is a static picture: every page,
-Glance included, is interactive. Motion is used where it carries the idea, not as decoration.**
-- **Glance** (ideas with no process in them): a diagram with ONE control, a toggle, a slider, a hover,
-  a click, and the diagram responds: boxes resize, layers light up, a value slides into its slot.
-  No steps, no inputs, no state to manage. Examples: data types and sizes, naming conventions, JDK/JRE/JVM.
-  **Motion only when it shows something (instructor, 2026-10-12): never animation for its own sake.** A
-  layer lighting up answers a question; a token flying around a static diagram does not. If nothing in the
-  idea moves, the page responds to its control and otherwise stays still.
-- **Walk** (the default): a step-through that shows what happens behind the scenes, 4 to 10 steps, Next and
-  Reset, one sentence per step, the picture changes at each step. Evaluation order, truncation, what == compares,
-  the string printf builds, the path through if/else, a loop running.
-- **Model**: the full simulator with editable inputs, computed outcomes, and an experiment that lets the
-  learner break the rule and see the consequence. Only where the mechanism is the whole point and the
-  instructor wants to play with it in class: the call stack, the Scanner buffer. Few per week.
-  `week-01/visuals/26-method-call-stack.html` is the reference for this size, not the template for all.
-
-**Design is the same for all three sizes** (header, stage, panels where they make sense, takeaway, rail).
-A Glance page may drop the left/right split and put its one control under the animation.
+**Rules that stay:** one idea per page; one example per page, from the week's demos when it fits; the thing on
+screen is what you interact with; minimal prose; never replay the demo in a browser; the gate is idea by idea
+from the workbook's learning objectives; a visual exists only when something is hidden, too big, or too
+abstract to see, or when the mental model itself is the invisible thing (often, with beginners).
+**Nothing on this hub is a static picture, and no animation for its own sake.**
 
 ## YearUp conventions (differ from Expeditors)
 - Git through IntelliJ (Share Project on GitHub, commit panel), not the CLI. Learner repos are public.
@@ -146,7 +134,7 @@ it gets no visual, no game, no reference entry. Week 1: 1c Module 1 was skipped 
   says: new project named `x-2`, copy the previous code in, change it there, own repository. Never the same project.
 
 ## Agents
-Pages are built by subagents, one page per agent, from this file + the calibration page of the size + the
+Pages are built by subagents, one page per agent, from this file + the calibration page + the
 workbook text + the demo code. Use **Opus** for pages (quality matters more than cost; a redo costs more).
 Use Sonnet for mechanical work: diffs, link checks, compile checks. The lead verifies every page in a browser.
 
@@ -155,9 +143,8 @@ Use Sonnet for mechanical work: diffs, link checks, compile checks. The lead ver
 2. Read the fall workbooks for the week and the spring hub's pages for the same week.
 3. Produce the idea list: for each idea, keep-and-reskin / rebuild / new / drop, with a one-line reason;
    same for reference pages, exercise companions, games. Instructor confirms before building.
-4. Build: one page per task, at the size named in the idea list, against the approved reference page for
-   that size (Model: `week-01/visuals/26-method-call-stack.html`; Glance and Walk: the first approved page of each). Verify every page in a browser: interaction works, text budget, links resolve,
-   rail renders, `node --check` on the inline script.
+4. Build: one page per task, against the calibration page `week-02/visuals/07-class-vs-object.html`. Verify every
+   page in a browser: every press answers, text budget, links resolve, rail renders, `node --check` on the inline script.
 5. Update `week-NN/manifest.js`, the week index, the landing page, and run `build-search-index.js`.
 6. Record progress in `.planning/PROGRESS.md`; plan changes in `.planning/DECISIONS.md`.
 
@@ -172,8 +159,8 @@ Examples come from the week's demos (`04.Weeks/Week NN/demos/`), never from exer
 ## One example per page (Ray, 2026-10-17)
 A visual takes ONE example from the demo and shows ONE idea with it. It never walks the whole demo block: no second example, no "and here is the loop version", no hand-over to the next page's topic. If the demo has three examples for an idea, the page uses the first one that carries the idea. Ray: "the visuals should not have everything the demos have; we only need to show one example."
 
-## Loops run one pass per step (Ray, 2026-10-18)
-When a page walks a loop, every pass is its own step, with the counter, the check and the printed value changing on each one. Never "passes 2 to 10 repeat". If a pass has several parts (check, body, update), they light one after another inside the step. A Walk that loops ten times has ten or more steps; that is fine. Switching a preset or form restarts the walk from step 0.
+## Loops run one pass per press (Ray, 2026-10-18, kept 2026-10-21)
+When a page shows a loop, every pass is its own press, with the counter, the check and the printed value changing on each one. Never "passes 2 to 10 repeat". If a pass has several parts (check, body, update), they light one after another inside the press. Changing an input restarts the loop.
 
 ## The visual explains the concept (Ray, 2026-10-18)
 A page exists to make ONE concept clear to a learner. The demo is a source of examples, not a script: use a demo example when it fits the concept, invent or adapt one when it does not, and never put something on the page only because the demo has it. "The visual is not responsible for the demo. If an example from the demo fits, fine. If not, we care about explaining the concept visually." Together with the rules above: one idea, one example, the example from the demo when it fits.

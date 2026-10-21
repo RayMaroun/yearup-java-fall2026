@@ -30,119 +30,73 @@
     background-clip:text;color:transparent}
   .lede{color:var(--muted);max-width:64ch;font-size:1.05rem;margin:0 0 26px;line-height:1.5}
   .lede b{color:var(--ink)}
-  .lede code,.take code,.caption code{font-family:var(--mono);font-size:.92em;color:#bcd0ff}
+  code{font-family:var(--mono);font-size:.92em;color:#bcd0ff}
 
-  /* ---------- stage: picture first, one toolbar, support below ---------- */
+  /* ---------- the stage IS the picture ---------- */
   .stage{position:relative;background:linear-gradient(180deg,rgba(255,255,255,.03),rgba(255,255,255,.01));
-    border:1px solid var(--line);border-radius:24px;padding:18px 18px 14px;
+    border:1px solid var(--line);border-radius:24px;padding:22px;
     box-shadow:0 1px 0 rgba(255,255,255,.06) inset,0 30px 80px -30px rgba(0,0,0,.8)}
-  .topbar{display:flex;align-items:center;gap:10px;margin:0 0 14px;flex-wrap:wrap}
-  .topbar .lab{margin:0 4px 0 0}
-  .lab{font-family:var(--mono);font-size:.7rem;letter-spacing:.12em;text-transform:uppercase;color:var(--muted);margin:0 0 10px}
-  .btn:focus-visible,.focus:focus-visible{outline:2px solid var(--accent);outline-offset:2px}
-  .focus{margin-left:auto;font-family:var(--mono);font-size:.68rem;letter-spacing:.1em;text-transform:uppercase;padding:6px 12px;
-    border-radius:999px;border:1px solid var(--line);background:rgba(0,0,0,.25);color:var(--muted);cursor:pointer;transition:.15s}
-  .focus:hover{border-color:var(--accent);color:var(--accent)}
-  body.solo .focus{border-color:rgba(255,200,98,.6);color:var(--gold);background:rgba(255,200,98,.1)}
+  .board{display:grid;grid-template-columns:minmax(0,1.75fr) minmax(0,1fr);gap:16px;align-items:stretch;min-height:340px}
+  @media (max-width:820px){.board{grid-template-columns:minmax(0,1fr)}.code{font-size:.78rem}}
 
-  /* hero picture: a stylized IntelliJ window in Debug mode */
-  .pic{position:relative;height:390px;border:1px solid var(--line);border-radius:18px;background:rgba(6,10,20,.5);overflow:hidden}
-  body.solo .pic{height:480px}
-  .ide{position:absolute;inset:0;display:flex;flex-direction:column;transition:opacity .3s}
-  .pic.idle .ide{opacity:.3}
-  .pic .start{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;font-family:var(--mono);
-    font-size:.8rem;color:var(--muted);pointer-events:none;transition:opacity .3s}
-  .pic .start b{color:var(--accent);font-weight:500}
-  .tabs{flex:0 0 34px;display:flex;align-items:stretch;justify-content:space-between;border-bottom:1px solid var(--line);background:rgba(255,255,255,.025)}
-  .ftab{display:flex;align-items:center;padding:0 16px;font-family:var(--mono);font-size:.72rem;color:var(--ink);box-shadow:inset 0 -2px 0 var(--accent)}
-  .ib{align-self:center;margin-right:10px;display:inline-flex;align-items:center;gap:6px;font-family:var(--mono);font-size:.68rem;color:var(--muted);
-    padding:4px 10px;border-radius:7px;border:1px solid var(--line);transition:.25s}
-  .ib svg{width:14px;height:14px}
-  .ib.press,.tb.press{border-color:rgba(110,160,255,.8);color:var(--ink);background:rgba(110,160,255,.18);box-shadow:0 0 14px -3px rgba(110,160,255,.8)}
+  .card{position:relative;border-radius:16px;padding:16px 18px 14px;border:1px solid rgba(255,255,255,.14);background:rgba(0,0,0,.28)}
+  .hd{font-family:var(--mono);font-size:.62rem;letter-spacing:.16em;text-transform:uppercase;color:var(--muted);margin:0 0 10px}
 
-  .editor{flex:1;position:relative;padding:8px 0;overflow:hidden;font-family:var(--mono);font-size:.76rem;color:#c9d4ea}
-  .gz{position:absolute;left:0;top:0;bottom:0;width:58px;background:rgba(255,255,255,.025);border-right:1px solid var(--line);transition:background .3s}
-  .gz.aim{background:rgba(255,200,98,.08)}
-  .gzl{position:absolute;left:64px;bottom:8px;font-family:var(--mono);font-size:.6rem;letter-spacing:.14em;text-transform:uppercase;
-    color:var(--gold);opacity:0;transition:opacity .3s}
-  .gz.aim+.gzl{opacity:1}
-  .el{position:relative;display:flex;height:17px;line-height:17px;white-space:pre;transition:background .15s,box-shadow .15s}
-  body.solo .el{height:22px;line-height:22px}
-  .el .num{width:30px;text-align:right;color:rgba(132,150,182,.55);flex-shrink:0;user-select:none}
-  .el .bp{width:28px;display:flex;align-items:center;justify-content:center;flex-shrink:0}
-  .el .bp i{display:block;width:11px;height:11px;border-radius:50%;background:#ff5f56;box-shadow:0 0 8px rgba(255,95,86,.6);
-    transform:scale(0);transition:transform .25s cubic-bezier(.2,.9,.3,1.4)}
-  .el .bp.aim{box-shadow:inset 0 0 0 1px rgba(255,200,98,.7);border-radius:6px}
-  .el.has-bp{background:rgba(255,106,106,.09)}
-  .el.has-bp .bp i{transform:scale(1)}
-  .el .tx{padding-left:12px}
-  .el.flash{background:rgba(110,160,255,.12)}
-  .el.paused{background:rgba(110,160,255,.24);box-shadow:inset 3px 0 0 var(--accent)}
-  .el.paused .num{color:var(--accent)}
-  .kw{color:#c792ea} .ty{color:#82aaff} .st{color:#c3e88d} .nm{color:#f78c6c} .fn{color:#ffcb6b}
+  /* debug toolbar on the editor */
+  .tools{display:flex;flex-wrap:wrap;gap:8px;margin:0 0 12px;padding-bottom:12px;border-bottom:1px solid var(--line)}
+  .tool{display:inline-flex;align-items:center;gap:8px;font-family:var(--mono);font-size:.8rem;padding:8px 12px;border-radius:10px;cursor:pointer;
+    border:1px solid var(--line);background:rgba(255,255,255,.04);color:var(--ink);transition:.15s}
+  .tool svg{width:16px;height:16px;flex-shrink:0}
+  .tool kbd{font-family:var(--mono);font-size:.62rem;color:var(--muted);border:1px solid var(--line);border-radius:5px;padding:1px 5px}
+  .tool:hover{border-color:var(--accent);background:rgba(110,160,255,.1)}
+  .tool.go{border-color:rgba(70,217,138,.5);background:rgba(70,217,138,.1)}
+  .tool.go:hover{border-color:var(--good);background:rgba(70,217,138,.2)}
+  .tool:disabled{opacity:.3;cursor:not-allowed;border-color:var(--line);background:rgba(255,255,255,.04)}
 
-  .dbg{flex:0 0 auto;border-top:1px solid var(--line);background:rgba(0,0,0,.22)}
-  .dbar{display:flex;align-items:center;gap:6px;padding:6px 10px;border-bottom:1px solid var(--line);flex-wrap:wrap}
-  .dbar .dl{font-family:var(--mono);font-size:.6rem;letter-spacing:.14em;text-transform:uppercase;color:var(--muted);margin-right:6px}
-  .tb{display:inline-flex;align-items:center;gap:5px;font-family:var(--mono);font-size:.66rem;color:var(--muted);padding:3px 9px;
-    border-radius:7px;border:1px solid var(--line);transition:.25s}
-  .tb.off{opacity:.35}
-  .tb .ic{font-size:.7rem} .tb .g{color:var(--good)} .tb .r{color:var(--warn)} .tb .a{color:var(--accent)}
-  .panes{display:grid;grid-template-columns:38% 1fr;min-height:84px}
-  .pane{padding:6px 12px 8px;font-family:var(--mono);font-size:.72rem;transition:background .3s}
-  .pane+.pane{border-left:1px solid var(--line)}
-  .pane.lit{background:rgba(110,160,255,.07)}
-  .ph{font-size:.58rem;letter-spacing:.14em;text-transform:uppercase;color:var(--muted);margin-bottom:4px;transition:color .3s}
-  .pane.lit .ph{color:var(--accent)}
-  .row{line-height:1.6;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
-  .row.top{background:rgba(110,160,255,.14);border-radius:5px;padding:0 6px;margin:0 -6px}
-  .row .m{color:var(--muted)}
-  .row .vv{color:#f78c6c;display:inline-block}
-  .row.chg .vv{color:var(--gold);animation:pop .35s}
-  .row.chg .was{color:var(--muted);margin-left:10px;font-size:.66rem}
-  .row.none{color:rgba(132,150,182,.6)}
+  /* editor */
+  .code{overflow-x:auto;font-family:var(--mono);font-size:.86rem;line-height:1}
+  .ln{display:grid;grid-template-columns:30px 26px minmax(0,1fr);align-items:center;min-height:34px;border-radius:8px;
+    border:1px solid transparent;transition:background .35s,border-color .35s}
+  .num{color:rgba(132,150,182,.6);text-align:right;padding-right:4px;font-size:.74rem}
+  .gut{height:34px;display:flex;align-items:center;justify-content:center;cursor:pointer;background:rgba(255,255,255,.035);border:0;padding:0}
+  .gut i{width:13px;height:13px;border-radius:50%;background:transparent;transition:background .3s,transform .3s;transform:scale(.6)}
+  .gut:hover i{background:rgba(255,106,106,.3);transform:scale(1)}
+  .gut.none{cursor:default}.gut.none:hover i{background:transparent}
+  .ln.bp .gut i{background:#ff5a5a;transform:scale(1);box-shadow:0 0 10px rgba(255,90,90,.6)}
+  .ln.bp{background:rgba(255,90,90,.07)}
+  .tx{white-space:pre;color:#c9d4ea;padding-right:10px}
+  .ln.at{background:rgba(110,160,255,.22);border-color:rgba(110,160,255,.7)}
+  .ln.done{background:rgba(70,217,138,.08)}
+  .kw{color:#c792ea}.ty{color:#82aaff}.nm{color:#f78c6c}.st{color:#c3e88d}.fn{color:#82aaff}
 
-  /* caption: the one sentence, right under the picture */
-  .caption{display:flex;gap:16px;align-items:flex-start;margin:14px 4px 0;min-height:56px}
-  .caption .n{flex-shrink:0;font-family:var(--disp);font-weight:700;font-size:1.35rem;color:var(--accent);font-variant-numeric:tabular-nums;
-    line-height:1.2;min-width:3.2rem}
-  .caption .n small{display:block;font-family:var(--mono);font-weight:400;font-size:.58rem;letter-spacing:.14em;text-transform:uppercase;color:var(--muted)}
-  .caption .t{font-size:1.02rem;line-height:1.55;color:var(--ink);padding-left:16px;border-left:3px solid var(--accent);transition:border-color .3s}
-  body.solo .caption .t{font-size:1.18rem}
-  .caption.left .t{border-left-color:var(--gold)} .caption.ok .t{border-left-color:var(--good)}
-  .caption b.g{color:var(--good)} .caption b.a{color:var(--accent)} .caption b.y{color:var(--gold)}
+  /* variables pane */
+  .vars{display:flex;flex-direction:column}
+  .vrow{display:flex;align-items:center;justify-content:space-between;gap:10px;font-family:var(--mono);font-size:.86rem;
+    padding:10px 12px;border-radius:9px;margin-bottom:6px;border:1px solid var(--line);background:rgba(255,255,255,.035);
+    opacity:0;transform:translateY(6px);transition:opacity .35s,transform .35s,background .35s,border-color .35s}
+  .vrow.show{opacity:1;transform:none}
+  .vrow .f{color:#c9d4ea}.vrow .f i{font-style:normal;color:#82aaff;margin-right:6px}
+  .vrow .v{color:#f78c6c;font-variant-numeric:tabular-nums}
+  .vrow .v s{color:var(--muted);margin-right:8px}
+  .vrow.chg{background:rgba(255,200,98,.12);border-color:rgba(255,200,98,.55)}
+  .vrow.chg .v{color:var(--gold)}
+  .vnone{font-family:var(--mono);font-size:.78rem;color:var(--muted);padding:10px 2px;line-height:1.6}
+  .out{margin-top:auto;font-family:var(--mono);font-size:.74rem;color:#9fe3b6;background:#05070e;border:1px solid var(--line);
+    border-radius:10px;padding:8px 10px;min-height:38px;opacity:0;transition:opacity .35s}
+  .out.show{opacity:1}
+  .out small{display:block;font-size:.54rem;letter-spacing:.12em;text-transform:uppercase;color:rgba(132,150,182,.7)}
 
-  /* toolbar: same on every page */
-  .toolbar{display:flex;align-items:center;gap:10px;margin:16px 0 0;padding-top:14px;border-top:1px solid var(--line)}
-  .btn{font-family:var(--body);font-weight:500;font-size:.86rem;padding:9px 16px;border-radius:11px;cursor:pointer;
-    border:1px solid var(--line);background:var(--surface);color:var(--ink);transition:.15s}
-  .btn:hover{border-color:var(--accent);color:var(--accent)}
-  .btn.primary{border-color:rgba(110,160,255,.5);background:rgba(110,160,255,.12);padding:9px 22px}
-  .btn:disabled{opacity:.35;cursor:not-allowed}
-  .btn.ghost{background:transparent;color:var(--muted);margin-left:auto}
-  .dots{display:flex;gap:5px;align-items:center;margin:0 6px}
-  .dots i{display:block;width:8px;height:8px;border-radius:50%;background:rgba(255,255,255,.12);transition:.2s}
-  .dots i.done{background:rgba(110,160,255,.45)}
-  .dots i.now{background:var(--accent);transform:scale(1.35);box-shadow:0 0 10px rgba(110,160,255,.7)}
-  .hint{font-family:var(--mono);font-size:.68rem;color:var(--muted);margin:10px 4px 0;line-height:1.5}
-  .hint b{color:var(--accent)}
+  /* the one sentence */
+  .caption{display:flex;gap:14px;align-items:flex-start;margin:18px 2px 0;padding-top:16px;border-top:1px solid var(--line)}
+  .caption .t{flex:1;font-size:1.05rem;line-height:1.55;color:var(--ink);padding-left:16px;border-left:3px solid var(--accent);transition:border-color .3s}
+  .caption .t .line{display:block;margin-top:6px;font-family:var(--mono);font-size:.8rem;color:#bcd0ff;opacity:.9}
+  .caption.y .t{border-left-color:var(--gold)} .caption.g .t{border-left-color:var(--good)} .caption.w .t{border-left-color:var(--warn)}
+  .caption b.a{color:var(--accent)} .caption b.y{color:var(--gold)} .caption b.g{color:var(--good)} .caption b.r{color:#ff8a8a}
+  .reset{font-family:var(--body);font-weight:500;font-size:.84rem;padding:8px 14px;border-radius:11px;cursor:pointer;
+    border:1px solid var(--line);background:transparent;color:var(--muted);transition:.15s;flex-shrink:0}
+  .reset:hover{border-color:var(--accent);color:var(--accent)}
+  button:focus-visible,input:focus-visible{outline:2px solid var(--accent);outline-offset:2px}
 
-  /* support: readouts and console. Below the picture, hidden in focus */
-  .support{display:grid;grid-template-columns:minmax(0,1.3fr) minmax(0,1fr);gap:14px;margin-top:18px}
-  @media (max-width:860px){.support{grid-template-columns:1fr}}
-  body.solo .support,body.solo .take,body.solo .hint{display:none}
-  .readout{display:grid;grid-template-columns:repeat(3,1fr);gap:10px}
-  .stat{background:rgba(255,255,255,.03);border:1px solid var(--line);border-radius:12px;padding:11px 13px;transition:opacity .3s}
-  .stat.empty{opacity:.3}
-  .stat .k{font-family:var(--mono);font-size:.62rem;letter-spacing:.1em;text-transform:uppercase;color:var(--muted)}
-  .stat .v{font-family:var(--disp);font-weight:700;font-size:1.45rem;font-variant-numeric:tabular-nums;margin-top:2px;transition:color .3s;min-height:1.6em;white-space:nowrap}
-  .stat .v.txt{font-size:1.05rem;line-height:1.55em}
-  .v.hot{color:var(--accent)} .v.dim{color:rgba(132,150,182,.5)}
-  .console{font-family:var(--mono);font-size:.76rem;line-height:1.6;background:#05070e;border:1px solid var(--line);
-    border-radius:12px;padding:10px 14px;min-height:64px;color:#9fe3b6}
-  .console .cl{font-size:.6rem;letter-spacing:.14em;text-transform:uppercase;color:rgba(132,150,182,.6);margin-bottom:4px}
-  .console .out{animation:pop .3s}
-  @keyframes pop{from{transform:scale(.6);opacity:0}to{transform:scale(1);opacity:1}}
   .take{margin-top:22px;background:linear-gradient(180deg,rgba(110,160,255,.08),rgba(139,123,255,.04));
     border:1px solid var(--line);border-left:3px solid var(--accent);border-radius:12px;padding:16px 18px}
   .take .tk{font-family:var(--mono);font-size:.66rem;letter-spacing:.14em;text-transform:uppercase;color:var(--accent);margin:0 0 8px}
@@ -152,236 +106,181 @@
 </style>
 </head>
 <body>
-
 <a class="back" href="../index.html#17-debugger">&#8592; Week 2 index</a>
-
 <canvas id="amb"></canvas>
 <div class="wrap">
   <p class="tag">Workbook 2b &middot; Section 1-2 &middot; Running the debugger</p>
   <h1>The Debugger</h1>
-  <p class="lede"><b>The debugger pauses your program on a line you choose, so you can run it one line at a time and watch the values change.</b></p>
+  <p class="lede"><b>Put a red dot on a line. Run. Step. Watch the values.</b></p>
 
   <div class="stage">
-    <div class="topbar">
-      <span class="lab">IntelliJ in Debug mode</span>
-      <button class="focus" id="bFocus" title="Hide the console and notes, enlarge the picture">Focus</button>
-    </div>
-
-    <div class="pic idle" id="pic">
-      <div class="ide">
-        <div class="tabs">
-          <span class="ftab">Main.java</span>
-          <span class="ib" id="ibDebug"><svg viewBox="0 0 16 16" fill="none" stroke="#46d98a" stroke-width="1.4" stroke-linecap="round"><ellipse cx="8" cy="9.5" rx="3.6" ry="4.3"/><path d="M8 5.2v8.6M4.4 9.5H1.8M14.2 9.5h-2.6M4.9 6.6 3 4.8M11.1 6.6 13 4.8M4.9 12.5 3 14.2M11.1 12.5l1.9 1.7M6 4.3a2 2 0 0 1 4 0"/></svg>Debug</span>
+    <div class="board">
+      <div class="card">
+        <div class="tools">
+          <button class="tool go" id="bDebug" title="Debug">
+            <svg viewBox="0 0 16 16" fill="none" stroke="#46d98a" stroke-width="1.4" stroke-linecap="round"><ellipse cx="8" cy="9.5" rx="3.6" ry="4.3"/><path d="M8 5.2v8.6M4.4 9.5H1.8M14.2 9.5h-2.6M4.9 6.6 3 4.8M11.1 6.6 13 4.8M4.9 12.5 3 14.2M11.1 12.5l1.9 1.7M6 4.3a2 2 0 0 1 4 0"/></svg>Debug</button>
+          <button class="tool" id="bOver" title="Step Over (F8)" disabled>
+            <svg viewBox="0 0 16 16" fill="none" stroke="#6ea0ff" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M2 9a6 6 0 0 1 11.2-3"/><path d="M13.6 2.6v3.6H10"/><circle cx="8" cy="13" r="1.4" fill="#6ea0ff"/></svg>Step over <kbd>F8</kbd></button>
+          <button class="tool" id="bResume" title="Resume (F9)" disabled>
+            <svg viewBox="0 0 16 16"><path d="M3 2.5v11" stroke="#46d98a" stroke-width="1.6" stroke-linecap="round"/><path d="M6 2.5l8 5.5-8 5.5z" fill="#46d98a"/></svg>Resume <kbd>F9</kbd></button>
         </div>
-        <div class="editor" id="editor">
-          <div class="gz" id="gz"></div><span class="gzl">gutter</span>
-          <div class="el" data-n="1"><span class="num">1</span><span class="bp"><i></i></span><span class="tx"><span class="kw">public class</span> Main {</span></div>
-          <div class="el" data-n="2"><span class="num">2</span><span class="bp"><i></i></span><span class="tx">    <span class="kw">public static void</span> <span class="fn">main</span>(<span class="ty">String</span>[] args) {</span></div>
-          <div class="el" data-n="3"><span class="num">3</span><span class="bp"><i></i></span><span class="tx">        <span class="ty">int</span> week = <span class="nm">1</span>;</span></div>
-          <div class="el" data-n="4"><span class="num">4</span><span class="bp"><i></i></span><span class="tx">        <span class="ty">double</span> savings = <span class="nm">0</span>;</span></div>
-          <div class="el" data-n="5"><span class="num">5</span><span class="bp"><i></i></span><span class="tx">        <span class="kw">while</span> (savings &lt; <span class="nm">100</span>) {</span></div>
-          <div class="el" data-n="6"><span class="num">6</span><span class="bp"><i></i></span><span class="tx">            savings = savings + <span class="nm">25</span>;</span></div>
-          <div class="el" data-n="7"><span class="num">7</span><span class="bp"><i></i></span><span class="tx">            System.out.<span class="fn">println</span>(<span class="st">"Week "</span> + week + <span class="st">": saved "</span> + savings);</span></div>
-          <div class="el" data-n="8"><span class="num">8</span><span class="bp"><i></i></span><span class="tx">            week++;</span></div>
-          <div class="el" data-n="9"><span class="num">9</span><span class="bp"><i></i></span><span class="tx">        }</span></div>
-          <div class="el" data-n="10"><span class="num">10</span><span class="bp"><i></i></span><span class="tx">        System.out.<span class="fn">println</span>(<span class="st">"Reached 100 after "</span> + (week - <span class="nm">1</span>) + <span class="st">" weeks"</span>);</span></div>
-          <div class="el" data-n="11"><span class="num">11</span><span class="bp"><i></i></span><span class="tx">    }</span></div>
-          <div class="el" data-n="12"><span class="num">12</span><span class="bp"><i></i></span><span class="tx">}</span></div>
-        </div>
-        <div class="dbg">
-          <div class="dbar">
-            <span class="dl">Debug</span>
-            <span class="tb" id="tbResume"><span class="ic g">&#9654;</span>Resume</span>
-            <span class="tb" id="tbOver"><span class="ic a">&#8631;</span>Step Over</span>
-            <span class="tb" id="tbInto"><span class="ic a">&#8600;</span>Step Into</span>
-            <span class="tb" id="tbStop"><span class="ic r">&#9632;</span>Stop</span>
-          </div>
-          <div class="panes">
-            <div class="pane" id="pFrames"><div class="ph">Frames</div><div id="frames"></div></div>
-            <div class="pane" id="pVars"><div class="ph">Variables</div><div id="vars"></div></div>
-          </div>
-        </div>
+        <div class="code" id="code"></div>
       </div>
-      <div class="start" id="start">a loop with a breakpoint &middot; press&nbsp;<b>Next</b></div>
+      <div class="card vars">
+        <p class="hd">Variables</p>
+        <div id="vars"><div class="vnone">not running</div></div>
+        <div class="out" id="out"></div>
+      </div>
     </div>
-
     <div class="caption" id="caption">
-      <div class="n" id="stepno"><small>step</small>0 / 8</div>
-      <div class="t" id="status">Press <b class="a">Next</b>. The picture changes at every step.</div>
-    </div>
-
-    <div class="toolbar">
-      <button class="btn" id="bBack">&larr; Back</button>
-      <div class="dots" id="dots"></div>
-      <button class="btn primary" id="bNext">Next &rarr;</button>
-      <button class="btn ghost" id="bReset">Reset</button>
-    </div>
-    <p class="hint">space = next &middot; <b>the highlighted line is the next one to run</b>, it has not run yet</p>
-
-    <div class="support">
-      <div class="readout">
-        <div class="stat empty" id="sLine"><div class="k">Paused on</div><div class="v dim" id="stLine"></div></div>
-        <div class="stat empty" id="sPass"><div class="k">Loop pass</div><div class="v dim" id="stPass"></div></div>
-        <div class="stat empty" id="sBtn"><div class="k">You pressed</div><div class="v txt dim" id="stBtn"></div></div>
-      </div>
-      <div class="console"><div class="cl">console</div><div id="console"></div></div>
+      <div class="t" id="status">Seven lines, <b class="a">no breakpoint yet</b>. Click the gutter next to a line number to put a red dot there.</div>
+      <button class="reset" id="bReset">Reset</button>
     </div>
   </div>
 
   <div class="take">
     <p class="tk">The one idea</p>
-    <p>A <b>breakpoint</b>, the red dot in the gutter, is where Debug pauses. While paused, the highlighted line has not run yet.
-    <b>Step Over</b> runs one line, <b>Resume</b> runs until the next breakpoint, the <b>Variables</b> pane shows the values right now
-    and the <b>Frames</b> pane shows which method you are in. Reach for it when the code runs but the answer is wrong.</p>
+    <p>A <b>breakpoint</b> is where Debug pauses, and the blue line has <b>not run yet</b>. <b>Step over</b> runs one line,
+    <b>Resume</b> runs to the next red dot or to the end, and <b>Variables</b> shows the values right now.
+    Reach for it when the code runs but the answer is wrong.</p>
   </div>
-
   <div id="rail"></div>
 </div>
-
 <script>
 (function(){
   "use strict";
   var $=function(s){return document.querySelector(s);};
   var reduce=matchMedia("(prefers-reduced-motion: reduce)").matches;
 
-  /* ---------- the walk: one snapshot per step ----------
-     bp: breakpoint on line 6 is set. line: the paused line (null = not paused).
-     btn: what was pressed. vars: week and savings, chg: which one just changed, was: its old value.
-     sweep: lines that run quickly before the pause lands. out: what this step prints. */
-  var S=[
-    {bp:true,line:null,btn:"gutter",cls:"left",
-     msg:'Click the gutter next to line 6. A <b class="y">red dot</b> appears: a breakpoint, where Debug will pause.'},
-    {bp:true,line:6,btn:"debug",pass:1,week:"1",sav:"0.0",lit:"frames",sweep:[3,4,5],
-     msg:'Debug runs to line 6 and pauses. <b class="a">Frames</b> says you are in main. The highlighted line has not run yet.'},
-    {bp:true,line:7,btn:"over",pass:1,week:"1",sav:"25.0",chg:"sav",was:"0.0",lit:"vars",
-     msg:'<b class="a">Step Over</b> runs line 6 and only line 6. <b class="a">Variables</b> shows savings went from 0.0 to 25.0.'},
-    {bp:true,line:8,btn:"over",pass:1,week:"1",sav:"25.0",out:["Week 1: saved 25.0"],
-     msg:'<b class="a">Step Over</b> runs the println. The console shows Week 1: saved 25.0. Paused on line 8.'},
-    {bp:true,line:6,btn:"resume",pass:2,week:"2",sav:"25.0",chg:"week",was:"1",lit:"vars",sweep:[8,5],
-     msg:'<b class="a">Resume</b> runs week++ and the loop check, then stops at the breakpoint again. Pass 2, week is 2.'},
-    {bp:true,line:7,btn:"over",pass:2,week:"2",sav:"50.0",chg:"sav",was:"25.0",lit:"vars",
-     msg:'<b class="a">Step Over</b> runs line 6 on pass 2. savings goes from 25.0 to 50.0, one pass at a time.'},
-    {bp:false,line:7,btn:"gutter",pass:2,week:"2",sav:"50.0",cls:"left",
-     msg:'Click the <b class="y">red dot</b> again to remove the breakpoint. The program stays paused on line 7.'},
-    {bp:false,line:null,btn:"resume",done:true,cls:"ok",sweep:[7,8,5,6,7,8,5,6,7,8,5,10],
-     out:["Week 2: saved 50.0","Week 3: saved 75.0","Week 4: saved 100.0","Reached 100 after 4 weeks"],
-     msg:'<b class="g">Resume</b>: no breakpoint left, so the program runs to the end. Frames and Variables go empty.'}
+  /* the program: plain text for the caption, colored html for the editor, run = can hold a breakpoint */
+  var L=[
+    {t:'int week = 1;', h:'<span class="ty">int</span> week = <span class="nm">1</span>;', run:true},
+    {t:'double savings = 0;', h:'<span class="ty">double</span> savings = <span class="nm">0</span>;', run:true},
+    {t:'while (savings < 100) {', h:'<span class="kw">while</span> (savings < <span class="nm">100</span>) {', run:true},
+    {t:'savings = savings + 25;', h:'    savings = savings + <span class="nm">25</span>;', run:true},
+    {t:'week++;', h:'    week++;', run:true},
+    {t:'}', h:'}', run:false},
+    {t:'System.out.println("Reached 100 after " + (week - 1) + " weeks");',
+     h:'System.out.<span class="fn">println</span>(<span class="st">"Reached 100 after "</span> + (week - <span class="nm">1</span>) + <span class="st">" weeks"</span>);', run:true}
   ];
+  var OUT="Reached 100 after 4 weeks";
+  var bps={}, pc=0, vars=null, state="idle", printed=false;   /* state: idle, paused, done */
+  var codeEl=$("#code"),varsEl=$("#vars"),outEl=$("#out"),status=$("#status"),caption=$("#caption");
+  var bDebug=$("#bDebug"),bOver=$("#bOver"),bResume=$("#bResume");
 
-  /* ---------- state ---------- */
-  var at=-1,timers=[];
-  var picEl=$("#pic"),statusEl=$("#status"),consEl=$("#console");
-  var LINES=document.querySelectorAll(".el");
-  var TB={resume:$("#tbResume"),over:$("#tbOver"),into:$("#tbInto"),stop:$("#tbStop")};
+  L.forEach(function(l,i){
+    var d=document.createElement("div"); d.className="ln"; d.id="l"+(i+1);
+    d.innerHTML='<span class="num">'+(i+1)+'</span><button class="gut'+(l.run?"":" none")+'" data-n="'+(i+1)+'" aria-label="breakpoint on line '+(i+1)+'"><i></i></button><span class="tx">'+l.h+'</span>';
+    codeEl.appendChild(d);
+  });
 
-  function clearTimers(){ timers.forEach(clearTimeout); timers=[]; }
-
-  function paintLines(s,pausedLine,flashLine){
-    Array.prototype.forEach.call(LINES,function(el){
-      var n=+el.getAttribute("data-n");
-      el.classList.toggle("has-bp",!!(s&&s.bp)&&n===6);
-      el.classList.toggle("paused",pausedLine===n);
-      el.classList.toggle("flash",flashLine===n);
-      el.querySelector(".bp").classList.toggle("aim",!!s&&s.btn==="gutter"&&n===6);
-    });
-    $("#gz").classList.toggle("aim",!!s&&s.btn==="gutter");
+  function say(html,tone,line){
+    caption.className="caption"+(tone?" "+tone:"");
+    status.innerHTML=html+(line?'<span class="line">'+esc(line)+'</span>':"");
   }
+  function esc(s){return s.replace(/[&<>"]/g,function(c){return {"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c];});}
+  function fmt(k,v){ return k==="savings"?v.toFixed(1):String(v); }
 
-  function paintButtons(s){
-    var running=!!(s&&s.line);
-    Object.keys(TB).forEach(function(k){
-      var press=!!s&&s.btn===k;
-      TB[k].classList.toggle("press",press);
-      TB[k].classList.toggle("off",!running&&!press);
-    });
-    $("#ibDebug").classList.toggle("press",!!s&&s.btn==="debug");
+  /* run one line (1-based pc), return the next line, 0 = finished */
+  function exec(){
+    var n=pc;
+    if(n===1){ vars.week=1; return 2; }
+    if(n===2){ vars.savings=0; return 3; }
+    if(n===3){ return vars.savings<100?4:7; }
+    if(n===4){ vars.savings=vars.savings+25; return 5; }
+    if(n===5){ vars.week=vars.week+1; return 3; }
+    if(n===7){ printed=true; return 0; }
+    return 0;
   }
+  function snap(){ var o={}; Object.keys(vars).forEach(function(k){ o[k]=vars[k]; }); return o; }
 
-  function row(html,cls){ return '<div class="row'+(cls?" "+cls:"")+'">'+html+'</div>'; }
-
-  function paintPanes(s){
-    var fr=$("#frames"),vr=$("#vars");
-    if(!s||!s.line){
-      var msg=s&&s.done?"program finished":"not running";
-      fr.innerHTML=row(msg,"none"); vr.innerHTML=row(msg,"none");
-    } else {
-      fr.innerHTML=row('main:'+s.line+', Main <span class="m">(com.pluralsight)</span>',"top");
-      vr.innerHTML=row('args = <span class="m">{String[0]}</span>')+
-        row('week = <span class="vv">'+s.week+'</span>'+(s.chg==="week"?'<span class="was">was '+s.was+'</span>':""),s.chg==="week"?"chg":"")+
-        row('savings = <span class="vv">'+s.sav+'</span>'+(s.chg==="sav"?'<span class="was">was '+s.was+'</span>':""),s.chg==="sav"?"chg":"");
+  function paint(before){
+    for(var i=1;i<=L.length;i++){
+      var el=$("#l"+i); el.classList.toggle("bp",!!bps[i]); el.classList.toggle("at",state==="paused"&&pc===i);
+      el.classList.toggle("done",state==="done"&&i===7);
     }
-    $("#pFrames").classList.toggle("lit",!!s&&s.lit==="frames");
-    $("#pVars").classList.toggle("lit",!!s&&s.lit==="vars");
-  }
-
-  function paintConsole(upto){
-    var out=[];
-    for(var k=0;k<=upto;k++) if(S[k].out) out=out.concat(S[k].out);
-    if(!out.length){ consEl.innerHTML='<span style="color:rgba(132,150,182,.5)">(nothing printed yet)</span>'; return; }
-    consEl.innerHTML="";
-    out.forEach(function(o){ var d=document.createElement("div"); d.className="out"; d.textContent=o; consEl.appendChild(d); });
-  }
-
-  function setStat(id,v){
-    var e=$(id),box=e.parentNode;
-    if(v===null||v===undefined){ e.textContent=""; e.classList.add("dim"); box.classList.add("empty"); }
-    else { e.textContent=v; e.classList.remove("dim"); box.classList.remove("empty"); }
-  }
-  var BTN_NAME={gutter:"gutter",debug:"Debug",over:"Step Over",resume:"Resume"};
-
-  function landed(i){
-    var s=S[i];
-    paintLines(s,s.line,null); paintPanes(s); paintConsole(i);
-    setStat("#stLine",s.line?"line "+s.line:(s.done?"finished":null));
-    setStat("#stPass",s.pass||null);
-  }
-
-  function show(i,forward){
-    clearTimers(); at=i;
-    var n=S.length;
-    picEl.classList.toggle("idle",i<0);
-    $("#start").style.opacity=i<0?1:0;
-    if(i<0){
-      paintLines(null,null,null); paintButtons(null); paintPanes(null); paintConsole(-1);
-      setStat("#stLine",null); setStat("#stPass",null); setStat("#stBtn",null);
-      $("#caption").className="caption"; statusEl.innerHTML='Press <b class="a">Next</b>. The picture changes at every step.';
-      $("#stepno").innerHTML="<small>step</small>0 / "+n; setBtns(); return;
+    bOver.disabled=bResume.disabled=state!=="paused";
+    if(state==="idle"){ varsEl.innerHTML='<div class="vnone">not running</div>'; }
+    else if(state==="done"){ varsEl.innerHTML='<div class="vnone">program finished<br>the variables are gone</div>'; }
+    else {
+      var keys=Object.keys(vars);
+      if(!keys.length){ varsEl.innerHTML='<div class="vnone">nothing exists yet:<br>line 1 has not run</div>'; }
+      else {
+        varsEl.innerHTML="";
+        keys.forEach(function(k){
+          var r=document.createElement("div"), was=before&&(k in before)&&before[k]!==vars[k];
+          r.className="vrow"+(was?" chg":"")+(before&&(k in before)?" show":"");
+          r.innerHTML='<span class="f"><i>'+(k==="week"?"int":"double")+'</i>'+k+'</span><span class="v">'+(was?"<s>"+fmt(k,before[k])+"</s>":"")+fmt(k,vars[k])+'</span>';
+          varsEl.appendChild(r);
+          if(!r.classList.contains("show")) setTimeout(function(){ r.classList.add("show"); },reduce?0:30);
+        });
+      }
     }
-    var s=S[i];
-    $("#stepno").innerHTML="<small>step</small>"+(i+1)+" / "+n;
-    $("#caption").className="caption "+(s.cls||""); statusEl.innerHTML=s.msg;
-    paintButtons(s); setStat("#stBtn",BTN_NAME[s.btn]);
-    if(forward&&s.sweep&&!reduce){
-      /* the lines that run at full speed light up one after another, then the pause lands */
-      var prev=i>0?S[i-1]:null;
-      paintPanes(prev&&prev.line?prev:null);
-      var dt=s.sweep.length>4?110:220;
-      s.sweep.forEach(function(ln,k){ timers.push(setTimeout(function(){ paintLines(s,null,ln); },k*dt)); });
-      timers.push(setTimeout(function(){ landed(i); },s.sweep.length*dt));
-    } else landed(i);
-    setBtns();
+    outEl.innerHTML=printed?'<small>console</small>'+OUT:""; outEl.classList.toggle("show",printed);
+  }
+  function now(){ return Object.keys(vars).map(function(k){ return k+" = "+fmt(k,vars[k]); }).join(", "); }
+  function diff(before){
+    var c=Object.keys(vars).filter(function(k){ return !(k in before)||before[k]!==vars[k]; });
+    return c.map(function(k){ return (k in before)?'<b class="y">'+k+'</b> '+fmt(k,before[k])+' \u2192 '+fmt(k,vars[k]):'<b class="y">'+k+'</b> appears = '+fmt(k,vars[k]); }).join(", ");
+  }
+  /* run lines until a breakpoint (not the one we start on) or the end */
+  function runFree(skipFirst){
+    var guard=0, first=true;
+    while(pc && guard++<200){
+      if(bps[pc] && !(first&&skipFirst)) return true;
+      first=false; pc=exec();
+    }
+    state="done"; return false;
   }
 
-  function setBtns(){ $("#bNext").disabled=at>=S.length-1; $("#bBack").disabled=at<0;
-    var d=""; for(var k=0;k<S.length;k++) d+='<i class="'+(k===at?"now":k<at?"done":"")+'"></i>'; $("#dots").innerHTML=d; }
+  function debug(){
+    vars={}; printed=false; pc=1; state="paused";
+    var stopped=runFree(false);
+    paint({});
+    if(!stopped) say('No red dot, so Debug ran <b class="a">straight to the end</b> and printed '+OUT+'. A breakpoint is where it stops.',"",OUT);
+    else say('Paused on <b class="a">line '+pc+'</b>, which has not run yet. Variables shows what exists so far'+(Object.keys(vars).length?': '+now()+'.':': nothing.'),"",L[pc-1].t);
+  }
+  function over(){
+    if(state!=="paused") return;
+    var before=snap(), ran=pc, ranT=L[ran-1].t;
+    pc=exec(); if(!pc) state="done";
+    paint(before);
+    if(state==="done"){ say('Step over ran the last line, printed '+OUT+' and the <b class="g">program finished</b>.',"g",ranT); return; }
+    var d=diff(before), msg;
+    if(ran===3) msg='Step over checked the loop: savings < 100 is <b class="y">'+(pc===4)+'</b>, so it goes to <b class="a">line '+pc+'</b>.';
+    else msg='Step over ran line '+ran+(d?': '+d:'')+'. Now on <b class="a">line '+pc+'</b>.';
+    say(msg,d?"y":"",ranT);
+  }
+  function resume(){
+    if(state!=="paused") return;
+    var before=snap();
+    pc=exec();
+    var stopped=pc?runFree(false):(state="done",false);
+    paint(before);
+    if(!stopped) say('Resume found no more red dots, so the <b class="g">program finished</b> and printed '+OUT+'.',"g",OUT);
+    else { var d=diff(before); say('Resume ran to the red dot on <b class="a">line '+pc+'</b>'+(d?': '+d:', values now '+now())+'.',d?"y":"",L[pc-1].t); }
+  }
+  function toggle(n){
+    if(!L[n-1].run) return;
+    if(bps[n]){ delete bps[n]; paint(); say('Dot removed from <b class="r">line '+n+'</b>. Debug no longer stops there.'); }
+    else { bps[n]=true; paint(); say('Red dot on <b class="r">line '+n+'</b>: Debug will pause there, before the line runs.',"",L[n-1].t); }
+  }
+  function reset(){
+    bps={}; vars=null; pc=0; state="idle"; printed=false; paint();
+    say('Seven lines, <b class="a">no breakpoint yet</b>. Click the gutter next to a line number to put a red dot there.');
+  }
 
-  /* focus: picture and caption only. Remembered per browser. */
-  function setFocus(on){ document.body.classList.toggle("solo",on); $("#bFocus").textContent=on?"Focus on":"Focus";
-    try{localStorage.setItem("hub-focus",on?"1":"0");}catch(e){} }
-  $("#bFocus").addEventListener("click",function(){ setFocus(!document.body.classList.contains("solo")); this.blur(); });
-  try{ if(localStorage.getItem("hub-focus")==="1") document.body.classList.add("solo"); }catch(e){}
-  if(document.body.classList.contains("solo")) $("#bFocus").textContent="Focus on";
-
-  function next(){ if(at<S.length-1) show(at+1,true); }
-  function back(){ if(at>=0) show(at-1,false); }
-  function reset(){ show(-1,false); }
-
-  $("#bNext").addEventListener("click",next);
-  $("#bBack").addEventListener("click",back);
+  codeEl.addEventListener("click",function(e){ var g=e.target.closest(".gut"); if(g) toggle(+g.getAttribute("data-n")); });
+  bDebug.addEventListener("click",debug);
+  bOver.addEventListener("click",over);
+  bResume.addEventListener("click",resume);
   $("#bReset").addEventListener("click",reset);
-  document.addEventListener("keydown",function(e){ if(e.code==="Space"&&!/INPUT|BUTTON/.test(e.target.tagName)){e.preventDefault();next();} });
+  addEventListener("keydown",function(e){
+    if(e.key==="F8"){ e.preventDefault(); over(); }
+    else if(e.key==="F9"){ e.preventDefault(); resume(); }
+  });
 
-  /* ---------- ambient canvas ---------- */
+  /* ambient canvas */
   var cv=$("#amb"),ctx=cv.getContext&&cv.getContext("2d"),parts=[];
   function sizeC(){if(!ctx)return;cv.width=innerWidth;cv.height=innerHeight;}
   function initParts(){parts=[];for(var i=0;i<46;i++)parts.push({x:Math.random(),y:Math.random(),
@@ -392,8 +291,6 @@
       ctx.fillStyle="rgba(140,170,255,"+p.o+")";ctx.fill();});
     requestAnimationFrame(drawC);}
   if(ctx&&!reduce){sizeC();initParts();drawC();addEventListener("resize",sizeC);}
-
-  reset();
 })();
 </script>
 <script src="../manifest.js"></script>
