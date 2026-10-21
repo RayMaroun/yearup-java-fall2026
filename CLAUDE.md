@@ -110,7 +110,7 @@ abstract to see, or when the mental model itself is the invisible thing (often, 
 - Git through IntelliJ (Share Project on GitHub, commit panel), not the CLI. Learner repos are public.
 - Java 17, Maven, package `com.pluralsight`, Amazon Corretto 17 in IntelliJ.
 - Both `switch` forms are taught in Workbook 1c: traditional first, then arrow. Show both where switch appears.
-- Terminology: learners, not students; the instructor is Raymond; no grades talk, no internal names.
+- Terminology: learners, not students, in prose AND in code (no `isStudent`, `Person student`, `Hello Student`; use `isEnrolled`, `Person learner`); the instructor is Raymond; no grades talk, no internal names.
 - US spelling. No emoji. No em dashes. No HTML entities inside `<script>`.
 
 ## Skipped content rule
