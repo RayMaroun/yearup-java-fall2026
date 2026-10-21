@@ -119,7 +119,7 @@
           <button class="nw" data-s="0">Person instructor = <b>new</b> Person("Raymond", 35);</button>
           <button data-s="1" disabled>Person teacher = instructor;</button>
           <button data-s="2" disabled>teacher.setName("Ray");</button>
-          <button class="nw" data-s="3" disabled>Person student = <b>new</b> Person("Brandon", 35);</button>
+          <button class="nw" data-s="3" disabled>Person learner = <b>new</b> Person("Brandon", 35);</button>
           <button data-s="4" disabled>instructor = null;</button>
         </div>
       </div>
@@ -230,9 +230,9 @@
       row.querySelector(".v").innerHTML='<s>"Raymond"</s>"Ray"'; lit(0);
       say('The one card changed, so <b class="y">instructor and teacher both see "Ray"</b>: it is one object.',"y",
         'teacher.setName("Ray");'); },
-    function(){ addSlot("student"); var k=addCard("Brandon",35); link("student",k); lit(k); refs();
-      say('<b class="g">new</b> again, so a second, separate object. <b class="a">student</b> points at it; the first card did not move.',"g",
-        'Person student = new Person("Brandon", 35);'); },
+    function(){ addSlot("learner"); var k=addCard("Brandon",35); link("learner",k); lit(k); refs();
+      say('<b class="g">new</b> again, so a second, separate object. <b class="a">learner</b> points at it; the first card did not move.',"g",
+        'Person learner = new Person("Brandon", 35);'); },
     function(){ unlink("instructor"); vars.instructor.el.classList.add("nul"); lit(0); refs();
       say('<b class="y">instructor</b> lost its arrow and holds null. The first object still exists: <b class="a">teacher</b> still points at it.',"y",
         'instructor = null;'); }

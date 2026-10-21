@@ -124,7 +124,7 @@
     <div class="doors" id="doors">
       <div class="col"><div class="door" id="d0"><div class="leaf"><span class="n">door 1</span><span class="p">( )</span></div></div><div class="out" id="o0"></div></div>
       <div class="col"><div class="door" id="d1"><div class="leaf"><span class="n">door 2</span><span class="p">(<i>String</i> personToGreet)</span></div></div><div class="out" id="o1"></div></div>
-      <div class="col"><div class="door" id="d2"><div class="leaf"><span class="n">door 3</span><span class="p">(<i>String</i> studentName,<br><i>int</i> age)</span></div></div><div class="out" id="o2"></div></div>
+      <div class="col"><div class="door" id="d2"><div class="leaf"><span class="n">door 3</span><span class="p">(<i>String</i> learnerName,<br><i>int</i> age)</span></div></div><div class="out" id="o2"></div></div>
     </div>
     <div class="calls" id="calls">
       <span class="lab">press a call</span>
@@ -153,7 +153,7 @@
   var reduce=matchMedia("(prefers-reduced-motion: reduce)").matches;
   var STEP=reduce?0:400;
   var DOORS=[[],["String"],["String","int"]];
-  var OUT=[["Raymond is saying Hi to Everyone!"],["Raymond is saying Hi to Brandon!"],["Hello Student: Brandon","Your age: 35"]];
+  var OUT=[["Raymond is saying Hi to Everyone!"],["Raymond is saying Hi to Brandon!"],["Hello Learner: Brandon","Your age: 35"]];
   var CALLS=[
     {args:[],line:"instructor.greet();",
      msg:'<b class="a">No arguments.</b> Only door 1 takes nothing, so <b class="g">greet() opens</b>.'},

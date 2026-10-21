@@ -127,7 +127,7 @@
           <div class="ch"><span class="cat">Compile</span><h2>Calling a getter that was never written</h2><a class="see" href="../visuals/08-encapsulation.html">See it</a></div>
           <pre class="msg">java: cannot find symbol
   symbol:   method getAge()
-  location: variable student of type Person</pre>
+  location: variable learner of type Person</pre>
           <p class="means">The class has an <code>age</code> field but no <code>getAge()</code> method, so there is nothing to call.</p>
           <p class="fix"><b>Fix</b>Add the getter to the class (Generate &gt; Getter), or check the spelling of the name.</p>
           <div class="ba"><div class="bad"><span>Before</span><pre>public class Person {
@@ -186,7 +186,7 @@ for (int week = 1; week &lt;= 10; week++) {
   location: class Main</pre>
           <p class="means">Without <code>new</code>, Java reads <code>Person(...)</code> as a call to a method named Person, and there is none.</p>
           <p class="fix"><b>Fix</b>Put <code>new</code> in front of the constructor call.</p>
-          <div class="ba"><div class="bad"><span>Before</span><pre>Person student = Person("Natalie", 37);</pre></div><div class="good"><span>After</span><pre>Person student = new Person("Natalie", 37);</pre></div></div>
+          <div class="ba"><div class="bad"><span>Before</span><pre>Person learner = Person("Natalie", 37);</pre></div><div class="good"><span>After</span><pre>Person learner = new Person("Natalie", 37);</pre></div></div>
         </article>
 
         <article class="card" data-cat="compile">

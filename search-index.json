@@ -137,7 +137,7 @@
     "desc": "",
     "group": "Workbook 1c · Section 3-1",
     "url": "week-01/visuals/14-naming-conventions.html",
-    "text": "← Week 1 index Workbook 1c · Section 3-1 · Naming conventions and consistency Naming Conventions Click any name in the code and see what kind of thing it is and which rule shaped it. Names Real names from this week package com.pluralsight ; import java.util . Scanner ; public class Main { public static void main ( String [] args ) { final int DAYS_IN_WEEK = 7; int firstNumber = 26; boolean isStudent = true ; Scanner myScanner = new Scanner (System.in); String firstName = myScanner . nextLine (); String lastName = myScanner . nextLine (); String fullName = generateFullName ( firstName , lastName ); } public static int addNumbers ( int num1 , int num2 ) { return num1 + num2 ; } public static String generateFullName ( String firstName , String lastName ) { return firstName + \" \" + lastName ; } } The five shapes Class PascalCase Main, HelloWorld, Scanner Variable camelCase firstNumber, isStudent Method camelCase() addNumbers, generateFullName Constant (final) UPPER_SNAKE_CASE DAYS_IN_WEEK Package all.lowercase com.pluralsight The compiler accepts first_number or main_class . Nobody writes them, so they stand out as wrong. The one idea The shape of a name tells the reader what it is before they read the code. The compiler does not enforce these rules, but every Java developer follows them, so a name in the wrong shape reads as a mistake."
+    "text": "← Week 1 index Workbook 1c · Section 3-1 · Naming conventions and consistency Naming Conventions Click any name in the code and see what kind of thing it is and which rule shaped it. Names Real names from this week package com.pluralsight ; import java.util . Scanner ; public class Main { public static void main ( String [] args ) { final int DAYS_IN_WEEK = 7; int firstNumber = 26; boolean isEnrolled = true ; Scanner myScanner = new Scanner (System.in); String firstName = myScanner . nextLine (); String lastName = myScanner . nextLine (); String fullName = generateFullName ( firstName , lastName ); } public static int addNumbers ( int num1 , int num2 ) { return num1 + num2 ; } public static String generateFullName ( String firstName , String lastName ) { return firstName + \" \" + lastName ; } } The five shapes Class PascalCase Main, HelloWorld, Scanner Variable camelCase firstNumber, isEnrolled Method camelCase() addNumbers, generateFullName Constant (final) UPPER_SNAKE_CASE DAYS_IN_WEEK Package all.lowercase com.pluralsight The compiler accepts first_number or main_class . Nobody writes them, so they stand out as wrong. The one idea The shape of a name tells the reader what it is before they read the code. The compiler does not enforce these rules, but every Java developer follows them, so a name in the wrong shape reads as a mistake."
   },
   {
     "week": 1,
@@ -577,7 +577,7 @@
     "desc": "",
     "group": "Workbook 2a · Section 1-1",
     "url": "week-02/visuals/01-comparing-strings.html",
-    "text": "← Week 2 index Workbook 2a · Section 1-1 · Comparing Strings Comparing Strings == asks whether two variables point at the same object. equals asks whether the text is the same. s3 = Focus step 0 / 7 Press Next . The picture changes at every step. ← Back Next → Reset space = next · change s3 and watch steps 6 and 7 Main.java s1 == s2 s1.equals(s2) s1.equalsIgnoreCase(s3) console The one idea == asks \"same object?\" It compares the arrows, so two Strings with the same letters can still give false. equals asks \"same text?\" : same characters, same order. equalsIgnoreCase asks \"same text, ignoring capitals?\" To compare text, always use equals or equalsIgnoreCase ."
+    "text": "← Week 2 index Workbook 2a · Section 1-1 · Comparing Strings Comparing Strings Two strings. Ask Java if they are the same, three ways. the second string is s2 = \"ABC\" same literal s2 = new String( \"ABC\" ) built at run time s3 = \"abc\" lowercase literal String s1 String s2 String object box #1 String object box #2 no second box == .equals() .equalsIgnoreCase() ? Reset The one idea == asks \"same box?\" Two boxes with the same letters still give false. .equals() asks \"same letters?\" and capitals count; .equalsIgnoreCase() lets capitals go. To compare text, use .equals() ."
   },
   {
     "week": 2,
@@ -587,7 +587,7 @@
     "desc": "",
     "group": "Workbook 2a · Section 1-1",
     "url": "week-02/visuals/02-string-methods.html",
-    "text": "← Week 2 index Workbook 2a · Section 1-1 · String Methods String Methods A String method reads the characters and hands back a value: a number, true or false, a char, or a new String. Example Focus returns int click a method · spaces show as · and count as characters Main.java return type after the call console The one idea A String method never changes the String. It returns a new value. Store it in a variable or use it right away, as in String trimmedUserName = username.trim(); Called on its own, the result is lost and the original stays as it was."
+    "text": "← Week 2 index Workbook 2a · Section 1-1 · String Methods String Methods One string. Press a method, watch what it looks at. String fullName · click a cell to pick an index .length() .charAt(5) .indexOf( \" \" ) .substring(2, 9) .toUpperCase() .toLowerCase() .trim() .contains( \" \" ) result nothing called yet Reset The one idea A String is a row of characters numbered from 0, and a method only reads it. It hands back a number, a char, true or false, or a brand new String. The original never changes, so keep the result in a variable if you need it."
   },
   {
     "week": 2,
@@ -597,7 +597,7 @@
     "desc": "",
     "group": "Workbook 2a · Section 1-2",
     "url": "week-02/visuals/03-string-to-number.html",
-    "text": "← Week 2 index Workbook 2a · Section 1-2 · Converting strings String to Number Text that looks like a number is still text. Integer.parseInt turns it into a real number. Text to number Focus step 0 / 5 Press Next . The picture changes at every step. ← Back Next → Reset space = next · watch the quotes: text has them, a number does not Main.java type now value console The one idea Text that looks like a number is still text : + glues it, it does not add. Integer.parseInt makes a real int, and then the math works ( Double.parseDouble does the same for decimals). A String that is not a number , like \"one hundred\" , crashes the program with a NumberFormatException ."
+    "text": "← Week 2 index Workbook 2a · Section 1-2 · Converting strings String to Number Text looks like a number until you ask Java to count with it. Press a button. String · text stringNumber \" \" Edit it. Try 111abc , 4.99 , spaces around 111 , or nothing. + 1 Integer.parseInt (stringNumber) → Double.parseDouble (stringNumber) → int · a whole number parsedNumber empty + 1 double · a decimal number parsedDouble empty + 1 On the left, \"111\" is text: three characters between quotes. The two number boxes are empty . Reset The one idea Digits in quotes are characters, not a number. + on a String glues text on. Integer.parseInt and Double.parseDouble read the characters and build a real number you can count with. If a character does not fit, Java throws a NumberFormatException ."
   },
   {
     "week": 2,
@@ -607,7 +607,7 @@
     "desc": "",
     "group": "Workbook 2a · Section 1-2",
     "url": "week-02/visuals/04-string-to-date.html",
-    "text": "← Week 2 index Workbook 2a · Section 1-2 · Converting a String to a date String to Date A String is not a date: a typed date like 17/October/2002 needs a formatter whose pattern matches it exactly. One typed date, one pattern Focus step 0 / 5 Press Next . The picture changes at every step. ← Back Next → Reset space = next · line up the pattern and the text: every piece must match Main.java userDate console The one idea A String is not a date. Only yyyy-MM-dd text parses with no formatter, so \"17/October/2002\" needs a DateTimeFormatter whose pattern matches it exactly: d the day, MMMM the full month name, yyyy the year, every / in its place. Once parsed, println shows the date as yyyy-MM-dd."
+    "text": "← Week 2 index Workbook 2a · Section 1-2 · Converting a String to a date String to Date A date is text until Java reads it with the right pattern. Pick one and parse. String · just characters userInput Java sees ten characters, not a date. pattern yyyy-MM-dd d/MMMM/yyyy → LocalDate .parse(...) LocalDate birthDay year ---- month -- day -- .getDayOfWeek() On the left is a String . The calendar page on the right is empty until Java parses the text. Reset The one idea A typed date is only text. LocalDate.parse(text) reads yyyy-MM-dd and nothing else. Any other shape needs a DateTimeFormatter whose pattern matches the text piece by piece, or Java throws a DateTimeParseException . Once parsed, it is a real date you can ask questions, like which day of the week it was."
   },
   {
     "week": 2,
@@ -617,7 +617,7 @@
     "desc": "",
     "group": "Workbook 2a · Section 1-4",
     "url": "week-02/visuals/05-string-immutability.html",
-    "text": "← Week 2 index Workbook 2a · Section 1-4 · Working with StringBuilder Strings Are Immutable A String object never changes: + builds a new one, and the old one becomes unreachable when you reassign. One String, one change Focus step 0 / 10 Press Next . The picture changes at every step. ← Back Next → Reset space = next · watch the old objects: their letters never change Main.java greeting points to unreachable objects console The one idea A String object never changes. Concatenation with + builds a new object. Assign it to keep it, and the old object becomes unreachable: no variable points to it any more. Every change to a String is a new object, which is why the next page introduces StringBuilder ."
+    "text": "← Week 2 index Workbook 2a · Section 1-4 · Working with StringBuilder Strings Are Immutable A String never changes. Methods hand you a new one. Press and watch. variable greeting String greeting press one greeting.toUpperCase(); call it, keep nothing greeting = greeting.toUpperCase(); call it and store the result greeting = greeting + \", Raymond\"; join and store String objects greeting points at one String box, \"Hello\". Press a button on the left. Reset The one idea A String box never changes. A method gives you a new box. toUpperCase() and + build a new String and leave the old one as it was. Only = moves the variable to the new box; skip it and the new text is lost."
   },
   {
     "week": 2,
@@ -627,7 +627,7 @@
     "desc": "",
     "group": "Workbook 2a · Section 1-4",
     "url": "week-02/visuals/06-stringbuilder.html",
-    "text": "← Week 2 index Workbook 2a · Section 1-4 · Working with StringBuilder StringBuilder append() changes one StringBuilder object in place, and toString() at the end gives you the String. One object, growing Focus skills → StringBuilder object mySkills → String object new StringBuilder() · press Next step 0 / 9 Press Next . The picture changes at every step. ← Back Next → Reset space = next · watch the green box: it is the same object at every append Main.java appends done new String objects console The one idea append() changes one object in place : eleven appends, still one StringBuilder, and no new String for each change. When the text is done, toString() hands back the String. A StringBuilder is not a String, so String mySkills = skills; does not compile."
+    "text": "← Week 2 index Workbook 2a · Section 1-4 · Working with StringBuilder StringBuilder Add four pieces. One side makes four boxes, the other grows one. immutable · every change is a new object String String countdown → the green box No String yet. 0 boxes made mutable · one object that grows StringBuilder StringBuilder sb → the blue box 1 box, 0 appends .toString() Two empty starts. The StringBuilder box already exists, empty. Press a button on each side. Reset The one idea A String never changes. Every += builds a whole new String and drops the old one. A StringBuilder is one object that append grows in place. Build the text there, then call toString() once to get the String you need."
   },
   {
     "week": 2,
@@ -637,7 +637,7 @@
     "desc": "",
     "group": "Workbook 2a · Section 2-1",
     "url": "week-02/visuals/07-class-vs-object.html",
-    "text": "← Week 2 index Workbook 2a · Section 2-1 · Classes and objects Class vs Object A class is one blueprint. new builds an object from it, and the object holds its own field values. One class, one object Focus step 0 / 4 Press Next . The picture changes at every step. ← Back Next → Reset space = next · watch the object: it holds the values, the class holds none Example classes objects instructor energy console The one idea The class is the blueprint, the object is the house built from it. new builds an object with the class's fields and fills them with its own values. A method runs on the object you call it on, so it changes and reads that object's values."
+    "text": "← Week 2 index Workbook 2a · Section 2-1 · Classes and objects Class vs Object One class, many objects. Build a few and press their buttons. class · the blueprint Person String name int age int energy what every Person can do work(int hours) greet() new Person(name, age) → new No objects yet. Type a name and an age, press new . The class on the left holds no values . It only says what a Person has and can do. Reset The one idea The class is the blueprint, the object is the house built from it. Every new gives you one more object with its own values. A method runs on the object you call it on, so it changes and reads that object's values only."
   },
   {
     "week": 2,
@@ -647,7 +647,7 @@
     "desc": "",
     "group": "Workbook 2a · Section 2-1",
     "url": "week-02/visuals/08-encapsulation.html",
-    "text": "← Week 2 index Workbook 2a · Section 2-1 · Encapsulation Encapsulation Private fields sit behind a wall: the only way in or out is a public method the class offers. Person Focus step 0 / 5 Press Next . The picture changes at every step. ← Back Next → Reset space = next · red = blocked by private, green = a getter reads, gold = a setter writes Main.java field name last access console The one idea Fields are private : only code inside Person can touch them, and private hides them from every other class, in any package. Getters read, setters write , and they are public, so every other class goes through them. That is encapsulation : the only way in is a method the class offers."
+    "text": "← Week 2 index Workbook 2a · Section 2-1 · Encapsulation Encapsulation The fields are locked. The doors are the methods. Try each of Main's three calls. class Main · the caller Main instructor.age = -5 instructor.setAge( -5 ) instructor.getAge() object · Person instructor private fields name \"Raymond\" age 55 energy 100 public methods · the doors setAge(int age) writes age getAge() reads age Main The age of instructor sits behind a lock. Main can only reach it through two doors: setAge and getAge . Reset The one idea The fields are locked. The doors are the methods. A private field can only be touched by code inside its own class, and the compiler rejects any other class that tries. Public getters and setters are the way in and out, so the setter is the one place where a value can be checked before it lands."
   },
   {
     "week": 2,
@@ -657,7 +657,7 @@
     "desc": "",
     "group": "Workbook 2a · Section 2-1",
     "url": "week-02/visuals/09-what-new-does.html",
-    "text": "← Week 2 index Workbook 2a · Section 2-1 · Instantiating an object What new Does new builds the object and runs the constructor; the variable gets back a reference, not the object. Typed in: \"Raymond\", 35 Focus step 0 / 8 Press Next . The picture changes at every step. ← Back Next → Reset space = next · name and age are typed in at the two prompts · watch instructor: it ends up holding an arrow Main.java Person.java instructor holds field this.name console The one idea new makes the object and runs the constructor , which fills the fields: this.name = name copies the parameter into the field. new hands back a reference, and the variable holds the reference, not the object : instructor.getName() follows that arrow."
+    "text": "← Week 2 index Workbook 2a · Section 2-1 · Instantiating an object What new Does new builds the object. The variable only points at it. Press each line in order. variables no variables yet Person instructor = new Person(\"Raymond\", 35); Person teacher = instructor; teacher.setName(\"Ray\"); Person learner = new Person(\"Brandon\", 35); instructor = null; objects in memory empty Nothing yet: no variables on the left, no objects in memory on the right. Reset The one idea Only new builds an object. A Person variable holds an arrow to it, not the object itself. Copying the variable copies the arrow, so two names can share one object and both see its changes. Setting a variable to null removes its arrow, not the object."
   },
   {
     "week": 2,
@@ -667,7 +667,7 @@
     "desc": "",
     "group": "Workbook 2a · Section 2-3",
     "url": "week-02/visuals/10-method-overloading.html",
-    "text": "← Week 2 index Workbook 2a · Section 2-3 · Overloading methods Method Overloading One name, several parameter lists: the compiler reads the arguments and picks the one that fits. Person Focus the call 3 methods, 1 name · press Next step 0 / 5 Press Next . The picture changes at every step. ← Back Next → Reset space = next · type, count, order decide which door opens Person.java and Main.java argument types method that runs console The one idea Same name, different parameter list. A method's signature is its name plus its parameter types. At each call the compiler compares the arguments with every parameter list of that name, by type, count and order , and runs the one that fits. If none fits, the code does not compile."
+    "text": "← Week 2 index Workbook 2a · Section 2-3 · Overloading methods Method Overloading Same name, different doors. The arguments pick the door. one method name · three parameter lists instructor. greet door 1 ( ) door 2 ( String personToGreet) door 3 ( String learnerName, int age) press a call greet() greet(\"Brandon\") greet(\"Brandon\", 35) greet(35, \"Brandon\") Three methods share the name greet . Each door takes a different parameter list . Press a call below. Reset The one idea Overloaded methods share a name but not a parameter list. Java looks at the number, the types and the order of the arguments and runs the one method whose list matches. If none matches, the code does not compile."
   },
   {
     "week": 2,
@@ -677,7 +677,7 @@
     "desc": "",
     "group": "Workbook 2a · Section 2-3",
     "url": "week-02/visuals/11-constructor-overloading.html",
-    "text": "← Week 2 index Workbook 2a · Section 2-3 · Overloading constructors Constructor Overloading A class can have several constructors. Java runs the one whose parameter list matches your arguments. Person Focus Person.java · seven constructors the new object seven constructors, four calls · press\\u00a0 Next step 0 / 7 Press Next . The picture changes at every step. ← Back Next → Reset space = next · match the argument types, in order, to one parameter list Main.java constructor picked fields set console The one idea Constructors overload like methods: same name, different parameter lists (number, types or order), and Java picks the one whose list matches your arguments. A field that constructor does not set keeps its default: null for a String, 0 for an int."
+    "text": "← Week 2 index Workbook 2a · Section 2-3 · Overloading constructors Constructor Overloading Four ways to build the same Person. The arguments choose. class · the blueprint Person String name int age int energy constructors · same name, different parameters → new No objects yet. Press a new Person(...) call below. press a call Four constructors, all named Person . Only the parameter lists differ. Reset The one idea The arguments choose the constructor. Every constructor carries the class name, so Java tells them apart by the number, types and order of the parameters. Whatever the chosen constructor does not set keeps its default: null for a String, 0 for an int."
   },
   {
     "week": 2,
@@ -687,7 +687,7 @@
     "desc": "",
     "group": "Workbook 2a · Section 3-1",
     "url": "week-02/visuals/12-loop-types.html",
-    "text": "← Week 2 index Workbook 2a · Section 3-1 · Loops Three Loops, One Job Every loop has the same four parts: start, condition, body, update. while, do / while and for only put them in different places. Form Focus Main.java The order of one pass false: exit repeat counter 0 condition Printed step 0 / 6 Press Next . Switch the form at any step: the same part lights up. ← Back Next → Reset space = next · switching the form starts over · every form prints 0 to 9 Where each part lives while do / while for start before the loop before the loop header, slot 1 condition top bottom header, slot 2 body inside { } inside { } inside { } update end of body end of body header, slot 3 first check before pass 1 after pass 1 before pass 1 body ran condition checked console The one idea Same four parts, different places. while and for check the condition before each pass; do / while checks after the pass, so its body always runs at least once . for puts start, condition and update on one line: for (int i = 0; i < 10; i++) ."
+    "text": "← Week 2 index Workbook 2a · Section 3-1 · Loops Three Loops, One Job Three loops run the same job. Watch where each one checks. start value runs while the value is < 10 Run one pass Run all Reset The one idea while and for check before the body, so they can run zero times. do-while checks after the body, so it always runs at least once. Pick for when you know the count, while when you do not."
   },
   {
     "week": 2,
@@ -697,7 +697,7 @@
     "desc": "",
     "group": "Workbook 2a · Section 3-1",
     "url": "week-02/visuals/13-break-vs-continue.html",
-    "text": "← Week 2 index Workbook 2a · Section 3-1 · Loops break vs continue break leaves the loop now. continue skips the rest of this pass. Version Focus passes, one per value of i inside the loop skipped 0 i = 1 to 10 · press Next step 0 / 6 Press Next . The picture changes at every step. ← Back Next → Reset space = next · same loop, i = 1 to 10 : switch between break and continue Main.java i ? sum ? console The one idea break leaves the loop now: only 1 and 2 are added, 4 to 10 never run, the sum is 3. continue skips the rest of this pass: 3, 6 and 9 are not added, the loop keeps going, the sum is 37. The same 37 also comes without continue, by writing the if the other way: if (i % 3 != 0) { sum += i; }"
+    "text": "← Week 2 index Workbook 2a · Section 3-1 · Loops break vs continue Same loop, one keyword changed. Watch the runner at station 3. at a gold station, where i % 3 == 0 : break continue Next pass Run all start sum += sum = 0 Reset The one idea break leaves the whole loop at once: only 1 and 2 are added, 4 to 10 never run, the sum is 3. continue skips only the rest of this pass: 3, 6 and 9 are left out, the loop goes on, the sum is 37."
   },
   {
     "week": 2,
@@ -707,7 +707,7 @@
     "desc": "",
     "group": "Workbook 2a · Section 3-2",
     "url": "week-02/visuals/14-arrays-indexing.html",
-    "text": "← Week 2 index Workbook 2a · Section 3-2 · Arrays Arrays and Indexes An array is a fixed row of slots numbered from 0, so the last index is always length - 1 . The array int[] listOfNumbers int[] newArrayOfNumbers String[] listOfNames boolean[] boolArray Focus i step 0 / 0 Press Step to create the array, or Run to watch it all. Step → Run ← Back Reset Experiment: index = length space = step · set the index to the length, or turn on the experiment. What is past the last slot? Main.java Inputs Change this, then press Step index in the brackets (0 to 7) Edit while stopped. The last allowed value is the length itself, which has no slot. length last index index value in the slot console The one idea Indexes start at 0 and end at length - 1 , so a loop runs while i < array.length . A new array is never empty: new int[n] starts at zeros, String at null, boolean at false . An index equal to the length has no slot, and Java stops with ArrayIndexOutOfBoundsException ."
+    "text": "← Week 2 index Workbook 2a · Section 3-2 · Arrays Arrays and Indexes Boxes in a row, counted from 0. Click one. Then ask for one too many. int[] listOfNumbers index read value write value .length = 7 Seven boxes, one value each. The number under a box is its index, and it starts at 0 . Reset The one idea An array is a fixed row of boxes, numbered from 0. listOfNumbers[i] reads or writes box i . With 7 boxes the last index is 6, which is length - 1 . Index 7, or -1, is not a box, so Java stops with ArrayIndexOutOfBoundsException ."
   },
   {
     "week": 2,
@@ -717,7 +717,7 @@
     "desc": "",
     "group": "Workbook 2a · Section 3-2",
     "url": "week-02/visuals/15-for-each-loop.html",
-    "text": "← Week 2 index Workbook 2a · Section 3-2 · Arrays for-each vs for for-each hands you each element directly, with no index. The indexed for loop gives you i as well. Two loops, one array Focus nameList for ( int i = 0 ; i < nameList.length; i++) a for loop with an index int i nameList[i] for ( String name : nameList) the for-each loop index not given String name 9 names · 2 loops · press Next step 0 / 21 Press Next to run the indexed loop, then the for-each loop. ← Back Next → Reset space = next · left lane : the indexed for · right lane : for-each Main2.java pass position known console The one idea Use for-each when you only need each element : it is shorter and visits every slot in order, no index to get wrong. Use the indexed for when you need the position , or when you want to change the slot itself with nameList[i] ."
+    "text": "← Week 2 index Workbook 2a · Section 3-2 · Arrays for-each vs for Two ways to visit every box. One knows where it is, one only knows what it holds. for ( int i = 0; i < nameList.length; i++) for ( String name : nameList) String[] nameList each pass reads nothing read yet Next pass Run all Reset The one idea Both loops visit every box, in order. The indexed for knows the position , so you can use i to print it, skip, or change a box with nameList[i] . The for-each only gets a copy of each value : shorter to write, nothing to get wrong, but no position."
   },
   {
     "week": 2,
@@ -727,7 +727,7 @@
     "desc": "",
     "group": "Workbook 2a · Section 3-2",
     "url": "week-02/visuals/16-sort-and-copy.html",
-    "text": "← Week 2 index Workbook 2a · Section 3-2 · Arrays Sorting and Copying Arrays Arrays.sort reorders the array itself, and copy = colors would copy only the arrow: a real copy is a second array. Part Focus step 0 / 7 Press Next . The picture changes at every step. ← Back Next → Reset space = next · arrow = reference · row of slots = one array · the chips jump to each part Main2.java arrays in memory arrows into it nameList[0] nameList[8] console The one idea Arrays.sort sorts the array itself : same array, values moved to new slots. Assigning one array variable to another copies the reference, so you get two names for one array. new String[7] is a real second array and System.arraycopy fills it , and a change to colors does not reach the copy."
+    "text": "← Week 2 index Workbook 2a · Section 3-2 · Arrays Sorting and Copying Arrays Sort the boxes, copy the boxes, or just give them a second name. variable String[] colors → second name String[] alias → alias[1] = \"black\"; Arrays. sort (colors) String[] fullCopy = Arrays. copyOf (colors, colors.length) String[] alias = colors its own array String[] fullCopy → fullCopy[1] = \"black\"; No second array yet. Only copyOf makes new boxes. One array of seven colors, and one variable, colors , that points at it. Reset The one idea Arrays.sort reorders the same boxes ; the variable still points at them. Arrays.copyOf builds a second row of boxes , so a change to one leaves the other alone. alias = colors copies only the arrow : two names, one array, and a change through either name shows in both."
   },
   {
     "week": 2,
@@ -737,7 +737,7 @@
     "desc": "",
     "group": "Workbook 2b · Section 1-2",
     "url": "week-02/visuals/17-debugger.html",
-    "text": "← Week 2 index Workbook 2b · Section 1-2 · Running the debugger The Debugger The debugger pauses your program on a line you choose, so you can run it one line at a time and watch the values change. IntelliJ in Debug mode Focus Main.java Debug gutter 1 public class Main { 2 public static void main ( String [] args) { 3 int week = 1 ; 4 double savings = 0 ; 5 while (savings < 100 ) { 6 savings = savings + 25 ; 7 System.out. println ( \"Week \" + week + \": saved \" + savings); 8 week++; 9 } 10 System.out. println ( \"Reached 100 after \" + (week - 1 ) + \" weeks\" ); 11 } 12 } Debug ▶ Resume ↷ Step Over ↘ Step Into ■ Stop Frames Variables a loop with a breakpoint · press Next step 0 / 8 Press Next . The picture changes at every step. ← Back Next → Reset space = next · the highlighted line is the next one to run , it has not run yet Paused on Loop pass You pressed console The one idea A breakpoint , the red dot in the gutter, is where Debug pauses. While paused, the highlighted line has not run yet. Step Over runs one line, Resume runs until the next breakpoint, the Variables pane shows the values right now and the Frames pane shows which method you are in. Reach for it when the code runs but the answer is wrong."
+    "text": "← Week 2 index Workbook 2b · Section 1-2 · Running the debugger The Debugger Put a red dot on a line. Run. Step. Watch the values. Debug Step over F8 Resume F9 Variables not running Seven lines, no breakpoint yet . Click the gutter next to a line number to put a red dot there. Reset The one idea A breakpoint is where Debug pauses, and the blue line has not run yet . Step over runs one line, Resume runs to the next red dot or to the end, and Variables shows the values right now. Reach for it when the code runs but the answer is wrong."
   },
   {
     "week": 2,
@@ -767,7 +767,7 @@
     "desc": "What the compiler or the runtime says, what it means, how to fix it.",
     "group": "Reference",
     "url": "week-02/reference/common-errors.html",
-    "text": "← Week 2 index Week 2 · Reference Common Errors The messages you will meet this week, word for word. Read the first line of the message: it usually names the fix. Show All Compile Runtime IntelliJ Compile Reaching a private field from outside See it java: name has private access in Person The field is private , so only code inside Person can touch it. Main cannot. Fix Go through the getter to read it and the setter to change it. Before System.out.println(instructor.name); After System.out.println(instructor.getName()); Compile Calling a getter that was never written See it java: cannot find symbol symbol: method getAge() location: variable student of type Person The class has an age field but no getAge() method, so there is nothing to call. Fix Add the getter to the class (Generate > Getter), or check the spelling of the name. Before public class Person { private int age; // no getAge() } After public class Person { private int age; public int getAge() { return this.age; } } Compile No constructor matches the new See it java: constructor Person in class Person cannot be applied to given types; required: String,int found: no arguments reason: actual and formal argument lists differ in length The only constructor needs a name and an age. Once you write any constructor, Java no longer gives you an empty one. Fix Pass what required lists, or add a no-argument constructor to the class. Before Person guest = new Person(); After Person guest = new Person(\"Guest\", 0); Compile No over"
+    "text": "← Week 2 index Week 2 · Reference Common Errors The messages you will meet this week, word for word. Read the first line of the message: it usually names the fix. Show All Compile Runtime IntelliJ Compile Reaching a private field from outside See it java: name has private access in Person The field is private , so only code inside Person can touch it. Main cannot. Fix Go through the getter to read it and the setter to change it. Before System.out.println(instructor.name); After System.out.println(instructor.getName()); Compile Calling a getter that was never written See it java: cannot find symbol symbol: method getAge() location: variable learner of type Person The class has an age field but no getAge() method, so there is nothing to call. Fix Add the getter to the class (Generate > Getter), or check the spelling of the name. Before public class Person { private int age; // no getAge() } After public class Person { private int age; public int getAge() { return this.age; } } Compile No constructor matches the new See it java: constructor Person in class Person cannot be applied to given types; required: String,int found: no arguments reason: actual and formal argument lists differ in length The only constructor needs a name and an age. Once you write any constructor, Java no longer gives you an empty one. Fix Pass what required lists, or add a no-argument constructor to the class. Before Person guest = new Person(); After Person guest = new Person(\"Guest\", 0); Compile No over"
   },
   {
     "week": 2,
