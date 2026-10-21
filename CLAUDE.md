@@ -130,6 +130,7 @@ it gets no visual, no game, no reference entry. Week 1: 1c Module 1 was skipped 
   (chips to visuals and reference). No hero picture, no steps to click through. The "how" text names menus, files and
   names; it never says what to type inside main. Calibration page: `week-01/exercises/shopping-list.html`.
   Text budget for companions is about 1300 visible characters (prose is their job).
+- **No "send your repository URL" step (Ray, 2026-10-22):** the last step is commit and push. Ray follows every learner's GitHub profile, so learners never send a link per project.
 - **One project per exercise (Ray, 2026-10-13):** when the workbook says "modify" or "refactor" the previous exercise, the companion
   says: new project named `x-2`, copy the previous code in, change it there, own repository. Never the same project.
 
