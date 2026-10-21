@@ -1,0 +1,258 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Assessment 1 Practice | Visual Hub</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Sora:wght@500;700&family=Inter:wght@400;500&family=JetBrains+Mono:wght@400;500&display=swap">
+<style>
+  :root{
+    --bg:#080c17; --bg2:#0c1428; --surface:rgba(255,255,255,.045); --line:rgba(255,255,255,.09);
+    --ink:#eef2fb; --muted:#8496b6; --accent:#6ea0ff; --accent2:#8b7bff; --good:#46d98a; --warn:#ff6a6a;
+    --gold:#ffc862; --disp:'Sora',system-ui,sans-serif; --body:'Inter',system-ui,sans-serif;
+    --mono:'JetBrains Mono',ui-monospace,monospace;
+  }
+  *{box-sizing:border-box}
+  [hidden]{display:none!important}
+  body{margin:0;min-height:100vh;color:var(--ink);font-family:var(--body);
+    background:radial-gradient(1200px 700px at 70% -10%,#141d38 0%,transparent 55%),
+               radial-gradient(900px 600px at 10% 110%,#161233 0%,transparent 50%),#080c17;
+    overflow-x:hidden}
+  #amb{position:fixed;inset:0;z-index:0;pointer-events:none;opacity:.6}
+  .back{position:relative;z-index:2;display:block;max-width:1120px;margin:0 auto;padding:26px 24px 0;
+    width:100%;font-family:var(--mono);font-size:.8rem;letter-spacing:.04em;color:var(--muted);
+    text-decoration:none;transition:color .15s}
+  .back:hover{color:var(--accent)}
+  .wrap{position:relative;z-index:1;max-width:1120px;margin:0 auto;padding:22px 24px 70px}
+  .tag{font-family:var(--mono);font-size:.72rem;letter-spacing:.22em;text-transform:uppercase;color:var(--accent);margin:0 0 14px}
+  h1{font-family:var(--disp);font-weight:700;font-size:clamp(2.3rem,6vw,3.6rem);line-height:1;margin:0 0 12px;
+    letter-spacing:-.03em;background:linear-gradient(180deg,#fff,#b9c6e6);-webkit-background-clip:text;
+    background-clip:text;color:transparent}
+  .lede{color:var(--muted);max-width:64ch;font-size:1.05rem;margin:0 0 26px;line-height:1.5}
+  .lede b{color:var(--ink)}
+
+  .stage{position:relative;background:linear-gradient(180deg,rgba(255,255,255,.03),rgba(255,255,255,.01));
+    border:1px solid var(--line);border-radius:24px;padding:18px 18px 14px;
+    box-shadow:0 1px 0 rgba(255,255,255,.06) inset,0 30px 80px -30px rgba(0,0,0,.8)}
+  .lab{font-family:var(--mono);font-size:.7rem;letter-spacing:.12em;text-transform:uppercase;color:var(--muted);margin:0 0 12px}
+  .lab b{color:var(--ink);font-weight:500}
+  .pic{position:relative;min-height:380px;border:1px solid var(--line);border-radius:18px;background:rgba(6,10,20,.5);padding:26px 26px 24px}
+  .pic.start{display:flex;flex-direction:column;align-items:center;justify-content:center;gap:18px;text-align:center}
+  .mono{font-family:var(--mono);font-size:.8rem;color:var(--muted);line-height:1.6;margin:0}
+  .btn{font-family:var(--body);font-weight:500;font-size:.86rem;padding:9px 16px;border-radius:11px;cursor:pointer;
+    border:1px solid var(--line);background:var(--surface);color:var(--ink);transition:.15s}
+  .btn:hover{border-color:var(--accent);color:var(--accent)}
+  .btn.primary{border-color:rgba(110,160,255,.5);background:rgba(110,160,255,.12);padding:9px 22px}
+  .btn.big{font-size:1rem;padding:13px 30px}
+  .btn:disabled{opacity:.35;cursor:not-allowed}
+  .btn.ghost{background:transparent;color:var(--muted)}
+  .btn:focus-visible,.opt:focus-visible{outline:2px solid var(--accent);outline-offset:2px}
+
+  .qtext{font-size:1.1rem;line-height:1.55;margin:0 0 16px;color:var(--ink)}
+  pre.code{font-family:var(--mono);font-size:.86rem;line-height:1.6;color:#c9d4ea;margin:0 0 18px;padding:12px 16px;
+    border:1px solid var(--line);border-radius:14px;background:rgba(0,0,0,.3);overflow-x:auto;white-space:pre;tab-size:4}
+  .opts{display:grid;gap:10px}
+  .opt{display:flex;align-items:center;gap:14px;width:100%;text-align:left;padding:10px 14px;border-radius:14px;cursor:pointer;
+    border:1px solid var(--line);background:var(--surface);color:var(--ink);font-family:var(--mono);font-size:.9rem;line-height:1.45;transition:.15s}
+  .opt:hover{border-color:rgba(110,160,255,.45)}
+  .opt[aria-pressed="true"]{border-color:var(--accent);background:rgba(110,160,255,.12);box-shadow:0 0 0 1px var(--accent) inset}
+  .opt .t{white-space:pre-wrap;word-break:break-word}
+  .num{flex-shrink:0;width:38px;height:38px;border-radius:10px;display:flex;align-items:center;justify-content:center;font-family:var(--disp);font-weight:700;
+    font-size:.95rem;background:rgba(110,160,255,.14);color:var(--accent);border:1px solid rgba(110,160,255,.3)}
+  .opt[aria-pressed="true"] .num{background:var(--accent);color:#0a1020}
+  .toolbar{display:flex;align-items:center;gap:10px;margin:16px 0 0;padding-top:14px;border-top:1px solid var(--line)}
+  .toolbar .right{margin-left:auto;display:flex;gap:10px}
+
+  .score{display:flex;align-items:baseline;gap:14px;flex-wrap:wrap;margin:4px 4px 18px}
+  .score .v{font-family:var(--disp);font-weight:700;font-size:2.6rem;font-variant-numeric:tabular-nums;color:var(--ink);line-height:1}
+  .score .m{font-family:var(--mono);font-size:.82rem;color:var(--muted)}
+  .review{display:flex;flex-direction:column;gap:8px}
+  .item{border:1px solid var(--line);border-radius:14px;background:rgba(6,10,20,.5);padding:14px 18px 16px;border-left:3px solid var(--good)}
+  .item.bad{border-left-color:var(--warn)}
+  .item .lab{margin:0 0 8px}
+  .item.bad .lab b{color:var(--warn)} .item.ok .lab b{color:var(--good)}
+  .item .qtext{font-size:1rem;margin:0 0 12px}
+  .item pre.code{margin-bottom:12px}
+  .ans{display:grid;gap:6px;margin:0 0 12px}
+  .ans div{display:flex;gap:10px;align-items:baseline;font-family:var(--mono);font-size:.84rem;padding:6px 10px;border-radius:10px;
+    border:1px solid transparent;color:var(--muted)}
+  .ans .l{flex-shrink:0;font-family:var(--disp);font-weight:700}
+  .ans .t{white-space:pre-wrap;word-break:break-word;flex:1}
+  .ans .tg{flex-shrink:0;font-size:.66rem;letter-spacing:.1em;text-transform:uppercase}
+  .ans .right{color:var(--ink);border-color:rgba(70,217,138,.45);background:rgba(70,217,138,.08)}
+  .ans .right .tg,.ans .right .l{color:var(--good)}
+  .ans .wrong{color:var(--ink);border-color:rgba(255,106,106,.45);background:rgba(255,106,106,.08)}
+  .ans .wrong .tg,.ans .wrong .l{color:var(--warn)}
+  .why{margin:0;font-size:.95rem;line-height:1.55;color:var(--ink);padding-left:14px;border-left:3px solid var(--accent)}
+
+  .take{margin-top:22px;background:linear-gradient(180deg,rgba(110,160,255,.08),rgba(139,123,255,.04));
+    border:1px solid var(--line);border-left:3px solid var(--accent);border-radius:12px;padding:16px 18px}
+  .take .tk{font-family:var(--mono);font-size:.66rem;letter-spacing:.14em;text-transform:uppercase;color:var(--accent);margin:0 0 8px}
+  .take p{margin:0;font-size:.95rem;color:var(--ink);line-height:1.55}
+
+  @media (max-width:760px){
+    .wrap{padding:18px 16px 60px} .back{padding:22px 16px 0}
+    .stage{padding:12px 10px 12px} .pic{padding:18px 14px}
+    .toolbar{flex-wrap:wrap} .toolbar .right{margin-left:0;width:100%} .toolbar .right .btn{flex:1}
+  }
+  @media (prefers-reduced-motion:reduce){*{animation-duration:.01ms!important;transition:none!important}#amb{display:none}}
+</style>
+</head>
+<body>
+
+<a class="back" href="../index.html">← All weeks</a>
+
+<canvas id="amb"></canvas>
+<div class="wrap">
+  <p class="tag">Knowledge Assessment 1 · Workbooks 1 and 2a</p>
+  <h1>Assessment 1 Practice</h1>
+  <p class="lede"><b>25 questions, like the real one.</b> Answers at the end.</p>
+
+  <div class="stage">
+
+    <section id="sStart">
+      <div class="pic start">
+        <p class="mono">A different mix each time. Nothing is saved or sent anywhere.</p>
+        <button class="btn primary big" id="bStart">Start</button>
+      </div>
+    </section>
+
+    <section id="sPaper" hidden>
+      <p class="lab">Question <b id="qn"></b></p>
+      <div class="pic" id="card"></div>
+      <div class="toolbar">
+        <button class="btn ghost" id="bBack">Back</button>
+        <div class="right"><button class="btn primary" id="bNext">Next</button></div>
+      </div>
+    </section>
+
+    <section id="sDone" hidden>
+      <div class="score"><span class="v" id="scoreV"></span><span class="m" id="scoreM"></span></div>
+      <div class="review" id="review"></div>
+      <div class="toolbar"><div class="right"><button class="btn primary" id="bNew">New paper</button></div></div>
+    </section>
+
+  </div>
+
+  <div class="take">
+    <p class="tk">How to use this</p>
+    <p>Do a paper without the book first, like on Monday. Read the answers you got wrong, open that week's pages, then do another. Two or three papers over the weekend is plenty.</p>
+  </div>
+</div>
+
+<script>
+(function(){
+  "use strict";
+  var $=function(s){return document.querySelector(s);};
+  var reduce=matchMedia("(prefers-reduced-motion: reduce)").matches;
+  var BANK={"topics":{"types":"Variables and types","ops":"Operators and math","strings":"Strings","arrays":"Arrays","loops":"Loops","methods":"Methods","classes":"Classes and objects","ctor":"Constructors and this"},"questions":[{"id":"r01","topic":"types","q":"Which of these is a primitive type?","opts":["String","Scanner","boolean","Integer"],"a":2,"why":"boolean, int, double, char and friends are primitives. String, Scanner and Integer are classes, which is why they start with a capital letter."},{"id":"r02","topic":"types","q":"Which line declares a whole-number variable named visitors and gives it the value 42?","opts":["visitors = 42;","int visitors = 42;","integer visitors = 42;","int visitors == 42;"],"a":1,"why":"Type, then name, then one = to assign. There is no type called integer, and == compares instead of assigning."},{"id":"r03","topic":"types","q":"Fill in the blank so the declaration stores a decimal number.","opts":["int","char","double","boolean"],"a":2,"why":"36.6 has a fraction, so it needs double. int would not even compile here because a double does not fit in an int without a cast.","code":"________ temperature = 36.6;"},{"id":"r04","topic":"types","q":"Which of these is a valid variable name?","opts":["2ndPlace","total-amount","class","firstName"],"a":3,"why":"A name starts with a letter, underscore or dollar sign, has no spaces or dashes, and cannot be a keyword. class is a keyword."},{"id":"r05","topic":"types","q":"True or False: a double value can be stored in an int variable without a cast.","opts":["True","False"],"a":1,"why":"Going from double to int loses the fraction, so Java refuses unless you write the cast yourself: int whole = (int) 7.9;"},{"id":"r06","topic":"types","q":"Which declaration stores a single character?","opts":["char grade = \"A\";","char grade = 'A';","String grade = 'A';","character grade = 'A';"],"a":1,"why":"char uses single quotes. Double quotes make a String, and character is not a type."},{"id":"r07","topic":"types","q":"Which keyword makes a variable's value fixed once assigned?","opts":["const","static","final","fixed"],"a":2,"why":"final means assign once. const is reserved but unused in Java; static means shared by the class."},{"id":"r08","topic":"types","q":"What does true or false get stored in?","opts":["a bit","a boolean","a bool","an int of 0 or 1"],"a":1,"why":"boolean holds exactly true or false. Java does not treat 0 and 1 as booleans and bool is not a Java type."},{"id":"r09","topic":"ops","q":"Which operator gives the remainder of a division?","opts":["/","%","mod","\\\\"],"a":1,"why":"% is the remainder operator: 17 % 5 is 2. / is division and mod is not Java."},{"id":"r10","topic":"ops","q":"Which line adds 1 to the variable laps?","opts":["laps + 1;","laps++;","laps =+ 1;","++laps++;"],"a":1,"why":"laps++ stores the new value. laps + 1 computes it and throws it away; laps =+ 1 assigns positive 1."},{"id":"r11","topic":"ops","q":"Which operator checks whether two int values are equal?","opts":["=","==","equals","=>"],"a":1,"why":"= assigns, == compares. equals is for objects such as Strings."},{"id":"r12","topic":"ops","q":"What does the && operator mean inside an if condition?","opts":["either side can be true","both sides must be true","the sides are added","the left side is assigned to the right"],"a":1,"why":"&& is AND: the condition is true only when both sides are true. || is OR."},{"id":"r13","topic":"ops","q":"Which cast turns the double 9.75 into the int 9?","opts":["int(9.75)","(int) 9.75","Integer.round(9.75)","9.75 as int"],"a":1,"why":"A cast is the type in parentheses before the value. It drops the fraction, it does not round."},{"id":"r14","topic":"strings","q":"Which method tells you how many characters a String has?","opts":[".size()",".length",".length()",".count()"],"a":2,"why":"Strings use length() with parentheses because it is a method. Arrays use length without parentheses."},{"id":"r15","topic":"strings","q":"Which is the right way to check whether two Strings have the same text?","opts":["city == town","city.equals(town)","city = town","city.compare(town)"],"a":1,"why":"== asks whether they are the same object. equals() compares the characters, which is what you want."},{"id":"r16","topic":"strings","q":"Which method gives you one character of a String by its position?","opts":["charAt(i)","get(i)","substring(i)","index(i)"],"a":0,"why":"charAt(i) returns the char at index i, counting from 0. substring returns a piece of text, not a single char."},{"id":"r17","topic":"strings","q":"What does \"Hello\".toUpperCase() give back?","opts":["It changes \"Hello\" into \"HELLO\" in place","A new String \"HELLO\"","true","An error, Strings cannot change"],"a":1,"why":"Strings never change. Every String method hands back a new String and leaves the original as it was."},{"id":"r18","topic":"strings","q":"Which method turns the text \"250\" into the number 250?","opts":["Integer.parseInt(\"250\")","int.parse(\"250\")","\"250\".toInt()","(int) \"250\""],"a":0,"why":"Integer.parseInt reads an int out of a String. A cast cannot turn text into a number."},{"id":"r19","topic":"arrays","q":"Which line creates an array that can hold 8 doubles?","opts":["double[] prices = new double(8);","double prices[8];","double[] prices = new double[8];","array<double> prices = 8;"],"a":2,"why":"new double[8] reserves 8 slots, all 0.0. Square brackets, not parentheses."},{"id":"r20","topic":"arrays","q":"An array has 12 elements. What is the index of its last element?","opts":["12","11","13","1"],"a":1,"why":"Indexes start at 0, so the last one is length minus 1."},{"id":"r21","topic":"arrays","q":"What happens when you read an array element at an index that does not exist?","opts":["You get 0","You get null","The program crashes with an exception","The array grows"],"a":2,"why":"Java throws ArrayIndexOutOfBoundsException at run time. Arrays never grow on their own."},{"id":"r22","topic":"arrays","q":"Fill in the blank: which name completes this array declaration?","opts":["String","new","4","cities"],"a":3,"why":"The blank is the variable name. It has to be an identifier you choose, not a keyword, a type or a number.","code":"String[] ________ = new String[4];"},{"id":"r23","topic":"arrays","q":"Which expression gives the number of elements in an array named temps?","opts":["temps.length()","temps.size()","temps.length","temps.count"],"a":2,"why":"Arrays expose length as a field, no parentheses. Strings use length() as a method."},{"id":"r24","topic":"loops","q":"True or False: a do-while loop runs its body at least once even when the condition is false from the start.","opts":["True","False"],"a":0,"why":"do-while checks the condition after the body, so the body always runs once."},{"id":"r25","topic":"loops","q":"Which loop fits best when you know in advance how many times to repeat?","opts":["while","do-while","for","if"],"a":2,"why":"for puts the counter, the condition and the step in one line, which is the natural shape for a known count."},{"id":"r26","topic":"loops","q":"What does break do inside a loop?","opts":["Skips the rest of this pass and starts the next one","Leaves the loop immediately","Restarts the loop from the first pass","Pauses the program"],"a":1,"why":"break exits the loop. continue is the one that jumps to the next pass."},{"id":"r27","topic":"loops","q":"Which part of a for header runs once, before the first pass?","opts":["int i = 0","i < 5","i++","none, all three run on every pass"],"a":0,"why":"Initialization runs once. The condition runs before every pass, the update after every pass.","code":"for (int i = 0; i < 5; i++)"},{"id":"r28","topic":"methods","q":"What return type should this method have if it sends back a yes or no answer?","opts":["void","String","int","boolean"],"a":3,"why":"A yes or no answer is a boolean. void would mean nothing comes back.","code":"public ______ isWeekend(String day) { }"},{"id":"r29","topic":"methods","q":"Fill in the blank so the method sends the computed value back to the caller.","opts":["print","return","send","output"],"a":1,"why":"return hands a value back and ends the method. Printing shows it on screen but the caller gets nothing.","code":"public double half(double amount) {\n    ________ amount / 2;\n}"},{"id":"r30","topic":"methods","q":"What does void in a method header mean?","opts":["The method takes no parameters","The method returns nothing","The method is empty","The method can only be called once"],"a":1,"why":"void is the return type that means no value comes back. Parameters are a separate matter."},{"id":"r31","topic":"methods","q":"Which line calls a method named printTotal that takes one double?","opts":["printTotal;","call printTotal(19.5);","printTotal(19.5);","printTotal(double 19.5);"],"a":2,"why":"A call is the name, parentheses and the arguments. No type in a call, no call keyword."},{"id":"r32","topic":"methods","q":"In a method header, what are the names inside the parentheses called?","opts":["arguments","parameters","fields","returns"],"a":1,"why":"Parameters are the names in the header. Arguments are the values you pass when you call the method.","code":"public static int area(int width, int height)"},{"id":"r33","topic":"classes","q":"Which line correctly begins a class?","opts":["class public Bike { }","public class Bike { }","Class Bike { }","new class Bike { }"],"a":1,"why":"Modifier, then the keyword class in lowercase, then the name. Class with a capital C is not the keyword."},{"id":"r34","topic":"classes","q":"What is the relationship between a class and an object?","opts":["They are two words for the same thing","A class is a blueprint, an object is one thing built from it","An object is a blueprint, a class is one copy of it","A class is a method inside an object"],"a":1,"why":"One class, many objects. The class describes the fields and methods; each object has its own values."},{"id":"r35","topic":"classes","q":"Which keyword creates a new object from a class?","opts":["create","new","make","object"],"a":1,"why":"new reserves memory for the object and runs the constructor."},{"id":"r36","topic":"classes","q":"Why are fields usually marked private?","opts":["So they use less memory","So only the class itself can change them, through its methods","So they cannot be read at all","So they are shared by every object"],"a":1,"why":"Encapsulation: the class controls its own data. Other code goes through getters and setters."},{"id":"r37","topic":"classes","q":"Given the class, which line creates a Plant object named fern?","opts":["Plant fern = Plant(\"Boston fern\");","Plant fern = new Plant(\"Boston fern\");","new Plant fern = \"Boston fern\";","Plant fern;"],"a":1,"why":"Type, name, =, new, then the constructor call with its argument. Without new nothing is built.","code":"public class Plant {\n    private String name;\n    public Plant(String name) {\n        this.name = name;\n    }\n}"},{"id":"r38","topic":"ctor","q":"What is a constructor for?","opts":["To delete an object when it is no longer used","To set up an object's starting values when it is created","To list the methods an object has","To name the class"],"a":1,"why":"A constructor runs once, at new, and gives the fields their first values."},{"id":"r39","topic":"ctor","q":"Which statement about constructors is true?","opts":["A constructor has the same name as its class","A constructor must return an int","A class can have only one constructor","A constructor needs at least one parameter"],"a":0,"why":"Same name as the class, no return type at all, and you can have several with different parameter lists."},{"id":"r40","topic":"ctor","q":"In this constructor, what does this.city mean?","opts":["The parameter named city","The field named city of the object being built","A new object named city","The class named city"],"a":1,"why":"this is the object under construction. this.city is its field; plain city is the parameter that shadows it.","code":"public Hotel(String city) {\n    this.city = city;\n}"},{"id":"r41","topic":"ctor","q":"Two constructors in one class with different parameter lists is called","opts":["inheritance","overloading","overriding","encapsulation"],"a":1,"why":"Overloading: same name, different parameters. Java picks the one that matches the arguments."},{"id":"r42","topic":"ctor","q":"What is wrong with this constructor header?","opts":["Nothing, it is a valid constructor","It has a return type, so it is a method, not a constructor","Constructors cannot take an int","The name should be lowercase"],"a":1,"why":"A constructor has no return type, not even void. With void this is just a method that happens to be named Lamp.","code":"public void Lamp(int watts) {"},{"id":"p01","topic":"ops","q":"What is the value of result?","opts":["21","11","13","Compiler error"],"a":1,"why":"Multiplication first: 2 * 3 is 6, then 5 + 6 is 11.","code":"int result = 5 + 2 * 3;"},{"id":"p02","topic":"ops","q":"What is the value of share?","opts":["3.5","3","4","Compiler error"],"a":1,"why":"int divided by int stays int: the fraction is dropped, not rounded.","code":"int share = 7 / 2;"},{"id":"p03","topic":"ops","q":"What is the value of left?","opts":["3","2","3.4","0"],"a":1,"why":"17 is 3 fives plus 2. % gives the leftover 2.","code":"int left = 17 % 5;"},{"id":"p05","topic":"strings","q":"What does this print?","opts":["Rooms: 5","Rooms: 32","Rooms: 3 2","Compiler error"],"a":1,"why":"Once a String is on the left, + means join. 3 is joined, then 2 is joined: 32.","code":"int rooms = 3;\nSystem.out.println(\"Rooms: \" + rooms + 2);"},{"id":"p06","topic":"strings","q":"What does this print?","opts":["6 p","5 p","6 l","7 p"],"a":0,"why":"planet has 6 letters and index 0 is the first one, p.","code":"String word = \"planet\";\nSystem.out.println(word.length() + \" \" + word.charAt(0));"},{"id":"p07","topic":"strings","q":"What does this print?","opts":["MAYA","Maya","maya","Compiler error"],"a":1,"why":"toUpperCase() returns a new String that nobody stored. name still points at \"Maya\".","code":"String name = \"Maya\";\nname.toUpperCase();\nSystem.out.println(name);"},{"id":"p08","topic":"strings","q":"What does this print?","opts":["key","board","yboard","oard"],"a":1,"why":"substring(3) starts at index 3 (the fourth character) and takes the rest: board.","code":"String s = \"keyboard\";\nSystem.out.println(s.substring(3));"},{"id":"p09","topic":"arrays","q":"What is the value of prices[1]?","opts":["2.5","4.0","6.5","1"],"a":1,"why":"Index 0 is 2.5, index 1 is 4.0.","code":"double[] prices = {2.5, 4.0, 6.5, 8.0};"},{"id":"p10","topic":"arrays","q":"What does this print?","opts":["10 20 30","0 1 2","30 20 10","10 20"],"a":0,"why":"i goes 0, 1, 2 and each pass prints steps[i], so the three values appear in order.","code":"int[] steps = {10, 20, 30};\nfor (int i = 0; i < steps.length; i++) {\n    System.out.print(steps[i] + \" \");\n}"},{"id":"p11","topic":"arrays","q":"What is the value of sum after the loop?","opts":["15","6","0","4"],"a":0,"why":"3 + 5 + 1 + 6 is 15. sum += adds each element into sum.","code":"int[] bags = {3, 5, 1, 6};\nint sum = 0;\nfor (int i = 0; i < bags.length; i++) {\n    sum += bags[i];\n}"},{"id":"p12","topic":"arrays","q":"What does this print?","opts":["cat dog fish on one line","cat, dog, fish","cat, dog and fish each on its own line","Compiler error"],"a":2,"why":"println ends every line, so each pet gets its own line.","code":"String[] pets = {\"cat\", \"dog\", \"fish\"};\nfor (int i = 0; i < pets.length; i++) {\n    System.out.println(pets[i]);\n}"},{"id":"p13","topic":"arrays","q":"What is the value of count?","opts":["4","5","0","Compiler error"],"a":1,"why":"new int[5] has 5 slots, so length is 5. The last index is 4, but length is the number of slots.","code":"int[] slots = new int[5];\nint count = slots.length;"},{"id":"p14","topic":"loops","q":"How many times does this loop print?","opts":["5","6","7","Never stops"],"a":1,"why":"n runs 1, 2, 3, 4, 5, 6: six passes, then n is 7 and the condition fails.","code":"int n = 1;\nwhile (n <= 6) {\n    System.out.println(\"tick\");\n    n++;\n}"},{"id":"p15","topic":"loops","q":"What does this print?","opts":["3 2 1","3 2 1 0","1 2 3","0 1 2"],"a":0,"why":"i starts at 3 and goes down while it is above 0.","code":"for (int i = 3; i > 0; i--) {\n    System.out.print(i + \" \");\n}"},{"id":"p16","topic":"loops","q":"How many lines does this print?","opts":["0","1","5","10"],"a":1,"why":"do-while runs the body once before it checks. 10 is printed, then 11 < 5 is false.","code":"int k = 10;\ndo {\n    System.out.println(k);\n    k++;\n} while (k < 5);"},{"id":"p17","topic":"loops","q":"What does this print?","opts":["1 2 3 4 5","1 2","1 2 4 5","4 5"],"a":2,"why":"continue skips the rest of pass 3 only. The loop goes on with 4 and 5.","code":"for (int i = 1; i <= 5; i++) {\n    if (i == 3) {\n        continue;\n    }\n    System.out.print(i + \" \");\n}"},{"id":"p18","topic":"loops","q":"What is the value of total after the loop?","opts":["4","10","6","24"],"a":1,"why":"1 + 2 + 3 + 4 is 10.","code":"int total = 0;\nfor (int i = 1; i <= 4; i++) {\n    total += i;\n}"},{"id":"p19","topic":"methods","q":"What does this print?","opts":["6","18","n * 3","Compiler error"],"a":1,"why":"The argument 6 lands in the parameter n, so the method prints 18.","code":"public static void triple(int n) {\n    System.out.println(n * 3);\n}\n\ntriple(6);"},{"id":"p20","topic":"methods","q":"What does this print?","opts":["16","17","9","4"],"a":1,"why":"square(4) returns 16, then + 1 gives 17.","code":"public static int square(int x) {\n    return x * x;\n}\n\nint r = square(4) + 1;\nSystem.out.println(r);"},{"id":"p22","topic":"classes","q":"What does this print? The constructor sets both fields.","opts":["title (minutes)","Up (96)","m.title (m.minutes)","Compiler error"],"a":1,"why":"m.title and m.minutes read the values the constructor stored.","code":"Movie m = new Movie(\"Up\", 96);\nSystem.out.println(m.title + \" (\" + m.minutes + \")\");"},{"id":"p24","topic":"ctor","q":"What does this print?","opts":["12.5","0.0","price","Compiler error"],"a":0,"why":"The constructor copies the parameter into the field with this.price = price, and the getter reads the field.","code":"public class Ticket {\n    private double price;\n    public Ticket(double price) {\n        this.price = price;\n    }\n    public double getPrice() {\n        return price;\n    }\n}\n\nTicket t = new Ticket(12.5);\nSystem.out.println(t.getPrice());"},{"id":"p26","topic":"types","q":"What does this print?","opts":["9","8","8.9","Compiler error"],"a":1,"why":"A cast to int drops the fraction. It does not round.","code":"int whole = (int) 8.9;\nSystem.out.println(whole);"},{"id":"b01","topic":"methods","q":"What happens when this is compiled?","opts":["It returns \"Hi\" and runs normally","void methods ignore the return value","Compiler error: a void method cannot return a value","Runtime error when called"],"a":2,"why":"void promises nothing comes back. Returning a value breaks that promise and the compiler stops.","code":"public void sayHi() {\n    return \"Hi\";\n}"},{"id":"b02","topic":"methods","q":"What is the bug?","opts":["n * 2 should be n + n","The method promises an int but never returns one","Printing is not allowed in a method","Nothing, it compiles"],"a":1,"why":"The return type is int, so every path must end with return. Printing is not returning.","code":"public int twice(int n) {\n    System.out.println(n * 2);\n}"},{"id":"b03","topic":"arrays","q":"This code should find the smallest number. What is the bug?","opts":["The loop should start at i = 1","The comparison should be < instead of >","min should start at 0","There is no bug"],"a":1,"why":"To keep the smallest, replace min only when the element is smaller: temps[i] < min. With > it finds the largest.","code":"int[] temps = {14, 9, 21, 7};\nint min = temps[0];\nfor (int i = 0; i < temps.length; i++) {\n    if (temps[i] > min) {\n        min = temps[i];\n    }\n}"},{"id":"b04","topic":"arrays","q":"What happens when this runs?","opts":["seats gets a fifth element","Compiler error","Runtime error: index 4 is out of bounds","Nothing, 1 is stored in the last slot"],"a":2,"why":"Valid indexes are 0 to 3. Index 4 does not exist, so Java throws ArrayIndexOutOfBoundsException at run time.","code":"int[] seats = new int[4];\nseats[4] = 1;"},{"id":"b05","topic":"loops","q":"This loop should print 1 to 5. What is the bug?","opts":["<= should be <","i should start at 0","i is never increased, so the loop never ends","println should be print"],"a":2,"why":"Nothing changes i, so i <= 5 stays true forever. Add i++ inside the body.","code":"int i = 1;\nwhile (i <= 5) {\n    System.out.println(i);\n}"},{"id":"b06","topic":"loops","q":"What is wrong with this for header?","opts":["Nothing, it compiles","The three parts must be separated by semicolons, not commas","i must start at 1","i++ is not allowed in a for header"],"a":1,"why":"A for header is init; condition; update. Commas make the compiler read it as one broken expression.","code":"for (int i = 0, i < 3, i++) {"},{"id":"b07","topic":"types","q":"What happens when this is compiled?","opts":["count becomes 2","count becomes 3","Compiler error: a double does not fit in an int","Runtime error"],"a":2,"why":"Java will not narrow a double into an int silently. You would need int count = (int) 2.5;","code":"int count = 2.5;"},{"id":"b08","topic":"strings","q":"The if never runs even when the user types yes. Why?","opts":["nextLine() returns a char, not a String","== compares object identity; use answer.equals(\"yes\")","The if needs curly braces","\"yes\" should be in single quotes"],"a":1,"why":"Two Strings with the same text can be different objects. equals() compares the characters.","code":"String answer = scanner.nextLine();\nif (answer == \"yes\") {\n    System.out.println(\"Great\");\n}"},{"id":"b09","topic":"ctor","q":"The field stays 0 after the constructor. What is the bug?","opts":["The parameter should be named differently, that is the only fix","this.width = width; is needed so the field, not the parameter, gets the value","Fields cannot be private","Constructors cannot take parameters"],"a":1,"why":"Inside the constructor, width alone means the parameter. this.width means the field. Renaming would also work, but this is the standard fix.","code":"public class Box {\n    private int width;\n    public Box(int width) {\n        width = width;\n    }\n}"},{"id":"b10","topic":"classes","q":"What happens when this is compiled?","opts":["Nothing wrong","Compiler error: a constructor call needs parentheses, new Bike()","Runtime error","b is null"],"a":1,"why":"new always calls a constructor, and a call needs parentheses even with no arguments.","code":"Bike b = new Bike;\nb.ride();"},{"id":"b11","topic":"ctor","q":"Why does this constructor never run when you write new Oven(200)?","opts":["200 is too large for an int","void makes it an ordinary method, not a constructor","The class needs a main method","Constructors must be private"],"a":1,"why":"A constructor has no return type. With void, Java sees a method named Oven and uses the default constructor instead.","code":"public class Oven {\n    private int degrees;\n    public void Oven(int degrees) {\n        this.degrees = degrees;\n    }\n}"}]};
+  var QS=BANK.questions, TOPICS=Object.keys(BANK.topics), N=25, PER_TOPIC=2;
+  var seen={}, paper=[], at=0;
+
+  function shuffle(a){ a=a.slice(); for(var i=a.length-1;i>0;i--){ var j=Math.floor(Math.random()*(i+1)); var t=a[i]; a[i]=a[j]; a[j]=t; } return a; }
+  function el(tag,cls,text){ var e=document.createElement(tag); if(cls) e.className=cls; if(text!=null) e.textContent=text; return e; }
+
+  // a paper: 25 questions, at least two from every topic, the rest at random, none repeated in this session until the bank runs out
+  function draw(pool){
+    var used={}, out=[];
+    TOPICS.forEach(function(t){
+      shuffle(pool.filter(function(q){ return q.topic===t; })).slice(0,PER_TOPIC).forEach(function(q){ used[q.id]=1; out.push(q); });
+    });
+    shuffle(pool.filter(function(q){ return !used[q.id]; })).slice(0,N-out.length).forEach(function(q){ out.push(q); });
+    return shuffle(out);
+  }
+  function buildPaper(){
+    var fresh=QS.filter(function(q){ return !seen[q.id]; });
+    if(fresh.length<N){ seen={}; fresh=QS; }
+    var p=draw(fresh);
+    p.forEach(function(q){ seen[q.id]=1; });
+    return p.map(arrange);
+  }
+  // option order is shuffled, except True/False and answers like "Nothing..." or "There is no bug..." which stay last
+  function pinned(o){ return o.indexOf("Nothing")===0||o.indexOf("There is no bug")===0; }
+  function arrange(q){
+    var idx=q.opts.map(function(_,i){ return i; });
+    if(q.opts.length>2){
+      var free=idx.filter(function(i){ return !pinned(q.opts[i]); }), pin=idx.filter(function(i){ return pinned(q.opts[i]); });
+      idx=shuffle(free).concat(pin);
+    }
+    return { q:q, opts:idx.map(function(i){ return q.opts[i]; }), a:idx.indexOf(q.a), pick:-1 };
+  }
+
+  // screens
+  var sStart=$("#sStart"), sPaper=$("#sPaper"), sDone=$("#sDone");
+  function show(s){ [sStart,sPaper,sDone].forEach(function(x){ x.hidden=(x!==s); }); window.scrollTo({top:0,behavior:reduce?"auto":"smooth"}); }
+
+  function renderQ(){
+    var it=paper[at], card=$("#card");
+    card.innerHTML="";
+    $("#qn").textContent=(at+1)+" of "+N;
+    card.appendChild(el("p","qtext",it.q.q));
+    if(it.q.code){ var pre=el("pre","code"); pre.textContent=it.q.code; card.appendChild(pre); }
+    var opts=el("div","opts");
+    it.opts.forEach(function(o,i){
+      var b=el("button","opt"); b.type="button"; b.setAttribute("aria-pressed",it.pick===i?"true":"false");
+      b.appendChild(el("span","num",String.fromCharCode(65+i)));
+      b.appendChild(el("span","t",o));
+      b.addEventListener("click",function(){ it.pick=i; renderQ(); });
+      opts.appendChild(b);
+    });
+    card.appendChild(opts);
+    $("#bBack").disabled=(at===0);
+    $("#bNext").textContent=(at===N-1)?"Finish":"Next";
+  }
+  function next(){ if(at<N-1){ at++; renderQ(); } else finish(); }
+  function back(){ if(at>0){ at--; renderQ(); } }
+
+  function finish(){
+    var right=paper.filter(function(it){ return it.pick===it.a; }).length;
+    $("#scoreV").textContent=right+" / "+N;
+    $("#scoreM").textContent=(N-right)===0?"all correct":(N-right)+" to read below";
+    var rv=$("#review"); rv.innerHTML="";
+    paper.forEach(function(it,n){
+      var ok=it.pick===it.a, box=el("div","item "+(ok?"ok":"bad"));
+      var lab=el("p","lab"); lab.appendChild(document.createTextNode("Question "+(n+1)+" · "+BANK.topics[it.q.topic]+" · "));
+      lab.appendChild(el("b",null,ok?"correct":(it.pick<0?"left blank":"wrong"))); box.appendChild(lab);
+      box.appendChild(el("p","qtext",it.q.q));
+      if(it.q.code){ var pre=el("pre","code"); pre.textContent=it.q.code; box.appendChild(pre); }
+      var ans=el("div","ans");
+      it.opts.forEach(function(o,i){
+        var row=el("div",i===it.a?"right":(i===it.pick?"wrong":""));
+        row.appendChild(el("span","l",String.fromCharCode(65+i)));
+        row.appendChild(el("span","t",o));
+        if(i===it.a) row.appendChild(el("span","tg","answer"));
+        else if(i===it.pick) row.appendChild(el("span","tg","your pick"));
+        ans.appendChild(row);
+      });
+      box.appendChild(ans);
+      box.appendChild(el("p","why",it.q.why));
+      rv.appendChild(box);
+    });
+    show(sDone);
+  }
+  function start(){ paper=buildPaper(); at=0; renderQ(); show(sPaper); }
+
+  $("#bStart").addEventListener("click",start);
+  $("#bNew").addEventListener("click",start);
+  $("#bNext").addEventListener("click",next);
+  $("#bBack").addEventListener("click",back);
+  document.addEventListener("keydown",function(e){
+    if(sPaper.hidden||e.metaKey||e.ctrlKey||e.altKey) return;
+    var it=paper[at], k=e.key;
+    if(k>="1"&&k<="4"&&Number(k)<=it.opts.length){ it.pick=Number(k)-1; renderQ(); }
+    else if(k==="ArrowRight"){ next(); } else if(k==="ArrowLeft"){ back(); }
+  });
+
+  // ambient canvas
+  var cv=$("#amb"),ctx=cv.getContext&&cv.getContext("2d"),parts=[];
+  function sizeC(){if(!ctx)return;cv.width=innerWidth;cv.height=innerHeight;}
+  function initParts(){parts=[];for(var i=0;i<46;i++)parts.push({x:Math.random(),y:Math.random(),r:Math.random()*1.6+.3,s:Math.random()*.02+.004,o:Math.random()*.4+.1});}
+  function drawC(){if(!ctx)return;ctx.clearRect(0,0,cv.width,cv.height);
+    parts.forEach(function(p){p.y-=p.s/60;if(p.y<-.02)p.y=1.02;ctx.beginPath();ctx.arc(p.x*cv.width,p.y*cv.height,p.r,0,7);
+      ctx.fillStyle="rgba(140,170,255,"+p.o+")";ctx.fill();});requestAnimationFrame(drawC);}
+  if(ctx&&!reduce){sizeC();initParts();drawC();addEventListener("resize",sizeC);}
+})();
+</script>
+</body>
+</html>
