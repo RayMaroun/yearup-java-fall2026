@@ -205,9 +205,12 @@
   }
   function moveTo(target,done){
     cancelAnimationFrame(anim);
+    // A click during the lap close leaves the marker past the top (angle > 216,
+    // the retrospective); count it from the other side so the next move goes forward.
+    if(angle>216) angle-=360;
     var from=angle;
     if(reduce||target===from){ angle=target; place(angle); if(done) done(); return; }
-    var t0=null, dur=Math.min(900,260+(target-from)*6);
+    var t0=null, dur=Math.min(900,260+Math.abs(target-from)*6);
     function f(ts){
       if(t0===null) t0=ts;
       var k=Math.min(1,(ts-t0)/dur), e=1-Math.pow(1-k,3);
