@@ -24,6 +24,9 @@ week-NN/reference/{cheat-sheet,glossary,common-errors,intellij-shortcuts}.html
 week-NN/exercises/<exercise-slug>.html
 week-NN/games/<game-slug>.html
 assets/rail.js             numbered rail + prev/next, per week; Rail.render(el, {week, kind, current})
+                           The rail injects its own CSS and marks dots with the bare classes `done` and `now`.
+                           A page must never style bare `.done` or `.now` (prefix page classes: `.card.done`, `.donewhen`),
+                           or the rail dots of that page break (found on week-03 visual 14, 2026-10-25).
 search.js, build-search-index.js, search-index.json
 ```
 
