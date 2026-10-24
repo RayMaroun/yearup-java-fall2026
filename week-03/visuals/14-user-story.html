@@ -94,10 +94,10 @@
   .sent{font-family:var(--disp);font-weight:500;font-size:1.15rem;line-height:1.5;margin:0;color:var(--muted)}
   .sent .k0{color:#bcd0ff} .sent .k1{color:var(--gold)} .sent .k2{color:#c3b8ff} .sent .gap{color:rgba(132,150,182,.5)}
   .sent .x{color:#ffb0b0;text-decoration:underline wavy rgba(255,106,106,.7);text-underline-offset:4px}
-  .done{margin-top:10px;font-family:var(--mono);font-size:.76rem;color:var(--good);opacity:0;max-height:0;overflow:hidden;
+  .donewhen{margin-top:10px;font-family:var(--mono);font-size:.76rem;color:var(--good);opacity:0;max-height:0;overflow:hidden;
     transition:opacity .35s,max-height .35s}
-  .done.show{opacity:1;max-height:80px}
-  .done i{font-style:normal;color:rgba(132,150,182,.8);margin-right:6px}
+  .donewhen.show{opacity:1;max-height:80px}
+  .donewhen i{font-style:normal;color:rgba(132,150,182,.8);margin-right:6px}
 
   /* the one sentence */
   .caption{display:flex;gap:14px;align-items:flex-start;margin:18px 2px 0;padding-top:16px;border-top:1px solid var(--line)}
@@ -154,7 +154,7 @@
         <div class="read">
           <p class="hd">the story reads</p>
           <p class="sent" id="sent"></p>
-          <div class="done" id="done"></div>
+          <div class="donewhen" id="done"></div>
         </div>
       </div>
     </div>
