@@ -244,7 +244,7 @@
       setGoal();
       say('<b class="a">Sprint planning</b>: the team agrees on the sprint goal, <b class="g">'+goal()+'</b>, and how long the sprint lasts.',"g");
     } else if(s.k==="day"){
-      say('Day '+s.day+' of 10, <b class="a">daily standup</b>. Each team member answers: <b>"'+QS[(s.day-1)%3]+'"</b>');
+      say('Day '+s.day+' of 10, <b class="a">daily standup</b>. Same three questions every day, each team member in turn: <b>'+QS.join('</b> <b>')+'</b>');
     } else if(s.k==="review"){
       say('<b class="g">Sprint review</b>: working software is shown to the customer, <b>'+goal().toLowerCase()+'</b>. Feedback comes back fast.',"g");
     } else {
