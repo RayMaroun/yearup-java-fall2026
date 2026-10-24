@@ -1,0 +1,501 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Your README | Week 3 Visual Hub</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Sora:wght@500;700&family=Inter:wght@400;500&family=JetBrains+Mono:wght@400;500&display=swap">
+<style>
+  :root{
+    --bg:#080c17; --bg2:#0c1428; --surface:rgba(255,255,255,.045); --line:rgba(255,255,255,.09);
+    --ink:#eef2fb; --muted:#8496b6; --accent:#6ea0ff; --accent2:#8b7bff; --good:#46d98a; --warn:#ff6a6a;
+    --gold:#ffc862; --disp:'Sora',system-ui,sans-serif; --body:'Inter',system-ui,sans-serif;
+    --mono:'JetBrains Mono',ui-monospace,monospace;
+  }
+  *{box-sizing:border-box}
+  body{margin:0;min-height:100vh;color:var(--ink);font-family:var(--body);
+    background:radial-gradient(1200px 700px at 70% -10%,#141d38 0%,transparent 55%),
+               radial-gradient(900px 600px at 10% 110%,#161233 0%,transparent 50%),#080c17;
+    overflow-x:hidden}
+  #amb{position:fixed;inset:0;z-index:0;pointer-events:none;opacity:.6}
+  .back{position:relative;z-index:2;display:block;max-width:1120px;margin:0 auto;padding:26px 24px 0;
+    width:100%;font-family:var(--mono);font-size:.8rem;letter-spacing:.04em;color:var(--muted);
+    text-decoration:none;transition:color .15s}
+  .back:hover{color:var(--accent)}
+  .wrap{position:relative;z-index:1;max-width:1120px;margin:0 auto;padding:22px 24px 70px}
+  .tag{font-family:var(--mono);font-size:.72rem;letter-spacing:.22em;text-transform:uppercase;color:var(--accent);margin:0 0 14px}
+  h1.page{font-family:var(--disp);font-weight:700;font-size:clamp(2.3rem,6vw,3.6rem);line-height:1;margin:0 0 12px;
+    letter-spacing:-.03em;background:linear-gradient(180deg,#fff,#b9c6e6);-webkit-background-clip:text;
+    background-clip:text;color:transparent}
+  .lede{color:var(--muted);max-width:64ch;font-size:1.05rem;margin:0 0 26px;line-height:1.5}
+  .lede b{color:var(--ink)}
+  code{font-family:var(--mono);font-size:.88em;color:#bcd0ff}
+
+  /* ---------- stage ---------- */
+  .stage{position:relative;background:linear-gradient(180deg,rgba(255,255,255,.03),rgba(255,255,255,.01));
+    border:1px solid var(--line);border-radius:24px;padding:22px;
+    box-shadow:0 1px 0 rgba(255,255,255,.06) inset,0 30px 80px -30px rgba(0,0,0,.8)}
+  .lab{font-family:var(--mono);font-size:.7rem;letter-spacing:.12em;text-transform:uppercase;color:var(--muted)}
+
+  /* the switch */
+  .switch{display:inline-flex;gap:4px;padding:4px;border:1px solid var(--line);border-radius:999px;background:rgba(0,0,0,.3);margin:0 0 14px}
+  .switch button{font-family:var(--mono);font-size:.8rem;padding:8px 18px;border-radius:999px;border:1px solid transparent;
+    background:transparent;color:var(--muted);cursor:pointer;transition:background .2s,color .2s,border-color .2s}
+  .switch button:hover{color:var(--ink)}
+  .switch button[aria-pressed="true"]{background:rgba(110,160,255,.16);border-color:rgba(110,160,255,.55);color:#dbe6ff}
+  .switch button.tp[aria-pressed="true"]{background:rgba(255,200,98,.12);border-color:rgba(255,200,98,.5);color:var(--gold)}
+
+  .board{display:grid;grid-template-columns:minmax(0,1.3fr) minmax(0,1fr);gap:16px;align-items:start}
+
+  /* ---------- the rendered README ---------- */
+  .mock{border:1px solid var(--line);border-radius:16px;background:rgba(6,10,20,.6);overflow:hidden}
+  .fbar{display:flex;align-items:center;gap:8px;padding:10px 14px;border-bottom:1px solid var(--line);background:rgba(255,255,255,.03);
+    font-family:var(--mono);font-size:.74rem;color:var(--muted)}
+  .fbar b{color:var(--ink);font-weight:500}
+  .fbar .st{margin-left:auto;font-size:.62rem;letter-spacing:.12em;text-transform:uppercase}
+  .doc{padding:10px 10px 14px}
+  .sec{display:block;width:100%;text-align:left;font:inherit;color:inherit;background:transparent;cursor:pointer;
+    border:1px solid transparent;border-radius:11px;padding:8px 12px 10px;margin:0 0 2px;transition:background .15s,border-color .15s}
+  .sec:hover{background:rgba(110,160,255,.05);border-color:rgba(110,160,255,.18)}
+  .sec.sel{background:rgba(110,160,255,.08);border-color:rgba(110,160,255,.55);box-shadow:inset 3px 0 0 var(--accent)}
+  .h2{display:block;font-family:var(--disp);font-weight:700;font-size:1.02rem;letter-spacing:-.01em;color:var(--ink);
+    padding:0 0 5px;margin:0 0 6px;border-bottom:1px solid var(--line)}
+  .h3{display:block;font-family:var(--disp);font-weight:500;font-size:.84rem;color:#c9d4ea;margin:8px 0 3px}
+  .h1{display:block;font-family:var(--disp);font-weight:700;font-size:1.5rem;letter-spacing:-.02em;color:#fff;
+    padding:0 0 6px;margin:0 0 6px;border-bottom:1px solid var(--line)}
+  /* the two bodies sit in the same cell, so switching never changes the height */
+  .pair{display:grid}
+  .pair > span{grid-area:1/1;display:block;font-size:.84rem;line-height:1.5;color:#c9d4ea;transition:opacity .3s}
+  .pair .fil{opacity:0;visibility:hidden}
+  .mock.filled .pair .tpl{opacity:0;visibility:hidden}
+  .mock.filled .pair .fil{opacity:1;visibility:visible}
+  .pair .tpl{color:rgba(132,150,182,.62)}
+  .pair .tpl .h1{color:rgba(238,242,251,.55)}
+  .li{display:block;padding-left:16px;position:relative}
+  .li::before{content:"";position:absolute;left:4px;top:.62em;width:5px;height:5px;border-radius:50%;background:currentColor;opacity:.7}
+  .ol{display:block;padding-left:20px;position:relative}
+  .ol i{position:absolute;left:0;font-style:normal;color:var(--muted)}
+  .gap{display:block;height:1.3em;border:1px dashed rgba(132,150,182,.28);border-radius:6px;margin:2px 0}
+  .gap.s{width:55%}
+  .bad{color:var(--warn);font-family:var(--mono);font-size:.92em}
+  .lnk{color:var(--accent)}
+  .img{display:inline-flex;align-items:center;gap:6px;margin:4px 8px 2px 0;padding:6px 10px;border-radius:8px;font-family:var(--mono);font-size:.68rem}
+  .img.broken{border:1px dashed rgba(255,106,106,.45);color:rgba(255,106,106,.75)}
+  .img.broken::before{content:"";width:10px;height:10px;border:1.5px solid currentColor;border-radius:2px;
+    background:linear-gradient(135deg,transparent 45%,currentColor 45%,currentColor 55%,transparent 55%)}
+  .shot{display:inline-block;vertical-align:top;margin:4px 8px 2px 0;width:132px;border:1px solid var(--line);border-radius:8px;overflow:hidden;background:#05070e}
+  .shot .bar{display:block;height:9px;background:rgba(255,255,255,.06)}
+  .shot .scr{display:block;padding:6px 8px 8px}
+  .shot .scr i{display:block;height:4px;border-radius:2px;background:rgba(159,227,182,.45);margin:0 0 4px}
+  .shot .cap{display:block;font-family:var(--mono);font-size:.6rem;color:var(--muted);padding:4px 8px;border-top:1px solid var(--line)}
+  .cb{display:block;font-family:var(--mono);font-variant-ligatures:none;font-size:.7rem;line-height:1.5;color:#bcd0ff;background:#05070e;border:1px solid var(--line);
+    border-radius:8px;padding:8px 10px;margin:3px 0;white-space:pre;overflow-x:auto}
+  .cb.empty{height:3.2em}
+  .cb .c{color:#6f7f9e}
+
+  /* ---------- the answer panel ---------- */
+  .detail{position:sticky;top:16px;border:1px solid var(--line);border-radius:16px;background:rgba(6,10,20,.5);padding:16px 18px 14px}
+  .detail .none{font-family:var(--mono);font-size:.8rem;line-height:1.7;color:var(--muted);text-align:center;padding:40px 10px}
+  .detail .none b{color:var(--accent);font-weight:500}
+  .detail h2{font-family:var(--disp);font-weight:700;font-size:1.2rem;margin:2px 0 12px;letter-spacing:-.01em}
+  .q{border-top:1px solid var(--line);padding:9px 0}
+  .q .lab{display:block;margin:0 0 3px;font-size:.62rem}
+  .q p{margin:0;font-size:.9rem;line-height:1.5}
+  .q.ck .lab{color:var(--accent)}
+  .q.mi .lab{color:var(--warn)}
+  .q.mi p{color:#ffd0d0}
+  .q.ex .lab{color:var(--good)}
+  .q.ex .exb{font-size:.84rem;line-height:1.55;color:#c9d4ea}
+  .q.ex .exb .cb{font-size:.68rem}
+  .q.ex .exb p{margin:0 0 6px}
+
+  /* ---------- where it goes ---------- */
+  .where{margin:16px 0 0;border:1px solid var(--line);border-radius:16px;background:rgba(6,10,20,.5);padding:14px 16px}
+  .where .lab{display:block;margin:0 0 8px}
+  .tree{font-family:var(--mono);font-size:.82rem;line-height:1.25;color:var(--muted)}
+  .tree .r{display:flex;align-items:center;min-height:30px;white-space:nowrap}
+  .tree .g{color:rgba(132,150,182,.45);white-space:pre}
+  .tree .fx{padding:3px 8px;border-radius:7px;border:1px solid transparent;transition:background .2s,border-color .2s,color .2s}
+  .tree button.fx{font:inherit;color:#dbe6ff;background:rgba(110,160,255,.1);border-color:rgba(110,160,255,.4);cursor:pointer}
+  .tree button.fx:hover{border-color:var(--accent)}
+  .tree .fx.hit{color:#fff;background:rgba(70,217,138,.14);border-color:rgba(70,217,138,.6)}
+  .tree .fx.nb{color:var(--ink);border-color:rgba(255,255,255,.22)}
+
+  /* the one sentence */
+  .caption{display:flex;gap:14px;align-items:flex-start;margin:18px 2px 0;padding-top:16px;border-top:1px solid var(--line)}
+  .caption .t{flex:1;font-size:1.05rem;line-height:1.55;color:var(--ink);padding-left:16px;border-left:3px solid var(--accent);transition:border-color .3s}
+  .caption .t .line{display:block;margin-top:6px;font-family:var(--mono);font-size:.8rem;color:#bcd0ff;opacity:.9}
+  .caption.y .t{border-left-color:var(--gold)} .caption.g .t{border-left-color:var(--good)}
+  .caption b.a{color:var(--accent)} .caption b.y{color:var(--gold)} .caption b.g{color:var(--good)}
+  .reset{font-family:var(--body);font-weight:500;font-size:.84rem;padding:8px 14px;border-radius:11px;cursor:pointer;
+    border:1px solid var(--line);background:transparent;color:var(--muted);transition:.15s;flex-shrink:0}
+  .reset:hover{border-color:var(--accent);color:var(--accent)}
+  button:focus-visible{outline:2px solid var(--accent);outline-offset:2px}
+
+  .take{margin-top:22px;background:linear-gradient(180deg,rgba(110,160,255,.08),rgba(139,123,255,.04));
+    border:1px solid var(--line);border-left:3px solid var(--accent);border-radius:12px;padding:16px 18px}
+  .take .tk{font-family:var(--mono);font-size:.66rem;letter-spacing:.14em;text-transform:uppercase;color:var(--accent);margin:0 0 8px}
+  .take p{margin:0;font-size:.95rem;color:var(--ink);line-height:1.55}
+  .take b{color:#fff}
+
+  @media (max-width:820px){
+    .board{grid-template-columns:minmax(0,1fr)}
+    .detail{position:static;margin:4px 0 10px}
+    .detail .none{padding:16px 6px}
+  }
+  @media (max-width:520px){
+    .wrap{padding:18px 16px 60px}
+    .back{padding:22px 16px 0}
+    .stage{padding:14px 12px 12px}
+    .doc{padding:6px 4px 10px}
+    .sec{padding:8px 8px 10px}
+    .tree{font-size:.74rem}
+    .caption{flex-direction:column}
+  }
+  @media (prefers-reduced-motion:reduce){*{animation-duration:.01ms!important;transition-duration:.01ms!important}#amb{display:none}}
+</style>
+</head>
+<body>
+<a class="back" href="../index.html#your-readme">&#8592; Week 3 index</a>
+<canvas id="amb"></canvas>
+<div class="wrap">
+  <p class="tag">Week 3 &middot; Reference &middot; Workshops and capstone</p>
+  <h1 class="page">Your README</h1>
+  <p class="lede">The template on the left is what GitHub shows when nothing was changed. <b>Tap a section to see what it needs, then switch to Filled.</b></p>
+
+  <div class="stage">
+    <div class="switch" role="group" aria-label="Which README">
+      <button class="tp" id="bTpl" aria-pressed="true">Template</button>
+      <button id="bFil" aria-pressed="false">Filled</button>
+    </div>
+
+    <div class="board">
+      <div class="mock" id="mock">
+        <div class="fbar"><b>README.md</b><span id="fst" class="st">template, unchanged</span></div>
+        <div class="doc" id="doc">
+
+          <button class="sec" data-s="title">
+            <span class="pair">
+              <span class="tpl"><span class="h1">Project Title</span><span class="gap"></span></span>
+              <span class="fil"><span class="h1">Trip Log</span>A console app that keeps a list of trips in a csv file and prints simple reports about them.</span>
+            </span>
+          </button>
+
+          <button class="sec" data-s="desc">
+            <span class="h2">Description of the Project</span>
+            <span class="pair">
+              <span class="tpl"><span class="gap"></span><span class="gap s"></span></span>
+              <span class="fil">Trip Log is a Java console application for someone who drives for work and needs to keep track of their trips. It replaces a notebook that kept getting lost.</span>
+            </span>
+          </button>
+
+          <button class="sec" data-s="feat">
+            <span class="h2">Features</span>
+            <span class="pair">
+              <span class="tpl"><span class="li">&nbsp;</span><span class="li">&nbsp;</span><span class="li">&nbsp;</span></span>
+              <span class="fil"><span class="li">Shows every trip, newest first</span><span class="li">Adds a trip and saves it to the file at once</span><span class="li">Prints the total miles for a month</span><span class="li">Searches trips by city (bonus)</span></span>
+            </span>
+          </button>
+
+          <button class="sec" data-s="story">
+            <span class="h2">User Stories</span>
+            <span class="pair">
+              <span class="tpl"><span class="li">As a ..., I want ..., so that ...</span><span class="li">As a ..., I want ..., so that ...</span></span>
+              <span class="fil"><span class="li">As a driver, I want to add a trip in a few seconds, so that I record it before I forget.</span><span class="li">As a driver, I want the total miles for a month, so that I can fill in my expense form.</span><span class="li">As a driver, I want to search by city, so that I can find a trip I made last year.</span></span>
+            </span>
+          </button>
+
+          <button class="sec" data-s="setup">
+            <span class="h2">Setup</span>
+            <span class="pair">
+              <span class="tpl"><span class="h3">Prerequisites</span><span class="li">Java 17 (Amazon Corretto), IntelliJ IDEA Community Edition</span><span class="h3">Running the application</span><span class="ol"><i>4.</i>Open <code>.../pluralsight/<span class="bad">YourMainClassName</span>.java</code></span><span class="ol"><i>5.</i>Run '<span class="bad">YourMainClassName</span>.main()'</span><span class="h3">Data files</span><span class="li">&nbsp;</span></span>
+              <span class="fil"><span class="h3">Prerequisites</span><span class="li">Java 17 (Amazon Corretto), IntelliJ IDEA Community Edition</span><span class="h3">Running the application</span><span class="ol"><i>4.</i>Open <code>.../pluralsight/TripLog.java</code></span><span class="ol"><i>5.</i>Run 'TripLog.main()'</span><span class="h3">Data files</span><span class="li"><code>trips.csv</code> sits at the project root, next to <code>pom.xml</code>.</span></span>
+            </span>
+          </button>
+
+          <button class="sec" data-s="tech">
+            <span class="h2">Technologies Used</span>
+            <span class="pair">
+              <span class="tpl"><span class="li">Java 17</span><span class="li">IntelliJ IDEA</span></span>
+              <span class="fil"><span class="li">Java 17</span><span class="li">IntelliJ IDEA</span></span>
+            </span>
+          </button>
+
+          <button class="sec" data-s="demo">
+            <span class="h2">Demo</span>
+            <span class="pair">
+              <span class="tpl"><span class="img broken">Main menu</span><span class="img broken">One feature in action</span></span>
+              <span class="fil"><span class="shot"><span class="bar"></span><span class="scr"><i style="width:70%"></i><i style="width:52%"></i><i style="width:60%"></i><i style="width:40%"></i></span><span class="cap">images/menu.png</span></span><span class="shot"><span class="bar"></span><span class="scr"><i style="width:44%"></i><i style="width:80%"></i><i style="width:30%"></i><i style="width:58%"></i></span><span class="cap">images/month-total.png</span></span></span>
+            </span>
+          </button>
+
+          <button class="sec" data-s="code">
+            <span class="h2">A piece of code I am proud of</span>
+            <span class="pair">
+              <span class="tpl"><span class="cb empty"></span></span>
+              <span class="fil"><span class="cb"><span class="c">// Reads the file once and turns every line into a Trip object</span>
+while ((line = reader.readLine()) != null) { ... }</span>This loop is where the file becomes objects.</span>
+            </span>
+          </button>
+
+          <button class="sec" data-s="future">
+            <span class="h2">Future Work</span>
+            <span class="pair">
+              <span class="tpl"><span class="li">&nbsp;</span><span class="li">&nbsp;</span></span>
+              <span class="fil"><span class="li">Sort the search results by date</span><span class="li">Validate the date the user types</span></span>
+            </span>
+          </button>
+
+          <button class="sec" data-s="res">
+            <span class="h2">Resources</span>
+            <span class="pair">
+              <span class="tpl"><span class="li">Java YearUp Fall 2026 hub: <span class="lnk">raymaroun.github.io/yearup-java-fall2026</span></span><span class="li">&nbsp;</span></span>
+              <span class="fil"><span class="li">Java YearUp Fall 2026 hub: <span class="lnk">raymaroun.github.io/yearup-java-fall2026</span></span><span class="li">Workbook 3a, Sections 1-2 and 2-1</span></span>
+            </span>
+          </button>
+
+          <button class="sec" data-s="author">
+            <span class="h2">Author</span>
+            <span class="pair">
+              <span class="tpl"><span class="li"><b>Your Name</b></span></span>
+              <span class="fil"><span class="li"><b>Alex Rivera</b></span></span>
+            </span>
+          </button>
+
+          <button class="sec" data-s="thanks">
+            <span class="h2">Thanks</span>
+            <span class="pair">
+              <span class="tpl"><span class="li">Thank you to ... for ...</span></span>
+              <span class="fil"><span class="li">Thank you to Raymond for the file reading demo that this app is built on.</span></span>
+            </span>
+          </button>
+
+        </div>
+      </div>
+
+      <div class="detail" id="detail" aria-live="polite">
+        <p class="none">Tap any section of the README.<br>This panel says <b>what it is for</b>, <b>what gets checked</b><br>and <b>the usual mistake</b>.</p>
+      </div>
+    </div>
+
+    <div class="where">
+      <span class="lab">Where it goes</span>
+      <div class="tree" id="tree">
+        <div class="r"><span class="fx">trip-log/</span></div>
+        <div class="r"><span class="g">&#9500;&#9472;&#9472; </span><button class="fx" id="tImg" data-t="img">images/</button></div>
+        <div class="r"><span class="g">&#9474;   &#9500;&#9472;&#9472; </span><span class="fx" data-k="img">menu.png</span></div>
+        <div class="r"><span class="g">&#9474;   &#9492;&#9472;&#9472; </span><span class="fx" data-k="img">month-total.png</span></div>
+        <div class="r"><span class="g">&#9500;&#9472;&#9472; </span><span class="fx">src/main/java/com/pluralsight/</span></div>
+        <div class="r"><span class="g">&#9500;&#9472;&#9472; </span><span class="fx" data-k="rd">pom.xml</span></div>
+        <div class="r"><span class="g">&#9500;&#9472;&#9472; </span><button class="fx" id="tRd" data-t="rd">README.md</button></div>
+        <div class="r"><span class="g">&#9492;&#9472;&#9472; </span><span class="fx">trips.csv</span></div>
+      </div>
+    </div>
+
+    <div class="caption" id="caption">
+      <div class="t" id="status">This is the template as GitHub shows it: the instructions are <b class="y">comments</b>, so only headings and placeholders appear.</div>
+      <button class="reset" id="bReset">Reset</button>
+    </div>
+  </div>
+
+  <div class="take">
+    <p class="tk">The one idea</p>
+    <p><b>A README is written for someone who has never seen the workbook:</b> a recruiter, a classmate, you in six months. Every section answers one question they have.</p>
+  </div>
+  <div id="rail"></div>
+</div>
+<script>
+(function(){
+  "use strict";
+  var $=function(s){return document.querySelector(s);};
+  var reduce=matchMedia("(prefers-reduced-motion: reduce)").matches;
+  var narrow=matchMedia("(max-width: 820px)");
+
+  /* one entry per section of the template, in order */
+  var S={
+    title:{name:"Title and one-line pitch",
+      what:"The name of the app and one sentence under it: what the app is, and for whom.",
+      check:"A real name, and a pitch someone outside the class understands.",
+      miss:"\"Project Title\" left as the heading, or no sentence under it.",
+      t:"<b class=\"y\">Project Title</b> with nothing under it: the pitch was a comment, so nothing shows.",
+      f:"A real name and <b class=\"g\">one sentence</b>: what it is and who it is for.",
+      ex:"<p><b>Trip Log</b></p><p>A console app that keeps a list of trips in a csv file and prints simple reports about them.</p>"},
+    desc:{name:"Description of the Project",
+      what:"Three to five sentences: what the application does, who uses it, what problem it solves.",
+      check:"A reader who has never seen the workbook knows what the app is for.",
+      miss:"One vague line, or text written for the instructor instead of a stranger.",
+      t:"An <b class=\"y\">empty heading</b>: the three to five sentences are still a comment.",
+      f:"Who uses it, what it does, and <b class=\"g\">what it replaces</b>: a notebook that kept getting lost.",
+      ex:"<p>Trip Log is a Java console application for someone who drives for work and needs to keep track of their trips. Each trip has a date, a start city, an end city and a distance in miles. The app reads the trips from a file when it starts, lets the user add new trips, and prints the total distance for a month. It replaces a notebook that kept getting lost.</p>"},
+    feat:{name:"Features",
+      what:"One bullet per thing the app can do, in the order of your menu, bonuses marked.",
+      check:"Every bullet works when the app runs.",
+      miss:"Listing things that do not work. Half done goes under Future Work.",
+      t:"<b class=\"y\">Three empty bullets</b>: nothing is listed yet.",
+      f:"<b class=\"g\">Four things that work</b>, in menu order, the bonus marked.",
+      ex:"<p>- Shows every trip, newest first<br>- Adds a trip (date, from, to, miles) and saves it to the file at once<br>- Prints the total miles for a month the user types in<br>- Searches trips by city (bonus)</p>"},
+    story:{name:"User Stories",
+      what:"The stories you worked from, one per bullet: As a [type of user], I want [some goal] so that [some reason].",
+      check:"The same text as the cards on your GitHub project board.",
+      miss:"The \"As a ...\" lines left in, or stories that differ from the board.",
+      t:"<b class=\"y\">Two placeholder stories</b>, with dots where the words go.",
+      f:"<b class=\"g\">Three stories</b>, the same text as the project board cards.",
+      ex:"<p>- As a driver, I want to add a trip in a few seconds, so that I record it before I forget.<br>- As a driver, I want the total miles for a month, so that I can fill in my expense form.<br>- As a driver, I want to search by city, so that I can find a trip I made last year.</p>"},
+    setup:{name:"Setup",
+      what:"How a stranger gets the app running: what to install, the steps in IntelliJ, and every file the program reads or writes.",
+      check:"The real main class in steps 4 and 5, and every data file with where it sits.",
+      miss:"The main class name left as YourMainClassName.",
+      t:"Prerequisites are written for you; <b class=\"y\">YourMainClassName</b> and the empty data file line are not.",
+      f:"<b class=\"g\">TripLog</b> is the real main class, and trips.csv sits next to pom.xml.",
+      ex:"<p>4. Open <code>src/main/java/com/pluralsight/TripLog.java</code>.<br>5. Right-click inside the file and choose Run 'TripLog.main()'.</p><p><code>trips.csv</code> sits at the project root, next to <code>pom.xml</code>. The program reads it at start and appends to it when a trip is added. The first line is a header: <code>date|from|to|miles</code>.</p>"},
+    tech:{name:"Technologies Used",
+      what:"What the app is built with: Java 17, IntelliJ, and anything else you used, a library or a tool.",
+      check:"The list matches what the project really uses.",
+      miss:"Padding it. For a console app this list is short, and that is fine.",
+      t:"<b class=\"y\">Already filled</b>: Java 17 and IntelliJ render as they are.",
+      f:"Still <b class=\"g\">Java 17 and IntelliJ</b>: a short list is fine for a console app.",
+      ex:"<p>- Java 17<br>- IntelliJ IDEA</p>"},
+    demo:{name:"Demo",
+      what:"Screenshots of the app running in the IntelliJ console: the menu, one feature, one error message. A GIF is a bonus.",
+      check:"The pictures show on the repository page.",
+      miss:"An image path with a space in it, or the images folder never committed.",
+      t:"<b class=\"y\">Two broken pictures</b>: images/menu.png does not exist yet.",
+      f:"<b class=\"g\">Two screenshots</b> from the images folder, named by what they show.",
+      ex:"<p><code>![Main menu](images/menu.png)</code><br><code>![Monthly total](images/month-total.png)</code></p>"},
+    code:{name:"A piece of code I am proud of",
+      what:"One short block of your own code, 5 to 15 lines, and two or three sentences: what it does and why you wrote it that way.",
+      check:"Your own code with the why next to it: what you show on demo day and in an interview.",
+      miss:"The empty backticks left, or a block with no sentences under it.",
+      t:"An <b class=\"y\">empty code box</b>: no code and no sentences.",
+      f:"Six lines that turn the file into objects, and <b class=\"g\">why</b> they are written that way.",
+      ex:"<span class=\"cb\"><span class=\"c\">// Reads the file once and turns every line into a Trip object</span>\nwhile ((line = reader.readLine()) != null) {\n    String[] parts = line.split(\"\\\\|\");\n    LocalDate date = LocalDate.parse(parts[0]);\n    int miles = Integer.parseInt(parts[3]);\n    trips.add(new Trip(date, parts[1], parts[2], miles));\n}</span><p>This loop is where the file becomes objects. I like that the header is skipped once before the loop instead of inside it with an if, and that the split uses <code>\\\\|</code> because a bare <code>|</code> means \"or\" in a pattern, which took me an hour to find out.</p>"},
+    future:{name:"Future Work",
+      what:"What you would add or fix next, one bullet each. Unfinished bonuses belong here.",
+      check:"What is missing or half done is named here, not under Features.",
+      miss:"The empty bullets left in place.",
+      t:"<b class=\"y\">Two empty bullets</b>: nothing planned.",
+      f:"<b class=\"g\">Two honest next steps</b>, one of them a crash on a typo.",
+      ex:"<p>- Sort the search results by date<br>- Validate the date the user types instead of letting the program crash on a typo</p>"},
+    res:{name:"Resources",
+      what:"What helped you: the workbook, the week's hub pages, a tutorial, a documentation page.",
+      check:"Real links that open.",
+      miss:"The empty bullet left under the hub link.",
+      t:"The hub link is there; <b class=\"y\">the next bullet is empty</b>.",
+      f:"The hub link and <b class=\"g\">the workbook sections</b> the app is built on.",
+      ex:"<p>- Java YearUp Fall 2026 hub: https://raymaroun.github.io/yearup-java-fall2026/<br>- Workbook 3a, Section 1-2 Using BufferedReader and Section 2-1 Writing to Files</p>"},
+    author:{name:"Author",
+      what:"Your name and, if you like, your GitHub profile link. In a team workshop, one line per person with what each one built.",
+      check:"A real name; in a team, every person and what they built.",
+      miss:"\"Your Name\" left in bold.",
+      t:"<b class=\"y\">Your Name</b>, in bold, belongs to nobody.",
+      f:"<b class=\"g\">A real name</b>. In a team, one line per person.",
+      ex:"<p>- <b>Alex Rivera</b></p>"},
+    thanks:{name:"Thanks",
+      what:"Optional: the people who helped, the instructor, a classmate who debugged with you, a mentor.",
+      check:"If the section stays, it names real people and what they did.",
+      miss:"\"Thank you to ... for ...\" left in.",
+      t:"<b class=\"y\">Thank you to ... for ...</b> thanks nobody.",
+      f:"<b class=\"g\">One person</b> and what they helped with.",
+      ex:"<p>- Thank you to Raymond for the file reading demo that this app is built on.</p>"}
+  };
+
+  var filled=false, cur=null;
+  var mock=$("#mock"), detail=$("#detail"), status=$("#status"), caption=$("#caption"), board=$(".board");
+  var noneHTML=detail.innerHTML;
+
+  function say(html,tone,line){
+    caption.className="caption"+(tone?" "+tone:"");
+    status.innerHTML=html+(line?"<span class=\"line\">"+line+"</span>":"");
+  }
+
+  /* on a phone the answer sits right under the tapped section */
+  function place(){
+    var sel=cur&&document.querySelector(".sec[data-s=\""+cur+"\"]");
+    if(narrow.matches&&sel){ sel.parentNode.insertBefore(detail,sel.nextSibling); }
+    else if(detail.parentNode!==board){ board.appendChild(detail); }
+  }
+
+  function showDetail(){
+    if(!cur){ detail.innerHTML=noneHTML; place(); return; }
+    var s=S[cur];
+    var h="<span class=\"lab\">"+(filled?"Filled":"Template")+"</span><h2>"+s.name+"</h2>"
+      +"<div class=\"q\"><span class=\"lab\">What it is for</span><p>"+s.what+"</p></div>"
+      +"<div class=\"q ck\"><span class=\"lab\">What gets checked</span><p>"+s.check+"</p></div>"
+      +"<div class=\"q mi\"><span class=\"lab\">Common mistake</span><p>"+s.miss+"</p></div>";
+    if(filled) h+="<div class=\"q ex\"><span class=\"lab\">In Trip Log</span><div class=\"exb\">"+s.ex+"</div></div>";
+    detail.innerHTML=h;
+    place();
+  }
+
+  function pick(id){
+    cur=id; clearTree();
+    document.querySelectorAll(".sec").forEach(function(b){
+      var on=b.getAttribute("data-s")===id;
+      b.classList.toggle("sel",on); b.setAttribute("aria-pressed",on?"true":"false");
+    });
+    showDetail();
+    say(filled?S[id].f:S[id].t, filled?"g":"y");
+  }
+
+  function setMode(f){
+    filled=f;
+    mock.classList.toggle("filled",f);
+    $("#bTpl").setAttribute("aria-pressed",f?"false":"true");
+    $("#bFil").setAttribute("aria-pressed",f?"true":"false");
+    $("#fst").textContent=f?"filled, Trip Log":"template, unchanged";
+    document.querySelectorAll(".pair .tpl").forEach(function(e){ e.setAttribute("aria-hidden",f?"true":"false"); });
+    document.querySelectorAll(".pair .fil").forEach(function(e){ e.setAttribute("aria-hidden",f?"false":"true"); });
+    showDetail();
+    if(cur){ say(f?S[cur].f:S[cur].t, f?"g":"y"); }
+    else if(f){ say("<b class=\"g\">Filled</b>: the same twelve sections, written for an app called Trip Log.","g"); }
+    else { say("This is the template as GitHub shows it: the instructions are <b class=\"y\">comments</b>, so only headings and placeholders appear.","y"); }
+  }
+
+  function clearTree(){
+    document.querySelectorAll("#tree .fx").forEach(function(e){ e.classList.remove("hit","nb"); });
+  }
+  function tapTree(k){
+    clearTree();
+    $(k==="rd"?"#tRd":"#tImg").classList.add("hit");
+    document.querySelectorAll("#tree [data-k=\""+k+"\"]").forEach(function(e){ e.classList.add("nb"); });
+    if(k==="rd") say("Exactly this name, <b class=\"a\">README.md</b> in capital letters, at the root next to pom.xml; GitHub shows it on the repository page.","");
+    else say("Screenshots live in <b class=\"a\">images/</b> at the root; commit them, or the Demo pictures break on GitHub.","");
+  }
+
+  function reset(){
+    cur=null; clearTree();
+    document.querySelectorAll(".sec").forEach(function(b){ b.classList.remove("sel"); b.setAttribute("aria-pressed","false"); });
+    setMode(false);
+  }
+
+  document.querySelectorAll(".sec").forEach(function(b){
+    b.setAttribute("aria-pressed","false");
+    b.addEventListener("click",function(){ pick(b.getAttribute("data-s")); });
+  });
+  $("#bTpl").addEventListener("click",function(){ setMode(false); });
+  $("#bFil").addEventListener("click",function(){ setMode(true); });
+  $("#tRd").addEventListener("click",function(){ tapTree("rd"); });
+  $("#tImg").addEventListener("click",function(){ tapTree("img"); });
+  $("#bReset").addEventListener("click",reset);
+  if(narrow.addEventListener) narrow.addEventListener("change",place);
+  setMode(false);
+
+  /* ambient canvas */
+  var cv=$("#amb"),ctx=cv.getContext&&cv.getContext("2d"),parts=[];
+  function sizeC(){if(!ctx)return;cv.width=innerWidth;cv.height=innerHeight;}
+  function initParts(){parts=[];for(var i=0;i<46;i++)parts.push({x:Math.random(),y:Math.random(),
+    r:Math.random()*1.6+.3,s:Math.random()*.02+.004,o:Math.random()*.4+.1});}
+  function drawC(){if(!ctx)return;ctx.clearRect(0,0,cv.width,cv.height);
+    parts.forEach(function(p){p.y-=p.s/60;if(p.y<-.02)p.y=1.02;
+      ctx.beginPath();ctx.arc(p.x*cv.width,p.y*cv.height,p.r,0,7);
+      ctx.fillStyle="rgba(140,170,255,"+p.o+")";ctx.fill();});
+    requestAnimationFrame(drawC);}
+  if(ctx&&!reduce){sizeC();initParts();drawC();addEventListener("resize",sizeC);}
+})();
+</script>
+<script src="../manifest.js"></script>
+<script src="../../assets/rail.js"></script>
+<script>Rail.render(document.getElementById("rail"),{week:3,kind:"reference",current:"your-readme"});</script>
+</body>
+</html>

@@ -1182,6 +1182,16 @@
   {
     "week": 3,
     "weekLabel": "Week 3",
+    "section": "Reference",
+    "title": "Your README",
+    "desc": "What each section of the README template is for, what gets checked, and what a finished one looks like. Used in every workshop and capstone.",
+    "group": "Reference",
+    "url": "week-03/reference/your-readme.html",
+    "text": "← Week 3 index Week 3 · Reference · Workshops and capstone Your README The template on the left is what GitHub shows when nothing was changed. Tap a section to see what it needs, then switch to Filled. Template Filled README.md template, unchanged Project Title Trip Log A console app that keeps a list of trips in a csv file and prints simple reports about them. Description of the Project Trip Log is a Java console application for someone who drives for work and needs to keep track of their trips. It replaces a notebook that kept getting lost. Features Shows every trip, newest first Adds a trip and saves it to the file at once Prints the total miles for a month Searches trips by city (bonus) User Stories As a ..., I want ..., so that ... As a ..., I want ..., so that ... As a driver, I want to add a trip in a few seconds, so that I record it before I forget. As a driver, I want the total miles for a month, so that I can fill in my expense form. As a driver, I want to search by city, so that I can find a trip I made last year. Setup Prerequisites Java 17 (Amazon Corretto), IntelliJ IDEA Community Edition Running the application 4. Open .../pluralsight/ YourMainClassName .java 5. Run ' YourMainClassName .main()' Data files Prerequisites Java 17 (Amazon Corretto), IntelliJ IDEA Community Edition Running the application 4. Open .../pluralsight/TripLog.java 5. Run 'TripLog.main()' Data files trips.csv sits at the project root, next to pom.xml . Technologies Used Java 17 IntelliJ ID"
+  },
+  {
+    "week": 3,
+    "weekLabel": "Week 3",
     "section": "Exercises",
     "title": "Reading This Week's Exercises",
     "desc": "Tap any sentence of a workbook-style exercise and see what it asks you to write. Invented exercises, this week's words.",

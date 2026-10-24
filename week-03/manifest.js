@@ -24,7 +24,8 @@ window.HUB_MANIFEST = {
     { file: "cheat-sheet.html", title: "Week 3 Cheat Sheet", group: "Reference", desc: "The syntax of the week on one page: try/catch, BufferedReader, FileWriter, dates, ArrayList, HashMap." },
     { file: "glossary.html", title: "Glossary", group: "Reference", desc: "The words of the week, each in one sentence, with the page that shows it. Java and Agile." },
     { file: "common-errors.html", title: "Common Errors", group: "Reference", desc: "FileNotFoundException, IOException, null from a map, index out of bounds, a forgotten close: what it says, what to do." },
-    { file: "date-patterns.html", title: "Date Pattern Letters", group: "Reference", desc: "Every pattern letter DateTimeFormatter understands, with what it prints for one sample date." }
+    { file: "date-patterns.html", title: "Date Pattern Letters", group: "Reference", desc: "Every pattern letter DateTimeFormatter understands, with what it prints for one sample date." },
+    { file: "your-readme.html", title: "Your README", group: "Reference", desc: "What each section of the README template is for, what gets checked, and what a finished one looks like. Used in every workshop and capstone." }
   ],
   exercises: [
     { file: "reading-the-exercises.html", title: "Reading This Week's Exercises", group: "Before you start", desc: "Tap any sentence of a workbook-style exercise and see what it asks you to write. Invented exercises, this week's words." },
