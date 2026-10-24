@@ -1023,10 +1023,20 @@
     "week": 3,
     "weekLabel": "Week 3",
     "section": "Visuals",
+    "title": "From One Line to One Object",
+    "desc": "",
+    "group": "Workbook 3a · Section 1-2",
+    "url": "week-03/visuals/04-from-line-to-object.html",
+    "text": "← Week 3 index Workbook 3a · Section 1-2 · Using BufferedReader From One Line to One Object readLine() gave you one line. Pick the separator, press Split, then tap the number. one line from cities.csv, as readLine() handed it back line.split( \"\\\\|\" \"|\" \",\" ) Split String[] parts what comes back nothing yet: press Split new City(name, country, population) City city name \"Tokyo\" country \"Japan\" population 13960000 Reset The one idea A line from a file is one String. split cuts it into parts, every part is still text, and parseInt turns the number back into a number. Then the constructor takes the parts and gives you one object per line. That is the whole loop of a csv reader."
+  },
+  {
+    "week": 3,
+    "weekLabel": "Week 3",
+    "section": "Visuals",
     "title": "Writing to a File",
     "desc": "",
     "group": "Workbook 3a · Section 2-1",
-    "url": "week-03/visuals/04-writing-a-file.html",
+    "url": "week-03/visuals/05-writing-a-file.html",
     "text": "← Week 3 index Workbook 3a · Section 2-1 Writing to a File Open the file, write three lines, close it. Then run the program again. not open FileWriter · the writer fileWriter 1 · open, how? new FileWriter(\"potato.txt\") new FileWriter(\"potato.txt\", true ) Run the program 2 · write .write(\"Hello Everyone\\n\") .write(\"I am your Potato instructor!\\n\") .write(\"Welcome to the Java Bootcamp!\") 3 · close .close() → write does not exist file on disk potato.txt open BufferedWriter · append bufferedWriter new BufferedWriter(new FileWriter(\"tomato.txt\", true )) .write(\"Counting 1\\n\") .close() → close on disk file on disk tomato.txt potato.txt does not exist yet . Pick how the program opens it and press Run. Reset The one idea Open, write, close. write puts exactly the text you give it, so \\n is what ends a line. close() makes sure everything written is saved. true as the second argument means add to the end instead of starting over."
   },
   {
@@ -1036,7 +1046,7 @@
     "title": "LocalDate, LocalTime, LocalDateTime",
     "desc": "",
     "group": "Workbook 3a · Section 2-2",
-    "url": "week-03/visuals/05-date-and-time-objects.html",
+    "url": "week-03/visuals/06-date-and-time-objects.html",
     "text": "← Week 3 index Workbook 3a · Section 2-2 · Date Basics LocalDate, LocalTime, LocalDateTime Three empty objects. Press now() on each, then tap the parts. LocalDate · today LocalDate a date only MONTH YEAR ? WEEKDAY month ? day ? of year prints nothing yet LocalDate.now() LocalTime · currentTime LocalTime a time only -- hour : -- minute : -- second . ------ nano prints nothing yet LocalTime.now() LocalDateTime · rightNow LocalDateTime a date and a time MONTH YEAR ? WEEKDAY + prints nothing yet LocalDateTime.now() Three objects, all empty : one for a date, one for a time, one for both. Press now() on a card. Reset The one idea Pick the class by what you need to store. A birthday is a LocalDate , a closing time a LocalTime , a timestamp a LocalDateTime . now() reads the computer's clock once and the object keeps that value. None of them has a time zone."
   },
   {
@@ -1046,7 +1056,7 @@
     "title": "Date Patterns",
     "desc": "",
     "group": "Workbook 3a · Section 2-2",
-    "url": "week-03/visuals/06-date-patterns.html",
+    "url": "week-03/visuals/07-date-patterns.html",
     "text": "← Week 3 index Workbook 3a · Section 2-2 · Formatting and parsing dates Date Patterns Build a pattern letter by letter, then hand one to parse. 1 · format : a date becomes text LocalDateTime currentDate 2026-10-17 14:05:09 a Saturday → the pattern clear → String formattedDate Reset 2 · parse : text becomes a date String userInput pattern LocalDate. parse (...) → how parse reads the text Press Parse. → LocalDate newDate ? Reset The one idea The pattern is the same language both ways. format reads it to print a date as text, parse reads it to understand text as a date. When the text does not fit the pattern, parse throws DateTimeParseException ."
   },
   {
@@ -1056,7 +1066,7 @@
     "title": "Array vs ArrayList",
     "desc": "",
     "group": "Workbook 3a · Section 3-1",
-    "url": "week-03/visuals/07-array-vs-arraylist.html",
+    "url": "week-03/visuals/08-array-vs-arraylist.html",
     "text": "← Week 3 index Workbook 3a · Section 3-1 Array vs ArrayList Two ways to hold names. Add to both and see which one runs out of room. name array · new String[2] String[] names length: 2 null 0 null 1 no box 2 Add names[0] = name ArrayList · new ArrayList<>() List<String> names size: 0 empty + Add names. add (name) remove last Left, an array created with 2 boxes , both null . Right, an ArrayList that starts empty . Reset The one idea An array's size is fixed when you create it: new String[2] is 2 boxes, never 3. An ArrayList grows and shrinks as you add and remove, and you ask it size() instead of reading length ."
   },
   {
@@ -1066,7 +1076,7 @@
     "title": "ArrayList Operations",
     "desc": "",
     "group": "Workbook 3a · Section 3-2",
-    "url": "week-03/visuals/08-arraylist-operations.html",
+    "url": "week-03/visuals/09-arraylist-operations.html",
     "text": "← Week 3 index Workbook 3a · Section 3-2 ArrayList Operations Tap a kid to get it. Then remove one and watch the rest slide over. ArrayList<String> kids size: 3 add(name) add(0, name) set(2, name) remove(0) Three kids in a row. The number under a box is its index, and it starts at 0 . Tap a box. Reset The one idea get, set and remove use positions that start at 0, and removing shifts everything after it down one. add(0, name) shifts them up one instead, set swaps a value in place, and size() follows every add and remove. A position the list does not have stops Java with IndexOutOfBoundsException ."
   },
   {
@@ -1076,7 +1086,7 @@
     "title": "HashMap Lookup",
     "desc": "",
     "group": "Workbook 3a · Section 4-1",
-    "url": "week-03/visuals/09-hashmap-lookup.html",
+    "url": "week-03/visuals/10-hashmap-lookup.html",
     "text": "← Week 3 index Workbook 3a · Section 4-1 HashMap Lookup Ask the map for a key and see which drawer opens, if any. HashMap<String, String> · one drawer per key statesAndCapitals key get(key) get returns Five drawers, one per key, each holding its capital. Tap a key or type one, then press get . Reset The one idea A map finds by key, not by position. An ArrayList asks for item 3; a HashMap asks for \"TX\". A key that is not there gives null , so check the value before you use it."
   },
   {
@@ -1086,7 +1096,7 @@
     "title": "HashMap Operations",
     "desc": "",
     "group": "Workbook 3a · Section 4-1",
-    "url": "week-03/visuals/10-hashmap-operations.html",
+    "url": "week-03/visuals/11-hashmap-operations.html",
     "text": "← Week 3 index Workbook 3a · Section 4-1 HashMap Operations Put, replace, remove, then walk the map two ways. Use the buttons on the map. the map · a key tag on top, its value under it HashMap<Integer, Product> idsAndProducts .put(id, product) .remove(id) .values() .keySet() The map is empty. Drawn in the order Java walks the map, which is not the order you added. Two pairs: key 1 holds the Potato card, key 2 the Tomato card. A tag is a key, a card is its value. Reset The one idea put adds a pair, or replaces the value when the key is already there, because keys are unique. remove takes a pair out by its key. values() and keySet() are the two ways to walk the whole map."
   },
   {
@@ -1096,7 +1106,7 @@
     "title": "Waterfall vs Agile",
     "desc": "",
     "group": "Workbook 3b · Section 1-1",
-    "url": "week-03/visuals/11-waterfall-vs-agile.html",
+    "url": "week-03/visuals/12-waterfall-vs-agile.html",
     "text": "← Week 3 index Workbook 3b · Section 1-1 Waterfall vs Agile One app, twelve weeks, two ways to build it. Move the weeks yourself. The app Bus Tracker Advance a week Customer changes a requirement: alerts by text message, not in the app one long pass Waterfall Plan all all 4 features Build all Next bus Favorite stop Alerts Dark mode Test all all 4 at once Ship shown to the customer short sprints Agile Same app, same four features, same 12 weeks. Week 0: nothing has started in either lane. Reset The one idea Agile delivers something working every few weeks and welcomes change. Each short sprint plans, builds, tests and shows one feature, so a new requirement just moves the plan. Waterfall builds everything in one long pass and finds out at the end , when changes are expensive and the customer sees the app for the first time."
   },
   {
@@ -1106,7 +1116,7 @@
     "title": "The Scrum Cycle",
     "desc": "",
     "group": "Workbook 3b · Section 1-1",
-    "url": "week-03/visuals/12-scrum-cycle.html",
+    "url": "week-03/visuals/13-scrum-cycle.html",
     "text": "← Week 3 index Workbook 3b · Section 1-1 The Scrum Cycle One sprint is one lap. Press Next to move through it, tap a role to meet it. 2 weeks · 10 working days Sprint 1 sprint goal not set yet Next → the scrum team PO Product owner SM Scrum master DT Development team This circle is one sprint . The token waits at sprint planning, and no goal is set yet. Reset The one idea A sprint is a short fixed loop, often 2 to 3 weeks. Plan a goal, build it with a daily standup, show working software to the customer, reflect on how it went, then start the next sprint with what you learned."
   },
   {
@@ -1116,7 +1126,7 @@
     "title": "A User Story",
     "desc": "",
     "group": "Workbook 3b · Section 2-1",
-    "url": "week-03/visuals/13-user-story.html",
+    "url": "week-03/visuals/14-user-story.html",
     "text": "← Week 3 index Workbook 3b · Section 2-1 · User Stories A User Story A vague requirement on top. Fill the story card under it, one slot at a time. requirement · Bus Tracker app Next requirement → &darr; becomes user story MVP the story reads Reset The one idea A user story names who, what and why in one sentence, specific enough to check when it is done. One vague requirement can become several stories, one per user type, and the MVP stories are built first."
   },
   {
@@ -1126,7 +1136,7 @@
     "title": "The Project Board",
     "desc": "",
     "group": "Workbook 3b · Section 3-1",
-    "url": "week-03/visuals/14-project-board.html",
+    "url": "week-03/visuals/15-project-board.html",
     "text": "← Week 3 index Workbook 3b · Section 3-1 · Agile Project Management Tools The Project Board Five stories wait in Todo. Open one, then walk it across the board. Project board Bus Tracker Todo Prioritize In Progress Done + Add column A new board has three columns. Every story starts in Todo , the backlog. Reset The one idea The board shows who is on what, what is left and what is done. Each story is a card that starts in Todo, MVP cards on top, and carries its own acceptance criteria. It walks left to right, In Progress, QA/Testing, Done, and the code is committed when it reaches Done."
   },
   {
@@ -1187,7 +1197,7 @@
     "desc": "Ten quotes in an array, pick one by number, then add try/catch so a bad number does not crash the program.",
     "group": "Workbook 3a · Section 1-1",
     "url": "week-03/exercises/famous-quotes.html",
-    "text": "← Week 3 index Workbook 3a · Section 1-1 · Exercise 1 Famous Quotes Ten quotes, one number, one quote back. Crash it on purpose first, then catch the crash. What you are building A program that holds ten quotes you like in an array, asks for a number from 1 to 10 and prints that quote. You build it twice over: first without try/catch , so you see what a bad number does, then with it, so a bad number gets a polite message. It does not read quotes from a file or save anything. The order matters: the crash comes before the fix. Do these in order 0 of 8 done Clear ticks What a finished run looks like run, with the loop bonus Pick a quote (1 to 10): 3 \"Well done is better than well said.\" Another one? (yes/no): yes Pick a quote (1 to 10): 12 There is no quote 12. Pick 1 to 10. Another one? (yes/no): no Goodbye! Yours will differ: your quotes, your wording. Before try/catch, the 12 ends the run in red text instead. Where people get stuck 1 shows the second quote, 10 crashes. People count from 1, the array counts from 0. Typing \"abc\" still crashes. That is a different exception, InputMismatchException. Your catch has to cover it too. \"Another one?\" is skipped. nextInt leaves the Enter behind; read the rest of the line before asking. The loop stops after a bad number. The try/catch sits outside the loop. Move it inside. Pages that help Three kinds of errors try and catch Common errors Cheat sheet The one idea An exception is a message, not the end. Read its name, then catch it so the"
+    "text": "← Week 3 index Workbook 3a · Section 1-1 · Exercise 1 Famous Quotes Ten quotes, one number, one quote back. Crash it on purpose first, then catch the crash. What you are building A program that holds ten quotes you like in an array, asks for a number from 1 to 10 and prints that quote. You build it twice over: first without try/catch , so you see what a bad number does, then with it, so a bad number gets a polite message. It does not read quotes from a file or save anything. The order matters: the crash comes before the fix. Do these in order 0 of 8 done Clear ticks What a finished run looks like run 1 Pick a quote (1 to 10): 3 \"Well done is better than well said.\" run 2 Pick a quote (1 to 10): 12 There is no quote 12. Pick 1 to 10. Yours will differ: your quotes, your wording. Before try/catch, the 12 ends run 2 in red text instead. With the loop bonus, both runs happen in one go. Where people get stuck 1 shows the second quote, 10 crashes. People count from 1, the array counts from 0. Typing \"abc\" still crashes. That is a different exception, InputMismatchException. Your catch has to cover it too. \"Another one?\" is skipped. nextInt leaves the Enter behind; read the rest of the line before asking. The loop stops after a bad number. The try/catch sits outside the loop. Move it inside. Pages that help Three kinds of errors try and catch Common errors Cheat sheet The one idea An exception is a message, not the end. Read its name, then catch it so the program can carry on."
   },
   {
     "week": 3,

@@ -140,7 +140,7 @@ int year = Integer.parseInt(parts[1]);</pre></div></div>
         </article>
 
         <article class="card" data-cat="compile">
-          <div class="ch"><span class="cat">Compile</span><h2>ArrayList without its import</h2><a class="see" href="../visuals/07-array-vs-arraylist.html">See it</a></div>
+          <div class="ch"><span class="cat">Compile</span><h2>ArrayList without its import</h2><a class="see" href="../visuals/08-array-vs-arraylist.html">See it</a></div>
           <pre class="msg">java: cannot find symbol
   symbol:   class ArrayList
   location: class Main</pre>
@@ -156,7 +156,7 @@ public class Main {</pre></div></div>
         </article>
 
         <article class="card" data-cat="compile">
-          <div class="ch"><span class="cat">Compile</span><h2>A list of the wrong type</h2><a class="see" href="../visuals/07-array-vs-arraylist.html">See it</a></div>
+          <div class="ch"><span class="cat">Compile</span><h2>A list of the wrong type</h2><a class="see" href="../visuals/08-array-vs-arraylist.html">See it</a></div>
           <pre class="msg">java: incompatible types: ArrayList&lt;String&gt; cannot be converted to ArrayList&lt;Integer&gt;</pre>
           <p class="means">The type in the angle brackets is part of the list's type. A list of names is not a list of numbers.</p>
           <p class="fix"><b>Fix</b>Declare the type the list really holds. Write <code>Integer</code>, not <code>int</code>, inside the brackets.</p>
@@ -192,7 +192,7 @@ int year = Integer.parseInt(parts[1]);</pre></div></div>
         </article>
 
         <article class="card" data-cat="runtime">
-          <div class="ch"><span class="cat">Runtime</span><h2>An index past the end of a list</h2><a class="see" href="../visuals/08-arraylist-operations.html">See it</a></div>
+          <div class="ch"><span class="cat">Runtime</span><h2>An index past the end of a list</h2><a class="see" href="../visuals/09-arraylist-operations.html">See it</a></div>
           <pre class="msg">Exception in thread "main" java.lang.IndexOutOfBoundsException: Index 3 out of bounds for length 3
 	at java.base/jdk.internal.util.Preconditions.outOfBounds(Preconditions.java:64)
 	...
@@ -207,7 +207,7 @@ int year = Integer.parseInt(parts[1]);</pre></div></div>
         </article>
 
         <article class="card" data-cat="runtime">
-          <div class="ch"><span class="cat">Runtime</span><h2>Using what get returned when the key is missing</h2><a class="see" href="../visuals/09-hashmap-lookup.html">See it</a></div>
+          <div class="ch"><span class="cat">Runtime</span><h2>Using what get returned when the key is missing</h2><a class="see" href="../visuals/10-hashmap-lookup.html">See it</a></div>
           <pre class="msg">Exception in thread "main" java.lang.NullPointerException: Cannot invoke "String.toUpperCase()" because "capital" is null
 	at com.pluralsight.Main.main(Main.java:30)</pre>
           <p class="means"><code>get("OK")</code> does not throw when the key is missing: it returns <code>null</code>. The crash comes on the next line, when you use it.</p>
@@ -222,7 +222,7 @@ if (capital != null) {
         </article>
 
         <article class="card" data-cat="runtime">
-          <div class="ch"><span class="cat">Runtime</span><h2>A pattern that does not match the text</h2><a class="see" href="../visuals/06-date-patterns.html">See it</a></div>
+          <div class="ch"><span class="cat">Runtime</span><h2>A pattern that does not match the text</h2><a class="see" href="../visuals/07-date-patterns.html">See it</a></div>
           <pre class="msg">Exception in thread "main" java.time.format.DateTimeParseException: Text '10/17/2026' could not be parsed at index 2
 	at java.base/java.time.format.DateTimeFormatter.parseResolved0(DateTimeFormatter.java:2052)
 	...
@@ -311,7 +311,7 @@ String name = scanner.nextLine();</pre></div></div>
         </article>
 
         <article class="card" data-cat="file">
-          <div class="ch"><span class="cat">Files</span><h2>The file is empty after writing</h2><a class="see" href="../visuals/04-writing-a-file.html">See it</a></div>
+          <div class="ch"><span class="cat">Files</span><h2>The file is empty after writing</h2><a class="see" href="../visuals/05-writing-a-file.html">See it</a></div>
           <p class="mk">No error. potato.txt:</p>
           <pre class="msg out">(empty)</pre>
           <p class="means">A writer holds text in memory and only puts it on disk for sure when it is closed. No <code>close()</code>, no text.</p>
@@ -323,7 +323,7 @@ fileWriter.close();</pre></div></div>
         </article>
 
         <article class="card" data-cat="file">
-          <div class="ch"><span class="cat">Files</span><h2>The old lines are gone</h2><a class="see" href="../visuals/04-writing-a-file.html">See it</a></div>
+          <div class="ch"><span class="cat">Files</span><h2>The old lines are gone</h2><a class="see" href="../visuals/05-writing-a-file.html">See it</a></div>
           <p class="mk">No error. tomato.txt after the second run:</p>
           <pre class="msg out">Counting 1
 ...

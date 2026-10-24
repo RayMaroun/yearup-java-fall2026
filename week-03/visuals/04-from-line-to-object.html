@@ -1,0 +1,281 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>From One Line to One Object | Week 3 Visual Hub</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Sora:wght@500;700&family=Inter:wght@400;500&family=JetBrains+Mono:wght@400;500&display=swap">
+<style>
+  :root{
+    --bg:#080c17; --bg2:#0c1428; --surface:rgba(255,255,255,.045); --line:rgba(255,255,255,.09);
+    --ink:#eef2fb; --muted:#8496b6; --accent:#6ea0ff; --accent2:#8b7bff; --good:#46d98a; --warn:#ff6a6a;
+    --gold:#ffc862; --disp:'Sora',system-ui,sans-serif; --body:'Inter',system-ui,sans-serif;
+    --mono:'JetBrains Mono',ui-monospace,monospace;
+  }
+  *{box-sizing:border-box}
+  body{margin:0;min-height:100vh;color:var(--ink);font-family:var(--body);
+    background:radial-gradient(1200px 700px at 70% -10%,#141d38 0%,transparent 55%),
+               radial-gradient(900px 600px at 10% 110%,#161233 0%,transparent 50%),#080c17;
+    overflow-x:hidden}
+  #amb{position:fixed;inset:0;z-index:0;pointer-events:none;opacity:.6}
+  .back{position:relative;z-index:2;display:block;max-width:1120px;margin:0 auto;padding:26px 24px 0;
+    width:100%;font-family:var(--mono);font-size:.8rem;letter-spacing:.04em;color:var(--muted);
+    text-decoration:none;transition:color .15s}
+  .back:hover{color:var(--accent)}
+  .wrap{position:relative;z-index:1;max-width:1120px;margin:0 auto;padding:22px 24px 70px}
+  .tag{font-family:var(--mono);font-size:.72rem;letter-spacing:.22em;text-transform:uppercase;color:var(--accent);margin:0 0 14px}
+  h1{font-family:var(--disp);font-weight:700;font-size:clamp(2.3rem,6vw,3.6rem);line-height:1;margin:0 0 12px;
+    letter-spacing:-.03em;background:linear-gradient(180deg,#fff,#b9c6e6);-webkit-background-clip:text;
+    background-clip:text;color:transparent}
+  .lede{color:var(--muted);max-width:64ch;font-size:1.05rem;margin:0 0 26px;line-height:1.5}
+  .lede b{color:var(--ink)}
+  code{font-family:var(--mono);font-size:.92em;color:#bcd0ff}
+
+  /* ---------- the stage IS the picture ---------- */
+  .stage{position:relative;background:linear-gradient(180deg,rgba(255,255,255,.03),rgba(255,255,255,.01));
+    border:1px solid var(--line);border-radius:24px;padding:22px;
+    box-shadow:0 1px 0 rgba(255,255,255,.06) inset,0 30px 80px -30px rgba(0,0,0,.8)}
+  .hd{font-family:var(--mono);font-size:.62rem;letter-spacing:.16em;text-transform:uppercase;color:var(--muted);margin:0 0 8px}
+
+  /* row 1: the line from the file, with the separator picker and the split button ON it */
+  .linebox{border:1px solid rgba(255,255,255,.18);background:rgba(255,255,255,.045);border-radius:16px;padding:14px 16px}
+  .strip{display:flex;flex-wrap:wrap;align-items:center;gap:0;font-family:var(--mono);font-size:1.15rem;color:#c3e88d;
+    padding:8px 10px;border-radius:12px;background:rgba(0,0,0,.28);border:1px solid rgba(195,232,141,.25)}
+  .strip .ch{padding:2px 1px;border-radius:5px;transition:background .3s,color .3s}
+  .strip .ch.sep{color:var(--gold);font-weight:500;padding:2px 3px}
+  .strip .ch.cut{background:rgba(255,200,98,.22);color:var(--gold)}
+  .strip .q{color:rgba(132,150,182,.6)}
+  .ctl{display:flex;flex-wrap:wrap;align-items:center;gap:8px;margin-top:12px}
+  .ctl .lab{font-family:var(--mono);font-size:.78rem;color:#82aaff}
+  .chip{font-family:var(--mono);font-size:.9rem;padding:8px 12px;border-radius:10px;cursor:pointer;border:1px solid var(--line);
+    background:rgba(0,0,0,.25);color:#c9d4ea;transition:.15s}
+  .chip:hover{border-color:var(--accent)}
+  .chip.on{border-color:var(--accent);background:rgba(110,160,255,.16);color:#dbe6ff}
+  .go{margin-left:auto;font-family:var(--mono);font-weight:500;font-size:.95rem;padding:10px 18px;border-radius:12px;cursor:pointer;
+    border:1px solid rgba(255,200,98,.5);background:rgba(255,200,98,.1);color:var(--gold);transition:.15s}
+  .go:hover{background:rgba(255,200,98,.2);border-color:var(--gold)}
+  .go:disabled{opacity:.35;cursor:not-allowed}
+
+  /* row 2: the parts that come back */
+  .arrow{height:34px;display:flex;align-items:center;justify-content:center;color:rgba(132,150,182,.5);font-family:var(--mono);font-size:.74rem}
+  .partsbox{border:1px solid var(--line);background:rgba(6,10,20,.5);border-radius:16px;padding:14px 16px;min-height:118px;transition:border-color .3s}
+  .partsbox.w{border-color:var(--warn)}
+  .parts{display:flex;flex-wrap:wrap;gap:10px;align-items:stretch}
+  .part{position:relative;min-width:92px;border-radius:12px;padding:10px 12px 8px;border:1px solid rgba(110,160,255,.45);
+    background:rgba(110,160,255,.08);animation:pop .35s both;transition:border-color .3s,background .3s,transform .5s cubic-bezier(.2,.9,.3,1),opacity .4s}
+  .part .ix{font-family:var(--mono);font-size:.62rem;color:var(--accent);letter-spacing:.08em}
+  .part .v{font-family:var(--mono);font-size:1.02rem;color:#c3e88d;margin-top:2px;white-space:nowrap}
+  .part .v .q{color:rgba(195,232,141,.5)}
+  .part .ty{font-family:var(--mono);font-size:.62rem;color:var(--muted);margin-top:4px;letter-spacing:.08em;text-transform:uppercase;transition:color .3s}
+  .part.tap{cursor:pointer;border-color:rgba(255,200,98,.6)}
+  .part.tap:hover{background:rgba(255,200,98,.14)}
+  .part.tap::after{content:"tap";position:absolute;right:8px;top:6px;font-family:var(--mono);font-size:.58rem;color:var(--gold);letter-spacing:.1em}
+  .part.num{border-color:var(--good);background:rgba(70,217,138,.1)}
+  .part.num .v{color:var(--good)} .part.num .ty{color:var(--good)}
+  .part.shard{min-width:0;padding:6px 8px;border-color:rgba(255,106,106,.5);background:rgba(255,106,106,.07)}
+  .part.shard .v{color:#ffb0b0;font-size:.9rem} .part.shard .ix{color:#ffb0b0}
+  .part.gone{opacity:0;transform:translateY(-60px) scale(.6);pointer-events:none}
+  .empty{font-family:var(--mono);font-size:.78rem;color:rgba(132,150,182,.5);padding:28px 0;text-align:center}
+  .mk{display:none;margin-top:14px;font-family:var(--mono);font-weight:500;font-size:.95rem;padding:11px 18px;border-radius:12px;cursor:pointer;
+    border:1px solid rgba(70,217,138,.5);background:rgba(70,217,138,.1);color:var(--good);transition:.15s}
+  .mk.show{display:inline-block} .mk:hover{background:rgba(70,217,138,.2);border-color:var(--good)}
+
+  /* row 3: the object */
+  .obj{display:none;margin-top:14px;border:1px solid rgba(70,217,138,.55);background:rgba(70,217,138,.07);border-radius:16px;padding:14px 18px;
+    max-width:420px;animation:pop .45s both}
+  .obj.show{display:block}
+  .obj .who{font-family:var(--disp);font-weight:700;font-size:1.2rem;margin:0 0 10px;color:var(--ink)}
+  .obj .who span{color:var(--good)}
+  .fld{display:grid;grid-template-columns:110px minmax(0,1fr);gap:10px;font-family:var(--mono);font-size:.9rem;padding:5px 0;border-top:1px dashed rgba(255,255,255,.08)}
+  .fld .k{color:#82aaff} .fld .vv{color:#c3e88d} .fld .vv.n{color:var(--good)}
+
+  /* the one sentence */
+  .caption{display:flex;gap:14px;align-items:flex-start;margin:18px 2px 0;padding-top:16px;border-top:1px solid var(--line)}
+  .caption .t{flex:1;font-size:1.05rem;line-height:1.55;color:var(--ink);padding-left:16px;border-left:3px solid var(--accent);transition:border-color .3s}
+  .caption .t .line{display:block;margin-top:6px;font-family:var(--mono);font-size:.8rem;color:#bcd0ff;opacity:.9;word-break:break-word}
+  .caption.y .t{border-left-color:var(--gold)} .caption.g .t{border-left-color:var(--good)} .caption.w .t{border-left-color:var(--warn)}
+  .caption.w .t .line{color:#ffb0b0}
+  .caption b.a{color:var(--accent)} .caption b.y{color:var(--gold)} .caption b.g{color:var(--good)} .caption b.w{color:var(--warn)}
+  .reset{font-family:var(--body);font-weight:500;font-size:.84rem;padding:8px 14px;border-radius:11px;cursor:pointer;
+    border:1px solid var(--line);background:transparent;color:var(--muted);transition:.15s;flex-shrink:0}
+  .reset:hover{border-color:var(--accent);color:var(--accent)}
+  button:focus-visible{outline:2px solid var(--accent);outline-offset:2px}
+
+  @media (max-width:760px){
+    .strip{font-size:1rem}
+    .go{margin-left:0;width:100%}
+    .part{min-width:0;flex:1 1 30%}
+  }
+
+  @keyframes pop{from{transform:scale(.6);opacity:0}to{transform:scale(1);opacity:1}}
+  .take{margin-top:22px;background:linear-gradient(180deg,rgba(110,160,255,.08),rgba(139,123,255,.04));
+    border:1px solid var(--line);border-left:3px solid var(--accent);border-radius:12px;padding:16px 18px}
+  .take .tk{font-family:var(--mono);font-size:.66rem;letter-spacing:.14em;text-transform:uppercase;color:var(--accent);margin:0 0 8px}
+  .take p{margin:0;font-size:.95rem;color:var(--ink);line-height:1.55}
+  .take b{color:#fff}
+  @media (prefers-reduced-motion:reduce){*{animation-duration:.01ms!important;transition-duration:.01ms!important}#amb{display:none}}
+</style>
+</head>
+<body>
+<a class="back" href="../index.html#04-from-line-to-object">&#8592; Week 3 index</a>
+<canvas id="amb"></canvas>
+<div class="wrap">
+  <p class="tag">Workbook 3a &middot; Section 1-2 &middot; Using BufferedReader</p>
+  <h1>From One Line to One Object</h1>
+  <p class="lede"><b>readLine() gave you one line. Pick the separator, press Split, then tap the number.</b></p>
+
+  <div class="stage">
+    <div class="linebox">
+      <p class="hd">one line from cities.csv, as readLine() handed it back</p>
+      <div class="strip" id="strip"></div>
+      <div class="ctl">
+        <span class="lab">line.split(</span>
+        <button class="chip on" id="cPipe" data-sep="pipe">"\\|"</button>
+        <button class="chip" id="cBare" data-sep="bare">"|"</button>
+        <button class="chip" id="cComma" data-sep="comma">","</button>
+        <span class="lab">)</span>
+        <button class="go" id="bSplit">Split</button>
+      </div>
+    </div>
+
+    <div class="arrow" id="arrow">String[] parts</div>
+
+    <div class="partsbox" id="partsbox">
+      <p class="hd">what comes back</p>
+      <div class="parts" id="parts"><div class="empty">nothing yet: press Split</div></div>
+      <button class="mk" id="bMake">new City(name, country, population)</button>
+      <div class="obj" id="obj">
+        <p class="who"><span>City</span> city</p>
+        <div class="fld"><span class="k">name</span><span class="vv">"Tokyo"</span></div>
+        <div class="fld"><span class="k">country</span><span class="vv">"Japan"</span></div>
+        <div class="fld"><span class="k">population</span><span class="vv n">13960000</span></div>
+      </div>
+    </div>
+
+    <div class="caption" id="caption">
+      <div class="t" id="status"></div>
+      <button class="reset" id="bReset">Reset</button>
+    </div>
+  </div>
+
+  <div class="take">
+    <p class="tk">The one idea</p>
+    <p><b>A line from a file is one String. split cuts it into parts, every part is still text, and parseInt turns the number back into a number.</b>
+    Then the constructor takes the parts and gives you one object per line. That is the whole loop of a csv reader.</p>
+  </div>
+  <div id="rail"></div>
+</div>
+<script>
+(function(){
+  "use strict";
+  var $=function(s){return document.querySelector(s);};
+  var reduce=matchMedia("(prefers-reduced-motion: reduce)").matches;
+  var LINE="Tokyo|Japan|13960000";
+  var sep="pipe", state="start";
+  var strip=$("#strip"),parts=$("#parts"),partsbox=$("#partsbox"),status=$("#status"),caption=$("#caption"),
+      bMake=$("#bMake"),obj=$("#obj"),bSplit=$("#bSplit");
+  var START='The reader handed back <b class="a">one String</b> with three values inside it. Nothing is split yet.';
+
+  function say(html,tone,line){
+    caption.className="caption"+(tone?" "+tone:"");
+    status.innerHTML=html+(line?'<span class="line">'+line+'</span>':"");
+  }
+  function esc(s){return s.replace(/[&<>"]/g,function(c){return {"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c];});}
+
+  function drawStrip(){
+    strip.innerHTML='<span class="q">"</span>';
+    LINE.split("").forEach(function(c,i){
+      var s=document.createElement("span"); s.className="ch"+(c==="|"?" sep":""); s.textContent=c; s.id="ch"+i; strip.appendChild(s);
+    });
+    var q=document.createElement("span"); q.className="q"; q.textContent='"'; strip.appendChild(q);
+  }
+  function part(ix,val,ty,cls){
+    var d=document.createElement("div"); d.className="part"+(cls?" "+cls:"");
+    d.innerHTML='<div class="ix">parts['+ix+']</div><div class="v">'+val+'</div>'+(ty?'<div class="ty">'+ty+'</div>':"");
+    return d;
+  }
+  function split(){
+    parts.innerHTML=""; partsbox.classList.remove("w"); bMake.classList.remove("show"); obj.classList.remove("show");
+    document.querySelectorAll(".strip .ch").forEach(function(e){ e.classList.remove("cut"); });
+    if(sep==="pipe"){
+      document.querySelectorAll(".strip .sep").forEach(function(e){ e.classList.add("cut"); });
+      var vals=LINE.split("|");
+      parts.appendChild(part(0,'<span class="q">"</span>'+vals[0]+'<span class="q">"</span>',"String"));
+      parts.appendChild(part(1,'<span class="q">"</span>'+vals[1]+'<span class="q">"</span>',"String"));
+      var p2=part(2,'<span class="q">"</span>'+vals[2]+'<span class="q">"</span>',"String, not a number yet","tap");
+      p2.id="p2"; p2.setAttribute("role","button"); p2.tabIndex=0;
+      p2.addEventListener("click",parse); p2.addEventListener("keydown",function(e){ if(e.key==="Enter"||e.key===" "){ e.preventDefault(); parse(); } });
+      parts.appendChild(p2);
+      state="split";
+      say('The line broke at each pipe into <b class="y">3 parts</b>, positions 0, 1 and 2. Every part is a String, even the population.',
+        "y",'String[] parts = line.split("\\\\|");   // parts.length is 3');
+    } else if(sep==="bare"){
+      partsbox.classList.add("w");
+      LINE.split("").forEach(function(c,i){ parts.appendChild(part(i,esc(c),"","shard")); });
+      document.querySelectorAll(".strip .ch").forEach(function(e){ e.classList.add("cut"); });
+      state="bare";
+      say('A bare <b class="w">|</b> means "or" in a pattern, so it matches between every character: <b class="w">20 parts</b> of one letter each. Escape it.',
+        "w",'String[] parts = line.split("|");   // parts.length is 20');
+    } else {
+      parts.appendChild(part(0,'<span class="q">"</span>'+esc(LINE)+'<span class="q">"</span>',"String"));
+      state="comma";
+      say('There is no comma in this line, so nothing is cut: <b class="y">1 part</b>, the whole line. The separator must match the file.',
+        "y",'String[] parts = line.split(",");   // parts.length is 1');
+    }
+  }
+  function parse(){
+    if(state!=="split") return;
+    var p2=$("#p2"); p2.classList.remove("tap"); p2.classList.add("num");
+    p2.querySelector(".v").innerHTML="13960000"; p2.querySelector(".ty").textContent="int";
+    bMake.classList.add("show");
+    state="parsed";
+    say('parseInt read the digits and gave back an <b class="g">int</b>. The quotes are gone: now it can be added, compared, stored as a number.',
+      "g","int population = Integer.parseInt(parts[2]);");
+  }
+  function make(){
+    if(state!=="parsed") return;
+    document.querySelectorAll("#parts .part").forEach(function(e){ e.classList.add("gone"); });
+    bMake.classList.remove("show");
+    setTimeout(function(){ obj.classList.add("show"); },reduce?0:260);
+    state="made";
+    say('The three parts went into the constructor and came out as <b class="g">one City object</b>. One line in the file, one object in the program.',
+      "g","City city = new City(name, country, population);");
+  }
+  function pick(e){
+    document.querySelectorAll(".chip").forEach(function(c){ c.classList.remove("on"); });
+    e.currentTarget.classList.add("on"); sep=e.currentTarget.getAttribute("data-sep");
+  }
+  function reset(){
+    sep="pipe"; state="start";
+    document.querySelectorAll(".chip").forEach(function(c){ c.classList.toggle("on",c.id==="cPipe"); });
+    drawStrip();
+    parts.innerHTML='<div class="empty">nothing yet: press Split</div>';
+    partsbox.classList.remove("w"); bMake.classList.remove("show"); obj.classList.remove("show");
+    say(START);
+  }
+
+  document.querySelectorAll(".chip").forEach(function(c){ c.addEventListener("click",pick); });
+  bSplit.addEventListener("click",split);
+  bMake.addEventListener("click",make);
+  $("#bReset").addEventListener("click",reset);
+  reset();
+
+  /* ambient canvas */
+  var cv=$("#amb"),ctx=cv.getContext&&cv.getContext("2d"),ps=[];
+  function sizeC(){if(!ctx)return;cv.width=innerWidth;cv.height=innerHeight;}
+  function initParts(){ps=[];for(var i=0;i<46;i++)ps.push({x:Math.random(),y:Math.random(),
+    r:Math.random()*1.6+.3,s:Math.random()*.02+.004,o:Math.random()*.4+.1});}
+  function drawC(){if(!ctx)return;ctx.clearRect(0,0,cv.width,cv.height);
+    ps.forEach(function(p){p.y-=p.s/60;if(p.y<-.02)p.y=1.02;
+      ctx.beginPath();ctx.arc(p.x*cv.width,p.y*cv.height,p.r,0,7);
+      ctx.fillStyle="rgba(140,170,255,"+p.o+")";ctx.fill();});
+    requestAnimationFrame(drawC);}
+  if(ctx&&!reduce){sizeC();initParts();drawC();addEventListener("resize",sizeC);}
+})();
+</script>
+<script src="../manifest.js"></script>
+<script src="../../assets/rail.js"></script>
+<script>Rail.render(document.getElementById("rail"),{week:3,kind:"visuals",current:"04-from-line-to-object"});</script>
+</body>
+</html>
