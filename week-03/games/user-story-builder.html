@@ -1,0 +1,491 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>User Story Builder | Week 3 Visual Hub</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Sora:wght@500;700&family=Inter:wght@400;500&family=JetBrains+Mono:wght@400;500&display=swap">
+<style>
+  :root{
+    --bg:#080c17; --bg2:#0c1428; --surface:rgba(255,255,255,.045); --line:rgba(255,255,255,.09);
+    --ink:#eef2fb; --muted:#8496b6; --accent:#6ea0ff; --accent2:#8b7bff; --good:#46d98a; --warn:#ff6a6a;
+    --gold:#ffc862; --disp:'Sora',system-ui,sans-serif; --body:'Inter',system-ui,sans-serif;
+    --mono:'JetBrains Mono',ui-monospace,monospace;
+  }
+  *{box-sizing:border-box}
+  body{margin:0;min-height:100vh;color:var(--ink);font-family:var(--body);
+    background:radial-gradient(1200px 700px at 70% -10%,#141d38 0%,transparent 55%),
+               radial-gradient(900px 600px at 10% 110%,#161233 0%,transparent 50%),#080c17;
+    overflow-x:hidden}
+  #amb{position:fixed;inset:0;z-index:0;pointer-events:none;opacity:.6}
+  .back{position:relative;z-index:2;display:block;max-width:1120px;margin:0 auto;padding:26px 24px 0;
+    width:100%;font-family:var(--mono);font-size:.8rem;letter-spacing:.04em;color:var(--muted);
+    text-decoration:none;transition:color .15s}
+  .back:hover{color:var(--accent)}
+  .wrap{position:relative;z-index:1;max-width:1120px;margin:0 auto;padding:22px 24px 70px}
+  .tag{font-family:var(--mono);font-size:.72rem;letter-spacing:.22em;text-transform:uppercase;color:var(--accent);margin:0 0 14px}
+  h1{font-family:var(--disp);font-weight:700;font-size:clamp(2.3rem,6vw,3.6rem);line-height:1;margin:0 0 12px;
+    letter-spacing:-.03em;background:linear-gradient(180deg,#fff,#b9c6e6);-webkit-background-clip:text;
+    background-clip:text;color:transparent}
+  .lede{color:var(--muted);max-width:64ch;font-size:1.05rem;margin:0 0 26px;line-height:1.5}
+  .lede b{color:var(--ink)}
+
+  .stage{position:relative;background:linear-gradient(180deg,rgba(255,255,255,.03),rgba(255,255,255,.01));
+    border:1px solid var(--line);border-radius:24px;padding:18px 18px 14px;
+    box-shadow:0 1px 0 rgba(255,255,255,.06) inset,0 30px 80px -30px rgba(0,0,0,.8)}
+  .lab{font-family:var(--mono);font-size:.7rem;letter-spacing:.12em;text-transform:uppercase;color:var(--muted);margin:0 0 10px}
+  .btn:focus-visible,.chip:focus-visible,.slot:focus-visible,.opt:focus-visible{outline:2px solid var(--accent);outline-offset:2px}
+
+  /* ---------- game board ---------- */
+  .pic{position:relative;min-height:440px;border:1px solid var(--line);border-radius:18px;background:rgba(6,10,20,.5);overflow:hidden;
+    display:flex;flex-direction:column;align-items:center;justify-content:center;gap:20px;padding:48px 22px 30px}
+  .pic .zone{position:absolute;left:18px;top:14px;font-family:var(--mono);font-size:.62rem;letter-spacing:.14em;text-transform:uppercase;color:rgba(132,150,182,.55)}
+  .hud{position:absolute;right:18px;top:12px;display:flex;gap:14px;font-family:var(--mono);font-size:.72rem;color:var(--muted)}
+  .hud b{color:var(--ink);font-weight:500}
+  .app{text-align:center}
+  .app .nm{font-family:var(--disp);font-weight:700;font-size:1.3rem;color:var(--ink)}
+  .app .cx{font-size:.9rem;color:var(--muted);margin-top:4px}
+
+  /* three slots */
+  .slots{display:grid;grid-template-columns:1fr 1.35fr 1.35fr;gap:10px;width:100%;max-width:900px}
+  .card{display:flex;flex-direction:column;gap:6px}
+  .card .hd{font-family:var(--mono);font-size:.78rem;color:var(--accent)}
+  .card .hd span{color:var(--muted);font-size:.66rem;letter-spacing:.1em;text-transform:uppercase;margin-left:6px}
+  .slot{min-height:72px;border:1.5px dashed rgba(132,150,182,.35);border-radius:14px;background:rgba(0,0,0,.22);
+    color:var(--ink);font-family:var(--body);font-size:.95rem;line-height:1.35;padding:10px 12px;text-align:left;cursor:pointer;
+    transition:border-color .2s,background .2s,box-shadow .2s;width:100%}
+  .slot:empty::before{content:"empty";color:rgba(132,150,182,.45);font-family:var(--mono);font-size:.72rem}
+  .slot.target{border-color:rgba(110,160,255,.7);box-shadow:0 0 18px -6px rgba(110,160,255,.8)}
+  .slot.full{border-style:solid;border-color:rgba(110,160,255,.35);background:rgba(110,160,255,.08)}
+  .slot.over{border-color:var(--gold)}
+  .slot.good{border-style:solid;border-color:rgba(70,217,138,.7);background:rgba(70,217,138,.1)}
+  .slot.bad{border-style:solid;border-color:rgba(255,106,106,.7);background:rgba(255,106,106,.1);animation:shake .3s}
+  .slot:disabled{cursor:default}
+  @keyframes shake{25%{transform:translateX(-5px)}75%{transform:translateX(5px)}}
+  .note{font-size:.8rem;line-height:1.4;color:var(--warn);min-height:1.1em}
+  .note.ok{color:var(--good)}
+
+  .tray{display:flex;flex-wrap:wrap;gap:8px;justify-content:center;max-width:900px}
+  .chip{font-family:var(--body);font-size:.88rem;padding:8px 14px;border-radius:999px;cursor:grab;border:1px solid var(--line);
+    background:var(--surface);color:var(--ink);transition:.15s}
+  .chip:hover{border-color:var(--accent);color:var(--accent)}
+  .chip .key{font-family:var(--mono);font-size:.62rem;color:var(--muted);margin-right:7px}
+  .chip.used{visibility:hidden}
+  .row{display:flex;gap:10px;justify-content:center;flex-wrap:wrap}
+
+  /* story or task */
+  .sentence{font-family:var(--disp);font-weight:500;font-size:clamp(1.1rem,2.4vw,1.5rem);line-height:1.45;text-align:center;max-width:760px;
+    padding:20px 28px;border:1px solid var(--line);border-radius:16px;background:rgba(0,0,0,.3);transition:border-color .2s,box-shadow .2s}
+  .sentence.good{border-color:rgba(70,217,138,.7);box-shadow:0 0 28px -8px rgba(70,217,138,.8)}
+  .sentence.bad{border-color:rgba(255,106,106,.7);box-shadow:0 0 28px -8px rgba(255,106,106,.8);animation:shake .3s}
+  .opts{display:flex;flex-wrap:wrap;gap:8px;justify-content:center}
+  .opt{font-family:var(--mono);font-size:.9rem;padding:10px 18px;border-radius:11px;cursor:pointer;border:1px solid var(--line);background:var(--surface);color:var(--ink);transition:.15s}
+  .opt:hover{border-color:var(--accent);color:var(--accent)}
+  .opt:disabled{cursor:default}
+  .opt.hit{border-color:rgba(70,217,138,.7);background:rgba(70,217,138,.14);color:var(--good)}
+  .opt.miss{border-color:rgba(255,106,106,.7);background:rgba(255,106,106,.12);color:var(--warn)}
+  .opt.dim{opacity:.4}
+  .opt .key{display:inline-block;margin-left:6px;font-size:.62rem;color:var(--muted)}
+  .hide{display:none!important}
+
+  .screen{position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:12px;background:rgba(6,10,20,.94);transition:opacity .25s;padding:20px;z-index:3}
+  .screen.off{opacity:0;pointer-events:none}
+  .screen h2{font-family:var(--disp);font-weight:700;font-size:1.6rem;margin:0;color:var(--ink)}
+  .screen p{margin:0;color:var(--muted);font-size:.95rem;text-align:center;max-width:52ch;line-height:1.5}
+  .screen .big{font-family:var(--disp);font-weight:700;font-size:2.6rem;color:var(--accent)}
+  .screen .big.gold{color:var(--gold)} .screen .big.good{color:var(--good)}
+  .bar{position:absolute;left:0;right:0;bottom:0;height:4px;background:rgba(255,255,255,.06)}
+  .bar i{display:block;height:100%;width:0;background:var(--accent);transition:width .25s}
+  .misses{font-size:.8rem;color:var(--muted);line-height:1.55;text-align:left;max-width:700px;max-height:170px;overflow-y:auto;padding:0 8px}
+  .misses b{color:var(--warn);font-weight:500} .misses i{font-style:normal;color:var(--good)}
+
+  .caption{display:flex;gap:16px;align-items:flex-start;margin:14px 4px 0;min-height:56px}
+  .caption .n{flex-shrink:0;font-family:var(--disp);font-weight:700;font-size:1.35rem;color:var(--accent);font-variant-numeric:tabular-nums;line-height:1.2;min-width:3.2rem}
+  .caption .n small{display:block;font-family:var(--mono);font-weight:400;font-size:.58rem;letter-spacing:.14em;text-transform:uppercase;color:var(--muted)}
+  .caption .t{font-size:1.02rem;line-height:1.55;color:var(--ink);padding-left:16px;border-left:3px solid var(--accent);transition:border-color .3s}
+  .caption.cut .t{border-left-color:var(--warn)} .caption.ok .t{border-left-color:var(--good)}
+  .caption b.g{color:var(--good)} .caption b.w{color:var(--warn)} .caption b.a{color:var(--accent)} .caption b.y{color:var(--gold)}
+  .hint{font-family:var(--mono);font-size:.68rem;color:var(--muted);margin:10px 4px 0;line-height:1.5}
+
+  .btn{font-family:var(--body);font-weight:500;font-size:.86rem;padding:9px 16px;border-radius:11px;cursor:pointer;
+    border:1px solid var(--line);background:var(--surface);color:var(--ink);transition:.15s}
+  .btn:hover{border-color:var(--accent);color:var(--accent)}
+  .btn.primary{border-color:rgba(110,160,255,.5);background:rgba(110,160,255,.12);padding:9px 22px;min-width:120px}
+  .btn:disabled{opacity:.35;cursor:not-allowed}
+  .btn.ghost{background:transparent;color:var(--muted)}
+
+  .take{margin-top:22px;background:linear-gradient(180deg,rgba(110,160,255,.08),rgba(139,123,255,.04));
+    border:1px solid var(--line);border-left:3px solid var(--accent);border-radius:12px;padding:16px 18px}
+  .take .tk{font-family:var(--mono);font-size:.66rem;letter-spacing:.14em;text-transform:uppercase;color:var(--accent);margin:0 0 8px}
+  .take p{margin:0;font-size:.95rem;color:var(--ink);line-height:1.55}
+  .take b{color:#fff}
+  @media (max-width:760px){.slots{grid-template-columns:1fr}.pic{padding:48px 14px 30px}}
+  @media (prefers-reduced-motion:reduce){*{animation-duration:.01ms!important;transition-duration:.01ms!important}#amb{display:none}}
+</style>
+</head>
+<body>
+
+<a class="back" href="../index.html#user-story-builder">&#8592; Week 3 index</a>
+
+<canvas id="amb"></canvas>
+<div class="wrap">
+  <p class="tag">Workbook 3b &middot; Section 2-1 &middot; Game</p>
+  <h1>User Story Builder</h1>
+  <p class="lede"><b>As a (role) I want (something) so that (benefit).</b> Build the story, then spot the ones that are really tasks.</p>
+
+  <div class="stage">
+    <div class="pic" id="pic">
+      <span class="zone" id="zone">build the story</span>
+      <div class="hud"><span>score <b id="hScore">0</b></span></div>
+
+      <!-- build round -->
+      <div class="app" id="app"><div class="nm" id="appName">&nbsp;</div><div class="cx" id="appCx"></div></div>
+      <div class="slots" id="slots">
+        <div class="card"><div class="hd">As<span>role</span></div><button class="slot" data-i="0"></button><div class="note" id="n0"></div></div>
+        <div class="card"><div class="hd">I want<span>something</span></div><button class="slot" data-i="1"></button><div class="note" id="n1"></div></div>
+        <div class="card"><div class="hd">so that<span>benefit</span></div><button class="slot" data-i="2"></button><div class="note" id="n2"></div></div>
+      </div>
+      <div class="tray" id="tray"></div>
+
+      <!-- story or task round -->
+      <div class="sentence hide" id="sentence"></div>
+      <div class="opts hide" id="opts">
+        <button class="opt" data-t="U">User story<span class="key">U</span></button>
+        <button class="opt" data-t="D">Developer story or task<span class="key">D</span></button>
+      </div>
+
+      <div class="row">
+        <button class="btn primary" id="bCheck" disabled>Check</button>
+        <button class="btn ghost" id="bClear">Clear</button>
+        <button class="btn primary hide" id="bNext">Next</button>
+      </div>
+
+      <div class="bar"><i id="bar"></i></div>
+      <div class="screen" id="startScr">
+        <h2>User Story Builder</h2>
+        <p>Two kinds of rounds. Build: click or drag a chip into each slot, then Check (keys 1 to 6, Enter). Story or task: say whether a sentence is a user story or developer work (keys U and D).</p>
+        <button class="btn primary" id="bStart">Start</button>
+      </div>
+      <div class="screen off" id="endScr">
+        <h2>Round over</h2>
+        <div class="big" id="endScore"></div>
+        <p id="endMsg"></p>
+        <div class="misses" id="endMiss"></div>
+        <button class="btn primary" id="bAgain">Restart</button>
+      </div>
+    </div>
+
+    <div class="caption" id="caption">
+      <div class="n" id="stepno"><small>round</small>0 / 15</div>
+      <div class="t" id="status">Press <b class="a">Start</b>. Fifteen rounds, two kinds, mixed.</div>
+    </div>
+    <p class="hint">role = who &middot; something = what they want to do &middot; benefit = why it matters to them &middot; more than one story can be right</p>
+  </div>
+
+  <div class="take">
+    <p class="tk">The one idea</p>
+    <p><b>A user story names a real user, what they want, and why it matters to them.</b> Setup work such as a repository or Bootstrap is still on the board, written as a developer story or a task, because no user gets anything from it on its own.</p>
+  </div>
+
+  <div id="rail"></div>
+</div>
+
+<script>
+(function(){
+  "use strict";
+  var $=function(s){return document.querySelector(s);};
+  var reduce=matchMedia("(prefers-reduced-motion: reduce)").matches;
+
+  // ---------- build rounds ----------
+  // Each round: two roles, two wants, two benefits.
+  // role.fits = the wants this role can sensibly have; role.no[w] = why not.
+  // ben.fits  = the wants this benefit follows from;  ben.no[w]  = why not.
+  // A story is valid when the role fits the want AND the benefit fits the want. Several can be valid.
+  var BUILD=[
+    {app:"Bike rental app",cx:"Rent a bike from a street dock, ride, return it.",
+     roles:[{t:"a rider",fits:[0],no:{1:"riders cannot take a bike out of service; that is the repair crew's job"}},
+            {t:"a repair mechanic",fits:[1],no:{0:"the mechanic is not renting bikes; paying for rides is the rider's goal"}}],
+     wants:["to pay for rides with a saved card","to mark a bike as out of service"],
+     bens:[{t:"I do not type my card number at every dock",fits:[0],no:{1:"marking a bike out of service has nothing to do with typing a card number"}},
+           {t:"no rider takes out a bike with bad brakes",fits:[1],no:{0:"paying with a saved card does not keep broken bikes off the street"}}]},
+    {app:"School library kiosk",cx:"A touch screen by the library door.",
+     roles:[{t:"a reader",fits:[0],no:{1:"readers cannot change the catalog; adding books is the librarian's job"}},
+            {t:"the librarian",fits:[0,1],no:{}}],
+     wants:["to place a hold on a book that is checked out","to add new books to the catalog"],
+     bens:[{t:"I get the book as soon as it comes back",fits:[0],no:{1:"adding books to the catalog does not get you a book someone else has"}},
+           {t:"readers can find the new books on the kiosk",fits:[1],no:{0:"one hold gets one person one book; it does not help readers find new books"}}]},
+    {app:"Food truck order screen",cx:"Order on a phone while in line, pick up at the window.",
+     roles:[{t:"a customer",fits:[0],no:{1:"customers do not work the kitchen; the incoming order list is for the cook"}},
+            {t:"the cook",fits:[1],no:{0:"the cook is inside the truck; ordering from the line is the customer's goal"}}],
+     wants:["to order and pay from my phone while I wait in line","to see new orders in the order they came in"],
+     bens:[{t:"my food is ready sooner when I reach the window",fits:[0],no:{1:"seeing the order list helps the kitchen; it does not feed the person in line sooner"}},
+           {t:"nobody waits longer than the person who ordered after them",fits:[1],no:{0:"paying from a phone does not keep the kitchen cooking in order"}}]},
+    {app:"Gym class booking app",cx:"Book a bike in a spin class.",
+     roles:[{t:"a gym member",fits:[0],no:{1:"a member cannot cancel a class for everyone; only the instructor who teaches it can"}},
+            {t:"a spin instructor",fits:[1],no:{0:"the instructor teaches the class, so booking a bike in it makes no sense"}}],
+     wants:["to book a bike in tomorrow's 7 am class","to cancel my class and message everyone who booked"],
+     bens:[{t:"I know a bike is waiting for me when I arrive",fits:[0],no:{1:"canceling a class takes bikes away; it does not hold one for you"}},
+           {t:"nobody drives in for a class that is not happening",fits:[1],no:{0:"booking a bike does not warn anyone about a canceled class"}}]},
+    {app:"Parking garage app",cx:"A city garage with a ticket gate.",
+     roles:[{t:"a driver",fits:[0],no:{1:"drivers cannot open the gate for other cars; the attendant controls it"}},
+            {t:"the garage attendant",fits:[1],no:{0:"the attendant works at the garage; reserving a space from home is the driver's goal"}}],
+     wants:["to reserve a space before I leave home","to open the exit gate when a ticket will not scan"],
+     bens:[{t:"I am not circling the garage looking for a spot",fits:[0],no:{1:"opening the exit gate helps a car leave; it does not find anyone a spot"}},
+           {t:"the cars behind a stuck driver keep moving",fits:[1],no:{0:"a reservation made at home does nothing for a line at the exit"}}]},
+    {app:"Pet adoption site",cx:"A shelter lists the dogs waiting for a home.",
+     roles:[{t:"a family looking for a dog",fits:[0],no:{1:"visitors cannot post animals; the shelter's volunteers do that"}},
+            {t:"a shelter volunteer",fits:[0,1],no:{}}],
+     wants:["to filter the dogs by size and age","to post photos of a dog that just arrived"],
+     bens:[{t:"I only see dogs that would fit in a small apartment",fits:[0],no:{1:"posting photos does not narrow the list down to small dogs"}},
+           {t:"the new dog gets noticed on its first day",fits:[1],no:{0:"filtering the list does not put a new dog on the site"}}]},
+    {app:"Museum audio guide app",cx:"Headphones, a phone, one track per painting.",
+     roles:[{t:"a visitor",fits:[0],no:{1:"visitors cannot add tracks to the guide; that is the curator's work"}},
+            {t:"the museum curator",fits:[0,1],no:{}}],
+     wants:["to hear each painting's story in Spanish","to record a new track when a painting is added"],
+     bens:[{t:"I understand the paintings in my own language",fits:[0],no:{1:"recording a track adds content; it does not change the language you hear it in"}},
+           {t:"the guide never skips a painting on the wall",fits:[1],no:{0:"listening in Spanish does not fill a gap in the guide"}}]},
+    {app:"Plant watering reminder app",cx:"Reminds you when each plant needs water.",
+     roles:[{t:"a plant owner",fits:[0,1],no:{}},
+            {t:"a plant sitter",fits:[0],no:{1:"the sitter receives the list; sharing it while traveling is the owner's goal"}}],
+     wants:["to get a reminder when a plant needs water","to share my plant list with a sitter while I travel"],
+     bens:[{t:"my plants do not dry out",fits:[0,1],no:{}},
+           {t:"the sitter knows which plants to water",fits:[1],no:{0:"a reminder on your own phone does not tell the sitter anything"}}]},
+    {app:"Movie theater kiosk",cx:"Buy a ticket in the lobby.",
+     roles:[{t:"a moviegoer",fits:[0],no:{1:"a moviegoer cannot change the schedule; adding showings is the manager's call"}},
+            {t:"the theater manager",fits:[1],no:{0:"the manager is not buying a ticket at the kiosk; picking a seat is the moviegoer's goal"}}],
+     wants:["to pick my seat when I buy a ticket","to add an extra showing of a popular film"],
+     bens:[{t:"I can sit next to my friends",fits:[0],no:{1:"an extra showing does not choose where you sit"}},
+           {t:"fewer people get turned away at the door",fits:[1],no:{0:"picking one seat does not make room for the people turned away"}}]},
+    {app:"Hotel check-in screen",cx:"A screen in the hotel lobby.",
+     roles:[{t:"a guest",fits:[0],no:{1:"guests do not see the cleaning status of every room; that is for the staff"}},
+            {t:"the front desk clerk",fits:[1],no:{0:"the clerk works behind the desk; skipping the desk line is the guest's goal"}}],
+     wants:["to check in without waiting at the desk","to see which rooms are cleaned and ready"],
+     bens:[{t:"I get to my room right after a long trip",fits:[0],no:{1:"a list of clean rooms does not skip the line for the guest"}},
+           {t:"I never give a guest a room that is not ready",fits:[1],no:{0:"checking in on a screen does not tell the clerk which rooms are clean"}}]}
+  ];
+
+  // ---------- story or task rounds ----------
+  // k: U = user story, D = developer story or task. dev: true when it is in the "As a developer" format.
+  var SENT=[
+    {s:"As a rider I want to see the next bus so that I do not wait in the cold",k:"U",why:"a real user (a rider), what they want, and why it matters to them"},
+    {s:"As a web site user I want a navigation bar so that I can switch between pages",k:"U",why:"the workbook's own example: a user, a want, a benefit to that user"},
+    {s:"As a renter I want to return my bike at any dock so that I do not have to ride back to the start",k:"U",why:"the renter gets something they can use, and the benefit is theirs"},
+    {s:"As a customer I want to see the prices before I order so that I know what I can afford",k:"U",why:"a customer, something they want on the screen, and why it matters to them"},
+    {s:"As a gym member I want a reminder an hour before class so that I do not forget to go",k:"U",why:"the member is the user and the benefit is theirs"},
+    {s:"As a reader I want the kiosk to show when my books are due so that I avoid late fees",k:"U",why:"a reader, a want, and a benefit the reader feels"},
+    {s:"As a museum visitor I want a map of the rooms so that I find the paintings I came to see",k:"U",why:"a visitor gets something they can see and use"},
+    {s:"Set up the project repository",k:"D",why:"no user sees a repository; it is setup work for the team"},
+    {s:"Add Bootstrap to the page",k:"D",why:"a library for the developer; the user never asked for it by name"},
+    {s:"Make the first commit and link the local repo to GitHub",k:"D",why:"it keeps the code backed up, which helps the developer, not a user"},
+    {s:"Create style.css for the default styles",k:"D",why:"a file the developer needs; no user benefit on its own"},
+    {s:"Move the navbar code into its own file",k:"D",why:"the page looks the same to the user; only the code changes"},
+    {s:"As a developer I want to create the base folder structure so that the project has a place for css, images and scripts",k:"D",dev:true,why:"it has the format, but the role is the developer and the benefit goes to the project"},
+    {s:"As a developer I want one shared stylesheet so that every page uses the same colors",k:"D",dev:true,why:"the format is there, but the developer is the one who wants it"}
+  ];
+  var KLABEL={U:"User story",D:"Developer story or task"};
+
+  // ---------- helpers ----------
+  var AMP=String.fromCharCode(38), ENT={"<":"lt;",">":"gt;","\"":"quot;"};
+  function esc(s){ return String(s).replace(/[<>"]/g,function(c){ return AMP+ENT[c]; }); }
+  function shuffle(a){ a=a.slice(); for(var i=a.length-1;i>0;i--){ var j=Math.floor(Math.random()*(i+1)); var t=a[i]; a[i]=a[j]; a[j]=t; } return a; }
+  function has(a,x){ return a.indexOf(x)>=0; }
+  function cap(s){ return s.charAt(0).toUpperCase()+s.slice(1); }
+  function chipText(r,id){ var k=id.charAt(0), i=Number(id.charAt(1)); return k==="r"?r.roles[i].t:k==="w"?r.wants[i]:r.bens[i].t; }
+  function storyText(r,ri,wi,bi){ return "As "+r.roles[ri].t+", I want "+r.wants[wi]+", so that "+r.bens[bi].t+"."; }
+  function validTriples(r){
+    var out=[];
+    for(var ri=0;ri<2;ri++) for(var wi=0;wi<2;wi++) for(var bi=0;bi<2;bi++)
+      if(has(r.roles[ri].fits,wi)&&has(r.bens[bi].fits,wi)) out.push([ri,wi,bi]);
+    return out;
+  }
+
+  // ---------- the check ----------
+  var SLOT=["r","w","b"];
+  function typeWhy(k,slot){
+    if(slot===0) return k==="w"?"This is something to do, not a person. The first slot names who wants it.":"This is a benefit, not a person. The first slot names who wants it.";
+    if(slot===1) return k==="b"?"This is the benefit: it says why. It goes after so that.":"This is a person, not something they want. It goes after As.";
+    return k==="w"?"This is something to do, not the reason for it. It goes after I want.":"A person is not a benefit. It goes after As.";
+  }
+  // returns {ok, notes[3]} ; computed from the slot types and the round's fitness table
+  function judge(r,filled){
+    var notes=[null,null,null], typeOk=true;
+    for(var i=0;i<3;i++){ var k=filled[i].charAt(0); if(k!==SLOT[i]){ notes[i]=typeWhy(k,i); typeOk=false; } }
+    if(typeOk){
+      var ri=Number(filled[0].charAt(1)), wi=Number(filled[1].charAt(1)), bi=Number(filled[2].charAt(1));
+      if(!has(r.roles[ri].fits,wi)) notes[0]="Does not fit the want: "+r.roles[ri].no[wi]+".";
+      if(!has(r.bens[bi].fits,wi)) notes[2]="Does not follow from the want: "+r.bens[bi].no[wi]+".";
+    }
+    return {ok:!notes[0]&&!notes[1]&&!notes[2],notes:notes};
+  }
+
+  // ---------- game state ----------
+  var N=15, rounds=[], at=0, score=0, misses=[], live=false, answered=false;
+  var filled=[null,null,null], target=0, chips=[];
+
+  function deal(){
+    var b=shuffle(BUILD).slice(0,8);
+    var users=shuffle(SENT.filter(function(x){return x.k==="U";}));
+    var devs=shuffle(SENT.filter(function(x){return x.dev;}));
+    var tasks=shuffle(SENT.filter(function(x){return x.k==="D"&&!x.dev;}));
+    var nu=Math.random()<.5?3:4;
+    var t=shuffle(users.slice(0,nu).concat(devs.slice(0,1),tasks.slice(0,6-nu)));
+    var out=[];
+    for(var i=0;i<N;i++) out.push(i%2===0?{kind:"B",r:b[i/2]}:{kind:"T",r:t[(i-1)/2]});
+    return out;
+  }
+
+  function show(id,on){ $(id).classList.toggle("hide",!on); }
+  function slotsEls(){ return document.querySelectorAll(".slot"); }
+
+  function setCaption(cls,html){ $("#caption").className="caption"+(cls?" "+cls:""); $("#status").innerHTML=html; }
+
+  function drawBuild(){
+    var r=rounds[at].r;
+    $("#appName").textContent=r.app; $("#appCx").textContent=r.cx;
+    Array.prototype.forEach.call(slotsEls(),function(s,i){
+      var id=filled[i];
+      s.textContent=id?chipText(r,id):"";
+      s.className="slot"+(id?" full":"")+(!answered&&i===target?" target":"");
+      s.disabled=answered;
+    });
+    Array.prototype.forEach.call(document.querySelectorAll(".chip"),function(c){
+      c.classList.toggle("used",has(filled,c.getAttribute("data-id")));
+      c.disabled=answered; c.draggable=!answered;
+    });
+    $("#bCheck").disabled=answered||has(filled,null);
+  }
+  function nextTarget(){ var i=filled.indexOf(null); target=i<0?-1:i; }
+
+  function showRound(){
+    answered=false;
+    var R=rounds[at], isB=R.kind==="B";
+    $("#zone").textContent=isB?"build the story":"story or task?";
+    show("#app",isB); show("#slots",isB); show("#tray",isB); show("#sentence",!isB); show("#opts",!isB);
+    show("#bCheck",isB); show("#bClear",isB); show("#bNext",false);
+    $("#stepno").innerHTML="<small>round</small>"+(at+1)+" / "+N; $("#bar").style.width=(100*at/N)+"%";
+    if(isB){
+      filled=[null,null,null]; target=0;
+      for(var i=0;i<3;i++) $("#n"+i).textContent="", $("#n"+i).className="note";
+      chips=shuffle(["r0","r1","w0","w1","b0","b1"]);
+      $("#tray").innerHTML=chips.map(function(id,i){ return '<button class="chip" draggable="true" data-id="'+id+'"><span class="key">'+(i+1)+'</span>'+esc(chipText(R.r,id))+'</button>'; }).join("");
+      drawBuild();
+      setCaption("","<b class=\"a\">"+esc(R.r.app)+".</b> Fill the three slots, then Check. More than one story can be right.");
+    } else {
+      var el=$("#sentence"); el.textContent=R.r.s; el.className="sentence";
+      Array.prototype.forEach.call(document.querySelectorAll(".opt"),function(b){ b.className="opt"; b.disabled=false; });
+      setCaption("","A user story, or developer work? <b class=\"a\">U</b> or <b class=\"a\">D</b>.");
+    }
+  }
+
+  function place(id,slot){
+    if(!live||answered||rounds[at].kind!=="B") return;
+    var old=filled.indexOf(id); if(old>=0) filled[old]=null;
+    if(slot===undefined||slot<0){ slot=target>=0?target:filled.indexOf(null); }
+    if(slot<0) return;
+    filled[slot]=id; nextTarget(); drawBuild();
+  }
+  function unplace(i){
+    if(!live||answered) return;
+    if(filled[i]){ filled[i]=null; target=i; } else { target=i; }
+    drawBuild();
+  }
+  function clearAll(){ if(!live||answered) return; filled=[null,null,null]; target=0; drawBuild(); }
+
+  function checkBuild(){
+    if(!live||answered||has(filled,null)) return;
+    var r=rounds[at].r, res=judge(r,filled);
+    answered=true; drawBuild();
+    Array.prototype.forEach.call(slotsEls(),function(s,i){ s.classList.add(res.notes[i]?"bad":"good"); s.classList.remove("full"); });
+    for(var i=0;i<3;i++){ var n=$("#n"+i); n.textContent=res.notes[i]||""; n.className="note"; }
+    var valid=validTriples(r);
+    if(res.ok){
+      score++; $("#hScore").textContent=String(score);
+      var ri=Number(filled[0].charAt(1)), wi=Number(filled[1].charAt(1)), bi=Number(filled[2].charAt(1));
+      var other=valid.filter(function(v){ return !(v[0]===ri&&v[1]===wi&&v[2]===bi); });
+      setCaption("ok","<b class=\"g\">A real user story.</b> "+esc(storyText(r,ri,wi,bi))+(other.length?" Also right: "+esc(storyText(r,other[0][0],other[0][1],other[0][2])):""));
+    } else {
+      // suggest a valid story that keeps the learner's want if it is in the want slot
+      var w=filled[1].charAt(0)==="w"?Number(filled[1].charAt(1)):-1;
+      var pick=valid.filter(function(v){ return v[1]===w; })[0]||valid[0];
+      var bad=res.notes.filter(function(x){return x;}).length;
+      var good=storyText(r,pick[0],pick[1],pick[2]);
+      misses.push({q:r.app,a:good,why:res.notes.filter(function(x){return x;})[0]});
+      setCaption("cut","<b class=\"w\">"+bad+" slot"+(bad>1?"s":"")+" to fix</b>, see the red note"+(bad>1?"s":"")+". A story that works: "+esc(good));
+    }
+    show("#bCheck",false); show("#bClear",false); show("#bNext",true); $("#bNext").focus();
+  }
+
+  function answerTask(t){
+    if(!live||answered||rounds[at].kind!=="T") return;
+    answered=true;
+    var x=rounds[at].r, good=t===x.k;
+    Array.prototype.forEach.call(document.querySelectorAll(".opt"),function(b){ b.disabled=true; var d=b.getAttribute("data-t");
+      if(d===x.k) b.classList.add("hit"); else if(d===t) b.classList.add("miss"); else b.classList.add("dim"); });
+    $("#sentence").className="sentence "+(good?"good":"bad");
+    var tail=x.k==="U"?"":x.dev?" The workbook says there are developer user stories too: they go on the board next to the user stories.":
+      " The workbook says there are developer stories too: written up, this one would start As a developer, I want.";
+    var head="<b class=\""+(good?"g":"w")+"\">"+(good?"":"Not "+KLABEL[t].toLowerCase()+". ")+KLABEL[x.k]+"</b>: ";
+    if(good){ score++; $("#hScore").textContent=String(score); setCaption("ok",head+esc(x.why)+"."+esc(tail)); }
+    else { misses.push({q:x.s,a:KLABEL[x.k],why:x.why}); setCaption("cut",head+esc(x.why)+"."+esc(tail)); }
+    show("#bNext",true); $("#bNext").focus();
+  }
+
+  function next(){ if(!live||!answered) return; at++; if(at>=N) end(); else showRound(); }
+
+  function start(){
+    rounds=deal(); at=0; score=0; misses=[]; live=true;
+    $("#hScore").textContent="0"; $("#startScr").classList.add("off"); $("#endScr").classList.add("off");
+    showRound();
+  }
+  function end(){
+    live=false; $("#bar").style.width="100%";
+    $("#endScore").textContent=score+" / "+N; $("#endScore").className="big "+(score===N?"good":score>=11?"":"gold");
+    $("#endMsg").textContent=score===N?"Perfect. Every story and every task in its place.":score>=11?"Solid. Read the misses below.":"Keep going. Read the misses, then Restart for new rounds.";
+    $("#endMiss").innerHTML=misses.map(function(m){ return '<div><b>'+esc(m.q)+'</b> <i>'+esc(m.a)+'</i></div>'; }).join("");
+    $("#endScr").classList.remove("off");
+    $("#stepno").innerHTML="<small>round</small>"+N+" / "+N; setCaption("","Round over. <b class=\"a\">Restart</b> deals fifteen new rounds.");
+  }
+
+  // ---------- wiring ----------
+  $("#tray").addEventListener("click",function(e){ var c=e.target.closest(".chip"); if(c) place(c.getAttribute("data-id")); });
+  $("#slots").addEventListener("click",function(e){ var s=e.target.closest(".slot"); if(s) unplace(Number(s.getAttribute("data-i"))); });
+  $("#tray").addEventListener("dragstart",function(e){ var c=e.target.closest(".chip"); if(c&&e.dataTransfer){ e.dataTransfer.setData("text/plain",c.getAttribute("data-id")); e.dataTransfer.effectAllowed="move"; } });
+  Array.prototype.forEach.call(slotsEls(),function(s){
+    s.addEventListener("dragover",function(e){ if(!answered){ e.preventDefault(); s.classList.add("over"); } });
+    s.addEventListener("dragleave",function(){ s.classList.remove("over"); });
+    s.addEventListener("drop",function(e){ e.preventDefault(); s.classList.remove("over"); var id=e.dataTransfer.getData("text/plain"); if(/^[rwb][01]$/.test(id)) place(id,Number(s.getAttribute("data-i"))); });
+  });
+  $("#opts").addEventListener("click",function(e){ var b=e.target.closest(".opt"); if(b) answerTask(b.getAttribute("data-t")); });
+  $("#bCheck").addEventListener("click",checkBuild);
+  $("#bClear").addEventListener("click",clearAll);
+  $("#bNext").addEventListener("click",next);
+  $("#bStart").addEventListener("click",start); $("#bAgain").addEventListener("click",start);
+  document.addEventListener("keydown",function(e){
+    if(/INPUT|TEXTAREA/.test(e.target.tagName)||e.ctrlKey||e.metaKey||e.altKey) return;
+    if(!live){ if((e.code==="Space"||e.key==="Enter")&&e.target.tagName!=="BUTTON"){ e.preventDefault(); start(); } return; }
+    var R=rounds[at], k=e.key.toUpperCase();
+    if(e.key==="Enter"){ if(e.target.tagName==="BUTTON") return; e.preventDefault(); if(answered) next(); else if(R.kind==="B") checkBuild(); return; }
+    if(R.kind==="B"&&!answered){
+      if(/^[1-6]$/.test(e.key)){ var id=chips[Number(e.key)-1]; if(!has(filled,id)) place(id); return; }
+      if(e.key==="Backspace"){ e.preventDefault(); for(var i=2;i>=0;i--) if(filled[i]){ unplace(i); break; } return; }
+    }
+    if(R.kind==="T"&&(k==="U"||k==="D")) answerTask(k);
+  });
+
+  // ---------- ambient ----------
+  var cv=$("#amb"),ctx=cv.getContext&&cv.getContext("2d"),parts=[];
+  function sizeC(){if(!ctx)return;cv.width=innerWidth;cv.height=innerHeight;}
+  function initParts(){parts=[];for(var i=0;i<46;i++)parts.push({x:Math.random(),y:Math.random(),r:Math.random()*1.6+.3,s:Math.random()*.02+.004,o:Math.random()*.4+.1});}
+  function drawC(){if(!ctx)return;ctx.clearRect(0,0,cv.width,cv.height);
+    parts.forEach(function(p){p.y-=p.s/60;if(p.y<-.02)p.y=1.02;ctx.beginPath();ctx.arc(p.x*cv.width,p.y*cv.height,p.r,0,7);
+      ctx.fillStyle="rgba(140,170,255,"+p.o+")";ctx.fill();});requestAnimationFrame(drawC);}
+  if(ctx&&!reduce){sizeC();initParts();drawC();addEventListener("resize",sizeC);}
+
+})();
+</script>
+<script src="../manifest.js"></script>
+<script src="../../assets/rail.js"></script>
+<script>Rail.render(document.getElementById("rail"),{week:3,kind:"games",current:"user-story-builder"});</script>
+</body>
+</html>

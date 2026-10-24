@@ -1,0 +1,309 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>List or Map? | Week 3 Visual Hub</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Sora:wght@500;700&family=Inter:wght@400;500&family=JetBrains+Mono:wght@400;500&display=swap">
+<style>
+  :root{
+    --bg:#080c17; --bg2:#0c1428; --surface:rgba(255,255,255,.045); --line:rgba(255,255,255,.09);
+    --ink:#eef2fb; --muted:#8496b6; --accent:#6ea0ff; --accent2:#8b7bff; --good:#46d98a; --warn:#ff6a6a;
+    --gold:#ffc862; --disp:'Sora',system-ui,sans-serif; --body:'Inter',system-ui,sans-serif;
+    --mono:'JetBrains Mono',ui-monospace,monospace;
+  }
+  *{box-sizing:border-box}
+  body{margin:0;min-height:100vh;color:var(--ink);font-family:var(--body);
+    background:radial-gradient(1200px 700px at 70% -10%,#141d38 0%,transparent 55%),
+               radial-gradient(900px 600px at 10% 110%,#161233 0%,transparent 50%),#080c17;
+    overflow-x:hidden}
+  #amb{position:fixed;inset:0;z-index:0;pointer-events:none;opacity:.6}
+  .back{position:relative;z-index:2;display:block;max-width:1120px;margin:0 auto;padding:26px 24px 0;
+    width:100%;font-family:var(--mono);font-size:.8rem;letter-spacing:.04em;color:var(--muted);
+    text-decoration:none;transition:color .15s}
+  .back:hover{color:var(--accent)}
+  .wrap{position:relative;z-index:1;max-width:1120px;margin:0 auto;padding:22px 24px 70px}
+  .tag{font-family:var(--mono);font-size:.72rem;letter-spacing:.22em;text-transform:uppercase;color:var(--accent);margin:0 0 14px}
+  h1{font-family:var(--disp);font-weight:700;font-size:clamp(2.3rem,6vw,3.6rem);line-height:1;margin:0 0 12px;
+    letter-spacing:-.03em;background:linear-gradient(180deg,#fff,#b9c6e6);-webkit-background-clip:text;
+    background-clip:text;color:transparent}
+  .lede{color:var(--muted);max-width:64ch;font-size:1.05rem;margin:0 0 26px;line-height:1.5}
+  .lede b{color:var(--ink)}
+  .lede code,.take code,.caption code{font-family:var(--mono);font-size:.92em;color:#bcd0ff}
+
+  /* ---------- stage: picture first, one toolbar, support below ---------- */
+  .stage{position:relative;background:linear-gradient(180deg,rgba(255,255,255,.03),rgba(255,255,255,.01));
+    border:1px solid var(--line);border-radius:24px;padding:18px 18px 14px;
+    box-shadow:0 1px 0 rgba(255,255,255,.06) inset,0 30px 80px -30px rgba(0,0,0,.8)}
+  .topbar{display:flex;align-items:center;gap:10px;margin:0 0 14px;flex-wrap:wrap}
+  .topbar .lab{margin:0 4px 0 0}
+  .lab{font-family:var(--mono);font-size:.7rem;letter-spacing:.12em;text-transform:uppercase;color:var(--muted);margin:0 0 10px}
+  .btn:focus-visible{outline:2px solid var(--accent);outline-offset:2px}
+
+  /* ---------- game board ---------- */
+  .pic{position:relative;min-height:400px;border:1px solid var(--line);border-radius:18px;background:rgba(6,10,20,.5);overflow:hidden;
+    display:flex;flex-direction:column;align-items:center;justify-content:center;gap:20px;padding:44px 20px 26px}
+  .pic .zone{position:absolute;left:18px;top:14px;font-family:var(--mono);font-size:.62rem;letter-spacing:.14em;text-transform:uppercase;color:rgba(132,150,182,.55)}
+  .hud{position:absolute;right:18px;top:12px;display:flex;gap:14px;font-family:var(--mono);font-size:.72rem;color:var(--muted)}
+  .hud b{color:var(--ink);font-weight:500}
+  .sit{font-family:var(--disp);font-weight:500;font-size:clamp(1.15rem,2.6vw,1.55rem);line-height:1.35;color:var(--ink);text-align:center;
+    max-width:34ch;padding:18px 28px;border:1px solid var(--line);border-radius:16px;background:rgba(0,0,0,.3);transition:border-color .2s,box-shadow .2s}
+  .sit.good{border-color:rgba(70,217,138,.7);box-shadow:0 0 28px -8px rgba(70,217,138,.8)}
+  .sit.bad{border-color:rgba(255,106,106,.7);box-shadow:0 0 28px -8px rgba(255,106,106,.8);animation:shake .3s}
+  @keyframes shake{25%{transform:translateX(-6px)}75%{transform:translateX(6px)}}
+  .both{display:inline-block;margin-top:10px;font-family:var(--mono);font-size:.66rem;letter-spacing:.14em;text-transform:uppercase;
+    padding:4px 10px;border-radius:999px;border:1px solid rgba(255,200,98,.5);color:var(--gold);background:rgba(255,200,98,.08)}
+  .row{display:flex;flex-direction:column;align-items:center;gap:8px}
+  .row .lab{margin:0}
+  .opts{display:flex;flex-wrap:wrap;gap:8px;justify-content:center;max-width:640px}
+  .opt{font-family:var(--mono);font-size:.95rem;padding:11px 20px;border-radius:11px;cursor:pointer;border:1px solid var(--line);background:var(--surface);color:var(--ink);transition:.15s}
+  .opt:hover:not(:disabled){border-color:var(--accent);color:var(--accent)}
+  .opt:disabled{cursor:default}
+  .opt.on{border-color:rgba(110,160,255,.6);background:rgba(110,160,255,.14)}
+  .opt.hit{border-color:rgba(70,217,138,.7);background:rgba(70,217,138,.14);color:var(--good)}
+  .opt.miss{border-color:rgba(255,106,106,.7);background:rgba(255,106,106,.12);color:var(--warn)}
+  .opt.dim{opacity:.4}
+  .chip{font-family:var(--mono);font-size:.84rem;padding:7px 15px;border-radius:999px;cursor:pointer;border:1px solid var(--line);background:rgba(0,0,0,.25);color:var(--muted);transition:.15s}
+  .chip:hover:not(:disabled){border-color:var(--accent);color:var(--accent)}
+  .chip:disabled{cursor:default}
+  .chips.wait .chip{opacity:.35}
+  .chip.hit{border-color:rgba(70,217,138,.7);background:rgba(70,217,138,.14);color:var(--good)}
+  .chip.dim{opacity:.4}
+  .chip.miss{border-color:rgba(255,106,106,.7);background:rgba(255,106,106,.12);color:var(--warn)}
+  .chip:focus-visible,.opt:focus-visible{outline:2px solid var(--accent);outline-offset:2px}
+  .key{display:inline-block;margin-left:7px;font-size:.62rem;color:var(--muted)}
+  .opt.hit .key,.opt.miss .key,.chip.hit .key,.chip.miss .key{color:inherit;opacity:.7}
+  .screen{position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:12px;background:rgba(6,10,20,.94);transition:opacity .25s;padding:20px;z-index:3}
+  .screen.off{opacity:0;pointer-events:none}
+  .screen h2{font-family:var(--disp);font-weight:700;font-size:1.6rem;margin:0;color:var(--ink)}
+  .screen p{margin:0;color:var(--muted);font-size:.95rem;text-align:center;max-width:54ch;line-height:1.5}
+  .screen p b{color:var(--ink);font-weight:500}
+  .screen .big{font-family:var(--disp);font-weight:700;font-size:2.6rem;color:var(--accent)}
+  .screen .big.gold{color:var(--gold)} .screen .big.good{color:var(--good)}
+  .bar{position:absolute;left:0;right:0;bottom:0;height:4px;background:rgba(255,255,255,.06)}
+  .bar i{display:block;height:100%;width:0;background:var(--accent);transition:width .25s}
+  .misses{font-family:var(--mono);font-size:.72rem;color:var(--muted);line-height:1.6;text-align:left;max-height:150px;overflow:auto;max-width:100%}
+  .misses b{color:var(--warn);font-weight:500} .misses i{font-style:normal;color:var(--good)}
+  .topbar .sp{flex:1}
+  /* caption: the one sentence, right under the picture */
+  .caption{display:flex;gap:16px;align-items:flex-start;margin:14px 4px 0;min-height:56px}
+  .caption .n{flex-shrink:0;font-family:var(--disp);font-weight:700;font-size:1.35rem;color:var(--accent);font-variant-numeric:tabular-nums;
+    line-height:1.2;min-width:3.2rem}
+  .caption .n small{display:block;font-family:var(--mono);font-weight:400;font-size:.58rem;letter-spacing:.14em;text-transform:uppercase;color:var(--muted)}
+  .caption .t{font-size:1.02rem;line-height:1.55;color:var(--ink);padding-left:16px;border-left:3px solid var(--accent);transition:border-color .3s}
+  .caption.cut .t{border-left-color:var(--warn)} .caption.left .t{border-left-color:var(--gold)} .caption.ok .t{border-left-color:var(--good)}
+  .caption b.g{color:var(--good)} .caption b.w{color:var(--warn)} .caption b.a{color:var(--accent)} .caption b.y{color:var(--gold)}
+
+  .btn{font-family:var(--body);font-weight:500;font-size:.86rem;padding:9px 16px;border-radius:11px;cursor:pointer;
+    border:1px solid var(--line);background:var(--surface);color:var(--ink);transition:.15s}
+  .btn:hover{border-color:var(--accent);color:var(--accent)}
+  .btn.primary{border-color:rgba(110,160,255,.5);background:rgba(110,160,255,.12);padding:9px 22px}
+  .hint{font-family:var(--mono);font-size:.68rem;color:var(--muted);margin:10px 4px 0;line-height:1.5}
+  .hint b{color:var(--accent)}
+
+  .take{margin-top:22px;background:linear-gradient(180deg,rgba(110,160,255,.08),rgba(139,123,255,.04));
+    border:1px solid var(--line);border-left:3px solid var(--accent);border-radius:12px;padding:16px 18px}
+  .take .tk{font-family:var(--mono);font-size:.66rem;letter-spacing:.14em;text-transform:uppercase;color:var(--accent);margin:0 0 8px}
+  .take p{margin:0;font-size:.95rem;color:var(--ink);line-height:1.55}
+  .take b{color:#fff}
+  @media (max-width:640px){.pic{min-height:420px}.wrap{padding:22px 16px 70px}.back{padding:26px 16px 0}}
+  @media (prefers-reduced-motion:reduce){*{animation-duration:.01ms!important;transition-duration:.01ms!important}#amb{display:none}}
+</style>
+</head>
+<body>
+
+<a class="back" href="../index.html#collection-picker">&#8592; Week 3 index</a>
+
+<canvas id="amb"></canvas>
+<div class="wrap">
+  <p class="tag">Workbook 3a &middot; Modules 3 and 4 &middot; Game</p>
+  <h1>List or Map?</h1>
+  <p class="lede"><b>A situation in one sentence: array, ArrayList or HashMap? Then say why in one word.</b> Both picks must be right for the point.</p>
+
+  <div class="stage">
+    <div class="topbar">
+      <span class="lab">Game</span>
+      <span class="sp"></span>
+      <button class="btn" id="bRestart">Restart</button>
+    </div>
+
+    <div class="pic" id="pic">
+      <span class="zone">which collection, and why?</span>
+      <div class="hud"><span>score <b id="hScore">0</b></span></div>
+      <div class="sit" id="sit">&nbsp;</div>
+      <div class="row">
+        <p class="lab">1 &middot; pick the collection</p>
+        <div class="opts" id="opts"></div>
+      </div>
+      <div class="row">
+        <p class="lab">2 &middot; pick the reason</p>
+        <div class="opts chips wait" id="chips"></div>
+      </div>
+      <button class="btn primary" id="bNext" style="visibility:hidden">Next</button>
+      <div class="bar"><i id="bar"></i></div>
+      <div class="screen" id="startScr">
+        <h2>List or Map?</h2>
+        <p>Read the situation. Pick <b>array</b>, <b>ArrayList</b> or <b>HashMap</b> (keys 1 to 3), then the reason (keys A to C). Some situations take two answers.</p>
+        <button class="btn primary" id="bStart">Start</button>
+      </div>
+      <div class="screen off" id="endScr">
+        <h2>Round over</h2>
+        <div class="big" id="endScore"></div>
+        <p id="endMsg"></p>
+        <div class="misses" id="endMiss"></div>
+        <button class="btn primary" id="bAgain">Play again</button>
+      </div>
+    </div>
+
+    <div class="caption" id="caption">
+      <div class="n" id="stepno"><small>round</small>0 / 15</div>
+      <div class="t" id="status">Press <b class="a">Start</b> or Enter. Fifteen situations, in a new order each time.</div>
+    </div>
+    <p class="hint">array = <b>fixed size</b>, set once &middot; ArrayList = <b>grows</b> and shrinks, keeps order &middot; HashMap = <b>lookup by key</b>, no order promised</p>
+  </div>
+
+  <div class="take">
+    <p class="tk">The one idea</p>
+    <p><b>Ask two questions: do I find things by a key, and does the size change?</b> A key means a HashMap. No key and a size that changes means an ArrayList. No key and a size that never changes means an array works, and an ArrayList is fine too.</p>
+  </div>
+
+  <div id="rail"></div>
+</div>
+
+<script>
+(function(){
+  "use strict";
+  var $=function(s){return document.querySelector(s);};
+  var reduce=matchMedia("(prefers-reduced-motion: reduce)").matches;
+
+  var COLS=["array","ArrayList","HashMap"];
+  // ok: for each accepted collection, the reasons that count for it.
+  // chips: the three reasons shown, in this order before shuffling.
+  // why: the one-line explanation shown after the answer.
+  var Q=[
+    {s:"The twelve months of the year.",ok:{"array":["fixed size","keeps order"],"ArrayList":["keeps order"]},chips:["fixed size","keeps order","lookup by key"],
+     why:"twelve months, always twelve, in order: an array fits the fixed size, and an ArrayList keeps the order too"},
+    {s:"Names of people who sign up for a trip. Nobody knows yet how many.",ok:{"ArrayList":["grows"]},chips:["grows","fixed size","lookup by key"],
+     why:"the count is unknown, so the list must grow with each sign-up: an array needs its size up front"},
+    {s:"A phone book: give a name, get the number.",ok:{"HashMap":["lookup by key"]},chips:["lookup by key","fixed size","index"],
+     why:"you search by name, not by position: the name is the key, the number is the value"},
+    {s:"Seat codes like 12C, each one to the passenger sitting there.",ok:{"HashMap":["lookup by key"]},chips:["lookup by key","fixed size","keeps order"],
+     why:"you ask \"who is in 12C?\": the seat code is the key, the passenger is the value"},
+    {s:"The seven days of the week.",ok:{"array":["fixed size","index"],"ArrayList":["index"]},chips:["fixed size","index","grows"],
+     why:"always seven days: an array fits the fixed size, and either one gives day number i by index"},
+    {s:"A shopping list you add to and cross items off all week.",ok:{"ArrayList":["grows"]},chips:["grows","fixed size","lookup by key"],
+     why:"items come and go, so the size changes: an ArrayList grows and shrinks, an array cannot"},
+    {s:"A word and its translation, to look up any word fast.",ok:{"HashMap":["lookup by key"]},chips:["lookup by key","index","fixed size"],
+     why:"you give the word and want its translation: the word is the key, the translation is the value"},
+    {s:"The top 3 scores of a game, always exactly 3, best first.",ok:{"array":["fixed size","keeps order"],"ArrayList":["keeps order"]},chips:["fixed size","keeps order","lookup by key"],
+     why:"always 3 slots, best first: an array fits the fixed size, and an ArrayList keeps the order too"},
+    {s:"A bus line's stops, from first to last.",ok:{"array":["keeps order"],"ArrayList":["keeps order"]},chips:["keeps order","grows","lookup by key"],
+     why:"what matters is the order of the stops: both an array and an ArrayList keep elements in order"},
+    {s:"A product code like A-104, to its price.",ok:{"HashMap":["lookup by key"]},chips:["lookup by key","keeps order","fixed size"],
+     why:"you give the code and want the price: the code is the key, and a HashMap does not promise any order"},
+    {s:"A to-do list: new tasks show up every day.",ok:{"ArrayList":["grows"]},chips:["grows","lookup by key","fixed size"],
+     why:"new tasks keep arriving, so the list must grow: an ArrayList adds one more with add"},
+    {s:"The 4 suits of a deck of cards.",ok:{"array":["fixed size","index"],"ArrayList":["index"]},chips:["fixed size","index","lookup by key"],
+     why:"always 4 suits: an array fits the fixed size, and either one gives suit number i by index"},
+    {s:"A zip code, to the city it belongs to.",ok:{"HashMap":["lookup by key"]},chips:["lookup by key","index","keeps order"],
+     why:"you give the zip code and want the city: the zip code is the key, the city is the value"},
+    {s:"The playlist you keep adding songs to.",ok:{"ArrayList":["grows"]},chips:["grows","fixed size","lookup by key"],
+     why:"a new song makes the playlist one longer: an ArrayList grows, an array stays the size it was made"},
+    {s:"The 3 primary colors.",ok:{"array":["fixed size","index"],"ArrayList":["index"]},chips:["fixed size","index","grows"],
+     why:"always 3 colors: an array fits the fixed size, and either one gives color number i by index"}
+  ];
+  var N=Q.length, round=[], at=0, score=0, misses=[], playing=false, col=null, done=false;
+
+  function shuffle(a){ a=a.slice(); for(var i=a.length-1;i>0;i--){ var j=Math.floor(Math.random()*(i+1)); var t=a[i]; a[i]=a[j]; a[j]=t; } return a; }
+  var escBox=document.createElement("div");
+  function esc(s){ escBox.textContent=String(s); return escBox.innerHTML; }
+  function isBoth(q){ return Object.keys(q.ok).length>1; }
+  function okPair(q,c,r){ return !!(q.ok[c]&&q.ok[c].indexOf(r)>=0); }
+  // the best pair to show as "the answer": same collection if it was accepted, else the first accepted one
+  function bestPair(q,c){ var cc=q.ok[c]?c:Object.keys(q.ok)[0]; return [cc,q.ok[cc][0]]; }
+  function answerText(q){ return Object.keys(q.ok).map(function(c){ return c+" ("+q.ok[c].join(" or ")+")"; }).join(", or "); }
+
+  function showQ(){
+    var q=round[at]; col=null; done=false;
+    $("#sit").className="sit"; $("#sit").textContent=q.s;
+    $("#opts").innerHTML=COLS.map(function(c,i){ return '<button class="opt" data-c="'+c+'">'+c+'<span class="key">'+(i+1)+'</span></button>'; }).join("");
+    $("#chips").className="opts chips wait";
+    $("#chips").innerHTML=q.order.map(function(r,i){ return '<button class="chip" data-r="'+esc(r)+'" disabled>'+esc(r)+'<span class="key">'+"ABC".charAt(i)+'</span></button>'; }).join("");
+    $("#bNext").style.visibility="hidden";
+    $("#stepno").innerHTML="<small>round</small>"+(at+1)+" / "+N; $("#bar").style.width=(100*at/N)+"%";
+    $("#caption").className="caption"; $("#status").innerHTML="Which collection would you use? Pick one, then the reason.";
+  }
+  function pickCol(c){
+    if(!playing||done) return; col=c;
+    Array.prototype.forEach.call(document.querySelectorAll("#opts .opt"),function(b){ b.classList.toggle("on",b.getAttribute("data-c")===c); });
+    $("#chips").className="opts chips";
+    Array.prototype.forEach.call(document.querySelectorAll("#chips .chip"),function(b){ b.disabled=false; });
+    $("#status").innerHTML="<b class=\"a\">"+esc(c)+"</b>. Now why? Pick the one-word reason.";
+  }
+  function pickReason(r){
+    if(!playing||done||!col) return; done=true;
+    var q=round[at], ok=okPair(q,col,r), best=bestPair(q,col);
+    Array.prototype.forEach.call(document.querySelectorAll("#opts .opt"),function(b){
+      var c=b.getAttribute("data-c"); b.disabled=true; b.classList.remove("on");
+      if(c===col) b.classList.add(q.ok[c]?"hit":"miss"); else if(q.ok[c]) b.classList.add("hit"); else b.classList.add("dim");
+    });
+    Array.prototype.forEach.call(document.querySelectorAll("#chips .chip"),function(b){
+      var rr=b.getAttribute("data-r"); b.disabled=true;
+      if(okPair(q,best[0],rr)) b.classList.add("hit"); else if(rr===r) b.classList.add("miss"); else b.classList.add("dim");
+    });
+    $("#sit").className="sit "+(ok?"good":"bad");
+    if(isBoth(q)) $("#sit").innerHTML=esc(q.s)+'<br><span class="both">both are fine</span>';
+    var lead=isBoth(q)?"Both are fine: ":"";
+    if(ok){ score++; $("#hScore").textContent=String(score); $("#caption").className="caption ok";
+      $("#status").innerHTML='<b class="g">'+esc(col)+', '+esc(r)+'</b>. '+esc(lead)+esc(q.why)+'.'; }
+    else { misses.push({q:q,c:col,r:r}); $("#caption").className="caption cut";
+      $("#status").innerHTML='Not <b class="w">'+esc(col)+', '+esc(r)+'</b>. It is <b class="g">'+esc(best[0])+', '+esc(best[1])+'</b>. '+esc(lead)+esc(q.why)+'.'; }
+    $("#bNext").style.visibility="visible"; $("#bNext").textContent=at+1>=N?"See score":"Next"; $("#bNext").focus();
+  }
+  function next(){ if(!playing||!done) return; at++; if(at>=N) end(); else showQ(); }
+  function start(){
+    round=shuffle(Q).map(function(q){ var o=Object.create(q); o.order=shuffle(q.chips); return o; });
+    at=0; score=0; misses=[]; playing=true;
+    $("#hScore").textContent="0"; $("#startScr").classList.add("off"); $("#endScr").classList.add("off");
+    showQ();
+  }
+  function end(){
+    playing=false; $("#bar").style.width="100%"; $("#bNext").style.visibility="hidden";
+    $("#endScore").textContent=score+" / "+N; $("#endScore").className="big "+(score===N?"good":score>=11?"":"gold");
+    $("#endMsg").textContent=score===N?"Perfect. Key or no key, fixed or growing: you read every one.":score>=11?"Solid. The misses are below.":"Keep going. The misses are below, then play again.";
+    $("#endMiss").innerHTML=misses.map(function(m){
+      return '<div>'+esc(m.q.s)+' <b>'+esc(m.c+", "+m.r)+'</b> \u2192 <i>'+esc(answerText(m.q))+'</i></div>'; }).join("");
+    $("#endScr").classList.remove("off"); $("#bAgain").focus();
+    $("#stepno").innerHTML="<small>round</small>"+N+" / "+N; $("#caption").className="caption";
+    $("#status").innerHTML="Round over. <b class=\"a\">Play again</b> (Enter) shuffles the fifteen situations.";
+  }
+
+  $("#opts").addEventListener("click",function(e){ var b=e.target.closest(".opt"); if(b&&!b.disabled) pickCol(b.getAttribute("data-c")); });
+  $("#chips").addEventListener("click",function(e){ var b=e.target.closest(".chip"); if(b&&!b.disabled) pickReason(b.getAttribute("data-r")); });
+  $("#bNext").addEventListener("click",next);
+  $("#bStart").addEventListener("click",start); $("#bAgain").addEventListener("click",start);
+  $("#bRestart").addEventListener("click",function(){ start(); $("#bRestart").blur(); });
+  document.addEventListener("keydown",function(e){
+    if(e.ctrlKey||e.metaKey||e.altKey) return;
+    if(!playing){ if((e.key==="Enter"||e.code==="Space")&&e.target.tagName!=="BUTTON"){ e.preventDefault(); start(); } return; }
+    if(done){ if(e.key==="Enter"&&e.target!==$("#bNext")){ e.preventDefault(); next(); } return; }
+    var k=e.key.toLowerCase();
+    if(k==="1"||k==="2"||k==="3"){ e.preventDefault(); pickCol(COLS[+k-1]); }
+    else if(col&&(k==="a"||k==="b"||k==="c")){ e.preventDefault(); pickReason(round[at].order["abc".indexOf(k)]); }
+  });
+
+  var cv=$("#amb"),ctx=cv.getContext&&cv.getContext("2d"),parts=[];
+  function sizeC(){if(!ctx)return;cv.width=innerWidth;cv.height=innerHeight;}
+  function initParts(){parts=[];for(var i=0;i<46;i++)parts.push({x:Math.random(),y:Math.random(),r:Math.random()*1.6+.3,s:Math.random()*.02+.004,o:Math.random()*.4+.1});}
+  function drawC(){if(!ctx)return;ctx.clearRect(0,0,cv.width,cv.height);
+    parts.forEach(function(p){p.y-=p.s/60;if(p.y<-.02)p.y=1.02;ctx.beginPath();ctx.arc(p.x*cv.width,p.y*cv.height,p.r,0,7);
+      ctx.fillStyle="rgba(140,170,255,"+p.o+")";ctx.fill();});requestAnimationFrame(drawC);}
+  if(ctx&&!reduce){sizeC();initParts();drawC();addEventListener("resize",sizeC);}
+})();
+</script>
+<script src="../manifest.js"></script>
+<script src="../../assets/rail.js"></script>
+<script>Rail.render(document.getElementById("rail"),{week:3,kind:"games",current:"collection-picker"});</script>
+</body>
+</html>

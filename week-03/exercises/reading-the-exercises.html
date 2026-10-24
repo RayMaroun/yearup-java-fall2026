@@ -1,0 +1,187 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Reading This Week's Exercises | Week 3 Visual Hub</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Sora:wght@500;700&family=Inter:wght@400;500&family=JetBrains+Mono:wght@400;500&display=swap">
+<style>
+  :root{
+    --bg:#080c17; --bg2:#0c1428; --surface:rgba(255,255,255,.045); --line:rgba(255,255,255,.09);
+    --ink:#eef2fb; --muted:#8496b6; --accent:#6ea0ff; --accent2:#8b7bff; --good:#46d98a; --warn:#ff6a6a;
+    --gold:#ffc862; --disp:'Sora',system-ui,sans-serif; --body:'Inter',system-ui,sans-serif;
+    --mono:'JetBrains Mono',ui-monospace,monospace;
+  }
+  *{box-sizing:border-box}
+  body{margin:0;min-height:100vh;color:var(--ink);font-family:var(--body);
+    background:radial-gradient(1200px 700px at 70% -10%,#141d38 0%,transparent 55%),
+               radial-gradient(900px 600px at 10% 110%,#161233 0%,transparent 50%),#080c17;
+    overflow-x:hidden}
+  #amb{position:fixed;inset:0;z-index:0;pointer-events:none;opacity:.6}
+  .back{position:relative;z-index:2;display:block;max-width:1120px;margin:0 auto;padding:26px 24px 0;
+    width:100%;font-family:var(--mono);font-size:.8rem;letter-spacing:.04em;color:var(--muted);
+    text-decoration:none;transition:color .15s}
+  .back:hover{color:var(--accent)}
+  .wrap{position:relative;z-index:1;max-width:1120px;margin:0 auto;padding:22px 24px 70px}
+  .tag{font-family:var(--mono);font-size:.72rem;letter-spacing:.22em;text-transform:uppercase;color:var(--accent);margin:0 0 14px}
+  h1{font-family:var(--disp);font-weight:700;font-size:clamp(2.3rem,6vw,3.6rem);line-height:1;margin:0 0 12px;
+    letter-spacing:-.03em;background:linear-gradient(180deg,#fff,#b9c6e6);-webkit-background-clip:text;
+    background-clip:text;color:transparent}
+  .lede{color:var(--muted);max-width:64ch;font-size:1.05rem;margin:0 0 26px;line-height:1.5}
+  .lede b{color:var(--ink)}
+  .lede code,.take code,.caption code{font-family:var(--mono);font-size:.92em;color:#bcd0ff}
+
+  /* ---------- reading page: tap a sentence, see what it asks for ---------- */
+  .stage{position:relative;background:linear-gradient(180deg,rgba(255,255,255,.03),rgba(255,255,255,.01));
+    border:1px solid var(--line);border-radius:24px;padding:18px;
+    box-shadow:0 1px 0 rgba(255,255,255,.06) inset,0 30px 80px -30px rgba(0,0,0,.8)}
+  .lab{font-family:var(--mono);font-size:.7rem;letter-spacing:.12em;text-transform:uppercase;color:var(--muted);margin:0 0 10px}
+  .picker{display:flex;flex-wrap:wrap;gap:6px;margin:0 0 14px}
+  .picker button{font-family:var(--body);font-weight:500;font-size:.86rem;padding:8px 14px;border-radius:999px;border:1px solid var(--line);
+    background:var(--surface);color:var(--muted);cursor:pointer;transition:.15s}
+  .picker button:hover{color:var(--accent);border-color:var(--accent)}
+  .picker button.on{background:rgba(110,160,255,.16);color:var(--ink);border-color:rgba(110,160,255,.45)}
+  .cols{display:grid;grid-template-columns:minmax(0,1.25fr) minmax(0,1fr);gap:16px;align-items:start}
+  @media (max-width:860px){.cols{grid-template-columns:1fr}}
+  .paper{background:#f4f1e8;color:#1b1f2a;border-radius:16px;padding:22px 24px 18px;font-family:Georgia,'Times New Roman',serif;
+    box-shadow:0 20px 50px -20px rgba(0,0,0,.9);position:relative}
+  .paper .ph{font-family:var(--body);font-weight:500;font-size:.72rem;letter-spacing:.12em;text-transform:uppercase;color:#6b7280;margin:0 0 6px}
+  .paper h2{font-family:var(--body);font-size:1.15rem;margin:0 0 14px;color:#111827}
+  .paper p{margin:0 0 10px;line-height:1.7;font-size:1rem}
+  .paper .mono{font-family:var(--mono);font-size:.9em;background:#e9e5d8;padding:1px 5px;border-radius:5px}
+  .paper .sample{font-family:var(--mono);font-size:.82rem;background:#1b1f2a;color:#d7e0ff;border-radius:10px;padding:10px 12px;white-space:pre;margin:8px 0 12px;line-height:1.55}
+  .s{cursor:pointer;border-radius:5px;padding:1px 3px;margin:0 -3px;transition:background .15s,box-shadow .15s;border-bottom:1px dashed rgba(17,24,39,.35)}
+  .s:hover{background:rgba(110,160,255,.18)}
+  .s.on{background:#ffe9a8;box-shadow:0 0 0 2px #ffc862;border-bottom-color:transparent}
+  .paper .hint{font-family:var(--body);font-size:.78rem;color:#6b7280;margin:12px 0 0;border-top:1px solid #d9d4c4;padding-top:10px}
+  .answer{background:rgba(6,10,20,.5);border:1px solid var(--line);border-radius:18px;padding:16px 18px;position:sticky;top:16px}
+  .answer .quote{font-family:Georgia,serif;font-style:italic;color:var(--muted);font-size:.95rem;line-height:1.55;margin:0 0 12px;padding-left:12px;border-left:3px solid var(--gold);min-height:2.4em}
+  .answer .asks{font-size:1.02rem;line-height:1.6;color:var(--ink);margin:0 0 10px}
+  .answer .asks b{color:#fff}
+  .answer .line{font-family:var(--mono);font-size:.84rem;color:#bcd0ff;background:#05070e;border:1px solid var(--line);border-radius:10px;padding:9px 12px;margin:0 0 10px;white-space:pre-wrap}
+  .answer .why{font-size:.86rem;color:var(--muted);line-height:1.5;margin:0}
+  .answer .why b{color:var(--gold);font-weight:500}
+  .answer .kw{display:inline-block;font-family:var(--mono);font-size:.64rem;letter-spacing:.1em;text-transform:uppercase;color:var(--accent);
+    border:1px solid rgba(110,160,255,.4);border-radius:999px;padding:3px 9px;margin:0 0 10px}
+  .answer .nav{display:flex;gap:8px;margin-top:12px}
+  .answer .nav button{font-family:var(--mono);font-size:.68rem;letter-spacing:.08em;text-transform:uppercase;color:var(--muted);background:transparent;
+    border:1px solid var(--line);border-radius:999px;padding:5px 11px;cursor:pointer}
+  .answer .nav button:hover{color:var(--accent);border-color:var(--accent)}
+  .words{margin-top:16px}
+  .words .grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(300px,1fr));gap:8px}
+  .word{border:1px solid var(--line);border-radius:12px;background:rgba(255,255,255,.025);padding:10px 13px;cursor:pointer;transition:.15s}
+  .word:hover{border-color:var(--accent)}
+  .word .w{font-family:Georgia,serif;font-style:italic;color:var(--ink);font-size:.95rem}
+  .word .m{display:none;font-size:.85rem;color:var(--muted);line-height:1.5;margin-top:6px}
+  .word .m code{font-family:var(--mono);font-size:.9em;color:#bcd0ff}
+  .word.open .m{display:block}
+  .word.open{border-color:rgba(255,200,98,.5);background:rgba(255,200,98,.05)}
+  .take{margin-top:22px;background:linear-gradient(180deg,rgba(110,160,255,.08),rgba(139,123,255,.04));
+    border:1px solid var(--line);border-left:3px solid var(--accent);border-radius:12px;padding:16px 18px}
+  .take .tk{font-family:var(--mono);font-size:.66rem;letter-spacing:.14em;text-transform:uppercase;color:var(--accent);margin:0 0 8px}
+  .take p{margin:0;font-size:.95rem;color:var(--ink);line-height:1.55}
+  .take b{color:#fff}
+  @media (prefers-reduced-motion:reduce){*{animation-duration:.01ms!important;transition-duration:.01ms!important}#amb{display:none}}
+</style>
+</head>
+<body>
+
+<a class="back" href="../index.html#reading-the-exercises">&#8592; Week 3 index</a>
+
+<canvas id="amb"></canvas>
+<div class="wrap">
+  <p class="tag">Before you start &middot; Week 3</p>
+  <h1>Reading This Week&rsquo;s Exercises</h1>
+  <p class="lede"><b>Tap any sentence of an exercise and see what it is really asking you to write.</b> Three made-up exercises in the workbook&rsquo;s own words, so you learn the words, not the answers.</p>
+
+  <div class="stage">
+    <p class="lab">Pick an exercise</p>
+    <div class="picker" id="picker"></div>
+    <div class="cols">
+      <div class="paper" id="paper"></div>
+      <div class="answer" id="answer">
+        <span class="kw" id="aKw">tap a sentence</span>
+        <p class="quote" id="aQuote">Every sentence on the paper is a job. Tap one.</p>
+        <p class="asks" id="aAsks">The sentence lights up here, and this box says what it asks you to do in code terms: a class, a method, a loop, a file, a check.</p>
+        <div class="line" id="aLine" style="display:none"></div>
+        <p class="why" id="aWhy"></p>
+        <div class="nav"><button id="bPrev">&larr; previous sentence</button><button id="bNext">next sentence &rarr;</button></div>
+      </div>
+    </div>
+    <div class="words">
+      <p class="lab">The words the workbook uses this week, and what they mean for your code (tap one)</p>
+      <div class="grid" id="words"></div>
+    </div>
+  </div>
+
+  <div class="take">
+    <p class="tk">The one idea</p>
+    <p><b>An exercise is a list of jobs hidden in sentences.</b> Read it once for the story, then once more sentence by sentence, and write down the job each one gives you before you type anything.</p>
+  </div>
+
+  <div id="rail"></div>
+</div>
+
+<script>
+(function(){
+  "use strict";
+  var $=function(s){return document.querySelector(s);};
+  var reduce=matchMedia("(prefers-reduced-motion: reduce)").matches;
+  var EX=[{"id": "gym", "name": "Gym Check-In", "tag": "Reading a file into objects (like 3a Section 1-2)", "title": "Exercise: Gym Check-In", "intro": "Data about who comes to the gym is kept in a text file. In this exercise you will read the file and turn every line into an object.", "parts": [["Create a new Java application named gym-check-in.", "project", "New project in IntelliJ: Maven, JDK 17, GroupId com.pluralsight, the name exactly as written, in your workbook-3 folder, Create Git repository ticked, then Share Project on GitHub. No code yet.", "Name: gym-check-in", "The name in the exercise is the project name, the folder name and the GitHub repository name. One exercise, one project."], ["The members.csv file contains several lines of member data in the form: id|name|visits|monthlyFee", "data file", "A file sits next to pom.xml at the project root. Each line is one member, the four values separated by a pipe. You will need split on the pipe and a parse for the two numbers.", "String[] tokens = line.split(\"\\\\|\");", "The format line tells you the column order, so tokens[0] is the id, tokens[1] the name, tokens[2] the visits, tokens[3] the fee. The pipe needs the escape."], ["Create a Member class with private data members: memberId, name, visits and monthlyFee.", "class", "A new class Member with four private fields, each with the type the data suggests: int, String, int, double.", "private int memberId;", "\"Data members\" means fields. \"Private\" means encapsulation: getters and setters come next, nothing reaches the fields directly."], ["Add a parameterized constructor and getters for every attribute.", "constructor", "One constructor that takes all four values in order and assigns them with this. One getter per field.", "public Member(int memberId, String name, int visits, double monthlyFee)", "\"Parameterized\" means it has parameters, as opposed to the empty one. Generate the getters with IntelliJ: Alt+Insert or Cmd+N."], ["Add a getCostPerVisit() method that calculates and returns the fee divided by the number of visits.", "method", "A method with no parameters that returns a double computed from two fields. It is a calculation, so it is a method, not a field.", "public double getCostPerVisit()", "\"Calculates and returns\" is the signal: compute inside, return the result, print nothing here."], ["Open the file with FileReader and wrap it in a BufferedReader.", "file", "Inside a try block: new FileReader with the file name, passed into new BufferedReader. Import java.io.*.", "BufferedReader reader = new BufferedReader(new FileReader(\"members.csv\"));", "\"Wrap it in\" means the reader takes the other one as its argument. The red underline until you add try/catch is expected: files can be missing."], ["Read each line of text and split it into fields using the | character as the delimiter.", "loop", "A while loop that calls readLine until it gives null; inside, split the line on the pipe.", "while ((line = reader.readLine()) != null)", "\"Each line\" is a loop. \"Delimiter\" is the separator character. readLine returns null at the end, which is what the loop condition checks."], ["Copy the values from the tokens into variables that match the data and use them to create a new Member object.", "objects", "Parse tokens[0] and tokens[2] with Integer.parseInt, tokens[3] with Double.parseDouble, keep tokens[1] as it is, then new Member(...) with the four.", "Member member = new Member(id, name, visits, fee);", "\"Variables that match the data\" means the right type for each column. Text stays a String; numbers are parsed first."], ["Display each member using a printf that shows the id, the name and the cost per visit with two decimals.", "output", "One printf per member with three placeholders: %d, %s and %.2f, calling the getters.", "System.out.printf(\"%d %s $%.2f%n\", ...)", "\"With two decimals\" is %.2f. \"Display\" with an exact shape means printf, not println."], ["If the file cannot be found, display a friendly message instead of crashing.", "exception", "A catch block after the try that prints one line. The program ends cleanly instead of showing a red stack trace.", "catch (Exception e) { System.out.println(\"Could not open members.csv\"); }", "\"Instead of crashing\" always means try and catch. The friendly message is yours to write."], ["Ensure all your changes are committed and pushed to GitHub.", "git", "Commit panel in IntelliJ, a message, Commit and Push. Then check the repository page on GitHub shows your files.", "Commit and Push", "The last line of every exercise. There is no step to send a link: Raymond follows your GitHub profile."]]}, {"id": "plant", "name": "Plant Watering Log", "tag": "Writing a file with a timestamp (like 3a Section 2-2)", "title": "Exercise: Plant Watering Log", "intro": "In this exercise you will keep a record of every plant you water, with the date and time, in a file that grows over time.", "parts": [["Create a new Java application named plant-watering-log.", "project", "New Maven project with this exact name in workbook-3, Git ticked, shared on GitHub.", "Name: plant-watering-log", "Same first step every time. Make it automatic."], ["In the main() method, prompt the user for the name of a plant they watered (X to exit).", "input loop", "A Scanner, a prompt printed before each answer, and a loop that keeps asking until the user types X. Read with nextLine.", "while (!plant.equalsIgnoreCase(\"X\"))", "\"Prompt the user for\" is println plus nextLine. \"(X to exit)\" tells you the loop condition: stop when the answer is X. Think about x in lowercase too."], ["Create a method to record each watering in a file named watering.txt.", "method + file", "A separate method, for example logWatering(String plant), that opens watering.txt and writes one line. Main calls it once per answer.", "public static void logWatering(String plant)", "\"Create a method to\" means the writing code lives outside main and is called from the loop. One job, one method."], ["Each entry should be added to the end of the file so earlier entries are kept.", "append", "Open the FileWriter with true as the second argument. Without it the file starts over every run.", "new FileWriter(\"watering.txt\", true)", "\"Added to the end\" and \"earlier entries are kept\" are the two ways the workbook says append. One argument changes everything."], ["Entries should follow this format: 2026-10-27 08:15 tomato", "format", "Build the line from the current LocalDateTime formatted with a pattern, a space, then the plant name.", "LocalDateTime.now().format(DateTimeFormatter.ofPattern(\"yyyy-MM-dd HH:mm\"))", "\"Follow this format\" means match it character for character. Count the digits: four-digit year, two-digit month and day, 24-hour time with no seconds."], ["Close the writer after each entry.", "close", "Call close on the writer inside the method, every time, or the file can stay empty.", "writer.close();", "Not closing is the most common reason a file looks empty. Close belongs inside the method that opened it."], ["BONUS: When the user exits, display how many plants were watered in this session.", "bonus", "Optional. A counter that goes up once per loop pass and is printed after the loop.", "int count = 0;  count++;", "\"BONUS\" is optional and comes after the required part works. \"In this session\" means this run only, so a variable, not the file."], ["Ensure all your changes are committed and pushed to GitHub.", "git", "Commit and Push from IntelliJ. Check GitHub.", "Commit and Push", "Last line, every time."]]}, {"id": "shelf", "name": "Board Game Shelf", "tag": "A list of objects and a map (like 3a Modules 3 and 4)", "title": "Exercise: Board Game Shelf", "intro": "You will build an application that keeps the board games on a shelf and lets a user look one up.", "parts": [["Create a new Java application named board-game-shelf.", "project", "New Maven project, this exact name, workbook-3, Git ticked, shared on GitHub.", "Name: board-game-shelf", "First step, as always."], ["Create a Game class with private fields for id, title and players.", "class", "A class Game with three private fields: int id, String title, int players; a constructor with the three; getters.", "public class Game", "\"Private fields\" is the same as \"private data members\". Getters follow even when the sentence does not say so, because main needs to read them."], ["Create a getShelf() method that returns an ArrayList of at least 5 games.", "list method", "A method with no parameters whose return type is ArrayList<Game>; inside, create the list, add five new Game objects, return it.", "public static ArrayList<Game> getShelf()", "\"Returns an ArrayList of\" sets the return type. Import java.util.ArrayList. The \"at least 5\" means five add calls."], ["Display the games using a for loop and the get() method.", "loop", "A for loop from 0 to size() minus 1, and games.get(i) inside, printed with the getters.", "for (int i = 0; i < games.size(); i++)", "When the exercise names the loop and the method, use exactly those. size() for a list, not length."], ["Add a HashMap that uses the game id as the key and the Game object as the value.", "map", "A HashMap<Integer, Game>. Fill it from the list with one put per game, key getId(), value the game.", "HashMap<Integer, Game> byId = new HashMap<>();", "\"Uses X as the key and Y as the value\" gives you the two type arguments in that order. Import java.util.HashMap."], ["Prompt the user for a game id and display the matching game.", "lookup", "Scanner, nextInt, then byId.get(id) and print the game's title and players.", "Game found = byId.get(id);", "A lookup by key is get. Nothing to loop over: the map finds it for you."], ["If there is no game with that id, display \"We do not have that game\".", "null check", "An if that compares the result of get with null, and the message in the else branch.", "if (found == null)", "\"If there is no\" with a map means the get returned null. Check before you call a method on it, or you get NullPointerException."], ["BONUS: Keep asking for ids until the user enters 0.", "bonus loop", "Optional. Wrap the prompt and lookup in a while or do-while that stops when the id is 0.", "do { ... } while (id != 0);", "\"Keep asking until\" is a loop with the stop value in its condition. A do-while fits because the question is asked at least once."], ["Ensure all your changes are committed and pushed to GitHub.", "git", "Commit and Push. Check GitHub.", "Commit and Push", "Done."]]}];
+  var WORDS=[["Create a new Java application named x", "A new IntelliJ Maven project called exactly x, in your workbook-3 folder, with Create Git repository ticked, then Share Project on GitHub. Every exercise starts here."], ["Prompt the user for ...", "Print a question with <code>System.out.print</code>, then read the answer with a Scanner (<code>nextLine</code> for text, then parse if you need a number)."], ["private data members / private fields", "The fields of a class, each marked <code>private</code>. They come with a constructor and getters (and setters when a value changes)."], ["parameterized constructor", "A constructor with parameters, one per field, that assigns them with <code>this.name = name</code>."], ["a method that calculates and returns ...", "A method with a return type, no printing inside: compute, <code>return</code>."], ["Display ... in the following format", "Match the sample character for character. When numbers have two decimals or columns line up, that means <code>printf</code>."], ["Read the file line by line / read each line", "A BufferedReader and the loop <code>while ((line = reader.readLine()) != null)</code>."], ["Open the file with FileReader and wrap it in a BufferedReader", "<code>new BufferedReader(new FileReader(\"name\"))</code>, inside a try block, <code>import java.io.*</code>."], ["split it into fields using | as the delimiter", "<code>line.split(\"\\\\|\")</code>: the pipe has to be escaped. The result is a String array; parse the numeric pieces."], ["Copy the values from the tokens into variables", "<code>Integer.parseInt(tokens[0])</code>, <code>Double.parseDouble(tokens[2])</code>, and the text pieces as they are."], ["Write ... to a file / create a file named", "A FileWriter, often inside a BufferedWriter, <code>write</code>, then <code>close</code>. Forgetting close leaves the file empty."], ["Add to the end of the file / keep earlier entries / log", "Append mode: <code>new FileWriter(\"name\", true)</code>."], ["Entries should follow this format: 2026-04-22 12:42:20 ...", "A LocalDateTime formatted with a DateTimeFormatter pattern that matches digit for digit, for example <code>yyyy-MM-dd HH:mm:ss</code>."], ["Handle the error / do not crash / friendly message", "try and catch around the risky lines; the catch prints one message and the program goes on."], ["DO NOT use try/catch (yet)", "Let it crash on purpose and read the exception name. The next step adds the catch."], ["an ArrayList of at least N items", "<code>ArrayList&lt;Type&gt; list = new ArrayList&lt;&gt;();</code> and N calls to <code>add</code>. <code>size()</code> tells you how many."], ["a method that returns an ArrayList of ...", "Return type <code>ArrayList&lt;Type&gt;</code>; build the list inside and return it."], ["Use the id as the key so users can search by id", "A <code>HashMap&lt;Integer, Type&gt;</code>, one <code>put(id, object)</code> per item, then <code>get(id)</code> to look one up."], ["If the key is not found / we do not carry that", "<code>get</code> returned null: <code>if (result == null)</code> before using it."], ["Sort the items by name", "<code>Collections.sort</code>, with a Comparator on the getter when the items are objects."], ["Replace the code that loaded the list with code that reads a file", "Same list, different source: a BufferedReader loop that builds one object per line and adds it."], ["Provide a loop and prompt the user using a menu", "A while or do-while around a printed menu, read the choice, a switch on it, one case per option, one that ends the loop."], ["BONUS", "Optional, after the required part works. Still in the same project."], ["Ensure all your changes are committed and pushed", "Commit and Push in IntelliJ. There is no step to send a link; Raymond follows your GitHub profile."]];
+  var cur=0, sel=-1;
+  function esc(t){return String(t).replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/>/g,"&gt;");}
+  var picker=$("#picker"), paper=$("#paper");
+  picker.innerHTML=EX.map(function(e,i){return '<button data-i="'+i+'"'+(i===0?' class="on"':'')+'>'+esc(e.name)+'</button>';}).join("");
+  picker.addEventListener("click",function(ev){var b=ev.target.closest("button"); if(!b) return; cur=+b.getAttribute("data-i"); sel=-1; draw(); resetAnswer();});
+  function draw(){
+    var e=EX[cur];
+    Array.prototype.forEach.call(picker.querySelectorAll("button"),function(b,i){b.classList.toggle("on",i===cur);});
+    var h='<p class="ph">'+esc(e.tag)+'</p><h2>'+esc(e.title)+'</h2><p>'+esc(e.intro)+'</p>';
+    e.parts.forEach(function(p,i){
+      var txt=esc(p[0]).replace(/(gym-check-in|plant-watering-log|board-game-shelf|members\.csv|watering\.txt|id\|name\|visits\|monthlyFee|getCostPerVisit\(\)|getShelf\(\)|get\(\)|main\(\)|FileReader|BufferedReader|ArrayList|HashMap|2026-10-27 08:15 tomato|\| character)/g,'<span class="mono">$1</span>');
+      h+='<p><span class="s'+(i===sel?' on':'')+'" data-i="'+i+'">'+txt+'</span></p>';
+    });
+    h+='<p class="hint">Made up for this page. It is not one of this week\'s exercises, but it is written the way they are.</p>';
+    paper.innerHTML=h;
+  }
+  function resetAnswer(){
+    $("#aKw").textContent="tap a sentence"; $("#aQuote").textContent="Every sentence on the paper is a job. Tap one.";
+    $("#aAsks").innerHTML="The sentence lights up here, and this box says what it asks you to do in code terms: a class, a method, a loop, a file, a check.";
+    $("#aLine").style.display="none"; $("#aWhy").textContent="";
+  }
+  function show(i){
+    var e=EX[cur]; if(i<0||i>=e.parts.length) return; sel=i; var p=e.parts[i];
+    Array.prototype.forEach.call(paper.querySelectorAll(".s"),function(s,k){s.classList.toggle("on",k===i);});
+    $("#aKw").textContent=p[1]; $("#aQuote").textContent=p[0]; $("#aAsks").textContent=p[2];
+    var ln=$("#aLine"); ln.textContent=p[3]; ln.style.display="block"; $("#aWhy").innerHTML=esc(p[4]).replace(/^(\"[^\"]+\"|[A-Z][^.]*?\b(?:means|is|are|tells you|always means|sets|gives you)\b)/,function(m){return m;});
+    var box=$("#answer"); if(!reduce){box.style.transition="none";box.style.boxShadow="0 0 0 2px rgba(255,200,98,.55)";setTimeout(function(){box.style.transition="box-shadow .5s";box.style.boxShadow="none";},40);}
+  }
+  paper.addEventListener("click",function(ev){var s=ev.target.closest(".s"); if(!s) return; show(+s.getAttribute("data-i"));});
+  $("#bNext").addEventListener("click",function(){show(sel<0?0:Math.min(sel+1,EX[cur].parts.length-1));});
+  $("#bPrev").addEventListener("click",function(){show(sel<=0?0:sel-1);});
+  document.addEventListener("keydown",function(ev){
+    if(/INPUT|TEXTAREA|BUTTON/.test(ev.target.tagName)) return;
+    if(ev.key==="ArrowDown"||ev.key==="j"){ev.preventDefault();$("#bNext").click();}
+    if(ev.key==="ArrowUp"||ev.key==="k"){ev.preventDefault();$("#bPrev").click();}
+  });
+  var words=$("#words");
+  words.innerHTML=WORDS.map(function(w){return '<div class="word"><div class="w">'+esc(w[0])+'</div><div class="m">'+w[1]+'</div></div>';}).join("");
+  words.addEventListener("click",function(ev){var c=ev.target.closest(".word"); if(c) c.classList.toggle("open");});
+  draw();
+
+  var cv=$("#amb"),ctx=cv.getContext&&cv.getContext("2d"),parts=[];
+  function sizeC(){if(!ctx)return;cv.width=innerWidth;cv.height=innerHeight;}
+  function initParts(){parts=[];for(var i=0;i<46;i++)parts.push({x:Math.random(),y:Math.random(),r:Math.random()*1.6+.3,s:Math.random()*.02+.004,o:Math.random()*.4+.1});}
+  function drawC(){if(!ctx)return;ctx.clearRect(0,0,cv.width,cv.height);
+    parts.forEach(function(p){p.y-=p.s/60;if(p.y<-.02)p.y=1.02;ctx.beginPath();ctx.arc(p.x*cv.width,p.y*cv.height,p.r,0,7);
+      ctx.fillStyle="rgba(140,170,255,"+p.o+")";ctx.fill();});requestAnimationFrame(drawC);}
+  if(ctx&&!reduce){sizeC();initParts();drawC();addEventListener("resize",sizeC);}
+})();
+</script>
+<script src="../manifest.js"></script>
+<script src="../../assets/rail.js"></script>
+<script>Rail.render(document.getElementById("rail"),{week:3,kind:"exercises",current:"reading-the-exercises"});</script>
+</body>
+</html>

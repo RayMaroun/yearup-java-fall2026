@@ -988,5 +988,385 @@
     "group": "Week 2",
     "url": "week-02/games/bug-hunter-2.html",
     "text": "← Week 2 index Workbook 2a · all sections · Game Bug Hunter 2 Every snippet hides exactly one week 2 bug. Click the line you would change. Fifteen rounds, the clock is running. Game which line? score 0 time 0.0s Bug Hunter 2 A short piece of Java appears. One line is wrong: it does not compile, crashes, or does the wrong thing. Click the line you would change, or press its number. Start Round over Play again round 0 / 15 Press Start . Keys 1 to 9 pick a line. look for: == on Strings · a String result thrown away · substring end index · a missing this. · a missing new or () · <= length · a loop that never ends · break vs continue The one idea Most week 2 bugs compile and still do the wrong thing. Ask what each line really changes: a String method returns a new String, a for-each hands you a copy, a setter must write to this , and a loop ends only when something moves it toward the end."
+  },
+  {
+    "week": 3,
+    "weekLabel": "Week 3",
+    "section": "Visuals",
+    "title": "Three Kinds of Errors",
+    "desc": "",
+    "group": "Workbook 3a · Section 1-1",
+    "url": "week-03/visuals/01-three-kinds-of-errors.html",
+    "text": "← Week 3 index Workbook 3a · Section 1-1 · Errors and Java Three Kinds of Errors Three small programs, each with one mistake. Run each one and see who notices. program 1 Say hello System.out. printLn ( \"Hello Raymond\" ); compile run output prints nothing yet kind of error: ? ▶ Run program 2 20% off double price 100.0 double discount 0.2 double finalPrice = price + (price * discount); compile run output prints nothing yet kind of error: ? ▶ Run program 3 Pick a name [0] \"Ray\" [1] \"Mason\" [2] \"Claude\" [3] none System.out.println(listOfNames[index]); compile run output prints nothing yet kind of error: ? you type ▶ Run Each card is a program, and the dark line is the one that matters. Press Run on each. Reset The one idea The compiler catches the first kind : nothing runs until you fix it. You catch the second , by reading the output and asking if it is right. On the third, Java stops you mid-run with an exception. Handling that is what try and catch are for, on the next page."
+  },
+  {
+    "week": 3,
+    "weekLabel": "Week 3",
+    "section": "Visuals",
+    "title": "try and catch",
+    "desc": "",
+    "group": "Workbook 3a · Section 1-1",
+    "url": "week-03/visuals/02-try-catch-flow.html",
+    "text": "← Week 3 index Workbook 3a · Section 1-1 try and catch Divide two numbers and press Run. Then try dividing by 0. try { try block number 1 / number 2 Run ArithmeticException: / by zero without try and catch still inside try result printed catch (Exception ex) { catch block ArithmeticException: / by zero no catch here: nothing to land on the line after the try and catch after the try program ended. this line never ran The division sits inside the try block . Press Run and follow the dot. Reset The one idea catch is where the program lands when the try fails. The rest of the try is skipped, the catch runs, and the line after the whole thing still runs . Without a catch, the exception ends the program right there."
+  },
+  {
+    "week": 3,
+    "weekLabel": "Week 3",
+    "section": "Visuals",
+    "title": "Reading a File Line by Line",
+    "desc": "",
+    "group": "Workbook 3a · Section 1-2",
+    "url": "week-03/visuals/03-reading-a-file.html",
+    "text": "← Week 3 index Workbook 3a · Section 1-2 · Using BufferedReader Reading a File Line by Line Press readLine() and watch the reader walk down the file, one line a press. file on disk poem.txt end of file the reader bufferedReader readLine() close() line → console console project folder poem.txt pom.xml src/ try to open a file new FileReader( ) Open try open the file, read it catch (IOException e) runs only if something went wrong Reset The one idea readLine() gives you one line per call, and null when the file has no lines left. That null is exactly what while ((line = bufferedReader.readLine()) != null) checks, so the loop prints every line and stops by itself. Close the reader when you are done."
+  },
+  {
+    "week": 3,
+    "weekLabel": "Week 3",
+    "section": "Visuals",
+    "title": "Writing to a File",
+    "desc": "",
+    "group": "Workbook 3a · Section 2-1",
+    "url": "week-03/visuals/04-writing-a-file.html",
+    "text": "← Week 3 index Workbook 3a · Section 2-1 Writing to a File Open the file, write three lines, close it. Then run the program again. not open FileWriter · the writer fileWriter 1 · open, how? new FileWriter(\"potato.txt\") new FileWriter(\"potato.txt\", true ) Run the program 2 · write .write(\"Hello Everyone\\n\") .write(\"I am your Potato instructor!\\n\") .write(\"Welcome to the Java Bootcamp!\") 3 · close .close() → write does not exist file on disk potato.txt open BufferedWriter · append bufferedWriter new BufferedWriter(new FileWriter(\"tomato.txt\", true )) .write(\"Counting 1\\n\") .close() → close on disk file on disk tomato.txt potato.txt does not exist yet . Pick how the program opens it and press Run. Reset The one idea Open, write, close. write puts exactly the text you give it, so \\n is what ends a line. close() makes sure everything written is saved. true as the second argument means add to the end instead of starting over."
+  },
+  {
+    "week": 3,
+    "weekLabel": "Week 3",
+    "section": "Visuals",
+    "title": "LocalDate, LocalTime, LocalDateTime",
+    "desc": "",
+    "group": "Workbook 3a · Section 2-2",
+    "url": "week-03/visuals/05-date-and-time-objects.html",
+    "text": "← Week 3 index Workbook 3a · Section 2-2 · Date Basics LocalDate, LocalTime, LocalDateTime Three empty objects. Press now() on each, then tap the parts. LocalDate · today LocalDate a date only MONTH YEAR ? WEEKDAY month ? day ? of year prints nothing yet LocalDate.now() LocalTime · currentTime LocalTime a time only -- hour : -- minute : -- second . ------ nano prints nothing yet LocalTime.now() LocalDateTime · rightNow LocalDateTime a date and a time MONTH YEAR ? WEEKDAY + prints nothing yet LocalDateTime.now() Three objects, all empty : one for a date, one for a time, one for both. Press now() on a card. Reset The one idea Pick the class by what you need to store. A birthday is a LocalDate , a closing time a LocalTime , a timestamp a LocalDateTime . now() reads the computer's clock once and the object keeps that value. None of them has a time zone."
+  },
+  {
+    "week": 3,
+    "weekLabel": "Week 3",
+    "section": "Visuals",
+    "title": "Date Patterns",
+    "desc": "",
+    "group": "Workbook 3a · Section 2-2",
+    "url": "week-03/visuals/06-date-patterns.html",
+    "text": "← Week 3 index Workbook 3a · Section 2-2 · Formatting and parsing dates Date Patterns Build a pattern letter by letter, then hand one to parse. 1 · format : a date becomes text LocalDateTime currentDate 2026-10-17 14:05:09 a Saturday → the pattern clear → String formattedDate Reset 2 · parse : text becomes a date String userInput pattern LocalDate. parse (...) → how parse reads the text Press Parse. → LocalDate newDate ? Reset The one idea The pattern is the same language both ways. format reads it to print a date as text, parse reads it to understand text as a date. When the text does not fit the pattern, parse throws DateTimeParseException ."
+  },
+  {
+    "week": 3,
+    "weekLabel": "Week 3",
+    "section": "Visuals",
+    "title": "Array vs ArrayList",
+    "desc": "",
+    "group": "Workbook 3a · Section 3-1",
+    "url": "week-03/visuals/07-array-vs-arraylist.html",
+    "text": "← Week 3 index Workbook 3a · Section 3-1 Array vs ArrayList Two ways to hold names. Add to both and see which one runs out of room. name array · new String[2] String[] names length: 2 null 0 null 1 no box 2 Add names[0] = name ArrayList · new ArrayList<>() List<String> names size: 0 empty + Add names. add (name) remove last Left, an array created with 2 boxes , both null . Right, an ArrayList that starts empty . Reset The one idea An array's size is fixed when you create it: new String[2] is 2 boxes, never 3. An ArrayList grows and shrinks as you add and remove, and you ask it size() instead of reading length ."
+  },
+  {
+    "week": 3,
+    "weekLabel": "Week 3",
+    "section": "Visuals",
+    "title": "ArrayList Operations",
+    "desc": "",
+    "group": "Workbook 3a · Section 3-2",
+    "url": "week-03/visuals/08-arraylist-operations.html",
+    "text": "← Week 3 index Workbook 3a · Section 3-2 ArrayList Operations Tap a kid to get it. Then remove one and watch the rest slide over. ArrayList<String> kids size: 3 add(name) add(0, name) set(2, name) remove(0) Three kids in a row. The number under a box is its index, and it starts at 0 . Tap a box. Reset The one idea get, set and remove use positions that start at 0, and removing shifts everything after it down one. add(0, name) shifts them up one instead, set swaps a value in place, and size() follows every add and remove. A position the list does not have stops Java with IndexOutOfBoundsException ."
+  },
+  {
+    "week": 3,
+    "weekLabel": "Week 3",
+    "section": "Visuals",
+    "title": "HashMap Lookup",
+    "desc": "",
+    "group": "Workbook 3a · Section 4-1",
+    "url": "week-03/visuals/09-hashmap-lookup.html",
+    "text": "← Week 3 index Workbook 3a · Section 4-1 HashMap Lookup Ask the map for a key and see which drawer opens, if any. HashMap<String, String> · one drawer per key statesAndCapitals key get(key) get returns Five drawers, one per key, each holding its capital. Tap a key or type one, then press get . Reset The one idea A map finds by key, not by position. An ArrayList asks for item 3; a HashMap asks for \"TX\". A key that is not there gives null , so check the value before you use it."
+  },
+  {
+    "week": 3,
+    "weekLabel": "Week 3",
+    "section": "Visuals",
+    "title": "HashMap Operations",
+    "desc": "",
+    "group": "Workbook 3a · Section 4-1",
+    "url": "week-03/visuals/10-hashmap-operations.html",
+    "text": "← Week 3 index Workbook 3a · Section 4-1 HashMap Operations Put, replace, remove, then walk the map two ways. Use the buttons on the map. the map · a key tag on top, its value under it HashMap<Integer, Product> idsAndProducts .put(id, product) .remove(id) .values() .keySet() The map is empty. Drawn in the order Java walks the map, which is not the order you added. Two pairs: key 1 holds the Potato card, key 2 the Tomato card. A tag is a key, a card is its value. Reset The one idea put adds a pair, or replaces the value when the key is already there, because keys are unique. remove takes a pair out by its key. values() and keySet() are the two ways to walk the whole map."
+  },
+  {
+    "week": 3,
+    "weekLabel": "Week 3",
+    "section": "Visuals",
+    "title": "Waterfall vs Agile",
+    "desc": "",
+    "group": "Workbook 3b · Section 1-1",
+    "url": "week-03/visuals/11-waterfall-vs-agile.html",
+    "text": "← Week 3 index Workbook 3b · Section 1-1 Waterfall vs Agile One app, twelve weeks, two ways to build it. Move the weeks yourself. The app Bus Tracker Advance a week Customer changes a requirement: alerts by text message, not in the app one long pass Waterfall Plan all all 4 features Build all Next bus Favorite stop Alerts Dark mode Test all all 4 at once Ship shown to the customer short sprints Agile Same app, same four features, same 12 weeks. Week 0: nothing has started in either lane. Reset The one idea Agile delivers something working every few weeks and welcomes change. Each short sprint plans, builds, tests and shows one feature, so a new requirement just moves the plan. Waterfall builds everything in one long pass and finds out at the end , when changes are expensive and the customer sees the app for the first time."
+  },
+  {
+    "week": 3,
+    "weekLabel": "Week 3",
+    "section": "Visuals",
+    "title": "The Scrum Cycle",
+    "desc": "",
+    "group": "Workbook 3b · Section 1-1",
+    "url": "week-03/visuals/12-scrum-cycle.html",
+    "text": "← Week 3 index Workbook 3b · Section 1-1 The Scrum Cycle One sprint is one lap. Press Next to move through it, tap a role to meet it. 2 weeks · 10 working days Sprint 1 sprint goal not set yet Next → the scrum team PO Product owner SM Scrum master DT Development team This circle is one sprint . The token waits at sprint planning, and no goal is set yet. Reset The one idea A sprint is a short fixed loop, often 2 to 3 weeks. Plan a goal, build it with a daily standup, show working software to the customer, reflect on how it went, then start the next sprint with what you learned."
+  },
+  {
+    "week": 3,
+    "weekLabel": "Week 3",
+    "section": "Visuals",
+    "title": "A User Story",
+    "desc": "",
+    "group": "Workbook 3b · Section 2-1",
+    "url": "week-03/visuals/13-user-story.html",
+    "text": "← Week 3 index Workbook 3b · Section 2-1 · User Stories A User Story A vague requirement on top. Fill the story card under it, one slot at a time. requirement · Bus Tracker app Next requirement → &darr; becomes user story MVP the story reads Reset The one idea A user story names who, what and why in one sentence, specific enough to check when it is done. One vague requirement can become several stories, one per user type, and the MVP stories are built first."
+  },
+  {
+    "week": 3,
+    "weekLabel": "Week 3",
+    "section": "Visuals",
+    "title": "The Project Board",
+    "desc": "",
+    "group": "Workbook 3b · Section 3-1",
+    "url": "week-03/visuals/14-project-board.html",
+    "text": "← Week 3 index Workbook 3b · Section 3-1 · Agile Project Management Tools The Project Board Five stories wait in Todo. Open one, then walk it across the board. Project board Bus Tracker Todo Prioritize In Progress Done + Add column A new board has three columns. Every story starts in Todo , the backlog. Reset The one idea The board shows who is on what, what is left and what is done. Each story is a card that starts in Todo, MVP cards on top, and carries its own acceptance criteria. It walks left to right, In Progress, QA/Testing, Done, and the code is committed when it reaches Done."
+  },
+  {
+    "week": 3,
+    "weekLabel": "Week 3",
+    "section": "Reference",
+    "title": "Week 3 Cheat Sheet",
+    "desc": "The syntax of the week on one page: try/catch, BufferedReader, FileWriter, dates, ArrayList, HashMap.",
+    "group": "Reference",
+    "url": "week-03/reference/cheat-sheet.html",
+    "text": "← Week 3 index Week 3 · Reference Week 3 Cheat Sheet The syntax of the week, one line per idea. Pick a topic to see only that card; every card links to the page that shows it moving. Topic All Exceptions Reading files Writing files Dates ArrayList HashMap split Agile try and catch 3a · 1-1 three kinds compile error: will not build logic error: runs, wrong answer runtime error: Java throws an exception try try { int result = firstNumber / secondNumber; // code that might fail System.out.println(\"The result is: \" + result); } catch catch (Exception ex) { System.out.println(ex.getMessage()); // what Java says went wrong } the jump a line throws: the rest of try is skipped, catch runs, then the program keeps going no exception every line of try runs, catch is skipped getMessage() ex.getMessage() // \"/ by zero\" for 10 / 0 stack trace ex.printStackTrace(); // the full error, with line numbers Exception catch (Exception ex) // catches every kind; a narrower type catches only its own no try int result = 10 / 0; // the program stops on this line See it: Three Kinds of Errors try and catch Common exception names 3a · 1-1, 1-2, 2-2 ArithmeticException firstNumber / 0 // int division by zero ArrayIndexOutOfBounds listOfNames[3] // 3 names: indexes 0 to 2 only IndexOutOfBounds kids.get(3) // same mistake on an ArrayList of 3 NumberFormatException Integer.parseInt(\"abc\") // text that is not a number InputMismatchException scanner.nextInt() // the user typed a letter FileNotFoundException n"
+  },
+  {
+    "week": 3,
+    "weekLabel": "Week 3",
+    "section": "Reference",
+    "title": "Glossary",
+    "desc": "The words of the week, each in one sentence, with the page that shows it. Java and Agile.",
+    "group": "Reference",
+    "url": "week-03/reference/glossary.html",
+    "text": "← Week 3 index Week 3 · Reference Glossary The words of the week, Java and Agile, one sentence each. Type a word and the list narrows as you go. Filter / All Errors and exceptions Files Dates Collections Agile Errors and exceptions Compile time error A mistake in syntax or types that the compiler points out before the program can run at all. System.out.printLn(\"Hello Raymond\"); // printLn does not exist See it: Three Kinds of Errors Logic error The program runs and finishes but gives the wrong answer, because it does exactly what you wrote, not what you meant. double finalPrice = price * discount; // 20.0, not 80.0 See it: Three Kinds of Errors Runtime error The program compiles and starts, then stops in the middle because of bad input, a bad index, a missing file or something else unexpected. listOfNames[3] // only indexes 0 to 2 exist See it: Three Kinds of Errors Exception The object Java creates to describe a runtime error; its type names what went wrong, and Exception is the parent of all of them. catch (Exception ex) // catches any exception See it: try and catch Throw What happens when a line fails: the line stops and the exception jumps to the nearest catch, or ends the program if there is none. int result = firstNumber / secondNumber; // 0 here throws See it: try and catch try block The code you want to run that might throw; when a line inside it throws, the rest of the block is skipped. try { ... } See it: try and catch catch block The code that runs only when the t"
+  },
+  {
+    "week": 3,
+    "weekLabel": "Week 3",
+    "section": "Reference",
+    "title": "Common Errors",
+    "desc": "FileNotFoundException, IOException, null from a map, index out of bounds, a forgotten close: what it says, what to do.",
+    "group": "Reference",
+    "url": "week-03/reference/common-errors.html",
+    "text": "← Week 3 index Week 3 · Reference Common Errors The messages you will meet this week, word for word. Read the first line of the message: it usually names the fix. Show All Compile Runtime Files Compile Reading a file outside try See it java: unreported exception IOException; must be caught or declared to be thrown readLine() can fail, so Java makes you plan for it. The new FileReader line gives the same message with FileNotFoundException . Fix Put the reader and the loop inside try , with a catch after it. Before BufferedReader bufferedReader = new BufferedReader(new FileReader(\"poem.txt\")); String line = bufferedReader.readLine(); After try { BufferedReader bufferedReader = new BufferedReader(new FileReader(\"poem.txt\")); String line = bufferedReader.readLine(); } catch (IOException e) { System.out.println(e.getMessage()); } Compile Using a token without parsing it java: incompatible types: String cannot be converted to int split always gives back Strings. \"2026\" is text until you turn it into a number. Fix Parse the token: Integer.parseInt for whole numbers, Double.parseDouble for decimals. Before String[] parts = line.split(\"\\\\|\"); int year = parts[1]; After String[] parts = line.split(\"\\\\|\"); int year = Integer.parseInt(parts[1]); Compile ArrayList without its import See it java: cannot find symbol symbol: class ArrayList location: class Main ArrayList lives in java.util , and Java only knows it once you import it. HashMap and List are the same. Fix Add the import at the t"
+  },
+  {
+    "week": 3,
+    "weekLabel": "Week 3",
+    "section": "Reference",
+    "title": "Date Pattern Letters",
+    "desc": "Every pattern letter DateTimeFormatter understands, with what it prints for one sample date.",
+    "group": "Reference",
+    "url": "week-03/reference/date-patterns.html",
+    "text": "← Week 3 index Week 3 · Reference Date Pattern Letters Every letter below is printed for one sample moment: Saturday, October 17, 2026 at 14:05:09 . Type a pattern and see what format() prints; the letters it uses light up in the table. How many times you repeat a letter matters. Pattern DateTimeFormatter.ofPattern( ) LocalDateTime.of(2026, 10, 17, 14, 5, 9).format(fmt) prints Pattern letters 3a · 2-2 Pattern Prints Meaning Year yyyy 2026 four-digit year; use this one yy 26 last two digits y 2026 the whole year, no padding Month M 10 month number, no padding (March is 3) MM 10 month number, two digits (March is 03) MMM Oct short month name MMMM October full month name mm vs MM 05 vs 10 the classic trap: small mm is minutes, capital MM is the month. yyyy-mm-dd prints 2026-05-17 Day d 17 day of the month, no padding (the 5th is 5) dd 17 day of the month, two digits (the 5th is 05) D 290 day of the year, 1 to 366; capital D is not the day of the month E · EEE Sat short day name; one to three E print the same EEEE Saturday full day name Time H 14 hour 0 to 23, no padding (9 a.m. is 9) HH 14 hour 0 to 23, two digits (9 a.m. is 09) h 2 hour 1 to 12: 14 becomes 2 hh 02 hour 1 to 12, two digits; pair it with a m 5 minutes, no padding mm 05 minutes, two digits s 9 seconds, no padding ss 09 seconds, two digits a PM AM or PM; one a only Text and separators 'on' E on Sat text in single quotes is copied as is 'at' HH:mm at 14:05 without the quotes, a would print PM and t is an error / - ,"
+  },
+  {
+    "week": 3,
+    "weekLabel": "Week 3",
+    "section": "Exercises",
+    "title": "Reading This Week's Exercises",
+    "desc": "Tap any sentence of a workbook-style exercise and see what it asks you to write. Invented exercises, this week's words.",
+    "group": "Before you start",
+    "url": "week-03/exercises/reading-the-exercises.html",
+    "text": "← Week 3 index Before you start · Week 3 Reading This Week’s Exercises Tap any sentence of an exercise and see what it is really asking you to write. Three made-up exercises in the workbook’s own words, so you learn the words, not the answers. Pick an exercise tap a sentence Every sentence on the paper is a job. Tap one. The sentence lights up here, and this box says what it asks you to do in code terms: a class, a method, a loop, a file, a check. ← previous sentence next sentence → The words the workbook uses this week, and what they mean for your code (tap one) The one idea An exercise is a list of jobs hidden in sentences. Read it once for the story, then once more sentence by sentence, and write down the job each one gives you before you type anything."
+  },
+  {
+    "week": 3,
+    "weekLabel": "Week 3",
+    "section": "Exercises",
+    "title": "Famous Quotes",
+    "desc": "Ten quotes in an array, pick one by number, then add try/catch so a bad number does not crash the program.",
+    "group": "Workbook 3a · Section 1-1",
+    "url": "week-03/exercises/famous-quotes.html",
+    "text": "← Week 3 index Workbook 3a · Section 1-1 · Exercise 1 Famous Quotes Ten quotes, one number, one quote back. Crash it on purpose first, then catch the crash. What you are building A program that holds ten quotes you like in an array, asks for a number from 1 to 10 and prints that quote. You build it twice over: first without try/catch , so you see what a bad number does, then with it, so a bad number gets a polite message. It does not read quotes from a file or save anything. The order matters: the crash comes before the fix. Do these in order 0 of 8 done Clear ticks What a finished run looks like run, with the loop bonus Pick a quote (1 to 10): 3 \"Well done is better than well said.\" Another one? (yes/no): yes Pick a quote (1 to 10): 12 There is no quote 12. Pick 1 to 10. Another one? (yes/no): no Goodbye! Yours will differ: your quotes, your wording. Before try/catch, the 12 ends the run in red text instead. Where people get stuck 1 shows the second quote, 10 crashes. People count from 1, the array counts from 0. Typing \"abc\" still crashes. That is a different exception, InputMismatchException. Your catch has to cover it too. \"Another one?\" is skipped. nextInt leaves the Enter behind; read the rest of the line before asking. The loop stops after a bad number. The try/catch sits outside the loop. Move it inside. Pages that help Three kinds of errors try and catch Common errors Cheat sheet The one idea An exception is a message, not the end. Read its name, then catch it so the"
+  },
+  {
+    "week": 3,
+    "weekLabel": "Week 3",
+    "section": "Exercises",
+    "title": "Bedtime Stories",
+    "desc": "Ask for a story file, read it with BufferedReader, print every line with its line number.",
+    "group": "Workbook 3a · Section 1-2",
+    "url": "week-03/exercises/bedtime-stories.html",
+    "text": "← Week 3 index Workbook 3a · Section 1-2 · Exercise 2 Bedtime Stories Ask which story to read, open that file, and print it back with a number in front of every line. What you are building A program that asks for the name of a story file , reads that file one line at a time with a BufferedReader , and prints each line with its line number in front: 1. , 2. and so on. It does not change the story or write any file. The three stories come from DataFiles.zip; you only read them. Do these in order 0 of 6 done Clear ticks What a finished run looks like run Enter the name of a story: goldilocks.txt 1. Goldilocks and the Three Bears 2. 3. Once upon a time a girl named Goldilocks lived in 4. a house at the edge of the woods. In those days ... The story text is the file's. Your prompt and spacing will differ. Where people get stuck FileNotFoundException. The .txt files are in src or still in the zip. They belong next to pom.xml. Typed goldilocks . The name needs .txt at the end. Red new FileReader . No try/catch around it. Catch the exception. The blank line has no number. An empty line is still a line: number it too. Pages that help Reading a file line by line try and catch Common errors Cheat sheet The one idea readLine gives you one line per call and null when the story is over. A counter that goes up with every line is the line number."
+  },
+  {
+    "week": 3,
+    "weekLabel": "Week 3",
+    "section": "Exercises",
+    "title": "Payroll Calculator",
+    "desc": "Read employees.csv line by line, split on the pipe, build Employee objects, print id, name and gross pay.",
+    "group": "Workbook 3a · Section 1-2",
+    "url": "week-03/exercises/payroll-calculator.html",
+    "text": "← Week 3 index Workbook 3a · Section 1-2 · Exercise 3 Payroll Calculator Read a csv file line by line, turn every line into an Employee, print what each one earned. What you are building A program that opens employees.csv , where each line is id|name|hours-worked|pay-rate . For every line it builds an Employee object and prints the id, the name and the gross pay : hours worked times pay rate. Nobody types anything: all the data comes from the file. No overtime, no taxes, no writing to a file yet (that is Payroll Calculator 2). Do these in order 0 of 8 done Clear ticks What a finished run looks like run 10 Dana Wyatt $656.25 20 Ezra Aiden $284.75 30 Brittany Thibbs $660.00 40 Zephaniah Hughes $20.00 Yours may be formatted differently. The four amounts must match. Where people get stuck Every line splits into single characters. split(\"|\") treats the pipe as \"or\". Escape it: \"\\\\|\" . NumberFormatException. A token has a space at the end or start. Trim it before parsing. FileNotFoundException. employees.csv is inside src or a package. It goes at the project root, next to pom.xml. Red under new FileReader. Opening a file can throw: it needs try/catch. Pages that help Reading a file line by line Three kinds of errors Week 3 cheat sheet What the red text means The one idea One line of text, one object. Split the line, convert each piece to its type, hand the pieces to the constructor."
+  },
+  {
+    "week": 3,
+    "weekLabel": "Week 3",
+    "section": "Exercises",
+    "title": "Payroll Calculator 2",
+    "desc": "New project, copy the first one in: ask for the input and output file names and write the payroll as a csv.",
+    "group": "Workbook 3a · Section 2-1",
+    "url": "week-03/exercises/payroll-calculator-2.html",
+    "text": "← Week 3 index Workbook 3a · Section 2-1 · Exercise 1 Payroll Calculator 2 The same payroll, written to a file you name instead of printed to the screen. What you are building Your payroll calculator in a new project . It asks which file to read and which payroll file to create, then writes one line per employee, id|name|gross pay , into that new file. Bonus: a name ending in .json gets a JSON array instead. The workbook says continue the previous program. Here every exercise gets its own project and repository, so payroll-calculator stays as you pushed it. The console shows only the two questions. Do these in order 0 of 6 done Clear ticks What a finished run looks like run Enter the name of the file to process: employees.csv Enter the name of the payroll file to create: payroll-sept-2023.csv payroll-sept-2023.csv 10|Dana Wyatt|656.25 20|Ezra Aiden|284.75 30|Brittany Thibbs|660.00 ... Yours will differ if your data or rounding differs. One line per employee, pipes between fields. Where people get stuck The new file is there but empty. The writer was never closed, so the text stayed in its buffer. \"Where did my file go?\" A bare file name lands at the project root, next to pom.xml, not in src. employees.csv is now empty. The same name was typed for both questions, and opening the writer wiped it. Copy it in again. Pages that help Writing to a file Reading a file Cheat sheet Common errors The one idea Writing mirrors reading: open, write line by line, close. Nothing reaches the "
+  },
+  {
+    "week": 3,
+    "weekLabel": "Week 3",
+    "section": "Exercises",
+    "title": "Format Dates",
+    "desc": "Today's date and time in four formats with DateTimeFormatter, plus a GMT challenge.",
+    "group": "Workbook 3a · Section 2-2",
+    "url": "week-03/exercises/format-dates.html",
+    "text": "← Week 3 index Workbook 3a · Section 2-2 · Exercise 2 Format Dates One moment, the current date and time, printed four ways, and a fifth for the challenge. What you are building A program that reads now once and prints it in four formats, one per line. The fourth shows the time in GMT . The challenge adds a time-first line in your local zone. No input, no menu, no files. The work is the right pattern for each line. Do these in order 0 of 8 done Clear ticks What a finished run looks like run 10/24/2026 2026-10-24 Saturday, October 24, 2026 Saturday, Oct 24, 2026 14:15 (challenge) 10:15 on 24-Oct-2026 Yours will differ: it prints right now. Compare the shape, not the values. Where people get stuck The month shows minutes. Pattern letters are case-sensitive: MM is the month, mm is minutes. The GMT line shows your own time. A LocalDateTime has no time zone. The GMT line needs a zoned time, a ZonedDateTime for ZoneId GMT. Wed instead of Wednesday. How many times you repeat a letter decides short or full name. The date does not match the workbook. The workbook ran on April 22. Yours prints today. Pages that help LocalDate, LocalTime, LocalDateTime Date patterns Every pattern letter Week 3 cheat sheet The one idea A date is one value; the pattern decides how it looks. Same moment, five patterns, and a zone when the clock is elsewhere."
+  },
+  {
+    "week": 3,
+    "weekLabel": "Week 3",
+    "section": "Exercises",
+    "title": "Search Engine Logger",
+    "desc": "A loop that asks for search terms and appends a timestamped line to logs.txt for launch, search and exit.",
+    "group": "Workbook 3a · Section 2-2",
+    "url": "week-03/exercises/search-engine-logger.html",
+    "text": "← Week 3 index Workbook 3a · Section 2-2 · Exercise 3 Search Engine Logger A program that keeps a diary: every launch, search and exit goes into logs.txt with the date and time. What you are building A loop that asks for search terms until the user types X or x . One method writes a line to logs.txt : the date and time, then what happened. It runs at launch, after each search, and at exit. It does not search anything; the term only goes into the log. And it never wipes the file: every run adds its lines under the last run's. Do these in order 0 of 7 done Clear ticks What a finished run looks like run Enter a search term (X or x to exit): How to use ChatGPT Enter a search term (X or x to exit): How to forge a camp knife Enter a search term (X or x to exit): x logs.txt 2026-04-22 12:42:20 launch 2026-04-22 12:42:45 search : How to use ChatGPT 2026-04-22 12:43:51 search : How to forge a camp knife 2026-04-22 12:45:32 exit Yours will differ: your times, your terms. Run it again and four more lines appear below these. Where people get stuck Only the last run is in the file. FileWriter without the append argument true starts the file over each time. Afternoon shows as 02:45. hh is the 12-hour clock; the log uses HH , 0 to 23. Typing x does not stop it. The check only matches X . Compare ignoring case. logs.txt is empty. The writer was never closed, so nothing left the buffer. Pages that help Writing to a file Date patterns LocalDateTime Pattern letters Common errors The one idea Ap"
+  },
+  {
+    "week": 3,
+    "weekLabel": "Week 3",
+    "section": "Exercises",
+    "title": "Search Inventory",
+    "desc": "Products in an ArrayList, printed with printf; bonuses: load from inventory.csv, sort by name, a menu.",
+    "group": "Workbook 3a · Section 3-2",
+    "url": "week-03/exercises/search-inventory.html",
+    "text": "← Week 3 index Workbook 3a · Section 3-2 · Exercise 1 Search Inventory A store's products in an ArrayList, printed one line each, then three bonuses that grow it. What you are building The StoreApp from the workbook pages. A Product class holds one item (id, name, price), getInventory() returns an ArrayList of at least 5 products, and main prints them all. No arrays with a fixed size and no counter: the list grows as you add. The file, the sort and the menu are bonuses, one at a time, after the basic version runs. Do these in order 0 of 8 done Clear ticks What a finished run looks like run We carry the following inventory: id: 4567 10' 2x4 (grade B) - Price: $9.99 id: 1234 Hammer - Price: $19.49 id: 2345 Box of nails - Price: $9.29 id: 9154 9-in-1 Ratcheting Screwdriver - Price: $24.97 id: 1648 10\" Crescent Wrench - Price: $15.95 Your products will differ. Two decimals on every price. Where people get stuck ArrayList is red. It needs import java.util.ArrayList; at the top. Every character becomes a part. The pipe is special in split: split(\"\\\\|\") . The price will not go in. Parts are Strings: Double.parseDouble for the price, Integer.parseInt for the id. The menu skips a question. The Enter left after nextInt() : read the rest of the line. Pages that help Array vs ArrayList ArrayList operations Reading a file line by line Week 3 cheat sheet What the red text means The one idea An ArrayList grows as you add. Five products or five hundred, the same loop prints them all, up to s"
+  },
+  {
+    "week": 3,
+    "weekLabel": "Week 3",
+    "section": "Exercises",
+    "title": "Search Inventory Map",
+    "desc": "The same products in a HashMap keyed by id; look one up, say so when it is not there.",
+    "group": "Workbook 3a · Section 4-1",
+    "url": "week-03/exercises/search-inventory-map.html",
+    "text": "← Week 3 index Workbook 3a · Section 4-1 · Exercise 2 Search Inventory Map The same products, this time in a HashMap keyed by id: type a number, get the product, or hear that the store does not carry it. What you are building The StoreApp from the HashMap pages. A static HashMap<Integer, Product> named inventory is filled by loadInventory() from inventory.csv, each product stored under its id . main asks for an item number and looks it up with get . No list, no loop over every product, no search by name. The workbook says \"so that users can search for products by name\", but its own code keys by id and asks for an item #: the key is the id. Do these in order 0 of 9 done Clear ticks What a finished run looks like run 1 What item # are you interested in? 1234 We carry Hammer and the price is $19.49 run 2 What item # are you interested in? 9999 We don't carry that product Your products and ids will differ. Try one id that is in the file and one that is not. Where people get stuck HashMap<int, Product> does not compile. A map holds objects only: the key type is Integer . NullPointerException on an unknown id. get returns null when the key is missing. Check for null before calling getName. FileNotFoundException. inventory.csv sits at the project root, next to pom.xml, not inside src. Every line splits wrong. The pipe is special in split: it needs escaping, as in the payroll exercise. Pages that help HashMap lookup HashMap operations Week 3 cheat sheet What the red text means The on"
+  },
+  {
+    "week": 3,
+    "weekLabel": "Week 3",
+    "section": "Exercises",
+    "title": "User Stories",
+    "desc": "Turn eight hardware store requirements into user stories: As a..., I want..., so that...",
+    "group": "Workbook 3b · Section 2-1",
+    "url": "week-03/exercises/user-stories.html",
+    "text": "← Week 3 index Workbook 3b · Section 2-1 · Exercise 1 User Stories Eight requirements for a hardware store app, turned into stories: who wants it, what they want, and why. What you are building A file of user stories for a Hardware Store application. Each requirement becomes one or more stories in the shape As a ..., I want ..., so that ... , written for one real user: a customer, the store owner, the warehouse worker. No project and no code. The requirements are vague on purpose; your stories should not be. Some requirements need a story per type of user. Do these in order 0 of 11 done Clear ticks What a finished story looks like the workbook's example Requirement: Display products list User story: As a customer, I want to view a list of products, so that I can determine what I want to buy. Your stories are in your own words and will differ. One requirement can give two stories. Where people get stuck No benefit. The story stops before so that . Without the why, nobody can tell if the feature does its job. It is a developer task. A table, a class, a button. A story says what the user gets, not how it is built. \"We\" left as the role. We is not a user. Name who: the store owner, the warehouse worker. Pages that help A user story Waterfall vs Agile Glossary The one idea A requirement says what the system does; a story says what a person gets. Who, what, why, in the user's words, specific enough that a developer can build it without asking you."
+  },
+  {
+    "week": 3,
+    "weekLabel": "Week 3",
+    "section": "Exercises",
+    "title": "GitHub Project Board",
+    "desc": "A board named Hardware Store Project, a Testing column, one card per user story, with descriptions.",
+    "group": "Workbook 3b · Section 3-1",
+    "url": "week-03/exercises/github-project-board.html",
+    "text": "← Week 3 index Workbook 3b · Section 3-1 · Exercise 1 GitHub Project Board Your hardware store user stories, moved onto a board on github.com: one card each, in Todo, ready to plan. What you are building A GitHub project board named Hardware Store Project , with the columns Todo, In Progress, Testing and Done. Every user story you wrote in the Module 2 exercise becomes a card in Todo , and each card holds its story and details. No code, no IntelliJ, no repository: everything happens on github.com. You are not building the store, only planning it. Do these in order 0 of 6 done Clear ticks What a finished board looks like board view Hardware Store Project Todo one card per story In Progress empty Testing empty Done empty open a card: the story, then a checklist Card titles and details are yours and will differ. Where people get stuck A table, not columns. Table was picked in the dialog. Make a new project and choose Board. Every card says Draft. That is expected; the workbook keeps them as drafts. Testing sits after Done. Drag it by its name to the left of Done. Pages that help The project board A user story Glossary The one idea Todo is the backlog. Every story starts there, and a card moves one column right each time the work behind it moves on."
+  },
+  {
+    "week": 3,
+    "weekLabel": "Week 3",
+    "section": "Exercises",
+    "title": "Online Store",
+    "desc": "Team workshop: products.csv into a list, a home screen, display and search products, a cart with a total.",
+    "group": "Workshop 3w",
+    "url": "week-03/exercises/online-store.html",
+    "text": "← Week 3 index Workshop 3w · Online Store Online Store A team-built store front in the terminal: products from a file, a search, a cart with a total. What you are building A team project in one shared repository. The program loads products.csv into a list of Product objects. From the home screen the customer browses or searches the products, adds some to a cart , then views the cart with its total and removes what they do not want. No logins, no real payment, and the cart is gone when the program ends. Check Out is only a menu option until you do the bonus. Do these in order 0 of 17 done Clear ticks What a finished run looks like run 1 - Display Products 2 - Display Cart 3 - Exit Choose an option: 1 SKU Product Name Price AV1051 JBL Bluetooth Speaker 89.95 GM1148 Retro Handheld Arcade 24.45 ... S - Search, A - Add to cart, B - Back: A Enter the SKU: GM1148 Retro Handheld Arcade added to your cart. Choose an option: 2 GM1148 Retro Handheld Arcade 24.45 Total: $24.45 C - Check Out, R - Remove, B - Back: B The screens come from the workshop; your team's wording, layout and menus will differ. Where people get stuck NumberFormatException: For input string: \"Price\". The header line was read as a product. Read it once before the loop and ignore it. Where does the cart live? It is a second ArrayList of Product. Adding puts the same Product from the inventory into it; nothing new to build. ConcurrentModificationException on remove. You removed from the cart inside a for-each over the "
+  },
+  {
+    "week": 3,
+    "weekLabel": "Week 3",
+    "section": "Games",
+    "title": "Exception Hunter",
+    "desc": "A short program and an input flash up: runs fine, or which exception? Fifteen rounds.",
+    "group": "Workbook 3a · Section 1-1",
+    "url": "week-03/games/exception-hunter.html",
+    "text": "← Week 3 index Workbook 3a · Section 1-1 · Game Exception Hunter A short program and its input flash up. Does it run fine, or which exception stops it? Fifteen rounds. runs fine, or which exception? score 0 Exception Hunter Read the lines top to bottom with the input shown under them. Pick Runs fine, or the exception that stops the program. The letter on each button is its key. Start Hunt over Play again round 0 / 15 Press Start . Each round: one program, one answer. Next Restart Keys: R runs fine · A Arithmetic · I ArrayIndexOutOfBounds · N NumberFormat · F FileNotFound · P NullPointer · D DateTimeParse · Enter next The one idea The exception name tells you what went wrong. A box past the end, a word where digits belong, a division by zero, a missing file, a null, a date in the wrong shape: each one has its own exception, and its message points to the value that caused it. Read it before you change any code."
+  },
+  {
+    "week": 3,
+    "weekLabel": "Week 3",
+    "section": "Games",
+    "title": "File Flow",
+    "desc": "Put the scrambled lines of a read or a write back in the order that works.",
+    "group": "Workbook 3a · Sections 1-2 and 2-1",
+    "url": "week-03/games/file-flow.html",
+    "text": "← Week 3 index Workbook 3a · Sections 1-2 and 2-1 · Game File Flow The lines of a small file program are shuffled. Put them back in the order that works. Game order the program score 0 unused lines Show the working order Check File Flow Click a line to drop it into the next free slot. Click a placed line to send it back. When every slot is full, press Check. Ten programs. In the last two, one line does not belong: leave it in the tray. Start Programs ordered Play again round 0 / 10 Press Start . Ten small programs that read or write a file. Restart click a line to place it · click a placed line to send it back · Enter checks, then goes to the next program The one idea A file program always has the same flow: create the reader or writer, use it (often in a loop), and close it only after the last readLine or write , all inside a try whose catch handles IOException ."
+  },
+  {
+    "week": 3,
+    "weekLabel": "Week 3",
+    "section": "Games",
+    "title": "Date Formatter",
+    "desc": "One date, one pattern: type what it prints. Or the other way round.",
+    "group": "Workbook 3a · Section 2-2",
+    "url": "week-03/games/date-formatter.html",
+    "text": "← Week 3 index Workbook 3a · Section 2-2 · Game Date Formatter One moment, fifteen patterns. Type what format prints, or pick the pattern that printed it. Game moment.format(fmt) score 0 time 0.0s Next (Enter) Date Formatter The moment on the left never changes. A pattern appears: type exactly what format prints and press Enter. Every third round the output appears instead: pick the pattern that printed it (keys 1 to 4). Capitals count. Start Round over Restart round 0 / 15 Press Start . Enter submits, 1 to 4 pick, Enter again moves on. MM month · mm minutes · HH 0 to 23 · hh 1 to 12 · one letter = no padding · MMM / E short name, MMMM / EEEE full name · 'text' printed as is The one idea Every letter in a pattern is a field, and the count of letters is the style. Capital M is the month, small m the minutes; HH runs 0 to 23, hh needs an a beside it; three or four letters turn a number into a name. Anything in single quotes is printed as is."
+  },
+  {
+    "week": 3,
+    "weekLabel": "Week 3",
+    "section": "Games",
+    "title": "ArrayList Tracer",
+    "desc": "add, set, remove, add at an index: type the list after each call.",
+    "group": "Workbook 3a · Section 3-2",
+    "url": "week-03/games/arraylist-tracer.html",
+    "text": "← Week 3 index Workbook 3a · Section 3-2 · Game ArrayList Tracer One list, fifteen calls in a row. Type the list after each call, or what the call returns. Game Restart names your answers score 0 time 0.0s ArrayList<String> names each call and your answer land here > IndexOutOfBoundsException ArrayList Tracer A list of names, then fifteen calls on it, one after another. The list carries over. Type the list as Java prints it, like [Mina, Ivy, Theo] , or the value that get, size or contains returns. If the call crashes, press the exception. Start Game over Play again call 0 / 15 Press Start . New starting names each game. Enter checks · spaces inside the brackets do not count · capitals do not count · an empty list prints [] The one idea An ArrayList keeps its names in order and renumbers them after every change. add and remove shift the names after them, set swaps one name in place, get, size and contains only read, and an index past the last one throws IndexOutOfBoundsException."
+  },
+  {
+    "week": 3,
+    "weekLabel": "Week 3",
+    "section": "Games",
+    "title": "HashMap Lookup",
+    "desc": "A map and a call: type what get returns, or null.",
+    "group": "Workbook 3a · Section 4-1",
+    "url": "week-03/games/hashmap-lookup.html",
+    "text": "← Week 3 index Workbook 3a · Section 4-1 · Game HashMap Lookup A map and a call: type what it gives back, or null. The map keeps every change for the next round. Game what does the call give? score 0 time 0.0s HashMap Lookup Read the map, then the call. Type what it returns and press Enter. A missing key gives null : type null. Start Round over Play again round 0 / 15 Press Start or Enter. Answers are typed, Enter submits. Restart get = the value, or null · put on a key that exists replaces the value · remove returns the value it took out, or null · keys match exactly The one idea A HashMap finds a value by its key, and each key appears once. get on a missing key gives null , not an error; put on a key that is already there replaces its value and the size stays the same; remove hands back the value it took out."
+  },
+  {
+    "week": 3,
+    "weekLabel": "Week 3",
+    "section": "Games",
+    "title": "List or Map?",
+    "desc": "A situation in one sentence: array, ArrayList or HashMap? Say why in one word.",
+    "group": "Workbook 3a · Modules 3 and 4",
+    "url": "week-03/games/collection-picker.html",
+    "text": "← Week 3 index Workbook 3a · Modules 3 and 4 · Game List or Map? A situation in one sentence: array, ArrayList or HashMap? Then say why in one word. Both picks must be right for the point. Game Restart which collection, and why? score 0 1 · pick the collection 2 · pick the reason Next List or Map? Read the situation. Pick array , ArrayList or HashMap (keys 1 to 3), then the reason (keys A to C). Some situations take two answers. Start Round over Play again round 0 / 15 Press Start or Enter. Fifteen situations, in a new order each time. array = fixed size , set once · ArrayList = grows and shrinks, keeps order · HashMap = lookup by key , no order promised The one idea Ask two questions: do I find things by a key, and does the size change? A key means a HashMap. No key and a size that changes means an ArrayList. No key and a size that never changes means an array works, and an ArrayList is fine too."
+  },
+  {
+    "week": 3,
+    "weekLabel": "Week 3",
+    "section": "Games",
+    "title": "User Story Builder",
+    "desc": "Drag the three parts of a user story into place, then call the stories that are really tasks.",
+    "group": "Workbook 3b · Section 2-1",
+    "url": "week-03/games/user-story-builder.html",
+    "text": "← Week 3 index Workbook 3b · Section 2-1 · Game User Story Builder As a (role) I want (something) so that (benefit). Build the story, then spot the ones that are really tasks. build the story score 0 As role I want something so that benefit User story U Developer story or task D Check Clear Next User Story Builder Two kinds of rounds. Build: click or drag a chip into each slot, then Check (keys 1 to 6, Enter). Story or task: say whether a sentence is a user story or developer work (keys U and D). Start Round over Restart round 0 / 15 Press Start . Fifteen rounds, two kinds, mixed. role = who · something = what they want to do · benefit = why it matters to them · more than one story can be right The one idea A user story names a real user, what they want, and why it matters to them. Setup work such as a repository or Bootstrap is still on the board, written as a developer story or a task, because no user gets anything from it on its own."
+  },
+  {
+    "week": 3,
+    "weekLabel": "Week 3",
+    "section": "Games",
+    "title": "Bug Hunter 3",
+    "desc": "Fifteen snippets, one week 3 bug each: files, dates, lists, maps.",
+    "group": "Week 3",
+    "url": "week-03/games/bug-hunter-3.html",
+    "text": "← Week 3 index Workbook 3a · all sections · Game Bug Hunter 3 Fifteen snippets, one week 3 bug each: files, dates, lists, maps. Click the line you would change, then pick the fix. One point for the line, one for the fix. Game which line? score 0 / 30 Pick the fix Bug Hunter 3 A short piece of Java appears. One line is wrong: it does not compile, crashes, or does the wrong thing. If a line is missing, click the line it belongs after. Then pick the fix that repairs it. Start Round over Play again round 0 / 15 Press Start . Keys 1 to 9 pick a line, A B C pick a fix, Enter moves on. Next Restart look for: split on a regex character · a reader left open · a writer that wipes the file · missing parentheses · a primitive in <> · index size() · == on Strings · a null from get · mm vs MM · parse without a formatter · a missing import · a silent catch · changing a list mid for-each The one idea Week 3 bugs live at the edges. The last index is size() - 1 , a map answers null for a key it does not have, a pattern letter means one exact field ( MM month, mm minute), and a file is opened, used, then closed. When something fails, let the catch block say so."
   }
 ]

@@ -1,0 +1,506 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Date Formatter | Week 3 Visual Hub</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Sora:wght@500;700&family=Inter:wght@400;500&family=JetBrains+Mono:wght@400;500&display=swap">
+<style>
+  :root{
+    --bg:#080c17; --bg2:#0c1428; --surface:rgba(255,255,255,.045); --line:rgba(255,255,255,.09);
+    --ink:#eef2fb; --muted:#8496b6; --accent:#6ea0ff; --accent2:#8b7bff; --good:#46d98a; --warn:#ff6a6a;
+    --gold:#ffc862; --disp:'Sora',system-ui,sans-serif; --body:'Inter',system-ui,sans-serif;
+    --mono:'JetBrains Mono',ui-monospace,monospace;
+  }
+  *{box-sizing:border-box}
+  body{margin:0;min-height:100vh;color:var(--ink);font-family:var(--body);
+    background:radial-gradient(1200px 700px at 70% -10%,#141d38 0%,transparent 55%),
+               radial-gradient(900px 600px at 10% 110%,#161233 0%,transparent 50%),#080c17;
+    overflow-x:hidden}
+  #amb{position:fixed;inset:0;z-index:0;pointer-events:none;opacity:.6}
+  .back{position:relative;z-index:2;display:block;max-width:1120px;margin:0 auto;padding:26px 24px 0;
+    width:100%;font-family:var(--mono);font-size:.8rem;letter-spacing:.04em;color:var(--muted);
+    text-decoration:none;transition:color .15s}
+  .back:hover{color:var(--accent)}
+  .wrap{position:relative;z-index:1;max-width:1120px;margin:0 auto;padding:22px 24px 70px}
+  .tag{font-family:var(--mono);font-size:.72rem;letter-spacing:.22em;text-transform:uppercase;color:var(--accent);margin:0 0 14px}
+  h1{font-family:var(--disp);font-weight:700;font-size:clamp(2.3rem,6vw,3.6rem);line-height:1;margin:0 0 12px;
+    letter-spacing:-.03em;background:linear-gradient(180deg,#fff,#b9c6e6);-webkit-background-clip:text;
+    background-clip:text;color:transparent}
+  .lede{color:var(--muted);max-width:64ch;font-size:1.05rem;margin:0 0 26px;line-height:1.5}
+  .lede b{color:var(--ink)}
+  .lede code,.take code,.caption code{font-family:var(--mono);font-size:.92em;color:#bcd0ff}
+
+  .stage{position:relative;background:linear-gradient(180deg,rgba(255,255,255,.03),rgba(255,255,255,.01));
+    border:1px solid var(--line);border-radius:24px;padding:18px 18px 14px;
+    box-shadow:0 1px 0 rgba(255,255,255,.06) inset,0 30px 80px -30px rgba(0,0,0,.8)}
+  .topbar{display:flex;align-items:center;gap:10px;margin:0 0 14px;flex-wrap:wrap}
+  .topbar .lab{margin:0 4px 0 0}
+  .lab{font-family:var(--mono);font-size:.7rem;letter-spacing:.12em;text-transform:uppercase;color:var(--muted);margin:0 0 10px}
+  .btn:focus-visible,.opt:focus-visible{outline:2px solid var(--accent);outline-offset:2px}
+
+  /* ---------- game board ---------- */
+  .pic{position:relative;min-height:440px;border:1px solid var(--line);border-radius:18px;background:rgba(6,10,20,.5);overflow:hidden;
+    display:grid;grid-template-columns:250px 1fr;gap:26px;align-items:center;padding:44px 26px 26px}
+  .pic .zone{position:absolute;left:18px;top:14px;font-family:var(--mono);font-size:.62rem;letter-spacing:.14em;text-transform:uppercase;color:rgba(132,150,182,.55)}
+  .hud{position:absolute;right:18px;top:12px;display:flex;gap:14px;font-family:var(--mono);font-size:.72rem;color:var(--muted)}
+  .hud b{color:var(--ink);font-weight:500}
+
+  /* the fixed moment: a calendar page and a clock */
+  .moment{display:flex;flex-direction:column;align-items:center;gap:14px}
+  .cal{width:170px;border-radius:14px;overflow:hidden;border:1px solid var(--line);background:rgba(0,0,0,.3);text-align:center;
+    box-shadow:0 18px 40px -20px rgba(0,0,0,.9)}
+  .cal .top{background:linear-gradient(180deg,rgba(110,160,255,.35),rgba(139,123,255,.25));padding:7px 0;font-family:var(--mono);font-size:.78rem;
+    letter-spacing:.2em;text-transform:uppercase;color:var(--ink)}
+  .cal .day{font-family:var(--disp);font-weight:700;font-size:3.4rem;line-height:1;padding:12px 0 2px;color:#fff}
+  .cal .wd{font-family:var(--body);font-size:.9rem;color:var(--muted);padding:0 0 12px}
+  .clockrow{display:flex;align-items:center;gap:12px}
+  .clock{width:78px;height:78px}
+  .clock .face{fill:rgba(0,0,0,.3);stroke:rgba(255,255,255,.14);stroke-width:1.5}
+  .clock .tick{stroke:rgba(255,255,255,.3);stroke-width:1.5}
+  .clock .hh{stroke:var(--ink);stroke-width:3.2;stroke-linecap:round}
+  .clock .mh{stroke:#bcd0ff;stroke-width:2.2;stroke-linecap:round}
+  .clock .sh{stroke:var(--gold);stroke-width:1.2;stroke-linecap:round}
+  .digi{font-family:var(--mono);font-size:1.15rem;color:var(--ink);line-height:1.3}
+  .digi small{display:block;font-size:.66rem;color:var(--muted);letter-spacing:.08em}
+
+  .play{display:flex;flex-direction:column;align-items:center;gap:16px;min-width:0}
+  .ask{font-family:var(--mono);font-size:.7rem;letter-spacing:.14em;text-transform:uppercase;color:var(--muted)}
+  .pat{font-family:var(--mono);font-size:clamp(1.05rem,2.6vw,1.6rem);color:var(--ink);padding:14px 26px;border:1px solid var(--line);border-radius:16px;
+    background:rgba(0,0,0,.3);max-width:100%;white-space:pre;overflow-x:auto;text-align:center;transition:border-color .2s,box-shadow .2s,transform .2s}
+  .pat .q{color:var(--gold)} .pat .l{color:#c9a7ff} .pat .o{color:#9fe6b8}
+  .pat.good{border-color:rgba(70,217,138,.7);box-shadow:0 0 28px -8px rgba(70,217,138,.8)}
+  .pat.bad{border-color:rgba(255,106,106,.7);box-shadow:0 0 28px -8px rgba(255,106,106,.8);animation:shake .3s}
+  @keyframes shake{25%{transform:translateX(-6px)}75%{transform:translateX(6px)}}
+  .ans{font-family:var(--mono);font-size:1.05rem;padding:10px 16px;width:min(440px,100%);border-radius:11px;border:1px solid var(--line);
+    background:var(--surface);color:var(--ink);text-align:center;outline:none;transition:border-color .15s}
+  .ans:focus{border-color:rgba(110,160,255,.6);box-shadow:0 0 0 3px rgba(110,160,255,.15)}
+  .ans.good{border-color:rgba(70,217,138,.7);color:var(--good)}
+  .ans.bad{border-color:rgba(255,106,106,.7);color:var(--warn)}
+  .ans[hidden],.opts[hidden]{display:none}
+  .opts{display:grid;grid-template-columns:1fr 1fr;gap:8px;width:min(560px,100%)}
+  .opt{font-family:var(--mono);font-size:.88rem;padding:10px 14px;border-radius:11px;cursor:pointer;border:1px solid var(--line);background:var(--surface);color:var(--ink);
+    transition:.15s;text-align:left;white-space:pre;overflow-x:auto}
+  .opt:hover{border-color:var(--accent);color:var(--accent)}
+  .opt:disabled{cursor:default}
+  .opt.hit{border-color:rgba(70,217,138,.7);background:rgba(70,217,138,.14);color:var(--good)}
+  .opt.miss{border-color:rgba(255,106,106,.7);background:rgba(255,106,106,.12);color:var(--warn)}
+  .opt.dim{opacity:.4}
+  .opt .key{display:inline-block;margin-right:8px;font-size:.62rem;color:var(--muted)}
+
+  /* breakdown: pattern letters over what they print */
+  .strip{display:flex;flex-wrap:wrap;gap:4px;justify-content:center;max-width:100%;min-height:52px;align-items:flex-end}
+  .tk{display:flex;flex-direction:column;align-items:center;gap:3px;font-family:var(--mono)}
+  .tk .p{font-size:.7rem;color:var(--muted);padding:0 2px}
+  .tk .v{font-size:.95rem;color:var(--ink);padding:4px 7px;border-radius:7px;border:1px solid var(--line);background:rgba(0,0,0,.3);white-space:pre}
+  .tk.lit .v{border-color:transparent;background:transparent;color:var(--muted);padding:4px 1px}
+  .tk.hot .p{color:var(--gold)}
+  .tk.hot .v{border-color:rgba(255,200,98,.7);background:rgba(255,200,98,.12);color:var(--gold)}
+  .strip .eq{font-family:var(--mono);font-size:.95rem;color:var(--muted);align-self:flex-end;padding:4px 4px}
+  .nextb{min-height:38px}
+
+  .screen{position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:12px;background:rgba(6,10,20,.93);transition:opacity .25s;padding:20px;z-index:3}
+  .screen.off{opacity:0;pointer-events:none}
+  .screen h2{font-family:var(--disp);font-weight:700;font-size:1.6rem;margin:0;color:var(--ink)}
+  .screen p{margin:0;color:var(--muted);font-size:.95rem;text-align:center;max-width:52ch;line-height:1.5}
+  .screen p b{color:var(--ink);font-weight:500}
+  .screen .big{font-family:var(--disp);font-weight:700;font-size:2.6rem;color:var(--accent)}
+  .screen .big.gold{color:var(--gold)} .screen .big.good{color:var(--good)}
+  .bar{position:absolute;left:0;right:0;bottom:0;height:4px;background:rgba(255,255,255,.06)}
+  .bar i{display:block;height:100%;width:0;background:var(--accent);transition:width .25s}
+  .misses{font-family:var(--mono);font-size:.72rem;color:var(--muted);line-height:1.6;text-align:left;max-height:150px;overflow:auto;max-width:100%}
+  .misses b{color:var(--warn);font-weight:500} .misses i{font-style:normal;color:var(--good)}
+
+  .caption{display:flex;gap:16px;align-items:flex-start;margin:14px 4px 0;min-height:56px}
+  .caption .n{flex-shrink:0;font-family:var(--disp);font-weight:700;font-size:1.35rem;color:var(--accent);font-variant-numeric:tabular-nums;
+    line-height:1.2;min-width:3.2rem}
+  .caption .n small{display:block;font-family:var(--mono);font-weight:400;font-size:.58rem;letter-spacing:.14em;text-transform:uppercase;color:var(--muted)}
+  .caption .t{font-size:1.02rem;line-height:1.55;color:var(--ink);padding-left:16px;border-left:3px solid var(--accent);transition:border-color .3s}
+  .caption.cut .t{border-left-color:var(--warn)} .caption.left .t{border-left-color:var(--gold)} .caption.ok .t{border-left-color:var(--good)}
+  .caption b.g{color:var(--good)} .caption b.w{color:var(--warn)} .caption b.a{color:var(--accent)} .caption b.y{color:var(--gold)}
+  .caption code{white-space:pre}
+
+  .btn{font-family:var(--body);font-weight:500;font-size:.86rem;padding:9px 16px;border-radius:11px;cursor:pointer;
+    border:1px solid var(--line);background:var(--surface);color:var(--ink);transition:.15s}
+  .btn:hover{border-color:var(--accent);color:var(--accent)}
+  .btn.primary{border-color:rgba(110,160,255,.5);background:rgba(110,160,255,.12);padding:9px 22px}
+  .btn.ghost{background:transparent;color:var(--muted)}
+  .btn[hidden]{display:none}
+  .hint{font-family:var(--mono);font-size:.68rem;color:var(--muted);margin:10px 4px 0;line-height:1.5}
+  .hint b{color:var(--accent)}
+
+  .take{margin-top:22px;background:linear-gradient(180deg,rgba(110,160,255,.08),rgba(139,123,255,.04));
+    border:1px solid var(--line);border-left:3px solid var(--accent);border-radius:12px;padding:16px 18px}
+  .take .tk{font-family:var(--mono);font-size:.66rem;letter-spacing:.14em;text-transform:uppercase;color:var(--accent);margin:0 0 8px}
+  .take p{margin:0;font-size:.95rem;color:var(--ink);line-height:1.55}
+  .take b{color:#fff}
+  @media (max-width:760px){
+    .pic{grid-template-columns:1fr;padding:44px 14px 22px;gap:18px}
+    .moment{flex-direction:row;justify-content:center;flex-wrap:wrap}
+    .cal{width:130px} .cal .day{font-size:2.6rem}
+    .opts{grid-template-columns:1fr}
+    .wrap{padding:22px 16px 70px} .back{padding:26px 16px 0} .stage{padding:12px}
+  }
+  @media (prefers-reduced-motion:reduce){*{animation-duration:.01ms!important;transition-duration:.01ms!important}#amb{display:none}}
+</style>
+</head>
+<body>
+
+<a class="back" href="../index.html#date-formatter">&#8592; Week 3 index</a>
+
+<canvas id="amb"></canvas>
+<div class="wrap">
+  <p class="tag">Workbook 3a &middot; Section 2-2 &middot; Game</p>
+  <h1>Date Formatter</h1>
+  <p class="lede"><b>One moment, fifteen patterns. Type what format prints, or pick the pattern that printed it.</b></p>
+
+  <div class="stage">
+    <div class="topbar">
+      <span class="lab">Game</span>
+    </div>
+
+    <div class="pic" id="pic">
+      <span class="zone">moment.format(fmt)</span>
+      <div class="hud"><span>score <b id="hScore">0</b></span><span>time <b id="hTime">0.0s</b></span></div>
+
+      <div class="moment" aria-label="The sample moment">
+        <div class="cal">
+          <div class="top" id="calTop"></div>
+          <div class="day" id="calDay"></div>
+          <div class="wd" id="calWd"></div>
+        </div>
+        <div class="clockrow">
+          <svg class="clock" viewBox="0 0 80 80" aria-hidden="true">
+            <circle class="face" cx="40" cy="40" r="37"></circle>
+            <g id="ticks"></g>
+            <line class="hh" id="hHand" x1="40" y1="40" x2="40" y2="20"></line>
+            <line class="mh" id="mHand" x1="40" y1="40" x2="40" y2="11"></line>
+            <line class="sh" id="sHand" x1="40" y1="44" x2="40" y2="8"></line>
+            <circle cx="40" cy="40" r="2.4" fill="#ffc862"></circle>
+          </svg>
+          <div class="digi" id="digi"></div>
+        </div>
+      </div>
+
+      <div class="play">
+        <div class="ask" id="ask">&nbsp;</div>
+        <div class="pat" id="pat">&nbsp;</div>
+        <input class="ans" id="ans" type="text" autocomplete="off" autocapitalize="off" spellcheck="false" placeholder="type what it prints, press Enter" aria-label="Your answer" disabled>
+        <div class="opts" id="opts" hidden></div>
+        <div class="strip" id="strip"></div>
+        <button class="btn primary nextb" id="bNext" hidden>Next (Enter)</button>
+      </div>
+
+      <div class="bar"><i id="bar"></i></div>
+      <div class="screen" id="startScr">
+        <h2>Date Formatter</h2>
+        <p>The moment on the left never changes. A pattern appears: <b>type exactly what format prints</b> and press Enter. Every third round the output appears instead: <b>pick the pattern</b> that printed it (keys 1 to 4). Capitals count.</p>
+        <button class="btn primary" id="bStart">Start</button>
+      </div>
+      <div class="screen off" id="endScr">
+        <h2>Round over</h2>
+        <div class="big" id="endScore"></div>
+        <p id="endMsg"></p>
+        <div class="misses" id="endMiss"></div>
+        <button class="btn primary" id="bAgain">Restart</button>
+      </div>
+    </div>
+
+    <div class="caption" id="caption">
+      <div class="n" id="stepno"><small>round</small>0 / 15</div>
+      <div class="t" id="status">Press <b class="a">Start</b>. Enter submits, 1 to 4 pick, Enter again moves on.</div>
+    </div>
+    <p class="hint">MM month &middot; mm minutes &middot; HH 0 to 23 &middot; hh 1 to 12 &middot; one letter = no padding &middot; MMM / E short name, MMMM / EEEE full name &middot; 'text' printed as is</p>
+  </div>
+
+  <div class="take">
+    <p class="tk">The one idea</p>
+    <p><b>Every letter in a pattern is a field, and the count of letters is the style.</b> Capital M is the month, small m the minutes; HH runs 0 to 23, hh needs an a beside it; three or four letters turn a number into a name. Anything in single quotes is printed as is.</p>
+  </div>
+
+  <div id="rail"></div>
+</div>
+
+<script>
+(function(){
+  "use strict";
+  var $=function(s){return document.querySelector(s);};
+  var reduce=matchMedia("(prefers-reduced-motion: reduce)").matches;
+
+  // ---------- the fixed moment: LocalDateTime.of(2026, 10, 17, 14, 5, 9) ----------
+  var T={y:2026,M:10,d:17,H:14,m:5,s:9};
+  var MONTHS=["January","February","March","April","May","June","July","August","September","October","November","December"];
+  var DAYS=["Sunday","Monday","Tuesday","Wednesday","Thursday","Friday","Saturday"];
+  var WEEKDAY=DAYS[new Date(Date.UTC(T.y,T.M-1,T.d)).getUTCDay()];
+
+  // ---------- a small DateTimeFormatter (Java 17, Locale US) ----------
+  // Letters A-Z a-z are fields; the count of letters is the style. 'text' is a literal, '' is one quote.
+  function tokenize(p){
+    var out=[],i=0;
+    while(i<p.length){
+      var c=p.charAt(i);
+      if(c==="'"){
+        if(p.charAt(i+1)==="'"){ out.push({lit:"'",src:"''"}); i+=2; continue; }
+        var j=i+1, txt="";
+        while(j<p.length){
+          if(p.charAt(j)==="'"){ if(p.charAt(j+1)==="'"){ txt+="'"; j+=2; continue; } break; }
+          txt+=p.charAt(j); j++;
+        }
+        out.push({lit:txt,src:p.substring(i,j+1),quoted:true}); i=j+1; continue;
+      }
+      if(/[A-Za-z]/.test(c)){ var k=i; while(p.charAt(k)===c) k++; out.push({f:c,n:k-i,src:p.substring(i,k)}); i=k; continue; }
+      out.push({lit:c,src:c}); i++;
+    }
+    return out;
+  }
+  function pad(v,w){ var s=String(v); while(s.length<w) s="0"+s; return s; }
+  function field(f,n){
+    if(f==="y"){ if(n===2) return pad(T.y%100,2); return pad(T.y,n); }
+    if(f==="M"){ if(n===4) return MONTHS[T.M-1]; if(n===3) return MONTHS[T.M-1].slice(0,3); return pad(T.M,n); }
+    if(f==="d") return pad(T.d,n);
+    if(f==="E"){ if(n===4) return WEEKDAY; return WEEKDAY.slice(0,3); }
+    if(f==="H") return pad(T.H,n);
+    if(f==="h"){ var h=T.H%12; if(h===0) h=12; return pad(h,n); }
+    if(f==="m") return pad(T.m,n);
+    if(f==="s") return pad(T.s,n);
+    if(f==="a") return T.H<12?"AM":"PM";
+    throw new Error("letter not supported: "+f);
+  }
+  function tokOut(t){ return t.lit!==undefined?t.lit:field(t.f,t.n); }
+  function format(p){ return tokenize(p).map(tokOut).join(""); }
+
+  var MEANS={
+    y:"y is the year", yy:"yy is the last two digits of the year", yyyy:"yyyy is the four-digit year",
+    M:"M is the month number, no padding", MM:"MM is the month number, two digits", MMM:"MMM is the short month name", MMMM:"MMMM is the full month name",
+    d:"d is the day of the month, no padding", dd:"dd is the day of the month, two digits",
+    E:"E is the short weekday", EEEE:"EEEE is the full weekday",
+    H:"H is the hour 0 to 23", HH:"HH is the hour 0 to 23, two digits",
+    h:"h is the hour 1 to 12", hh:"hh is the hour 1 to 12, two digits",
+    m:"m is the minutes", mm:"mm is the minutes, two digits", s:"s is the seconds", ss:"ss is the seconds, two digits",
+    a:"a is AM or PM"
+  };
+  function means(src){ return MEANS[src]||(src.charAt(0)==="'"?src+" is text, printed as is":src+" is printed as is"); }
+
+  // ---------- the rounds: fixed order, growing length; every third round is a pick ----------
+  // trap: the letter that the round is about (marked gold in the strip whatever the answer).
+  var ROUNDS=[
+    {p:"yyyy"},
+    {p:"HH:mm"},
+    {p:"E HH:mm", pick:true},
+    {p:"M/d/yy"},
+    {p:"hh:mm a"},
+    {p:"MMMM yyyy", pick:true},
+    {p:"hh:mm:ss", trap:"hh", why:"hh is the hour 1 to 12, so 14:00 prints as 02. For 14 use HH"},
+    {p:"d MMM yyyy"},
+    {p:"yyyy/MM/dd", pick:true},
+    {p:"yyyy-mm-dd", trap:"mm", why:"small mm is the minutes (05), not the month. The month is capital MM"},
+    {p:"yyyyMMdd-HHmmss"},
+    {p:"EEEE d MMMM yyyy", pick:true},
+    {p:"'Week of' MMMM d"},
+    {p:"E, MMM dd, yyyy HH:mm:ss"},
+    {p:"EEEE, MMMM d 'at' h:mm a", pick:true}
+  ];
+  var N=ROUNDS.length;
+
+  // one-token changes of a pattern: the usual mix-ups (case, count, 12 vs 24 hours)
+  var SWAP={
+    y:["yy","yyyy"], M:["M","MM","MMM","MMMM","mm"], d:["d","dd"], E:["E","EEEE"],
+    H:["H","HH","h","hh"], h:["h","hh","H","HH"], m:["m","mm","MM"], s:["s","ss"], a:[]
+  };
+  function variants(p){
+    var tk=tokenize(p), out=[];
+    tk.forEach(function(t,i){
+      if(t.f===undefined) return;
+      var alts=SWAP[t.f]||[];
+      if(t.f==="M"&&t.n>2) alts=alts.filter(function(a){ return a!=="mm"; });
+      alts.forEach(function(a){
+        if(a===t.src) return;
+        var np=tk.map(function(u,k){ return k===i?a:u.src; }).join("");
+        out.push({p:np,at:i,from:t.src,to:a});
+      });
+    });
+    return out;
+  }
+  function shuffle(a){ a=a.slice(); for(var i=a.length-1;i>0;i--){ var j=Math.floor(Math.random()*(i+1)); var t=a[i]; a[i]=a[j]; a[j]=t; } return a; }
+  // three wrong patterns, each printing something different from the answer and from each other
+  function choices(p){
+    var right=format(p), seen={}, picks=[];
+    seen[right]=1;
+    shuffle(variants(p)).forEach(function(v){
+      var o=format(v.p);
+      if(picks.length<3&&!seen[o]){ seen[o]=1; v.out=o; picks.push(v); }
+    });
+    return shuffle(picks.concat([{p:p,out:right,right:true}]));
+  }
+  function norm(s){ return String(s).trim().replace(/\s+/g," "); }
+  // which single-letter change prints exactly what was typed
+  function explainTyped(p,typed){
+    var hits=variants(p).filter(function(v){ return format(v.p)===typed; });
+    hits.sort(function(a,b){ return Math.abs(a.to.length-a.from.length)-Math.abs(b.to.length-b.from.length); });
+    return hits[0]||null;
+  }
+
+  // ---------- drawing ----------
+  var AMP=String.fromCharCode(38), ENT={"<":"lt;",">":"gt;","\"":"quot;","&":"amp;"};
+  function esc(s){ return String(s).replace(/[<>"&]/g,function(c){ return AMP+ENT[c]; }); }
+  function patHTML(p){
+    return '<span class="o">ofPattern(</span><span class="q">"</span>'+tokenize(p).map(function(t){
+      return t.f!==undefined?'<span class="l">'+esc(t.src)+'</span>':esc(t.src);
+    }).join("")+'<span class="q">"</span><span class="o">)</span>';
+  }
+  function outHTML(o){ return '<span class="q">"</span>'+esc(o)+'<span class="q">"</span>'; }
+  function stripHTML(p,hot){
+    return tokenize(p).map(function(t,i){
+      var lit=t.f===undefined, cls="tk"+(lit?" lit":"")+(hot.indexOf(i)>=0?" hot":"");
+      var v=tokOut(t);
+      if(lit&&v===" ") v=" ";
+      return '<div class="'+cls+'"><span class="p">'+esc(lit?(t.quoted?t.src:" "):t.src)+'</span><span class="v">'+esc(v)+'</span></div>';
+    }).join("");
+  }
+  function drawMoment(){
+    $("#calTop").textContent=MONTHS[T.M-1].slice(0,3)+" "+T.y;
+    $("#calDay").textContent=String(T.d);
+    $("#calWd").textContent=WEEKDAY;
+    $("#digi").innerHTML=pad(T.H,2)+":"+pad(T.m,2)+":"+pad(T.s,2)+"<small>24-hour clock</small>";
+    var g="";
+    for(var i=0;i<12;i++){ var a=i*Math.PI/6, r1=i%3===0?29:32;
+      g+='<line class="tick" x1="'+(40+r1*Math.sin(a)).toFixed(1)+'" y1="'+(40-r1*Math.cos(a)).toFixed(1)+'" x2="'+(40+35*Math.sin(a)).toFixed(1)+'" y2="'+(40-35*Math.cos(a)).toFixed(1)+'"></line>'; }
+    $("#ticks").innerHTML=g;
+    var sec=T.s, min=T.m+sec/60, hr=(T.H%12)+min/60;
+    $("#hHand").setAttribute("transform","rotate("+(hr*30)+" 40 40)");
+    $("#mHand").setAttribute("transform","rotate("+(min*6)+" 40 40)");
+    $("#sHand").setAttribute("transform","rotate("+(sec*6)+" 40 40)");
+  }
+
+  // ---------- game ----------
+  var at=0, score=0, misses=[], t0=0, timer=null, live=false, waiting=false, opts=[];
+  function hotOf(r){
+    if(!r.trap) return [];
+    var hot=[]; tokenize(r.p).forEach(function(t,i){ if(t.src===r.trap) hot.push(i); }); return hot;
+  }
+  function tick(){ $("#hTime").textContent=((performance.now()-t0)/1000).toFixed(1)+"s"; }
+  function showRound(){
+    var r=ROUNDS[at]; waiting=false;
+    $("#strip").innerHTML=""; $("#bNext").hidden=true;
+    $("#stepno").innerHTML="<small>round</small>"+(at+1)+" / "+N; $("#bar").style.width=(100*at/N)+"%";
+    $("#caption").className="caption";
+    var inp=$("#ans");
+    if(r.pick){
+      opts=choices(r.p);
+      $("#ask").textContent="format printed this. Which pattern?";
+      $("#pat").innerHTML=outHTML(format(r.p)); $("#pat").className="pat";
+      inp.hidden=true; inp.disabled=true;
+      $("#opts").hidden=false;
+      $("#opts").innerHTML=opts.map(function(o,i){ return '<button class="opt" data-i="'+i+'"><span class="key">'+(i+1)+'</span>"'+esc(o.p)+'"</button>'; }).join("");
+      $("#status").innerHTML="Read the output, then find the pattern whose letters print it. <b class=\"a\">1 to 4</b> or click.";
+    } else {
+      $("#ask").textContent="What does format print?";
+      $("#pat").innerHTML=patHTML(r.p); $("#pat").className="pat";
+      $("#opts").hidden=true; $("#opts").innerHTML="";
+      inp.hidden=false; inp.disabled=false; inp.value=""; inp.className="ans"; inp.focus();
+      $("#status").innerHTML="Type the exact text, capitals and punctuation included. <b class=\"a\">Enter</b> submits.";
+    }
+  }
+  function start(){
+    at=0; score=0; misses=[]; live=true;
+    $("#hScore").textContent="0"; $("#startScr").classList.add("off"); $("#endScr").classList.add("off");
+    showRound(); t0=performance.now(); if(timer) clearInterval(timer); timer=setInterval(tick,100);
+  }
+  function settle(good,html,stripP,hot){
+    waiting=true;
+    if(good){ score++; $("#hScore").textContent=String(score); }
+    $("#pat").className="pat "+(good?"good":"bad");
+    $("#caption").className="caption "+(good?"ok":"cut");
+    $("#status").innerHTML=html;
+    $("#strip").innerHTML=stripHTML(stripP,hot);
+    $("#bNext").hidden=false; $("#bNext").focus();
+  }
+  function submitTyped(){
+    if(!live||waiting) return;
+    var r=ROUNDS[at], inp=$("#ans"), typed=norm(inp.value);
+    if(!typed) return;
+    inp.disabled=true;
+    var right=format(r.p), good=typed===norm(right), hot=hotOf(r), why;
+    inp.className="ans "+(good?"good":"bad");
+    if(good){
+      why=r.why||(hot.length?"":tokenize(r.p).filter(function(t){ return t.f!==undefined; }).slice(0,3).map(function(t){ return means(t.src); }).join("; "));
+      settle(true,'<b class="g">'+esc(right)+'</b>. '+esc(why)+'.',r.p,hot);
+    } else {
+      var v=explainTyped(r.p,typed);
+      if(v){ hot=hot.concat([v.at]); why="that is what "+v.to+" would print here. "+means(v.from)+"; "+means(v.to); }
+      else why=r.why||"compare it letter by letter in the strip above";
+      misses.push({p:r.p,got:typed,right:right});
+      settle(false,'Not <b class="w">'+esc(typed)+'</b>. It prints <b class="g">'+esc(right)+'</b>: '+esc(why)+'.',r.p,hot);
+    }
+  }
+  function submitPick(i){
+    if(!live||waiting) return;
+    var r=ROUNDS[at], o=opts[i]; if(!o) return;
+    var rightIx=0; opts.forEach(function(x,k){ if(x.right) rightIx=k; });
+    Array.prototype.forEach.call(document.querySelectorAll(".opt"),function(b){
+      var k=Number(b.getAttribute("data-i")); b.disabled=true;
+      if(k===rightIx) b.classList.add("hit"); else if(k===i) b.classList.add("miss"); else b.classList.add("dim");
+    });
+    var right=format(r.p);
+    if(o.right){
+      settle(true,'<b class="g">"'+esc(r.p)+'"</b> prints it. The strip shows each letter and what it printed.',r.p,hotOf(r));
+    } else {
+      // the wrong pick differs from the right one in one letter group: name both
+      var ti=-1, tkR=tokenize(r.p);
+      var tkW=tokenize(o.p);
+      for(var k=0;k<Math.min(tkR.length,tkW.length);k++){ if(tkR[k].src!==tkW[k].src){ ti=k; break; } }
+      var why=ti>=0?'"'+o.p+'" prints "'+o.out+'". '+means(tkW[ti].src)+"; "+means(tkR[ti].src):'"'+o.p+'" prints "'+o.out+'"';
+      misses.push({p:r.p,got:o.p,right:right,pick:true});
+      settle(false,'Not that one. <b class="g">"'+esc(r.p)+'"</b> prints it: '+esc(why)+'.',r.p,ti>=0?[ti]:[]);
+    }
+  }
+  function next(){
+    if(!live||!waiting) return;
+    at++; if(at>=N) end(); else showRound();
+  }
+  function end(){
+    live=false; waiting=false; clearInterval(timer); tick(); $("#bar").style.width="100%";
+    $("#ans").disabled=true; $("#bNext").hidden=true;
+    var secs=((performance.now()-t0)/1000).toFixed(1);
+    $("#endScore").textContent=score+" / "+N; $("#endScore").className="big "+(score===N?"good":score>=12?"":"gold");
+    $("#endMsg").textContent=(score===N?"Perfect. ":score>=12?"Solid. ":"Keep going. ")+secs+" seconds.";
+    $("#endMiss").innerHTML=misses.map(function(m){
+      return m.pick?'<div>"'+esc(m.right)+'" came from <i>"'+esc(m.p)+'"</i>, not <b>"'+esc(m.got)+'"</b></div>'
+                   :'<div>"'+esc(m.p)+'" prints <i>'+esc(m.right)+'</i>, not <b>'+esc(m.got)+'</b></div>';
+    }).join("");
+    $("#endScr").classList.remove("off"); $("#bAgain").focus();
+    $("#stepno").innerHTML="<small>round</small>"+N+" / "+N; $("#caption").className="caption";
+    $("#status").innerHTML="Round over. <b class=\"a\">Restart</b> (Enter) plays the fifteen patterns again.";
+  }
+
+  $("#ans").addEventListener("keydown",function(e){ if(e.key==="Enter"){ e.preventDefault(); e.stopPropagation(); submitTyped(); } });
+  $("#opts").addEventListener("click",function(e){ var b=e.target.closest(".opt"); if(b) submitPick(Number(b.getAttribute("data-i"))); });
+  $("#bNext").addEventListener("click",next);
+  $("#bStart").addEventListener("click",start); $("#bAgain").addEventListener("click",start);
+  document.addEventListener("keydown",function(e){
+    if(e.ctrlKey||e.metaKey||e.altKey) return;
+    if(e.target.tagName==="INPUT") return;
+    if(live&&!waiting&&ROUNDS[at].pick&&/^[1-4]$/.test(e.key)){ submitPick(Number(e.key)-1); return; }
+    if(e.target.tagName==="BUTTON") return;
+    if(live&&waiting&&e.key==="Enter"){ e.preventDefault(); next(); return; }
+    if(!live&&(e.key==="Enter"||e.code==="Space")){ e.preventDefault(); start(); return; }
+    if(live&&!waiting&&!ROUNDS[at].pick&&e.key.length===1){ $("#ans").focus(); }
+  });
+
+  var cv=$("#amb"),ctx=cv.getContext&&cv.getContext("2d"),parts=[];
+  function sizeC(){if(!ctx)return;cv.width=innerWidth;cv.height=innerHeight;}
+  function initParts(){parts=[];for(var i=0;i<46;i++)parts.push({x:Math.random(),y:Math.random(),r:Math.random()*1.6+.3,s:Math.random()*.02+.004,o:Math.random()*.4+.1});}
+  function drawC(){if(!ctx)return;ctx.clearRect(0,0,cv.width,cv.height);
+    parts.forEach(function(p){p.y-=p.s/60;if(p.y<-.02)p.y=1.02;ctx.beginPath();ctx.arc(p.x*cv.width,p.y*cv.height,p.r,0,7);
+      ctx.fillStyle="rgba(140,170,255,"+p.o+")";ctx.fill();});requestAnimationFrame(drawC);}
+  if(ctx&&!reduce){sizeC();initParts();drawC();addEventListener("resize",sizeC);}
+
+  drawMoment();
+})();
+</script>
+<script src="../manifest.js"></script>
+<script src="../../assets/rail.js"></script>
+<script>Rail.render(document.getElementById("rail"),{week:3,kind:"games",current:"date-formatter"});</script>
+</body>
+</html>

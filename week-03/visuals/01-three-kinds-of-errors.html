@@ -1,0 +1,313 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Three Kinds of Errors | Week 3 Visual Hub</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Sora:wght@500;700&family=Inter:wght@400;500&family=JetBrains+Mono:wght@400;500&display=swap">
+<style>
+  :root{
+    --bg:#080c17; --bg2:#0c1428; --surface:rgba(255,255,255,.045); --line:rgba(255,255,255,.09);
+    --ink:#eef2fb; --muted:#8496b6; --accent:#6ea0ff; --accent2:#8b7bff; --good:#46d98a; --warn:#ff6a6a;
+    --gold:#ffc862; --disp:'Sora',system-ui,sans-serif; --body:'Inter',system-ui,sans-serif;
+    --mono:'JetBrains Mono',ui-monospace,monospace;
+  }
+  *{box-sizing:border-box}
+  body{margin:0;min-height:100vh;color:var(--ink);font-family:var(--body);
+    background:radial-gradient(1200px 700px at 70% -10%,#141d38 0%,transparent 55%),
+               radial-gradient(900px 600px at 10% 110%,#161233 0%,transparent 50%),#080c17;
+    overflow-x:hidden}
+  #amb{position:fixed;inset:0;z-index:0;pointer-events:none;opacity:.6}
+  .back{position:relative;z-index:2;display:block;max-width:1120px;margin:0 auto;padding:26px 24px 0;
+    width:100%;font-family:var(--mono);font-size:.8rem;letter-spacing:.04em;color:var(--muted);
+    text-decoration:none;transition:color .15s}
+  .back:hover{color:var(--accent)}
+  .wrap{position:relative;z-index:1;max-width:1120px;margin:0 auto;padding:22px 24px 70px}
+  .tag{font-family:var(--mono);font-size:.72rem;letter-spacing:.22em;text-transform:uppercase;color:var(--accent);margin:0 0 14px}
+  h1{font-family:var(--disp);font-weight:700;font-size:clamp(2.3rem,6vw,3.6rem);line-height:1;margin:0 0 12px;
+    letter-spacing:-.03em;background:linear-gradient(180deg,#fff,#b9c6e6);-webkit-background-clip:text;
+    background-clip:text;color:transparent}
+  .lede{color:var(--muted);max-width:64ch;font-size:1.05rem;margin:0 0 26px;line-height:1.5}
+  .lede b{color:var(--ink)}
+  code{font-family:var(--mono);font-size:.92em;color:#bcd0ff}
+
+  /* ---------- the stage IS the picture ---------- */
+  .stage{position:relative;background:linear-gradient(180deg,rgba(255,255,255,.03),rgba(255,255,255,.01));
+    border:1px solid var(--line);border-radius:24px;padding:22px;
+    box-shadow:0 1px 0 rgba(255,255,255,.06) inset,0 30px 80px -30px rgba(0,0,0,.8)}
+  .progs{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:14px;align-items:stretch}
+  @media (max-width:1000px){.progs{grid-template-columns:1fr}}
+
+  .card{position:relative;display:flex;flex-direction:column;border-radius:16px;padding:16px 16px 14px;
+    border:1px solid rgba(255,255,255,.14);background:rgba(255,255,255,.04);transition:border-color .3s,box-shadow .3s}
+  .card.act{border-color:rgba(110,160,255,.7);box-shadow:0 0 26px -8px rgba(110,160,255,.7)}
+  .card.bad{border-color:rgba(255,106,106,.7);box-shadow:0 0 26px -8px rgba(255,106,106,.7)}
+  .card.odd{border-color:rgba(255,200,98,.7);box-shadow:0 0 26px -8px rgba(255,200,98,.7)}
+  .hd{font-family:var(--mono);font-size:.62rem;letter-spacing:.16em;text-transform:uppercase;color:var(--muted);margin:0 0 4px}
+  .who{font-family:var(--disp);font-weight:700;font-size:1.25rem;margin:0 0 12px;color:var(--ink);letter-spacing:-.01em}
+
+  /* the given values, as rows */
+  .row{display:flex;align-items:center;justify-content:space-between;gap:10px;font-family:var(--mono);font-size:.8rem;
+    padding:6px 10px;border-radius:9px;margin-bottom:5px;background:rgba(0,0,0,.18)}
+  .row .f{color:#c9d4ea} .row .f i{font-style:normal;color:#82aaff;margin-right:6px}
+  .row .v{color:#f78c6c;font-variant-numeric:tabular-nums}
+
+  /* the array boxes */
+  .arr{display:flex;gap:6px;margin:2px 0 8px}
+  .box{flex:1;min-width:0;text-align:center;border-radius:9px;border:1px solid var(--line);background:rgba(0,0,0,.22);
+    padding:6px 2px 7px;font-family:var(--mono);transition:border-color .3s,background .3s}
+  .box .ix{display:block;font-size:.58rem;color:var(--muted);margin-bottom:3px}
+  .box .nm{font-size:.8rem;color:#c3e88d;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;display:block}
+  .box.ghost{border-style:dashed;border-color:rgba(132,150,182,.25);background:transparent;opacity:.0;transition:opacity .3s,border-color .3s}
+  .box.ghost .nm{color:var(--warn)}
+  .box.ghost.out{opacity:1;border-color:var(--warn);background:rgba(255,106,106,.07)}
+  .box.ghost.out .ix{color:var(--warn)}
+  .box.hit{border-color:var(--good);background:rgba(70,217,138,.1)}
+
+  /* the one line being run */
+  .prog{font-family:var(--mono);font-size:.78rem;line-height:1.5;color:#dbe6ff;background:#05070e;border:1px solid var(--line);
+    border-radius:10px;padding:9px 11px;margin:4px 0 10px;white-space:pre-wrap;word-break:break-word}
+  .prog .m{color:#82aaff} .prog .s{color:#c3e88d} .prog .n{color:#f78c6c}
+  .prog .sq{text-decoration:underline wavy transparent;text-underline-offset:4px;transition:text-decoration-color .3s}
+  .prog .sq.on{text-decoration-color:var(--warn);color:#ffb0b0}
+  .prog .op{transition:color .3s,background .3s;border-radius:4px;padding:0 2px}
+  .prog .op.on{color:#1a1206;background:var(--gold)}
+
+  /* compile, run, output: three lights */
+  .lights{display:flex;gap:6px;margin:auto 0 10px}
+  .lt{flex:1;text-align:center;font-family:var(--mono);font-size:.62rem;letter-spacing:.1em;text-transform:uppercase;
+    padding:6px 2px;border-radius:999px;border:1px solid var(--line);color:rgba(132,150,182,.6);transition:.25s}
+  .lt.ok{border-color:rgba(70,217,138,.6);color:var(--good);background:rgba(70,217,138,.08)}
+  .lt.no{border-color:var(--warn);color:var(--warn);background:rgba(255,106,106,.1)}
+  .lt.odd{border-color:var(--gold);color:var(--gold);background:rgba(255,200,98,.1)}
+  .lt.off{border-style:dashed;opacity:.45}
+
+  .out{font-family:var(--mono);font-size:.78rem;line-height:1.45;color:#9fe3b6;background:#05070e;border:1px solid var(--line);
+    border-radius:10px;padding:7px 10px;min-height:52px;margin-bottom:10px;word-break:break-word}
+  .out small{display:block;font-size:.54rem;letter-spacing:.12em;text-transform:uppercase;color:rgba(132,150,182,.7);margin-bottom:2px}
+  .out .big{font-size:1.05rem;color:var(--gold)} .out .ok{color:#9fe3b6} .out .err{color:#ffb0b0} .out .dim{color:var(--muted)}
+  .out .exp{display:block;font-size:.66rem;color:var(--muted);margin-top:2px}
+  .out.pop .big,.out.pop .ok,.out.pop .err{animation:pop .4s}
+
+  .kind{font-family:var(--mono);font-size:.66rem;letter-spacing:.12em;text-transform:uppercase;text-align:center;
+    padding:5px 8px;border-radius:999px;margin-bottom:10px;border:1px dashed rgba(132,150,182,.3);color:rgba(132,150,182,.55)}
+  .kind.w{border:1px solid var(--warn);color:var(--warn)} .kind.y{border:1px solid var(--gold);color:var(--gold)}
+  .kind.g{border:1px solid var(--good);color:var(--good)}
+
+  .runrow{display:flex;gap:8px;align-items:stretch}
+  .runrow label{display:flex;flex-direction:column;gap:3px;font-family:var(--mono);font-size:.56rem;letter-spacing:.12em;
+    text-transform:uppercase;color:var(--muted);width:82px}
+  .runrow input{width:100%;font-family:var(--mono);font-size:.9rem;padding:7px 9px;border-radius:10px;border:1px solid var(--line);
+    background:rgba(0,0,0,.3);color:var(--ink);outline:none;transition:border-color .15s}
+  .runrow input:focus{border-color:var(--accent)}
+  .run{flex:1;font-family:var(--mono);font-weight:500;font-size:.95rem;padding:11px;border-radius:12px;cursor:pointer;
+    border:1px solid rgba(110,160,255,.55);background:rgba(110,160,255,.14);color:#dbe6ff;transition:.15s}
+  .run:hover{background:rgba(110,160,255,.26);border-color:var(--accent)}
+  .run b{font-weight:500;color:var(--good)}
+
+  /* the one sentence */
+  .caption{display:flex;gap:14px;align-items:flex-start;margin:18px 2px 0;padding-top:16px;border-top:1px solid var(--line)}
+  .caption .t{flex:1;font-size:1.05rem;line-height:1.55;color:var(--ink);padding-left:16px;border-left:3px solid var(--accent);transition:border-color .3s}
+  .caption .t .line{display:block;margin-top:6px;font-family:var(--mono);font-size:.8rem;color:#bcd0ff;opacity:.9;word-break:break-word}
+  .caption.y .t{border-left-color:var(--gold)} .caption.g .t{border-left-color:var(--good)} .caption.w .t{border-left-color:var(--warn)}
+  .caption.w .t .line{color:#ffb0b0}
+  .caption b.a{color:var(--accent)} .caption b.y{color:var(--gold)} .caption b.g{color:var(--good)} .caption b.w{color:var(--warn)}
+  .reset{font-family:var(--body);font-weight:500;font-size:.84rem;padding:8px 14px;border-radius:11px;cursor:pointer;
+    border:1px solid var(--line);background:transparent;color:var(--muted);transition:.15s;flex-shrink:0}
+  .reset:hover{border-color:var(--accent);color:var(--accent)}
+  button:focus-visible,input:focus-visible{outline:2px solid var(--accent);outline-offset:2px}
+
+  @keyframes pop{from{transform:scale(.8);opacity:0}to{transform:scale(1);opacity:1}}
+  .take{margin-top:22px;background:linear-gradient(180deg,rgba(110,160,255,.08),rgba(139,123,255,.04));
+    border:1px solid var(--line);border-left:3px solid var(--accent);border-radius:12px;padding:16px 18px}
+  .take .tk{font-family:var(--mono);font-size:.66rem;letter-spacing:.14em;text-transform:uppercase;color:var(--accent);margin:0 0 8px}
+  .take p{margin:0;font-size:.95rem;color:var(--ink);line-height:1.55}
+  .take b{color:#fff}
+  @media (prefers-reduced-motion:reduce){*{animation-duration:.01ms!important;transition-duration:.01ms!important}#amb{display:none}}
+</style>
+</head>
+<body>
+<a class="back" href="../index.html#01-three-kinds-of-errors">&#8592; Week 3 index</a>
+<canvas id="amb"></canvas>
+<div class="wrap">
+  <p class="tag">Workbook 3a &middot; Section 1-1 &middot; Errors and Java</p>
+  <h1>Three Kinds of Errors</h1>
+  <p class="lede"><b>Three small programs, each with one mistake. Run each one and see who notices.</b></p>
+
+  <div class="stage">
+    <div class="progs">
+      <div class="card" id="c1">
+        <p class="hd">program 1</p>
+        <p class="who">Say hello</p>
+        <div class="prog">System.out.<span class="sq" id="sq1">printLn</span>(<span class="s">"Hello Raymond"</span>);</div>
+        <div class="lights" id="l1"><span class="lt">compile</span><span class="lt">run</span><span class="lt">output</span></div>
+        <div class="out" id="o1"><small>prints</small><span class="dim">nothing yet</span></div>
+        <div class="kind" id="k1">kind of error: ?</div>
+        <div class="runrow"><button class="run" id="r1"><b>&#9654;</b> Run</button></div>
+      </div>
+
+      <div class="card" id="c2">
+        <p class="hd">program 2</p>
+        <p class="who">20% off</p>
+        <div class="row"><span class="f"><i>double</i>price</span><span class="v">100.0</span></div>
+        <div class="row"><span class="f"><i>double</i>discount</span><span class="v">0.2</span></div>
+        <div class="prog"><span class="m">double</span> finalPrice = price <span class="op" id="op2">+</span> (price * discount);</div>
+        <div class="lights" id="l2"><span class="lt">compile</span><span class="lt">run</span><span class="lt">output</span></div>
+        <div class="out" id="o2"><small>prints</small><span class="dim">nothing yet</span></div>
+        <div class="kind" id="k2">kind of error: ?</div>
+        <div class="runrow"><button class="run" id="r2"><b>&#9654;</b> Run</button></div>
+      </div>
+
+      <div class="card" id="c3">
+        <p class="hd">program 3</p>
+        <p class="who">Pick a name</p>
+        <div class="arr">
+          <div class="box" id="b0"><span class="ix">[0]</span><span class="nm">"Ray"</span></div>
+          <div class="box" id="b1"><span class="ix">[1]</span><span class="nm">"Mason"</span></div>
+          <div class="box" id="b2"><span class="ix">[2]</span><span class="nm">"Claude"</span></div>
+          <div class="box ghost" id="bx"><span class="ix" id="bxi">[3]</span><span class="nm">none</span></div>
+        </div>
+        <div class="prog">System.out.println(listOfNames[index]);</div>
+        <div class="lights" id="l3"><span class="lt">compile</span><span class="lt">run</span><span class="lt">output</span></div>
+        <div class="out" id="o3"><small>prints</small><span class="dim">nothing yet</span></div>
+        <div class="kind" id="k3">kind of error: ?</div>
+        <div class="runrow">
+          <label for="in3">you type<input id="in3" value="1" maxlength="4" inputmode="numeric" aria-label="index typed at the keyboard"></label>
+          <button class="run" id="r3"><b>&#9654;</b> Run</button>
+        </div>
+      </div>
+    </div>
+    <div class="caption" id="caption">
+      <div class="t" id="status">Each card is a program, and the dark line is the one that matters. <b class="a">Press Run</b> on each.</div>
+      <button class="reset" id="bReset">Reset</button>
+    </div>
+  </div>
+
+  <div class="take">
+    <p class="tk">The one idea</p>
+    <p><b>The compiler catches the first kind</b>: nothing runs until you fix it. <b>You catch the second</b>, by reading the output and asking if it is right.
+    On the third, <b>Java stops you mid-run</b> with an exception. Handling that is what try and catch are for, on the next page.</p>
+  </div>
+  <div id="rail"></div>
+</div>
+<script>
+(function(){
+  "use strict";
+  var $=function(s){return document.querySelector(s);};
+  var reduce=matchMedia("(prefers-reduced-motion: reduce)").matches;
+  var STEP=reduce?0:260;
+  var NAMES=["Ray","Mason","Claude"];
+  var caption=$("#caption"),status=$("#status");
+  var timers=[];
+
+  function say(html,tone,line){
+    caption.className="caption"+(tone?" "+tone:"");
+    status.innerHTML=html+(line?'<span class="line">'+line+'</span>':"");
+  }
+  function later(fn,ms){ timers.push(setTimeout(fn,ms)); }
+  function clearTimers(){ timers.forEach(clearTimeout); timers=[]; }
+  function lights(n){ return $("#l"+n).querySelectorAll(".lt"); }
+  function setLights(n,states){ var l=lights(n); for(var i=0;i<3;i++){ l[i].className="lt"+(states[i]?" "+states[i]:""); } }
+  function out(n,html){ var o=$("#o"+n); o.classList.remove("pop"); void o.offsetWidth; o.innerHTML="<small>prints</small>"+html; o.classList.add("pop"); }
+  function kind(n,text,tone){ var k=$("#k"+n); k.className="kind"+(tone?" "+tone:""); k.textContent=text; }
+  function focusCard(n,tone){ for(var i=1;i<=3;i++){ $("#c"+i).className="card"+(i===n?" "+(tone||"act"):""); } }
+  function clearCard(n){ setLights(n,["","",""]); $("#o"+n).innerHTML='<small>prints</small><span class="dim">nothing yet</span>'; kind(n,"kind of error: ?",""); }
+
+  function run1(){
+    clearTimers(); clearCard(1); focusCard(1,"act");
+    $("#sq1").classList.remove("on");
+    later(function(){
+      setLights(1,["no","off","off"]); $("#sq1").classList.add("on"); focusCard(1,"bad");
+      out(1,'<span class="dim">nothing: the program never started</span>');
+      kind(1,"compile time error","w");
+      say('The <b class="w">compiler</b> stopped it before it ran. Java has no method printLn (it is println), so there is no program to start.',
+        "w","error: cannot find symbol: method printLn");
+    },STEP);
+  }
+
+  function run2(){
+    clearTimers(); clearCard(2); focusCard(2,"act");
+    $("#op2").classList.remove("on");
+    setLights(2,["ok","",""]);
+    later(function(){ setLights(2,["ok","ok",""]); },STEP);
+    later(function(){
+      setLights(2,["ok","ok","odd"]); focusCard(2,"odd"); $("#op2").classList.add("on");
+      out(2,'<span class="big">120.0</span><span class="exp">20% off 100.0 should be 80.0</span>');
+      kind(2,"logic error","y");
+      say('It ran and printed <b class="y">120.0</b> with no error, and nobody told you it is wrong. The plus adds the discount; it should be a minus.',
+        "y","double finalPrice = price + (price * discount);");
+    },STEP*2);
+  }
+
+  function run3(){
+    clearTimers(); clearCard(3); focusCard(3,"act");
+    ["#b0","#b1","#b2"].forEach(function(s){ $(s).classList.remove("hit"); });
+    var gx=$("#bx"); gx.classList.remove("out");
+    var raw=$("#in3").value.trim();
+    var isInt=/^-?\d{1,9}$/.test(raw);
+    var ix=isInt?parseInt(raw,10):NaN;
+    setLights(3,["ok","",""]);
+    later(function(){ setLights(3,["ok","ok",""]); },STEP);
+    later(function(){
+      if(!isInt){
+        setLights(3,["ok","no","off"]); focusCard(3,"bad");
+        out(3,'<span class="err">crashed while reading the number</span>');
+        kind(3,"runtime error","w");
+        say('It compiled and started, then <b class="w">Java stopped it</b> at the read: what you typed is not a whole number.',
+          "w","InputMismatchException");
+        return;
+      }
+      if(ix>=0 && ix<NAMES.length){
+        setLights(3,["ok","ok","ok"]); focusCard(3,"act");
+        $("#b"+ix).classList.add("hit");
+        out(3,'<span class="ok">'+NAMES[ix]+'</span>');
+        kind(3,"no error this time","g");
+        say('Index <b class="g">'+ix+'</b> is inside the array, so it prints <b class="g">'+NAMES[ix]+'</b>. Now type 3 and run it again.',
+          "g","System.out.println(listOfNames["+ix+"]);");
+        return;
+      }
+      $("#bxi").textContent="["+ix+"]"; gx.classList.add("out");
+      setLights(3,["ok","no","off"]); focusCard(3,"bad");
+      out(3,'<span class="err">crashed mid-run</span>');
+      kind(3,"runtime error","w");
+      say('It compiled and started, then <b class="w">Java stopped it</b> mid-run: there is no box '+ix+', only 0 to 2.',
+        "w","ArrayIndexOutOfBoundsException: Index "+ix+" out of bounds for length 3");
+    },STEP*2);
+  }
+
+  function reset(){
+    clearTimers();
+    for(var i=1;i<=3;i++){ clearCard(i); }
+    focusCard(0);
+    $("#sq1").classList.remove("on"); $("#op2").classList.remove("on");
+    ["#b0","#b1","#b2"].forEach(function(s){ $(s).classList.remove("hit"); });
+    $("#bx").classList.remove("out"); $("#bxi").textContent="[3]";
+    $("#in3").value="1";
+    say('Each card is a program, and the dark line is the one that matters. <b class="a">Press Run</b> on each.');
+  }
+
+  $("#r1").addEventListener("click",run1);
+  $("#r2").addEventListener("click",run2);
+  $("#r3").addEventListener("click",run3);
+  $("#in3").addEventListener("keydown",function(e){ if(e.key==="Enter") run3(); });
+  $("#bReset").addEventListener("click",reset);
+
+  /* ambient canvas */
+  var cv=$("#amb"),ctx=cv.getContext&&cv.getContext("2d"),parts=[];
+  function sizeC(){if(!ctx)return;cv.width=innerWidth;cv.height=innerHeight;}
+  function initParts(){parts=[];for(var i=0;i<46;i++)parts.push({x:Math.random(),y:Math.random(),
+    r:Math.random()*1.6+.3,s:Math.random()*.02+.004,o:Math.random()*.4+.1});}
+  function drawC(){if(!ctx)return;ctx.clearRect(0,0,cv.width,cv.height);
+    parts.forEach(function(p){p.y-=p.s/60;if(p.y<-.02)p.y=1.02;
+      ctx.beginPath();ctx.arc(p.x*cv.width,p.y*cv.height,p.r,0,7);
+      ctx.fillStyle="rgba(140,170,255,"+p.o+")";ctx.fill();});
+    requestAnimationFrame(drawC);}
+  if(ctx&&!reduce){sizeC();initParts();drawC();addEventListener("resize",sizeC);}
+})();
+</script>
+<script src="../manifest.js"></script>
+<script src="../../assets/rail.js"></script>
+<script>Rail.render(document.getElementById("rail"),{week:3,kind:"visuals",current:"01-three-kinds-of-errors"});</script>
+</body>
+</html>

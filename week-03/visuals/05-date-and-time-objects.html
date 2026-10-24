@@ -1,0 +1,387 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>LocalDate, LocalTime, LocalDateTime | Week 3 Visual Hub</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Sora:wght@500;700&family=Inter:wght@400;500&family=JetBrains+Mono:wght@400;500&display=swap">
+<style>
+  :root{
+    --bg:#080c17; --bg2:#0c1428; --surface:rgba(255,255,255,.045); --line:rgba(255,255,255,.09);
+    --ink:#eef2fb; --muted:#8496b6; --accent:#6ea0ff; --accent2:#8b7bff; --good:#46d98a; --warn:#ff6a6a;
+    --gold:#ffc862; --disp:'Sora',system-ui,sans-serif; --body:'Inter',system-ui,sans-serif;
+    --mono:'JetBrains Mono',ui-monospace,monospace;
+  }
+  *{box-sizing:border-box}
+  body{margin:0;min-height:100vh;color:var(--ink);font-family:var(--body);
+    background:radial-gradient(1200px 700px at 70% -10%,#141d38 0%,transparent 55%),
+               radial-gradient(900px 600px at 10% 110%,#161233 0%,transparent 50%),#080c17;
+    overflow-x:hidden}
+  #amb{position:fixed;inset:0;z-index:0;pointer-events:none;opacity:.6}
+  .back{position:relative;z-index:2;display:block;max-width:1120px;margin:0 auto;padding:26px 24px 0;
+    width:100%;font-family:var(--mono);font-size:.8rem;letter-spacing:.04em;color:var(--muted);
+    text-decoration:none;transition:color .15s}
+  .back:hover{color:var(--accent)}
+  .wrap{position:relative;z-index:1;max-width:1120px;margin:0 auto;padding:22px 24px 70px}
+  .tag{font-family:var(--mono);font-size:.72rem;letter-spacing:.22em;text-transform:uppercase;color:var(--accent);margin:0 0 14px}
+  h1{font-family:var(--disp);font-weight:700;font-size:clamp(2.3rem,6vw,3.6rem);line-height:1;margin:0 0 12px;
+    letter-spacing:-.03em;background:linear-gradient(180deg,#fff,#b9c6e6);-webkit-background-clip:text;
+    background-clip:text;color:transparent}
+  .lede{color:var(--muted);max-width:64ch;font-size:1.05rem;margin:0 0 26px;line-height:1.5}
+  .lede b{color:var(--ink)}
+  code{font-family:var(--mono);font-size:.92em;color:#bcd0ff}
+
+  /* ---------- the stage IS the picture ---------- */
+  .stage{position:relative;background:linear-gradient(180deg,rgba(255,255,255,.03),rgba(255,255,255,.01));
+    border:1px solid var(--line);border-radius:24px;padding:22px;
+    box-shadow:0 1px 0 rgba(255,255,255,.06) inset,0 30px 80px -30px rgba(0,0,0,.8)}
+  .board{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:16px;align-items:stretch}
+  @media (max-width:760px){.board{grid-template-columns:1fr}}
+
+  .card{position:relative;border-radius:16px;padding:16px 16px 14px;display:flex;flex-direction:column;
+    border:1px solid rgba(255,255,255,.18);background:rgba(255,255,255,.045);transition:border-color .3s,box-shadow .3s}
+  .card.act{border-color:rgba(110,160,255,.75);box-shadow:0 0 26px -8px rgba(110,160,255,.8)}
+  .hd{font-family:var(--mono);font-size:.62rem;letter-spacing:.16em;text-transform:uppercase;color:var(--muted);margin:0 0 4px}
+  .who{font-family:var(--disp);font-weight:700;font-size:1.3rem;margin:0 0 2px;color:var(--ink);letter-spacing:-.01em}
+  .holds{font-family:var(--mono);font-size:.7rem;color:#82aaff;margin:0 0 12px}
+  .pic{flex:1;display:flex;align-items:center;justify-content:center;min-height:228px}
+
+  /* tappable parts */
+  .part{font:inherit;color:inherit;background:transparent;border:1px dashed transparent;border-radius:8px;padding:0 4px;
+    cursor:pointer;transition:background .2s,border-color .2s,color .2s}
+  .filled .part{border-color:rgba(255,200,98,.35)}
+  .filled .part:hover{background:rgba(255,200,98,.1);border-color:var(--gold)}
+  .part.on{background:rgba(255,200,98,.16);border:1px solid var(--gold);color:var(--gold)}
+  .part:disabled{cursor:default}
+  .ph{color:rgba(132,150,182,.45)}
+
+  /* calendar page */
+  .cal{width:100%;max-width:210px;border-radius:14px;overflow:hidden;background:#f3f5fb;color:#18213a;
+    box-shadow:0 14px 30px -14px rgba(0,0,0,.8);text-align:center;position:relative}
+  .cal .band{background:linear-gradient(180deg,#5b8cf0,#4570d6);color:#fff;padding:16px 8px 8px;display:flex;
+    justify-content:center;gap:6px;font-family:var(--disp);font-weight:700;font-size:.95rem;letter-spacing:.06em;position:relative}
+  .cal .band::before,.cal .band::after{content:"";position:absolute;top:5px;width:10px;height:10px;border-radius:50%;background:#0c1428}
+  .cal .band::before{left:34%} .cal .band::after{right:34%}
+  .cal .day{font-family:var(--disp);font-weight:700;font-size:4rem;line-height:1.05;margin:8px 0 0;letter-spacing:-.03em}
+  .cal .wd{font-family:var(--mono);font-size:.82rem;letter-spacing:.12em;margin:2px 0 8px;color:#3a4766}
+  .cal .ft{display:flex;justify-content:space-between;gap:4px;padding:7px 8px;border-top:1px dashed #c7cfe2;
+    font-family:var(--mono);font-size:.64rem;color:#5a6788}
+  .cal .ph{color:#b3bcd2}
+  .cal .part.on{background:#ffe7b3;border-color:#d99a1e;color:#7a4b00}
+  .cal.filled .part{border-color:rgba(70,112,214,.35)}
+  .cal.filled .part:hover{background:#e3eaff;border-color:#4570d6}
+  .cal .band .part.on{background:rgba(255,200,98,.35);color:#fff;border-color:#ffe7b3}
+  .cal.small{max-width:118px;border-radius:10px}
+  .cal.small .band{padding:11px 4px 5px;font-size:.62rem}
+  .cal.small .band::before,.cal.small .band::after{top:3px;width:7px;height:7px}
+  .cal.small .day{font-size:2.3rem;margin:4px 0 0}
+  .cal.small .wd{font-size:.58rem;margin:0 0 6px}
+
+  /* clock */
+  .clock{display:flex;flex-direction:column;align-items:center;gap:10px;width:100%}
+  .face{width:150px;height:150px}
+  .face.small{width:100px;height:100px}
+  .hand{transform-box:view-box;transform-origin:70px 70px;transition:transform .8s cubic-bezier(.2,.9,.3,1)}
+  .digits{display:flex;align-items:flex-end;font-family:var(--mono);font-size:1.02rem;color:#f78c6c;font-variant-numeric:tabular-nums}
+  .digits .sep{color:var(--muted);padding-bottom:16px}
+  .dg{display:flex;flex-direction:column;align-items:center}
+  .dg small{font-size:.52rem;letter-spacing:.1em;text-transform:uppercase;color:rgba(132,150,182,.7);margin-top:3px}
+  .dg .part{padding:1px 3px}
+
+  .both{display:flex;align-items:center;justify-content:center;gap:6px;width:100%}
+  .tj{font-family:var(--mono);font-size:1.3rem;color:var(--muted)}
+
+  /* printed value + button */
+  .prints{margin-top:12px;font-family:var(--mono);font-size:.78rem;line-height:1.5;color:#c3e88d;background:#05070e;
+    border:1px solid var(--line);border-radius:10px;padding:7px 10px;min-height:52px;word-break:break-all}
+  .prints small{display:block;font-size:.54rem;letter-spacing:.12em;text-transform:uppercase;color:rgba(132,150,182,.7)}
+  .prints s{color:var(--muted);display:block;font-size:.7rem}
+  .prints .v{animation:pop .45s}
+  .prints .T{color:var(--gold)}
+  .prints .part{padding:0 2px}
+  .now{margin-top:10px;font-family:var(--mono);font-weight:500;font-size:.92rem;padding:11px;border-radius:12px;cursor:pointer;
+    border:1px solid rgba(110,160,255,.55);background:rgba(110,160,255,.14);color:var(--gold);transition:.15s}
+  .now:hover{background:rgba(110,160,255,.26);border-color:var(--accent)}
+
+  /* the one sentence */
+  .caption{display:flex;gap:14px;align-items:flex-start;margin:18px 2px 0;padding-top:16px;border-top:1px solid var(--line)}
+  .caption .t{flex:1;font-size:1.05rem;line-height:1.55;color:var(--ink);padding-left:16px;border-left:3px solid var(--accent);transition:border-color .3s}
+  .caption .t .line{display:block;margin-top:6px;font-family:var(--mono);font-size:.8rem;color:#bcd0ff;opacity:.9}
+  .caption .t .line i{font-style:normal;color:var(--muted)}
+  .caption.y .t{border-left-color:var(--gold)} .caption.g .t{border-left-color:var(--good)}
+  .caption b.a{color:var(--accent)} .caption b.y{color:var(--gold)} .caption b.g{color:var(--good)}
+  .reset{font-family:var(--body);font-weight:500;font-size:.84rem;padding:8px 14px;border-radius:11px;cursor:pointer;
+    border:1px solid var(--line);background:transparent;color:var(--muted);transition:.15s;flex-shrink:0}
+  .reset:hover{border-color:var(--accent);color:var(--accent)}
+  button:focus-visible,input:focus-visible{outline:2px solid var(--accent);outline-offset:2px}
+
+  @keyframes pop{from{transform:scale(.6);opacity:0}to{transform:scale(1);opacity:1}}
+  .take{margin-top:22px;background:linear-gradient(180deg,rgba(110,160,255,.08),rgba(139,123,255,.04));
+    border:1px solid var(--line);border-left:3px solid var(--accent);border-radius:12px;padding:16px 18px}
+  .take .tk{font-family:var(--mono);font-size:.66rem;letter-spacing:.14em;text-transform:uppercase;color:var(--accent);margin:0 0 8px}
+  .take p{margin:0;font-size:.95rem;color:var(--ink);line-height:1.55}
+  .take b{color:#fff}
+  @media (prefers-reduced-motion:reduce){*{animation-duration:.01ms!important;transition-duration:.01ms!important}#amb{display:none}}
+</style>
+</head>
+<body>
+<a class="back" href="../index.html#05-date-and-time-objects">&#8592; Week 3 index</a>
+<canvas id="amb"></canvas>
+<div class="wrap">
+  <p class="tag">Workbook 3a &middot; Section 2-2 &middot; Date Basics</p>
+  <h1>LocalDate, LocalTime, LocalDateTime</h1>
+  <p class="lede"><b>Three empty objects. Press now() on each, then tap the parts.</b></p>
+
+  <div class="stage">
+    <div class="board">
+      <!-- LocalDate -->
+      <div class="card" id="cD">
+        <p class="hd">LocalDate &middot; today</p>
+        <p class="who">LocalDate</p>
+        <p class="holds">a date only</p>
+        <div class="pic">
+          <div class="cal" id="calD">
+            <div class="band"><button class="part" data-g="month" disabled><span class="ph">MONTH</span></button><button class="part" data-g="year" disabled><span class="ph">YEAR</span></button></div>
+            <p class="day"><button class="part" data-g="dom" disabled><span class="ph">?</span></button></p>
+            <p class="wd"><button class="part" data-g="dow" disabled><span class="ph">WEEKDAY</span></button></p>
+            <div class="ft"><button class="part" data-g="mval" disabled>month <span class="ph">?</span></button><button class="part" data-g="doy" disabled>day <span class="ph">?</span> of year</button></div>
+          </div>
+        </div>
+        <div class="prints" id="pD"><small>prints</small><span class="ph">nothing yet</span></div>
+        <button class="now" id="nD">LocalDate.now()</button>
+      </div>
+
+      <!-- LocalTime -->
+      <div class="card" id="cT">
+        <p class="hd">LocalTime &middot; currentTime</p>
+        <p class="who">LocalTime</p>
+        <p class="holds">a time only</p>
+        <div class="pic">
+          <div class="clock" id="clkT">
+            <svg class="face" viewBox="0 0 140 140" aria-hidden="true">
+              <circle cx="70" cy="70" r="64" fill="rgba(6,10,20,.6)" stroke="rgba(110,160,255,.5)" stroke-width="2"/>
+              <g id="ticksT"></g>
+              <g class="hand" id="hT"><line x1="70" y1="74" x2="70" y2="38" stroke="#eef2fb" stroke-width="5" stroke-linecap="round"/></g>
+              <g class="hand" id="mT"><line x1="70" y1="76" x2="70" y2="20" stroke="#bcd0ff" stroke-width="3.2" stroke-linecap="round"/></g>
+              <g class="hand" id="sT"><line x1="70" y1="80" x2="70" y2="14" stroke="#ffc862" stroke-width="1.4" stroke-linecap="round"/></g>
+              <circle cx="70" cy="70" r="4" fill="#ffc862"/>
+            </svg>
+            <div class="digits">
+              <div class="dg"><button class="part" data-g="hour" disabled><span class="ph">--</span></button><small>hour</small></div><span class="sep">:</span>
+              <div class="dg"><button class="part" data-g="minute" disabled><span class="ph">--</span></button><small>minute</small></div><span class="sep">:</span>
+              <div class="dg"><button class="part" data-g="second" disabled><span class="ph">--</span></button><small>second</small></div><span class="sep">.</span>
+              <div class="dg"><button class="part" data-g="nano" disabled><span class="ph">------</span></button><small>nano</small></div>
+            </div>
+          </div>
+        </div>
+        <div class="prints" id="pT"><small>prints</small><span class="ph">nothing yet</span></div>
+        <button class="now" id="nT">LocalTime.now()</button>
+      </div>
+
+      <!-- LocalDateTime -->
+      <div class="card" id="cB">
+        <p class="hd">LocalDateTime &middot; rightNow</p>
+        <p class="who">LocalDateTime</p>
+        <p class="holds">a date and a time</p>
+        <div class="pic">
+          <div class="both">
+            <div class="cal small" id="calB">
+              <div class="band"><span id="bMon" class="ph">MONTH</span><span id="bYr" class="ph">YEAR</span></div>
+              <p class="day" id="bDay"><span class="ph">?</span></p>
+              <p class="wd" id="bWd"><span class="ph">WEEKDAY</span></p>
+            </div>
+            <span class="tj">+</span>
+            <svg class="face small" viewBox="0 0 140 140" aria-hidden="true">
+              <circle cx="70" cy="70" r="64" fill="rgba(6,10,20,.6)" stroke="rgba(110,160,255,.5)" stroke-width="2"/>
+              <g id="ticksB"></g>
+              <g class="hand" id="hB"><line x1="70" y1="74" x2="70" y2="38" stroke="#eef2fb" stroke-width="6" stroke-linecap="round"/></g>
+              <g class="hand" id="mB"><line x1="70" y1="76" x2="70" y2="20" stroke="#bcd0ff" stroke-width="4" stroke-linecap="round"/></g>
+              <g class="hand" id="sB"><line x1="70" y1="80" x2="70" y2="14" stroke="#ffc862" stroke-width="2" stroke-linecap="round"/></g>
+              <circle cx="70" cy="70" r="5" fill="#ffc862"/>
+            </svg>
+          </div>
+        </div>
+        <div class="prints" id="pB"><small>prints</small><span class="ph">nothing yet</span></div>
+        <button class="now" id="nB">LocalDateTime.now()</button>
+      </div>
+    </div>
+    <div class="caption" id="caption">
+      <div class="t" id="status">Three objects, all <b class="a">empty</b>: one for a date, one for a time, one for both. Press <b class="y">now()</b> on a card.</div>
+      <button class="reset" id="bReset">Reset</button>
+    </div>
+  </div>
+
+  <div class="take">
+    <p class="tk">The one idea</p>
+    <p><b>Pick the class by what you need to store.</b> A birthday is a <code>LocalDate</code>, a closing time a <code>LocalTime</code>,
+    a timestamp a <code>LocalDateTime</code>. <code>now()</code> reads the computer's clock once and the object keeps that value. None of them has a time zone.</p>
+  </div>
+  <div id="rail"></div>
+</div>
+<script>
+(function(){
+  "use strict";
+  var $=function(s){return document.querySelector(s);};
+  var reduce=matchMedia("(prefers-reduced-motion: reduce)").matches;
+  var DAYS=["SUNDAY","MONDAY","TUESDAY","WEDNESDAY","THURSDAY","FRIDAY","SATURDAY"];
+  var MONTHS=["JANUARY","FEBRUARY","MARCH","APRIL","MAY","JUNE","JULY","AUGUST","SEPTEMBER","OCTOBER","NOVEMBER","DECEMBER"];
+  var status=$("#status"),caption=$("#caption");
+  var D=null,T=null,B=null;          /* the three objects' values */
+  var ang={hT:0,mT:0,sT:0,hB:0,mB:0,sB:0};
+
+  function say(html,tone,line){
+    caption.className="caption"+(tone?" "+tone:"");
+    status.innerHTML=html+(line?'<span class="line">'+line+'</span>':"");
+  }
+  function p2(n){return (n<10?"0":"")+n;}
+  function p(n,w){var s=String(n);while(s.length<w)s="0"+s;return s;}
+
+  /* read the real browser clock, local time, with microseconds where the browser gives them */
+  function readClock(){
+    var t=(performance.timeOrigin||Date.now()-performance.now())+performance.now();
+    var ms=Math.floor(t), d=new Date(ms);
+    var micro=Math.floor((t-ms)*1000);
+    var start=new Date(d.getFullYear(),0,1);
+    var doy=Math.round((new Date(d.getFullYear(),d.getMonth(),d.getDate())-start)/86400000)+1;
+    return {y:d.getFullYear(),mo:d.getMonth()+1,dom:d.getDate(),dow:DAYS[d.getDay()],doy:doy,
+      h:d.getHours(),mi:d.getMinutes(),s:d.getSeconds(),nano:(d.getMilliseconds()*1000+micro)*1000};
+  }
+  /* Java's toString rules */
+  function fracStr(nano){
+    if(nano%1000000===0) return p(nano/1000000,3);
+    if(nano%1000===0) return p(nano/1000,6);
+    return p(nano,9);
+  }
+  function dateStr(v){return p(v.y,4)+"-"+p2(v.mo)+"-"+p2(v.dom);}
+  function timeStr(v){
+    var s=p2(v.h)+":"+p2(v.mi);
+    if(v.s>0||v.nano>0){ s+=":"+p2(v.s); if(v.nano>0) s+="."+fracStr(v.nano); }
+    return s;
+  }
+
+  function prints(el,old,html){
+    el.innerHTML='<small>prints</small>'+(old?"<s>"+old+"</s>":"")+'<span class="v">'+html+'</span>';
+  }
+  function act(id){ ["#cD","#cT","#cB"].forEach(function(c){ $(c).classList.toggle("act",c===id); }); }
+  function clearOn(){ document.querySelectorAll(".part.on").forEach(function(e){e.classList.remove("on");}); }
+  function setPart(sel,html){ var b=$(sel); b.innerHTML=html; b.disabled=false; }
+
+  function turn(id,deg){
+    var cur=ang[id], base=((cur%360)+360)%360, delta=((deg-base)%360+360)%360;
+    ang[id]=cur+delta;
+    $("#"+id).style.transform="rotate("+ang[id]+"deg)";
+  }
+  function setHands(sfx,v){
+    turn("h"+sfx,(v.h%12+v.mi/60)*30);
+    turn("m"+sfx,(v.mi+v.s/60)*6);
+    turn("s"+sfx,v.s*6);
+  }
+  function ticks(id,len){
+    var g=$("#"+id),out="";
+    for(var i=0;i<12;i++){
+      var a=i*Math.PI/6, r1=64-(i%3===0?len+4:len), r2=60;
+      out+='<line x1="'+(70+r1*Math.sin(a)).toFixed(1)+'" y1="'+(70-r1*Math.cos(a)).toFixed(1)+'" x2="'+(70+r2*Math.sin(a)).toFixed(1)+'" y2="'+(70-r2*Math.cos(a)).toFixed(1)+'" stroke="rgba(188,208,255,.6)" stroke-width="'+(i%3===0?2.4:1.4)+'"/>';
+    }
+    g.innerHTML=out;
+  }
+
+  function nowDate(){
+    var old=D?dateStr(D):""; D=readClock(); clearOn(); act("#cD");
+    $("#calD").classList.add("filled");
+    setPart('[data-g="month"]',MONTHS[D.mo-1]); setPart('[data-g="year"]',String(D.y));
+    setPart('[data-g="dom"]',String(D.dom)); setPart('[data-g="dow"]',D.dow);
+    setPart('[data-g="mval"]',"month "+D.mo); setPart('[data-g="doy"]',"day "+D.doy+" of year");
+    prints($("#pD"),old,dateStr(D));
+    say('<b class="g">LocalDate</b> holds <b class="g">a date only</b>: year, month, day. No time and no time zone, just the date on this computer. Tap a part of the page.',
+      "g","LocalDate today = LocalDate.now();");
+  }
+  function nowTime(){
+    var old=T?timeStr(T):""; T=readClock(); clearOn(); act("#cT");
+    $("#clkT").classList.add("filled");
+    setPart('[data-g="hour"]',p2(T.h)); setPart('[data-g="minute"]',p2(T.mi));
+    setPart('[data-g="second"]',p2(T.s)); setPart('[data-g="nano"]',T.nano>0?fracStr(T.nano):"0");
+    setHands("T",T);
+    prints($("#pT"),old,timeStr(T));
+    say('<b class="g">LocalTime</b> holds <b class="g">a time only</b>, down to a fraction of a second. No date and no time zone. The clock stays still: the object keeps the moment <b class="y">now()</b> ran.',
+      "g","LocalTime currentTime = LocalTime.now();");
+  }
+  function nowBoth(){
+    var old=B?dateStr(B)+"T"+timeStr(B):""; B=readClock(); clearOn(); act("#cB");
+    $("#bMon").textContent=MONTHS[B.mo-1].slice(0,3); $("#bMon").className="";
+    $("#bYr").textContent=String(B.y); $("#bYr").className="";
+    $("#bDay").textContent=String(B.dom); $("#bWd").textContent=B.dow.slice(0,3);
+    setHands("B",B);
+    prints($("#pB"),old,dateStr(B)+'<button class="part T" id="tT">T</button>'+timeStr(B));
+    $("#pB").classList.add("filled");
+    say('<b class="g">LocalDateTime</b> holds <b class="g">both</b>, a date and a time in one object. Still no time zone. Tap the <b class="y">T</b> in what it prints.',
+      "g","LocalDateTime rightNow = LocalDateTime.now();");
+  }
+
+  var GET={
+    dow:   function(){return ["the weekday","today.getDayOfWeek()",D.dow];},
+    dom:   function(){return ["the day of the month","today.getDayOfMonth()",String(D.dom)];},
+    month: function(){return ["the month as a name","today.getMonth()",MONTHS[D.mo-1]];},
+    mval:  function(){return ["the month as a number","today.getMonthValue()",String(D.mo)];},
+    year:  function(){return ["the year","today.getYear()",String(D.y)];},
+    doy:   function(){return ["the day of the year","today.getDayOfYear()",String(D.doy)];},
+    hour:  function(){return ["the hour, 0 to 23","currentTime.getHour()",String(T.h)];},
+    minute:function(){return ["the minute","currentTime.getMinute()",String(T.mi)];},
+    second:function(){return ["the second","currentTime.getSecond()",String(T.s)];},
+    nano:  function(){return ["the fraction of the second, in nanoseconds","currentTime.getNano()",String(T.nano)];}
+  };
+  function tapPart(b){
+    var g=b.getAttribute("data-g"); if(!GET[g]||b.disabled) return;
+    var r=GET[g](); clearOn(); b.classList.add("on");
+    act(g==="hour"||g==="minute"||g==="second"||g==="nano"?"#cT":"#cD");
+    say('<b class="y">'+r[1]+'</b> reads '+r[0]+' out of the object: <b class="y">'+r[2]+'</b>.',"y",r[1]+'   <i>// '+r[2]+'</i>');
+  }
+  function tapT(b){
+    clearOn(); b.classList.add("on"); act("#cB");
+    say('The <b class="y">T</b> is where the date ends and the time begins. That is the ISO-8601 way Java prints a LocalDateTime.',"y");
+  }
+
+  function reset(){
+    D=T=B=null; clearOn(); act("");
+    $("#calD").classList.remove("filled"); $("#clkT").classList.remove("filled"); $("#pB").classList.remove("filled");
+    $('[data-g="month"]').innerHTML='<span class="ph">MONTH</span>'; $('[data-g="year"]').innerHTML='<span class="ph">YEAR</span>';
+    $('[data-g="dom"]').innerHTML='<span class="ph">?</span>'; $('[data-g="dow"]').innerHTML='<span class="ph">WEEKDAY</span>';
+    $('[data-g="mval"]').innerHTML='month <span class="ph">?</span>'; $('[data-g="doy"]').innerHTML='day <span class="ph">?</span> of year';
+    ["hour","minute","second"].forEach(function(g){ $('[data-g="'+g+'"]').innerHTML='<span class="ph">--</span>'; });
+    $('[data-g="nano"]').innerHTML='<span class="ph">------</span>';
+    document.querySelectorAll(".part[data-g]").forEach(function(b){ b.disabled=true; });
+    $("#bMon").textContent="MONTH"; $("#bMon").className="ph"; $("#bYr").textContent="YEAR"; $("#bYr").className="ph";
+    $("#bDay").innerHTML='<span class="ph">?</span>'; $("#bWd").innerHTML='<span class="ph">WEEKDAY</span>';
+    ["hT","mT","sT","hB","mB","sB"].forEach(function(id){ ang[id]=0; $("#"+id).style.transform="rotate(0deg)"; });
+    ["#pD","#pT","#pB"].forEach(function(s){ $(s).innerHTML='<small>prints</small><span class="ph">nothing yet</span>'; });
+    say('Three objects, all <b class="a">empty</b>: one for a date, one for a time, one for both. Press <b class="y">now()</b> on a card.');
+  }
+
+  ticks("ticksT",6); ticks("ticksB",8);
+  $("#nD").addEventListener("click",nowDate);
+  $("#nT").addEventListener("click",nowTime);
+  $("#nB").addEventListener("click",nowBoth);
+  $("#bReset").addEventListener("click",reset);
+  document.querySelector(".board").addEventListener("click",function(e){
+    var t=e.target.closest("#tT"); if(t){ tapT(t); return; }
+    var b=e.target.closest(".part[data-g]"); if(b) tapPart(b);
+  });
+
+  /* ambient canvas */
+  var cv=$("#amb"),ctx=cv.getContext&&cv.getContext("2d"),parts=[];
+  function sizeC(){if(!ctx)return;cv.width=innerWidth;cv.height=innerHeight;}
+  function initParts(){parts=[];for(var i=0;i<46;i++)parts.push({x:Math.random(),y:Math.random(),
+    r:Math.random()*1.6+.3,s:Math.random()*.02+.004,o:Math.random()*.4+.1});}
+  function drawC(){if(!ctx)return;ctx.clearRect(0,0,cv.width,cv.height);
+    parts.forEach(function(p){p.y-=p.s/60;if(p.y<-.02)p.y=1.02;
+      ctx.beginPath();ctx.arc(p.x*cv.width,p.y*cv.height,p.r,0,7);
+      ctx.fillStyle="rgba(140,170,255,"+p.o+")";ctx.fill();});
+    requestAnimationFrame(drawC);}
+  if(ctx&&!reduce){sizeC();initParts();drawC();addEventListener("resize",sizeC);}
+})();
+</script>
+<script src="../manifest.js"></script>
+<script src="../../assets/rail.js"></script>
+<script>Rail.render(document.getElementById("rail"),{week:3,kind:"visuals",current:"05-date-and-time-objects"});</script>
+</body>
+</html>

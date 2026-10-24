@@ -1,0 +1,293 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>The Project Board | Week 3 Visual Hub</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Sora:wght@500;700&family=Inter:wght@400;500&family=JetBrains+Mono:wght@400;500&display=swap">
+<style>
+  :root{
+    --bg:#080c17; --bg2:#0c1428; --surface:rgba(255,255,255,.045); --line:rgba(255,255,255,.09);
+    --ink:#eef2fb; --muted:#8496b6; --accent:#6ea0ff; --accent2:#8b7bff; --good:#46d98a; --warn:#ff6a6a;
+    --gold:#ffc862; --disp:'Sora',system-ui,sans-serif; --body:'Inter',system-ui,sans-serif;
+    --mono:'JetBrains Mono',ui-monospace,monospace;
+  }
+  *{box-sizing:border-box}
+  body{margin:0;min-height:100vh;color:var(--ink);font-family:var(--body);
+    background:radial-gradient(1200px 700px at 70% -10%,#141d38 0%,transparent 55%),
+               radial-gradient(900px 600px at 10% 110%,#161233 0%,transparent 50%),#080c17;
+    overflow-x:hidden}
+  #amb{position:fixed;inset:0;z-index:0;pointer-events:none;opacity:.6}
+  .back{position:relative;z-index:2;display:block;max-width:1120px;margin:0 auto;padding:26px 24px 0;
+    width:100%;font-family:var(--mono);font-size:.8rem;letter-spacing:.04em;color:var(--muted);
+    text-decoration:none;transition:color .15s}
+  .back:hover{color:var(--accent)}
+  .wrap{position:relative;z-index:1;max-width:1120px;margin:0 auto;padding:22px 24px 70px}
+  .tag{font-family:var(--mono);font-size:.72rem;letter-spacing:.22em;text-transform:uppercase;color:var(--accent);margin:0 0 14px}
+  h1{font-family:var(--disp);font-weight:700;font-size:clamp(2.3rem,6vw,3.6rem);line-height:1;margin:0 0 12px;
+    letter-spacing:-.03em;background:linear-gradient(180deg,#fff,#b9c6e6);-webkit-background-clip:text;
+    background-clip:text;color:transparent}
+  .lede{color:var(--muted);max-width:64ch;font-size:1.05rem;margin:0 0 26px;line-height:1.5}
+  .lede b{color:var(--ink)}
+  code{font-family:var(--mono);font-size:.92em;color:#bcd0ff}
+
+  /* ---------- the stage IS the picture ---------- */
+  .stage{position:relative;background:linear-gradient(180deg,rgba(255,255,255,.03),rgba(255,255,255,.01));
+    border:1px solid var(--line);border-radius:24px;padding:22px;
+    box-shadow:0 1px 0 rgba(255,255,255,.06) inset,0 30px 80px -30px rgba(0,0,0,.8)}
+  .bname{display:flex;align-items:center;gap:10px;margin:0 2px 14px;font-family:var(--mono);font-size:.7rem;
+    letter-spacing:.14em;text-transform:uppercase;color:var(--muted)}
+  .bname b{font-family:var(--disp);font-weight:700;font-size:1.05rem;letter-spacing:-.01em;text-transform:none;color:var(--ink)}
+  .board{display:grid;grid-template-columns:repeat(3,minmax(0,1fr)) 120px;gap:12px;align-items:stretch;min-height:420px}
+  .board.four{grid-template-columns:repeat(4,minmax(0,1fr))}
+  .col{display:flex;flex-direction:column;border-radius:14px;border:1px solid var(--line);background:rgba(6,10,20,.5);padding:10px;min-width:0}
+  .col.born{animation:born .5s cubic-bezier(.2,.9,.3,1)}
+  .ch{display:flex;align-items:center;gap:8px;padding:2px 4px 10px;border-bottom:1px solid var(--line);margin-bottom:10px;min-height:34px}
+  .ch .dot{width:10px;height:10px;border-radius:50%;flex-shrink:0;border:2px solid var(--muted)}
+  .ch .nm{font-family:var(--disp);font-weight:500;font-size:.95rem;white-space:nowrap}
+  .ch .n{font-family:var(--mono);font-size:.68rem;color:var(--muted);background:rgba(255,255,255,.06);border-radius:999px;padding:1px 8px}
+  .col[data-c="prog"] .dot{border-color:var(--accent)}
+  .col[data-c="qa"] .dot{border-color:var(--gold)}
+  .col[data-c="done"] .dot{border-color:var(--good);background:var(--good)}
+  .prio{margin-left:auto;font-family:var(--mono);font-size:.68rem;padding:5px 9px;border-radius:9px;cursor:pointer;
+    border:1px solid rgba(70,217,138,.45);background:rgba(70,217,138,.1);color:#bff3d6;transition:.15s;white-space:nowrap}
+  .prio:hover{border-color:var(--good);background:rgba(70,217,138,.2)}
+  .cb{display:flex;flex-direction:column;gap:8px;flex:1;min-height:60px}
+  .addcol{border:1px dashed rgba(132,150,182,.4);border-radius:14px;background:transparent;color:var(--muted);cursor:pointer;
+    font-family:var(--mono);font-size:.82rem;transition:.15s;padding:12px}
+  .addcol:hover{border-color:var(--gold);color:var(--gold);background:rgba(255,200,98,.06)}
+
+  /* cards */
+  .kc{position:relative;border-radius:12px;padding:10px 10px 8px;border:1px solid rgba(255,255,255,.14);background:rgba(255,255,255,.05);
+    transition:border-color .3s,box-shadow .3s,background .3s}
+  .kc.lit{border-color:rgba(110,160,255,.75);box-shadow:0 0 22px -8px rgba(110,160,255,.85)}
+  .col[data-c="done"] .kc{background:rgba(70,217,138,.05)}
+  .kt{display:flex;align-items:flex-start;gap:6px}
+  .ttl{flex:1;text-align:left;background:none;border:0;padding:0;cursor:pointer;color:var(--ink);font-family:var(--body);
+    font-weight:500;font-size:.88rem;line-height:1.35}
+  .ttl:hover{color:#bcd0ff;text-decoration:underline;text-underline-offset:3px}
+  .mvp{font-family:var(--mono);font-size:.56rem;letter-spacing:.1em;color:var(--good);border:1px solid rgba(70,217,138,.5);
+    border-radius:999px;padding:1px 6px;flex-shrink:0;margin-top:2px}
+  .det{display:none;margin-top:8px;padding-top:8px;border-top:1px solid var(--line)}
+  .kc.open .det{display:block;animation:pop .3s}
+  .story{font-size:.78rem;line-height:1.45;color:#c9d4ea;margin:0 0 8px}
+  .story i{font-style:normal;color:var(--accent)}
+  .ac{font-family:var(--mono);font-size:.56rem;letter-spacing:.12em;text-transform:uppercase;color:var(--muted);margin:0 0 4px}
+  .ck{display:flex;gap:7px;align-items:flex-start;font-size:.76rem;line-height:1.35;color:#c9d4ea;padding:3px 0;cursor:pointer}
+  .ck input{margin:1px 0 0;accent-color:var(--good);cursor:pointer;flex-shrink:0}
+  .ck.on span{color:var(--muted);text-decoration:line-through}
+  .kf{display:flex;align-items:center;justify-content:space-between;gap:6px;margin-top:8px}
+  .mv{font-family:var(--mono);font-size:.82rem;width:30px;height:24px;border-radius:8px;cursor:pointer;line-height:1;
+    border:1px solid var(--line);background:rgba(0,0,0,.25);color:#bcd0ff;transition:.15s}
+  .mv:hover{border-color:var(--accent);background:rgba(110,160,255,.14)}
+  .mv[hidden]{display:inline-block;visibility:hidden}
+  .cm{font-family:var(--mono);font-size:.6rem;letter-spacing:.08em;color:var(--good);opacity:0;transition:opacity .3s}
+  .col[data-c="done"] .cm{opacity:1}
+
+  /* the one sentence */
+  .caption{display:flex;gap:14px;align-items:flex-start;margin:18px 2px 0;padding-top:16px;border-top:1px solid var(--line)}
+  .caption .t{flex:1;font-size:1.05rem;line-height:1.55;color:var(--ink);padding-left:16px;border-left:3px solid var(--accent);transition:border-color .3s}
+  .caption .t .line{display:block;margin-top:6px;font-family:var(--mono);font-size:.8rem;color:#bcd0ff;opacity:.9}
+  .caption.y .t{border-left-color:var(--gold)} .caption.g .t{border-left-color:var(--good)}
+  .caption b.a{color:var(--accent)} .caption b.y{color:var(--gold)} .caption b.g{color:var(--good)}
+  .reset{font-family:var(--body);font-weight:500;font-size:.84rem;padding:8px 14px;border-radius:11px;cursor:pointer;
+    border:1px solid var(--line);background:transparent;color:var(--muted);transition:.15s;flex-shrink:0}
+  .reset:hover{border-color:var(--accent);color:var(--accent)}
+  button:focus-visible,input:focus-visible{outline:2px solid var(--accent);outline-offset:2px}
+
+  @media (max-width:700px){.board,.board.four{grid-template-columns:1fr;min-height:0}.addcol{min-height:48px}}
+
+  @keyframes pop{from{opacity:0;transform:translateY(-4px)}to{opacity:1;transform:none}}
+  @keyframes born{from{opacity:0;transform:scaleX(.6)}to{opacity:1;transform:none}}
+  .take{margin-top:22px;background:linear-gradient(180deg,rgba(110,160,255,.08),rgba(139,123,255,.04));
+    border:1px solid var(--line);border-left:3px solid var(--accent);border-radius:12px;padding:16px 18px}
+  .take .tk{font-family:var(--mono);font-size:.66rem;letter-spacing:.14em;text-transform:uppercase;color:var(--accent);margin:0 0 8px}
+  .take p{margin:0;font-size:.95rem;color:var(--ink);line-height:1.55}
+  .take b{color:#fff}
+  @media (prefers-reduced-motion:reduce){*{animation-duration:.01ms!important;transition-duration:.01ms!important}#amb{display:none}}
+</style>
+</head>
+<body>
+<a class="back" href="../index.html#14-project-board">&#8592; Week 3 index</a>
+<canvas id="amb"></canvas>
+<div class="wrap">
+  <p class="tag">Workbook 3b &middot; Section 3-1 &middot; Agile Project Management Tools</p>
+  <h1>The Project Board</h1>
+  <p class="lede"><b>Five stories wait in Todo. Open one, then walk it across the board.</b></p>
+
+  <div class="stage">
+    <p class="bname">Project board <b>Bus Tracker</b></p>
+    <div class="board" id="board">
+      <div class="col" data-c="todo"><div class="ch"><span class="dot"></span><span class="nm">Todo</span><span class="n"></span><button class="prio" id="bPrio">Prioritize</button></div><div class="cb"></div></div>
+      <div class="col" data-c="prog"><div class="ch"><span class="dot"></span><span class="nm">In Progress</span><span class="n"></span></div><div class="cb"></div></div>
+      <div class="col" data-c="done"><div class="ch"><span class="dot"></span><span class="nm">Done</span><span class="n"></span></div><div class="cb"></div></div>
+      <button class="addcol" id="bAdd">+ Add column</button>
+    </div>
+    <div class="caption" id="caption">
+      <div class="t" id="status">A new board has three columns. Every story starts in <b class="a">Todo</b>, the backlog.</div>
+      <button class="reset" id="bReset">Reset</button>
+    </div>
+  </div>
+
+  <div class="take">
+    <p class="tk">The one idea</p>
+    <p><b>The board shows who is on what, what is left and what is done.</b> Each story is a card that starts in Todo,
+    MVP cards on top, and carries its own acceptance criteria. It walks left to right, In Progress, QA/Testing, Done,
+    and the code is committed when it reaches Done.</p>
+  </div>
+  <div id="rail"></div>
+</div>
+<script>
+(function(){
+  "use strict";
+  var $=function(s,r){return (r||document).querySelector(s);};
+  var reduce=matchMedia("(prefers-reduced-motion: reduce)").matches;
+  var NAMES={todo:"Todo",prog:"In Progress",qa:"QA/Testing",done:"Done"};
+  var STORIES=[
+    {t:"Night mode",mvp:false,w:"a dark screen at night",s:"the app is easy on my eyes",
+      a:["Switch between light and dark","Remember my choice"]},
+    {t:"Find my stop",mvp:true,w:"to find my stop by its number or street",s:"I can pick it quickly",
+      a:["Search by stop number","Search by street name","Show \"Stop not found\" for unknown input"]},
+    {t:"Late bus alert",mvp:false,w:"an alert when my bus is running late",s:"I can plan around it",
+      a:["Alert when the bus is 5 or more minutes late","Show the new arrival time"]},
+    {t:"See the next bus",mvp:true,w:"to see when the next bus reaches my stop",s:"I leave home on time",
+      a:["Show the next arrival time for a stop","Count down in minutes","Say \"No more buses today\" after the last one"]},
+    {t:"Save my stop",mvp:false,w:"to save the stop I use every day",s:"I do not search for it each morning",
+      a:["Save one favorite stop","Open the app on that stop"]}
+  ];
+  var board=$("#board"),status=$("#status"),caption=$("#caption"),bAdd=$("#bAdd");
+  var order,hasQA,cards;
+
+  function say(html,tone){ caption.className="caption"+(tone?" "+tone:""); status.innerHTML=html; }
+  function q(c){ return "<b>“"+c.t+"”</b>"; }
+
+  function makeCard(s,k){
+    var el=document.createElement("div"); el.className="kc"; el.id="c"+k;
+    var list=s.a.map(function(x,i){
+      return '<label class="ck"><input type="checkbox" data-i="'+i+'"><span>'+x+'</span></label>';
+    }).join("");
+    el.innerHTML='<div class="kt"><button class="ttl" aria-expanded="false">'+s.t+'</button>'+(s.mvp?'<span class="mvp">MVP</span>':"")+'</div>'
+      +'<div class="det"><p class="story"><i>As a</i> rider, <i>I want</i> '+s.w+' <i>so that</i> '+s.s+'.</p>'
+      +'<p class="ac">Acceptance criteria</p>'+list+'</div>'
+      +'<div class="kf"><button class="mv b" aria-label="Move left">←</button><span class="cm">✓ committed</span>'
+      +'<button class="mv f" aria-label="Move right">→</button></div>';
+    return {t:s.t,mvp:s.mvp,col:"todo",el:el,n:s.a.length};
+  }
+
+  function colEl(c){ return board.querySelector('.col[data-c="'+c+'"]'); }
+  function place(){
+    cards.forEach(function(c){
+      $(".cb",colEl(c.col)).appendChild(c.el);
+      var i=order.indexOf(c.col);
+      $(".mv.b",c.el).hidden=(i===0); $(".mv.f",c.el).hidden=(i===order.length-1);
+    });
+    order.forEach(function(c){ $(".n",colEl(c)).textContent=cards.filter(function(x){return x.col===c;}).length; });
+  }
+  /* move cards, then slide each one from where it was to where it lands */
+  function flip(mutate){
+    var before={}; cards.forEach(function(c){ before[c.el.id]=c.el.getBoundingClientRect(); });
+    mutate(); place();
+    if(reduce) return;
+    cards.forEach(function(c){
+      var o=before[c.el.id],r=c.el.getBoundingClientRect(),dx=o.left-r.left,dy=o.top-r.top;
+      if(!dx&&!dy) return;
+      c.el.style.transition="none"; c.el.style.transform="translate("+dx+"px,"+dy+"px)";
+      requestAnimationFrame(function(){ requestAnimationFrame(function(){
+        c.el.style.transition="transform .45s cubic-bezier(.2,.9,.3,1),border-color .3s,box-shadow .3s";
+        c.el.style.transform="";
+      });});
+    });
+  }
+  function lit(c){ cards.forEach(function(x){ x.el.classList.toggle("lit",x===c); }); }
+
+  function addColumn(){
+    if(hasQA) return;
+    flip(function(){
+      var col=document.createElement("div"); col.className="col born"; col.setAttribute("data-c","qa");
+      col.innerHTML='<div class="ch"><span class="dot"></span><span class="nm">QA/Testing</span><span class="n"></span></div><div class="cb"></div>';
+      board.insertBefore(col,colEl("done"));
+      bAdd.style.display="none"; board.classList.add("four");
+      order=["todo","prog","qa","done"]; hasQA=true;
+    });
+    say('<b class="y">QA/Testing</b> goes after In Progress and before Done: finished work is tested there, so a second pair of eyes sees every card before it is Done.',"y");
+  }
+  function prioritize(){
+    flip(function(){
+      var todo=cards.filter(function(c){return c.col==="todo";}),rest=cards.filter(function(c){return c.col!=="todo";});
+      var top=todo.filter(function(c){return c.mvp;}),low=todo.filter(function(c){return !c.mvp;});
+      cards=top.concat(low,rest);
+    });
+    lit(null);
+    var m=cards.filter(function(c){return c.col==="todo"&&c.mvp;}).length;
+    say(m?'<b class="g">Prioritize</b> put the MVP cards on top of Todo: the first working version needs them, so they are built first.'
+         :'No MVP card is left in Todo, so the order stays as it is.',"g");
+  }
+  function move(c,dir){
+    var i=order.indexOf(c.col),to=order[i+dir]; if(!to) return;
+    flip(function(){ cards.splice(cards.indexOf(c),1); cards.push(c); c.col=to; });
+    lit(c);
+    if(dir<0){ say(q(c)+' moved back to <b class="a">'+NAMES[to]+'</b>.'+(to==="todo"?" It is back in the backlog.":"")); return; }
+    if(to==="prog") say(q(c)+' moved to <b class="a">In Progress</b>: this is the card you are working on now.');
+    else if(to==="qa") say(q(c)+' moved to <b class="y">QA/Testing</b>: the code is written, now it is checked against the acceptance criteria.',"y");
+    else say(q(c)+' moved to <b class="g">Done</b>. Commit now: one commit after closing each task.',"g");
+  }
+  function toggle(c){
+    var open=c.el.classList.toggle("open");
+    $(".ttl",c.el).setAttribute("aria-expanded",open?"true":"false");
+    lit(c);
+    say(open?'The details live on the card: '+q(c)+' holds its user story and the acceptance criteria to tick off.'
+            :q(c)+' is closed. Tap its title to open it again.');
+  }
+  function tick(c){
+    var boxes=c.el.querySelectorAll(".ck input"),n=0;
+    boxes.forEach(function(b){ b.parentNode.classList.toggle("on",b.checked); if(b.checked) n++; });
+    lit(c);
+    if(n===c.n) say('Every criterion on '+q(c)+' is checked: this story is ready to move toward Done.',"g");
+    else say(q(c)+': <b class="a">'+n+' of '+c.n+'</b> acceptance criteria checked.');
+  }
+
+  function reset(){
+    var qa=colEl("qa"); if(qa) qa.remove();
+    bAdd.style.display=""; board.classList.remove("four");
+    board.querySelectorAll(".kc").forEach(function(e){ e.remove(); });
+    order=["todo","prog","done"]; hasQA=false;
+    cards=STORIES.map(makeCard);
+    place();
+    say('A new board has three columns. Every story starts in <b class="a">Todo</b>, the backlog.');
+  }
+
+  board.addEventListener("click",function(e){
+    var el=e.target.closest(".kc"); if(!el) return;
+    var c=cards.filter(function(x){return x.el===el;})[0]; if(!c) return;
+    if(e.target.closest(".ttl")) toggle(c);
+    else if(e.target.closest(".mv.f")) move(c,1);
+    else if(e.target.closest(".mv.b")) move(c,-1);
+  });
+  board.addEventListener("change",function(e){
+    var el=e.target.closest(".kc"); if(!el) return;
+    var c=cards.filter(function(x){return x.el===el;})[0]; if(c) tick(c);
+  });
+  bAdd.addEventListener("click",addColumn);
+  $("#bPrio").addEventListener("click",prioritize);
+  $("#bReset").addEventListener("click",reset);
+  reset();
+
+  /* ambient canvas */
+  var cv=$("#amb"),ctx=cv.getContext&&cv.getContext("2d"),parts=[];
+  function sizeC(){if(!ctx)return;cv.width=innerWidth;cv.height=innerHeight;}
+  function initParts(){parts=[];for(var i=0;i<46;i++)parts.push({x:Math.random(),y:Math.random(),
+    r:Math.random()*1.6+.3,s:Math.random()*.02+.004,o:Math.random()*.4+.1});}
+  function drawC(){if(!ctx)return;ctx.clearRect(0,0,cv.width,cv.height);
+    parts.forEach(function(p){p.y-=p.s/60;if(p.y<-.02)p.y=1.02;
+      ctx.beginPath();ctx.arc(p.x*cv.width,p.y*cv.height,p.r,0,7);
+      ctx.fillStyle="rgba(140,170,255,"+p.o+")";ctx.fill();});
+    requestAnimationFrame(drawC);}
+  if(ctx&&!reduce){sizeC();initParts();drawC();addEventListener("resize",sizeC);}
+})();
+</script>
+<script src="../manifest.js"></script>
+<script src="../../assets/rail.js"></script>
+<script>Rail.render(document.getElementById("rail"),{week:3,kind:"visuals",current:"14-project-board"});</script>
+</body>
+</html>

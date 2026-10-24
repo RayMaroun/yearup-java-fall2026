@@ -1,0 +1,219 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>GitHub Project Board | Week 3 Visual Hub</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Sora:wght@500;700&family=Inter:wght@400;500&family=JetBrains+Mono:wght@400;500&display=swap">
+<style>
+  :root{
+    --bg:#080c17; --bg2:#0c1428; --surface:rgba(255,255,255,.045); --line:rgba(255,255,255,.09);
+    --ink:#eef2fb; --muted:#8496b6; --accent:#6ea0ff; --accent2:#8b7bff; --good:#46d98a; --warn:#ff6a6a;
+    --gold:#ffc862; --disp:'Sora',system-ui,sans-serif; --body:'Inter',system-ui,sans-serif;
+    --mono:'JetBrains Mono',ui-monospace,monospace;
+  }
+  *{box-sizing:border-box}
+  body{margin:0;min-height:100vh;color:var(--ink);font-family:var(--body);
+    background:radial-gradient(1200px 700px at 70% -10%,#141d38 0%,transparent 55%),
+               radial-gradient(900px 600px at 10% 110%,#161233 0%,transparent 50%),#080c17;
+    overflow-x:hidden}
+  #amb{position:fixed;inset:0;z-index:0;pointer-events:none;opacity:.6}
+  .back{position:relative;z-index:2;display:block;max-width:1120px;margin:0 auto;padding:26px 24px 0;
+    width:100%;font-family:var(--mono);font-size:.8rem;letter-spacing:.04em;color:var(--muted);
+    text-decoration:none;transition:color .15s}
+  .back:hover{color:var(--accent)}
+  .wrap{position:relative;z-index:1;max-width:1120px;margin:0 auto;padding:22px 24px 70px}
+  .tag{font-family:var(--mono);font-size:.72rem;letter-spacing:.22em;text-transform:uppercase;color:var(--accent);margin:0 0 14px}
+  h1{font-family:var(--disp);font-weight:700;font-size:clamp(2.3rem,6vw,3.6rem);line-height:1;margin:0 0 12px;
+    letter-spacing:-.03em;background:linear-gradient(180deg,#fff,#b9c6e6);-webkit-background-clip:text;
+    background-clip:text;color:transparent}
+  .lede{color:var(--muted);max-width:64ch;font-size:1.05rem;margin:0 0 26px;line-height:1.5}
+  .lede b{color:var(--ink)}
+  .lede code,.take code,.caption code{font-family:var(--mono);font-size:.92em;color:#bcd0ff}
+
+  /* ---------- companion: everything visible, a checklist you tick ---------- */
+  .stage{position:relative;background:linear-gradient(180deg,rgba(255,255,255,.03),rgba(255,255,255,.01));
+    border:1px solid var(--line);border-radius:24px;padding:18px;
+    box-shadow:0 1px 0 rgba(255,255,255,.06) inset,0 30px 80px -30px rgba(0,0,0,.8)}
+  .lab{font-family:var(--mono);font-size:.7rem;letter-spacing:.12em;text-transform:uppercase;color:var(--muted);margin:0 0 10px}
+  .cols{display:grid;grid-template-columns:minmax(0,1.35fr) minmax(0,1fr);gap:16px}
+  @media (max-width:860px){.cols{grid-template-columns:1fr}}
+  .box{background:rgba(6,10,20,.5);border:1px solid var(--line);border-radius:18px;padding:16px 18px}
+  .brief p{margin:0 0 10px;font-size:1rem;line-height:1.6;color:var(--ink)} .brief p:last-child{margin:0}
+  .brief b{color:#fff} .brief code,.step code,.stuck code{font-family:var(--mono);font-size:.9em;color:#bcd0ff}
+  .brief .no{color:var(--muted)}
+  /* steps */
+  .steps{display:flex;flex-direction:column;gap:8px;margin-top:4px}
+  .step{border:1px solid var(--line);border-radius:14px;background:rgba(255,255,255,.025);transition:border-color .2s,background .2s}
+  .step.done{border-color:rgba(70,217,138,.45);background:rgba(70,217,138,.05)}
+  .step .hd{display:flex;align-items:center;gap:12px;padding:11px 14px;cursor:pointer;user-select:none}
+  .step .tick{flex-shrink:0;width:22px;height:22px;border-radius:7px;border:1.5px solid rgba(132,150,182,.6);display:grid;place-items:center;
+    background:rgba(0,0,0,.25);transition:.15s;font-size:.8rem;color:transparent}
+  .step.done .tick{border-color:var(--good);background:rgba(70,217,138,.2);color:var(--good)}
+  .step .num{font-family:var(--mono);font-size:.68rem;color:var(--accent);min-width:1.4rem}
+  .step .txt{flex:1;font-size:.98rem;line-height:1.45;color:var(--ink)}
+  .step.done .txt{color:var(--muted);text-decoration:line-through;text-decoration-color:rgba(132,150,182,.5)}
+  .step .more{flex-shrink:0;font-family:var(--mono);font-size:.64rem;letter-spacing:.08em;text-transform:uppercase;color:var(--muted);
+    padding:4px 9px;border-radius:999px;border:1px solid var(--line);transition:.15s}
+  .step .hd:hover .more{color:var(--accent);border-color:var(--accent)}
+  .step .dt{display:none;padding:0 14px 13px 62px;font-size:.9rem;line-height:1.55;color:var(--muted)}
+  .step.open .dt{display:block}
+  .step .dt b{color:var(--ink);font-weight:500}
+  .step .dt .ok{display:block;margin-top:6px;font-family:var(--mono);font-size:.74rem;color:var(--good)}
+  .step .dt .ok:before{content:"done when  ";color:rgba(70,217,138,.6);letter-spacing:.08em;text-transform:uppercase;font-size:.62rem}
+  .prog{display:flex;align-items:center;gap:12px;margin-top:12px;font-family:var(--mono);font-size:.72rem;color:var(--muted)}
+  .prog .bar{flex:1;height:6px;border-radius:999px;background:rgba(255,255,255,.08);overflow:hidden}
+  .prog .bar i{display:block;height:100%;width:0;background:var(--good);transition:width .3s}
+  .prog button{font-family:var(--mono);font-size:.66rem;letter-spacing:.08em;text-transform:uppercase;color:var(--muted);background:transparent;
+    border:1px solid var(--line);border-radius:999px;padding:4px 10px;cursor:pointer}
+  .prog button:hover{color:var(--accent);border-color:var(--accent)}
+  /* right column */
+  .side{display:flex;flex-direction:column;gap:14px}
+  .console{font-family:var(--mono);font-size:.78rem;line-height:1.65;background:#05070e;border:1px solid var(--line);
+    border-radius:12px;padding:10px 14px;color:#9fe3b6;white-space:pre}
+  .console .cl{font-size:.6rem;letter-spacing:.14em;text-transform:uppercase;color:rgba(132,150,182,.6);margin-bottom:4px;white-space:normal}
+  .console .mu{color:rgba(132,150,182,.6)}
+  .note{font-size:.84rem;color:var(--muted);line-height:1.5;margin:8px 0 0}
+  .stuck{margin:0;padding:0;list-style:none;display:flex;flex-direction:column;gap:8px}
+  .stuck li{font-size:.9rem;line-height:1.5;color:var(--ink);padding-left:14px;border-left:2px solid rgba(255,106,106,.5)}
+  .stuck li b{color:var(--warn);font-weight:500}
+  .links{display:flex;flex-wrap:wrap;gap:6px}
+  .links a{font-family:var(--mono);font-size:.72rem;padding:5px 11px;border-radius:999px;border:1px solid var(--line);
+    color:var(--accent);text-decoration:none;background:rgba(110,160,255,.06);transition:.15s}
+  .links a:hover{border-color:var(--accent);background:rgba(110,160,255,.14)}
+  .take{margin-top:22px;background:linear-gradient(180deg,rgba(110,160,255,.08),rgba(139,123,255,.04));
+    border:1px solid var(--line);border-left:3px solid var(--accent);border-radius:12px;padding:16px 18px}
+  .take .tk{font-family:var(--mono);font-size:.66rem;letter-spacing:.14em;text-transform:uppercase;color:var(--accent);margin:0 0 8px}
+  .take p{margin:0;font-size:.95rem;color:var(--ink);line-height:1.55}
+  .take b{color:#fff}
+  @media (prefers-reduced-motion:reduce){*{animation-duration:.01ms!important;transition-duration:.01ms!important}#amb{display:none}}
+</style>
+</head>
+<body>
+
+<a class="back" href="../index.html#github-project-board">&#8592; Week 3 index</a>
+
+<canvas id="amb"></canvas>
+<div class="wrap">
+  <p class="tag">Workbook 3b &middot; Section 3-1 &middot; Exercise 1</p>
+  <h1>GitHub Project Board</h1>
+  <p class="lede"><b>Your hardware store user stories, moved onto a board on github.com: one card each, in Todo, ready to plan.</b></p>
+
+  <div class="stage">
+    <div class="cols">
+      <div>
+        <p class="lab">What you are building</p>
+        <div class="box brief">
+          <p>A <b>GitHub project board</b> named <b>Hardware Store Project</b>, with the columns Todo, In Progress, <b>Testing</b> and Done. Every user story you wrote in the Module 2 exercise becomes a card in <b>Todo</b>, and each card holds its story and details.</p>
+          <p class="no">No code, no IntelliJ, no repository: everything happens on github.com. You are not building the store, only planning it.</p>
+        </div>
+
+        <p class="lab" style="margin-top:18px">Do these in order</p>
+        <div class="steps" id="steps"></div>
+        <div class="prog"><span id="progTxt">0 of 6 done</span><div class="bar"><i id="progBar"></i></div><button id="bClear">Clear ticks</button></div>
+      </div>
+
+      <div class="side">
+        <div>
+          <p class="lab">What a finished board looks like</p>
+          <div class="console"><div class="cl">board view</div>Hardware Store Project
+Todo         one card per story
+In Progress  empty
+Testing      empty
+Done         empty
+<span class="mu">open a card: the story, then a checklist</span></div>
+          <p class="note">Card titles and details are yours and will differ.</p>
+        </div>
+        <div>
+          <p class="lab">Where people get stuck</p>
+          <ul class="stuck">
+            <li><b>A table, not columns.</b> Table was picked in the dialog. Make a new project and choose Board.</li>
+            <li><b>Every card says Draft.</b> That is expected; the workbook keeps them as drafts.</li>
+            <li><b>Testing sits after Done.</b> Drag it by its name to the left of Done.</li>
+          </ul>
+        </div>
+        <div>
+          <p class="lab">Pages that help</p>
+          <div class="links">
+            <a href="../visuals/14-project-board.html">The project board</a>
+            <a href="../visuals/13-user-story.html">A user story</a>
+            <a href="../reference/glossary.html">Glossary</a>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="take">
+    <p class="tk">The one idea</p>
+    <p><b>Todo is the backlog.</b> Every story starts there, and a card moves one column right each time the work behind it moves on.</p>
+  </div>
+
+  <div id="rail"></div>
+</div>
+
+<script>
+(function(){
+  "use strict";
+  var $=function(s){return document.querySelector(s);};
+  var reduce=matchMedia("(prefers-reduced-motion: reduce)").matches;
+  var KEY="hub-ex-w3-github-project-board";
+
+  /* each step: what to do (the workbook's words, plain), what it means, how you know it worked */
+  var STEPS=[
+    {t:"Log in to GitHub and create a new project as a <b>Board</b>.",
+     d:"On github.com, signed in, open the <b>+</b> menu next to your avatar (top right) and pick <b>New project</b>. In the dialog choose <b>Board</b> on the left, then <b>Create</b> at the bottom.",
+     ok:"a board with Todo, In Progress and Done"},
+    {t:"Rename it <code>Hardware Store Project</code>.",
+     d:"Click the name in the top left corner of the board and type the new one.",
+     ok:"the new name shows at the top of the board"},
+    {t:"Add a <b>Testing</b> column and put it before Done.",
+     d:"Click the <b>+</b> to the right of the last column and name it Testing (the workbook pages say QA/Testing; either is fine). Then drag it by its name to the left of <b>Done</b>.",
+     ok:"Todo, In Progress, Testing, Done, in that order"},
+    {t:"Add a card to <b>Todo</b> for each user story from the Module 2 exercise.",
+     d:"Click <b>+ Add item</b> at the bottom of Todo, type a short title for the story and press Enter. Repeat for every story.",
+     ok:"Todo holds one card per story"},
+    {t:"Give each card a description: the story and its details.",
+     d:"Click the card's <b>title</b> to open it, then <b>Edit</b> on the description. Write the full As a..., I want..., so that... sentence, then the acceptance criteria as a checklist (<code>- [ ]</code> per line). Finish with <b>Update comment</b>.",
+     ok:"every card opens to its story and a checklist"},
+    {t:"Nothing to commit or push: the board lives on GitHub.",
+     d:"It saves as you go. Raymond can see it if the project is <b>public</b> or shared with him: set that in the project's <b>Settings</b>.",
+     ok:"the board opens from your GitHub profile under Projects"}
+  ];
+  var done=[]; try{ done=JSON.parse(localStorage.getItem(KEY)||"[]"); }catch(e){ done=[]; }
+  var stepsEl=$("#steps");
+  function render(){
+    stepsEl.innerHTML=STEPS.map(function(s,i){
+      return '<div class="step'+(done.indexOf(i)>=0?" done":"")+'" data-i="'+i+'">'+
+        '<div class="hd"><span class="tick">✓</span><span class="num">'+(i+1)+'</span><span class="txt">'+s.t+'</span><span class="more">how</span></div>'+
+        '<div class="dt">'+s.d+'<span class="ok">'+s.ok+'</span></div></div>';
+    }).join("");
+    var n=done.length; $("#progTxt").textContent=n+" of "+STEPS.length+" done"; $("#progBar").style.width=(100*n/STEPS.length)+"%";
+  }
+  stepsEl.addEventListener("click",function(e){
+    var st=e.target.closest(".step"); if(!st) return; var i=+st.getAttribute("data-i");
+    if(e.target.closest(".tick")){
+      var k=done.indexOf(i); if(k>=0) done.splice(k,1); else done.push(i);
+      try{localStorage.setItem(KEY,JSON.stringify(done));}catch(err){}
+      var open=[]; Array.prototype.forEach.call(stepsEl.querySelectorAll(".step.open"),function(o){open.push(o.getAttribute("data-i"));});
+      render(); open.forEach(function(o){ var el=stepsEl.querySelector('[data-i="'+o+'"]'); if(el) el.classList.add("open"); });
+    } else if(e.target.closest(".hd")){ st.classList.toggle("open"); }
+  });
+  $("#bClear").addEventListener("click",function(){ done=[]; try{localStorage.removeItem(KEY);}catch(e){} render(); });
+  render();
+
+  var cv=$("#amb"),ctx=cv.getContext&&cv.getContext("2d"),parts=[];
+  function sizeC(){if(!ctx)return;cv.width=innerWidth;cv.height=innerHeight;}
+  function initParts(){parts=[];for(var i=0;i<46;i++)parts.push({x:Math.random(),y:Math.random(),r:Math.random()*1.6+.3,s:Math.random()*.02+.004,o:Math.random()*.4+.1});}
+  function drawC(){if(!ctx)return;ctx.clearRect(0,0,cv.width,cv.height);
+    parts.forEach(function(p){p.y-=p.s/60;if(p.y<-.02)p.y=1.02;ctx.beginPath();ctx.arc(p.x*cv.width,p.y*cv.height,p.r,0,7);
+      ctx.fillStyle="rgba(140,170,255,"+p.o+")";ctx.fill();});requestAnimationFrame(drawC);}
+  if(ctx&&!reduce){sizeC();initParts();drawC();addEventListener("resize",sizeC);}
+})();
+</script>
+<script src="../manifest.js"></script>
+<script src="../../assets/rail.js"></script>
+<script>Rail.render(document.getElementById("rail"),{week:3,kind:"exercises",current:"github-project-board"});</script>
+</body>
+</html>

@@ -1,0 +1,349 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>try and catch | Week 3 Visual Hub</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Sora:wght@500;700&family=Inter:wght@400;500&family=JetBrains+Mono:wght@400;500&display=swap">
+<style>
+  :root{
+    --bg:#080c17; --bg2:#0c1428; --surface:rgba(255,255,255,.045); --line:rgba(255,255,255,.09);
+    --ink:#eef2fb; --muted:#8496b6; --accent:#6ea0ff; --accent2:#8b7bff; --good:#46d98a; --warn:#ff6a6a;
+    --gold:#ffc862; --disp:'Sora',system-ui,sans-serif; --body:'Inter',system-ui,sans-serif;
+    --mono:'JetBrains Mono',ui-monospace,monospace;
+  }
+  *{box-sizing:border-box}
+  body{margin:0;min-height:100vh;color:var(--ink);font-family:var(--body);
+    background:radial-gradient(1200px 700px at 70% -10%,#141d38 0%,transparent 55%),
+               radial-gradient(900px 600px at 10% 110%,#161233 0%,transparent 50%),#080c17;
+    overflow-x:hidden}
+  #amb{position:fixed;inset:0;z-index:0;pointer-events:none;opacity:.6}
+  .back{position:relative;z-index:2;display:block;max-width:1120px;margin:0 auto;padding:26px 24px 0;
+    width:100%;font-family:var(--mono);font-size:.8rem;letter-spacing:.04em;color:var(--muted);
+    text-decoration:none;transition:color .15s}
+  .back:hover{color:var(--accent)}
+  .wrap{position:relative;z-index:1;max-width:1120px;margin:0 auto;padding:22px 24px 70px}
+  .tag{font-family:var(--mono);font-size:.72rem;letter-spacing:.22em;text-transform:uppercase;color:var(--accent);margin:0 0 14px}
+  h1{font-family:var(--disp);font-weight:700;font-size:clamp(2.3rem,6vw,3.6rem);line-height:1;margin:0 0 12px;
+    letter-spacing:-.03em;background:linear-gradient(180deg,#fff,#b9c6e6);-webkit-background-clip:text;
+    background-clip:text;color:transparent}
+  .lede{color:var(--muted);max-width:64ch;font-size:1.05rem;margin:0 0 26px;line-height:1.5}
+  .lede b{color:var(--ink)}
+  code{font-family:var(--mono);font-size:.92em;color:#bcd0ff}
+
+  /* ---------- the stage IS the picture ---------- */
+  .stage{position:relative;background:linear-gradient(180deg,rgba(255,255,255,.03),rgba(255,255,255,.01));
+    border:1px solid var(--line);border-radius:24px;padding:22px;
+    box-shadow:0 1px 0 rgba(255,255,255,.06) inset,0 30px 80px -30px rgba(0,0,0,.8)}
+
+  /* the track: left lane is the normal path, right lane is where catch sits */
+  .track{position:relative;display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr);gap:16px 56px;
+    grid-template-areas:"try sw" "res ." ". cat" "aft aft"}
+  .track::before{content:"";position:absolute;left:0;top:30px;bottom:30px;width:0;border-left:2px dashed rgba(132,150,182,.22)}
+  #bTry{grid-area:try} #sw{grid-area:sw} #bRes{grid-area:res} #bCat{grid-area:cat} #bAft{grid-area:aft}
+  @media (max-width:820px){
+    .track{grid-template-columns:1fr;gap:14px;grid-template-areas:"sw" "try" "res" "cat" "aft"}
+  }
+
+  .box{position:relative;border-radius:16px;padding:14px 18px 14px 24px;border:1px solid rgba(255,255,255,.16);
+    background:rgba(255,255,255,.04);transition:opacity .3s,border-color .3s,box-shadow .3s,background .3s}
+  .hd{font-family:var(--mono);font-size:.62rem;letter-spacing:.16em;text-transform:uppercase;color:var(--muted);margin:0 0 4px}
+  .who{font-family:var(--disp);font-weight:700;font-size:1.25rem;margin:0;color:var(--ink);letter-spacing:-.01em}
+  .box.on{border-color:rgba(110,160,255,.8);box-shadow:0 0 28px -8px rgba(110,160,255,.85)}
+  .box.ok{border-color:rgba(70,217,138,.7);box-shadow:0 0 26px -10px rgba(70,217,138,.8)}
+  .box.dim{opacity:.32}
+  .box.bad{border-color:var(--warn);background:rgba(255,106,106,.07);animation:warnflash .55s ease-out 2}
+  @keyframes warnflash{0%{box-shadow:0 0 0 3px rgba(255,106,106,.2),0 0 34px -6px rgba(255,106,106,.8)}100%{box-shadow:none}}
+
+  /* try box: the two inputs and Run live on it */
+  #bTry{border:2px dashed rgba(110,160,255,.55);background:rgba(110,160,255,.05)}
+  #bTry.bad{border-style:solid;border-color:var(--warn)}
+  .fill{display:grid;grid-template-columns:1fr auto 1fr auto;gap:8px;align-items:end;margin-top:12px}
+  .fill label{display:block;font-family:var(--mono);font-size:.58rem;letter-spacing:.12em;text-transform:uppercase;color:var(--muted);margin-bottom:4px}
+  .fill input{width:100%;font-family:var(--mono);font-size:1rem;padding:9px 11px;border-radius:10px;border:1px solid var(--line);
+    background:rgba(0,0,0,.3);color:var(--ink);outline:none;transition:border-color .15s;text-align:center}
+  .fill input:focus{border-color:var(--accent)}
+  .fill .sl{font-family:var(--mono);font-size:1.3rem;color:var(--muted);padding-bottom:8px}
+  .run{font-family:var(--mono);font-weight:500;font-size:.95rem;padding:10px 18px;border-radius:11px;cursor:pointer;
+    border:1px solid rgba(110,160,255,.55);background:rgba(110,160,255,.14);color:#dbe6ff;transition:.15s}
+  .run:hover{background:rgba(110,160,255,.26);border-color:var(--accent)}
+  .run:disabled{opacity:.35;cursor:not-allowed}
+  .boom{margin-top:10px;font-family:var(--mono);font-size:.78rem;color:var(--warn);min-height:1.2em;opacity:0;transition:opacity .3s}
+  .boom.show{opacity:1}
+
+  /* the toggle, drawn on the picture */
+  #sw{display:flex;align-items:center;justify-content:flex-start}
+  .tog{display:flex;align-items:center;gap:12px;cursor:pointer;font-family:var(--mono);font-size:.8rem;color:var(--muted);
+    background:transparent;border:1px solid var(--line);border-radius:999px;padding:8px 16px 8px 8px;transition:.2s}
+  .tog:hover{border-color:var(--accent);color:var(--ink)}
+  .tog .knob{width:38px;height:22px;border-radius:999px;background:rgba(255,255,255,.08);position:relative;transition:background .2s}
+  .tog .knob::after{content:"";position:absolute;top:3px;left:3px;width:16px;height:16px;border-radius:50%;background:var(--muted);transition:transform .2s,background .2s}
+  .tog[aria-pressed="true"]{border-color:rgba(255,106,106,.6);color:#ffb0b0}
+  .tog[aria-pressed="true"] .knob{background:rgba(255,106,106,.25)}
+  .tog[aria-pressed="true"] .knob::after{transform:translateX(16px);background:var(--warn)}
+
+  /* printed output on a box */
+  .out{margin-top:10px;font-family:var(--mono);font-size:.78rem;line-height:1.55;color:#9fe3b6;background:#05070e;
+    border:1px solid var(--line);border-radius:10px;padding:7px 10px;min-height:34px;opacity:0;transition:opacity .35s}
+  .out.show{opacity:1}
+  .out small{display:block;font-size:.54rem;letter-spacing:.12em;text-transform:uppercase;color:rgba(132,150,182,.7)}
+
+  /* catch box and its wall form */
+  #bCat{border-color:rgba(255,200,98,.35)}
+  #bCat.on{border-color:var(--gold);box-shadow:0 0 30px -8px rgba(255,200,98,.85)}
+  .exc{display:inline-block;margin-top:10px;font-family:var(--mono);font-size:.76rem;color:#ffb0b0;padding:4px 10px;border-radius:999px;
+    border:1px solid rgba(255,106,106,.5);background:rgba(255,106,106,.08);opacity:0;transition:opacity .3s}
+  .exc.show{opacity:1}
+  .wallnote{display:none;margin-top:8px;font-family:var(--mono);font-size:.72rem;color:#ffb0b0}
+  #bCat.wall{border:2px solid rgba(255,106,106,.5);
+    background:repeating-linear-gradient(135deg,rgba(255,106,106,.1) 0 10px,rgba(255,106,106,.02) 10px 20px)}
+  #bCat.wall .who{color:#ffb0b0;text-decoration:line-through}
+  #bCat.wall .wallnote{display:block}
+  #bCat.wall .exc,#bCat.wall .out{display:none}
+
+  /* after box when the program died */
+  .stamp{display:none;margin-top:10px;font-family:var(--mono);font-size:.76rem;color:var(--warn);letter-spacing:.06em}
+  #bAft.dead{opacity:.45;border-style:dashed;border-color:rgba(255,106,106,.5)}
+  #bAft.dead .stamp{display:block}
+
+  /* the token: where the program is right now */
+  .tok{position:absolute;left:0;top:0;width:20px;height:20px;border-radius:50%;z-index:3;pointer-events:none;
+    background:var(--accent);box-shadow:0 0 0 4px rgba(110,160,255,.2),0 0 22px rgba(110,160,255,.9);
+    transform:translate(-50%,-50%);opacity:0;
+    transition:left .5s cubic-bezier(.2,.9,.3,1),top .5s cubic-bezier(.2,.9,.3,1),opacity .2s,background .2s,box-shadow .2s}
+  .tok.show{opacity:1}
+  .tok.w{background:var(--warn);box-shadow:0 0 0 4px rgba(255,106,106,.22),0 0 22px rgba(255,106,106,.9)}
+  .tok.y{background:var(--gold);box-shadow:0 0 0 4px rgba(255,200,98,.22),0 0 22px rgba(255,200,98,.9)}
+  .tok.g{background:var(--good);box-shadow:0 0 0 4px rgba(70,217,138,.22),0 0 22px rgba(70,217,138,.9)}
+
+  /* the one sentence */
+  .caption{display:flex;gap:14px;align-items:flex-start;margin:18px 2px 0;padding-top:16px;border-top:1px solid var(--line)}
+  .caption .t{flex:1;font-size:1.05rem;line-height:1.55;color:var(--ink);padding-left:16px;border-left:3px solid var(--accent);transition:border-color .3s}
+  .caption .t .line{display:block;margin-top:6px;font-family:var(--mono);font-size:.8rem;color:#bcd0ff;opacity:.9}
+  .caption.y .t{border-left-color:var(--gold)} .caption.g .t{border-left-color:var(--good)} .caption.w .t{border-left-color:var(--warn)}
+  .caption.w .t .line,.caption.y .t .line{color:#ffb0b0}
+  .caption b.a{color:var(--accent)} .caption b.y{color:var(--gold)} .caption b.g{color:var(--good)} .caption b.w{color:var(--warn)}
+  .reset{font-family:var(--body);font-weight:500;font-size:.84rem;padding:8px 14px;border-radius:11px;cursor:pointer;
+    border:1px solid var(--line);background:transparent;color:var(--muted);transition:.15s;flex-shrink:0}
+  .reset:hover{border-color:var(--accent);color:var(--accent)}
+  button:focus-visible,input:focus-visible{outline:2px solid var(--accent);outline-offset:2px}
+
+  .take{margin-top:22px;background:linear-gradient(180deg,rgba(110,160,255,.08),rgba(139,123,255,.04));
+    border:1px solid var(--line);border-left:3px solid var(--accent);border-radius:12px;padding:16px 18px}
+  .take .tk{font-family:var(--mono);font-size:.66rem;letter-spacing:.14em;text-transform:uppercase;color:var(--accent);margin:0 0 8px}
+  .take p{margin:0;font-size:.95rem;color:var(--ink);line-height:1.55}
+  .take b{color:#fff}
+  @media (prefers-reduced-motion:reduce){*{animation-duration:.01ms!important;transition-duration:.01ms!important}#amb{display:none}}
+</style>
+</head>
+<body>
+<a class="back" href="../index.html#02-try-catch-flow">&#8592; Week 3 index</a>
+<canvas id="amb"></canvas>
+<div class="wrap">
+  <p class="tag">Workbook 3a &middot; Section 1-1</p>
+  <h1>try and catch</h1>
+  <p class="lede"><b>Divide two numbers and press Run. Then try dividing by 0.</b></p>
+
+  <div class="stage">
+    <div class="track" id="track">
+      <div class="box" id="bTry">
+        <p class="hd" id="tryHd">try {</p>
+        <p class="who" id="tryWho">try block</p>
+        <div class="fill">
+          <div><label for="n1">number 1</label><input id="n1" value="10" inputmode="numeric" maxlength="6"></div>
+          <span class="sl">/</span>
+          <div><label for="n2">number 2</label><input id="n2" value="2" inputmode="numeric" maxlength="6"></div>
+          <button class="run" id="bRun">Run</button>
+        </div>
+        <div class="boom" id="boom">ArithmeticException: / by zero</div>
+      </div>
+
+      <div id="sw">
+        <button class="tog" id="tog" aria-pressed="false"><span class="knob"></span>without try and catch</button>
+      </div>
+
+      <div class="box" id="bRes">
+        <p class="hd" id="resHd">still inside try</p>
+        <p class="who">result printed</p>
+        <div class="out" id="oRes"></div>
+      </div>
+
+      <div class="box" id="bCat">
+        <p class="hd">catch (Exception ex) {</p>
+        <p class="who">catch block</p>
+        <div class="exc" id="exc">ArithmeticException: / by zero</div>
+        <div class="out" id="oCat"></div>
+        <div class="wallnote">no catch here: nothing to land on</div>
+      </div>
+
+      <div class="box" id="bAft">
+        <p class="hd">the line after the try and catch</p>
+        <p class="who">after the try</p>
+        <div class="out" id="oAft"></div>
+        <div class="stamp">program ended. this line never ran</div>
+      </div>
+
+      <div class="tok" id="tok"></div>
+    </div>
+
+    <div class="caption" id="caption">
+      <div class="t" id="status">The division sits inside the <b class="a">try block</b>. Press <b class="a">Run</b> and follow the dot.</div>
+      <button class="reset" id="bReset">Reset</button>
+    </div>
+  </div>
+
+  <div class="take">
+    <p class="tk">The one idea</p>
+    <p><b>catch is where the program lands when the try fails.</b> The rest of the try is skipped, the catch runs,
+    and the line after the whole thing <b>still runs</b>. Without a catch, the exception ends the program right there.</p>
+  </div>
+  <div id="rail"></div>
+</div>
+<script>
+(function(){
+  "use strict";
+  var $=function(s){return document.querySelector(s);};
+  var reduce=matchMedia("(prefers-reduced-motion: reduce)").matches;
+  var STEP=reduce?420:700;
+  var track=$("#track"),tok=$("#tok"),caption=$("#caption"),status=$("#status");
+  var bTry=$("#bTry"),bRes=$("#bRes"),bCat=$("#bCat"),bAft=$("#bAft");
+  var n1=$("#n1"),n2=$("#n2"),bRun=$("#bRun"),tog=$("#tog"),boom=$("#boom");
+  var oRes=$("#oRes"),oCat=$("#oCat"),oAft=$("#oAft"),exc=$("#exc");
+  var noCatch=false,timers=[],at=null;
+  var SORRY="A big sorry from Potato Sensei, but an error has occurred!";
+
+  function say(html,tone,line){
+    caption.className="caption"+(tone?" "+tone:"");
+    status.innerHTML=html+(line?'<span class="line">'+line+'</span>':"");
+  }
+  function later(fn,ms){timers.push(setTimeout(fn,ms));}
+  function clearTimers(){timers.forEach(clearTimeout);timers=[];}
+
+  /* the dot sits on the left edge of a box, level with its title */
+  function moveTo(box,tone){
+    at=box;
+    tok.style.left=box.offsetLeft+"px";
+    tok.style.top=(box.offsetTop+38)+"px";
+    tok.className="tok show"+(tone?" "+tone:"");
+  }
+  function print(el,lines){
+    el.innerHTML="<small>prints</small>"+lines.join("<br>");
+    el.classList.add("show");
+  }
+  function clearPicture(){
+    [bTry,bRes,bCat,bAft].forEach(function(b){b.classList.remove("on","ok","dim","bad","dead");});
+    [oRes,oCat,oAft,exc,boom].forEach(function(e){e.classList.remove("show");});
+    tok.className="tok"; at=null;
+  }
+  function readInt(el){
+    var s=el.value.trim();
+    if(!/^-?\d+$/.test(s)) return null;
+    return parseInt(s,10);
+  }
+
+  function run(){
+    clearTimers(); clearPicture();
+    var a=readInt(n1),b=readInt(n2);
+    if(a===null||b===null){
+      say('Type a <b class="a">whole number</b> in both boxes, then press Run.');
+      return;
+    }
+    bRun.disabled=true;
+    bTry.classList.add("on"); moveTo(bTry);
+    say('The program enters the try and divides <b class="a">'+a+' / '+b+'</b>.',"","int result = firstNumber / secondNumber;");
+
+    if(b!==0){
+      var r=Math.trunc(a/b);   /* Java int division drops the decimals */
+      later(function(){
+        bTry.classList.remove("on"); bTry.classList.add("ok");
+        bRes.classList.add("on"); moveTo(bRes);
+        print(oRes,[a+" / "+b+" = "+r]);
+      },STEP);
+      later(function(){
+        bRes.classList.remove("on"); bRes.classList.add("ok");
+        if(!noCatch) bCat.classList.add("dim");
+        bAft.classList.add("ok"); moveTo(bAft,"g");
+        print(oAft,["Program continues"]);
+        say(a+' / '+b+' = '+r+'. The try finished, so the <b class="g">catch was skipped</b> and the program went on.',"g",
+          "int result = firstNumber / secondNumber;");
+        bRun.disabled=false;
+      },STEP*2);
+      return;
+    }
+
+    /* second number is 0: the division throws */
+    later(function(){
+      bTry.classList.remove("on"); bTry.classList.add("bad"); boom.classList.add("show");
+      moveTo(bTry,"w");
+      say('Dividing by 0 <b class="w">throws an exception</b> right at the division.',"w","ArithmeticException: / by zero");
+    },STEP*0.6);
+
+    if(noCatch){
+      later(function(){
+        bRes.classList.add("dim"); bAft.classList.add("dead");
+        say('No catch to land on, so the exception <b class="w">ended the program</b> at the division. "Program continues" never printed.',
+          "w","Exception in thread \"main\" java.lang.ArithmeticException: / by zero");
+        bRun.disabled=false;
+      },STEP*1.6);
+      return;
+    }
+    later(function(){
+      bRes.classList.add("dim");
+      bCat.classList.add("on"); moveTo(bCat,"y");
+      exc.classList.add("show");
+      print(oCat,["/ by zero",SORRY]);
+      say('The program <b class="y">jumped to catch</b>. The result line in the try was skipped.',"y","ArithmeticException: / by zero");
+    },STEP*1.6);
+    later(function(){
+      bCat.classList.remove("on"); bCat.classList.add("ok");
+      bAft.classList.add("ok"); moveTo(bAft,"g");
+      print(oAft,["Program continues"]);
+      say('The catch handled it and the line after still ran. <b class="g">The program did not die.</b>',"g","ArithmeticException: / by zero");
+      bRun.disabled=false;
+    },STEP*2.6);
+  }
+
+  function setMode(off){
+    noCatch=off;
+    tog.setAttribute("aria-pressed",off?"true":"false");
+    bCat.classList.toggle("wall",off);
+    $("#tryHd").textContent=off?"plain code, no try":"try {";
+    $("#tryWho").textContent=off?"the division":"try block";
+    $("#resHd").textContent=off?"the next line":"still inside try";
+  }
+  function reset(keepMode){
+    clearTimers(); clearPicture(); bRun.disabled=false;
+    if(!keepMode){ setMode(false); n1.value="10"; n2.value="2"; }
+    say('The division sits inside the <b class="a">try block</b>. Press <b class="a">Run</b> and follow the dot.');
+  }
+
+  bRun.addEventListener("click",run);
+  [n1,n2].forEach(function(el){
+    el.addEventListener("keydown",function(e){ if(e.key==="Enter"&&!bRun.disabled) run(); });
+  });
+  tog.addEventListener("click",function(){
+    setMode(!noCatch); reset(true);
+    if(noCatch) say('The <b class="w">try and catch are gone</b>: the catch box is now a wall. Run it with 0.',"w");
+  });
+  $("#bReset").addEventListener("click",function(){ reset(false); });
+  addEventListener("resize",function(){ if(at) moveTo(at,(tok.className.match(/ (w|y|g)$/)||[])[1]); });
+
+  /* ambient canvas */
+  var cv=$("#amb"),ctx=cv.getContext&&cv.getContext("2d"),parts=[];
+  function sizeC(){if(!ctx)return;cv.width=innerWidth;cv.height=innerHeight;}
+  function initParts(){parts=[];for(var i=0;i<46;i++)parts.push({x:Math.random(),y:Math.random(),
+    r:Math.random()*1.6+.3,s:Math.random()*.02+.004,o:Math.random()*.4+.1});}
+  function drawC(){if(!ctx)return;ctx.clearRect(0,0,cv.width,cv.height);
+    parts.forEach(function(p){p.y-=p.s/60;if(p.y<-.02)p.y=1.02;
+      ctx.beginPath();ctx.arc(p.x*cv.width,p.y*cv.height,p.r,0,7);
+      ctx.fillStyle="rgba(140,170,255,"+p.o+")";ctx.fill();});
+    requestAnimationFrame(drawC);}
+  if(ctx&&!reduce){sizeC();initParts();drawC();addEventListener("resize",sizeC);}
+})();
+</script>
+<script src="../manifest.js"></script>
+<script src="../../assets/rail.js"></script>
+<script>Rail.render(document.getElementById("rail"),{week:3,kind:"visuals",current:"02-try-catch-flow"});</script>
+</body>
+</html>

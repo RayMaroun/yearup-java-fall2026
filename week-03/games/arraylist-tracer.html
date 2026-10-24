@@ -1,0 +1,427 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>ArrayList Tracer | Week 3 Visual Hub</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Sora:wght@500;700&family=Inter:wght@400;500&family=JetBrains+Mono:wght@400;500&display=swap">
+<style>
+  :root{
+    --bg:#080c17; --bg2:#0c1428; --surface:rgba(255,255,255,.045); --line:rgba(255,255,255,.09);
+    --ink:#eef2fb; --muted:#8496b6; --accent:#6ea0ff; --accent2:#8b7bff; --good:#46d98a; --warn:#ff6a6a;
+    --gold:#ffc862; --disp:'Sora',system-ui,sans-serif; --body:'Inter',system-ui,sans-serif;
+    --mono:'JetBrains Mono',ui-monospace,monospace;
+  }
+  *{box-sizing:border-box}
+  body{margin:0;min-height:100vh;color:var(--ink);font-family:var(--body);
+    background:radial-gradient(1200px 700px at 70% -10%,#141d38 0%,transparent 55%),
+               radial-gradient(900px 600px at 10% 110%,#161233 0%,transparent 50%),#080c17;
+    overflow-x:hidden}
+  #amb{position:fixed;inset:0;z-index:0;pointer-events:none;opacity:.6}
+  .back{position:relative;z-index:2;display:block;max-width:1120px;margin:0 auto;padding:26px 24px 0;
+    width:100%;font-family:var(--mono);font-size:.8rem;letter-spacing:.04em;color:var(--muted);
+    text-decoration:none;transition:color .15s}
+  .back:hover{color:var(--accent)}
+  .wrap{position:relative;z-index:1;max-width:1120px;margin:0 auto;padding:22px 24px 70px}
+  .tag{font-family:var(--mono);font-size:.72rem;letter-spacing:.22em;text-transform:uppercase;color:var(--accent);margin:0 0 14px}
+  h1{font-family:var(--disp);font-weight:700;font-size:clamp(2.3rem,6vw,3.6rem);line-height:1;margin:0 0 12px;
+    letter-spacing:-.03em;background:linear-gradient(180deg,#fff,#b9c6e6);-webkit-background-clip:text;
+    background-clip:text;color:transparent}
+  .lede{color:var(--muted);max-width:64ch;font-size:1.05rem;margin:0 0 26px;line-height:1.5}
+  .lede b{color:var(--ink)}
+  .lede code,.take code,.caption code{font-family:var(--mono);font-size:.92em;color:#bcd0ff}
+
+  .stage{position:relative;background:linear-gradient(180deg,rgba(255,255,255,.03),rgba(255,255,255,.01));
+    border:1px solid var(--line);border-radius:24px;padding:18px 18px 14px;
+    box-shadow:0 1px 0 rgba(255,255,255,.06) inset,0 30px 80px -30px rgba(0,0,0,.8)}
+  .topbar{display:flex;align-items:center;gap:10px;margin:0 0 14px;flex-wrap:wrap}
+  .topbar .lab{margin:0 4px 0 0}
+  .topbar .sp{flex:1}
+  .lab{font-family:var(--mono);font-size:.7rem;letter-spacing:.12em;text-transform:uppercase;color:var(--muted);margin:0 0 10px}
+  .btn:focus-visible{outline:2px solid var(--accent);outline-offset:2px}
+
+  /* ---------- game board ---------- */
+  .pic{position:relative;height:440px;border:1px solid var(--line);border-radius:18px;background:rgba(6,10,20,.5);overflow:hidden;
+    display:grid;grid-template-columns:1.15fr 1fr;gap:22px;align-items:stretch;padding:40px 22px 22px}
+  .pic .zone{position:absolute;top:14px;font-family:var(--mono);font-size:.62rem;letter-spacing:.14em;text-transform:uppercase;color:rgba(132,150,182,.55)}
+  .pic .zone.z1{left:18px} .pic .zone.z2{left:calc(53.5% + 4px)}
+  .hud{position:absolute;right:18px;top:12px;display:flex;gap:14px;font-family:var(--mono);font-size:.72rem;color:var(--muted)}
+  .hud b{color:var(--ink);font-weight:500}
+
+  .model{min-width:0;display:flex;flex-direction:column;justify-content:center;gap:26px}
+  .decl{font-family:var(--mono);font-size:.74rem;color:var(--muted)}
+  .decl .ty{color:#82aaff}
+  .boxes{display:flex;flex-wrap:wrap;gap:10px 8px;min-height:74px;align-items:flex-start}
+  .box{position:relative;min-width:66px;padding:12px 10px 10px;border:1px solid rgba(110,160,255,.35);border-radius:14px;
+    background:linear-gradient(180deg,rgba(110,160,255,.12),rgba(110,160,255,.04));text-align:center;
+    font-family:var(--mono);font-size:.92rem;color:var(--ink);transition:border-color .25s,background .25s,opacity .25s,transform .25s}
+  .box .ix{position:absolute;left:0;right:0;top:-17px;font-size:.62rem;color:var(--muted);letter-spacing:.06em}
+  .box .old{display:block;font-size:.66rem;color:var(--warn);text-decoration:line-through;opacity:.85;margin-top:2px}
+  .box.new{border-color:rgba(70,217,138,.8);background:rgba(70,217,138,.12);animation:pop .3s}
+  .box.chg{border-color:rgba(255,200,98,.85);background:rgba(255,200,98,.12)}
+  .box.hit{border-color:var(--accent);box-shadow:0 0 22px -6px rgba(110,160,255,.9)}
+  .box.gone{border-style:dashed;border-color:rgba(255,106,106,.6);background:rgba(255,106,106,.06);color:var(--warn);text-decoration:line-through;opacity:.7}
+  .box.ghost{border-style:dashed;border-color:rgba(255,106,106,.8);background:transparent;color:var(--warn);min-width:44px}
+  .box.ghost .ix{color:var(--warn)}
+  .boxes .none{font-family:var(--mono);font-size:.8rem;color:rgba(132,150,182,.7);padding:12px 0}
+  @keyframes pop{from{transform:scale(.7);opacity:0}to{transform:scale(1);opacity:1}}
+  .call{font-family:var(--mono);font-size:1.15rem;padding:14px 16px;border:1px solid var(--line);border-radius:14px;background:rgba(0,0,0,.3);
+    color:var(--ink);transition:border-color .2s,box-shadow .2s;overflow-x:auto;white-space:nowrap}
+  .call .fn{color:#ffcb6b} .call .st{color:#c3e88d} .call .nm{color:#f78c6c} .call .ty{color:#82aaff}
+  .call .ret{display:block;margin-top:8px;font-size:.78rem;color:var(--muted);white-space:normal}
+  .call .ret b{color:var(--good);font-weight:500} .call .ret b.w{color:var(--warn)}
+  .call.good{border-color:rgba(70,217,138,.7);box-shadow:0 0 28px -8px rgba(70,217,138,.8)}
+  .call.bad{border-color:rgba(255,106,106,.7);box-shadow:0 0 28px -8px rgba(255,106,106,.8);animation:shake .3s}
+  @keyframes shake{25%{transform:translateX(-6px)}75%{transform:translateX(6px)}}
+  .ask{font-family:var(--mono);font-size:.74rem;color:var(--gold);letter-spacing:.04em}
+
+  .out{min-width:0;display:flex;flex-direction:column;border:1px solid var(--line);border-radius:14px;background:rgba(0,0,0,.4);overflow:hidden}
+  .rows{flex:1;overflow-y:auto;padding:12px 14px;font-family:var(--mono);font-size:.8rem;line-height:1.45;display:flex;flex-direction:column;gap:5px}
+  .rows .empty{color:rgba(132,150,182,.55);font-size:.74rem;margin:auto;text-align:center}
+  .row{padding:3px 10px;border-left:3px solid transparent;border-radius:4px;white-space:pre-wrap;word-break:break-word}
+  .row .c{display:block;color:var(--muted);font-size:.68rem}
+  .row.ok{border-left-color:var(--good);color:var(--ink)}
+  .row.miss{border-left-color:var(--warn);background:rgba(255,106,106,.07);color:var(--good)}
+  .row.miss s{display:block;color:var(--warn);font-size:.72rem;text-decoration:line-through;opacity:.85}
+  .inrow{display:flex;align-items:center;gap:8px;border-top:1px solid var(--line);padding:10px 14px;background:rgba(110,160,255,.05)}
+  .inrow .pr{font-family:var(--mono);color:var(--accent);font-size:.9rem}
+  .ans{flex:1;min-width:0;border:0;outline:0;background:transparent;color:var(--ink);font-family:var(--mono);font-size:.92rem;caret-color:var(--accent)}
+  .ans::placeholder{color:rgba(132,150,182,.55);font-size:.78rem}
+  .ans:disabled{opacity:.4}
+  .exrow{display:flex;justify-content:flex-end;padding:0 14px 10px;background:rgba(110,160,255,.05)}
+  .btn.ex{font-family:var(--mono);font-size:.74rem;padding:7px 12px;color:var(--warn);border-color:rgba(255,106,106,.35);background:rgba(255,106,106,.06)}
+  .btn.ex:hover{border-color:var(--warn);color:var(--warn)}
+
+  .screen{position:absolute;inset:0;z-index:4;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:12px;background:rgba(6,10,20,.94);transition:opacity .25s;padding:20px}
+  .screen.off{opacity:0;pointer-events:none}
+  .screen h2{font-family:var(--disp);font-weight:700;font-size:1.6rem;margin:0;color:var(--ink)}
+  .screen p{margin:0;color:var(--muted);font-size:.95rem;text-align:center;max-width:52ch;line-height:1.5}
+  .screen p b{color:var(--ink);font-weight:500}
+  .screen .big{font-family:var(--disp);font-weight:700;font-size:2.6rem;color:var(--accent)}
+  .screen .big.gold{color:var(--gold)} .screen .big.good{color:var(--good)}
+  .bar{position:absolute;left:0;right:0;bottom:0;height:4px;background:rgba(255,255,255,.06)}
+  .bar i{display:block;height:100%;width:0;background:var(--accent);transition:width .25s}
+  .misses{font-family:var(--mono);font-size:.72rem;color:var(--muted);line-height:1.6;text-align:left;max-height:170px;overflow-y:auto;max-width:700px;width:100%}
+  .misses b{color:var(--warn);font-weight:500} .misses i{font-style:normal;color:var(--good)} .misses code{color:#c9d4ea}
+  @media (max-width:760px){.pic{height:auto;min-height:700px;grid-template-columns:1fr;grid-template-rows:auto 280px}.pic .zone.z2{display:none}}
+
+  .caption{display:flex;gap:16px;align-items:flex-start;margin:14px 4px 0;min-height:56px}
+  .caption .n{flex-shrink:0;font-family:var(--disp);font-weight:700;font-size:1.35rem;color:var(--accent);font-variant-numeric:tabular-nums;
+    line-height:1.2;min-width:3.6rem}
+  .caption .n small{display:block;font-family:var(--mono);font-weight:400;font-size:.58rem;letter-spacing:.14em;text-transform:uppercase;color:var(--muted)}
+  .caption .t{font-size:1.02rem;line-height:1.55;color:var(--ink);padding-left:16px;border-left:3px solid var(--accent);transition:border-color .3s}
+  .caption.cut .t{border-left-color:var(--warn)} .caption.ok .t{border-left-color:var(--good)}
+  .caption b.g{color:var(--good)} .caption b.w{color:var(--warn)} .caption b.a{color:var(--accent)} .caption b.y{color:var(--gold)}
+
+  .btn{font-family:var(--body);font-weight:500;font-size:.86rem;padding:9px 16px;border-radius:11px;cursor:pointer;
+    border:1px solid var(--line);background:var(--surface);color:var(--ink);transition:.15s}
+  .btn:hover{border-color:var(--accent);color:var(--accent)}
+  .btn.primary{border-color:rgba(110,160,255,.5);background:rgba(110,160,255,.12);padding:9px 22px}
+  .btn.ghost{background:transparent;padding:7px 14px;font-size:.8rem}
+  .btn:disabled{opacity:.35;cursor:not-allowed}
+  .hint{font-family:var(--mono);font-size:.68rem;color:var(--muted);margin:10px 4px 0;line-height:1.5}
+  .hint b{color:var(--accent)}
+
+  .take{margin-top:22px;background:linear-gradient(180deg,rgba(110,160,255,.08),rgba(139,123,255,.04));
+    border:1px solid var(--line);border-left:3px solid var(--accent);border-radius:12px;padding:16px 18px}
+  .take .tk{font-family:var(--mono);font-size:.66rem;letter-spacing:.14em;text-transform:uppercase;color:var(--accent);margin:0 0 8px}
+  .take p{margin:0;font-size:.95rem;color:var(--ink);line-height:1.55}
+  .take b{color:#fff}
+  @media (prefers-reduced-motion:reduce){*{animation-duration:.01ms!important;transition-duration:.01ms!important}#amb{display:none}}
+</style>
+</head>
+<body>
+
+<a class="back" href="../index.html#arraylist-tracer">&#8592; Week 3 index</a>
+
+<canvas id="amb"></canvas>
+<div class="wrap">
+  <p class="tag">Workbook 3a &middot; Section 3-2 &middot; Game</p>
+  <h1>ArrayList Tracer</h1>
+  <p class="lede"><b>One list, fifteen calls in a row. Type the list after each call, or what the call returns.</b></p>
+
+  <div class="stage">
+    <div class="topbar">
+      <span class="lab">Game</span>
+      <span class="sp"></span>
+      <button class="btn ghost" id="bRestart">Restart</button>
+    </div>
+
+    <div class="pic" id="pic">
+      <span class="zone z1">names</span><span class="zone z2">your answers</span>
+      <div class="hud"><span>score <b id="hScore">0</b></span><span>time <b id="hTime">0.0s</b></span></div>
+      <div class="model">
+        <div class="decl"><span class="ty">ArrayList&lt;String&gt;</span> names</div>
+        <div class="boxes" id="boxes"></div>
+        <div>
+          <div class="call" id="call"></div>
+          <div class="ask" id="ask" style="margin-top:10px"></div>
+        </div>
+      </div>
+      <div class="out">
+        <div class="rows" id="rows"><span class="empty">each call and your answer land here</span></div>
+        <div class="inrow"><span class="pr">&gt;</span><input class="ans" id="ans" autocomplete="off" spellcheck="false" placeholder="[Mina, Theo] or the value it returns" aria-label="your answer" disabled></div>
+        <div class="exrow"><button class="btn ex" id="bEx" disabled>IndexOutOfBoundsException</button></div>
+      </div>
+      <div class="bar"><i id="bar"></i></div>
+      <div class="screen" id="startScr">
+        <h2>ArrayList Tracer</h2>
+        <p>A list of names, then fifteen calls on it, one after another. The list carries over. Type the list as Java prints it, like <b>[Mina, Ivy, Theo]</b>, or the value that get, size or contains returns. If the call crashes, press the exception.</p>
+        <button class="btn primary" id="bStart">Start</button>
+      </div>
+      <div class="screen off" id="endScr">
+        <h2>Game over</h2>
+        <div class="big" id="endScore"></div>
+        <p id="endMsg"></p>
+        <div class="misses" id="endMiss"></div>
+        <button class="btn primary" id="bAgain">Play again</button>
+      </div>
+    </div>
+
+    <div class="caption" id="caption">
+      <div class="n" id="stepno"><small>call</small>0 / 15</div>
+      <div class="t" id="status">Press <b class="a">Start</b>. New starting names each game.</div>
+    </div>
+    <p class="hint"><b>Enter</b> checks &middot; spaces inside the brackets do not count &middot; capitals do not count &middot; an empty list prints <b>[]</b></p>
+  </div>
+
+  <div class="take">
+    <p class="tk">The one idea</p>
+    <p><b>An ArrayList keeps its names in order and renumbers them after every change.</b> add and remove shift the names after them, set swaps one name in place, get, size and contains only read, and an index past the last one throws IndexOutOfBoundsException.</p>
+  </div>
+
+  <div id="rail"></div>
+</div>
+
+<script>
+(function(){
+  "use strict";
+  var $=function(s){return document.querySelector(s);};
+  var reduce=matchMedia("(prefers-reduced-motion: reduce)").matches;
+
+  function R(a,b){ return a+Math.floor(Math.random()*(b-a+1)); }
+  function shuffle(a){ a=a.slice(); for(var i=a.length-1;i>0;i--){ var j=Math.floor(Math.random()*(i+1)); var t=a[i]; a[i]=a[j]; a[j]=t; } return a; }
+  function esc(s){ return String(s).replace(/\u0026/g,"\u0026amp;").replace(/</g,"\u0026lt;").replace(/>/g,"\u0026gt;"); }
+  function show(list){ return "["+list.join(", ")+"]"; }
+  function q(s){ return "\""+s+"\""; }
+  function javaCmp(a,b){ return a<b?-1:a>b?1:0; } /* String.compareTo order for these plain ASCII names */
+
+  var POOL=["Mina","Theo","Ravi","Lena","Omar","Ivy","Zed","Kofi","Aria","Nora","Jonas","Sana","Eli","Dara","Leo","Maya"];
+  /* The order of calls is fixed so every operation appears and the list is exactly 3 long at the out-of-bounds call.
+     Sizes: 4, add 5, get, set, remove(i) 4, add(i,x) 5, size, contains, remove(x) 4, sort, get, remove(i) 3, remove(7) throws, add 4, clear 0, size. */
+  var PLAN=["add","get","set","removeAt","addAt","size","contains","removeObj","sort","get","removeAt","oob","add","clear","size"];
+  var N=PLAN.length;
+
+  /* Each builder runs the real operation on the working list and returns the round:
+     call text, what to answer (list / value / exception), the expected answer, the why, and how to draw the result. */
+  function build(){
+    var p=shuffle(POOL), list=p.slice(0,4), spare=p.slice(4), removed=[], rounds=[], start=list.slice();
+    function fresh(){ return spare.shift(); }
+    var B={
+      add:function(){
+        var x=fresh(), before=list.slice(); list.push(x);
+        return {call:"names.add("+q(x)+");", ask:"list", before:before, after:list.slice(), mark:{"new":list.length-1},
+          why:"add puts "+x+" at the end, at index "+(list.length-1)+". The list grows to "+list.length+"."};
+      },
+      get:function(){
+        var i=R(0,list.length-1), v=list[i];
+        return {call:"names.get("+i+")", ask:"value", value:v, before:list.slice(), after:list.slice(), mark:{hit:i},
+          why:"get("+i+") reads index "+i+", the "+ord(i+1)+" name, and returns "+v+". The list does not change."};
+      },
+      set:function(){
+        var i=R(0,list.length-1), x=fresh(), old=list[i], before=list.slice(); list[i]=x;
+        return {call:"names.set("+i+", "+q(x)+");", ask:"list", before:before, after:list.slice(), mark:{chg:i,old:old},
+          why:"set("+i+", "+x+") replaces "+old+" at index "+i+". Nothing shifts and the size stays "+list.length+"."};
+      },
+      removeAt:function(){
+        var n=list.length, i=n>2?R(1,n-2):R(0,n-1), before=list.slice(), gone=list.splice(i,1)[0]; removed.push(gone);
+        var tail=before.slice(i+1);
+        return {call:"names.remove("+i+");", ask:"list", before:before, after:list.slice(), mark:{gone:i,name:gone},
+          why:"remove("+i+") takes out "+gone+" at index "+i+(tail.length?", and "+listWords(tail)+" "+(tail.length>1?"shift":"shifts")+" left one index.":". It was the last one, so nothing shifts.")};
+      },
+      addAt:function(){
+        var n=list.length, i=R(1,n-1), x=fresh(), before=list.slice(); list.splice(i,0,x);
+        var tail=before.slice(i);
+        return {call:"names.add("+i+", "+q(x)+");", ask:"list", before:before, after:list.slice(), mark:{"new":i},
+          why:"add("+i+", "+x+") inserts at index "+i+" and pushes "+listWords(tail)+" one index to the right."};
+      },
+      size:function(){
+        var n=list.length;
+        return {call:"names.size()", ask:"value", value:String(n), before:list.slice(), after:list.slice(), mark:{},
+          why:n?"size() counts the names: "+n+". The last index is "+(n-1)+", one less than the size.":"clear() left nothing, so size() returns 0."};
+      },
+      contains:function(){
+        var yes=!removed.length||Math.random()<0.5, x=yes?list[R(0,list.length-1)]:removed[R(0,removed.length-1)];
+        var has=list.indexOf(x)>=0;
+        return {call:"names.contains("+q(x)+")", ask:"value", value:String(has), before:list.slice(), after:list.slice(), mark:has?{hit:list.indexOf(x)}:{},
+          why:has?x+" is in the list at index "+list.indexOf(x)+", so contains returns true.":x+" was removed earlier, so contains returns false."};
+      },
+      removeObj:function(){
+        var i=R(0,list.length-1), x=list[i], before=list.slice(); list.splice(i,1); removed.push(x);
+        return {call:"names.remove("+q(x)+");", ask:"list", before:before, after:list.slice(), mark:{gone:i,name:x},
+          why:"remove with a String removes that name, not an index: "+x+" was at index "+i+" and the names after it shift left."};
+      },
+      sort:function(){
+        var before=list.slice(); list.sort(javaCmp);
+        var same=before.join()===list.join();
+        return {call:"Collections.sort(names);", ask:"list", before:before, after:list.slice(), mark:{sorted:true},
+          why:same?"The names were already in alphabetical order, so sort leaves them as they are.":"Collections.sort puts the names in alphabetical order, in the same list."};
+      },
+      oob:function(){
+        var n=list.length;
+        return {call:"names.remove(7);", ask:"exception", before:list.slice(), after:list.slice(), mark:{ghost:7},
+          why:"Index 7 out of bounds for length "+n+". The valid indexes are 0 to "+(n-1)+", so the call throws and the list stays as it was."};
+      },
+      clear:function(){
+        var before=list.slice(); list.length=0;
+        return {call:"names.clear();", ask:"list", before:before, after:[], mark:{},
+          why:"clear() removes every name. An empty ArrayList prints as []."};
+      }
+    };
+    PLAN.forEach(function(k){
+      var r=B[k](); r.kind=k;
+      if(r.ask==="list") r.expect=show(r.after);
+      else if(r.ask==="value") r.expect=r.value;
+      else r.expect="IndexOutOfBoundsException";
+      rounds.push(r);
+    });
+    return {start:start, rounds:rounds};
+  }
+  function ord(n){ return ["zeroth","first","second","third","fourth","fifth","sixth","seventh","eighth"][n]||(n+"th"); }
+  function listWords(a){ if(a.length===1) return a[0]; return a.slice(0,-1).join(", ")+" and "+a[a.length-1]; }
+
+  /* ---------- answer checking ---------- */
+  function squash(s){ return String(s).replace(/\s+/g,"").toLowerCase(); }
+  function unq(s){ s=String(s).trim(); if(s.length>1&&s.charAt(0)==="\""&&s.charAt(s.length-1)==="\"") s=s.slice(1,-1).trim(); return s.toLowerCase(); }
+  function isEx(s){ var t=squash(s).replace(/^java\.lang\./,""); return t==="indexoutofboundsexception"; }
+  function judge(r,typed){
+    var t=String(typed), note="";
+    if(r.ask==="exception"){
+      if(isEx(t)) return {ok:true};
+      if(squash(t)==="arrayindexoutofboundsexception") note="Close, but that one is for plain arrays. ArrayList throws IndexOutOfBoundsException. ";
+      else if(squash(t)===squash(show(r.before))) note="The list does stay the same, but Java never gets there: the call crashes first. ";
+      return {ok:false,note:note};
+    }
+    if(isEx(t)) return {ok:false,note:/\(\d/.test(r.call)?"No crash here: the index is inside 0 to "+(r.before.length-(r.kind==="addAt"?0:1))+". ":"No crash here: this call takes no index, so it cannot go out of bounds. "};
+    if(r.ask==="value"){
+      if(unq(t)===r.expect.toLowerCase()) return {ok:true};
+      if(r.kind==="get"&&/^\[/.test(t.trim())) note="get returns one name, not the list. ";
+      if(r.kind==="size"&&r.after.length&&t.trim()===String(r.after.length-1)) note="That is the last index. size counts from 1. ";
+      return {ok:false,note:note};
+    }
+    if(squash(t)===squash(r.expect)) return {ok:true};
+    var inner=squash(r.expect).slice(1,-1);
+    if(inner&&squash(t)===inner) note="Right names, but Java prints the square brackets too. ";
+    else if(squash(t)===squash(show(r.before))) note="That is the list before the call. ";
+    else if(r.kind==="sort"&&squash(t).length===squash(r.expect).length) note="Check the order: A to Z by first letter, then the next letter. ";
+    return {ok:false,note:note};
+  }
+
+  /* ---------- drawing ---------- */
+  function boxHTML(name,ix,cls,extra){ return '<div class="box'+(cls?" "+cls:"")+'"><span class="ix">'+ix+'</span>'+esc(name)+(extra||"")+'</div>'; }
+  function drawList(list,mark){
+    mark=mark||{};
+    var h="";
+    if(!list.length&&mark.gone===undefined) h='<span class="none">[] empty</span>';
+    for(var i=0;i<list.length;i++){
+      if(mark.gone===i) h+=boxHTML(mark.name,"out","gone");
+      var cls="", extra="";
+      if(mark["new"]===i) cls="new";
+      else if(mark.chg===i){ cls="chg"; extra='<span class="old">'+esc(mark.old)+'</span>'; }
+      else if(mark.hit===i) cls="hit";
+      else if(mark.sorted) cls="chg";
+      h+=boxHTML(list[i],i,cls,extra);
+    }
+    if(mark.gone!==undefined&&mark.gone>=list.length) h+=boxHTML(mark.name,"out","gone");
+    if(mark.ghost!==undefined) h+='<div class="box ghost"><span class="ix">'+mark.ghost+'</span>?</div>';
+    $("#boxes").innerHTML=h;
+  }
+  var TOK=/("[^"]*")|(\b(?:add|get|set|remove|size|contains|sort|clear)\b)|(\bCollections\b)|(\b\d+\b)/g;
+  function hl(s){ return esc(s).replace(TOK,function(m,a,b,c){ return '<span class="'+(a?"st":b?"fn":c?"ty":"nm")+'">'+m+'</span>'; }); }
+
+  /* ---------- game loop ---------- */
+  var game=null, ri=0, cur=null, score=0, misses=[], t0=0, timer=null, busy=false, playing=false, pending=null;
+
+  function tick(){ $("#hTime").textContent=((performance.now()-t0)/1000).toFixed(1)+"s"; }
+  function setCap(cls,html){ $("#caption").className="caption"+(cls?" "+cls:""); $("#status").innerHTML=html; }
+  function addRow(cls,html){ var r=$("#rows"), e=r.querySelector(".empty"); if(e) r.removeChild(e);
+    var d=document.createElement("div"); d.className="row "+cls; d.innerHTML=html; r.appendChild(d); r.scrollTop=r.scrollHeight; }
+  function askText(r){ return r.ask==="value"?(r.kind==="contains"?"what does it return? true or false":"what does it return?"):"what is in names now?"; }
+
+  function renderRound(){
+    cur=game.rounds[ri];
+    drawList(cur.before,{});
+    $("#call").className="call"; $("#call").innerHTML=hl(cur.call);
+    $("#ask").textContent=askText(cur);
+    $("#stepno").innerHTML="<small>call</small>"+(ri+1)+" / "+N; $("#bar").style.width=(100*ri/N)+"%";
+    setCap("",ri===0?"Here is the list. Run the call on it in your head.":"The list carries over. Next call.");
+    var a=$("#ans"); a.disabled=false; a.value=""; $("#bEx").disabled=false; a.focus(); busy=false;
+  }
+  function submit(typed){
+    if(busy||!playing) return;
+    if(String(typed).trim()===""){ $("#ans").focus(); return; }
+    busy=true; $("#ans").disabled=true; $("#bEx").disabled=true; $("#ans").value="";
+    var res=judge(cur,typed), ok=res.ok;
+    var mark=cur.mark;
+    drawList(cur.after,mark);
+    var retLine="";
+    if(cur.ask==="value") retLine='<span class="ret">returns <b>'+esc(cur.expect)+'</b></span>';
+    else if(cur.ask==="exception") retLine='<span class="ret"><b class="w">IndexOutOfBoundsException</b>: Index 7 out of bounds for length '+cur.before.length+'</span>';
+    else retLine='<span class="ret">names is now <b>'+esc(cur.expect)+'</b></span>';
+    $("#call").innerHTML=hl(cur.call)+retLine;
+    $("#call").className="call "+(ok?"good":"bad");
+    var head='<span class="c">'+esc(cur.call)+'</span>';
+    if(ok){
+      score++; $("#hScore").textContent=String(score);
+      addRow("ok",head+esc(cur.expect));
+      setCap("ok",'<b class="g">Right.</b> '+esc(cur.why));
+    } else {
+      addRow("miss",head+esc(cur.expect)+"<s>"+esc(String(typed).trim())+"</s>");
+      var lead=cur.ask==="exception"?"It throws IndexOutOfBoundsException.":cur.ask==="value"?"It returns "+cur.expect+".":"names is now "+cur.expect+".";
+      setCap("cut",'<b class="w">'+esc(lead)+'</b> '+esc((res.note||"")+cur.why));
+      misses.push({call:cur.call,you:String(typed).trim(),right:cur.expect,why:(res.note||"")+cur.why});
+    }
+    pending=setTimeout(function(){ pending=null; if(!playing) return; ri++; if(ri>=N) end(); else renderRound(); }, reduce?600:(ok?1600:3600));
+  }
+  function start(){
+    if(pending){ clearTimeout(pending); pending=null; }
+    game=build(); ri=0; score=0; misses=[]; playing=true;
+    $("#hScore").textContent="0"; $("#startScr").classList.add("off"); $("#endScr").classList.add("off");
+    $("#rows").innerHTML='<span class="empty">each call and your answer land here</span>';
+    t0=performance.now(); if(timer) clearInterval(timer); timer=setInterval(tick,100);
+    renderRound();
+  }
+  function end(){
+    playing=false; clearInterval(timer); tick(); $("#bar").style.width="100%"; $("#ans").disabled=true; $("#bEx").disabled=true;
+    var secs=((performance.now()-t0)/1000).toFixed(1), pct=score/N;
+    $("#endScore").textContent=score+" / "+N; $("#endScore").className="big "+(score===N?"good":pct>=.8?"":"gold");
+    $("#endMsg").textContent=(score===N?"Perfect trace. ":pct>=.8?"Solid. ":"Keep going. ")+"Started from "+show(game.start)+", "+secs+" seconds.";
+    $("#endMiss").innerHTML=misses.map(function(m){ return '<div><code>'+esc(m.call)+'</code> you typed <b>'+esc(m.you)+'</b>, it was <i>'+esc(m.right)+'</i>. '+esc(m.why)+'</div>'; }).join("");
+    $("#endScr").classList.remove("off");
+    $("#stepno").innerHTML="<small>call</small>"+N+" / "+N; setCap("","Game over. <b class=\"a\">Play again</b> starts from new names.");
+  }
+
+  $("#bStart").addEventListener("click",start); $("#bAgain").addEventListener("click",start); $("#bRestart").addEventListener("click",start);
+  $("#bEx").addEventListener("click",function(){ submit("IndexOutOfBoundsException"); });
+  $("#ans").addEventListener("keydown",function(e){ if(e.key==="Enter"){ e.preventDefault(); submit($("#ans").value); } });
+  document.addEventListener("keydown",function(e){
+    if(/INPUT|TEXTAREA|BUTTON/.test(e.target.tagName)) return;
+    var startOn=!$("#startScr").classList.contains("off"), endOn=!$("#endScr").classList.contains("off");
+    if((startOn||endOn)&&(e.code==="Space"||e.key==="Enter")){ e.preventDefault(); start(); }
+  });
+
+  var cv=$("#amb"),ctx=cv.getContext&&cv.getContext("2d"),parts=[];
+  function sizeC(){if(!ctx)return;cv.width=innerWidth;cv.height=innerHeight;}
+  function initParts(){parts=[];for(var i=0;i<46;i++)parts.push({x:Math.random(),y:Math.random(),r:Math.random()*1.6+.3,s:Math.random()*.02+.004,o:Math.random()*.4+.1});}
+  function drawC(){if(!ctx)return;ctx.clearRect(0,0,cv.width,cv.height);
+    parts.forEach(function(p){p.y-=p.s/60;if(p.y<-.02)p.y=1.02;ctx.beginPath();ctx.arc(p.x*cv.width,p.y*cv.height,p.r,0,7);
+      ctx.fillStyle="rgba(140,170,255,"+p.o+")";ctx.fill();});requestAnimationFrame(drawC);}
+  if(ctx&&!reduce){sizeC();initParts();drawC();addEventListener("resize",sizeC);}
+})();
+</script>
+<script src="../manifest.js"></script>
+<script src="../../assets/rail.js"></script>
+<script>Rail.render(document.getElementById("rail"),{week:3,kind:"games",current:"arraylist-tracer"});</script>
+</body>
+</html>

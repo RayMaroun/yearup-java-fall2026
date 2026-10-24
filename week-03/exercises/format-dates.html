@@ -1,0 +1,227 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Format Dates | Week 3 Visual Hub</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Sora:wght@500;700&family=Inter:wght@400;500&family=JetBrains+Mono:wght@400;500&display=swap">
+<style>
+  :root{
+    --bg:#080c17; --bg2:#0c1428; --surface:rgba(255,255,255,.045); --line:rgba(255,255,255,.09);
+    --ink:#eef2fb; --muted:#8496b6; --accent:#6ea0ff; --accent2:#8b7bff; --good:#46d98a; --warn:#ff6a6a;
+    --gold:#ffc862; --disp:'Sora',system-ui,sans-serif; --body:'Inter',system-ui,sans-serif;
+    --mono:'JetBrains Mono',ui-monospace,monospace;
+  }
+  *{box-sizing:border-box}
+  body{margin:0;min-height:100vh;color:var(--ink);font-family:var(--body);
+    background:radial-gradient(1200px 700px at 70% -10%,#141d38 0%,transparent 55%),
+               radial-gradient(900px 600px at 10% 110%,#161233 0%,transparent 50%),#080c17;
+    overflow-x:hidden}
+  #amb{position:fixed;inset:0;z-index:0;pointer-events:none;opacity:.6}
+  .back{position:relative;z-index:2;display:block;max-width:1120px;margin:0 auto;padding:26px 24px 0;
+    width:100%;font-family:var(--mono);font-size:.8rem;letter-spacing:.04em;color:var(--muted);
+    text-decoration:none;transition:color .15s}
+  .back:hover{color:var(--accent)}
+  .wrap{position:relative;z-index:1;max-width:1120px;margin:0 auto;padding:22px 24px 70px}
+  .tag{font-family:var(--mono);font-size:.72rem;letter-spacing:.22em;text-transform:uppercase;color:var(--accent);margin:0 0 14px}
+  h1{font-family:var(--disp);font-weight:700;font-size:clamp(2.3rem,6vw,3.6rem);line-height:1;margin:0 0 12px;
+    letter-spacing:-.03em;background:linear-gradient(180deg,#fff,#b9c6e6);-webkit-background-clip:text;
+    background-clip:text;color:transparent}
+  .lede{color:var(--muted);max-width:64ch;font-size:1.05rem;margin:0 0 26px;line-height:1.5}
+  .lede b{color:var(--ink)}
+  .lede code,.take code,.caption code{font-family:var(--mono);font-size:.92em;color:#bcd0ff}
+
+  /* ---------- companion: everything visible, a checklist you tick ---------- */
+  .stage{position:relative;background:linear-gradient(180deg,rgba(255,255,255,.03),rgba(255,255,255,.01));
+    border:1px solid var(--line);border-radius:24px;padding:18px;
+    box-shadow:0 1px 0 rgba(255,255,255,.06) inset,0 30px 80px -30px rgba(0,0,0,.8)}
+  .lab{font-family:var(--mono);font-size:.7rem;letter-spacing:.12em;text-transform:uppercase;color:var(--muted);margin:0 0 10px}
+  .cols{display:grid;grid-template-columns:minmax(0,1.35fr) minmax(0,1fr);gap:16px}
+  @media (max-width:860px){.cols{grid-template-columns:1fr}}
+  .box{background:rgba(6,10,20,.5);border:1px solid var(--line);border-radius:18px;padding:16px 18px}
+  .brief p{margin:0 0 10px;font-size:1rem;line-height:1.6;color:var(--ink)} .brief p:last-child{margin:0}
+  .brief b{color:#fff} .brief code,.step code,.stuck code{font-family:var(--mono);font-size:.9em;color:#bcd0ff}
+  .brief .no{color:var(--muted)}
+  /* steps */
+  .steps{display:flex;flex-direction:column;gap:8px;margin-top:4px}
+  .step{border:1px solid var(--line);border-radius:14px;background:rgba(255,255,255,.025);transition:border-color .2s,background .2s}
+  .step.done{border-color:rgba(70,217,138,.45);background:rgba(70,217,138,.05)}
+  .step .hd{display:flex;align-items:center;gap:12px;padding:11px 14px;cursor:pointer;user-select:none}
+  .step .tick{flex-shrink:0;width:22px;height:22px;border-radius:7px;border:1.5px solid rgba(132,150,182,.6);display:grid;place-items:center;
+    background:rgba(0,0,0,.25);transition:.15s;font-size:.8rem;color:transparent}
+  .step.done .tick{border-color:var(--good);background:rgba(70,217,138,.2);color:var(--good)}
+  .step .num{font-family:var(--mono);font-size:.68rem;color:var(--accent);min-width:1.4rem}
+  .step .txt{flex:1;font-size:.98rem;line-height:1.45;color:var(--ink)}
+  .step.done .txt{color:var(--muted);text-decoration:line-through;text-decoration-color:rgba(132,150,182,.5)}
+  .step .more{flex-shrink:0;font-family:var(--mono);font-size:.64rem;letter-spacing:.08em;text-transform:uppercase;color:var(--muted);
+    padding:4px 9px;border-radius:999px;border:1px solid var(--line);transition:.15s}
+  .step .hd:hover .more{color:var(--accent);border-color:var(--accent)}
+  .step .dt{display:none;padding:0 14px 13px 62px;font-size:.9rem;line-height:1.55;color:var(--muted)}
+  .step.open .dt{display:block}
+  .step .dt b{color:var(--ink);font-weight:500}
+  .step .dt .ok{display:block;margin-top:6px;font-family:var(--mono);font-size:.74rem;color:var(--good)}
+  .step .dt .ok:before{content:"done when  ";color:rgba(70,217,138,.6);letter-spacing:.08em;text-transform:uppercase;font-size:.62rem}
+  .prog{display:flex;align-items:center;gap:12px;margin-top:12px;font-family:var(--mono);font-size:.72rem;color:var(--muted)}
+  .prog .bar{flex:1;height:6px;border-radius:999px;background:rgba(255,255,255,.08);overflow:hidden}
+  .prog .bar i{display:block;height:100%;width:0;background:var(--good);transition:width .3s}
+  .prog button{font-family:var(--mono);font-size:.66rem;letter-spacing:.08em;text-transform:uppercase;color:var(--muted);background:transparent;
+    border:1px solid var(--line);border-radius:999px;padding:4px 10px;cursor:pointer}
+  .prog button:hover{color:var(--accent);border-color:var(--accent)}
+  /* right column */
+  .side{display:flex;flex-direction:column;gap:14px}
+  .console{font-family:var(--mono);font-size:.78rem;line-height:1.65;background:#05070e;border:1px solid var(--line);
+    border-radius:12px;padding:10px 14px;color:#9fe3b6;white-space:pre}
+  .console .cl{font-size:.6rem;letter-spacing:.14em;text-transform:uppercase;color:rgba(132,150,182,.6);margin-bottom:4px;white-space:normal}
+  .console .mu{color:rgba(132,150,182,.6)}
+  .note{font-size:.84rem;color:var(--muted);line-height:1.5;margin:8px 0 0}
+  .stuck{margin:0;padding:0;list-style:none;display:flex;flex-direction:column;gap:8px}
+  .stuck li{font-size:.9rem;line-height:1.5;color:var(--ink);padding-left:14px;border-left:2px solid rgba(255,106,106,.5)}
+  .stuck li b{color:var(--warn);font-weight:500}
+  .links{display:flex;flex-wrap:wrap;gap:6px}
+  .links a{font-family:var(--mono);font-size:.72rem;padding:5px 11px;border-radius:999px;border:1px solid var(--line);
+    color:var(--accent);text-decoration:none;background:rgba(110,160,255,.06);transition:.15s}
+  .links a:hover{border-color:var(--accent);background:rgba(110,160,255,.14)}
+  .take{margin-top:22px;background:linear-gradient(180deg,rgba(110,160,255,.08),rgba(139,123,255,.04));
+    border:1px solid var(--line);border-left:3px solid var(--accent);border-radius:12px;padding:16px 18px}
+  .take .tk{font-family:var(--mono);font-size:.66rem;letter-spacing:.14em;text-transform:uppercase;color:var(--accent);margin:0 0 8px}
+  .take p{margin:0;font-size:.95rem;color:var(--ink);line-height:1.55}
+  .take b{color:#fff}
+  @media (prefers-reduced-motion:reduce){*{animation-duration:.01ms!important;transition-duration:.01ms!important}#amb{display:none}}
+</style>
+</head>
+<body>
+
+<a class="back" href="../index.html#format-dates">&#8592; Week 3 index</a>
+
+<canvas id="amb"></canvas>
+<div class="wrap">
+  <p class="tag">Workbook 3a &middot; Section 2-2 &middot; Exercise 2</p>
+  <h1>Format Dates</h1>
+  <p class="lede"><b>One moment, the current date and time, printed four ways, and a fifth for the challenge.</b></p>
+
+  <div class="stage">
+    <div class="cols">
+      <div>
+        <p class="lab">What you are building</p>
+        <div class="box brief">
+          <p>A program that reads <b>now</b> once and prints it in four formats, one per line. The fourth shows the time <b>in GMT</b>. The challenge adds a time-first line in your local zone.</p>
+          <p class="no">No input, no menu, no files. The work is the right pattern for each line.</p>
+        </div>
+
+        <p class="lab" style="margin-top:18px">Do these in order</p>
+        <div class="steps" id="steps"></div>
+        <div class="prog"><span id="progTxt">0 of 8 done</span><div class="bar"><i id="progBar"></i></div><button id="bClear">Clear ticks</button></div>
+      </div>
+
+      <div class="side">
+        <div>
+          <p class="lab">What a finished run looks like</p>
+          <div class="console"><div class="cl">run</div>10/24/2026
+2026-10-24
+Saturday, October 24, 2026
+Saturday, Oct 24, 2026 14:15
+<span class="mu">(challenge)</span>
+10:15 on 24-Oct-2026</div>
+          <p class="note">Yours will differ: it prints right now. Compare the shape, not the values.</p>
+        </div>
+        <div>
+          <p class="lab">Where people get stuck</p>
+          <ul class="stuck">
+            <li><b>The month shows minutes.</b> Pattern letters are case-sensitive: <code>MM</code> is the month, <code>mm</code> is minutes.</li>
+            <li><b>The GMT line shows your own time.</b> A LocalDateTime has no time zone. The GMT line needs a zoned time, a <code>ZonedDateTime</code> for <code>ZoneId</code> GMT.</li>
+            <li><b>Wed instead of Wednesday.</b> How many times you repeat a letter decides short or full name.</li>
+            <li><b>The date does not match the workbook.</b> The workbook ran on April 22. Yours prints today.</li>
+          </ul>
+        </div>
+        <div>
+          <p class="lab">Pages that help</p>
+          <div class="links">
+            <a href="../visuals/05-date-and-time-objects.html">LocalDate, LocalTime, LocalDateTime</a>
+            <a href="../visuals/06-date-patterns.html">Date patterns</a>
+            <a href="../reference/date-patterns.html">Every pattern letter</a>
+            <a href="../reference/cheat-sheet.html">Week 3 cheat sheet</a>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="take">
+    <p class="tk">The one idea</p>
+    <p><b>A date is one value; the pattern decides how it looks.</b> Same moment, five patterns, and a zone when the clock is elsewhere.</p>
+  </div>
+
+  <div id="rail"></div>
+</div>
+
+<script>
+(function(){
+  "use strict";
+  var $=function(s){return document.querySelector(s);};
+  var reduce=matchMedia("(prefers-reduced-motion: reduce)").matches;
+  var KEY="hub-ex-w3-format-dates";
+
+  /* each step: what to do (the workbook's words, plain), what it means, how you know it worked */
+  var STEPS=[
+    {t:"Create a new project named <code>format-dates</code> in your <code>workbook-3</code> folder.",
+     d:"File > New > Project. Name <b>format-dates</b>, Location Desktop > pluralsight > java-development > workbook-3, Java, Maven, JDK 17, GroupId <b>com.pluralsight</b>, <b>Create Git repository</b> ticked. Then Git > GitHub > Share Project on GitHub.",
+     ok:"the project runs and has its own repository on github.com"},
+    {t:"Get the current date and time once, in <code>main</code>.",
+     d:"<b>LocalDateTime</b> and its <b>now()</b> method, from java.time. Every line below formats this one value.",
+     ok:"the program compiles with the java.time imports at the top"},
+    {t:"Line 1: month, day and year with slashes.",
+     d:"A <b>DateTimeFormatter</b> from <b>ofPattern()</b>, used with <b>format()</b>. Month and day always two digits, year four.",
+     ok:"a line like 04/22/2026, a leading zero on a one-digit month or day"},
+    {t:"Line 2: year, month and day with dashes.",
+     d:"The ISO order, biggest unit first. Same two digits for month and day.",
+     ok:"a line like 2026-04-22"},
+    {t:"Line 3: full weekday, full month name, day, year.",
+     d:"Names spelled out in full, a comma after the weekday and after the day.",
+     ok:"a line like Wednesday, April 22, 2026"},
+    {t:"Line 4: weekday, short month, day, year, hours and minutes, in GMT.",
+     d:"Full weekday, three-letter month, then a 24-hour time. The time must be the time in GMT, not on your clock: see the time zone page the workbook links (beginnersbook).",
+     ok:"a line like Wednesday, Apr 22, 2026 10:02, hours off your clock"},
+    {t:"<b>Bonus</b> (challenge): time first, then the date, in your local time zone.",
+     d:"Hour without a leading zero, colon, minutes, the word on, then day, three-letter month and year joined by dashes.",
+     ok:"a line like 5:02 on 22-Apr-2026, matching your clock"},
+    {t:"Commit and push.",
+     d:"Git > Commit, a short message that says what changed, then <b>Commit and Push</b>.",
+     ok:"github.com shows the new commit"}
+  ];
+  var done=[]; try{ done=JSON.parse(localStorage.getItem(KEY)||"[]"); }catch(e){ done=[]; }
+  var stepsEl=$("#steps");
+  function render(){
+    stepsEl.innerHTML=STEPS.map(function(s,i){
+      return '<div class="step'+(done.indexOf(i)>=0?" done":"")+'" data-i="'+i+'">'+
+        '<div class="hd"><span class="tick">✓</span><span class="num">'+(i+1)+'</span><span class="txt">'+s.t+'</span><span class="more">how</span></div>'+
+        '<div class="dt">'+s.d+'<span class="ok">'+s.ok+'</span></div></div>';
+    }).join("");
+    var n=done.length; $("#progTxt").textContent=n+" of "+STEPS.length+" done"; $("#progBar").style.width=(100*n/STEPS.length)+"%";
+  }
+  stepsEl.addEventListener("click",function(e){
+    var st=e.target.closest(".step"); if(!st) return; var i=+st.getAttribute("data-i");
+    if(e.target.closest(".tick")){
+      var k=done.indexOf(i); if(k>=0) done.splice(k,1); else done.push(i);
+      try{localStorage.setItem(KEY,JSON.stringify(done));}catch(err){}
+      var open=[]; Array.prototype.forEach.call(stepsEl.querySelectorAll(".step.open"),function(o){open.push(o.getAttribute("data-i"));});
+      render(); open.forEach(function(o){ var el=stepsEl.querySelector('[data-i="'+o+'"]'); if(el) el.classList.add("open"); });
+    } else if(e.target.closest(".hd")){ st.classList.toggle("open"); }
+  });
+  $("#bClear").addEventListener("click",function(){ done=[]; try{localStorage.removeItem(KEY);}catch(e){} render(); });
+  render();
+
+  var cv=$("#amb"),ctx=cv.getContext&&cv.getContext("2d"),parts=[];
+  function sizeC(){if(!ctx)return;cv.width=innerWidth;cv.height=innerHeight;}
+  function initParts(){parts=[];for(var i=0;i<46;i++)parts.push({x:Math.random(),y:Math.random(),r:Math.random()*1.6+.3,s:Math.random()*.02+.004,o:Math.random()*.4+.1});}
+  function drawC(){if(!ctx)return;ctx.clearRect(0,0,cv.width,cv.height);
+    parts.forEach(function(p){p.y-=p.s/60;if(p.y<-.02)p.y=1.02;ctx.beginPath();ctx.arc(p.x*cv.width,p.y*cv.height,p.r,0,7);
+      ctx.fillStyle="rgba(140,170,255,"+p.o+")";ctx.fill();});requestAnimationFrame(drawC);}
+  if(ctx&&!reduce){sizeC();initParts();drawC();addEventListener("resize",sizeC);}
+})();
+</script>
+<script src="../manifest.js"></script>
+<script src="../../assets/rail.js"></script>
+<script>Rail.render(document.getElementById("rail"),{week:3,kind:"exercises",current:"format-dates"});</script>
+</body>
+</html>

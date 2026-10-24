@@ -1,0 +1,351 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>HashMap Lookup | Week 3 Visual Hub</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Sora:wght@500;700&family=Inter:wght@400;500&family=JetBrains+Mono:wght@400;500&display=swap">
+<style>
+  :root{
+    --bg:#080c17; --bg2:#0c1428; --surface:rgba(255,255,255,.045); --line:rgba(255,255,255,.09);
+    --ink:#eef2fb; --muted:#8496b6; --accent:#6ea0ff; --accent2:#8b7bff; --good:#46d98a; --warn:#ff6a6a;
+    --gold:#ffc862; --disp:'Sora',system-ui,sans-serif; --body:'Inter',system-ui,sans-serif;
+    --mono:'JetBrains Mono',ui-monospace,monospace;
+  }
+  *{box-sizing:border-box}
+  body{margin:0;min-height:100vh;color:var(--ink);font-family:var(--body);
+    background:radial-gradient(1200px 700px at 70% -10%,#141d38 0%,transparent 55%),
+               radial-gradient(900px 600px at 10% 110%,#161233 0%,transparent 50%),#080c17;
+    overflow-x:hidden}
+  #amb{position:fixed;inset:0;z-index:0;pointer-events:none;opacity:.6}
+  .back{position:relative;z-index:2;display:block;max-width:1120px;margin:0 auto;padding:26px 24px 0;
+    width:100%;font-family:var(--mono);font-size:.8rem;letter-spacing:.04em;color:var(--muted);
+    text-decoration:none;transition:color .15s}
+  .back:hover{color:var(--accent)}
+  .wrap{position:relative;z-index:1;max-width:1120px;margin:0 auto;padding:22px 24px 70px}
+  .tag{font-family:var(--mono);font-size:.72rem;letter-spacing:.22em;text-transform:uppercase;color:var(--accent);margin:0 0 14px}
+  h1{font-family:var(--disp);font-weight:700;font-size:clamp(2.3rem,6vw,3.6rem);line-height:1;margin:0 0 12px;
+    letter-spacing:-.03em;background:linear-gradient(180deg,#fff,#b9c6e6);-webkit-background-clip:text;
+    background-clip:text;color:transparent}
+  .lede{color:var(--muted);max-width:64ch;font-size:1.05rem;margin:0 0 26px;line-height:1.5}
+  .lede b{color:var(--ink)}
+  .take code{font-family:var(--mono);font-size:.92em;color:#bcd0ff}
+
+  /* ---------- stage ---------- */
+  .stage{position:relative;background:linear-gradient(180deg,rgba(255,255,255,.03),rgba(255,255,255,.01));
+    border:1px solid var(--line);border-radius:24px;padding:18px 18px 14px;
+    box-shadow:0 1px 0 rgba(255,255,255,.06) inset,0 30px 80px -30px rgba(0,0,0,.8)}
+  .topbar{display:flex;align-items:center;gap:10px;margin:0 0 14px;flex-wrap:wrap}
+  .topbar .lab{margin:0 4px 0 0}
+  .lab{font-family:var(--mono);font-size:.7rem;letter-spacing:.12em;text-transform:uppercase;color:var(--muted);margin:0 0 10px}
+
+  /* ---------- game board ---------- */
+  .pic{position:relative;min-height:430px;border:1px solid var(--line);border-radius:18px;background:rgba(6,10,20,.5);overflow:hidden;
+    display:flex;flex-wrap:wrap;align-items:center;justify-content:center;gap:34px;padding:48px 24px 30px}
+  .pic .zone{position:absolute;left:18px;top:14px;font-family:var(--mono);font-size:.62rem;letter-spacing:.14em;text-transform:uppercase;color:rgba(132,150,182,.55)}
+  .hud{position:absolute;right:18px;top:12px;display:flex;gap:14px;font-family:var(--mono);font-size:.72rem;color:var(--muted)}
+  .hud b{color:var(--ink);font-weight:500}
+
+  /* the map: one card, key and value rows */
+  .map{width:300px;max-width:100%;border:1px solid var(--line);border-radius:14px;background:rgba(0,0,0,.28);overflow:hidden;
+    box-shadow:0 1px 0 rgba(255,255,255,.05) inset}
+  .map .hd{font-family:var(--mono);font-size:.78rem;padding:10px 14px;border-bottom:1px solid var(--line);background:rgba(110,160,255,.08);color:var(--ink)}
+  .map .hd .ty{color:#c9a7ff}
+  .map .cols{display:grid;grid-template-columns:1fr 1fr;padding:6px 14px;font-family:var(--mono);font-size:.6rem;letter-spacing:.14em;text-transform:uppercase;color:var(--muted)}
+  .map .cols span:last-child{text-align:right}
+  .row{display:grid;grid-template-columns:1fr 1fr;align-items:center;padding:7px 14px;border-top:1px solid var(--line);font-family:var(--mono);font-size:1rem;
+    transition:background .25s,opacity .25s}
+  .row .k{color:#9fe6b8}
+  .row .v{color:var(--gold);text-align:right;font-variant-numeric:tabular-nums}
+  .row .v s{color:var(--muted);margin-right:8px;text-decoration-color:var(--warn)}
+  .row .note{grid-column:1 / -1;font-size:.62rem;letter-spacing:.1em;text-transform:uppercase;margin-top:2px}
+  .row.hit{background:rgba(70,217,138,.13)} .row.hit .note{color:var(--good)}
+  .row.all{background:rgba(110,160,255,.1)}
+  .row.chg{background:rgba(255,200,98,.12)} .row.chg .note{color:var(--gold)}
+  .row.add{background:rgba(70,217,138,.13)} .row.add .note{color:var(--good)}
+  .row.gone{background:rgba(255,106,106,.1)} .row.gone .k,.row.gone .v{text-decoration:line-through;text-decoration-color:var(--warn);opacity:.7}
+  .row.gone .note{color:var(--warn)}
+  .row.ghost{border:1px dashed rgba(255,106,106,.7);margin:6px 8px;border-radius:9px;background:rgba(255,106,106,.07)}
+  .row.ghost .k{color:var(--warn)} .row.ghost .v{color:var(--warn)} .row.ghost .note{color:var(--warn)}
+  .map .ft{padding:7px 14px;border-top:1px solid var(--line);font-family:var(--mono);font-size:.68rem;color:var(--muted);text-align:right}
+  .map .ft b{color:var(--ink);font-weight:500}
+
+  .ask{display:flex;flex-direction:column;align-items:center;gap:16px;min-width:300px;max-width:100%}
+  .call{font-family:var(--mono);font-size:clamp(1.05rem,2.4vw,1.4rem);line-height:1.5;color:var(--ink);padding:14px 26px;border:1px solid var(--line);border-radius:16px;
+    background:rgba(0,0,0,.3);white-space:pre;max-width:100%;overflow-x:auto;transition:border-color .2s,box-shadow .2s,transform .2s}
+  .call.multi{font-size:clamp(.9rem,2vw,1.08rem)}
+  .call .nm{color:var(--gold)} .call .st{color:#9fe6b8} .call .ty{color:#c9a7ff}
+  .call.good{border-color:rgba(70,217,138,.7);box-shadow:0 0 28px -8px rgba(70,217,138,.8)}
+  .call.bad{border-color:rgba(255,106,106,.7);box-shadow:0 0 28px -8px rgba(255,106,106,.8);animation:shake .3s}
+  @keyframes shake{25%{transform:translateX(-6px)}75%{transform:translateX(6px)}}
+  .ans{font-family:var(--mono);font-size:1.05rem;padding:10px 16px;width:min(320px,100%);border-radius:11px;border:1px solid var(--line);
+    background:var(--surface);color:var(--ink);text-align:center;outline:none;transition:border-color .15s}
+  .ans:focus{border-color:rgba(110,160,255,.6);box-shadow:0 0 0 3px rgba(110,160,255,.15)}
+  .ans.good{border-color:rgba(70,217,138,.7);color:var(--good)}
+  .ans.bad{border-color:rgba(255,106,106,.7);color:var(--warn)}
+
+  .screen{position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:12px;background:rgba(6,10,20,.92);transition:opacity .25s;padding:20px;z-index:3}
+  .screen.off{opacity:0;pointer-events:none}
+  .screen h2{font-family:var(--disp);font-weight:700;font-size:1.6rem;margin:0;color:var(--ink)}
+  .screen p{margin:0;color:var(--muted);font-size:.95rem;text-align:center;max-width:52ch;line-height:1.5}
+  .screen p b{color:var(--ink);font-weight:500}
+  .screen .big{font-family:var(--disp);font-weight:700;font-size:2.6rem;color:var(--accent)}
+  .screen .big.gold{color:var(--gold)} .screen .big.good{color:var(--good)}
+  .bar{position:absolute;left:0;right:0;bottom:0;height:4px;background:rgba(255,255,255,.06)}
+  .bar i{display:block;height:100%;width:0;background:var(--accent);transition:width .25s}
+  .misses{font-family:var(--mono);font-size:.72rem;color:var(--muted);line-height:1.6;text-align:left;max-height:150px;overflow:auto;max-width:100%}
+  .misses b{color:var(--warn);font-weight:500} .misses i{font-style:normal;color:var(--good)}
+
+  /* caption: the one sentence, right under the picture */
+  .caption{display:flex;gap:16px;align-items:flex-start;margin:14px 4px 0;min-height:56px}
+  .caption .n{flex-shrink:0;font-family:var(--disp);font-weight:700;font-size:1.35rem;color:var(--accent);font-variant-numeric:tabular-nums;
+    line-height:1.2;min-width:3.2rem}
+  .caption .n small{display:block;font-family:var(--mono);font-weight:400;font-size:.58rem;letter-spacing:.14em;text-transform:uppercase;color:var(--muted)}
+  .caption .t{flex:1;font-size:1.02rem;line-height:1.55;color:var(--ink);padding-left:16px;border-left:3px solid var(--accent);transition:border-color .3s}
+  .caption.cut .t{border-left-color:var(--warn)} .caption.ok .t{border-left-color:var(--good)}
+  .caption b.g{color:var(--good)} .caption b.w{color:var(--warn)} .caption b.a{color:var(--accent)} .caption b.y{color:var(--gold)}
+
+  .btn{font-family:var(--body);font-weight:500;font-size:.86rem;padding:9px 16px;border-radius:11px;cursor:pointer;
+    border:1px solid var(--line);background:var(--surface);color:var(--ink);transition:.15s}
+  .btn:hover{border-color:var(--accent);color:var(--accent)}
+  .btn:focus-visible{outline:2px solid var(--accent);outline-offset:2px}
+  .btn.primary{border-color:rgba(110,160,255,.5);background:rgba(110,160,255,.12);padding:9px 22px}
+  .btn.ghost{background:transparent;color:var(--muted);flex-shrink:0}
+  .hint{font-family:var(--mono);font-size:.68rem;color:var(--muted);margin:10px 4px 0;line-height:1.5}
+  .hint b{color:var(--accent)}
+
+  .take{margin-top:22px;background:linear-gradient(180deg,rgba(110,160,255,.08),rgba(139,123,255,.04));
+    border:1px solid var(--line);border-left:3px solid var(--accent);border-radius:12px;padding:16px 18px}
+  .take .tk{font-family:var(--mono);font-size:.66rem;letter-spacing:.14em;text-transform:uppercase;color:var(--accent);margin:0 0 8px}
+  .take p{margin:0;font-size:.95rem;color:var(--ink);line-height:1.55}
+  .take b{color:#fff}
+  @media (max-width:640px){.wrap{padding:22px 16px 70px}.back{padding:26px 16px 0}.pic{gap:22px;padding:46px 14px 26px}.caption{flex-wrap:wrap}}
+  @media (prefers-reduced-motion:reduce){*{animation-duration:.01ms!important;transition-duration:.01ms!important}#amb{display:none}}
+</style>
+</head>
+<body>
+
+<a class="back" href="../index.html#hashmap-lookup">&#8592; Week 3 index</a>
+
+<canvas id="amb"></canvas>
+<div class="wrap">
+  <p class="tag">Workbook 3a &middot; Section 4-1 &middot; Game</p>
+  <h1>HashMap Lookup</h1>
+  <p class="lede"><b>A map and a call: type what it gives back, or null.</b> The map keeps every change for the next round.</p>
+
+  <div class="stage">
+    <div class="topbar">
+      <span class="lab">Game</span>
+    </div>
+
+    <div class="pic" id="pic">
+      <span class="zone">what does the call give?</span>
+      <div class="hud"><span>score <b id="hScore">0</b></span><span>time <b id="hTime">0.0s</b></span></div>
+      <div class="map" id="map"></div>
+      <div class="ask">
+        <div class="call" id="call">&nbsp;</div>
+        <input class="ans" id="ans" type="text" autocomplete="off" spellcheck="false" placeholder="a number, true, false or null" aria-label="Your answer" disabled>
+      </div>
+      <div class="bar"><i id="bar"></i></div>
+      <div class="screen" id="startScr">
+        <h2>HashMap Lookup</h2>
+        <p>Read the map, then the call. Type what it returns and press Enter. A missing key gives <b>null</b>: type null.</p>
+        <button class="btn primary" id="bStart">Start</button>
+      </div>
+      <div class="screen off" id="endScr">
+        <h2>Round over</h2>
+        <div class="big" id="endScore"></div>
+        <p id="endMsg"></p>
+        <div class="misses" id="endMiss"></div>
+        <button class="btn primary" id="bAgain">Play again</button>
+      </div>
+    </div>
+
+    <div class="caption" id="caption">
+      <div class="n" id="stepno"><small>round</small>0 / 15</div>
+      <div class="t" id="status">Press <b class="a">Start</b> or Enter. Answers are typed, Enter submits.</div>
+      <button class="btn ghost" id="bRestart">Restart</button>
+    </div>
+    <p class="hint">get = the value, or <b>null</b> &middot; put on a key that exists replaces the value &middot; remove returns the value it took out, or null &middot; keys match exactly</p>
+  </div>
+
+  <div class="take">
+    <p class="tk">The one idea</p>
+    <p><b>A HashMap finds a value by its key, and each key appears once.</b> <code>get</code> on a missing key gives <code>null</code>, not an error; <code>put</code> on a key that is already there replaces its value and the size stays the same; <code>remove</code> hands back the value it took out.</p>
+  </div>
+
+  <div id="rail"></div>
+</div>
+
+<script>
+(function(){
+  "use strict";
+  var $=function(s){return document.querySelector(s);};
+  var reduce=matchMedia("(prefers-reduced-motion: reduce)").matches;
+
+  var FRUITS=["apple","pear","fig","plum","kiwi","mango","lime","peach","grape","cherry","lemon","melon"];
+  var N=15, MIN=3, MAX=7;
+  // the real map: a JavaScript Map stands in for HashMap<String, Integer> and every answer is read from it
+  var stock=new Map();
+  var plan=[], at=0, score=0, misses=[], t0=0, timer=null, busy=false, playing=false, cur=null;
+
+  function rnd(a,b){ return a+Math.floor(Math.random()*(b-a+1)); }
+  function shuffle(a){ a=a.slice(); for(var i=a.length-1;i>0;i--){ var j=Math.floor(Math.random()*(i+1)); var t=a[i]; a[i]=a[j]; a[j]=t; } return a; }
+  function pickOne(a){ return a[Math.floor(Math.random()*a.length)]; }
+  var escBox=document.createElement("div");
+  function esc(s){ escBox.textContent=String(s); return escBox.innerHTML; }
+  function q(s){ return "\""+s+"\""; }
+  function keys(){ return Array.from(stock.keys()); }
+  function absent(){ return FRUITS.filter(function(f){ return !stock.has(f); }); }
+  function cap(s){ return s.charAt(0).toUpperCase()+s.slice(1); }
+  // Java prints a null Integer as null
+  function show(v){ return v===undefined||v===null?"null":String(v); }
+
+  function newValue(old){ var v; do { v=rnd(1,20); } while(v===old); return v; }
+
+  // Each kind builds a question from the map as it is now. run() performs the call on the real map
+  // and returns the answer, the one-line why, and how to mark the rows.
+  var KINDS={
+    get:function(){ var k=pickOne(keys());
+      return {expr:"stock.get("+q(k)+")",run:function(){ var v=stock.get(k);
+        return {ans:show(v),why:q(k)+" is a key, so get gives its value, "+show(v),marks:{hit:[k]}}; }}; },
+    miss:function(){ var k=pickOne(absent());
+      return {expr:"stock.get("+q(k)+")",run:function(){ var v=stock.get(k);
+        return {ans:show(v),why:"the key was not there, get gives null, not an error",marks:{ghost:k}}; }}; },
+    caseMiss:function(){ var k=pickOne(keys()), K=cap(k);
+      return {expr:"stock.get("+q(K)+")",run:function(){ var v=stock.get(K);
+        return {ans:show(v),why:"keys match exactly: "+q(K)+" is not "+q(k)+", so get gives null",marks:{ghost:K}}; }}; },
+    replace:function(){ var k=pickOne(keys()), nv=newValue(stock.get(k));
+      return {multi:true,expr:"stock.put("+q(k)+", "+nv+");\nstock.get("+q(k)+")",run:function(){ var old=stock.get(k); stock.set(k,nv); var v=stock.get(k);
+        return {ans:show(v),why:"keys are unique: put on "+q(k)+" replaced "+old+" with "+nv+", so get gives "+show(v),marks:{chg:k,old:old}}; }}; },
+    add:function(){ var k=pickOne(absent()), nv=rnd(1,20);
+      return {multi:true,expr:"stock.put("+q(k)+", "+nv+");\nstock.get("+q(k)+")",run:function(){ stock.set(k,nv); var v=stock.get(k);
+        return {ans:show(v),why:q(k)+" was not a key, so put added a new entry and get gives "+show(v),marks:{add:k}}; }}; },
+    remove:function(){ var k=pickOne(keys());
+      return {expr:"stock.remove("+q(k)+")",run:function(){ var v=stock.has(k)?stock.get(k):null; stock.delete(k);
+        return {ans:show(v),why:"remove takes the entry out and returns the value it held, "+show(v),marks:{gone:k,old:v}}; }}; },
+    removeMiss:function(){ var k=pickOne(absent());
+      return {expr:"stock.remove("+q(k)+")",run:function(){ var had=stock.has(k), v=had?stock.get(k):null; stock.delete(k);
+        return {ans:show(v),why:q(k)+" was not there, so remove changes nothing and returns null",marks:{ghost:k}}; }}; },
+    contains:function(){ var yes=Math.random()<.5, k=yes?pickOne(keys()):pickOne(absent());
+      return {expr:"stock.containsKey("+q(k)+")",run:function(){ var r=stock.has(k);
+        return {ans:String(r),why:r?q(k)+" is one of the keys, so containsKey is true":q(k)+" is not a key, so containsKey is false",marks:r?{hit:[k]}:{ghost:k}}; }}; },
+    sizeSame:function(){ var k=pickOne(keys()), nv=newValue(stock.get(k));
+      return {multi:true,expr:"stock.put("+q(k)+", "+nv+");\nstock.size()",run:function(){ var old=stock.get(k); stock.set(k,nv); var n=stock.size;
+        return {ans:String(n),why:q(k)+" was already a key, put replaced the value, size stays "+n,marks:{chg:k,old:old}}; }}; },
+    keySet:function(){
+      return {expr:"stock.keySet().size()",run:function(){ var n=stock.size;
+        return {ans:String(n),why:"one key per entry, so keySet().size() is the same as size(), "+n,marks:{all:true}}; }}; },
+    sum:function(){
+      return {multi:true,expr:"int total = 0;\nfor (int n : stock.values()) {\n    total += n;\n}\ntotal",run:function(){
+        var vals=Array.from(stock.values()), t=vals.reduce(function(a,b){ return a+b; },0);
+        return {ans:String(t),why:"values() visits every value once: "+vals.join(" + ")+" = "+t,marks:{all:true}}; }}; }
+  };
+  // fifteen rounds, shuffled; the map limits which kinds can run (never fewer than 3 or more than 7 entries)
+  var MIX=["get","get","miss","miss","caseMiss","replace","replace","add","remove","remove","removeMiss","contains","sizeSame","keySet","sum"];
+  function canRun(kind){
+    if(kind==="remove") return stock.size>MIN;
+    if(kind==="add") return stock.size<MAX&&absent().length>0;
+    if(kind==="miss"||kind==="removeMiss") return absent().length>0;
+    return stock.size>0;
+  }
+  function makeQ(kind){ if(!canRun(kind)) kind=stock.size>MIN?"get":"add"; if(!canRun(kind)) kind="get"; return KINDS[kind](); }
+
+  // ---------- drawing ----------
+  function rowHTML(k,v,cls,note,old){
+    var vv=(old!==undefined&&old!==null?"<s>"+esc(old)+"</s>":"")+esc(v);
+    return '<div class="row'+(cls?" "+cls:"")+'"><span class="k">'+esc(q(k))+'</span><span class="v">'+vv+'</span>'+(note?'<span class="note">'+esc(note)+'</span>':"")+'</div>';
+  }
+  function drawMap(marks){
+    marks=marks||{}; var rows=[];
+    stock.forEach(function(v,k){
+      if(marks.hit&&marks.hit.indexOf(k)>=0) rows.push(rowHTML(k,v,"hit","found"));
+      else if(marks.chg===k) rows.push(rowHTML(k,v,"chg","replaced",marks.old));
+      else if(marks.add===k) rows.push(rowHTML(k,v,"add","new entry"));
+      else rows.push(rowHTML(k,v,marks.all?"all":""));
+    });
+    if(marks.gone!==undefined) rows.push(rowHTML(marks.gone,marks.old,"gone","removed"));
+    if(marks.ghost!==undefined) rows.push(rowHTML(marks.ghost,"null","ghost","no such key"));
+    $("#map").innerHTML='<div class="hd"><span class="ty">'+esc("HashMap<String, Integer>")+'</span> stock</div>'+
+      '<div class="cols"><span>key</span><span>value</span></div>'+rows.join("")+
+      '<div class="ft">size() <b>'+stock.size+'</b></div>';
+  }
+  function callHTML(expr){
+    // strings first, so the class names added later are never matched
+    return esc(expr).replace(/("[A-Za-z]+")/g,'<span class="st">$1</span>')
+      .replace(/(get|put|remove|containsKey|size|keySet|values)\(/g,'<span class="nm">$1</span>(').replace(/\bint\b/g,'<span class="ty">int</span>');
+  }
+  // accept spaces, quotes, a trailing semicolon and any letter case
+  function norm(s){ return String(s).replace(/["'\s;]/g,"").toLowerCase(); }
+
+  function tick(){ $("#hTime").textContent=((performance.now()-t0)/1000).toFixed(1)+"s"; }
+  function showQ(){
+    cur=makeQ(plan[at]); drawMap(null);
+    $("#call").innerHTML=callHTML(cur.expr); $("#call").className="call"+(cur.multi?" multi":"");
+    var inp=$("#ans"); inp.value=""; inp.className="ans"; inp.disabled=false; inp.focus();
+    $("#stepno").innerHTML="<small>round</small>"+(at+1)+" / "+N; $("#bar").style.width=(100*at/N)+"%";
+  }
+  function fillMap(){
+    stock=new Map();
+    shuffle(FRUITS).slice(0,5).forEach(function(f){ stock.set(f,rnd(1,20)); });
+  }
+  function start(){
+    fillMap(); plan=shuffle(MIX); at=0; score=0; misses=[]; busy=false; playing=true;
+    $("#hScore").textContent="0"; $("#startScr").classList.add("off"); $("#endScr").classList.add("off");
+    $("#caption").className="caption"; $("#status").innerHTML="Type what the call gives. <b class=\"a\">Enter</b> submits, <b class=\"w\">null</b> when nothing is there.";
+    showQ(); t0=performance.now(); if(timer) clearInterval(timer); timer=setInterval(tick,100);
+  }
+  function answer(){
+    if(!playing||busy||!cur) return;
+    var inp=$("#ans"), typed=inp.value.trim(); if(!typed) return;
+    busy=true; inp.disabled=true;
+    var r=cur.run(), ok=norm(typed)===norm(r.ans);
+    drawMap(r.marks);
+    $("#call").className="call"+(cur.multi?" multi":"")+(ok?" good":" bad");
+    inp.className="ans "+(ok?"good":"bad");
+    if(ok){ score++; $("#hScore").textContent=String(score); $("#caption").className="caption ok";
+      $("#status").innerHTML='<b class="g">'+esc(r.ans)+'</b>: '+esc(r.why)+'.'; }
+    else { misses.push({expr:cur.expr,ans:r.ans,why:r.why}); $("#caption").className="caption cut";
+      $("#status").innerHTML='Not <b class="w">'+esc(typed)+'</b>. It is <b class="g">'+esc(r.ans)+'</b>: '+esc(r.why)+'.'; }
+    var gen=startGen;
+    setTimeout(function(){ if(gen!==startGen) return; at++; busy=false; if(at>=N) end(); else showQ(); }, reduce?600:(ok?1500:3200));
+  }
+  function end(){
+    playing=false; cur=null; clearInterval(timer); tick(); $("#bar").style.width="100%"; $("#ans").blur(); $("#ans").disabled=true;
+    var secs=((performance.now()-t0)/1000).toFixed(1);
+    $("#endScore").textContent=score+" / "+N; $("#endScore").className="big "+(score===N?"good":score>=12?"":"gold");
+    $("#endMsg").textContent=(score===N?"Perfect. ":score>=12?"Solid. ":"Keep going. ")+secs+" seconds.";
+    $("#endMiss").innerHTML=misses.map(function(m){
+      return '<div><b>'+esc(m.expr.replace(/\n\s*/g," "))+'</b> gives <i>'+esc(m.ans)+'</i>: '+esc(m.why)+'</div>'; }).join("");
+    $("#endScr").classList.remove("off"); $("#bAgain").focus();
+    $("#stepno").innerHTML="<small>round</small>"+N+" / "+N; $("#caption").className="caption"; $("#status").innerHTML="Round over. <b class=\"a\">Play again</b> (Enter) fills a new map.";
+  }
+  // a restart in the middle of the feedback pause must not let the old timer advance the new game
+  var startGen=0;
+  function restart(){ startGen++; start(); }
+
+  $("#ans").addEventListener("keydown",function(e){ if(e.key==="Enter"){ e.preventDefault(); answer(); } });
+  $("#bStart").addEventListener("click",restart); $("#bAgain").addEventListener("click",restart); $("#bRestart").addEventListener("click",restart);
+  document.addEventListener("keydown",function(e){
+    if(/INPUT|TEXTAREA|BUTTON/.test(e.target.tagName)) return;
+    if(!playing&&(e.key==="Enter"||e.code==="Space")){ e.preventDefault(); restart(); }
+    else if(playing&&!busy&&e.key.length===1&&!e.ctrlKey&&!e.metaKey){ $("#ans").focus(); }
+  });
+
+  var cv=$("#amb"),ctx=cv.getContext&&cv.getContext("2d"),parts=[];
+  function sizeC(){if(!ctx)return;cv.width=innerWidth;cv.height=innerHeight;}
+  function initParts(){parts=[];for(var i=0;i<46;i++)parts.push({x:Math.random(),y:Math.random(),r:Math.random()*1.6+.3,s:Math.random()*.02+.004,o:Math.random()*.4+.1});}
+  function drawC(){if(!ctx)return;ctx.clearRect(0,0,cv.width,cv.height);
+    parts.forEach(function(p){p.y-=p.s/60;if(p.y<-.02)p.y=1.02;ctx.beginPath();ctx.arc(p.x*cv.width,p.y*cv.height,p.r,0,7);
+      ctx.fillStyle="rgba(140,170,255,"+p.o+")";ctx.fill();});requestAnimationFrame(drawC);}
+  if(ctx&&!reduce){sizeC();initParts();drawC();addEventListener("resize",sizeC);}
+
+  fillMap(); drawMap(null);
+})();
+</script>
+<script src="../manifest.js"></script>
+<script src="../../assets/rail.js"></script>
+<script>Rail.render(document.getElementById("rail"),{week:3,kind:"games",current:"hashmap-lookup"});</script>
+</body>
+</html>

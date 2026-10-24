@@ -1,0 +1,333 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>A User Story | Week 3 Visual Hub</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Sora:wght@500;700&family=Inter:wght@400;500&family=JetBrains+Mono:wght@400;500&display=swap">
+<style>
+  :root{
+    --bg:#080c17; --bg2:#0c1428; --surface:rgba(255,255,255,.045); --line:rgba(255,255,255,.09);
+    --ink:#eef2fb; --muted:#8496b6; --accent:#6ea0ff; --accent2:#8b7bff; --good:#46d98a; --warn:#ff6a6a;
+    --gold:#ffc862; --disp:'Sora',system-ui,sans-serif; --body:'Inter',system-ui,sans-serif;
+    --mono:'JetBrains Mono',ui-monospace,monospace;
+  }
+  *{box-sizing:border-box}
+  body{margin:0;min-height:100vh;color:var(--ink);font-family:var(--body);
+    background:radial-gradient(1200px 700px at 70% -10%,#141d38 0%,transparent 55%),
+               radial-gradient(900px 600px at 10% 110%,#161233 0%,transparent 50%),#080c17;
+    overflow-x:hidden}
+  #amb{position:fixed;inset:0;z-index:0;pointer-events:none;opacity:.6}
+  .back{position:relative;z-index:2;display:block;max-width:1120px;margin:0 auto;padding:26px 24px 0;
+    width:100%;font-family:var(--mono);font-size:.8rem;letter-spacing:.04em;color:var(--muted);
+    text-decoration:none;transition:color .15s}
+  .back:hover{color:var(--accent)}
+  .wrap{position:relative;z-index:1;max-width:1120px;margin:0 auto;padding:22px 24px 70px}
+  .tag{font-family:var(--mono);font-size:.72rem;letter-spacing:.22em;text-transform:uppercase;color:var(--accent);margin:0 0 14px}
+  h1{font-family:var(--disp);font-weight:700;font-size:clamp(2.3rem,6vw,3.6rem);line-height:1;margin:0 0 12px;
+    letter-spacing:-.03em;background:linear-gradient(180deg,#fff,#b9c6e6);-webkit-background-clip:text;
+    background-clip:text;color:transparent}
+  .lede{color:var(--muted);max-width:64ch;font-size:1.05rem;margin:0 0 26px;line-height:1.5}
+  .lede b{color:var(--ink)}
+  code{font-family:var(--mono);font-size:.92em;color:#bcd0ff}
+
+  /* ---------- the stage IS the picture ---------- */
+  .stage{position:relative;background:linear-gradient(180deg,rgba(255,255,255,.03),rgba(255,255,255,.01));
+    border:1px solid var(--line);border-radius:24px;padding:22px;
+    box-shadow:0 1px 0 rgba(255,255,255,.06) inset,0 30px 80px -30px rgba(0,0,0,.8)}
+  .board{max-width:780px;margin:0 auto;display:flex;flex-direction:column;align-items:stretch}
+
+  .card{position:relative;border-radius:16px;padding:16px 18px 14px}
+  .hd{font-family:var(--mono);font-size:.62rem;letter-spacing:.16em;text-transform:uppercase;color:var(--muted);margin:0 0 6px}
+
+  /* requirement: plain, vague, on paper */
+  .req{border:1px dashed rgba(132,150,182,.45);background:rgba(255,255,255,.025);display:grid;
+    grid-template-columns:1fr auto;gap:10px 16px;align-items:start}
+  .req .txt{font-family:var(--disp);font-weight:500;font-size:1.25rem;color:#c9d4ea;margin:0;letter-spacing:-.01em;
+    transition:opacity .25s}
+  .req .txt.fade{opacity:0}
+  .nextReq{font-family:var(--mono);font-size:.76rem;padding:8px 12px;border-radius:10px;cursor:pointer;white-space:nowrap;
+    border:1px solid rgba(110,160,255,.5);background:rgba(110,160,255,.12);color:#dbe6ff;transition:.15s}
+  .nextReq:hover{background:rgba(110,160,255,.24);border-color:var(--accent)}
+  .pills{grid-column:1/-1;display:flex;flex-wrap:wrap;align-items:center;gap:6px;font-family:var(--mono);font-size:.66rem;color:var(--muted)}
+  .pill{padding:3px 10px;border-radius:999px;border:1px dashed rgba(132,150,182,.4);color:rgba(132,150,182,.8);transition:.3s}
+  .pill.done{border-style:solid;border-color:rgba(70,217,138,.6);background:rgba(70,217,138,.12);color:var(--good)}
+
+  .becomes{display:flex;align-items:center;justify-content:center;gap:8px;height:42px;font-family:var(--mono);
+    font-size:.7rem;color:rgba(132,150,182,.6)}
+  .becomes b{font-weight:500;font-size:1.3rem;line-height:1}
+
+  /* the story card */
+  .story{border:1px solid rgba(110,160,255,.4);background:linear-gradient(180deg,rgba(110,160,255,.08),rgba(139,123,255,.03));
+    transition:border-color .3s,box-shadow .3s}
+  .story.good{border-color:rgba(70,217,138,.7);box-shadow:0 0 30px -10px rgba(70,217,138,.7)}
+  .story.bad{border-color:rgba(255,106,106,.6)}
+  .shd{display:flex;justify-content:space-between;align-items:center;margin-bottom:10px}
+  .star{display:inline-flex;align-items:center;gap:6px;font-family:var(--mono);font-size:.72rem;padding:5px 11px 5px 8px;
+    border-radius:999px;cursor:pointer;border:1px solid var(--line);background:rgba(0,0,0,.25);color:var(--muted);transition:.2s}
+  .star svg{width:15px;height:15px;fill:none;stroke:currentColor;stroke-width:1.6;transition:transform .3s}
+  .star:hover{border-color:var(--gold);color:var(--gold)}
+  .star.on{border-color:rgba(255,200,98,.7);background:rgba(255,200,98,.14);color:var(--gold)}
+  .star.on svg{fill:var(--gold);transform:rotate(72deg)}
+
+  .slotWrap{margin-bottom:6px}
+  .slot{width:100%;display:flex;align-items:baseline;gap:12px;text-align:left;cursor:pointer;padding:11px 14px;border-radius:11px;
+    border:1px solid var(--line);background:rgba(0,0,0,.22);color:var(--ink);font-family:var(--body);font-size:1rem;transition:.2s}
+  .slot:hover{border-color:rgba(110,160,255,.6)}
+  .slot.open{border-color:var(--accent);background:rgba(110,160,255,.1)}
+  .slot .pre{flex:0 0 74px;font-family:var(--mono);font-size:.78rem;color:var(--muted)}
+  .slot .val{flex:1;color:rgba(132,150,182,.55);letter-spacing:.06em}
+  .slot .val.f{letter-spacing:0;color:var(--ink);animation:pop .35s}
+  .slot.k0 .val.f{color:#bcd0ff} .slot.k1 .val.f{color:var(--gold)} .slot.k2 .val.f{color:#c3b8ff}
+  .slot.off{border-color:rgba(255,106,106,.7);background:rgba(255,106,106,.08)}
+  .slot.off .val.f{color:#ffb0b0}
+  .chips{display:none;flex-wrap:wrap;gap:6px;padding:8px 0 4px 86px}
+  .chips.show{display:flex}
+  .chip{font-family:var(--body);font-size:.86rem;padding:6px 13px;border-radius:999px;cursor:pointer;
+    border:1px solid rgba(255,255,255,.16);background:rgba(255,255,255,.05);color:var(--ink);transition:.15s}
+  .chip:hover{border-color:var(--accent);background:rgba(110,160,255,.16)}
+  .chip.sel{border-color:var(--accent);background:rgba(110,160,255,.24)}
+
+  .read{margin-top:12px;padding:14px 16px;border-radius:12px;background:#05070e;border:1px solid var(--line)}
+  .read .hd{margin-bottom:6px}
+  .sent{font-family:var(--disp);font-weight:500;font-size:1.15rem;line-height:1.5;margin:0;color:var(--muted)}
+  .sent .k0{color:#bcd0ff} .sent .k1{color:var(--gold)} .sent .k2{color:#c3b8ff} .sent .gap{color:rgba(132,150,182,.5)}
+  .sent .x{color:#ffb0b0;text-decoration:underline wavy rgba(255,106,106,.7);text-underline-offset:4px}
+  .done{margin-top:10px;font-family:var(--mono);font-size:.76rem;color:var(--good);opacity:0;max-height:0;overflow:hidden;
+    transition:opacity .35s,max-height .35s}
+  .done.show{opacity:1;max-height:80px}
+  .done i{font-style:normal;color:rgba(132,150,182,.8);margin-right:6px}
+
+  /* the one sentence */
+  .caption{display:flex;gap:14px;align-items:flex-start;margin:18px 2px 0;padding-top:16px;border-top:1px solid var(--line)}
+  .caption .t{flex:1;font-size:1.05rem;line-height:1.55;color:var(--ink);padding-left:16px;border-left:3px solid var(--accent);transition:border-color .3s}
+  .caption .t .line{display:block;margin-top:6px;font-family:var(--mono);font-size:.8rem;color:#bcd0ff;opacity:.9}
+  .caption.y .t{border-left-color:var(--gold)} .caption.g .t{border-left-color:var(--good)} .caption.w .t{border-left-color:var(--warn)}
+  .caption b.a{color:var(--accent)} .caption b.y{color:var(--gold)} .caption b.g{color:var(--good)} .caption b.w{color:var(--warn)}
+  .reset{font-family:var(--body);font-weight:500;font-size:.84rem;padding:8px 14px;border-radius:11px;cursor:pointer;
+    border:1px solid var(--line);background:transparent;color:var(--muted);transition:.15s;flex-shrink:0}
+  .reset:hover{border-color:var(--accent);color:var(--accent)}
+  button:focus-visible,input:focus-visible{outline:2px solid var(--accent);outline-offset:2px}
+
+  @media (max-width:620px){
+    .req{grid-template-columns:1fr}
+    .slot{flex-direction:column;gap:2px}
+    .slot .pre{flex:none}
+    .chips{padding-left:0}
+  }
+
+  @keyframes pop{from{transform:scale(.85);opacity:0}to{transform:scale(1);opacity:1}}
+  .take{margin-top:22px;background:linear-gradient(180deg,rgba(110,160,255,.08),rgba(139,123,255,.04));
+    border:1px solid var(--line);border-left:3px solid var(--accent);border-radius:12px;padding:16px 18px}
+  .take .tk{font-family:var(--mono);font-size:.66rem;letter-spacing:.14em;text-transform:uppercase;color:var(--accent);margin:0 0 8px}
+  .take p{margin:0;font-size:.95rem;color:var(--ink);line-height:1.55}
+  .take b{color:#fff}
+  @media (prefers-reduced-motion:reduce){*{animation-duration:.01ms!important;transition-duration:.01ms!important}#amb{display:none}}
+</style>
+</head>
+<body>
+<a class="back" href="../index.html#13-user-story">&#8592; Week 3 index</a>
+<canvas id="amb"></canvas>
+<div class="wrap">
+  <p class="tag">Workbook 3b &middot; Section 2-1 &middot; User Stories</p>
+  <h1>A User Story</h1>
+  <p class="lede"><b>A vague requirement on top. Fill the story card under it, one slot at a time.</b></p>
+
+  <div class="stage">
+    <div class="board">
+      <div class="card req">
+        <div>
+          <p class="hd">requirement &middot; Bus Tracker app</p>
+          <p class="txt" id="reqTxt"></p>
+        </div>
+        <button class="nextReq" id="bNext">Next requirement &rarr;</button>
+        <div class="pills" id="pills"></div>
+      </div>
+      <div class="becomes"><b>&darr;</b>becomes</div>
+      <div class="card story" id="story">
+        <div class="shd">
+          <p class="hd" style="margin:0">user story</p>
+          <button class="star" id="bStar" aria-pressed="false"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 2.8l2.8 5.9 6.4.8-4.7 4.4 1.2 6.4L12 17.2l-5.7 3.1 1.2-6.4-4.7-4.4 6.4-.8z"/></svg>MVP</button>
+        </div>
+        <div id="slots"></div>
+        <div class="read">
+          <p class="hd">the story reads</p>
+          <p class="sent" id="sent"></p>
+          <div class="done" id="done"></div>
+        </div>
+      </div>
+    </div>
+    <div class="caption" id="caption">
+      <div class="t" id="status"></div>
+      <button class="reset" id="bReset">Reset</button>
+    </div>
+  </div>
+
+  <div class="take">
+    <p class="tk">The one idea</p>
+    <p><b>A user story names who, what and why in one sentence, specific enough to check when it is done.</b>
+    One vague requirement can become several stories, one per user type, and the MVP stories are built first.</p>
+  </div>
+  <div id="rail"></div>
+</div>
+<script>
+(function(){
+  "use strict";
+  var $=function(s){return document.querySelector(s);};
+  var reduce=matchMedia("(prefers-reduced-motion: reduce)").matches;
+  var WHO={r:"rider",d:"dispatcher",dev:"developer"};
+  var PRE=["As a","I want","so that"], NAMES=["who","what","why"];
+  /* each chip: [text, owner]; owner v = vague */
+  var REQS=[
+    {txt:"People should know when the bus comes.", users:["r","d"],
+     chips:[[["rider","r"],["dispatcher","d"],["user","v"]],
+            [["to see when the next bus reaches my stop","r"],["to see every bus on a map","d"],["bus information","v"]],
+            [["I do not wait in the cold","r"],["I can reroute a late bus","d"],["it is useful","v"]]],
+     done:{r:"a rider opens their stop and sees the minutes until the next bus.",
+           d:"a dispatcher sees every bus on one live map."}},
+    {txt:"The app should handle delays.", users:["r","d"],
+     chips:[[["user","v"],["rider","r"],["dispatcher","d"]],
+            [["to mark a bus as delayed","d"],["delays handled","v"],["an alert when my bus runs late","r"]],
+            [["I can leave home a little later","r"],["things work better","v"],["riders see the right arrival time","d"]]],
+     done:{r:"a rider gets an alert as soon as their bus runs late.",
+           d:"a dispatcher marks a bus delayed and riders see the new time."}},
+    {txt:"The app needs a schedule.", users:["r","d"],
+     chips:[[["dispatcher","d"],["user","v"],["rider","r"]],
+            [["to see today's times for my line","r"],["to change a bus's departure time","d"],["a schedule","v"]],
+            [["the schedule matches the buses on the road","d"],["it is there","v"],["I can plan my morning","r"]]],
+     done:{r:"a rider picks a line and sees every time it stops today.",
+           d:"a dispatcher moves a departure and the schedule shows the new time."}},
+    {txt:"Set up the project repository.", users:["dev"],
+     chips:[[["developer","dev"],["rider","r"],["user","v"]],
+            [["a shared repository with a starter project","dev"],["to set things up","v"]],
+            [["every teammate can push code from day one","dev"],["it is done","v"]]],
+     done:{dev:"every teammate clones the repository and runs the starter project."}}
+  ];
+  var ri=0, pick=[null,null,null], open=-1, mvp=false, written=[{},{},{},{}];
+  var slotsEl=$("#slots"),sent=$("#sent"),doneEl=$("#done"),story=$("#story"),status=$("#status"),caption=$("#caption"),star=$("#bStar");
+
+  function say(html,tone){ caption.className="caption"+(tone?" "+tone:""); status.innerHTML=html; }
+  function R(){ return REQS[ri]; }
+  function chip(s){ return pick[s]===null?null:R().chips[s][pick[s]]; }
+  function art(w){ return /^[aeiou]/.test(w)?"an":"a"; }
+  function role(){ var c=chip(0); return c?art(c[0])+" "+c[0]:null; }
+
+  function drawSlots(){
+    var h="";
+    for(var s=0;s<3;s++){
+      var c=chip(s), v=c?c[0]:"_____";
+      h+='<div class="slotWrap"><button class="slot k'+s+(open===s?" open":"")+'" id="sl'+s+'" data-s="'+s+'" aria-expanded="'+(open===s)+'">'
+        +'<span class="pre">'+(s===0?"As "+(c?art(c[0]):"a"):PRE[s])+'</span><span class="val'+(c?" f":"")+'">'+v+'</span></button>'
+        +'<div class="chips'+(open===s?" show":"")+'">';
+      R().chips[s].forEach(function(ch,i){
+        h+='<button class="chip'+(pick[s]===i?" sel":"")+'" data-s="'+s+'" data-i="'+i+'">'+ch[0]+'</button>';
+      });
+      h+='</div></div>';
+    }
+    slotsEl.innerHTML=h;
+  }
+  function drawPills(){
+    var h='<span>stories from it:</span>';
+    R().users.forEach(function(u){ h+='<span class="pill'+(written[ri][u]?" done":"")+'">'+WHO[u]+'</span>'; });
+    $("#pills").innerHTML=h;
+  }
+  function verdict(){
+    if(pick.indexOf(null)>=0) return {k:"open"};
+    var own=[0,1,2].map(function(s){return chip(s)[1];});
+    var vg=[]; own.forEach(function(o,s){ if(o==="v") vg.push(s); });
+    if(vg.length) return {k:"vague",bad:vg};
+    var bad=[]; own.forEach(function(o,s){ if(s>0&&o!==own[0]) bad.push(s); });
+    if(bad.length) return {k:"mixed",bad:bad,owner:own[bad[0]]};
+    return {k:"good",u:own[0]};
+  }
+  function drawSentence(v){
+    var bad=v.bad||[], parts=[];
+    for(var s=0;s<3;s++){
+      var c=chip(s), txt=c?(s===0?role():c[0]):"_____";
+      parts.push('<span class="'+(c?(bad.indexOf(s)>=0?"x":"k"+s):"gap")+'">'+txt+'</span>');
+    }
+    sent.innerHTML="As "+parts[0]+", I want "+parts[1]+", so that "+parts[2]+".";
+    story.classList.toggle("good",v.k==="good");
+    story.classList.toggle("bad",v.k==="vague"||v.k==="mixed");
+    bad.forEach(function(s){ var e=$("#sl"+s); if(e) e.classList.add("off"); });
+    if(v.k==="good"){ doneEl.innerHTML='<i>done when</i>'+R().done[v.u]; doneEl.classList.add("show"); }
+    else doneEl.classList.remove("show");
+  }
+  function answer(v,last){
+    if(v.k==="open"){
+      var nx=pick.indexOf(null);
+      say('Filled the <b class="a">'+NAMES[last]+'</b>. Now tap <b class="a">'+PRE[nx]+'</b> and pick the '+NAMES[nx]+'.');
+      return;
+    }
+    if(v.k==="vague"){
+      var s=v.bad[0], c=chip(s);
+      say('Too vague: <b class="w">'+(s===0?role():c[0])+'</b> could mean anyone or anything, so nobody can check when it is done. Pick something specific.',"w");
+      return;
+    }
+    if(v.k==="mixed"){
+      say('Two users in one story: the role is <b class="w">'+role()+'</b>, but <b class="w">'+chip(v.bad[0])[0]+'</b> is what '+art(WHO[v.owner])+' '+WHO[v.owner]+' needs. Keep who, what and why on one user.',"w");
+      return;
+    }
+    var first=!written[ri][v.u]; written[ri][v.u]=true; drawPills();
+    var left=R().users.filter(function(u){return !written[ri][u];});
+    var tail;
+    if(v.u==="dev") tail=' Not every story has a customer in it: <b class="g">developer stories</b> exist too.';
+    else if(left.length) tail=' The <b class="a">'+WHO[left[0]]+'</b> needs a story of their own from this same requirement.';
+    else tail=' One vague requirement, <b class="g">two stories</b>, one per user type.';
+    say('Specific: one user type, one want, one reason, and you can check when it is done.'+(first||!left.length?tail:""),"g");
+  }
+  function refresh(last){ drawSlots(); var v=verdict(); drawSentence(v); if(last!==undefined) answer(v,last); }
+
+  function choose(s,i){
+    pick[s]=i;
+    var nx=pick.indexOf(null); open=nx;
+    refresh(s);
+  }
+  function toggleSlot(s){ open=(open===s)?-1:s; drawSlots(); drawSentence(verdict()); }
+  function toggleStar(){
+    mvp=!mvp; star.classList.toggle("on",mvp); star.setAttribute("aria-pressed",String(mvp));
+    if(mvp) say('In the <b class="y">MVP</b>: built first, just enough for early users to use the app and give feedback.',"y");
+    else say('Out of the MVP for now: this story waits until early users have given feedback.');
+  }
+  function loadReq(n,msg){
+    ri=n; pick=[null,null,null]; open=0; mvp=false;
+    star.classList.remove("on"); star.setAttribute("aria-pressed","false");
+    var t=$("#reqTxt"); t.classList.add("fade");
+    setTimeout(function(){ t.textContent=R().txt; t.classList.remove("fade"); },reduce?0:180);
+    drawPills(); refresh();
+    say(msg);
+  }
+  var START='The requirement on top is <b class="a">vague</b>: it names no user. Pick who the story is for in <b class="a">As a</b>.';
+  $("#bNext").addEventListener("click",function(){
+    var n=(ri+1)%REQS.length;
+    loadReq(n,n===3?'This requirement is <b class="a">work for the team</b>, not a feature riders see. Who is the story for?'
+      :'A new vague requirement. Turn it into a story for <b class="a">one user type</b>.');
+  });
+  $("#bReset").addEventListener("click",function(){ written=[{},{},{},{}]; loadReq(0,START); });
+  star.addEventListener("click",toggleStar);
+  slotsEl.addEventListener("click",function(e){
+    var c=e.target.closest(".chip"); if(c){ choose(+c.getAttribute("data-s"),+c.getAttribute("data-i")); return; }
+    var s=e.target.closest(".slot"); if(s) toggleSlot(+s.getAttribute("data-s"));
+  });
+  $("#reqTxt").textContent=REQS[0].txt;
+  loadReq(0,START);
+
+  /* ambient canvas */
+  var cv=$("#amb"),ctx=cv.getContext&&cv.getContext("2d"),parts=[];
+  function sizeC(){if(!ctx)return;cv.width=innerWidth;cv.height=innerHeight;}
+  function initParts(){parts=[];for(var i=0;i<46;i++)parts.push({x:Math.random(),y:Math.random(),
+    r:Math.random()*1.6+.3,s:Math.random()*.02+.004,o:Math.random()*.4+.1});}
+  function drawC(){if(!ctx)return;ctx.clearRect(0,0,cv.width,cv.height);
+    parts.forEach(function(p){p.y-=p.s/60;if(p.y<-.02)p.y=1.02;
+      ctx.beginPath();ctx.arc(p.x*cv.width,p.y*cv.height,p.r,0,7);
+      ctx.fillStyle="rgba(140,170,255,"+p.o+")";ctx.fill();});
+    requestAnimationFrame(drawC);}
+  if(ctx&&!reduce){sizeC();initParts();drawC();addEventListener("resize",sizeC);}
+})();
+</script>
+<script src="../manifest.js"></script>
+<script src="../../assets/rail.js"></script>
+<script>Rail.render(document.getElementById("rail"),{week:3,kind:"visuals",current:"13-user-story"});</script>
+</body>
+</html>

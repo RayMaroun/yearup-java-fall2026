@@ -1,0 +1,484 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Date Patterns | Week 3 Visual Hub</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Sora:wght@500;700&family=Inter:wght@400;500&family=JetBrains+Mono:wght@400;500&display=swap">
+<style>
+  :root{
+    --bg:#080c17; --bg2:#0c1428; --surface:rgba(255,255,255,.045); --line:rgba(255,255,255,.09);
+    --ink:#eef2fb; --muted:#8496b6; --accent:#6ea0ff; --accent2:#8b7bff; --good:#46d98a; --warn:#ff6a6a;
+    --gold:#ffc862; --disp:'Sora',system-ui,sans-serif; --body:'Inter',system-ui,sans-serif;
+    --mono:'JetBrains Mono',ui-monospace,monospace;
+  }
+  *{box-sizing:border-box}
+  body{margin:0;min-height:100vh;color:var(--ink);font-family:var(--body);
+    background:radial-gradient(1200px 700px at 70% -10%,#141d38 0%,transparent 55%),
+               radial-gradient(900px 600px at 10% 110%,#161233 0%,transparent 50%),#080c17;
+    overflow-x:hidden}
+  #amb{position:fixed;inset:0;z-index:0;pointer-events:none;opacity:.6}
+  .back{position:relative;z-index:2;display:block;max-width:1120px;margin:0 auto;padding:26px 24px 0;
+    width:100%;font-family:var(--mono);font-size:.8rem;letter-spacing:.04em;color:var(--muted);
+    text-decoration:none;transition:color .15s}
+  .back:hover{color:var(--accent)}
+  .wrap{position:relative;z-index:1;max-width:1120px;margin:0 auto;padding:22px 24px 70px}
+  .tag{font-family:var(--mono);font-size:.72rem;letter-spacing:.22em;text-transform:uppercase;color:var(--accent);margin:0 0 14px}
+  h1{font-family:var(--disp);font-weight:700;font-size:clamp(2.3rem,6vw,3.6rem);line-height:1;margin:0 0 12px;
+    letter-spacing:-.03em;background:linear-gradient(180deg,#fff,#b9c6e6);-webkit-background-clip:text;
+    background-clip:text;color:transparent}
+  .lede{color:var(--muted);max-width:64ch;font-size:1.05rem;margin:0 0 26px;line-height:1.5}
+  .lede b{color:var(--ink)}
+  code{font-family:var(--mono);font-size:.92em;color:#bcd0ff}
+
+  /* ---------- the stage IS the picture ---------- */
+  .stage{position:relative;background:linear-gradient(180deg,rgba(255,255,255,.03),rgba(255,255,255,.01));
+    border:1px solid var(--line);border-radius:24px;padding:22px;margin-bottom:18px;
+    box-shadow:0 1px 0 rgba(255,255,255,.06) inset,0 30px 80px -30px rgba(0,0,0,.8)}
+  .face{font-family:var(--mono);font-size:.7rem;letter-spacing:.16em;text-transform:uppercase;color:var(--muted);margin:0 0 14px 2px}
+  .face b{color:var(--accent);font-weight:500}
+  .board{display:grid;grid-template-columns:200px 34px minmax(0,1.35fr) 34px minmax(0,1fr);gap:10px;align-items:stretch}
+  .arw{display:flex;align-items:center;justify-content:center;font-family:var(--mono);font-size:1.5rem;color:rgba(132,150,182,.45);transition:color .3s}
+  .arw.on{color:var(--gold)}
+  @media (max-width:980px){.board{grid-template-columns:minmax(0,1fr) minmax(0,1fr)}.arw{display:none}.mid{grid-column:1/-1;order:3}}
+  @media (max-width:640px){.board{grid-template-columns:1fr}.mid{order:0}}
+
+  .card{position:relative;border-radius:16px;padding:16px 18px 14px;border:1px solid rgba(255,255,255,.14);background:rgba(255,255,255,.035);min-width:0}
+  .hd{font-family:var(--mono);font-size:.62rem;letter-spacing:.16em;text-transform:uppercase;color:var(--muted);margin:0 0 8px}
+  .hd i{font-style:normal;color:#82aaff}
+  .big{font-family:var(--mono);font-size:1.5rem;font-weight:500;color:var(--ink);letter-spacing:-.01em;margin:0;font-variant-numeric:tabular-nums}
+  .sub{font-family:var(--mono);font-size:1.05rem;color:#c9d4ea;margin:4px 0 0}
+  .note{font-family:var(--mono);font-size:.68rem;color:var(--muted);margin:12px 0 0;line-height:1.5}
+
+  /* format: the pattern */
+  .mid{border:2px dashed rgba(110,160,255,.5);background:rgba(110,160,255,.05)}
+  .pat{display:flex;flex-wrap:wrap;gap:5px;align-items:center;min-height:44px;padding:7px 8px;border-radius:11px;background:rgba(0,0,0,.3);border:1px solid var(--line)}
+  .pat .empty{font-family:var(--mono);font-size:.74rem;color:var(--muted);padding:0 4px}
+  .pc{font-family:var(--mono);font-size:.86rem;padding:4px 9px;border-radius:999px;background:rgba(110,160,255,.16);border:1px solid rgba(110,160,255,.45);color:#dbe6ff;transition:.25s}
+  .pc.s{background:transparent;border-color:rgba(255,255,255,.12);color:var(--muted);padding:4px 7px}
+  .pc.last{background:rgba(255,200,98,.16);border-color:var(--gold);color:var(--gold);animation:pop .35s}
+  .pc.bad{background:rgba(255,106,106,.14);border-color:var(--warn);color:var(--warn)}
+  .pathd{display:flex;justify-content:space-between;align-items:center;margin:0 0 8px}
+  .pathd .hd{margin:0}
+  .clr{font-family:var(--mono);font-size:.68rem;padding:4px 10px;border-radius:999px;cursor:pointer;border:1px solid var(--line);background:transparent;color:var(--muted);transition:.15s}
+  .clr:hover{border-color:var(--warn);color:var(--warn)}
+  .pal{display:flex;flex-wrap:wrap;gap:6px;margin-top:12px}
+  .pal .gap{flex-basis:100%;height:0}
+  .chip{font-family:var(--mono);font-size:.82rem;padding:6px 11px;border-radius:999px;cursor:pointer;border:1px solid rgba(110,160,255,.4);background:rgba(110,160,255,.08);color:#dbe6ff;transition:.15s}
+  .chip:hover{background:rgba(110,160,255,.22);border-color:var(--accent)}
+  .chip.s{border-color:var(--line);background:rgba(0,0,0,.25);color:#c9d4ea;min-width:34px}
+  .chip.s:hover{border-color:var(--gold)}
+
+  /* format: the output */
+  .out{font-family:var(--mono);font-size:1.25rem;line-height:1.5;color:#c3e88d;word-break:break-word;min-height:2.2em;white-space:pre-wrap}
+  .out .p{border-radius:5px;transition:background .3s,color .3s}
+  .out .p.last{background:rgba(255,200,98,.18);color:var(--gold);animation:pop .35s}
+  .out .q{color:var(--muted)}
+  .res.bad{border-color:var(--warn);background:rgba(255,106,106,.07);box-shadow:0 0 30px -10px rgba(255,106,106,.7)}
+  .res.bad .out,.res.bad .big{color:var(--warn);font-size:1rem}
+  .res.ok{border-color:rgba(70,217,138,.6);box-shadow:0 0 30px -12px rgba(70,217,138,.7)}
+  .res.ok .big{color:var(--good);animation:pop .4s}
+
+  /* parse: inputs */
+  .fld{display:block;font-family:var(--mono);font-size:.6rem;letter-spacing:.14em;text-transform:uppercase;color:var(--muted);margin:0 0 5px}
+  .inp{width:100%;font-family:var(--mono);font-size:.95rem;padding:9px 11px;border-radius:10px;border:1px solid var(--line);
+    background:rgba(0,0,0,.3);color:var(--ink);outline:none;margin-bottom:10px;transition:border-color .15s}
+  .inp:focus{border-color:var(--accent)}
+  .go{width:100%;font-family:var(--mono);font-size:.86rem;padding:11px;border-radius:12px;cursor:pointer;
+    border:1px solid rgba(110,160,255,.55);background:rgba(110,160,255,.14);color:#dbe6ff;transition:.15s}
+  .go:hover{background:rgba(110,160,255,.26);border-color:var(--accent)}
+  .go b{font-weight:500;color:var(--gold)}
+
+  /* parse: how the pattern reads the text */
+  .rd{display:flex;flex-wrap:wrap;gap:4px;align-items:stretch;min-height:74px}
+  .rd .empty{flex:1;display:flex;align-items:center;justify-content:center;font-family:var(--mono);font-size:.78rem;color:var(--muted);
+    border:1px dashed rgba(255,255,255,.1);border-radius:11px;text-align:center;padding:8px}
+  .g{display:flex;flex-direction:column;align-items:center;gap:4px;padding:6px 7px;border-radius:9px;border:1px solid rgba(110,160,255,.35);background:rgba(110,160,255,.07);
+    opacity:0;transform:translateY(6px);transition:opacity .25s,transform .25s}
+  .g.show{opacity:1;transform:none}
+  .g .tk{font-family:var(--mono);font-size:.68rem;color:#82aaff}
+  .g .tx{font-family:var(--mono);font-size:1.05rem;color:var(--ink);white-space:pre}
+  .g.lit{border-color:rgba(255,255,255,.1);background:transparent}
+  .g.lit .tk{color:var(--muted)}
+  .g.bad{border-color:var(--warn);background:rgba(255,106,106,.1)}
+  .g.bad .tk,.g.bad .tx{color:var(--warn)}
+
+  /* the one sentence */
+  .caption{display:flex;gap:14px;align-items:flex-start;margin:18px 2px 0;padding-top:16px;border-top:1px solid var(--line)}
+  .caption .t{flex:1;min-width:0;font-size:1.05rem;line-height:1.55;color:var(--ink);padding-left:16px;border-left:3px solid var(--accent);transition:border-color .3s}
+  .caption .t .line{display:block;margin-top:6px;font-family:var(--mono);font-size:.8rem;color:#bcd0ff;opacity:.9;word-break:break-word}
+  .caption.y .t{border-left-color:var(--gold)} .caption.g .t{border-left-color:var(--good)} .caption.w .t{border-left-color:var(--warn)}
+  .caption.w .t .line{color:#ffb0b0}
+  .caption b.a{color:var(--accent)} .caption b.y{color:var(--gold)} .caption b.g{color:var(--good)} .caption b.w{color:var(--warn)}
+  .caption b{font-family:var(--mono);font-weight:500;font-size:.95em}
+  .reset{font-family:var(--body);font-weight:500;font-size:.84rem;padding:8px 14px;border-radius:11px;cursor:pointer;
+    border:1px solid var(--line);background:transparent;color:var(--muted);transition:.15s;flex-shrink:0}
+  .reset:hover{border-color:var(--accent);color:var(--accent)}
+  button:focus-visible,input:focus-visible{outline:2px solid var(--accent);outline-offset:2px}
+
+  @keyframes pop{from{transform:scale(.8);opacity:.2}to{transform:scale(1);opacity:1}}
+  .take{margin-top:22px;background:linear-gradient(180deg,rgba(110,160,255,.08),rgba(139,123,255,.04));
+    border:1px solid var(--line);border-left:3px solid var(--accent);border-radius:12px;padding:16px 18px}
+  .take .tk{font-family:var(--mono);font-size:.66rem;letter-spacing:.14em;text-transform:uppercase;color:var(--accent);margin:0 0 8px}
+  .take p{margin:0;font-size:.95rem;color:var(--ink);line-height:1.55}
+  .take b{color:#fff}
+  @media (prefers-reduced-motion:reduce){*{animation-duration:.01ms!important;transition-duration:.01ms!important}#amb{display:none}}
+</style>
+</head>
+<body>
+<a class="back" href="../index.html#06-date-patterns">&#8592; Week 3 index</a>
+<canvas id="amb"></canvas>
+<div class="wrap">
+  <p class="tag">Workbook 3a &middot; Section 2-2 &middot; Formatting and parsing dates</p>
+  <h1>Date Patterns</h1>
+  <p class="lede"><b>Build a pattern letter by letter, then hand one to parse.</b></p>
+
+  <div class="stage">
+    <p class="face">1 &middot; <b>format</b>: a date becomes text</p>
+    <div class="board">
+      <div class="card">
+        <p class="hd"><i>LocalDateTime</i> currentDate</p>
+        <p class="big">2026-10-17</p>
+        <p class="sub">14:05:09</p>
+        <p class="note">a Saturday</p>
+      </div>
+      <div class="arw" id="fa1">&#8594;</div>
+      <div class="card mid">
+        <div class="pathd"><p class="hd">the pattern</p><button class="clr" id="bClear">clear</button></div>
+        <div class="pat" id="pat"></div>
+        <div class="pal" id="pal"></div>
+      </div>
+      <div class="arw" id="fa2">&#8594;</div>
+      <div class="card res" id="fOut">
+        <p class="hd"><i>String</i> formattedDate</p>
+        <div class="out" id="out"></div>
+      </div>
+    </div>
+    <div class="caption" id="fCap">
+      <div class="t" id="fSay"></div>
+      <button class="reset" id="fReset">Reset</button>
+    </div>
+  </div>
+
+  <div class="stage">
+    <p class="face">2 &middot; <b>parse</b>: text becomes a date</p>
+    <div class="board">
+      <div class="card">
+        <label class="fld" for="inText">String userInput</label>
+        <input class="inp" id="inText" value="10/17/2026" maxlength="30" spellcheck="false" autocomplete="off">
+        <label class="fld" for="inPat">pattern</label>
+        <input class="inp" id="inPat" value="MM/dd/yyyy" maxlength="30" spellcheck="false" autocomplete="off">
+        <button class="go" id="bParse">LocalDate.<b>parse</b>(...)</button>
+      </div>
+      <div class="arw" id="pa1">&#8594;</div>
+      <div class="card mid">
+        <p class="hd">how parse reads the text</p>
+        <div class="rd" id="rd"><div class="empty">Press Parse.</div></div>
+      </div>
+      <div class="arw" id="pa2">&#8594;</div>
+      <div class="card res" id="pOut">
+        <p class="hd"><i>LocalDate</i> newDate</p>
+        <p class="big" id="pVal">?</p>
+      </div>
+    </div>
+    <div class="caption" id="pCap">
+      <div class="t" id="pSay"></div>
+      <button class="reset" id="pReset">Reset</button>
+    </div>
+  </div>
+
+  <div class="take">
+    <p class="tk">The one idea</p>
+    <p><b>The pattern is the same language both ways.</b> <code>format</code> reads it to print a date as text,
+    <code>parse</code> reads it to understand text as a date. When the text does not fit the pattern, parse throws
+    <code>DateTimeParseException</code>.</p>
+  </div>
+  <div id="rail"></div>
+</div>
+<script>
+(function(){
+  "use strict";
+  var $=function(s){return document.querySelector(s);};
+  var reduce=matchMedia("(prefers-reduced-motion: reduce)").matches;
+  function esc(s){var d=document.createElement("div");d.textContent=String(s);return d.innerHTML;}
+  function q(s){return '"'+s+'"';}
+
+  /* the fixed sample moment: 2026-10-17 14:05:09, a Saturday */
+  var DT={y:2026,M:10,d:17,H:14,m:5,s:9};
+  var MONTHS=["January","February","March","April","May","June","July","August","September","October","November","December"];
+  var DAYS=["Monday","Tuesday","Wednesday","Thursday","Friday","Saturday","Sunday"];
+  function dow(y,M,d){var j=new Date(Date.UTC(y,M-1,d)).getUTCDay();return (j+6)%7;} /* 0 = Monday, as Java */
+  function pad(n,w){var s=String(n);while(s.length<w)s="0"+s;return s;}
+  var MAXN={y:19,M:5,d:2,E:5,H:2,h:2,m:2,s:2,a:1};
+  var KNOWN="yMdEHhmsa";
+
+  /* split a pattern into runs, the way ofPattern reads it: a run of the same letter is ONE field */
+  function tokenize(p){
+    var out=[],i=0;
+    while(i<p.length){
+      var c=p.charAt(i);
+      if(/[A-Za-z]/.test(c)){
+        var n=1;while(p.charAt(i+n)===c)n++;
+        if(KNOWN.indexOf(c)<0) return {toks:out,err:{kind:"unknown",ch:c}};
+        out.push({L:c,n:n,src:p.substr(i,n)});
+        if(n>MAXN[c]) return {toks:out,err:{kind:"many",ch:c}};
+        i+=n;
+      }else if(c==="'"){
+        var j=i+1,s="";
+        if(p.charAt(j)==="'"){out.push({t:"'",src:"''"});i+=2;continue;}
+        while(j<p.length){ if(p.charAt(j)==="'"){ if(p.charAt(j+1)==="'"){s+="'";j+=2;continue;} break; } s+=p.charAt(j);j++; }
+        if(j>=p.length) return {toks:out,err:{kind:"quote"}};
+        out.push({t:s,src:p.substring(i,j+1)});i=j+1;
+      }else if("[]{}#".indexOf(c)>=0){
+        return {toks:out,err:{kind:"unknown",ch:c}};
+      }else{ out.push({t:c,src:c}); i++; }
+    }
+    return {toks:out,err:null};
+  }
+  function fmtTok(k){
+    if(k.t!==undefined) return k.t;
+    var n=k.n;
+    switch(k.L){
+      case "y": return n===2?pad(DT.y%100,2):pad(DT.y,n);
+      case "M": return n<=2?pad(DT.M,n):n===3?MONTHS[DT.M-1].slice(0,3):n===4?MONTHS[DT.M-1]:MONTHS[DT.M-1].charAt(0);
+      case "d": return pad(DT.d,n);
+      case "E": var w=DAYS[dow(DT.y,DT.M,DT.d)]; return n<=3?w.slice(0,3):n===4?w:w.charAt(0);
+      case "H": return pad(DT.H,n);
+      case "h": return pad(DT.H%12===0?12:DT.H%12,n);
+      case "m": return pad(DT.m,n);
+      case "s": return pad(DT.s,n);
+      case "a": return DT.H<12?"AM":"PM";
+    }
+    return "";
+  }
+  var MEANS={y1:"the year",y3:"the year",y2:"the last two digits of the year",y4:"the four-digit year",
+    M1:"the month number",M2:"the month number, two digits",M3:"the short month name",M4:"the full month name",M5:"the first letter of the month",
+    d1:"the day of the month",d2:"the day of the month, two digits",
+    E1:"the short day name",E4:"the full day name",E5:"the first letter of the day",
+    H1:"the hour on a 24-hour clock",H2:"the hour on a 24-hour clock",h1:"the hour on a 12-hour clock",h2:"the hour on a 12-hour clock, two digits",
+    m1:"the minutes",m2:"the minutes, two digits",s1:"the seconds",s2:"the seconds, two digits",a1:"AM or PM"};
+  function means(k){ var key=k.L+k.n; if(MEANS[key])return MEANS[key];
+    if(k.L==="E")return MEANS.E1; if(k.L==="y")return "the year, padded to "+k.n+" digits"; return "it"; }
+
+  /* ---------- face 1: format ---------- */
+  var DEMO="E, MMM dd, yyyy HH:mm:ss";
+  var pattern=DEMO, lastAdd="";
+  var PAL=["yyyy","yy","MMMM","MMM","MM","M","dd","d","EEEE","E","HH","hh","mm","ss","a","|","/","-",",",":"," "];
+  var pal=$("#pal");
+  PAL.forEach(function(c){
+    if(c==="|"){var g=document.createElement("span");g.className="gap";pal.appendChild(g);return;}
+    var b=document.createElement("button");
+    var sep=!/[A-Za-z]/.test(c);
+    b.className="chip"+(sep?" s":"");b.textContent=c===" "?"space":c;b.setAttribute("data-c",c);
+    if(c===" ")b.setAttribute("aria-label","space");
+    pal.appendChild(b);
+  });
+  var fCap=$("#fCap"),fSay=$("#fSay"),fOut=$("#fOut");
+  function fsay(html,tone,line){
+    fCap.className="caption"+(tone?" "+tone:"");
+    fSay.innerHTML=html+(line!==undefined?'<span class="line">'+esc(line)+'</span>':"");
+  }
+  function call(p){return "currentDate.format(DateTimeFormatter.ofPattern("+q(p)+"))";}
+  function flashArrows(a,b){[a,b].forEach(function(id){var e=$(id);e.classList.add("on");setTimeout(function(){e.classList.remove("on");},reduce?0:700);});}
+
+  function drawFormat(mark){
+    var r=tokenize(pattern), pat=$("#pat"), out=$("#out"), html="", oh="";
+    r.toks.forEach(function(k,i){
+      var last=mark&&i===r.toks.length-1&&!r.err;
+      var sep=k.t!==undefined;
+      html+='<span class="pc'+(sep?" s":"")+(last?" last":"")+'">'+(k.src===" "?"␣":esc(k.src))+'</span>';
+      oh+='<span class="p'+(last?" last":"")+'">'+esc(fmtTok(k))+'</span>';
+    });
+    if(r.err&&r.err.kind==="many"){
+      html=html.replace(/<span class="pc">([^<]*)<\/span>$/,'<span class="pc bad">$1</span>');
+      oh="IllegalArgumentException";
+    }
+    pat.innerHTML=html||'<span class="empty">empty: tap a chip below</span>';
+    if(!r.err && !r.toks.length) oh='<span class="q">""</span>';
+    out.innerHTML=oh;
+    fOut.classList.toggle("bad",!!r.err);
+    return r;
+  }
+  function tap(c){
+    if(pattern.length+c.length>40){ fsay("The pattern is full. Press <b>clear</b> to start a new one."); return; }
+    var before=tokenize(pattern).toks, prevLast=before[before.length-1];
+    pattern+=c; lastAdd=c;
+    var r=drawFormat(true), k=r.toks[r.toks.length-1];
+    if(r.err){
+      fsay("Java has no <b class=\"w\">"+esc(k.src)+"</b>: "+(k.n)+" letters "+esc(k.L)+" in a row is too many, so <b class=\"w\">ofPattern</b> throws before anything prints. Press <b>clear</b>.",
+        "w","IllegalArgumentException: Too many pattern letters: "+k.L);
+      return;
+    }
+    flashArrows("#fa1","#fa2");
+    var printed=fmtTok(k);
+    if(k.t!==undefined){
+      fsay("<b class=\"y\">"+(c===" "?"space":esc(c))+"</b> is not a pattern letter, so it is copied into the text as it is.","y",call(pattern));
+    }else if(prevLast&&prevLast.L===k.L&&k.src!==c){
+      fsay("<b class=\"y\">"+esc(c)+"</b> landed next to <b class=\"y\">"+esc(prevLast.src)+"</b>. Java reads a run of the same letter as one, <b class=\"y\">"+esc(k.src)+"</b>, which prints <b class=\"y\">"+esc(printed)+"</b>.","y",call(pattern));
+    }else{
+      fsay("<b class=\"y\">"+esc(k.src)+"</b> prints <b class=\"y\">"+esc(printed)+"</b>, "+means(k)+".","y",call(pattern));
+    }
+  }
+  function clearPat(){
+    pattern=""; drawFormat(false);
+    fsay("The pattern is empty, so format prints an empty String. Tap letters and separators to build one.","",call(""));
+  }
+  function resetFormat(){
+    pattern=DEMO; drawFormat(false);
+    fsay("This pattern prints the moment as <b class=\"a\">Sat, Oct 17, 2026 14:05:09</b>. Press <b>clear</b> and tap chips to build your own.","",call(DEMO));
+  }
+  pal.addEventListener("click",function(e){var b=e.target.closest("button[data-c]");if(b)tap(b.getAttribute("data-c"));});
+  $("#bClear").addEventListener("click",clearPat);
+  $("#fReset").addEventListener("click",resetFormat);
+
+  /* ---------- face 2: parse ---------- */
+  var pCap=$("#pCap"),pSay=$("#pSay"),pOut=$("#pOut"),pVal=$("#pVal"),rd=$("#rd");
+  function psay(html,tone,line){
+    pCap.className="caption"+(tone?" "+tone:"");
+    pSay.innerHTML=html+(line!==undefined?'<span class="line">'+esc(line)+'</span>':"");
+  }
+  function isNum(k){return k&&k.L&&!(k.L==="M"&&k.n>=3)&&k.L!=="E"&&k.L!=="a";}
+  function fixedW(k){ if(!isNum(k))return 0; return k.n===2?2:0; }
+  function digitsAt(s,i){var n=0;while(i+n<s.length&&/[0-9]/.test(s.charAt(i+n)))n++;return n;}
+  var FIELD={y:"YearOfEra",M:"MonthOfYear",d:"DayOfMonth",H:"HourOfDay",h:"ClockHourOfAmPm",m:"MinuteOfHour",s:"SecondOfMinute"};
+  var RANGE={M:[1,12,"1 - 12"],d:[1,31,"1 - 28/31"],H:[0,23,"0 - 23"],h:[1,12,"1 - 12"],m:[0,59,"0 - 59"],s:[0,59,"0 - 59"],y:[1,999999999,"1 - 999999999/1000000000"]};
+
+  function parse(text,p){
+    var r=tokenize(p);
+    if(r.err) return {perr:r.err};
+    var toks=r.toks,pos=0,groups=[],vals={},bad=null;
+    for(var i=0;i<toks.length;i++){
+      var k=toks[i],start=pos;
+      if(k.t!==undefined){
+        if(text.substr(pos,k.t.length)!==k.t){ bad={at:pos,expect:k.t}; break; }
+        pos+=k.t.length; groups.push({tk:k.src,tx:k.t,lit:true}); continue;
+      }
+      var v;
+      if(isNum(k)){
+        var fw=fixedW(k), have=digitsAt(text,pos), take;
+        if(fw){ if(have<2){bad={at:pos,tok:k};break;} take=2; }
+        else{
+          var reserve=0;for(var j=i+1;j<toks.length&&fixedW(toks[j]);j++)reserve+=fixedW(toks[j]);
+          var min=k.L==="y"?k.n:1; take=Math.min(have-reserve,19);
+          if(take<min){bad={at:pos,tok:k};break;}
+        }
+        var str=text.substr(pos,take); v=parseInt(str,10);
+        if(k.L==="y"&&k.n===2) v=2000+v;
+        pos+=take;
+      }else{
+        var list=k.L==="M"?MONTHS.map(function(m){return k.n===3?m.slice(0,3):k.n===4?m:m.charAt(0);})
+                :k.L==="E"?DAYS.map(function(d){return k.n<=3?d.slice(0,3):k.n===4?d:d.charAt(0);}):["AM","PM"];
+        var hit=-1,best=0;
+        list.forEach(function(w,ix){ if(w.length>best&&text.substr(pos,w.length)===w){hit=ix;best=w.length;} });
+        if(hit<0){bad={at:pos,tok:k};break;}
+        v=k.L==="a"?hit:hit+1; pos+=best;
+      }
+      var key=k.L==="E"?"E":k.L;
+      if(vals[key]!==undefined&&vals[key]!==v) return {groups:groups.concat([{tk:k.src,tx:text.substring(start,pos),bad:true}]),ex:"Conflict found: two fields disagree on "+(FIELD[key]||"DayOfWeek"),why:"conflict"};
+      vals[key]=v; groups.push({tk:k.src,tx:text.substring(start,pos),key:key});
+    }
+    if(bad){
+      var rest=text.substring(bad.at);
+      groups.push({tk:bad.tok?bad.tok.src:(bad.expect===" "?"␣":bad.expect),tx:rest===""?"(end)":rest.charAt(0),bad:true});
+      return {groups:groups,ex:"Text '"+text+"' could not be parsed at index "+bad.at,why:"at",at:bad.at,
+        want:bad.tok?bad.tok.src:bad.expect,got:rest===""?"nothing":rest.charAt(0)};
+    }
+    if(pos<text.length){
+      groups.push({tk:"left over",tx:text.substring(pos),bad:true});
+      return {groups:groups,ex:"Text '"+text+"' could not be parsed, unparsed text found at index "+pos,why:"left",at:pos};
+    }
+    for(var f in RANGE){ if(vals[f]!==undefined&&(vals[f]<RANGE[f][0]||vals[f]>RANGE[f][1])){
+      groups.forEach(function(g){if(g.key===f)g.bad=true;});
+      return {groups:groups,ex:"Text '"+text+"' could not be parsed: Invalid value for "+FIELD[f]+" (valid values "+RANGE[f][2]+"): "+vals[f],why:"range",f:f,v:vals[f]};
+    } }
+    if(vals.y===undefined||vals.M===undefined||vals.d===undefined){
+      var miss=[vals.y===undefined?"year":"",vals.M===undefined?"month":"",vals.d===undefined?"day":""].filter(Boolean).join(" and ");
+      return {groups:groups,ex:"Text '"+text+"' could not be parsed: Unable to obtain LocalDate from TemporalAccessor",why:"miss",miss:miss};
+    }
+    /* SMART resolver (the ofPattern default): a day past the month's end moves back to the last valid day */
+    var last=new Date(Date.UTC(vals.y,vals.M,0)).getUTCDate(), day=Math.min(vals.d,last), clipped=day!==vals.d;
+    if(vals.E!==undefined&&vals.E-1!==dow(vals.y,vals.M,day)){
+      groups.forEach(function(g){if(g.key==="E")g.bad=true;});
+      return {groups:groups,ex:"Text '"+text+"' could not be parsed: Conflict found: Field DayOfWeek "+vals.E+" differs from DayOfWeek "+(dow(vals.y,vals.M,day)+1)+" derived from "+iso(vals.y,vals.M,day),why:"dow",real:DAYS[dow(vals.y,vals.M,day)]};
+    }
+    return {groups:groups,ok:iso(vals.y,vals.M,day),clipped:clipped,asked:vals.d};
+  }
+  function iso(y,M,d){return pad(y,4)+"-"+pad(M,2)+"-"+pad(d,2);}
+
+  function drawGroups(gs){
+    rd.innerHTML="";
+    gs.forEach(function(g,i){
+      var e=document.createElement("div");
+      e.className="g"+(g.lit?" lit":"")+(g.bad?" bad":"");
+      e.innerHTML='<span class="tk">'+esc(g.tk===" "?"␣":g.tk)+'</span><span class="tx">'+esc(g.tx===" "?"␣":g.tx)+'</span>';
+      rd.appendChild(e);
+      setTimeout(function(){e.classList.add("show");},reduce?0:60*i+20);
+    });
+    if(!gs.length) rd.innerHTML='<div class="empty">nothing to read</div>';
+  }
+  function doParse(){
+    var text=$("#inText").value, p=$("#inPat").value;
+    var stmt="LocalDate.parse("+q(text)+", DateTimeFormatter.ofPattern("+q(p)+"))";
+    var r=parse(text,p);
+    pOut.classList.remove("ok","bad"); void pOut.offsetWidth;
+    if(r.perr){
+      rd.innerHTML='<div class="empty">the pattern itself is the problem</div>';
+      if(r.perr.kind==="unknown"){
+        pVal.textContent="?";
+        psay("This page reads the letters <b>y M d E H h m s a</b>. <b class=\"a\">"+esc(r.perr.ch)+"</b> is not one of them; try a pattern made of those.","",stmt);
+        return;
+      }
+      pOut.classList.add("bad"); pVal.textContent="IllegalArgumentException";
+      psay("The pattern is broken before parse even reads the text, so <b class=\"w\">ofPattern</b> throws.","w",
+        r.perr.kind==="many"?"IllegalArgumentException: Too many pattern letters: "+r.perr.ch:"IllegalArgumentException: Pattern ends with an incomplete string literal");
+      return;
+    }
+    drawGroups(r.groups);
+    flashArrows("#pa1","#pa2");
+    if(r.ok){
+      pOut.classList.add("ok"); pVal.textContent=r.ok;
+      if(r.clipped) psay("There is no day "+r.asked+" in that month, so parse moved it back to the last valid day: <b class=\"g\">"+r.ok+"</b>.","g",stmt);
+      else psay("The text fits <b class=\"g\">"+esc(p)+"</b> piece by piece, so parse understood it as the date <b class=\"g\">"+r.ok+"</b>.","g",stmt);
+      return;
+    }
+    pOut.classList.add("bad"); pVal.textContent="DateTimeParseException";
+    var why;
+    if(r.why==="at") why="At index "+r.at+" the pattern wants <b class=\"w\">"+esc(r.want===" "?"a space":r.want)+"</b> but the text has <b class=\"w\">"+esc(r.got)+"</b>. The text does not fit the pattern.";
+    else if(r.why==="left") why="The pattern ended but the text did not: <b class=\"w\">"+esc(text.substring(r.at))+"</b> is left over.";
+    else if(r.why==="range") why="The text fits the shape, but <b class=\"w\">"+r.v+"</b> is not a valid "+({M:"month",d:"day",H:"hour",h:"hour",m:"minute",s:"second",y:"year"}[r.f])+".";
+    else if(r.why==="miss") why="The text fits, but there is no "+r.miss+", so it cannot become a LocalDate.";
+    else if(r.why==="dow") why="That date is a <b class=\"w\">"+r.real+"</b>, so the day name in the text contradicts it.";
+    else why="Two parts of the text disagree.";
+    psay(why,"w","DateTimeParseException: "+r.ex);
+  }
+  function resetParse(){
+    $("#inText").value="10/17/2026"; $("#inPat").value="MM/dd/yyyy";
+    rd.innerHTML='<div class="empty">Press Parse.</div>';
+    pOut.classList.remove("ok","bad"); pVal.textContent="?";
+    psay("The text <b class=\"a\">10/17/2026</b> and the pattern <b class=\"a\">MM/dd/yyyy</b> wait on the left. Press <b>Parse</b>, then try <b>2026-10-17</b>.","");
+  }
+  $("#bParse").addEventListener("click",doParse);
+  $("#pReset").addEventListener("click",resetParse);
+  ["#inText","#inPat"].forEach(function(s){$(s).addEventListener("keydown",function(e){if(e.key==="Enter")doParse();});});
+
+  resetFormat(); resetParse();
+
+  /* ambient canvas */
+  var cv=$("#amb"),ctx=cv.getContext&&cv.getContext("2d"),parts=[];
+  function sizeC(){if(!ctx)return;cv.width=innerWidth;cv.height=innerHeight;}
+  function initParts(){parts=[];for(var i=0;i<46;i++)parts.push({x:Math.random(),y:Math.random(),
+    r:Math.random()*1.6+.3,s:Math.random()*.02+.004,o:Math.random()*.4+.1});}
+  function drawC(){if(!ctx)return;ctx.clearRect(0,0,cv.width,cv.height);
+    parts.forEach(function(p){p.y-=p.s/60;if(p.y<-.02)p.y=1.02;
+      ctx.beginPath();ctx.arc(p.x*cv.width,p.y*cv.height,p.r,0,7);
+      ctx.fillStyle="rgba(140,170,255,"+p.o+")";ctx.fill();});
+    requestAnimationFrame(drawC);}
+  if(ctx&&!reduce){sizeC();initParts();drawC();addEventListener("resize",sizeC);}
+})();
+</script>
+<script src="../manifest.js"></script>
+<script src="../../assets/rail.js"></script>
+<script>Rail.render(document.getElementById("rail"),{week:3,kind:"visuals",current:"06-date-patterns"});</script>
+</body>
+</html>

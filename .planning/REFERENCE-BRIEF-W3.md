@@ -1,0 +1,9 @@
+# Agent brief — building one reference page (Week 3)
+
+You build exactly ONE reference page. Read first: `CLAUDE.md`, then the week 2 page with the same file name under `week-02/reference/` (cheat-sheet.html, glossary.html, common-errors.html; for date-patterns.html use `week-02/reference/cheat-sheet.html` as the base) and copy its CSS base, header, ONE control (filter chips or live filter box), card or table layout, cross-link style and rail block exactly. Change the content to week 3.
+Workbook text (fall v7.2Y, source of truth): `.planning/workbook-text/wb3a.txt`, `wb3b.txt`. Spring content for ideas only: `/Users/ray/Desktop/Training/Pluralsight/YearUp/yearup-java-spring2026/week-03/reference/` (its design is not reused; check every fact against the fall text: LocalDate has no time zone, ArrayList prints `[Natalie, Brittany, Zachary]`, remove shifts later elements down, `remove()` of a missing key returns null, `get()` of a missing key returns null, Product price is a double).
+Cross-links: where an entry has a visual, link `../visuals/<file>` using the file names in `week-03/manifest.js` (only those). Examples from the instructor demos quoted in your task or invented; never an exercise (famous quotes, bedtime stories, payroll, format dates, search engine logger, search inventory, hardware store, online store, accounting ledger).
+Rules: learners not students; Raymond; US spelling; no emoji; no em dashes; no entities in script; Java 17; package com.pluralsight. `<title>Title | Week 3 Visual Hub</title>`, `.back` href `../index.html#<slug>`, rail `Rail.render(document.getElementById("rail"),{week:3,kind:"reference",current:"<slug>"})`. If you use a `.take`, exactly one.
+
+## Deliver
+Write `week-03/reference/<file>`. `node --check`; divs balanced; one style; title; rail; every href resolves to a file in the manifest. Do not edit other files, do not commit, do not open a browser. Report under 10 lines.

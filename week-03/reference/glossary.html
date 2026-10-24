@@ -1,0 +1,304 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Glossary | Week 3 Visual Hub</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Sora:wght@500;700&family=Inter:wght@400;500&family=JetBrains+Mono:wght@400;500&display=swap">
+<style>
+  :root{
+    --bg:#080c17; --bg2:#0c1428; --surface:rgba(255,255,255,.045); --line:rgba(255,255,255,.09);
+    --ink:#eef2fb; --muted:#8496b6; --accent:#6ea0ff; --accent2:#8b7bff; --good:#46d98a; --warn:#ff6a6a;
+    --gold:#ffc862; --disp:'Sora',system-ui,sans-serif; --body:'Inter',system-ui,sans-serif;
+    --mono:'JetBrains Mono',ui-monospace,monospace;
+  }
+  *{box-sizing:border-box}
+  body{margin:0;min-height:100vh;color:var(--ink);font-family:var(--body);
+    background:radial-gradient(1200px 700px at 70% -10%,#141d38 0%,transparent 55%),
+               radial-gradient(900px 600px at 10% 110%,#161233 0%,transparent 50%),#080c17;
+    overflow-x:hidden}
+  #amb{position:fixed;inset:0;z-index:0;pointer-events:none;opacity:.6}
+  .back{position:relative;z-index:2;display:block;max-width:1120px;margin:0 auto;padding:26px 24px 0;
+    width:100%;font-family:var(--mono);font-size:.8rem;letter-spacing:.04em;color:var(--muted);
+    text-decoration:none;transition:color .15s}
+  .back:hover{color:var(--accent)}
+  .wrap{position:relative;z-index:1;max-width:1120px;margin:0 auto;padding:22px 24px 70px}
+  .tag{font-family:var(--mono);font-size:.72rem;letter-spacing:.22em;text-transform:uppercase;color:var(--accent);margin:0 0 14px}
+  h1{font-family:var(--disp);font-weight:700;font-size:clamp(2.3rem,6vw,3.6rem);line-height:1;margin:0 0 12px;
+    letter-spacing:-.03em;background:linear-gradient(180deg,#fff,#b9c6e6);-webkit-background-clip:text;
+    background-clip:text;color:transparent}
+  .lede{color:var(--muted);max-width:64ch;font-size:1.05rem;margin:0 0 26px;line-height:1.5}
+  .lede b{color:var(--ink)}
+
+  /* ---------- stage ---------- */
+  .stage{position:relative;background:linear-gradient(180deg,rgba(255,255,255,.03),rgba(255,255,255,.01));
+    border:1px solid var(--line);border-radius:24px;padding:18px 18px 14px;
+    box-shadow:0 1px 0 rgba(255,255,255,.06) inset,0 30px 80px -30px rgba(0,0,0,.8)}
+  .topbar{display:flex;align-items:center;gap:10px;margin:0 0 14px;flex-wrap:wrap}
+  .lab{font-family:var(--mono);font-size:.7rem;letter-spacing:.12em;text-transform:uppercase;color:var(--muted);margin:0 4px 0 0}
+  .find{position:relative;flex:1 1 260px;max-width:420px}
+  .find input{width:100%;font-family:var(--mono);font-size:.9rem;color:var(--ink);background:rgba(0,0,0,.3);
+    border:1px solid var(--line);border-radius:11px;padding:10px 40px 10px 14px;outline:none;transition:border-color .15s,box-shadow .15s}
+  .find input::placeholder{color:var(--muted)}
+  .find input:focus{border-color:var(--accent);box-shadow:0 0 0 3px rgba(110,160,255,.15)}
+  .find kbd{position:absolute;right:10px;top:50%;transform:translateY(-50%);font-family:var(--mono);font-size:.66rem;color:var(--muted);
+    border:1px solid var(--line);border-radius:6px;padding:1px 6px;pointer-events:none}
+  .count{margin-left:auto;font-family:var(--mono);font-size:.72rem;color:var(--muted);letter-spacing:.06em}
+  .count b{color:var(--accent);font-weight:500}
+  .chips{display:flex;flex-wrap:wrap;gap:6px;margin:0 0 14px}
+  .chip{font-family:var(--mono);font-size:.7rem;letter-spacing:.06em;padding:6px 12px;border-radius:999px;border:1px solid var(--line);
+    background:rgba(0,0,0,.25);color:var(--muted);cursor:pointer;transition:.15s}
+  .chip:hover{border-color:var(--accent);color:var(--accent)}
+  .chip.on{background:rgba(110,160,255,.16);border-color:rgba(110,160,255,.5);color:var(--ink)}
+  .chip:focus-visible{outline:2px solid var(--accent);outline-offset:2px}
+
+  /* the list: grows with its content, never clipped */
+  .pic{position:relative;min-height:390px;border:1px solid var(--line);border-radius:18px;background:rgba(6,10,20,.5);padding:18px}
+  .grp+.grp{margin-top:22px}
+  .gh{font-family:var(--mono);font-weight:500;font-size:.72rem;letter-spacing:.16em;text-transform:uppercase;color:var(--accent);margin:0 0 10px}
+  .cards{display:grid;grid-template-columns:repeat(auto-fill,minmax(300px,1fr));gap:8px}
+  .term{border:1px solid var(--line);border-radius:14px;background:rgba(255,255,255,.025);padding:12px 14px;
+    display:flex;flex-direction:column;gap:6px;transition:border-color .2s,background .2s}
+  .term:hover{border-color:rgba(110,160,255,.4);background:rgba(110,160,255,.05)}
+  .term h3{font-family:var(--disp);font-weight:700;font-size:1.02rem;margin:0;color:var(--ink);letter-spacing:-.01em}
+  .term p{margin:0;font-size:.9rem;line-height:1.5;color:var(--muted)}
+  .term p b{color:var(--ink);font-weight:500}
+  .term code{display:block;font-family:var(--mono);font-size:.78rem;color:#bcd0ff;background:rgba(0,0,0,.35);
+    border:1px solid var(--line);border-radius:8px;padding:6px 9px;white-space:pre-wrap;word-break:break-word}
+  .see{align-self:flex-start;font-family:var(--mono);font-size:.68rem;letter-spacing:.04em;color:var(--accent);text-decoration:none;
+    border-bottom:1px dashed rgba(110,160,255,.4);padding-bottom:1px;transition:color .15s}
+  .see:hover{color:#fff;border-bottom-color:#fff}
+  .hide{display:none!important}
+  mark{background:rgba(255,200,98,.22);color:var(--ink);border-radius:3px;padding:0 1px}
+  .empty{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;font-family:var(--mono);font-size:.82rem;color:var(--muted)}
+  .hint{font-family:var(--mono);font-size:.68rem;color:var(--muted);margin:10px 4px 0;line-height:1.5}
+  .hint b{color:var(--accent)}
+  @media (max-width:600px){.cards{grid-template-columns:1fr}.count{margin-left:0}}
+  @media (prefers-reduced-motion:reduce){*{animation-duration:.01ms!important;transition-duration:.01ms!important}#amb{display:none}}
+</style>
+</head>
+<body>
+
+<a class="back" href="../index.html#glossary">&#8592; Week 3 index</a>
+
+<canvas id="amb"></canvas>
+<div class="wrap">
+  <p class="tag">Week 3 &middot; Reference</p>
+  <h1>Glossary</h1>
+  <p class="lede">The words of the week, Java and Agile, one sentence each. <b>Type a word and the list narrows as you go.</b></p>
+
+  <div class="stage">
+    <div class="topbar">
+      <span class="lab">Filter</span>
+      <label class="find"><input id="q" type="search" placeholder="Try readLine, keySet, sprint..." aria-label="Filter terms" autocomplete="off" spellcheck="false"><kbd>/</kbd></label>
+      <span class="count" id="count"></span>
+    </div>
+    <div class="chips" id="chips" role="group" aria-label="Topic">
+        <button class="chip on" data-g="all">All</button>
+        <button class="chip" data-g="errors">Errors and exceptions</button>
+        <button class="chip" data-g="files">Files</button>
+        <button class="chip" data-g="dates">Dates</button>
+        <button class="chip" data-g="collections">Collections</button>
+        <button class="chip" data-g="agile">Agile</button>
+    </div>
+
+    <div class="pic" id="list">
+      <section class="grp" data-g="errors">
+        <h2 class="gh">Errors and exceptions</h2>
+        <div class="cards">
+          <article class="term" data-k="compile time error syntax type compiler"><h3>Compile time error</h3><p>A mistake in syntax or types that the compiler points out before the program can run at all.</p><code>System.out.printLn("Hello Raymond");   // printLn does not exist</code><a class="see" href="../visuals/01-three-kinds-of-errors.html">See it: Three Kinds of Errors</a></article>
+          <article class="term" data-k="logic error wrong answer bug"><h3>Logic error</h3><p>The program runs and finishes but gives the wrong answer, because it does exactly what you wrote, not what you meant.</p><code>double finalPrice = price * discount;   // 20.0, not 80.0</code><a class="see" href="../visuals/01-three-kinds-of-errors.html">See it: Three Kinds of Errors</a></article>
+          <article class="term" data-k="runtime error crash halt"><h3>Runtime error</h3><p>The program compiles and starts, then stops in the middle because of bad input, a bad index, a missing file or something else unexpected.</p><code>listOfNames[3]   // only indexes 0 to 2 exist</code><a class="see" href="../visuals/01-three-kinds-of-errors.html">See it: Three Kinds of Errors</a></article>
+          <article class="term" data-k="exception object error type"><h3>Exception</h3><p>The object Java creates to describe a runtime error; its type names what went wrong, and Exception is the parent of all of them.</p><code>catch (Exception ex)   // catches any exception</code><a class="see" href="../visuals/02-try-catch-flow.html">See it: try and catch</a></article>
+          <article class="term" data-k="throw thrown jump"><h3>Throw</h3><p>What happens when a line fails: the line stops and the exception jumps to the nearest catch, or ends the program if there is none.</p><code>int result = firstNumber / secondNumber;   // 0 here throws</code><a class="see" href="../visuals/02-try-catch-flow.html">See it: try and catch</a></article>
+          <article class="term" data-k="try block"><h3>try block</h3><p>The code you want to run that might throw; when a line inside it throws, the rest of the block is skipped.</p><code>try { ... }</code><a class="see" href="../visuals/02-try-catch-flow.html">See it: try and catch</a></article>
+          <article class="term" data-k="catch block handler"><h3>catch block</h3><p>The code that runs only when the try block throws; the type in the parentheses says which exceptions it accepts.</p><code>catch (Exception ex) { ... }</code><a class="see" href="../visuals/02-try-catch-flow.html">See it: try and catch</a></article>
+          <article class="term" data-k="handle handling handled continue"><h3>Handle</h3><p>To catch an exception and do something sensible with it, like print a message, so the program keeps running instead of crashing.</p><a class="see" href="../visuals/02-try-catch-flow.html">See it: try and catch</a></article>
+          <article class="term" data-k="stack trace printstacktrace red"><h3>Stack trace</h3><p>The report Java prints for an exception: its type, its message, and the chain of method calls with line numbers that led to it.</p><code>e.printStackTrace();</code><a class="see" href="../visuals/02-try-catch-flow.html">See it: try and catch</a></article>
+          <article class="term" data-k="getmessage() message text"><h3>getMessage()</h3><p>Returns the short text an exception carries, without the stack trace.</p><code>ex.getMessage()   // "/ by zero"</code><a class="see" href="../visuals/02-try-catch-flow.html">See it: try and catch</a></article>
+          <article class="term" data-k="arithmeticexception divide by zero"><h3>ArithmeticException</h3><p>Thrown when a whole number is divided by zero.</p><code>10 / 0   // / by zero</code><a class="see" href="../visuals/02-try-catch-flow.html">See it: try and catch</a></article>
+          <article class="term" data-k="inputmismatchexception scanner nextint letter"><h3>InputMismatchException</h3><p>Thrown by scanner.nextInt() when the user types something that is not a whole number, like a letter.</p><code>int firstNumber = scanner.nextInt();   // user types abc</code><a class="see" href="../visuals/02-try-catch-flow.html">See it: try and catch</a></article>
+          <article class="term" data-k="arrayindexoutofboundsexception array index"><h3>ArrayIndexOutOfBoundsException</h3><p>Thrown when an array index is below 0 or at or past the array's length.</p><code>Index 6 out of bounds for length 6</code><a class="see" href="../visuals/01-three-kinds-of-errors.html">See it: Three Kinds of Errors</a></article>
+          <article class="term" data-k="indexoutofboundsexception arraylist list get"><h3>IndexOutOfBoundsException</h3><p>The list version: get, set or remove with an index the ArrayList does not have.</p><code>kids.get(3)   // size is 3, last index is 2</code><a class="see" href="../visuals/08-arraylist-operations.html">See it: ArrayList Operations</a></article>
+          <article class="term" data-k="ioexception input output file java.io"><h3>IOException</h3><p>The family of input and output errors when reading or writing a file; Java makes you catch it around file code.</p><code>catch (IOException e)</code><a class="see" href="../visuals/03-reading-a-file.html">See it: Reading a File Line by Line</a></article>
+          <article class="term" data-k="filenotfoundexception missing file"><h3>FileNotFoundException</h3><p>A kind of IOException, thrown by new FileReader when the file is not where Java looks for it.</p><code>new FileReader("missing.txt")</code><a class="see" href="../visuals/03-reading-a-file.html">See it: Reading a File Line by Line</a></article>
+        </div>
+      </section>
+      <section class="grp" data-g="files">
+        <h2 class="gh">Files</h2>
+        <div class="cards">
+          <article class="term" data-k="file txt extension disk"><h3>File</h3><p>Characters saved on disk under a name with an extension, like poem.txt; it is still there after the program ends.</p><a class="see" href="../visuals/03-reading-a-file.html">See it: Reading a File Line by Line</a></article>
+          <article class="term" data-k="path relative absolute folder"><h3>Path</h3><p>Where a file is: a bare name like poem.txt is a relative path, read from the working directory; a full path starts at the top of the drive.</p><code>"poem.txt"   // relative</code></article>
+          <article class="term" data-k="working directory project root folder intellij"><h3>Working directory</h3><p>The folder a running program treats as here; in IntelliJ it is the project root, so poem.txt sits next to pom.xml, not inside src.</p><a class="see" href="../visuals/03-reading-a-file.html">See it: Reading a File Line by Line</a></article>
+          <article class="term" data-k="filereader java.io open read"><h3>FileReader</h3><p>Opens a file for reading, one character at a time; on its own it has no readLine().</p><code>FileReader fileReader = new FileReader("poem.txt");</code><a class="see" href="../visuals/03-reading-a-file.html">See it: Reading a File Line by Line</a></article>
+          <article class="term" data-k="bufferedreader wrap read lines"><h3>BufferedReader</h3><p>Wraps a FileReader, reads big blocks into a buffer, and hands you the text a whole line at a time.</p><code>BufferedReader bufferedReader = new BufferedReader(fileReader);</code><a class="see" href="../visuals/03-reading-a-file.html">See it: Reading a File Line by Line</a></article>
+          <article class="term" data-k="buffer memory block efficient"><h3>Buffer</h3><p>A block of memory that holds characters between the program and the file, so the disk is touched in big chunks instead of once per character.</p><a class="see" href="../visuals/03-reading-a-file.html">See it: Reading a File Line by Line</a></article>
+          <article class="term" data-k="readline() line"><h3>readLine()</h3><p>Returns the next line of the file as a String, without its line break.</p><code>String line = bufferedReader.readLine();</code><a class="see" href="../visuals/03-reading-a-file.html">See it: Reading a File Line by Line</a></article>
+          <article class="term" data-k="null end of file eof while loop"><h3>null at end of file</h3><p>readLine() returns null when there are no more lines, which is how the while loop knows to stop.</p><code>while ((line = bufferedReader.readLine()) != null)</code><a class="see" href="../visuals/03-reading-a-file.html">See it: Reading a File Line by Line</a></article>
+          <article class="term" data-k="close() release resources"><h3>close()</h3><p>Releases the file when you are done; on a writer it also pushes the last buffered text to disk, so a forgotten close can leave the file empty.</p><code>bufferedWriter.close();</code><a class="see" href="../visuals/04-writing-a-file.html">See it: Writing to a File</a></article>
+          <article class="term" data-k="filewriter write create overwrite"><h3>FileWriter</h3><p>Opens a file for writing: creates it, or wipes and overwrites it if it already exists; write() adds no line break, so you add \n yourself.</p><code>fileWriter.write("Hello Everyone\n");</code><a class="see" href="../visuals/04-writing-a-file.html">See it: Writing to a File</a></article>
+          <article class="term" data-k="bufferedwriter 8k buffer write"><h3>BufferedWriter</h3><p>Wraps a FileWriter and collects text in an 8K buffer, writing to the file only when the buffer fills or when you close it.</p><code>BufferedWriter bufferedWriter = new BufferedWriter(fileWriter);</code><a class="see" href="../visuals/04-writing-a-file.html">See it: Writing to a File</a></article>
+          <article class="term" data-k="append true end keep"><h3>Append</h3><p>Adding to the end of a file instead of overwriting it; pass true as FileWriter's second argument.</p><code>new FileWriter("tomato.txt", true)</code><a class="see" href="../visuals/04-writing-a-file.html">See it: Writing to a File</a></article>
+          <article class="term" data-k="flush() buffer push"><h3>flush()</h3><p>Pushes whatever is waiting in the buffer to the file now, without closing it; close() flushes for you.</p><code>bufferedWriter.flush();</code><a class="see" href="../visuals/04-writing-a-file.html">See it: Writing to a File</a></article>
+          <article class="term" data-k="csv comma separated values record"><h3>CSV</h3><p>A plain text file with one record per line and the fields separated by a delimiter; the name means comma-separated values, but a pipe works too.</p><code>SUV|2026|Black</code></article>
+          <article class="term" data-k="delimiter separator"><h3>Delimiter</h3><p>The character that sits between the fields of a line, like a comma or a pipe.</p></article>
+          <article class="term" data-k="pipe | vertical bar"><h3>Pipe</h3><p>The | character, a common delimiter because it rarely shows up in the data; split() needs it escaped.</p><code>line.split("\\|")</code></article>
+          <article class="term" data-k="split() array pieces"><h3>split()</h3><p>Cuts a line at every delimiter and returns the pieces as a String array.</p><code>String[] tokens = line.split(Pattern.quote("|"));</code></article>
+          <article class="term" data-k="token field piece parse"><h3>Token</h3><p>One piece of a split line; tokens[0] is the first field, and every token is a String until you parse it.</p><code>int year = Integer.parseInt(tokens[1]);</code></article>
+        </div>
+      </section>
+      <section class="grp" data-g="dates">
+        <h2 class="gh">Dates</h2>
+        <div class="cards">
+          <article class="term" data-k="java.time package java 8"><h3>java.time</h3><p>The package of date and time classes that came with Java 8.</p><code>import java.time.LocalDate;</code><a class="see" href="../visuals/05-date-and-time-objects.html">See it: LocalDate, LocalTime, LocalDateTime</a></article>
+          <article class="term" data-k="localdate date only birthday"><h3>LocalDate</h3><p>A date with no time, like a birthday; it prints as year-month-day.</p><code>LocalDate today = LocalDate.now();   // 2026-04-22</code><a class="see" href="../visuals/05-date-and-time-objects.html">See it: LocalDate, LocalTime, LocalDateTime</a></article>
+          <article class="term" data-k="localtime time only closing"><h3>LocalTime</h3><p>A time with no date, like a store's closing time; it prints hours, minutes, seconds and a fraction.</p><code>LocalTime.now()   // 02:17:11.770918</code><a class="see" href="../visuals/05-date-and-time-objects.html">See it: LocalDate, LocalTime, LocalDateTime</a></article>
+          <article class="term" data-k="localdatetime timestamp moment t"><h3>LocalDateTime</h3><p>A date and a time together, like a timestamp; it prints with a T between the two.</p><code>LocalDateTime.now()   // 2026-04-22T02:17:11.771319</code><a class="see" href="../visuals/05-date-and-time-objects.html">See it: LocalDate, LocalTime, LocalDateTime</a></article>
+          <article class="term" data-k="now() current static"><h3>now()</h3><p>The static method on each date and time class that returns the current value from the computer's clock.</p><code>LocalTime currentTime = LocalTime.now();</code><a class="see" href="../visuals/05-date-and-time-objects.html">See it: LocalDate, LocalTime, LocalDateTime</a></article>
+          <article class="term" data-k="iso 8601 yyyy-mm-dd standard"><h3>ISO 8601</h3><p>The international layout year-month-day; the date classes print in it, and parse() reads it without a formatter.</p><code>2026-10-17</code><a class="see" href="../visuals/06-date-patterns.html">See it: Date Patterns</a></article>
+          <article class="term" data-k="datetimeformatter ofpattern formatter"><h3>DateTimeFormatter</h3><p>Describes a layout with pattern letters, to read text in that layout or to print a date in it.</p><code>DateTimeFormatter.ofPattern("MM/dd/yyyy")</code><a class="see" href="../visuals/06-date-patterns.html">See it: Date Patterns</a></article>
+          <article class="term" data-k="pattern letters mm dd yyyy hh e mmm"><h3>Pattern</h3><p>The letters given to ofPattern(): MM month, dd day, yyyy year, HH hour, mm minutes, E day name, MMM month name; case matters.</p><code>"E, MMM dd, yyyy HH:mm:ss"</code><a class="see" href="../visuals/06-date-patterns.html">See it: Date Patterns</a></article>
+          <article class="term" data-k="format() date to string"><h3>format()</h3><p>Turns a date or time into a String in the formatter's layout; the date itself does not change.</p><code>String formattedDate = currentDate.format(formatter);</code><a class="see" href="../visuals/06-date-patterns.html">See it: Date Patterns</a></article>
+          <article class="term" data-k="parse() string to date datetimeparseexception"><h3>parse()</h3><p>Turns text into a date; the text must match the formatter's pattern exactly, or ISO when there is none, otherwise it throws DateTimeParseException.</p><code>LocalDate.parse("10/17/2026", dateTimeFormatter)</code><a class="see" href="../visuals/06-date-patterns.html">See it: Date Patterns</a></article>
+          <article class="term" data-k="time zone offset none local clock"><h3>Time zone</h3><p>A region's offset from GMT; LocalDate, LocalTime and LocalDateTime have no time zone, they use the computer's local date and time.</p><a class="see" href="../visuals/05-date-and-time-objects.html">See it: LocalDate, LocalTime, LocalDateTime</a></article>
+          <article class="term" data-k="gmt greenwich mean time utc"><h3>GMT</h3><p>Greenwich Mean Time, the reference clock other time zones are counted from; New York is GMT-5 in winter and GMT-4 in summer.</p></article>
+        </div>
+      </section>
+      <section class="grp" data-g="collections">
+        <h2 class="gh">Collections</h2>
+        <div class="cards">
+          <article class="term" data-k="collection group objects"><h3>Collection</h3><p>An object that holds a group of other objects; informally, an array is one too.</p><a class="see" href="../visuals/07-array-vs-arraylist.html">See it: Array vs ArrayList</a></article>
+          <article class="term" data-k="collections framework interfaces classes jdk"><h3>Collections Framework</h3><p>The ready-made, tested collection classes that come with Java, so you never have to build and test your own.</p><a class="see" href="../visuals/07-array-vs-arraylist.html">See it: Array vs ArrayList</a></article>
+          <article class="term" data-k="java.util package import"><h3>java.util</h3><p>The package where ArrayList, List, HashMap and Collections live.</p><code>import java.util.ArrayList;</code></article>
+          <article class="term" data-k="generic type angle brackets &lt;&gt; integer"><h3>Generic type</h3><p>The type in angle brackets that says what a collection holds; it must be a class, so a list of numbers uses Integer, not int.</p><code>List&lt;Integer&gt; numbers = new ArrayList&lt;&gt;();</code><a class="see" href="../visuals/07-array-vs-arraylist.html">See it: Array vs ArrayList</a></article>
+          <article class="term" data-k="arraylist resizable array grow"><h3>ArrayList</h3><p>A resizable array: it keeps the order you add in, grows as you add, shrinks as you remove, and prints in square brackets.</p><code>[Natalie, Brittany, Zachary]</code><a class="see" href="../visuals/07-array-vs-arraylist.html">See it: Array vs ArrayList</a></article>
+          <article class="term" data-k="list interface"><h3>List</h3><p>The interface ArrayList belongs to; declaring the variable as List is the common style.</p><code>List&lt;String&gt; names = new ArrayList&lt;&gt;();</code><a class="see" href="../visuals/07-array-vs-arraylist.html">See it: Array vs ArrayList</a></article>
+          <article class="term" data-k="add() insert end"><h3>add()</h3><p>Puts an element at the end; add(index, element) inserts it at that index and moves each later element up one index.</p><code>kids.add(0, "Natalie");</code><a class="see" href="../visuals/08-arraylist-operations.html">See it: ArrayList Operations</a></article>
+          <article class="term" data-k="get() read index list"><h3>get()</h3><p>Returns the element at an index without removing it.</p><code>kids.get(0)   // Natalie</code><a class="see" href="../visuals/08-arraylist-operations.html">See it: ArrayList Operations</a></article>
+          <article class="term" data-k="set() replace update"><h3>set()</h3><p>Replaces the element at an index; the size stays the same.</p><code>kids.set(2, "Zach");</code><a class="see" href="../visuals/08-arraylist-operations.html">See it: ArrayList Operations</a></article>
+          <article class="term" data-k="remove() delete shift"><h3>remove()</h3><p>Takes out the element at an index, and each later element moves down one index to close the gap.</p><code>kids.remove(0);</code><a class="see" href="../visuals/08-arraylist-operations.html">See it: ArrayList Operations</a></article>
+          <article class="term" data-k="size() count length"><h3>size()</h3><p>The number of elements in the list right now; a list has size(), an array has length.</p><code>for (int i = 0; i &lt; kids.size(); i++)</code><a class="see" href="../visuals/08-arraylist-operations.html">See it: ArrayList Operations</a></article>
+          <article class="term" data-k="index position zero list"><h3>Index (in a list)</h3><p>A position counted from 0, as in an array, so the last element is at size() - 1.</p><a class="see" href="../visuals/08-arraylist-operations.html">See it: ArrayList Operations</a></article>
+          <article class="term" data-k="for-each enhanced for loop"><h3>for-each loop</h3><p>Visits every element of a collection in order, with no index to manage.</p><code>for (String kid : kids)</code><a class="see" href="../visuals/08-arraylist-operations.html">See it: ArrayList Operations</a></article>
+          <article class="term" data-k="collections.sort() sort reverseorder a to z"><h3>Collections.sort()</h3><p>Sorts a list in place, A to Z for Strings; add Collections.reverseOrder() for Z to A.</p><code>Collections.sort(kids);</code><a class="see" href="../visuals/08-arraylist-operations.html">See it: ArrayList Operations</a></article>
+          <article class="term" data-k="hashmap map"><h3>HashMap</h3><p>A collection of key/value pairs where you find a value by its key, not by its position.</p><code>HashMap&lt;String, String&gt; statesAndCapitals = new HashMap&lt;&gt;();</code><a class="see" href="../visuals/09-hashmap-lookup.html">See it: HashMap Lookup</a></article>
+          <article class="term" data-k="key label lookup"><h3>Key</h3><p>What you look a value up by; it does the job an index does in a list, but it can be any type you choose.</p><code>"TX"</code><a class="see" href="../visuals/09-hashmap-lookup.html">See it: HashMap Lookup</a></article>
+          <article class="term" data-k="value stored"><h3>Value</h3><p>What a key leads to; two keys can share the same value.</p><code>"Austin"</code><a class="see" href="../visuals/09-hashmap-lookup.html">See it: HashMap Lookup</a></article>
+          <article class="term" data-k="key/value pair entry ="><h3>Key/value pair</h3><p>One entry in a map, a key and the value stored under it; a printed map shows each one as key=value.</p><code>{CT=Hartford, TX=Austin}</code><a class="see" href="../visuals/09-hashmap-lookup.html">See it: HashMap Lookup</a></article>
+          <article class="term" data-k="put() add store"><h3>put()</h3><p>Stores a value under a key; if the key is already there, the new value replaces the old one.</p><code>statesAndCapitals.put("TX", "Austin");</code><a class="see" href="../visuals/10-hashmap-operations.html">See it: HashMap Operations</a></article>
+          <article class="term" data-k="lookup get() null missing key"><h3>Lookup</h3><p>Finding a value by its key with get(); a key that is not in the map gives null, not an exception.</p><code>statesAndCapitals.get("OK")   // null</code><a class="see" href="../visuals/09-hashmap-lookup.html">See it: HashMap Lookup</a></article>
+          <article class="term" data-k="unique key duplicate overwrite"><h3>Unique key</h3><p>Each key appears at most once in a map; putting the same key again overwrites its value instead of adding a second entry.</p><a class="see" href="../visuals/10-hashmap-operations.html">See it: HashMap Operations</a></article>
+          <article class="term" data-k="values() all values"><h3>values()</h3><p>Returns every value in the map, ready for a for-each loop.</p><code>for (String value : statesAndCapitals.values())</code><a class="see" href="../visuals/10-hashmap-operations.html">See it: HashMap Operations</a></article>
+          <article class="term" data-k="keyset() all keys"><h3>keySet()</h3><p>Returns every key in the map, often looped over to get each value.</p><code>for (String key : statesAndCapitals.keySet())</code><a class="see" href="../visuals/10-hashmap-operations.html">See it: HashMap Operations</a></article>
+          <article class="term" data-k="hash function position fast"><h3>Hash function</h3><p>Turns a key into a position in the map's storage; that makes lookup fast and decides the order a map prints in.</p><a class="see" href="../visuals/09-hashmap-lookup.html">See it: HashMap Lookup</a></article>
+          <article class="term" data-k="insertion order added"><h3>Insertion order</h3><p>The order elements were added in; an ArrayList keeps it, a HashMap does not.</p><a class="see" href="../visuals/09-hashmap-lookup.html">See it: HashMap Lookup</a></article>
+        </div>
+      </section>
+      <section class="grp" data-g="agile">
+        <h2 class="gh">Agile</h2>
+        <div class="cards">
+          <article class="term" data-k="agile iterative change"><h3>Agile</h3><p>A way to manage a project in short repeated cycles that stays open to change and responds to it without going off the rails.</p><a class="see" href="../visuals/11-waterfall-vs-agile.html">See it: Waterfall vs Agile</a></article>
+          <article class="term" data-k="waterfall plan upfront test at the end"><h3>Waterfall</h3><p>The opposite of Agile: plan everything up front, build every feature, test at the end, then ship, so nobody sees working software for a long time.</p><a class="see" href="../visuals/11-waterfall-vs-agile.html">See it: Waterfall vs Agile</a></article>
+          <article class="term" data-k="agile manifesto values principles"><h3>Agile Manifesto</h3><p>The short document of the four values behind Agile, people, working software, customer collaboration and responding to change, backed by twelve principles.</p><a class="see" href="../visuals/11-waterfall-vs-agile.html">See it: Waterfall vs Agile</a></article>
+          <article class="term" data-k="scrum framework"><h3>Scrum</h3><p>A popular Agile framework in which a self-organizing team works in sprints and reflects to keep improving.</p><a class="see" href="../visuals/12-scrum-cycle.html">See it: The Scrum Cycle</a></article>
+          <article class="term" data-k="sprint cycle weeks planning"><h3>Sprint</h3><p>A short, fixed period, often 2 to 3 weeks, in which the team completes a chosen amount of work.</p><a class="see" href="../visuals/12-scrum-cycle.html">See it: The Scrum Cycle</a></article>
+          <article class="term" data-k="product owner role customer priority"><h3>Product owner</h3><p>The Scrum role that speaks for the customer and decides what the team works on first.</p><a class="see" href="../visuals/12-scrum-cycle.html">See it: The Scrum Cycle</a></article>
+          <article class="term" data-k="scrum master role facilitate"><h3>Scrum master</h3><p>The Scrum role that keeps the process running, clears obstacles, and usually facilitates the daily standup.</p><a class="see" href="../visuals/12-scrum-cycle.html">See it: The Scrum Cycle</a></article>
+          <article class="term" data-k="development team developers role"><h3>Development team</h3><p>The Scrum role that builds the product and is responsible for running its own standup.</p><a class="see" href="../visuals/12-scrum-cycle.html">See it: The Scrum Cycle</a></article>
+          <article class="term" data-k="daily standup daily scrum yesterday today"><h3>Daily standup</h3><p>A short daily meeting: what did you do yesterday, what will you do today, where are you blocked.</p><a class="see" href="../visuals/12-scrum-cycle.html">See it: The Scrum Cycle</a></article>
+          <article class="term" data-k="blocker blocked stuck"><h3>Blocker</h3><p>Anything stopping you from moving forward; you raise it at standup so someone can help.</p><a class="see" href="../visuals/12-scrum-cycle.html">See it: The Scrum Cycle</a></article>
+          <article class="term" data-k="retrospective retro end of sprint"><h3>Retrospective</h3><p>A meeting at the end of a sprint to look back, hear from everyone, and agree on action items for the next one.</p><a class="see" href="../visuals/12-scrum-cycle.html">See it: The Scrum Cycle</a></article>
+          <article class="term" data-k="user story as a i want so that"><h3>User story</h3><p>One feature written from the user's side: As a (role) I want (something) so that (benefit).</p><code>As a web site user I want a navigation bar so that I can switch between pages</code><a class="see" href="../visuals/13-user-story.html">See it: A User Story</a></article>
+          <article class="term" data-k="requirement need"><h3>Requirement</h3><p>Something the application must do; each one becomes one or more user stories.</p><a class="see" href="../visuals/13-user-story.html">See it: A User Story</a></article>
+          <article class="term" data-k="acceptance criteria done checklist"><h3>Acceptance criteria</h3><p>The checklist on a story that says exactly what must be true for it to count as done.</p><code>- [ ] Create the root directory</code><a class="see" href="../visuals/13-user-story.html">See it: A User Story</a></article>
+          <article class="term" data-k="mvp minimum viable product"><h3>MVP</h3><p>Minimum viable product: the first version with just enough features for early users to use it and give feedback.</p><a class="see" href="../visuals/13-user-story.html">See it: A User Story</a></article>
+          <article class="term" data-k="backlog todo not started"><h3>Backlog</h3><p>Every story not started yet, in priority order; on the board it is the Todo column.</p><a class="see" href="../visuals/14-project-board.html">See it: The Project Board</a></article>
+          <article class="term" data-k="kanban board columns cards"><h3>Kanban board</h3><p>A board of columns, one per state of work, with a card per task that moves left to right.</p><a class="see" href="../visuals/14-project-board.html">See it: The Project Board</a></article>
+          <article class="term" data-k="github projects board tool"><h3>GitHub Projects</h3><p>GitHub's project boards, the kanban tool used in this class; Trello and Asana do the same job.</p><a class="see" href="../visuals/14-project-board.html">See it: The Project Board</a></article>
+          <article class="term" data-k="issue tracking to-do list ticket"><h3>Issue tracking</h3><p>A specialized to-do list that also tracks who is on each task and its review before it counts as done.</p><a class="see" href="../visuals/14-project-board.html">See it: The Project Board</a></article>
+          <article class="term" data-k="todo column backlog"><h3>Todo</h3><p>The first column of the board, where every new story is created and prioritized.</p><a class="see" href="../visuals/14-project-board.html">See it: The Project Board</a></article>
+          <article class="term" data-k="in progress column working"><h3>In Progress</h3><p>The column for stories someone is working on right now.</p><a class="see" href="../visuals/14-project-board.html">See it: The Project Board</a></article>
+          <article class="term" data-k="qa/testing column quality"><h3>QA/Testing</h3><p>A column you add before Done for stories in final testing before they are merged to main.</p><a class="see" href="../visuals/14-project-board.html">See it: The Project Board</a></article>
+          <article class="term" data-k="done column finished"><h3>Done</h3><p>The last column: the story is finished and meets its acceptance criteria.</p><a class="see" href="../visuals/14-project-board.html">See it: The Project Board</a></article>
+        </div>
+      </section>
+      <p class="empty hide" id="none">No term matches. Try a shorter word.</p>
+    </div>
+    <p class="hint">Press <b>/</b> to jump to the filter, <b>Esc</b> to clear it. Matches names, definitions and code. <b>See it</b> opens the visual for that term.</p>
+  </div>
+
+  <div id="rail"></div>
+</div>
+
+<script>
+(function(){
+  "use strict";
+  var $=function(s){return document.querySelector(s);};
+  var reduce=matchMedia("(prefers-reduced-motion: reduce)").matches;
+  var q=$("#q"), terms=[].slice.call(document.querySelectorAll(".term")), groups=[].slice.call(document.querySelectorAll(".grp"));
+  var topic="all";
+
+  /* keep the original text of each name so highlights can be undone */
+  terms.forEach(function(t){
+    var h=t.querySelector("h3");
+    t._name=h.textContent;
+    var c=t.querySelector("code");
+    t._hay=(t.getAttribute("data-k")+" "+t.querySelector("p").textContent+" "+(c?c.textContent:"")).toLowerCase();
+    t._g=t.closest(".grp").getAttribute("data-g");
+  });
+
+  function mark(text,word){
+    var h=document.createDocumentFragment(), i=word?text.toLowerCase().indexOf(word):-1;
+    if(i<0){h.appendChild(document.createTextNode(text));return h;}
+    h.appendChild(document.createTextNode(text.slice(0,i)));
+    var m=document.createElement("mark"); m.textContent=text.slice(i,i+word.length); h.appendChild(m);
+    h.appendChild(document.createTextNode(text.slice(i+word.length)));
+    return h;
+  }
+
+  function apply(){
+    var words=q.value.trim().toLowerCase().split(/\s+/).filter(Boolean), shown=0;
+    terms.forEach(function(t){
+      var ok=(topic==="all"||t._g===topic)&&words.every(function(w){return t._hay.indexOf(w)>=0;});
+      t.classList.toggle("hide",!ok);
+      var h=t.querySelector("h3"); h.textContent=""; h.appendChild(mark(t._name,words[0]||""));
+      if(ok) shown++;
+    });
+    groups.forEach(function(g){ g.classList.toggle("hide",!g.querySelector(".term:not(.hide)")); });
+    $("#none").classList.toggle("hide",shown>0);
+    $("#count").innerHTML="<b>"+shown+"</b> of "+terms.length+" terms";
+  }
+
+  q.addEventListener("input",apply);
+  q.addEventListener("keydown",function(e){ if(e.key==="Escape"){ q.value=""; apply(); q.blur(); } });
+  $("#chips").addEventListener("click",function(e){
+    var b=e.target.closest(".chip"); if(!b) return;
+    topic=b.getAttribute("data-g");
+    [].forEach.call(document.querySelectorAll(".chip"),function(c){c.classList.toggle("on",c===b);});
+    apply();
+  });
+  document.addEventListener("keydown",function(e){
+    if(e.key==="/"&&document.activeElement!==q){ e.preventDefault(); q.focus(); }
+  });
+
+  /* ---------- ambient canvas ---------- */
+  var cv=$("#amb"),ctx=cv.getContext&&cv.getContext("2d"),parts=[];
+  function sizeC(){if(!ctx)return;cv.width=innerWidth;cv.height=innerHeight;}
+  function initParts(){parts=[];for(var i=0;i<46;i++)parts.push({x:Math.random(),y:Math.random(),
+    r:Math.random()*1.6+.3,s:Math.random()*.02+.004,o:Math.random()*.4+.1});}
+  function drawC(){if(!ctx)return;ctx.clearRect(0,0,cv.width,cv.height);
+    parts.forEach(function(p){p.y-=p.s/60;if(p.y<-.02)p.y=1.02;
+      ctx.beginPath();ctx.arc(p.x*cv.width,p.y*cv.height,p.r,0,7);
+      ctx.fillStyle="rgba(140,170,255,"+p.o+")";ctx.fill();});
+    requestAnimationFrame(drawC);}
+  if(ctx&&!reduce){sizeC();initParts();drawC();addEventListener("resize",sizeC);}
+
+  apply();
+})();
+</script>
+<script src="../manifest.js"></script>
+<script src="../../assets/rail.js"></script>
+<script>Rail.render(document.getElementById("rail"),{week:3,kind:"reference",current:"glossary"});</script>
+</body>
+</html>

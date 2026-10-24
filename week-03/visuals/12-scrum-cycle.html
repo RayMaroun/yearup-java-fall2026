@@ -1,0 +1,295 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>The Scrum Cycle | Week 3 Visual Hub</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Sora:wght@500;700&family=Inter:wght@400;500&family=JetBrains+Mono:wght@400;500&display=swap">
+<style>
+  :root{
+    --bg:#080c17; --bg2:#0c1428; --surface:rgba(255,255,255,.045); --line:rgba(255,255,255,.09);
+    --ink:#eef2fb; --muted:#8496b6; --accent:#6ea0ff; --accent2:#8b7bff; --good:#46d98a; --warn:#ff6a6a;
+    --gold:#ffc862; --disp:'Sora',system-ui,sans-serif; --body:'Inter',system-ui,sans-serif;
+    --mono:'JetBrains Mono',ui-monospace,monospace;
+  }
+  *{box-sizing:border-box}
+  body{margin:0;min-height:100vh;color:var(--ink);font-family:var(--body);
+    background:radial-gradient(1200px 700px at 70% -10%,#141d38 0%,transparent 55%),
+               radial-gradient(900px 600px at 10% 110%,#161233 0%,transparent 50%),#080c17;
+    overflow-x:hidden}
+  #amb{position:fixed;inset:0;z-index:0;pointer-events:none;opacity:.6}
+  .back{position:relative;z-index:2;display:block;max-width:1120px;margin:0 auto;padding:26px 24px 0;
+    width:100%;font-family:var(--mono);font-size:.8rem;letter-spacing:.04em;color:var(--muted);
+    text-decoration:none;transition:color .15s}
+  .back:hover{color:var(--accent)}
+  .wrap{position:relative;z-index:1;max-width:1120px;margin:0 auto;padding:22px 24px 70px}
+  .tag{font-family:var(--mono);font-size:.72rem;letter-spacing:.22em;text-transform:uppercase;color:var(--accent);margin:0 0 14px}
+  h1{font-family:var(--disp);font-weight:700;font-size:clamp(2.3rem,6vw,3.6rem);line-height:1;margin:0 0 12px;
+    letter-spacing:-.03em;background:linear-gradient(180deg,#fff,#b9c6e6);-webkit-background-clip:text;
+    background-clip:text;color:transparent}
+  .lede{color:var(--muted);max-width:64ch;font-size:1.05rem;margin:0 0 26px;line-height:1.5}
+  .lede b{color:var(--ink)}
+  code{font-family:var(--mono);font-size:.92em;color:#bcd0ff}
+
+  /* ---------- the stage IS the picture ---------- */
+  .stage{position:relative;background:linear-gradient(180deg,rgba(255,255,255,.03),rgba(255,255,255,.01));
+    border:1px solid var(--line);border-radius:24px;padding:22px;
+    box-shadow:0 1px 0 rgba(255,255,255,.06) inset,0 30px 80px -30px rgba(0,0,0,.8)}
+  .board{display:grid;grid-template-columns:minmax(0,1fr) 230px;gap:18px;align-items:center}
+  @media (max-width:820px){.board{grid-template-columns:1fr}.role{flex:1;flex-direction:column;text-align:center}}
+
+  /* the sprint circle */
+  .cycle{position:relative;width:100%;max-width:640px;margin:0 auto}
+  .cycle svg{display:block;width:100%;height:auto}
+  .ring{fill:none;stroke:rgba(110,160,255,.18);stroke-width:3}
+  .prog{fill:none;stroke:var(--accent);stroke-width:4;stroke-linecap:round;opacity:.75}
+  .chev{fill:rgba(110,160,255,.55)}
+  .st circle{fill:#0c1428;stroke:rgba(132,150,182,.55);stroke-width:2.5;transition:fill .3s,stroke .3s}
+  .st text{font-family:var(--disp);font-weight:500;font-size:19px;fill:#c9d4ea;transition:fill .3s}
+  .st.done circle{stroke:var(--good);fill:rgba(70,217,138,.16)}
+  .st.on circle{stroke:var(--gold);fill:rgba(255,200,98,.2)}
+  .st.on text{fill:var(--gold)}
+  .dy circle{fill:#0c1428;stroke:rgba(132,150,182,.5);stroke-width:2;transition:fill .3s,stroke .3s}
+  .dy text{font-family:var(--mono);font-size:12px;fill:var(--muted);transition:fill .3s}
+  .dy.done circle{stroke:var(--good);fill:rgba(70,217,138,.35)}
+  .dy.on circle{stroke:var(--gold);fill:rgba(255,200,98,.45)}
+  .dy.on text{fill:var(--gold)}
+  .arcl{font-family:var(--disp);font-weight:500;font-size:19px;fill:#c9d4ea}
+  .arcs{font-family:var(--mono);font-size:12px;fill:var(--muted);letter-spacing:.06em}
+  .tok{fill:var(--gold);filter:drop-shadow(0 0 8px rgba(255,200,98,.85))}
+
+  .hub{position:absolute;left:50%;top:50%;transform:translate(-50%,-50%);width:38%;text-align:center}
+  .hub .sp{font-family:var(--mono);font-size:clamp(.56rem,1.1vw,.68rem);letter-spacing:.16em;text-transform:uppercase;color:var(--muted);margin:0 0 4px}
+  .hub .sn{font-family:var(--disp);font-weight:700;font-size:clamp(1.1rem,2.6vw,1.6rem);color:var(--ink);margin:0 0 10px;letter-spacing:-.01em}
+  .hub .gl{font-family:var(--mono);font-size:clamp(.52rem,1vw,.6rem);letter-spacing:.16em;text-transform:uppercase;color:rgba(132,150,182,.75);margin:0 0 3px}
+  .hub .gv{font-family:var(--body);font-weight:500;font-size:clamp(.74rem,1.6vw,.95rem);line-height:1.35;color:var(--good);margin:0 0 12px;min-height:2.7em}
+  .hub .gv.none{color:rgba(132,150,182,.6);font-weight:400}
+  .hub .gv.pop{animation:pop .45s}
+  .next{font-family:var(--mono);font-weight:500;font-size:clamp(.82rem,1.7vw,1rem);padding:10px 22px;border-radius:12px;cursor:pointer;
+    border:1px solid rgba(110,160,255,.55);background:rgba(110,160,255,.14);color:#dbe6ff;transition:.15s}
+  .next:hover{background:rgba(110,160,255,.26);border-color:var(--accent)}
+
+  /* the three roles */
+  .roles{display:flex;flex-direction:column;gap:12px}
+  .roles .hd{font-family:var(--mono);font-size:.62rem;letter-spacing:.16em;text-transform:uppercase;color:var(--muted);margin:0 0 2px}
+  .role{display:flex;align-items:center;gap:12px;width:100%;padding:14px;border-radius:14px;cursor:pointer;text-align:left;
+    border:1px solid rgba(255,255,255,.16);background:rgba(255,255,255,.045);color:var(--ink);font-family:var(--disp);font-weight:500;font-size:.98rem;
+    transition:border-color .3s,box-shadow .3s,background .3s}
+  .role:hover{border-color:rgba(110,160,255,.6)}
+  .role.act{border-color:rgba(110,160,255,.85);background:rgba(110,160,255,.1);box-shadow:0 0 26px -8px rgba(110,160,255,.8)}
+  .role i{font-style:normal;flex:0 0 40px;height:40px;border-radius:999px;display:flex;align-items:center;justify-content:center;
+    font-family:var(--mono);font-size:.78rem;color:#bcd0ff;background:rgba(110,160,255,.14);border:1px solid rgba(110,160,255,.45)}
+  .rolewrap{display:flex;flex-direction:column;gap:8px}
+  @media (max-width:820px){.rolewrap{flex-direction:row}.role{padding:10px 6px;gap:6px;font-size:.82rem}}
+
+  /* the one sentence */
+  .caption{display:flex;gap:14px;align-items:flex-start;margin:18px 2px 0;padding-top:16px;border-top:1px solid var(--line)}
+  .caption .t{flex:1;font-size:1.05rem;line-height:1.55;color:var(--ink);padding-left:16px;border-left:3px solid var(--accent);transition:border-color .3s}
+  .caption .t .line{display:block;margin-top:6px;font-family:var(--mono);font-size:.8rem;color:#bcd0ff;opacity:.9}
+  .caption.y .t{border-left-color:var(--gold)} .caption.g .t{border-left-color:var(--good)}
+  .caption b.a{color:var(--accent)} .caption b.y{color:var(--gold)} .caption b.g{color:var(--good)}
+  .reset{font-family:var(--body);font-weight:500;font-size:.84rem;padding:8px 14px;border-radius:11px;cursor:pointer;
+    border:1px solid var(--line);background:transparent;color:var(--muted);transition:.15s;flex-shrink:0}
+  .reset:hover{border-color:var(--accent);color:var(--accent)}
+  button:focus-visible,input:focus-visible{outline:2px solid var(--accent);outline-offset:2px}
+
+  @keyframes pop{from{transform:scale(.6);opacity:0}to{transform:scale(1);opacity:1}}
+  .take{margin-top:22px;background:linear-gradient(180deg,rgba(110,160,255,.08),rgba(139,123,255,.04));
+    border:1px solid var(--line);border-left:3px solid var(--accent);border-radius:12px;padding:16px 18px}
+  .take .tk{font-family:var(--mono);font-size:.66rem;letter-spacing:.14em;text-transform:uppercase;color:var(--accent);margin:0 0 8px}
+  .take p{margin:0;font-size:.95rem;color:var(--ink);line-height:1.55}
+  .take b{color:#fff}
+  @media (prefers-reduced-motion:reduce){*{animation-duration:.01ms!important;transition-duration:.01ms!important}#amb{display:none}}
+</style>
+</head>
+<body>
+<a class="back" href="../index.html#12-scrum-cycle">&#8592; Week 3 index</a>
+<canvas id="amb"></canvas>
+<div class="wrap">
+  <p class="tag">Workbook 3b &middot; Section 1-1</p>
+  <h1>The Scrum Cycle</h1>
+  <p class="lede"><b>One sprint is one lap. Press Next to move through it, tap a role to meet it.</b></p>
+
+  <div class="stage">
+    <div class="board">
+      <div class="cycle">
+        <svg id="svg" viewBox="-120 -20 760 560" role="img" aria-label="One sprint drawn as a circle: sprint planning, ten daily standups, sprint review, retrospective, back to planning">
+          <circle class="ring" cx="260" cy="260" r="200"></circle>
+          <circle class="prog" id="prog" cx="260" cy="260" r="200" transform="rotate(-90 260 260)"></circle>
+          <g id="marks"></g>
+          <circle class="tok" id="tok" r="13" cx="260" cy="60"></circle>
+        </svg>
+        <div class="hub">
+          <p class="sp">2 weeks &middot; 10 working days</p>
+          <p class="sn" id="sn">Sprint 1</p>
+          <p class="gl">sprint goal</p>
+          <p class="gv none" id="gv">not set yet</p>
+          <button class="next" id="bNext">Next &rarr;</button>
+        </div>
+      </div>
+      <div class="roles">
+        <p class="hd">the scrum team</p>
+        <div class="rolewrap" id="roles">
+          <button class="role" data-r="po"><i>PO</i>Product owner</button>
+          <button class="role" data-r="sm"><i>SM</i>Scrum master</button>
+          <button class="role" data-r="dt"><i>DT</i>Development team</button>
+        </div>
+      </div>
+    </div>
+    <div class="caption" id="caption">
+      <div class="t" id="status">This circle is <b class="a">one sprint</b>. The token waits at sprint planning, and no goal is set yet.</div>
+      <button class="reset" id="bReset">Reset</button>
+    </div>
+  </div>
+
+  <div class="take">
+    <p class="tk">The one idea</p>
+    <p><b>A sprint is a short fixed loop, often 2 to 3 weeks.</b> Plan a goal, build it with a daily standup, show working
+    software to the customer, reflect on how it went, then start the next sprint with what you learned.</p>
+  </div>
+  <div id="rail"></div>
+</div>
+<script>
+(function(){
+  "use strict";
+  var $=function(s){return document.querySelector(s);};
+  var reduce=matchMedia("(prefers-reduced-motion: reduce)").matches;
+  var NS="http://www.w3.org/2000/svg", CX=260, CY=260, R=200, C=2*Math.PI*R;
+  var GOALS=["Riders see when the next bus reaches their stop",
+             "Riders get an alert when their bus is 5 minutes away",
+             "Riders save their favorite stops"];
+  var QS=["What did you accomplish yesterday?","What do you plan to accomplish today?","Where are your blockers?"];
+  var RETRO=[["Start","writing the sprint goal where everyone can see it."],
+             ["Stop","waiting for the next standup to raise a blocker."],
+             ["Continue","showing the customer something that works, every sprint."]];
+  /* stations clockwise from the top: planning, 10 standups, review, retrospective */
+  var ST=[{k:"plan",a:-90,lab:"Sprint planning"}];
+  for(var d=0;d<10;d++) ST.push({k:"day",a:-54+20*d,day:d+1});
+  ST.push({k:"review",a:162,lab:"Sprint review"});
+  ST.push({k:"retro",a:216,lab:"Retrospective"});
+
+  var step=-1, sprint=1, angle=-90, anim=0, roleOn=null;
+  var status=$("#status"), caption=$("#caption"), tok=$("#tok"), prog=$("#prog"), gv=$("#gv");
+
+  function pt(a,r){ var t=a*Math.PI/180; return {x:CX+r*Math.cos(t), y:CY+r*Math.sin(t)}; }
+  function el(tag,attrs,txt){ var e=document.createElementNS(NS,tag); for(var k in attrs) e.setAttribute(k,attrs[k]); if(txt) e.textContent=txt; return e; }
+  function say(html,tone){ caption.className="caption"+(tone?" "+tone:""); status.innerHTML=html; }
+  function goal(){ return GOALS[(sprint-1)%GOALS.length]; }
+
+  function build(){
+    var g=$("#marks");
+    ST.forEach(function(s,i){
+      var p=pt(s.a,R), grp=el("g",{"class":s.k==="day"?"dy":"st",id:"s"+i});
+      if(s.k==="day"){
+        grp.appendChild(el("circle",{cx:p.x,cy:p.y,r:9}));
+        var q=pt(s.a,R-26); grp.appendChild(el("text",{x:q.x,y:q.y+4,"text-anchor":"middle"},String(s.day)));
+      } else {
+        grp.appendChild(el("circle",{cx:p.x,cy:p.y,r:21}));
+        var c=Math.cos(s.a*Math.PI/180), lp=pt(s.a,R+36);
+        grp.appendChild(el("text",{x:lp.x,y:lp.y+6,"text-anchor":c>.3?"start":(c<-.3?"end":"middle")},s.lab));
+      }
+      g.appendChild(grp);
+    });
+    var lp=pt(36,R+40);
+    g.appendChild(el("text",{"class":"arcl",x:lp.x,y:lp.y,"text-anchor":"start"},"Daily standups"));
+    g.appendChild(el("text",{"class":"arcs",x:lp.x,y:lp.y+20,"text-anchor":"start"},"one per working day"));
+    var cp=pt(243,R);
+    g.appendChild(el("polygon",{"class":"chev",points:"9,0 -7,-8 -7,8",transform:"translate("+cp.x+" "+cp.y+") rotate(333)"}));
+  }
+
+  function place(a){
+    var p=pt(a,R); tok.setAttribute("cx",p.x); tok.setAttribute("cy",p.y);
+    var len=Math.max(0,(a+90)/360*C);
+    prog.setAttribute("stroke-dasharray",len+" "+C);
+  }
+  function moveTo(target,done){
+    cancelAnimationFrame(anim);
+    var from=angle;
+    if(reduce||target===from){ angle=target; place(angle); if(done) done(); return; }
+    var t0=null, dur=Math.min(900,260+(target-from)*6);
+    function f(ts){
+      if(t0===null) t0=ts;
+      var k=Math.min(1,(ts-t0)/dur), e=1-Math.pow(1-k,3);
+      angle=from+(target-from)*e; place(angle);
+      if(k<1) anim=requestAnimationFrame(f); else if(done) done();
+    }
+    anim=requestAnimationFrame(f);
+  }
+  function mark(){
+    ST.forEach(function(s,i){
+      var e=$("#s"+i); e.classList.toggle("on",i===step); e.classList.toggle("done",i<step);
+    });
+  }
+  function setGoal(){
+    gv.textContent=goal(); gv.className="gv"; void gv.offsetWidth; gv.classList.add("pop");
+    $("#sn").textContent="Sprint "+sprint;
+  }
+  function clearRole(){ roleOn=null; document.querySelectorAll(".role").forEach(function(b){ b.classList.remove("act"); }); }
+
+  function next(){
+    clearRole();
+    var lap=(step===ST.length-1);
+    if(lap){
+      sprint++; step=0;
+      moveTo(270,function(){ angle=-90; place(angle); });
+      mark(); setGoal();
+      say('One lap done, <b class="y">Sprint '+sprint+' begins</b>. Planning sets a new goal: <b class="g">'+goal()+'</b>.',"y");
+      return;
+    }
+    step++;
+    var s=ST[step];
+    moveTo(s.a); mark();
+    if(s.k==="plan"){
+      setGoal();
+      say('<b class="a">Sprint planning</b>: the team agrees on the sprint goal, <b class="g">'+goal()+'</b>, and how long the sprint lasts.',"g");
+    } else if(s.k==="day"){
+      say('Day '+s.day+' of 10, <b class="a">daily standup</b>. Each team member answers: <b>"'+QS[(s.day-1)%3]+'"</b>');
+    } else if(s.k==="review"){
+      say('<b class="g">Sprint review</b>: working software is shown to the customer, <b>'+goal().toLowerCase()+'</b>. Feedback comes back fast.',"g");
+    } else {
+      var r=RETRO[(sprint-1)%RETRO.length];
+      say('<b class="y">Retrospective</b>, Start/Stop/Continue. The team agrees: <b class="y">'+r[0]+'</b> '+r[1]+' It carries into the next sprint.',"y");
+    }
+  }
+  function role(r,btn){
+    document.querySelectorAll(".role").forEach(function(b){ b.classList.toggle("act",b===btn); }); roleOn=r;
+    if(r==="po"){
+      var set=step>=0;
+      say('The <b class="a">product owner</b> owns <b>what</b> gets built and in what order.'+(set?' This sprint, that is: <b class="g">'+goal()+'</b>.':' The sprint goal starts with them.'));
+    } else if(r==="sm"){
+      say('The <b class="a">scrum master</b> usually facilitates the daily standup. Running it is still <b>the development team\'s</b> job.');
+    } else {
+      say('The <b class="a">development team</b> builds the working software, runs the daily standup, and says out loud where it is blocked.');
+    }
+  }
+  function reset(){
+    cancelAnimationFrame(anim); clearRole();
+    step=-1; sprint=1; angle=-90; place(angle); mark();
+    $("#sn").textContent="Sprint 1"; gv.textContent="not set yet"; gv.className="gv none";
+    say('This circle is <b class="a">one sprint</b>. The token waits at sprint planning, and no goal is set yet.');
+  }
+
+  build(); place(angle);
+  $("#bNext").addEventListener("click",next);
+  $("#bReset").addEventListener("click",reset);
+  $("#roles").addEventListener("click",function(e){ var b=e.target.closest(".role"); if(b) role(b.getAttribute("data-r"),b); });
+
+  /* ambient canvas */
+  var cv=$("#amb"),ctx=cv.getContext&&cv.getContext("2d"),parts=[];
+  function sizeC(){if(!ctx)return;cv.width=innerWidth;cv.height=innerHeight;}
+  function initParts(){parts=[];for(var i=0;i<46;i++)parts.push({x:Math.random(),y:Math.random(),
+    r:Math.random()*1.6+.3,s:Math.random()*.02+.004,o:Math.random()*.4+.1});}
+  function drawC(){if(!ctx)return;ctx.clearRect(0,0,cv.width,cv.height);
+    parts.forEach(function(p){p.y-=p.s/60;if(p.y<-.02)p.y=1.02;
+      ctx.beginPath();ctx.arc(p.x*cv.width,p.y*cv.height,p.r,0,7);
+      ctx.fillStyle="rgba(140,170,255,"+p.o+")";ctx.fill();});
+    requestAnimationFrame(drawC);}
+  if(ctx&&!reduce){sizeC();initParts();drawC();addEventListener("resize",sizeC);}
+})();
+</script>
+<script src="../manifest.js"></script>
+<script src="../../assets/rail.js"></script>
+<script>Rail.render(document.getElementById("rail"),{week:3,kind:"visuals",current:"12-scrum-cycle"});</script>
+</body>
+</html>

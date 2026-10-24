@@ -1,0 +1,387 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Bug Hunter 3 | Week 3 Visual Hub</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Sora:wght@500;700&family=Inter:wght@400;500&family=JetBrains+Mono:wght@400;500&display=swap">
+<style>
+  :root{
+    --bg:#080c17; --bg2:#0c1428; --surface:rgba(255,255,255,.045); --line:rgba(255,255,255,.09);
+    --ink:#eef2fb; --muted:#8496b6; --accent:#6ea0ff; --accent2:#8b7bff; --good:#46d98a; --warn:#ff6a6a;
+    --gold:#ffc862; --disp:'Sora',system-ui,sans-serif; --body:'Inter',system-ui,sans-serif;
+    --mono:'JetBrains Mono',ui-monospace,monospace;
+  }
+  *{box-sizing:border-box}
+  body{margin:0;min-height:100vh;color:var(--ink);font-family:var(--body);
+    background:radial-gradient(1200px 700px at 70% -10%,#141d38 0%,transparent 55%),
+               radial-gradient(900px 600px at 10% 110%,#161233 0%,transparent 50%),#080c17;
+    overflow-x:hidden}
+  #amb{position:fixed;inset:0;z-index:0;pointer-events:none;opacity:.6}
+  .back{position:relative;z-index:2;display:block;max-width:1120px;margin:0 auto;padding:26px 24px 0;
+    width:100%;font-family:var(--mono);font-size:.8rem;letter-spacing:.04em;color:var(--muted);
+    text-decoration:none;transition:color .15s}
+  .back:hover{color:var(--accent)}
+  .wrap{position:relative;z-index:1;max-width:1120px;margin:0 auto;padding:22px 24px 70px}
+  .tag{font-family:var(--mono);font-size:.72rem;letter-spacing:.22em;text-transform:uppercase;color:var(--accent);margin:0 0 14px}
+  h1{font-family:var(--disp);font-weight:700;font-size:clamp(2.3rem,6vw,3.6rem);line-height:1;margin:0 0 12px;
+    letter-spacing:-.03em;background:linear-gradient(180deg,#fff,#b9c6e6);-webkit-background-clip:text;
+    background-clip:text;color:transparent}
+  .lede{color:var(--muted);max-width:64ch;font-size:1.05rem;margin:0 0 26px;line-height:1.5}
+  .lede b{color:var(--ink)}
+  .lede code,.take code,.caption code{font-family:var(--mono);font-size:.92em;color:#bcd0ff}
+
+  /* ---------- stage: picture first, one toolbar, support below ---------- */
+  .stage{position:relative;background:linear-gradient(180deg,rgba(255,255,255,.03),rgba(255,255,255,.01));
+    border:1px solid var(--line);border-radius:24px;padding:18px 18px 14px;
+    box-shadow:0 1px 0 rgba(255,255,255,.06) inset,0 30px 80px -30px rgba(0,0,0,.8)}
+  .topbar{display:flex;align-items:center;gap:10px;margin:0 0 14px;flex-wrap:wrap}
+  .topbar .lab{margin:0 4px 0 0}
+  .lab{font-family:var(--mono);font-size:.7rem;letter-spacing:.12em;text-transform:uppercase;color:var(--muted);margin:0 0 10px}
+  .chips{display:flex;flex-wrap:wrap;gap:6px}
+  .chip{font-family:var(--mono);font-size:.74rem;padding:5px 11px;border-radius:999px;cursor:pointer;
+    border:1px solid var(--line);background:rgba(0,0,0,.25);color:var(--muted);transition:.15s}
+  .chip:hover{border-color:var(--accent);color:var(--accent)}
+  .chip.on{border-color:rgba(110,160,255,.6);background:rgba(110,160,255,.14);color:var(--ink)}
+  .chip:focus-visible,.btn:focus-visible,.focus:focus-visible{outline:2px solid var(--accent);outline-offset:2px}
+  .focus{margin-left:auto;font-family:var(--mono);font-size:.68rem;letter-spacing:.1em;text-transform:uppercase;padding:6px 12px;
+    border-radius:999px;border:1px solid var(--line);background:rgba(0,0,0,.25);color:var(--muted);cursor:pointer;transition:.15s}
+  .focus:hover{border-color:var(--accent);color:var(--accent)}
+  body.solo .focus{border-color:rgba(255,200,98,.6);color:var(--gold);background:rgba(255,200,98,.1)}
+
+
+  /* ---------- game board ---------- */
+  .pic{position:relative;height:390px;border:1px solid var(--line);border-radius:18px;background:rgba(6,10,20,.5);overflow:hidden;
+    display:flex;flex-direction:column;align-items:center;justify-content:center;padding:40px 20px 24px}
+  .pic .zone{position:absolute;left:18px;top:14px;font-family:var(--mono);font-size:.62rem;letter-spacing:.14em;text-transform:uppercase;color:rgba(132,150,182,.55)}
+  .hud{position:absolute;right:18px;top:12px;display:flex;gap:14px;font-family:var(--mono);font-size:.72rem;color:var(--muted)}
+  .hud b{color:var(--ink);font-weight:500}
+  .code{width:100%;max-width:700px;border:1px solid var(--line);border-radius:14px;background:rgba(0,0,0,.3);padding:8px 0;transition:border-color .2s}
+  .code.bad{animation:shake .3s}
+  @keyframes shake{25%{transform:translateX(-6px)}75%{transform:translateX(6px)}}
+  .ln{display:flex;width:100%;align-items:baseline;gap:14px;padding:4px 16px;border:0;border-left:3px solid transparent;background:transparent;
+    color:#c9d4ea;font-family:var(--mono);font-size:.92rem;line-height:1.55;text-align:left;cursor:pointer;transition:background .15s,border-color .15s}
+  .ln:hover{background:rgba(110,160,255,.08);border-left-color:var(--accent)}
+  .ln:disabled{cursor:default}
+  .ln .no{flex-shrink:0;width:1.4em;text-align:right;color:var(--muted);font-size:.78rem}
+  .ln .src{white-space:pre;overflow:hidden;text-overflow:ellipsis}
+  .ln.hit{background:rgba(70,217,138,.12);border-left-color:var(--good)}
+  .ln.miss{background:rgba(255,106,106,.12);border-left-color:var(--warn)}
+  .ln.dim{opacity:.45}
+  .cm{color:#6b7a99;font-style:italic}
+  .kw{color:#c792ea} .ty{color:#6ea0ff} .st{color:#9ee493} .nm{color:#ffc862} .fn{color:#7fdbca}
+  .screen{position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:12px;background:rgba(6,10,20,.92);transition:opacity .25s;padding:20px}
+  .screen.off{opacity:0;pointer-events:none}
+  .screen h2{font-family:var(--disp);font-weight:700;font-size:1.6rem;margin:0;color:var(--ink)}
+  .screen p{margin:0;color:var(--muted);font-size:.95rem;text-align:center;max-width:46ch;line-height:1.5}
+  .screen .big{font-family:var(--disp);font-weight:700;font-size:2.6rem;color:var(--accent)}
+  .screen .big.gold{color:var(--gold)} .screen .big.good{color:var(--good)}
+  .bar{position:absolute;left:0;right:0;bottom:0;height:4px;background:rgba(255,255,255,.06)}
+  .bar i{display:block;height:100%;width:0;background:var(--accent);transition:width .25s}
+  .misses{font-family:var(--mono);font-size:.72rem;color:var(--muted);line-height:1.6;text-align:left;max-width:640px;max-height:130px;overflow-y:auto}
+  .misses div{margin:0 0 4px}
+  .misses b{color:var(--warn);font-weight:500;white-space:pre}
+  /* caption: the one sentence, right under the picture */
+  .caption{display:flex;gap:16px;align-items:flex-start;margin:14px 4px 0;min-height:56px}
+  .caption .n{flex-shrink:0;font-family:var(--disp);font-weight:700;font-size:1.35rem;color:var(--accent);font-variant-numeric:tabular-nums;
+    line-height:1.2;min-width:3.2rem}
+  .caption .n small{display:block;font-family:var(--mono);font-weight:400;font-size:.58rem;letter-spacing:.14em;text-transform:uppercase;color:var(--muted)}
+  .caption .t{font-size:1.02rem;line-height:1.55;color:var(--ink);padding-left:16px;border-left:3px solid var(--accent);transition:border-color .3s}
+  body.solo .caption .t{font-size:1.18rem}
+  .caption.cut .t{border-left-color:var(--warn)} .caption.left .t{border-left-color:var(--gold)} .caption.ok .t{border-left-color:var(--good)}
+  .caption b.g{color:var(--good)} .caption b.w{color:var(--warn)} .caption b.a{color:var(--accent)} .caption b.y{color:var(--gold)}
+
+  /* toolbar: same on every page */
+  .toolbar{display:flex;align-items:center;gap:10px;margin:16px 0 0;padding-top:14px;border-top:1px solid var(--line)}
+  .btn{font-family:var(--body);font-weight:500;font-size:.86rem;padding:9px 16px;border-radius:11px;cursor:pointer;
+    border:1px solid var(--line);background:var(--surface);color:var(--ink);transition:.15s}
+  .btn:hover{border-color:var(--accent);color:var(--accent)}
+  .btn.primary{border-color:rgba(110,160,255,.5);background:rgba(110,160,255,.12);padding:9px 22px}
+  .btn:disabled{opacity:.35;cursor:not-allowed}
+  .btn.ghost{background:transparent;color:var(--muted);margin-left:auto}
+  .dots{display:flex;gap:5px;align-items:center;margin:0 6px}
+  .dots i{display:block;width:8px;height:8px;border-radius:50%;background:rgba(255,255,255,.12);transition:.2s}
+  .dots i.done{background:rgba(110,160,255,.45)}
+  .dots i.now{background:var(--accent);transform:scale(1.35);box-shadow:0 0 10px rgba(110,160,255,.7)}
+  .hint{font-family:var(--mono);font-size:.68rem;color:var(--muted);margin:10px 4px 0;line-height:1.5}
+  .hint b{color:var(--accent)}
+
+  .toolbar .btn.primary{min-width:120px}
+  .take{margin-top:22px;background:linear-gradient(180deg,rgba(110,160,255,.08),rgba(139,123,255,.04));
+    border:1px solid var(--line);border-left:3px solid var(--accent);border-radius:12px;padding:16px 18px}
+  .take .tk{font-family:var(--mono);font-size:.66rem;letter-spacing:.14em;text-transform:uppercase;color:var(--accent);margin:0 0 8px}
+  .take p{margin:0;font-size:.95rem;color:var(--ink);line-height:1.55}
+  .take b{color:#fff}
+  @media (prefers-reduced-motion:reduce){*{animation-duration:.01ms!important;transition-duration:.01ms!important}#amb{display:none}}
+
+
+  /* ---------- week 3: line first, then the fix ---------- */
+  .pic{height:auto;min-height:560px;justify-content:flex-start;gap:14px;padding:46px 20px 26px}
+  .fixes{width:100%;max-width:700px;display:flex;flex-direction:column;gap:8px;transition:opacity .2s}
+  .fixes.off{opacity:0;pointer-events:none}
+  .fixes .lab{margin:2px 0 0}
+  .opt{display:flex;align-items:baseline;gap:12px;width:100%;padding:9px 14px;border-radius:12px;cursor:pointer;text-align:left;
+    border:1px solid var(--line);background:rgba(0,0,0,.25);color:#c9d4ea;font-family:var(--mono);font-size:.86rem;line-height:1.5;transition:.15s}
+  .opt:hover{border-color:var(--accent);background:rgba(110,160,255,.08)}
+  .opt:disabled{cursor:default}
+  .opt .k{flex-shrink:0;font-size:.7rem;color:var(--muted);border:1px solid var(--line);border-radius:6px;padding:0 6px}
+  .opt .c{white-space:pre-wrap;word-break:break-word}
+  .opt .why{display:none;margin-top:4px;font-family:var(--body);font-size:.8rem;color:var(--muted);white-space:normal}
+  .opt.right{border-color:rgba(70,217,138,.6);background:rgba(70,217,138,.12)}
+  .opt.wrong{border-color:rgba(255,106,106,.6);background:rgba(255,106,106,.12)}
+  .opt.dim{opacity:.5}
+  .opt.right .why,.opt.wrong .why,.opt.dim .why{display:block}
+  .opt:focus-visible{outline:2px solid var(--accent);outline-offset:2px}
+  .ln .src{white-space:pre;overflow-x:auto;text-overflow:clip}
+  @media (max-width:640px){.ln{font-size:.78rem;gap:8px;padding:4px 10px}.opt{font-size:.78rem}.pic{padding:46px 10px 24px}}
+</style>
+</head>
+<body>
+
+<a class="back" href="../index.html#bug-hunter-3">&#8592; Week 3 index</a>
+
+<canvas id="amb"></canvas>
+<div class="wrap">
+  <p class="tag">Workbook 3a &middot; all sections &middot; Game</p>
+  <h1>Bug Hunter 3</h1>
+  <p class="lede"><b>Fifteen snippets, one week 3 bug each: files, dates, lists, maps.</b> Click the line you would change, then pick the fix. One point for the line, one for the fix.</p>
+
+  <div class="stage">
+    <div class="topbar">
+      <span class="lab">Game</span>
+    </div>
+
+    <div class="pic" id="pic">
+      <span class="zone" id="zone">which line?</span>
+      <div class="hud"><span>score <b id="hScore">0</b> / 30</span></div>
+      <div class="code" id="code"></div>
+      <div class="fixes off" id="fixes">
+        <p class="lab">Pick the fix</p>
+        <div id="opts" style="display:flex;flex-direction:column;gap:8px"></div>
+      </div>
+      <div class="bar"><i id="bar"></i></div>
+      <div class="screen" id="startScr">
+        <h2>Bug Hunter 3</h2>
+        <p>A short piece of Java appears. One line is wrong: it does not compile, crashes, or does the wrong thing. If a line is missing, click the line it belongs after. Then pick the fix that repairs it.</p>
+        <button class="btn primary" id="bStart">Start</button>
+      </div>
+      <div class="screen off" id="endScr">
+        <h2>Round over</h2>
+        <div class="big" id="endScore"></div>
+        <p id="endMsg"></p>
+        <div class="misses" id="endMiss"></div>
+        <button class="btn primary" id="bAgain">Play again</button>
+      </div>
+    </div>
+
+    <div class="caption" id="caption">
+      <div class="n" id="stepno"><small>round</small>0 / 15</div>
+      <div class="t" id="status">Press <b class="a">Start</b>. Keys 1 to 9 pick a line, A B C pick a fix, Enter moves on.</div>
+    </div>
+
+    <div class="toolbar">
+      <button class="btn primary" id="bNext" disabled>Next</button>
+      <button class="btn ghost" id="bRestart">Restart</button>
+    </div>
+    <p class="hint">look for: split on a regex character &middot; a reader left open &middot; a writer that wipes the file &middot; missing parentheses &middot; a primitive in &lt;&gt; &middot; index size() &middot; == on Strings &middot; a null from get &middot; mm vs MM &middot; parse without a formatter &middot; a missing import &middot; a silent catch &middot; changing a list mid for-each</p>
+  </div>
+
+  <div class="take">
+    <p class="tk">The one idea</p>
+    <p><b>Week 3 bugs live at the edges.</b> The last index is <code>size() - 1</code>, a map answers <code>null</code> for a key it does not have, a pattern letter means one exact field (<code>MM</code> month, <code>mm</code> minute), and a file is opened, used, then closed. When something fails, let the catch block say so.</p>
+  </div>
+
+  <div id="rail"></div>
+</div>
+
+<script>
+(function(){
+  "use strict";
+  var $=function(s){return document.querySelector(s);};
+  var reduce=matchMedia("(prefers-reduced-motion: reduce)").matches;
+
+  var MAIN="inside main", IO="inside main (throws IOException)";
+  /* b = the line to click (alt = other lines that also count), x[0] = the right fix, x[1..2] = wrong fixes with why they fail */
+  var POOL=[
+    {f:IO,b:3,w:'| means "or" in a regex, so split("|") cuts between every character and parts[1] is "0". Escape it: split("\\\\|")',l:[
+      'BufferedReader reader = new BufferedReader(new FileReader("notes.txt"));','String line = reader.readLine();   // 2026-10-17|Call the dentist','String[] parts = line.split("|");','String date = parts[0];','String text = parts[1];','System.out.println(text);   // want: Call the dentist','reader.close();'],
+     x:[['String[] parts = line.split("\\\\|");','the escaped pipe is a plain | character, so parts is ["2026-10-17", "Call the dentist"]'],
+        ['String[] parts = line.split(\'|\');','does not compile: split takes a String, not a char'],
+        ['String[] parts = line.split("\\|");','does not compile: illegal escape character. Java needs two backslashes to put one in a String']]},
+    {f:IO,b:7,miss:true,w:'nothing ever closes the reader, so weather.txt stays open until the program ends. The missing line goes after line 7: reader.close();',l:[
+      'BufferedReader reader = new BufferedReader(new FileReader("weather.txt"));','String line;','int days = 0;','while ((line = reader.readLine()) != null) {','    days++;','}','System.out.println(days + " days logged");'],
+     x:[['add reader.close(); after line 7','done with the file, so release it'],
+        ['add line = null; after line 7','line is already null after the loop, and the file is still open'],
+        ['add reader.readLine(); after line 7','reads past the end (returns null) and the file is still open']]},
+    {f:IO,b:2,w:'a one-argument FileWriter empties log.txt before writing, so only today\'s line survives. Pass true to append: new FileWriter("log.txt", true)',l:[
+      '// add one line to the end of log.txt','FileWriter writer = new FileWriter("log.txt");','BufferedWriter bufWriter = new BufferedWriter(writer);','bufWriter.write("Played: Night Drive");','bufWriter.newLine();','bufWriter.close();'],
+     x:[['FileWriter writer = new FileWriter("log.txt", true);','true as the second argument appends to what is already there'],
+        ['FileWriter writer = new FileWriter("log.txt", false);','false is the default: the file is still wiped'],
+        ['FileWriter writer = new FileWriter("log.txt" + true);','one String argument, so this writes a new file named log.txttrue']]},
+    {f:IO,b:3,w:'!= runs before =, so the line tries to store a boolean in a String: incompatible types: boolean cannot be converted to String. Wrap the assignment: ((line = reader.readLine()) != null)',l:[
+      'BufferedReader reader = new BufferedReader(new FileReader("seats.txt"));','String line;','while (line = reader.readLine() != null) {','    System.out.println(line);','}','reader.close();'],
+     x:[['while ((line = reader.readLine()) != null) {','the inner parentheses assign first, then the result is compared to null'],
+        ['while (line = (reader.readLine() != null)) {','same error: the parentheses still hand a boolean to line'],
+        ['while (line == reader.readLine() != null) {','does not compile: line == ... is a boolean, and a boolean cannot be compared to null']]},
+    {f:MAIN,b:1,w:'a list holds objects, not primitives: unexpected type, required: reference, found: int. Use the wrapper class Integer',l:[
+      'ArrayList<int> scores = new ArrayList<>();','scores.add(88);','scores.add(92);','int first = scores.get(0);','System.out.println("First round: " + first);'],
+     x:[['ArrayList<Integer> scores = new ArrayList<>();','Integer is the object version of int, and Java boxes 88 and 92 for you'],
+        ['ArrayList<Int> scores = new ArrayList<>();','does not compile: cannot find symbol, there is no class Int'],
+        ['ArrayList<int[]> scores = new ArrayList<>();','compiles, but now each item is an array, so scores.add(88) does not compile']]},
+    {f:MAIN,b:5,w:'indexes run 0 to size() - 1, so get(3) on a 3-song list throws IndexOutOfBoundsException: Index 3 out of bounds for length 3',l:[
+      'ArrayList<String> playlist = new ArrayList<>();','playlist.add("Intro");','playlist.add("Rainfall");','playlist.add("Night Drive");','String lastSong = playlist.get(playlist.size());','System.out.println("Last: " + lastSong);'],
+     x:[['String lastSong = playlist.get(playlist.size() - 1);','get(2) is "Night Drive", the last song'],
+        ['String lastSong = playlist.get(playlist.length - 1);','does not compile: length is for arrays, a list uses size()'],
+        ['String lastSong = playlist.get(playlist.size() + 1);','get(4) is even further past the end: IndexOutOfBoundsException']]},
+    {f:"inside main (scanner already made)",b:5,w:'seat came from the keyboard, so it is a different object from the key "A1", and == compares objects. Nothing prints. Use key.equals(seat)',l:[
+      'HashMap<String, String> seats = new HashMap<>();','seats.put("A1", "Lina");','String seat = scanner.nextLine();   // typed: A1','for (String key : seats.keySet()) {','    if (key == seat) {','        System.out.println(key + ": " + seats.get(key));','    }','}'],
+     x:[['    if (key.equals(seat)) {','equals compares the text, so "A1" matches and Lina prints'],
+        ['    if (key = seat) {','does not compile: incompatible types: String cannot be converted to boolean'],
+        ['    if (key == seat.trim()) {','still ==, still two different objects, still false']]},
+    {f:MAIN,b:5,w:'"Omar" is not a key, so get returns null and .length() throws NullPointerException: Cannot invoke "String.length()" because the return value of "java.util.HashMap.get(Object)" is null',l:[
+      'HashMap<String, String> nicknames = new HashMap<>();','nicknames.put("Lina", "Li");','nicknames.put("Daniel", "Dan");','String name = "Omar";','int letters = nicknames.get(name).length();','System.out.println(name + ": " + letters + " letters");'],
+     x:[['check nicknames.get(name) != null before calling .length()','a missing key gives null, so test for it first and skip or use 0'],
+        ['int letters = nicknames.get("name").length();','looks up the word "name", which is not a key either: still null, still a crash'],
+        ['int letters = nicknames.get(name).size();','does not compile: a String has length(), not size()']]},
+    {f:MAIN,b:2,w:'mm is minute of the hour and a LocalDate has no time, so format throws UnsupportedTemporalTypeException: Unsupported field: MinuteOfHour. Month is MM',l:[
+      'LocalDate day = LocalDate.of(2026, 10, 17);','DateTimeFormatter fmt = DateTimeFormatter.ofPattern("mm/dd/yyyy");','String label = day.format(fmt);','System.out.println("Rain on " + label);   // want: Rain on 10/17/2026'],
+     x:[['DateTimeFormatter fmt = DateTimeFormatter.ofPattern("MM/dd/yyyy");','MM is the month: Rain on 10/17/2026'],
+        ['DateTimeFormatter fmt = DateTimeFormatter.ofPattern("MM/DD/yyyy");','DD is day of the year: Rain on 10/290/2026'],
+        ['DateTimeFormatter fmt = DateTimeFormatter.ofPattern("mm/DD/yyyy");','mm is still minutes: same UnsupportedTemporalTypeException']]},
+    {f:MAIN,b:3,w:'parse with no formatter expects yyyy-MM-dd, so it throws DateTimeParseException: Text \'10/17/2026\' could not be parsed. Pass a formatter that matches',l:[
+      'String title = "Dune";','String typed = "10/17/2026";','LocalDate due = LocalDate.parse(typed);','LocalDate late = due.plusDays(1);','System.out.println(title + " is late from " + late);'],
+     x:[['LocalDate due = LocalDate.parse(typed, DateTimeFormatter.ofPattern("MM/dd/yyyy"));','the pattern matches the text, so due is 2026-10-17'],
+        ['LocalDate due = LocalDate.parse(typed, DateTimeFormatter.ofPattern("dd/MM/yyyy"));','reads 17 as the month: DateTimeParseException'],
+        ['LocalDate due = LocalDate.of(typed);','does not compile: of wants numbers for year, month and day, not a String']]},
+    {f:"SeatChart.java",b:5,alt:[1],w:'HashMap lives in java.util and was never imported: cannot find symbol, class HashMap. Add import java.util.HashMap; at the top',l:[
+      'import java.util.ArrayList;','public class SeatChart {','    public static void main(String[] args) {','        ArrayList<String> rows = new ArrayList<>();','        HashMap<String, String> taken = new HashMap<>();','        taken.put("C3", "Nadia");','    }','}'],
+     x:[['add import java.util.HashMap; at the top','now the compiler knows which HashMap you mean'],
+        ['add import java.io.HashMap; at the top','does not compile: there is no HashMap in java.io'],
+        ['write new Hashmap<>() instead','Java is case sensitive: still cannot find symbol, and now twice']]},
+    {f:MAIN,b:5,alt:[6],w:'if playlist.txt is missing, the exception is caught and nothing prints, so the program fails in silence. Print ex.getMessage(), for example: playlist.txt (No such file or directory)',l:[
+      'try {','    BufferedReader reader = new BufferedReader(new FileReader("playlist.txt"));','    System.out.println(reader.readLine());','    reader.close();','} catch (IOException ex) {','}'],
+     x:[['add System.out.println(ex.getMessage()); inside the catch','whoever runs it sees what went wrong'],
+        ['change IOException to Exception','catches even more and still prints nothing'],
+        ['add return; inside the catch','leaves main quietly: still no message']]},
+    {f:MAIN,b:5,w:'i reaches names.size(), which is 3: the three names print, then IndexOutOfBoundsException: Index 3 out of bounds for length 3',l:[
+      'ArrayList<String> names = new ArrayList<>();','names.add("Ana");','names.add("Ben");','names.add("Cleo");','for (int i = 0; i <= names.size(); i++) {','    System.out.println(names.get(i));','}'],
+     x:[['for (int i = 0; i < names.size(); i++) {','stops at index 2, the last name'],
+        ['for (int i = 1; i <= names.size(); i++) {','skips Ana and still asks for index 3: same exception'],
+        ['for (int i = 0; i <= names.length; i++) {','does not compile: length is for arrays, a list uses size()']]},
+    {f:MAIN,b:6,alt:[5],w:'the for-each notices the list changed under it and throws ConcurrentModificationException on its next step. Walk by index from the end and remove(i)',l:[
+      'ArrayList<String> notes = new ArrayList<>();','notes.add("done: call the bank");','notes.add("buy milk");','notes.add("water plants");','for (String note : notes) {','    if (note.startsWith("done")) notes.remove(note);','}','System.out.println(notes);'],
+     x:[['loop for (int i = notes.size() - 1; i >= 0; i--) and call notes.remove(i)','removing from the end never shifts an index you still have to visit'],
+        ['call notes.remove(0) instead of notes.remove(note)','still changes the list inside the for-each: ConcurrentModificationException'],
+        ['wrap the loop in try / catch','hides the crash, and later notes are never checked']]},
+    {f:MAIN,b:2,w:'a BufferedReader wraps a Reader, not a file name: incompatible types: String cannot be converted to Reader. Give it a FileReader',l:[
+      'try {','    BufferedReader reader = new BufferedReader("poem.txt");','    String first = reader.readLine();','    System.out.println(first);','    reader.close();','} catch (IOException ex) {','    System.out.println(ex.getMessage());','}'],
+     x:[['    BufferedReader reader = new BufferedReader(new FileReader("poem.txt"));','FileReader opens the file, BufferedReader reads it line by line'],
+        ['    BufferedReader reader = new BufferedReader(new File("poem.txt"));','does not compile: incompatible types: File cannot be converted to Reader'],
+        ['    FileReader reader = new FileReader(new BufferedReader("poem.txt"));','still hands a String to BufferedReader: same error']]}
+  ];
+  var KW=/^(public|private|static|void|class|final|if|else|while|for|do|break|continue|return|new|this|null|try|catch|import|true|false)$/;
+  var TY=/^(int|long|double|float|char|boolean|String|Scanner|Integer|ArrayList|HashMap|BufferedReader|FileReader|FileWriter|BufferedWriter|File|IOException|LocalDate|DateTimeFormatter)$/;
+  var N=15, round=[], at=0, score=0, misses=[], phase="idle", lineOk=false, order=[];
+
+  function esc(s){ return s.replace(/&/g,"\u0026amp;").replace(/</g,"\u0026lt;").replace(/>/g,"\u0026gt;"); }
+  function splitComment(src){
+    var q=false;
+    for(var i=0;i<src.length-1;i++){
+      if(src[i]==='"'&&src[i-1]!=="\\") q=!q;
+      if(!q&&src[i]==="/"&&src[i+1]==="/") return [src.slice(0,i),src.slice(i)];
+    }
+    return [src,""];
+  }
+  function hl(full){
+    var parts=splitComment(full), src=parts[0];
+    var re=/("(?:[^"\\]|\\.)*"|'(?:[^'\\]|\\.)*'|\b\d[\d_]*(?:\.\d+)?[LfFdD]?\b|[A-Za-z_]\w*)/g, out="", last=0, m;
+    while((m=re.exec(src))){
+      out+=esc(src.slice(last,m.index)); var t=m[0], c="";
+      if(t[0]==='"'||t[0]==="'") c="st"; else if(/^\d/.test(t)) c="nm"; else if(KW.test(t)) c="kw"; else if(TY.test(t)) c="ty";
+      else if(/^\s*\(/.test(src.slice(re.lastIndex))) c="fn";
+      out+=c?'<span class="'+c+'">'+esc(t)+'</span>':esc(t); last=re.lastIndex;
+    }
+    out+=esc(src.slice(last));
+    return parts[1]?out+'<span class="cm">'+esc(parts[1])+'</span>':out;
+  }
+  function shuffle(a){ a=a.slice(); for(var i=a.length-1;i>0;i--){ var j=Math.floor(Math.random()*(i+1)); var t=a[i]; a[i]=a[j]; a[j]=t; } return a; }
+  function lines(){ return document.querySelectorAll(".ln"); }
+  function opts(){ return document.querySelectorAll(".opt"); }
+  function isCode(t){ return !/^(add|check|change|call|loop|wrap|write) /.test(t); }
+  function showSnip(){
+    var s=round[at]; phase="line"; lineOk=false;
+    $("#zone").textContent=s.f; $("#code").className="code";
+    $("#code").innerHTML=s.l.map(function(x,i){ return '<button class="ln" data-n="'+(i+1)+'"><span class="no">'+(i+1)+'</span><span class="src">'+hl(x)+'</span></button>'; }).join("");
+    order=shuffle([0,1,2]);
+    $("#opts").innerHTML=order.map(function(k,i){ var c=s.x[k];
+      return '<button class="opt" data-k="'+k+'" tabindex="-1"><span class="k">'+"ABC"[i]+'</span><span><span class="c">'+(isCode(c[0])?hl(c[0].trim()):esc(c[0]))+'</span><span class="why">'+esc(c[1])+'</span></span></button>'; }).join("");
+    $("#fixes").className="fixes off"; $("#bNext").disabled=true;
+    $("#caption").className="caption"; $("#status").innerHTML="One line is wrong. <b class=\"a\">Which one would you change?</b>";
+    $("#stepno").innerHTML="<small>round</small>"+(at+1)+" / "+N; $("#bar").style.width=(100*at/N)+"%";
+  }
+  function start(){
+    round=shuffle(POOL).slice(0,N); at=0; score=0; misses=[];
+    $("#hScore").textContent="0"; $("#startScr").classList.add("off"); $("#endScr").classList.add("off");
+    showSnip();
+  }
+  function goodLine(s,n){ return n===s.b||(s.alt||[]).indexOf(n)>=0; }
+  function pickLine(n){
+    if(phase!=="line") return; var s=round[at]; if(n<1||n>s.l.length) return;
+    lineOk=goodLine(s,n); phase="fix";
+    Array.prototype.forEach.call(lines(),function(b){ var k=+b.getAttribute("data-n"); b.disabled=true;
+      b.classList.add(k===(lineOk?n:s.b)?"hit":k===n?"miss":"dim"); });
+    if(lineOk){ score++; $("#hScore").textContent=String(score); $("#caption").className="caption ok";
+      $("#status").innerHTML='<b class="g">Right line.</b> '+(s.miss?'Something is missing after it. ':'')+'Now <b class="a">pick the fix</b> (A, B or C).'; }
+    else { $("#code").className="code bad"; $("#caption").className="caption cut";
+      $("#status").innerHTML='<b class="w">Line '+n+'</b> is fine. The bug is '+(s.miss?'right after':'on')+' <b class="g">line '+s.b+'</b>. Now <b class="a">pick the fix</b> (A, B or C).'; }
+    $("#fixes").className="fixes";
+    Array.prototype.forEach.call(opts(),function(o){ o.removeAttribute("tabindex"); });
+  }
+  function pickFix(i){
+    if(phase!=="fix") return; var s=round[at], btns=opts(); if(i<0||i>2) return;
+    phase="done"; var k=+btns[i].getAttribute("data-k"), ok=k===0;
+    Array.prototype.forEach.call(btns,function(b,j){ var kk=+b.getAttribute("data-k"); b.disabled=true;
+      b.classList.add(kk===0?"right":j===i?"wrong":"dim"); });
+    if(ok){ score++; $("#hScore").textContent=String(score); }
+    if(!ok||!lineOk) misses.push(s);
+    $("#caption").className="caption "+(ok&&lineOk?"ok":ok||lineOk?"left":"cut");
+    $("#status").innerHTML=(ok?'<b class="g">Right fix.</b> ':'<b class="w">Not that one.</b> ')+esc(s.w)+'.';
+    $("#bNext").disabled=false; $("#bNext").textContent=at+1>=N?"See score":"Next"; $("#bNext").focus();
+  }
+  function next(){ if(phase!=="done") return; at++; if(at>=N) end(); else showSnip(); }
+  function end(){
+    phase="idle"; $("#bar").style.width="100%"; $("#bNext").disabled=true; $("#bNext").textContent="Next";
+    var max=2*N;
+    $("#endScore").textContent=score+" / "+max; $("#endScore").className="big "+(score===max?"good":score>=22?"":"gold");
+    $("#endMsg").textContent=score===max?"Perfect: every line, every fix.":score>=22?"Solid. Read the misses below.":"Keep going. Read the misses below, then play again.";
+    $("#endMiss").innerHTML=misses.map(function(s){ return '<div><b>'+esc(splitComment(s.l[s.b-1])[0].trim())+'</b> '+esc(s.w)+'</div>'; }).join("");
+    $("#endScr").classList.remove("off");
+    $("#stepno").innerHTML="<small>round</small>"+N+" / "+N; $("#caption").className="caption"; $("#status").innerHTML="Round over. <b class=\"a\">Play again</b> shuffles the fifteen snippets.";
+  }
+  $("#code").addEventListener("click",function(e){ var b=e.target.closest(".ln"); if(b) pickLine(+b.getAttribute("data-n")); });
+  $("#opts").addEventListener("click",function(e){ var b=e.target.closest(".opt"); if(b) pickFix(Array.prototype.indexOf.call(opts(),b)); });
+  $("#bStart").addEventListener("click",start); $("#bAgain").addEventListener("click",start);
+  $("#bRestart").addEventListener("click",start); $("#bNext").addEventListener("click",next);
+  document.addEventListener("keydown",function(e){ if(/INPUT|TEXTAREA/.test(e.target.tagName)) return;
+    var playing=$("#startScr").classList.contains("off")&&$("#endScr").classList.contains("off");
+    if(!playing){ if(e.code==="Space"||e.key==="Enter"){ e.preventDefault(); start(); } return; }
+    var k=parseInt(e.key,10);
+    if(phase==="line"&&k>=1&&k<=9) pickLine(k);
+    else if(phase==="fix"){ var i="abc".indexOf(e.key.toLowerCase()); if(i>=0&&e.key.length===1) pickFix(i); }
+    else if(phase==="done"&&(e.key==="Enter"||e.code==="Space")){ e.preventDefault(); next(); } });
+
+  var cv=$("#amb"),ctx=cv.getContext&&cv.getContext("2d"),parts=[];
+  function sizeC(){if(!ctx)return;cv.width=innerWidth;cv.height=innerHeight;}
+  function initParts(){parts=[];for(var i=0;i<46;i++)parts.push({x:Math.random(),y:Math.random(),r:Math.random()*1.6+.3,s:Math.random()*.02+.004,o:Math.random()*.4+.1});}
+  function drawC(){if(!ctx)return;ctx.clearRect(0,0,cv.width,cv.height);
+    parts.forEach(function(p){p.y-=p.s/60;if(p.y<-.02)p.y=1.02;ctx.beginPath();ctx.arc(p.x*cv.width,p.y*cv.height,p.r,0,7);
+      ctx.fillStyle="rgba(140,170,255,"+p.o+")";ctx.fill();});requestAnimationFrame(drawC);}
+  if(ctx&&!reduce){sizeC();initParts();drawC();addEventListener("resize",sizeC);}
+})();
+</script>
+<script src="../manifest.js"></script>
+<script src="../../assets/rail.js"></script>
+<script>Rail.render(document.getElementById("rail"),{week:3,kind:"games",current:"bug-hunter-3"});</script>
+</body>
+</html>

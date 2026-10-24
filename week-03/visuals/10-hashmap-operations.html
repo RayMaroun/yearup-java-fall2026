@@ -1,0 +1,313 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>HashMap Operations | Week 3 Visual Hub</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Sora:wght@500;700&family=Inter:wght@400;500&family=JetBrains+Mono:wght@400;500&display=swap">
+<style>
+  :root{
+    --bg:#080c17; --bg2:#0c1428; --surface:rgba(255,255,255,.045); --line:rgba(255,255,255,.09);
+    --ink:#eef2fb; --muted:#8496b6; --accent:#6ea0ff; --accent2:#8b7bff; --good:#46d98a; --warn:#ff6a6a;
+    --gold:#ffc862; --disp:'Sora',system-ui,sans-serif; --body:'Inter',system-ui,sans-serif;
+    --mono:'JetBrains Mono',ui-monospace,monospace;
+  }
+  *{box-sizing:border-box}
+  body{margin:0;min-height:100vh;color:var(--ink);font-family:var(--body);
+    background:radial-gradient(1200px 700px at 70% -10%,#141d38 0%,transparent 55%),
+               radial-gradient(900px 600px at 10% 110%,#161233 0%,transparent 50%),#080c17;
+    overflow-x:hidden}
+  #amb{position:fixed;inset:0;z-index:0;pointer-events:none;opacity:.6}
+  .back{position:relative;z-index:2;display:block;max-width:1120px;margin:0 auto;padding:26px 24px 0;
+    width:100%;font-family:var(--mono);font-size:.8rem;letter-spacing:.04em;color:var(--muted);
+    text-decoration:none;transition:color .15s}
+  .back:hover{color:var(--accent)}
+  .wrap{position:relative;z-index:1;max-width:1120px;margin:0 auto;padding:22px 24px 70px}
+  .tag{font-family:var(--mono);font-size:.72rem;letter-spacing:.22em;text-transform:uppercase;color:var(--accent);margin:0 0 14px}
+  h1{font-family:var(--disp);font-weight:700;font-size:clamp(2.3rem,6vw,3.6rem);line-height:1;margin:0 0 12px;
+    letter-spacing:-.03em;background:linear-gradient(180deg,#fff,#b9c6e6);-webkit-background-clip:text;
+    background-clip:text;color:transparent}
+  .lede{color:var(--muted);max-width:64ch;font-size:1.05rem;margin:0 0 26px;line-height:1.5}
+  .lede b{color:var(--ink)}
+  code{font-family:var(--mono);font-size:.92em;color:#bcd0ff}
+
+  /* ---------- the stage IS the picture ---------- */
+  .stage{position:relative;background:linear-gradient(180deg,rgba(255,255,255,.03),rgba(255,255,255,.01));
+    border:1px solid var(--line);border-radius:24px;padding:22px;
+    box-shadow:0 1px 0 rgba(255,255,255,.06) inset,0 30px 80px -30px rgba(0,0,0,.8)}
+
+  /* the map card */
+  .map{border:2px solid rgba(110,160,255,.35);background:rgba(110,160,255,.04);border-radius:18px;padding:16px 18px 18px}
+  .hd{font-family:var(--mono);font-size:.62rem;letter-spacing:.16em;text-transform:uppercase;color:var(--muted);margin:0 0 4px}
+  .who{font-family:var(--mono);font-weight:500;font-size:1.05rem;margin:0 0 14px;color:#bcd0ff}
+  .who i{font-style:normal;color:#82aaff}
+
+  /* tools on the map */
+  .tools{display:flex;flex-wrap:wrap;gap:10px;padding-bottom:16px;margin-bottom:16px;border-bottom:1px solid var(--line)}
+  .op{display:flex;align-items:center;gap:6px;padding:6px;border-radius:12px;border:1px solid var(--line);background:rgba(0,0,0,.22)}
+  .op input{font-family:var(--mono);font-size:.84rem;padding:8px 9px;border-radius:9px;border:1px solid var(--line);
+    background:rgba(0,0,0,.3);color:var(--ink);outline:none;transition:border-color .15s}
+  .op input:focus{border-color:var(--accent)}
+  .op input.id{width:58px;text-align:center} .op input.nm{width:110px}
+  .op input.miss{border-color:var(--warn);color:var(--warn)}
+  .op button,.walk{font-family:var(--mono);font-size:.8rem;padding:9px 12px;border-radius:9px;cursor:pointer;
+    border:1px solid var(--line);background:rgba(0,0,0,.25);color:#ffcb6b;transition:.15s;white-space:nowrap}
+  .op button:hover,.walk:hover{border-color:var(--gold);background:rgba(255,200,98,.1)}
+  .op button:disabled{opacity:.35;cursor:not-allowed}
+  .walks{display:flex;gap:8px;margin-left:auto}
+  .walk.on{border-color:var(--gold);background:rgba(255,200,98,.14)}
+
+  /* the shelf */
+  .shelf{display:grid;grid-template-columns:repeat(auto-fill,minmax(150px,1fr));gap:14px;min-height:250px;align-content:start}
+  .empty{grid-column:1/-1;display:flex;align-items:center;justify-content:center;min-height:240px;font-family:var(--mono);font-size:.82rem;
+    color:var(--muted);border:1px dashed rgba(255,255,255,.08);border-radius:16px}
+  .pair{display:flex;flex-direction:column;align-items:center;transition:opacity .4s,transform .45s cubic-bezier(.2,.9,.3,1)}
+  .pair.in{opacity:0;transform:translateY(-24px) scale(.9)}
+  .pair.gone{opacity:0;transform:scale(.8)}
+  .key{position:relative;min-width:84px;padding:8px 14px 8px 26px;border-radius:10px 10px 10px 10px;text-align:center;
+    border:1px solid rgba(110,160,255,.55);background:rgba(110,160,255,.12);transition:box-shadow .3s,border-color .3s,background .3s}
+  .key::before{content:"";position:absolute;left:10px;top:50%;width:8px;height:8px;margin-top:-4px;border-radius:50%;
+    border:1.5px solid rgba(110,160,255,.7);background:var(--bg)}
+  .key small{display:block;font-family:var(--mono);font-size:.54rem;letter-spacing:.14em;text-transform:uppercase;color:var(--muted)}
+  .key b{font-family:var(--disp);font-size:1.45rem;font-weight:700;color:#bcd0ff;font-variant-numeric:tabular-nums}
+  .key.lit{border-color:var(--gold);background:rgba(255,200,98,.16);box-shadow:0 0 26px -6px rgba(255,200,98,.8)}
+  .key.lit b{color:var(--gold)}
+  .string{width:2px;height:18px;background:rgba(110,160,255,.45)}
+  .slotc{position:relative;width:100%;min-height:118px}
+  .card{position:absolute;inset:0 0 auto 0;padding:10px 11px;border-radius:14px;border:1px solid rgba(255,255,255,.18);
+    background:rgba(255,255,255,.045);transition:opacity .45s,transform .5s cubic-bezier(.2,.9,.3,1),border-color .3s,box-shadow .3s}
+  .card.in{opacity:0;transform:translateY(-18px)}
+  .card.out{opacity:0;transform:translateY(46px) rotate(4deg)}
+  .card.out .row .v{text-decoration:line-through}
+  .card .ch{font-family:var(--mono);font-size:.54rem;letter-spacing:.14em;text-transform:uppercase;color:var(--muted);margin:0 0 6px}
+  .row{display:flex;justify-content:space-between;gap:8px;font-family:var(--mono);font-size:.74rem;padding:3px 2px}
+  .row .f{color:#c9d4ea} .row .v{color:#f78c6c;font-variant-numeric:tabular-nums;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+  .row .v.s{color:#c3e88d}
+  .card.lit{border-color:var(--gold);box-shadow:0 0 26px -6px rgba(255,200,98,.8);background:rgba(255,200,98,.07)}
+  .card.read{border-color:rgba(110,160,255,.75);box-shadow:0 0 22px -8px rgba(110,160,255,.8)}
+  .card.fresh{border-color:rgba(70,217,138,.7);box-shadow:0 0 22px -8px rgba(70,217,138,.8)}
+  .order{margin:14px 0 0;font-family:var(--mono);font-size:.7rem;color:var(--muted)}
+
+  /* the one sentence */
+  .caption{display:flex;gap:14px;align-items:flex-start;margin:18px 2px 0;padding-top:16px;border-top:1px solid var(--line)}
+  .caption .t{flex:1;font-size:1.05rem;line-height:1.55;color:var(--ink);padding-left:16px;border-left:3px solid var(--accent);transition:border-color .3s;min-width:0;overflow-wrap:anywhere}
+  .caption .t .line{display:block;margin-top:6px;font-family:var(--mono);font-size:.8rem;color:#bcd0ff;opacity:.9}
+  .caption.y .t{border-left-color:var(--gold)} .caption.g .t{border-left-color:var(--good)} .caption.w .t{border-left-color:var(--warn)}
+  .caption.w .t .line{color:#ffb0b0}
+  .caption b.a{color:var(--accent)} .caption b.y{color:var(--gold)} .caption b.g{color:var(--good)} .caption b.w{color:var(--warn)}
+  .reset{font-family:var(--body);font-weight:500;font-size:.84rem;padding:8px 14px;border-radius:11px;cursor:pointer;
+    border:1px solid var(--line);background:transparent;color:var(--muted);transition:.15s;flex-shrink:0}
+  .reset:hover{border-color:var(--accent);color:var(--accent)}
+  button:focus-visible,input:focus-visible{outline:2px solid var(--accent);outline-offset:2px}
+
+  .take{margin-top:22px;background:linear-gradient(180deg,rgba(110,160,255,.08),rgba(139,123,255,.04));
+    border:1px solid var(--line);border-left:3px solid var(--accent);border-radius:12px;padding:16px 18px}
+  .take .tk{font-family:var(--mono);font-size:.66rem;letter-spacing:.14em;text-transform:uppercase;color:var(--accent);margin:0 0 8px}
+  .take p{margin:0;font-size:.95rem;color:var(--ink);line-height:1.55}
+  .take b{color:#fff}
+  @media (max-width:820px){.walks{margin-left:0}.shelf{grid-template-columns:repeat(auto-fill,minmax(130px,1fr))}}
+  @media (max-width:520px){.stage{padding:14px}.map{padding:12px}.op{flex-wrap:wrap}.op input.nm{width:90px}
+    .shelf{grid-template-columns:repeat(2,minmax(0,1fr));gap:10px}.caption{flex-direction:column}}
+  @media (prefers-reduced-motion:reduce){*{animation-duration:.01ms!important;transition-duration:.01ms!important}#amb{display:none}}
+</style>
+</head>
+<body>
+<a class="back" href="../index.html#10-hashmap-operations">&#8592; Week 3 index</a>
+<canvas id="amb"></canvas>
+<div class="wrap">
+  <p class="tag">Workbook 3a &middot; Section 4-1</p>
+  <h1>HashMap Operations</h1>
+  <p class="lede"><b>Put, replace, remove, then walk the map two ways. Use the buttons on the map.</b></p>
+
+  <div class="stage">
+    <div class="map">
+      <p class="hd">the map &middot; a key tag on top, its value under it</p>
+      <p class="who"><i>HashMap&lt;Integer, Product&gt;</i> idsAndProducts</p>
+      <div class="tools">
+        <div class="op">
+          <input class="id" id="inPutId" value="17" inputmode="numeric" maxlength="3" aria-label="id to put" placeholder="id">
+          <input class="nm" id="inPutName" value="Onion" maxlength="12" aria-label="product name" placeholder="name">
+          <button id="bPut">.put(id, product)</button>
+        </div>
+        <div class="op">
+          <input class="id" id="inRemId" value="1" inputmode="numeric" maxlength="3" aria-label="id to remove" placeholder="id">
+          <button id="bRem">.remove(id)</button>
+        </div>
+        <div class="walks">
+          <button class="walk" id="bVals">.values()</button>
+          <button class="walk" id="bKeys">.keySet()</button>
+        </div>
+      </div>
+      <div class="shelf" id="shelf"><div class="empty" id="empty" style="display:none">The map is empty.</div></div>
+      <p class="order">Drawn in the order Java walks the map, which is not the order you added.</p>
+    </div>
+    <div class="caption" id="caption">
+      <div class="t" id="status">Two pairs: key <b class="a">1</b> holds the Potato card, key <b class="a">2</b> the Tomato card. A tag is a key, a card is its value.</div>
+      <button class="reset" id="bReset">Reset</button>
+    </div>
+  </div>
+
+  <div class="take">
+    <p class="tk">The one idea</p>
+    <p><b>put adds a pair, or replaces the value when the key is already there, because keys are unique.</b> remove takes a pair out
+    by its key. <code>values()</code> and <code>keySet()</code> are the two ways to walk the whole map.</p>
+  </div>
+  <div id="rail"></div>
+</div>
+<script>
+(function(){
+  "use strict";
+  var $=function(s){return document.querySelector(s);};
+  var reduce=matchMedia("(prefers-reduced-motion: reduce)").matches;
+  var MAX=8, PRICE=100;
+  var shelf=$("#shelf"),emptyEl=$("#empty"),status=$("#status"),caption=$("#caption");
+  var entries=[], seq=0, walk=null;
+  var NEXT=[[17,"Onion"],[2,"Carrot"],[5,"Pepper"],[33,"Garlic"],[9,"Lettuce"],[4,"Celery"],[12,"Leek"],[7,"Radish"]], nextI=0;
+
+  function say(html,tone,line){
+    caption.className="caption"+(tone?" "+tone:"");
+    status.innerHTML=html+(line?'<span class="line">'+line+'</span>':"");
+  }
+  function esc(s){return String(s).replace(/[&<>"]/g,function(c){return {"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c];});}
+  function priceStr(p){return p.toFixed(1);}
+  function toStr(e){return "Product{productID="+e.k+", productName='"+esc(e.name)+"', price="+priceStr(e.price)+"}";}
+
+  /* Java's HashMap with Integer keys under 65536 and fewer than 13 entries: 16 buckets,
+     bucket = key % 16, walked bucket by bucket, insertion order inside a bucket. */
+  function bucket(k){return k&15;}
+  function sortEntries(){entries.sort(function(a,b){return bucket(a.k)-bucket(b.k)||a.seq-b.seq;});}
+  function find(k){for(var i=0;i<entries.length;i++) if(entries[i].k===k) return i; return -1;}
+  function pairEl(k){return document.getElementById("p"+k);}
+
+  function cardHTML(e){
+    return '<p class="ch">Product</p>'
+      +'<div class="row"><span class="f">productID</span><span class="v">'+e.k+'</span></div>'
+      +'<div class="row"><span class="f">productName</span><span class="v s">"'+esc(e.name)+'"</span></div>'
+      +'<div class="row"><span class="f">price</span><span class="v">'+priceStr(e.price)+'</span></div>';
+  }
+  function makeCard(e){var c=document.createElement("div");c.className="card";c.innerHTML=cardHTML(e);return c;}
+  function makePair(e){
+    var p=document.createElement("div"); p.className="pair"; p.id="p"+e.k;
+    p.innerHTML='<div class="key"><small>key</small><b>'+e.k+'</b></div><div class="string"></div><div class="slotc"></div>';
+    p.querySelector(".slotc").appendChild(makeCard(e));
+    return p;
+  }
+  function placeAll(){
+    entries.forEach(function(e){ var el=pairEl(e.k); if(el) shelf.appendChild(el); });
+    emptyEl.style.display=entries.length?"none":"";
+    $("#bPut").disabled=false;
+  }
+  function clearLit(){
+    shelf.querySelectorAll(".lit,.read,.fresh").forEach(function(x){x.classList.remove("lit","read","fresh");});
+    $("#bVals").classList.remove("on"); $("#bKeys").classList.remove("on");
+    $("#inRemId").classList.remove("miss");
+  }
+  function readId(inp,def){var n=parseInt(inp.value,10); if(isNaN(n)||n<0||n>999){n=def;inp.value=def;} return n;}
+
+  function put(){
+    walk=null; clearLit();
+    var k=readId($("#inPutId"),17), name=$("#inPutName").value.trim().replace(/[^A-Za-z0-9 ]/g,"")||"Onion";
+    var i=find(k), line='idsAndProducts.put('+k+', new Product('+k+', "'+esc(name)+'", '+PRICE+'));';
+    if(i>=0){
+      var e=entries[i], oldName=e.name, slot=pairEl(k).querySelector(".slotc"), old=slot.querySelector(".card:not(.out)");
+      e.name=name; e.price=PRICE;
+      var c=makeCard(e); c.classList.add("in","fresh"); slot.appendChild(c);
+      old.classList.add("out");
+      setTimeout(function(){ if(old.parentNode) old.remove(); },reduce?0:500);
+      requestAnimationFrame(function(){requestAnimationFrame(function(){c.classList.remove("in");});});
+      say('Key <b class="y">'+k+'</b> was already there. Keys are unique, so put <b class="y">replaced the value</b>: '
+        +esc(oldName)+' is gone, '+esc(name)+' now sits under tag '+k+'.',"y",line);
+    } else {
+      if(entries.length>=MAX){ say('This shelf holds '+MAX+' pairs. Remove one first.',"",""); return; }
+      var ne={k:k,name:name,price:PRICE,seq:seq++};
+      entries.push(ne); sortEntries();
+      var p=makePair(ne); p.classList.add("in"); p.querySelector(".card").classList.add("fresh");
+      shelf.appendChild(p); placeAll();
+      requestAnimationFrame(function(){requestAnimationFrame(function(){p.classList.remove("in");});});
+      var pos=find(k), where='';
+      if(pos===0&&entries.length>1) where=' It landed first, not at the end: the map keeps its own order.';
+      else if(pos>0&&pos<entries.length-1) where=' It landed after key '+entries[pos-1].k+', not at the end: the map keeps its own order.';
+      say('New key <b class="g">'+k+'</b>, so put <b class="g">added a pair</b>: a tag and its '+esc(name)+' card.'+where,"g",line);
+    }
+    nextI++; var nx=NEXT[nextI%NEXT.length]; $("#inPutId").value=nx[0]; $("#inPutName").value=nx[1];
+  }
+
+  function remove(){
+    walk=null; clearLit();
+    var inp=$("#inRemId"), k=readId(inp,1), i=find(k), line='idsAndProducts.remove('+k+');';
+    if(i<0){
+      inp.classList.add("miss");
+      say('There is no key <b class="w">'+k+'</b>. remove did nothing and <b class="w">returned null</b>. No exception.',"w",line);
+      return;
+    }
+    var e=entries[i], el=pairEl(k);
+    entries.splice(i,1);
+    el.id=""; el.classList.add("gone");
+    setTimeout(function(){ if(el.parentNode) el.remove(); placeAll(); },reduce?0:420);
+    say('remove('+k+') took <b class="y">tag '+k+' and its '+esc(e.name)+' card</b> out of the map together.',"y",line);
+    if(entries.length){ inp.value=entries[0].k; }
+  }
+
+  function step(kind){
+    var btn=kind==="values"?$("#bVals"):$("#bKeys");
+    clearLit();
+    if(!entries.length){ walk=null; say('The map is empty, so the loop runs <b class="a">zero times</b>.',"",kind==="values"?'for (Product product : idsAndProducts.values())':'for (Integer key : idsAndProducts.keySet())'); return; }
+    if(!walk||walk.kind!==kind) walk={kind:kind,i:0}; else walk.i++;
+    if(walk.i>=entries.length){
+      var n=entries.length; walk=null;
+      say('The loop is done: <b class="a">'+n+' pass'+(n>1?'es':'')+'</b>, one per pair, in the map\'s own order. Press again to walk it again.',"",
+        kind==="values"?'for (Product product : idsAndProducts.values())':'for (Integer key : idsAndProducts.keySet())');
+      return;
+    }
+    btn.classList.add("on");
+    var e=entries[walk.i], p=pairEl(e.k), total=entries.length, pass='Pass '+(walk.i+1)+' of '+total+': ';
+    if(kind==="values"){
+      p.querySelector(".card").classList.add("lit");
+      say(pass+'<code>product</code> is the '+esc(e.name)+' card. The loop sees <b class="y">only the values</b>, never the tags. It prints <code>'+toStr(e)+'</code>',
+        "y",'System.out.println(product);');
+    } else {
+      p.querySelector(".key").classList.add("lit"); p.querySelector(".card").classList.add("read");
+      say(pass+'<code>key</code> is <b class="y">'+e.k+'</b>, then get('+e.k+') fetches its card. It prints <code>'+e.k+': '+toStr(e)+'</code>',
+        "y",'System.out.println(key + ": " + idsAndProducts.get(key));');
+    }
+  }
+
+  function reset(){
+    walk=null; entries=[]; seq=0; nextI=0;
+    shelf.querySelectorAll(".pair").forEach(function(x){x.remove();});
+    [{k:1,name:"Potato",price:123},{k:2,name:"Tomato",price:456}].forEach(function(e){ e.seq=seq++; entries.push(e); shelf.appendChild(makePair(e)); });
+    sortEntries(); placeAll(); clearLit();
+    $("#inPutId").value=NEXT[0][0]; $("#inPutName").value=NEXT[0][1]; $("#inRemId").value=1;
+    say('Two pairs: key <b class="a">1</b> holds the Potato card, key <b class="a">2</b> the Tomato card. A tag is a key, a card is its value.');
+  }
+
+  $("#bPut").addEventListener("click",put);
+  $("#bRem").addEventListener("click",remove);
+  $("#bVals").addEventListener("click",function(){step("values");});
+  $("#bKeys").addEventListener("click",function(){step("keys");});
+  $("#bReset").addEventListener("click",reset);
+  $("#inPutId").addEventListener("keydown",function(e){ if(e.key==="Enter") put(); });
+  $("#inPutName").addEventListener("keydown",function(e){ if(e.key==="Enter") put(); });
+  $("#inRemId").addEventListener("keydown",function(e){ if(e.key==="Enter") remove(); });
+  $("#inRemId").addEventListener("input",function(){ this.classList.remove("miss"); });
+  reset();
+
+  /* ambient canvas */
+  var cv=$("#amb"),ctx=cv.getContext&&cv.getContext("2d"),parts=[];
+  function sizeC(){if(!ctx)return;cv.width=innerWidth;cv.height=innerHeight;}
+  function initParts(){parts=[];for(var i=0;i<46;i++)parts.push({x:Math.random(),y:Math.random(),
+    r:Math.random()*1.6+.3,s:Math.random()*.02+.004,o:Math.random()*.4+.1});}
+  function drawC(){if(!ctx)return;ctx.clearRect(0,0,cv.width,cv.height);
+    parts.forEach(function(p){p.y-=p.s/60;if(p.y<-.02)p.y=1.02;
+      ctx.beginPath();ctx.arc(p.x*cv.width,p.y*cv.height,p.r,0,7);
+      ctx.fillStyle="rgba(140,170,255,"+p.o+")";ctx.fill();});
+    requestAnimationFrame(drawC);}
+  if(ctx&&!reduce){sizeC();initParts();drawC();addEventListener("resize",sizeC);}
+})();
+</script>
+<script src="../manifest.js"></script>
+<script src="../../assets/rail.js"></script>
+<script>Rail.render(document.getElementById("rail"),{week:3,kind:"visuals",current:"10-hashmap-operations"});</script>
+</body>
+</html>

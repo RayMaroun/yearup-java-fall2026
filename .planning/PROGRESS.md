@@ -37,3 +37,8 @@
 
 ## 2026-10-21 — Week 2 visuals rebuilt as "one picture you touch"
 All 17 week 2 visuals rebuilt to the new rule (CLAUDE.md "ONE PICTURE YOU TOUCH"): no code listing, no readouts/console/steps/dots/Focus; the learner acts on the picture, one sentence answers. Calibration page 07 by hand (approved by Ray), 16 pages by Opus agents, every page verified in Chrome by the lead (every press, failure cases, console clean). Old pages in `~/.Trash/hub-week02-old-visuals-2026-10-21/`. Not committed, awaiting Ray's review of the set. Week 1 visuals: same treatment after Assessment 1 (Mon Oct 26). Manifest `size` field is now unused (kept, harmless).
+
+## 2026-10-24 Week 3 built ahead of Ray's review (LOCAL ONLY, push Mon 26 Oct)
+- Plan .planning/week-03-plan.md; briefs AGENT-BRIEF-W3, COMPANION-BRIEF-W3, GAME-BRIEF-W3, REFERENCE-BRIEF-W3, CONTENT-BRIEF-W3. Workbook text wb3a/wb3b/wb3w/wb3-outline.
+- 14 visuals (Opus, one per page, one-picture rule), 4 reference, 11 companions + reading-the-exercises.html (by hand, first of its kind), 8 games. Every page opened in Chrome by the lead, main actions pressed, console clean, static sweep clean, every href resolves (fetch HEAD from the browser). Fixes by the lead: rail `current` slugs without .html on 4 pages; visual 03 default missing file renamed notes.txt (story.txt was the Bedtime Stories domain).
+- week-03/index.html, manifest (14/4/12/8), landing card live locally, search-index.json 137 items.

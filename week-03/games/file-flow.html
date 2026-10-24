@@ -1,0 +1,537 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>File Flow | Week 3 Visual Hub</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Sora:wght@500;700&family=Inter:wght@400;500&family=JetBrains+Mono:wght@400;500&display=swap">
+<style>
+  :root{
+    --bg:#080c17; --bg2:#0c1428; --surface:rgba(255,255,255,.045); --line:rgba(255,255,255,.09);
+    --ink:#eef2fb; --muted:#8496b6; --accent:#6ea0ff; --accent2:#8b7bff; --good:#46d98a; --warn:#ff6a6a;
+    --gold:#ffc862; --disp:'Sora',system-ui,sans-serif; --body:'Inter',system-ui,sans-serif;
+    --mono:'JetBrains Mono',ui-monospace,monospace;
+  }
+  *{box-sizing:border-box}
+  body{margin:0;min-height:100vh;color:var(--ink);font-family:var(--body);
+    background:radial-gradient(1200px 700px at 70% -10%,#141d38 0%,transparent 55%),
+               radial-gradient(900px 600px at 10% 110%,#161233 0%,transparent 50%),#080c17;
+    overflow-x:hidden}
+  #amb{position:fixed;inset:0;z-index:0;pointer-events:none;opacity:.6}
+  .back{position:relative;z-index:2;display:block;max-width:1120px;margin:0 auto;padding:26px 24px 0;
+    width:100%;font-family:var(--mono);font-size:.8rem;letter-spacing:.04em;color:var(--muted);
+    text-decoration:none;transition:color .15s}
+  .back:hover{color:var(--accent)}
+  .wrap{position:relative;z-index:1;max-width:1120px;margin:0 auto;padding:22px 24px 70px}
+  .tag{font-family:var(--mono);font-size:.72rem;letter-spacing:.22em;text-transform:uppercase;color:var(--accent);margin:0 0 14px}
+  h1{font-family:var(--disp);font-weight:700;font-size:clamp(2.3rem,6vw,3.6rem);line-height:1;margin:0 0 12px;
+    letter-spacing:-.03em;background:linear-gradient(180deg,#fff,#b9c6e6);-webkit-background-clip:text;
+    background-clip:text;color:transparent}
+  .lede{color:var(--muted);max-width:64ch;font-size:1.05rem;margin:0 0 26px;line-height:1.5}
+  .lede b{color:var(--ink)}
+  .take code,.caption code{font-family:var(--mono);font-size:.92em;color:#bcd0ff}
+
+  .stage{position:relative;background:linear-gradient(180deg,rgba(255,255,255,.03),rgba(255,255,255,.01));
+    border:1px solid var(--line);border-radius:24px;padding:18px 18px 14px;
+    box-shadow:0 1px 0 rgba(255,255,255,.06) inset,0 30px 80px -30px rgba(0,0,0,.8)}
+  .topbar{display:flex;align-items:center;gap:10px;margin:0 0 14px;flex-wrap:wrap}
+  .lab{font-family:var(--mono);font-size:.7rem;letter-spacing:.12em;text-transform:uppercase;color:var(--muted);margin:0}
+
+  /* ---------- game board ---------- */
+  .pic{position:relative;min-height:440px;border:1px solid var(--line);border-radius:18px;background:rgba(6,10,20,.5);overflow:hidden;
+    display:flex;flex-direction:column;align-items:center;justify-content:flex-start;gap:14px;padding:44px 22px 26px}
+  .pic .zone{position:absolute;left:18px;top:14px;font-family:var(--mono);font-size:.62rem;letter-spacing:.14em;text-transform:uppercase;color:rgba(132,150,182,.55)}
+  .hud{position:absolute;right:18px;top:12px;display:flex;gap:14px;font-family:var(--mono);font-size:.72rem;color:var(--muted)}
+  .hud b{color:var(--ink);font-weight:500}
+  @keyframes shake{25%{transform:translateX(-6px)}75%{transform:translateX(6px)}}
+  .screen{position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:12px;background:rgba(6,10,20,.94);transition:opacity .25s;overflow-y:auto;padding:20px}
+  .screen.off{opacity:0;pointer-events:none}
+  .screen h2{font-family:var(--disp);font-weight:700;font-size:1.6rem;margin:0;color:var(--ink)}
+  .screen p{margin:0;color:var(--muted);font-size:.95rem;text-align:center;max-width:50ch;line-height:1.5}
+  .screen .big{font-family:var(--disp);font-weight:700;font-size:2.6rem;color:var(--accent)}
+  .screen .big.gold{color:var(--gold)} .screen .big.good{color:var(--good)}
+  .bar{position:absolute;left:0;right:0;bottom:0;height:4px;background:rgba(255,255,255,.06)}
+  .bar i{display:block;height:100%;width:0;background:var(--accent);transition:width .25s}
+  .misses{font-family:var(--mono);font-size:.74rem;color:var(--muted);line-height:1.7;text-align:left;max-width:640px}
+  .misses div{margin-bottom:6px}
+  .misses b{color:var(--warn);font-weight:500}
+
+  .q{font-family:var(--disp);font-weight:500;font-size:1.08rem;color:var(--ink);text-align:center;margin:0;line-height:1.4;max-width:640px}
+  .q small{display:block;font-family:var(--mono);font-weight:400;font-size:.62rem;letter-spacing:.14em;text-transform:uppercase;color:var(--accent);margin-bottom:6px}
+  .q .fn{font-family:var(--mono);font-size:.92em;color:var(--gold)}
+
+  /* the program: fixed frame lines and numbered slots */
+  .prog{width:100%;max-width:720px;display:flex;flex-direction:column;gap:3px;padding:10px;border:1px dashed rgba(255,255,255,.14);
+    border-radius:14px;background:rgba(0,0,0,.25);transition:border-color .2s,box-shadow .2s}
+  .prog.good{border-style:solid;border-color:rgba(70,217,138,.7);box-shadow:0 0 28px -8px rgba(70,217,138,.8)}
+  .prog.bad{border-style:solid;border-color:rgba(255,106,106,.7);box-shadow:0 0 28px -8px rgba(255,106,106,.8);animation:shake .3s}
+  .fr{font-family:var(--mono);font-size:.84rem;line-height:1.3;padding:4px 10px 4px 46px;color:rgba(132,150,182,.6);white-space:pre}
+  .slot{display:flex;flex-direction:column;align-items:stretch;width:100%;text-align:left;font:inherit;color:inherit;margin:0;
+    border:1px solid transparent;border-radius:8px;background:rgba(255,255,255,.03);padding:0;cursor:pointer;transition:border-color .15s,background .15s}
+  .slot .in{display:flex;align-items:center;gap:10px;font-family:var(--mono);font-size:.84rem;line-height:1.3;padding:5px 10px;white-space:pre;min-height:28px}
+  .slot .ln{flex-shrink:0;width:1.6rem;text-align:right;font-size:.66rem;color:rgba(132,150,182,.55)}
+  .slot .cd{flex:1;min-width:0;overflow:hidden;text-overflow:ellipsis}
+  .slot.empty{border:1px dashed rgba(255,255,255,.1);background:transparent;cursor:default}
+  .slot.empty.next{border-color:rgba(110,160,255,.5);background:rgba(110,160,255,.06)}
+  .slot.empty .cd{color:rgba(132,150,182,.4);font-size:.7rem}
+  .prog:not(.lock) .slot:not(.empty):hover{border-color:rgba(255,200,98,.6)}
+  .slot.ok{border-color:rgba(70,217,138,.35)}
+  .slot.err{border-color:rgba(255,106,106,.8);background:rgba(255,106,106,.12)}
+  .slot.err .cd{color:var(--warn)}
+  .slot .why{font-family:var(--body);font-size:.8rem;color:var(--warn);padding:0 10px 6px 46px;white-space:normal}
+  .prog.lock .slot{cursor:default}
+  .slot:focus-visible,.card:focus-visible,.btn:focus-visible{outline:2px solid var(--accent);outline-offset:2px}
+
+  /* the tray of unused lines */
+  .tray{width:100%;max-width:720px}
+  .tray .lab{margin:0 0 8px 2px}
+  .cards{display:flex;flex-wrap:wrap;gap:6px;min-height:40px;padding:8px;border-radius:14px;border:1px solid var(--line);background:rgba(0,0,0,.18)}
+  .card{font-family:var(--mono);font-size:.8rem;line-height:1.3;padding:7px 12px;border-radius:9px;cursor:pointer;text-align:left;
+    border:1px solid var(--line);background:var(--surface);color:var(--ink);white-space:pre;max-width:100%;overflow:hidden;text-overflow:ellipsis;transition:.15s}
+  .card:hover{border-color:var(--accent)}
+  .card:disabled{cursor:default}
+  .card.decoy{border-color:rgba(70,217,138,.6);background:rgba(70,217,138,.1)}
+  .card.miss{border-color:rgba(255,106,106,.7);background:rgba(255,106,106,.1)}
+  .cards .none{font-family:var(--mono);font-size:.72rem;color:rgba(132,150,182,.5);padding:6px 4px}
+
+  .kw{color:var(--accent2)} .ty{color:var(--gold)} .st{color:#9fe0b8}
+  .slot.err .kw,.slot.err .ty,.slot.err .st{color:inherit}
+
+  .row{display:flex;gap:10px;flex-wrap:wrap;justify-content:center}
+  .caption{display:flex;gap:16px;align-items:flex-start;margin:14px 4px 0;min-height:56px}
+  .caption .n{flex-shrink:0;font-family:var(--disp);font-weight:700;font-size:1.35rem;color:var(--accent);font-variant-numeric:tabular-nums;line-height:1.2;min-width:3.6rem}
+  .caption .n small{display:block;font-family:var(--mono);font-weight:400;font-size:.58rem;letter-spacing:.14em;text-transform:uppercase;color:var(--muted)}
+  .caption .t{flex:1;font-size:1.02rem;line-height:1.55;color:var(--ink);padding-left:16px;border-left:3px solid var(--accent);transition:border-color .3s}
+  .caption.cut .t{border-left-color:var(--warn)} .caption.left .t{border-left-color:var(--gold)} .caption.ok .t{border-left-color:var(--good)}
+  .caption b.g{color:var(--good)} .caption b.w{color:var(--warn)} .caption b.a{color:var(--accent)} .caption b.y{color:var(--gold)}
+  .btn{font-family:var(--body);font-weight:500;font-size:.86rem;padding:9px 16px;border-radius:11px;cursor:pointer;
+    border:1px solid var(--line);background:var(--surface);color:var(--ink);transition:.15s}
+  .btn:hover{border-color:var(--accent);color:var(--accent)}
+  .btn.primary{border-color:rgba(110,160,255,.5);background:rgba(110,160,255,.12);padding:9px 22px;min-width:120px}
+  .btn:disabled{opacity:.35;cursor:not-allowed}
+  .btn.ghost{background:transparent;color:var(--muted)}
+  .caption .btn.ghost{flex-shrink:0;align-self:center}
+  .hint{font-family:var(--mono);font-size:.68rem;color:var(--muted);margin:10px 4px 0;line-height:1.5}
+  .hint b{color:var(--accent)}
+
+  .take{margin-top:22px;background:linear-gradient(180deg,rgba(110,160,255,.08),rgba(139,123,255,.04));
+    border:1px solid var(--line);border-left:3px solid var(--accent);border-radius:12px;padding:16px 18px}
+  .take .tk{font-family:var(--mono);font-size:.66rem;letter-spacing:.14em;text-transform:uppercase;color:var(--accent);margin:0 0 8px}
+  .take p{margin:0;font-size:.95rem;color:var(--ink);line-height:1.55}
+  .take b{color:#fff}
+  @media (prefers-reduced-motion:reduce){*{animation-duration:.01ms!important;transition-duration:.01ms!important}#amb{display:none}}
+  @media (max-width:640px){.wrap{padding:18px 16px 60px}.back{padding:22px 16px 0}.stage{padding:12px}.pic{padding:44px 8px 22px}
+    .slot .in,.fr{font-size:.72rem}.fr{padding-left:40px}.slot .why{padding-left:40px}.card{font-size:.72rem}.caption{flex-wrap:wrap}}
+</style>
+</head>
+<body>
+
+<a class="back" href="../index.html#file-flow">&#8592; Week 3 index</a>
+
+<canvas id="amb"></canvas>
+<div class="wrap">
+  <p class="tag">Workbook 3a &middot; Sections 1-2 and 2-1 &middot; Game</p>
+  <h1>File Flow</h1>
+  <p class="lede"><b>The lines of a small file program are shuffled. Put them back in the order that works.</b></p>
+
+  <div class="stage">
+    <div class="topbar"><span class="lab">Game</span></div>
+
+    <div class="pic" id="pic">
+      <span class="zone">order the program</span>
+      <div class="hud"><span>score <b id="hScore">0</b></span></div>
+      <p class="q" id="q"></p>
+      <div class="prog" id="prog"></div>
+      <div class="tray">
+        <p class="lab" id="trayLab">unused lines</p>
+        <div class="cards" id="cards"></div>
+      </div>
+      <div class="row"><button class="btn ghost" id="bFix" disabled>Show the working order</button><button class="btn primary" id="bCheck" disabled>Check</button></div>
+      <div class="bar"><i id="bar"></i></div>
+      <div class="screen" id="startScr">
+        <h2>File Flow</h2>
+        <p>Click a line to drop it into the next free slot. Click a placed line to send it back. When every slot is full, press Check. Ten programs. In the last two, one line does not belong: leave it in the tray.</p>
+        <button class="btn primary" id="bStart">Start</button>
+      </div>
+      <div class="screen off" id="endScr">
+        <h2>Programs ordered</h2>
+        <div class="big" id="endScore"></div>
+        <p id="endMsg"></p>
+        <div class="misses" id="endMiss"></div>
+        <button class="btn primary" id="bAgain">Play again</button>
+      </div>
+    </div>
+
+    <div class="caption" id="caption">
+      <div class="n" id="stepno"><small>round</small>0 / 10</div>
+      <div class="t" id="status">Press <b class="a">Start</b>. Ten small programs that read or write a file.</div>
+      <button class="btn ghost" id="bRestart">Restart</button>
+    </div>
+    <p class="hint">click a line to place it &middot; click a placed line to send it back &middot; <b>Enter</b> checks, then goes to the next program</p>
+  </div>
+
+  <div class="take">
+    <p class="tk">The one idea</p>
+    <p><b>A file program always has the same flow:</b> create the reader or writer, use it (often in a loop), and close it only after the last <code>readLine</code> or <code>write</code>, all inside a <code>try</code> whose <code>catch</code> handles <code>IOException</code>.</p>
+  </div>
+
+  <div id="rail"></div>
+</div>
+
+<script>
+(function(){
+  "use strict";
+  var $=function(s){return document.querySelector(s);};
+  var reduce=matchMedia("(prefers-reduced-motion: reduce)").matches;
+
+  /* frame lines shown around the slots (not movable) */
+  var TRY_OPEN=["try {"];
+  var TRY_CLOSE=["} catch (IOException e) {","    e.printStackTrace();","}"];
+
+  /* each puzzle: cards (id, text), the working order, and the rules.
+     A rule [x, y, mark, why] means card x must come before card y; when it is broken, card "mark" lights warn with "why".
+     The rules are complete: an order is accepted exactly when every rule holds. */
+  var PUZZLES=[
+    { name:"Read poem.txt", goal:"Read <span class=\"fn\">poem.txt</span> with a FileReader and a BufferedReader and print every line.",
+      pre:TRY_OPEN, post:TRY_CLOSE,
+      cards:{a:"FileReader fileReader = new FileReader(\"poem.txt\");",
+             b:"BufferedReader bufReader = new BufferedReader(fileReader);",
+             c:"String input;",
+             d:"while ((input = bufReader.readLine()) != null) {",
+             e:"System.out.println(input);",
+             f:"}",
+             g:"bufReader.close();"},
+      answer:["a","b","c","d","e","f","g"],
+      rules:[["a","b","b","new BufferedReader(fileReader) before fileReader exists."],
+             ["b","d","d","readLine before the reader exists."],
+             ["c","d","c","input is used in the while before it is declared."],
+             ["d","e","e","println(input) runs before the loop has read a line."],
+             ["e","f","e","println(input) sits after the loop's }, outside the loop."],
+             ["d","f","f","This } closes a loop that has not started yet."],
+             ["f","g","g","close before the loop ends."]] },
+
+    { name:"One-step reader", goal:"Same file, one-step constructor: read the first two lines of <span class=\"fn\">poem.txt</span> and print them in order.",
+      pre:TRY_OPEN, post:TRY_CLOSE,
+      cards:{a:"BufferedReader bufReader = new BufferedReader(new FileReader(\"poem.txt\"));",
+             b:"String first = bufReader.readLine();",
+             c:"String second = bufReader.readLine();",
+             d:"System.out.println(\"1: \" + first);",
+             e:"System.out.println(\"2: \" + second);",
+             f:"bufReader.close();"},
+      answer:["a","b","c","d","e","f"],
+      rules:[["a","b","b","readLine before the reader exists."],
+             ["b","c","c","readLine always reads the next line, so second would hold line 1."],
+             ["b","d","d","first is printed before it is declared."],
+             ["c","e","e","second is printed before it is declared."],
+             ["d","e","e","Line 2 would print before line 1."],
+             ["c","f","f","close before the last readLine."]] },
+
+    { name:"Write three lines", goal:"Write three lines to <span class=\"fn\">notes.txt</span> with a FileWriter, Monday first, then close it.",
+      pre:TRY_OPEN, post:TRY_CLOSE,
+      cards:{a:"FileWriter writer = new FileWriter(\"notes.txt\");",
+             b:"writer.write(\"Monday: stand-up\\n\");",
+             c:"writer.write(\"Tuesday: code review\\n\");",
+             d:"writer.write(\"Wednesday: demo day\\n\");",
+             e:"writer.close();"},
+      answer:["a","b","c","d","e"],
+      rules:[["a","b","b","write before the writer exists."],
+             ["a","c","c","write before the writer exists."],
+             ["a","d","d","write before the writer exists."],
+             ["b","c","c","The file keeps the order of the writes: Tuesday would land before Monday."],
+             ["c","d","d","The file keeps the order of the writes: Wednesday would land before Tuesday."],
+             ["d","e","e","close before the last write: writing after close throws IOException."]] },
+
+    { name:"Append with a loop", goal:"Add three reminder lines to the end of <span class=\"fn\">notes.txt</span>, keeping what is already there.",
+      pre:TRY_OPEN, post:TRY_CLOSE,
+      cards:{a:"FileWriter fileWriter = new FileWriter(\"notes.txt\", true);",
+             b:"BufferedWriter bufWriter = new BufferedWriter(fileWriter);",
+             c:"for (int day = 1; day <= 3; day++) {",
+             d:"bufWriter.write(\"Reminder \" + day + \"\\n\");",
+             e:"}",
+             f:"bufWriter.close();"},
+      answer:["a","b","c","d","e","f"],
+      rules:[["a","b","b","new BufferedWriter(fileWriter) before fileWriter exists."],
+             ["b","c","b","bufWriter must exist before the loop that writes with it."],
+             ["c","d","d","write uses day, which only exists inside the for loop."],
+             ["d","e","d","write sits after the loop's }, outside the loop, where day does not exist."],
+             ["c","e","e","This } closes a loop that has not started yet."],
+             ["e","f","f","close before the loop ends."]] },
+
+    { name:"Count the lines", goal:"Count the lines in <span class=\"fn\">notes.txt</span> and print the total once.",
+      pre:TRY_OPEN, post:TRY_CLOSE,
+      cards:{a:"BufferedReader bufReader = new BufferedReader(new FileReader(\"notes.txt\"));",
+             b:"int count = 0;",
+             c:"while (bufReader.readLine() != null) {",
+             d:"count++;",
+             e:"}",
+             f:"bufReader.close();",
+             g:"System.out.println(\"Lines: \" + count);"},
+      answer:["a","b","c","d","e","f","g"],
+      rules:[["a","c","c","readLine before the reader exists."],
+             ["b","c","b","count must start at 0 before the loop begins."],
+             ["c","d","d","count++ belongs inside the loop, between while and its }."],
+             ["d","e","d","count++ belongs inside the loop, between while and its }."],
+             ["c","e","e","This } closes a loop that has not started yet."],
+             ["e","f","f","close before the loop ends."],
+             ["e","g","g","The total is printed before the loop has finished counting."]] },
+
+    { name:"Format in a loop", goal:"Write the 3 times table, 1 to 5, to <span class=\"fn\">notes.txt</span>: one String.format line per pass.",
+      pre:TRY_OPEN, post:TRY_CLOSE,
+      cards:{a:"FileWriter fileWriter = new FileWriter(\"notes.txt\");",
+             b:"BufferedWriter bufWriter = new BufferedWriter(fileWriter);",
+             c:"for (int n = 1; n <= 5; n++) {",
+             d:"String text = String.format(\"%d x 3 = %d\\n\", n, n * 3);",
+             e:"bufWriter.write(text);",
+             f:"}",
+             g:"bufWriter.close();"},
+      answer:["a","b","c","d","e","f","g"],
+      rules:[["a","b","b","new BufferedWriter(fileWriter) before fileWriter exists."],
+             ["b","c","b","bufWriter must exist before the loop that writes with it."],
+             ["c","d","d","String.format uses n, which only exists inside the for loop."],
+             ["d","e","e","write(text) before text has been built."],
+             ["e","f","e","write sits after the loop's }, outside the loop, where text does not exist."],
+             ["c","f","f","This } closes a loop that has not started yet."],
+             ["f","g","g","close before the loop ends."]] },
+
+    { name:"Split a csv line", goal:"<span class=\"fn\">scores.csv</span> starts with <span class=\"fn\">Avery,42</span>. Read that line, split it on the comma, print <span class=\"fn\">Avery scored 42</span>.",
+      pre:TRY_OPEN, post:TRY_CLOSE,
+      cards:{a:"BufferedReader bufReader = new BufferedReader(new FileReader(\"scores.csv\"));",
+             b:"String line = bufReader.readLine();",
+             c:"String[] parts = line.split(\",\");",
+             d:"String name = parts[0];",
+             e:"int points = Integer.parseInt(parts[1]);",
+             f:"System.out.println(name + \" scored \" + points);",
+             g:"bufReader.close();"},
+      answer:["a","b","c","d","e","f","g"],
+      rules:[["a","b","b","readLine before the reader exists."],
+             ["b","c","c","split before the line has been read."],
+             ["c","d","d","parts[0] before split has made the array."],
+             ["c","e","e","parts[1] before split has made the array."],
+             ["d","f","f","name is printed before it is declared."],
+             ["e","f","f","points is printed before it is declared."],
+             ["b","g","g","close before the line is read."]] },
+
+    { name:"Try and catch", goal:"Write one line to <span class=\"fn\">notes.txt</span>. This time the try and the catch are yours to place too.",
+      pre:[], post:[],
+      cards:{a:"try {",
+             b:"FileWriter writer = new FileWriter(\"notes.txt\");",
+             c:"writer.write(\"Saved at the end of the day\\n\");",
+             d:"writer.close();",
+             e:"} catch (IOException e) {",
+             f:"System.out.println(\"Could not write notes.txt\");",
+             g:"e.printStackTrace();",
+             h:"}"},
+      answer:["a","b","c","d","e","f","g","h"],
+      rules:[["a","b","a","try { must open before the code it protects."],
+             ["b","c","c","write before the writer exists."],
+             ["c","d","d","close before the write: writing after close throws IOException."],
+             ["d","e","e","The catch closes the try too early: the writer code must sit inside try."],
+             ["e","f","f","The error message belongs inside the catch block."],
+             ["e","g","g","e only exists inside the catch block."],
+             ["f","h","h","This } closes the catch before its body."],
+             ["g","h","h","This } closes the catch before its body."]] },
+
+    { name:"One line too many", goal:"Print every line of <span class=\"fn\">poem.txt</span>, the first one included. One line does not belong: leave it in the tray.",
+      pre:TRY_OPEN, post:TRY_CLOSE,
+      cards:{a:"BufferedReader bufReader = new BufferedReader(new FileReader(\"poem.txt\"));",
+             c:"String input;",
+             d:"while ((input = bufReader.readLine()) != null) {",
+             e:"System.out.println(input);",
+             f:"}",
+             g:"bufReader.close();",
+             x:"bufReader.readLine();"},
+      decoy:"x", decoyWhy:"A lone readLine() before the loop throws away the first line of the poem.",
+      answer:["a","c","d","e","f","g"],
+      rules:[["a","d","d","readLine before the reader exists."],
+             ["c","d","c","input is used in the while before it is declared."],
+             ["d","e","e","println(input) runs before the loop has read a line."],
+             ["e","f","e","println(input) sits after the loop's }, outside the loop."],
+             ["d","f","f","This } closes a loop that has not started yet."],
+             ["f","g","g","close before the loop ends."]] },
+
+    { name:"Write a csv", goal:"Write a header row, then two score rows, to <span class=\"fn\">scores.csv</span>. One line does not belong: leave it in the tray.",
+      pre:TRY_OPEN, post:TRY_CLOSE,
+      cards:{a:"FileWriter fileWriter = new FileWriter(\"scores.csv\");",
+             b:"BufferedWriter bufWriter = new BufferedWriter(fileWriter);",
+             c:"bufWriter.write(\"name,points\\n\");",
+             d:"bufWriter.write(\"Avery,42\\n\");",
+             e:"bufWriter.write(\"Jordan,37\\n\");",
+             f:"bufWriter.close();",
+             x:"String line = bufWriter.readLine();"},
+      decoy:"x", decoyWhy:"A BufferedWriter has no readLine(): it only writes. This line does not compile.",
+      answer:["a","b","c","d","e","f"],
+      rules:[["a","b","b","new BufferedWriter(fileWriter) before fileWriter exists."],
+             ["b","c","c","write before the writer exists."],
+             ["c","d","d","The header row name,points must be written first."],
+             ["c","e","e","The header row name,points must be written first."],
+             ["d","f","f","close before the last write: writing after close throws IOException."],
+             ["e","f","f","close before the last write: writing after close throws IOException."]] }
+  ];
+
+  var N=PUZZLES.length;
+  var at=0, score=0, misses=[], state="idle";
+  var pz=null, ids=[], slots=[], tray=[], marks={}, failed=false;
+
+  function shuffle(a){ a=a.slice(); for(var i=a.length-1;i>0;i--){ var j=Math.floor(Math.random()*(i+1)); var t=a[i]; a[i]=a[j]; a[j]=t; } return a; }
+  function esc(s){ var d=document.createElement("span"); d.textContent=String(s); return d.innerHTML; }
+  function code(s){ return "<code>"+esc(s)+"</code>"; }
+  function setCap(c,html){ $("#caption").className="caption"+(c?" "+c:""); $("#status").innerHTML=html; }
+
+  /* syntax tint: strings first, then keywords and types outside strings */
+  function paint(s){
+    return String(s).split(/("(?:[^"\\]|\\.)*")/).map(function(part,i){
+      if(i%2===1) return '<span class="st">'+esc(part)+'</span>';
+      var h=esc(part);
+      h=h.replace(/\b(new|while|for|try|catch|null|true)\b/g,'<span class="kw">$1</span>');
+      h=h.replace(/\b(String|int|FileReader|BufferedReader|FileWriter|BufferedWriter|IOException|Integer)\b/g,'<span class="ty">$1</span>');
+      return h;
+    }).join("");
+  }
+  function realCount(){ return ids.length-(pz.decoy?1:0); }
+
+  /* the check: decoy placed, then every rule; returns marks by slot index */
+  function evaluate(seq){
+    var pos={}, m={};
+    seq.forEach(function(id,i){ pos[id]=i; });
+    if(pz.decoy&&pos[pz.decoy]!==undefined) m[pos[pz.decoy]]=pz.decoyWhy;
+    pz.rules.forEach(function(r){
+      if(pos[r[0]]===undefined||pos[r[1]]===undefined) return;
+      if(pos[r[0]]>pos[r[1]]){ var k=pos[r[2]]; if(m[k]===undefined) m[k]=r[3]; }
+    });
+    return m;
+  }
+
+  function depthOf(text,d){ var t=text.trim(); var before=t.charAt(0)==="}"?d-1:d; var after=before+(t.charAt(t.length-1)==="{"?1:0); return {line:Math.max(0,before),next:Math.max(0,after)}; }
+  function render(){
+    var base=pz.pre.length?1:0, d=base, html="", nextFree=slots.indexOf(null);
+    pz.pre.forEach(function(s){ html+='<div class="fr">'+paint(s)+'</div>'; });
+    slots.forEach(function(id,i){
+      var c="slot", txt, ind=d;
+      if(id===null){
+        c+=" empty"+(i===nextFree&&state==="play"?" next":"");
+        txt='<span class="cd">'+(i===nextFree&&state==="play"?"next line goes here":"")+'</span>';
+      } else {
+        var dd=depthOf(pz.cards[id],d); ind=dd.line; d=dd.next;
+        txt='<span class="cd">'+paint(pz.cards[id])+'</span>';
+        if(state==="shown"){ if(marks[i]!==undefined) c+=" err"; else c+=" ok"; }
+      }
+      var why=(state==="shown"&&marks[i]!==undefined)?'<span class="why">'+esc(marks[i])+'</span>':"";
+      html+='<button type="button" class="'+c+'" data-i="'+i+'"'+(id===null||state!=="play"?' tabindex="-1"':'')+' aria-label="line '+(i+1)+'">'+
+        '<span class="in" style="padding-left:'+(10+ind*22)+'px"><span class="ln">'+(i+1)+'</span>'+txt+'</span>'+why+'</button>';
+    });
+    pz.post.forEach(function(s,k){ var lead=s.match(/^ */)[0].length?1:0; html+='<div class="fr" style="padding-left:'+(46+lead*22)+'px">'+paint(s.trim())+'</div>'; });
+    $("#prog").innerHTML=html;
+
+    $("#cards").innerHTML=tray.length?tray.map(function(id){
+      var c="card";
+      if(state==="shown"){ if(id===pz.decoy) c+=" decoy"; else c+=" miss"; }
+      return '<button type="button" class="'+c+'" data-id="'+id+'"'+(state!=="play"?" disabled":"")+'>'+paint(pz.cards[id])+'</button>';
+    }).join(""):'<span class="none">every line is placed</span>';
+    $("#trayLab").textContent=pz.decoy?"unused lines (one stays here)":"unused lines";
+    if(state==="play") $("#bCheck").disabled=slots.indexOf(null)>=0;
+  }
+
+  function showRound(){
+    pz=PUZZLES[at]; ids=Object.keys(pz.cards); state="play"; marks={}; failed=false;
+    slots=[]; for(var i=0;i<realCount();i++) slots.push(null);
+    tray=shuffle(ids);
+    $("#q").innerHTML="<small>program "+(at+1)+" \u00b7 "+esc(pz.name)+"</small>"+pz.goal;
+    $("#prog").className="prog";
+    $("#bCheck").textContent="Check"; $("#bFix").disabled=true;
+    render();
+    $("#stepno").innerHTML="<small>round</small>"+(at+1)+" / "+N; $("#bar").style.width=(100*at/N)+"%";
+    setCap("","Place the "+realCount()+" lines in the order that works"+(pz.decoy?", and leave the extra line in the tray.":"."));
+  }
+  function start(){
+    at=0; score=0; misses=[];
+    $("#hScore").textContent="0"; $("#startScr").classList.add("off"); $("#endScr").classList.add("off");
+    showRound();
+  }
+  function place(id){
+    if(state!=="play") return;
+    var k=slots.indexOf(null); if(k<0) return;
+    slots[k]=id; tray.splice(tray.indexOf(id),1); render();
+    var left=slots.indexOf(null);
+    if(left<0) setCap("","Every slot is full. Press <b class=\"a\">Check</b>, or click a line to send it back.");
+    else setCap("",code(pz.cards[id])+" is line "+(k+1)+".");
+  }
+  function unplace(i){
+    if(state!=="play"||slots[i]===null) return;
+    var id=slots[i]; slots[i]=null; tray.push(id); render();
+    setCap("left",code(pz.cards[id])+" went back to the tray. Slot "+(i+1)+" is free.");
+  }
+  function check(){
+    if(state==="shown"){ at++; if(at>=N) end(); else showRound(); return; }
+    if(state!=="play"||slots.indexOf(null)>=0) return;
+    marks=evaluate(slots);
+    var keys=Object.keys(marks).map(Number).sort(function(a,b){ return a-b; });
+    var ok=keys.length===0;
+    state="shown";
+    $("#prog").className="prog lock "+(ok?"good":"bad");
+    if(ok){
+      score++; $("#hScore").textContent=String(score);
+      setCap("ok","<b class=\"g\">It works.</b> "+(pz.decoy?"And the extra line stayed out: "+esc(pz.decoyWhy):"The reader or writer exists before it is used, and it closes after the last use."));
+    } else {
+      failed=true;
+      var first=keys[0], miss=tray.filter(function(id){ return id!==pz.decoy; });
+      var extra=miss.length?" "+code(pz.cards[miss[0]])+" is still in the tray.":"";
+      misses.push({name:pz.name,msg:"line "+(first+1)+": "+marks[first]});
+      setCap("cut","<b class=\"w\">Line "+(first+1)+":</b> "+esc(marks[first])+extra);
+      $("#bFix").disabled=false;
+    }
+    render();
+    $("#bCheck").disabled=false;
+    $("#bCheck").textContent=at+1>=N?"Finish":"Next";
+  }
+  function showFix(){
+    if(state!=="shown"||!failed) return;
+    slots=pz.answer.slice(); tray=pz.decoy?[pz.decoy]:[]; marks={};
+    $("#prog").className="prog lock good"; render(); $("#bFix").disabled=true;
+    setCap("left","The working order for <b class=\"y\">"+esc(pz.name)+"</b>. Lines with no link between them may swap; the rest are fixed.");
+  }
+  function end(){
+    state="end"; $("#bar").style.width="100%";
+    $("#endScore").textContent=score+" / "+N; $("#endScore").className="big "+(score===N?"good":score>=7?"":"gold");
+    $("#endMsg").textContent=score===N?"Perfect. Every reader and writer was opened, used and closed in order.":score>=7?"Solid. The misses are below.":"Keep going. The misses are below.";
+    $("#endMiss").innerHTML=misses.map(function(m){ return "<div><b>"+esc(m.name)+"</b>: "+esc(m.msg)+"</div>"; }).join("");
+    $("#endScr").classList.remove("off");
+    $("#stepno").innerHTML="<small>round</small>"+N+" / "+N;
+    setCap("","Game over. <b class=\"a\">Play again</b> shuffles the ten programs again.");
+  }
+  function restart(){
+    state="idle"; at=0; score=0; misses=[]; pz=null;
+    $("#hScore").textContent="0"; $("#q").innerHTML=""; $("#prog").innerHTML=""; $("#prog").className="prog"; $("#cards").innerHTML="";
+    $("#bCheck").disabled=true; $("#bFix").disabled=true; $("#bCheck").textContent="Check"; $("#bar").style.width="0";
+    $("#endScr").classList.add("off"); $("#startScr").classList.remove("off");
+    $("#stepno").innerHTML="<small>round</small>0 / "+N;
+    setCap("","Press <b class=\"a\">Start</b>. Ten small programs that read or write a file.");
+  }
+
+  $("#cards").addEventListener("click",function(e){ var b=e.target.closest(".card"); if(b) place(b.getAttribute("data-id")); });
+  $("#prog").addEventListener("click",function(e){ var b=e.target.closest(".slot"); if(b) unplace(+b.getAttribute("data-i")); });
+  $("#bCheck").addEventListener("click",function(){ this.blur(); check(); });
+  $("#bFix").addEventListener("click",function(){ this.blur(); showFix(); });
+  $("#bStart").addEventListener("click",function(){ this.blur(); start(); });
+  $("#bAgain").addEventListener("click",function(){ this.blur(); start(); });
+  $("#bRestart").addEventListener("click",function(){ this.blur(); restart(); });
+  document.addEventListener("keydown",function(e){
+    if(/INPUT|TEXTAREA|BUTTON/.test(e.target.tagName)||e.metaKey||e.ctrlKey||e.altKey) return;
+    if(state==="idle"){ if(e.key==="Enter"||e.code==="Space"){ e.preventDefault(); start(); } return; }
+    if(e.key==="Enter"&&(state==="play"||state==="shown")){ e.preventDefault(); check(); }
+  });
+
+  var cv=$("#amb"),ctx=cv.getContext&&cv.getContext("2d"),parts=[];
+  function sizeC(){if(!ctx)return;cv.width=innerWidth;cv.height=innerHeight;}
+  function initParts(){parts=[];for(var i=0;i<46;i++)parts.push({x:Math.random(),y:Math.random(),r:Math.random()*1.6+.3,s:Math.random()*.02+.004,o:Math.random()*.4+.1});}
+  function drawC(){if(!ctx)return;ctx.clearRect(0,0,cv.width,cv.height);
+    parts.forEach(function(p){p.y-=p.s/60;if(p.y<-.02)p.y=1.02;ctx.beginPath();ctx.arc(p.x*cv.width,p.y*cv.height,p.r,0,7);
+      ctx.fillStyle="rgba(140,170,255,"+p.o+")";ctx.fill();});requestAnimationFrame(drawC);}
+  if(ctx&&!reduce){sizeC();initParts();drawC();addEventListener("resize",sizeC);}
+})();
+</script>
+<script src="../manifest.js"></script>
+<script src="../../assets/rail.js"></script>
+<script>Rail.render(document.getElementById("rail"),{week:3,kind:"games",current:"file-flow"});</script>
+</body>
+</html>

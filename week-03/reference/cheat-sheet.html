@@ -1,0 +1,343 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Week 3 Cheat Sheet | Week 3 Visual Hub</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Sora:wght@500;700&family=Inter:wght@400;500&family=JetBrains+Mono:wght@400;500&display=swap">
+<style>
+  :root{
+    --bg:#080c17; --bg2:#0c1428; --surface:rgba(255,255,255,.045); --line:rgba(255,255,255,.09);
+    --ink:#eef2fb; --muted:#8496b6; --accent:#6ea0ff; --accent2:#8b7bff; --good:#46d98a; --warn:#ff6a6a;
+    --gold:#ffc862; --disp:'Sora',system-ui,sans-serif; --body:'Inter',system-ui,sans-serif;
+    --mono:'JetBrains Mono',ui-monospace,monospace;
+  }
+  *{box-sizing:border-box}
+  body{margin:0;min-height:100vh;color:var(--ink);font-family:var(--body);
+    background:radial-gradient(1200px 700px at 70% -10%,#141d38 0%,transparent 55%),
+               radial-gradient(900px 600px at 10% 110%,#161233 0%,transparent 50%),#080c17;
+    overflow-x:hidden}
+  #amb{position:fixed;inset:0;z-index:0;pointer-events:none;opacity:.6}
+  .back{position:relative;z-index:2;display:block;max-width:1120px;margin:0 auto;padding:26px 24px 0;
+    width:100%;font-family:var(--mono);font-size:.8rem;letter-spacing:.04em;color:var(--muted);
+    text-decoration:none;transition:color .15s}
+  .back:hover{color:var(--accent)}
+  .wrap{position:relative;z-index:1;max-width:1120px;margin:0 auto;padding:22px 24px 70px}
+  .tag{font-family:var(--mono);font-size:.72rem;letter-spacing:.22em;text-transform:uppercase;color:var(--accent);margin:0 0 14px}
+  h1{font-family:var(--disp);font-weight:700;font-size:clamp(2.3rem,6vw,3.6rem);line-height:1;margin:0 0 12px;
+    letter-spacing:-.03em;background:linear-gradient(180deg,#fff,#b9c6e6);-webkit-background-clip:text;
+    background-clip:text;color:transparent}
+  .lede{color:var(--muted);max-width:64ch;font-size:1.05rem;margin:0 0 26px;line-height:1.5}
+  .lede b{color:var(--ink)}
+
+  /* ---------- stage ---------- */
+  .stage{position:relative;background:linear-gradient(180deg,rgba(255,255,255,.03),rgba(255,255,255,.01));
+    border:1px solid var(--line);border-radius:24px;padding:18px 18px 14px;
+    box-shadow:0 1px 0 rgba(255,255,255,.06) inset,0 30px 80px -30px rgba(0,0,0,.8)}
+  .topbar{display:flex;align-items:center;gap:10px;margin:0 0 14px;flex-wrap:wrap}
+  .lab{font-family:var(--mono);font-size:.7rem;letter-spacing:.12em;text-transform:uppercase;color:var(--muted);margin:0 4px 0 0}
+  .chips{display:flex;flex-wrap:wrap;gap:7px}
+  .chip{font-family:var(--body);font-weight:500;font-size:.82rem;padding:7px 14px;border-radius:999px;border:1px solid var(--line);
+    background:rgba(0,0,0,.25);color:var(--muted);cursor:pointer;transition:.15s}
+  .chip:hover{border-color:var(--accent);color:var(--accent)}
+  .chip.on{background:rgba(110,160,255,.16);border-color:rgba(110,160,255,.55);color:var(--ink)}
+  .chip:focus-visible{outline:2px solid var(--accent);outline-offset:2px}
+
+  .pic{position:relative;min-height:390px;border:1px solid var(--line);border-radius:18px;background:rgba(6,10,20,.5);padding:14px}
+  .sheet{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:12px;align-items:start}
+  .sheet.one{grid-template-columns:minmax(0,1fr)}
+  .card{border:1px solid var(--line);border-radius:14px;background:rgba(255,255,255,.025);padding:14px 16px 12px;
+    transition:border-color .2s,opacity .2s}
+  .card:hover{border-color:rgba(110,160,255,.35)}
+  .card[hidden]{display:none}
+  .card h2{font-family:var(--disp);font-weight:700;font-size:1.02rem;letter-spacing:-.01em;margin:0 0 10px;color:var(--ink);
+    display:flex;align-items:baseline;gap:10px}
+  .card h2 .wb{font-family:var(--mono);font-weight:400;font-size:.62rem;letter-spacing:.12em;text-transform:uppercase;color:var(--muted)}
+  .row{display:grid;grid-template-columns:132px minmax(0,1fr);gap:12px;padding:5px 0;border-top:1px solid rgba(255,255,255,.04);align-items:baseline}
+  .row:first-of-type{border-top:0}
+  .k{font-size:.78rem;color:var(--muted);line-height:1.35}
+  .row code{font-family:var(--mono);font-size:.8rem;color:#bcd0ff;white-space:pre-wrap;overflow-wrap:anywhere;line-height:1.45}
+  .row code .c{color:#6f7f9e}
+  .row code .w{color:var(--warn)}
+  .row code .g{color:var(--good)}
+  .see{margin:10px 0 0;padding-top:9px;border-top:1px solid var(--line);font-family:var(--mono);font-size:.7rem;color:var(--muted);
+    display:flex;flex-wrap:wrap;gap:6px 12px;align-items:baseline}
+  .see a{color:var(--accent);text-decoration:none;transition:color .15s}
+  .see a:hover{color:#fff;text-decoration:underline}
+  .hint{font-family:var(--mono);font-size:.68rem;color:var(--muted);margin:10px 4px 0;line-height:1.5}
+  .hint b{color:var(--accent);font-weight:500}
+  @media (max-width:860px){
+    .sheet{grid-template-columns:minmax(0,1fr)}
+    .row{grid-template-columns:minmax(0,1fr);gap:2px}
+  }
+  @media (prefers-reduced-motion:reduce){*{animation-duration:.01ms!important;transition-duration:.01ms!important}#amb{display:none}}
+</style>
+</head>
+<body>
+
+<a class="back" href="../index.html#cheat-sheet">&#8592; Week 3 index</a>
+
+<canvas id="amb"></canvas>
+<div class="wrap">
+  <p class="tag">Week 3 &middot; Reference</p>
+  <h1>Week 3 Cheat Sheet</h1>
+  <p class="lede">The syntax of the week, one line per idea. <b>Pick a topic to see only that card; every card links to the page that shows it moving.</b></p>
+
+  <div class="stage">
+    <div class="topbar">
+      <span class="lab">Topic</span>
+      <div class="chips" id="chips" role="group" aria-label="Filter by topic">
+        <button class="chip on" data-t="all" aria-pressed="true">All</button>
+        <button class="chip" data-t="exceptions" aria-pressed="false">Exceptions</button>
+        <button class="chip" data-t="read" aria-pressed="false">Reading files</button>
+        <button class="chip" data-t="write" aria-pressed="false">Writing files</button>
+        <button class="chip" data-t="dates" aria-pressed="false">Dates</button>
+        <button class="chip" data-t="list" aria-pressed="false">ArrayList</button>
+        <button class="chip" data-t="map" aria-pressed="false">HashMap</button>
+        <button class="chip" data-t="split" aria-pressed="false">split</button>
+        <button class="chip" data-t="agile" aria-pressed="false">Agile</button>
+      </div>
+    </div>
+
+    <div class="pic">
+      <div class="sheet" id="sheet">
+
+        <section class="card" data-t="exceptions">
+          <h2>try and catch <span class="wb">3a &middot; 1-1</span></h2>
+          <div class="row"><span class="k">three kinds</span><code>compile error: will not build   logic error: runs, wrong answer   runtime error: Java throws an exception</code></div>
+          <div class="row"><span class="k">try</span><code>try {
+    int result = firstNumber / secondNumber;  <span class="c">// code that might fail</span>
+    System.out.println("The result is: " + result);
+}</code></div>
+          <div class="row"><span class="k">catch</span><code>catch (Exception ex) {
+    System.out.println(ex.getMessage());  <span class="c">// what Java says went wrong</span>
+}</code></div>
+          <div class="row"><span class="k">the jump</span><code>a line throws: the rest of try is skipped, catch runs, then the program <span class="g">keeps going</span></code></div>
+          <div class="row"><span class="k">no exception</span><code>every line of try runs, catch is skipped</code></div>
+          <div class="row"><span class="k">getMessage()</span><code>ex.getMessage()  <span class="c">// "/ by zero" for 10 / 0</span></code></div>
+          <div class="row"><span class="k">stack trace</span><code>ex.printStackTrace();  <span class="c">// the full error, with line numbers</span></code></div>
+          <div class="row"><span class="k">Exception</span><code>catch (Exception ex)  <span class="c">// catches every kind; a narrower type catches only its own</span></code></div>
+          <div class="row"><span class="k">no try</span><code><span class="w">int result = 10 / 0;</span>  <span class="c">// the program stops on this line</span></code></div>
+          <p class="see">See it:
+            <a href="../visuals/01-three-kinds-of-errors.html">Three Kinds of Errors</a>
+            <a href="../visuals/02-try-catch-flow.html">try and catch</a>
+          </p>
+        </section>
+
+        <section class="card" data-t="exceptions">
+          <h2>Common exception names <span class="wb">3a &middot; 1-1, 1-2, 2-2</span></h2>
+          <div class="row"><span class="k">ArithmeticException</span><code>firstNumber / 0  <span class="c">// int division by zero</span></code></div>
+          <div class="row"><span class="k">ArrayIndexOutOfBounds</span><code>listOfNames[3]  <span class="c">// 3 names: indexes 0 to 2 only</span></code></div>
+          <div class="row"><span class="k">IndexOutOfBounds</span><code>kids.get(3)  <span class="c">// same mistake on an ArrayList of 3</span></code></div>
+          <div class="row"><span class="k">NumberFormatException</span><code>Integer.parseInt("abc")  <span class="c">// text that is not a number</span></code></div>
+          <div class="row"><span class="k">InputMismatchException</span><code>scanner.nextInt()  <span class="c">// the user typed a letter</span></code></div>
+          <div class="row"><span class="k">FileNotFoundException</span><code>new FileReader("missing.txt")  <span class="c">// no such file</span></code></div>
+          <div class="row"><span class="k">IOException</span><code>catch (IOException e)  <span class="c">// any read or write problem; FileNotFound is one kind</span></code></div>
+          <div class="row"><span class="k">DateTimeParseException</span><code>LocalDate.parse("10/17/2026")  <span class="c">// not yyyy-MM-dd and no formatter</span></code></div>
+          <p class="see">See it:
+            <a href="../visuals/01-three-kinds-of-errors.html">Three Kinds of Errors</a>
+            <a href="common-errors.html">Common Errors</a>
+          </p>
+        </section>
+
+        <section class="card" data-t="read">
+          <h2>Reading a file <span class="wb">3a &middot; 1-2</span></h2>
+          <div class="row"><span class="k">imports</span><code>import java.io.*;  <span class="c">// or FileReader, BufferedReader, IOException one by one</span></code></div>
+          <div class="row"><span class="k">open</span><code>FileReader fileReader = new FileReader("poem.txt");  <span class="c">// file at the project root</span></code></div>
+          <div class="row"><span class="k">wrap it</span><code>BufferedReader bufferedReader = new BufferedReader(fileReader);</code></div>
+          <div class="row"><span class="k">one step</span><code>BufferedReader bufferedReader = new BufferedReader(new FileReader("poem.txt"));</code></div>
+          <div class="row"><span class="k">one line</span><code>String line = bufferedReader.readLine();  <span class="c">// the next line, without its \n</span></code></div>
+          <div class="row"><span class="k">until the end</span><code>String line;
+while ((line = bufferedReader.readLine()) != null) {
+    System.out.println(line);
+}  <span class="c">// readLine gives null at the end of the file</span></code></div>
+          <div class="row"><span class="k">close</span><code>bufferedReader.close();  <span class="c">// release the file when done</span></code></div>
+          <div class="row"><span class="k">must catch</span><code>try { ... } catch (IOException e) { ... }  <span class="c">// or catch (Exception ex); with no catch it will not compile</span></code></div>
+          <div class="row"><span class="k">wrong name</span><code><span class="w">new FileReader("missing.txt")</span>  <span class="c">// FileNotFoundException, the catch runs</span></code></div>
+          <p class="see">See it:
+            <a href="../visuals/03-reading-a-file.html">Reading a File Line by Line</a>
+          </p>
+        </section>
+
+        <section class="card" data-t="write">
+          <h2>Writing a file <span class="wb">3a &middot; 2-1</span></h2>
+          <div class="row"><span class="k">imports</span><code>import java.io.FileWriter;   import java.io.BufferedWriter;   import java.io.IOException;</code></div>
+          <div class="row"><span class="k">create</span><code>FileWriter fileWriter = new FileWriter("potato.txt");  <span class="c">// creates it, or <span class="w">overwrites</span> it</span></code></div>
+          <div class="row"><span class="k">write</span><code>fileWriter.write("Hello Everyone\n");
+fileWriter.write("I am your Potato instructor!\n");  <span class="c">// write adds no new line: \n does</span></code></div>
+          <div class="row"><span class="k">close</span><code>fileWriter.close();  <span class="c">// nothing is sure to be on disk before close</span></code></div>
+          <div class="row"><span class="k">append</span><code>new FileWriter("tomato.txt", true)  <span class="c">// true: keep what is there, add at the end</span></code></div>
+          <div class="row"><span class="k">BufferedWriter</span><code>BufferedWriter bufferedWriter = new BufferedWriter(new FileWriter("tomato.txt", true));</code></div>
+          <div class="row"><span class="k">write in a loop</span><code>for (int i = 1; i &lt;= 10; i++) {
+    bufferedWriter.write(String.format("Counting %d", i));
+    bufferedWriter.newLine();  <span class="c">// same as writing \n</span>
+}</code></div>
+          <div class="row"><span class="k">close flushes</span><code>bufferedWriter.close();  <span class="c">// the buffer goes to the file; forget it and the file can stay empty</span></code></div>
+          <div class="row"><span class="k">must catch</span><code>catch (IOException e) { System.out.println("ERROR: An unexpected error occurred"); }</code></div>
+          <p class="see">See it:
+            <a href="../visuals/04-writing-a-file.html">Writing to a File</a>
+          </p>
+        </section>
+
+        <section class="card" data-t="dates">
+          <h2>Dates and times <span class="wb">3a &middot; 2-2</span></h2>
+          <div class="row"><span class="k">imports</span><code>import java.time.LocalDate;   import java.time.LocalTime;
+import java.time.LocalDateTime;   import java.time.format.DateTimeFormatter;</code></div>
+          <div class="row"><span class="k">three classes</span><code>LocalDate.now()  <span class="c">// 2026-10-17, a date only</span>
+LocalTime.now()  <span class="c">// 15:07:16.014, a time only</span>
+LocalDateTime.now()  <span class="c">// 2026-10-17T15:07:16.014, the T splits them</span></code></div>
+          <div class="row"><span class="k">no time zone</span><code>Local means the clock of this computer; none of the three stores a zone</code></div>
+          <div class="row"><span class="k">date parts</span><code>today.getDayOfWeek()  <span class="c">// SATURDAY</span>   today.getDayOfMonth()  <span class="c">// 17</span>   today.getDayOfYear()  <span class="c">// 290</span>
+today.getMonth()  <span class="c">// OCTOBER</span>   today.getMonthValue()  <span class="c">// 10</span>   today.getYear()  <span class="c">// 2026</span></code></div>
+          <div class="row"><span class="k">time parts</span><code>currentTime.getHour()   getMinute()   getSecond()   getNano()</code></div>
+          <div class="row"><span class="k">date to text</span><code>DateTimeFormatter formatter = DateTimeFormatter.ofPattern("E, MMM dd, yyyy HH:mm:ss");
+String formattedDate = currentDate.format(formatter);  <span class="c">// Sat, Oct 17, 2026 15:07:16</span></code></div>
+          <div class="row"><span class="k">text to date, ISO</span><code>LocalDate.parse("2026-10-17")  <span class="c">// yyyy-MM-dd needs no formatter</span></code></div>
+          <div class="row"><span class="k">text to date, pattern</span><code>DateTimeFormatter dateTimeFormatter = DateTimeFormatter.ofPattern("MM/dd/yyyy");
+LocalDate newDate = LocalDate.parse("10/17/2026", dateTimeFormatter);  <span class="c">// prints 2026-10-17</span></code></div>
+          <div class="row"><span class="k">no pattern</span><code><span class="w">LocalDate.parse("10/17/2026")</span>  <span class="c">// DateTimeParseException</span></code></div>
+          <div class="row"><span class="k">pattern letters</span><code>d dd  <span class="c">day</span>   M MM MMM MMMM  <span class="c">month: 10 10 Oct October</span>   yy yyyy  <span class="c">year</span>
+E EEEE  <span class="c">Sat Saturday</span>   HH  <span class="c">0-23</span>   hh a  <span class="c">1-12 PM</span>   mm  <span class="c">minutes</span>   ss  <span class="c">seconds</span></code></div>
+          <div class="row"><span class="k">case matters</span><code>MM month   <span class="w">mm</span> minutes   HH 24-hour   <span class="w">hh</span> 12-hour</code></div>
+          <p class="see">See it:
+            <a href="../visuals/05-date-and-time-objects.html">LocalDate, LocalTime, LocalDateTime</a>
+            <a href="../visuals/06-date-patterns.html">Date Patterns</a>
+            <a href="date-patterns.html">Date Pattern Letters</a>
+          </p>
+        </section>
+
+        <section class="card" data-t="list">
+          <h2>ArrayList <span class="wb">3a &middot; 3-1, 3-2</span></h2>
+          <div class="row"><span class="k">imports</span><code>import java.util.ArrayList;   import java.util.List;   import java.util.Collections;</code></div>
+          <div class="row"><span class="k">create</span><code>List&lt;String&gt; kids = new ArrayList&lt;&gt;();  <span class="c">// no size: it grows and shrinks</span></code></div>
+          <div class="row"><span class="k">objects only</span><code>List&lt;Integer&gt; numbers   <span class="w">List&lt;int&gt;</span>  <span class="c">// Integer, not int</span></code></div>
+          <div class="row"><span class="k">add, at the end</span><code>kids.add("Natalie");  kids.add("Brittany");  kids.add("Zachary");
+System.out.println(kids);  <span class="c">// [Natalie, Brittany, Zachary]</span></code></div>
+          <div class="row"><span class="k">add at an index</span><code>kids.add(0, "Natalie");  <span class="c">// goes in at 0, the rest shift one index up</span></code></div>
+          <div class="row"><span class="k">get</span><code>kids.get(0)  <span class="c">// "Natalie", first is 0</span></code></div>
+          <div class="row"><span class="k">set</span><code>kids.set(2, "Zach");  <span class="c">// replaces, the size stays the same</span></code></div>
+          <div class="row"><span class="k">remove</span><code>kids.remove(1);  <span class="c">// Brittany out; later elements shift one index down, size - 1</span></code></div>
+          <div class="row"><span class="k">size</span><code>kids.size()  <span class="c">// 3; size(), not length</span></code></div>
+          <div class="row"><span class="k">contains</span><code>kids.contains("Zach")  <span class="c">// true or false</span></code></div>
+          <div class="row"><span class="k">clear</span><code>kids.clear();  <span class="c">// empty list, size 0</span></code></div>
+          <div class="row"><span class="k">for, with index</span><code>for (int i = 0; i &lt; kids.size(); i++) { System.out.println((i + 1) + " : " + kids.get(i)); }</code></div>
+          <div class="row"><span class="k">for-each</span><code>for (String kid : kids) { System.out.println(kid); }</code></div>
+          <div class="row"><span class="k">sort</span><code>Collections.sort(kids);  <span class="c">// A to Z</span>
+Collections.sort(kids, Collections.reverseOrder());  <span class="c">// Z to A</span></code></div>
+          <p class="see">See it:
+            <a href="../visuals/07-array-vs-arraylist.html">Array vs ArrayList</a>
+            <a href="../visuals/08-arraylist-operations.html">ArrayList Operations</a>
+          </p>
+        </section>
+
+        <section class="card" data-t="map">
+          <h2>HashMap <span class="wb">3a &middot; 4-1</span></h2>
+          <div class="row"><span class="k">import</span><code>import java.util.HashMap;</code></div>
+          <div class="row"><span class="k">create</span><code>HashMap&lt;String, String&gt; statesAndCapitals = new HashMap&lt;&gt;();  <span class="c">// key type, value type</span></code></div>
+          <div class="row"><span class="k">put</span><code>statesAndCapitals.put("TX", "Austin");  <span class="c">// same key again replaces the value</span></code></div>
+          <div class="row"><span class="k">get</span><code>statesAndCapitals.get("TX")  <span class="c">// "Austin", by key, no index</span></code></div>
+          <div class="row"><span class="k">miss</span><code>statesAndCapitals.get("OK")  <span class="c">// null, no exception</span></code></div>
+          <div class="row"><span class="k">check first</span><code>String value = statesAndCapitals.get("OK");
+if (value != null) { System.out.println(value); }
+else { System.out.println("OK is not in the states map"); }</code></div>
+          <div class="row"><span class="k">containsKey</span><code>statesAndCapitals.containsKey("CA")  <span class="c">// true</span></code></div>
+          <div class="row"><span class="k">remove</span><code>statesAndCapitals.remove("WA");  <span class="c">// a missing key: nothing happens, returns null</span></code></div>
+          <div class="row"><span class="k">values()</span><code>for (String value : statesAndCapitals.values()) { System.out.println(value); }</code></div>
+          <div class="row"><span class="k">keySet()</span><code>for (String key : statesAndCapitals.keySet()) {
+    System.out.println(key + ": " + statesAndCapitals.get(key));
+}</code></div>
+          <div class="row"><span class="k">no fixed order</span><code>{CT=Hartford, TX=Austin, FL=Tallahassee, CA=Sacramento}  <span class="c">// a map is not a list</span></code></div>
+          <div class="row"><span class="k">objects as values</span><code>HashMap&lt;Integer, Product&gt; idsAndProducts = new HashMap&lt;&gt;();
+idsAndProducts.put(1, new Product(1, "Potato", 123));
+idsAndProducts.put(2, new Product(2, "Tomato", 456));  <span class="c">// price is a double: 456.0</span></code></div>
+          <p class="see">See it:
+            <a href="../visuals/09-hashmap-lookup.html">HashMap Lookup</a>
+            <a href="../visuals/10-hashmap-operations.html">HashMap Operations</a>
+          </p>
+        </section>
+
+        <section class="card" data-t="split">
+          <h2>split a csv line <span class="wb">3a &middot; 1-2</span></h2>
+          <div class="row"><span class="k">the line</span><code>String line = "1|Potato|123.0";</code></div>
+          <div class="row"><span class="k">split on a pipe</span><code>String[] parts = line.split("\\|");  <span class="c">// ["1", "Potato", "123.0"]</span></code></div>
+          <div class="row"><span class="k">why \\|</span><code>split reads a regex, and | there means "or"; \\ makes it a plain pipe</code></div>
+          <div class="row"><span class="k">not escaped</span><code><span class="w">line.split("|")</span>  <span class="c">// splits between every character</span></code></div>
+          <div class="row"><span class="k">same thing</span><code>line.split(Pattern.quote("|"))  <span class="c">// import java.util.regex.Pattern;</span></code></div>
+          <div class="row"><span class="k">to numbers</span><code>int id = Integer.parseInt(parts[0]);
+double price = Double.parseDouble(parts[2]);</code></div>
+          <div class="row"><span class="k">skip the header</span><code>bufferedReader.readLine();  <span class="c">// once, before the while loop</span></code></div>
+          <p class="see">See it:
+            <a href="../visuals/03-reading-a-file.html">Reading a File Line by Line</a>
+          </p>
+        </section>
+
+        <section class="card" data-t="agile">
+          <h2>Agile words <span class="wb">3b &middot; 1-1, 2-1, 3-1</span></h2>
+          <div class="row"><span class="k">Agile vs Waterfall</span><code>small pieces, feedback often   vs   one long plan, phase after phase</code></div>
+          <div class="row"><span class="k">sprint</span><code>a short time box, often 2 to 3 weeks, with one sprint goal</code></div>
+          <div class="row"><span class="k">standup</span><code>daily scrum: successes, issues, blockers; ask for help</code></div>
+          <div class="row"><span class="k">retrospective</span><code>at the end of a sprint: what went well, what to change next time</code></div>
+          <div class="row"><span class="k">user story</span><code>As a (role), I want (something), so that (benefit).</code></div>
+          <div class="row"><span class="k">MVP</span><code>minimum viable product: just enough features for early users to try</code></div>
+          <div class="row"><span class="k">kanban columns</span><code>Todo (the backlog)  &gt;  In Progress  &gt;  Done</code></div>
+          <p class="see">See it:
+            <a href="../visuals/11-waterfall-vs-agile.html">Waterfall vs Agile</a>
+            <a href="../visuals/12-scrum-cycle.html">The Scrum Cycle</a>
+            <a href="../visuals/13-user-story.html">A User Story</a>
+            <a href="../visuals/14-project-board.html">The Project Board</a>
+          </p>
+        </section>
+
+      </div>
+    </div>
+    <p class="hint" id="hint">Showing <b id="count">9</b> of <b id="total">9</b> cards. Java 17, package <b>com.pluralsight</b>.</p>
+  </div>
+
+  <div id="rail"></div>
+</div>
+
+<script>
+(function(){
+  "use strict";
+  var $=function(s){return document.querySelector(s);};
+  var reduce=matchMedia("(prefers-reduced-motion: reduce)").matches;
+  var cards=Array.prototype.slice.call(document.querySelectorAll("#sheet .card"));
+  var chips=Array.prototype.slice.call(document.querySelectorAll("#chips .chip"));
+
+  function show(t){
+    var n=0;
+    cards.forEach(function(c){
+      var on=(t==="all"||c.getAttribute("data-t")===t);
+      c.hidden=!on; if(on) n++;
+    });
+    chips.forEach(function(b){
+      var on=b.getAttribute("data-t")===t;
+      b.classList.toggle("on",on); b.setAttribute("aria-pressed",on?"true":"false");
+    });
+    $("#sheet").classList.toggle("one",n===1);
+    $("#count").textContent=n;
+  }
+  $("#chips").addEventListener("click",function(e){ var b=e.target.closest(".chip"); if(b) show(b.getAttribute("data-t")); });
+  $("#total").textContent=cards.length;
+
+  /* ---------- ambient canvas ---------- */
+  var cv=$("#amb"),ctx=cv.getContext&&cv.getContext("2d"),parts=[];
+  function sizeC(){if(!ctx)return;cv.width=innerWidth;cv.height=innerHeight;}
+  function initParts(){parts=[];for(var i=0;i<46;i++)parts.push({x:Math.random(),y:Math.random(),
+    r:Math.random()*1.6+.3,s:Math.random()*.02+.004,o:Math.random()*.4+.1});}
+  function drawC(){if(!ctx)return;ctx.clearRect(0,0,cv.width,cv.height);
+    parts.forEach(function(p){p.y-=p.s/60;if(p.y<-.02)p.y=1.02;
+      ctx.beginPath();ctx.arc(p.x*cv.width,p.y*cv.height,p.r,0,7);
+      ctx.fillStyle="rgba(140,170,255,"+p.o+")";ctx.fill();});
+    requestAnimationFrame(drawC);}
+  if(ctx&&!reduce){sizeC();initParts();drawC();addEventListener("resize",sizeC);}
+
+  show("all");
+})();
+</script>
+<script src="../manifest.js"></script>
+<script src="../../assets/rail.js"></script>
+<script>Rail.render(document.getElementById("rail"),{week:3,kind:"reference",current:"cheat-sheet"});</script>
+</body>
+</html>
