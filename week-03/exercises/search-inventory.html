@@ -105,7 +105,7 @@
       <div>
         <p class="lab">What you are building</p>
         <div class="box brief">
-          <p>The <b>StoreApp</b> from the workbook pages. A <b>Product</b> class holds one item (id, name, price), <code>getInventory()</code> returns an <b>ArrayList</b> of at least 5 products, and main prints them all.</p>
+          <p>Start from the <b>starter</b> Raymond hands out (public repo, <b>workbook-3/starters/search-inventory-starter</b>), not from the workbook's StoreApp. A <b>Product</b> class holds one item (id, name, price) and already has a <b>toString()</b>. <b>SearchInventory</b> has a main that already prints every product with a for-each loop. You write <code>getInventory()</code>: an <b>ArrayList</b> of at least 5 products.</p>
           <p class="no">No arrays with a fixed size and no counter: the list grows as you add. The file, the sort and the menu are bonuses, one at a time, after the basic version runs.</p>
         </div>
 
@@ -117,12 +117,11 @@
       <div class="side">
         <div>
           <p class="lab">What a finished run looks like</p>
-          <div class="console"><div class="cl">run</div>We carry the following inventory:
-id: 4567 10' 2x4 (grade B) - Price: $9.99
-id: 1234 Hammer - Price: $19.49
-id: 2345 Box of nails - Price: $9.29
-id: 9154 9-in-1 Ratcheting Screwdriver - Price: $24.97
-id: 1648 10" Crescent Wrench - Price: $15.95</div>
+          <div class="console"><div class="cl">run</div>Product{id=4567, name='10' 2x4 (grade B)', price=9.99}
+Product{id=1234, name='Hammer', price=19.49}
+Product{id=2345, name='Box of nails', price=9.29}
+Product{id=9154, name='9-in-1 Ratcheting Screwdriver', price=24.97}
+Product{id=1648, name='10" Crescent Wrench', price=15.95}</div>
           <p class="note">Your products will differ. Two decimals on every price.</p>
         </div>
         <div>
@@ -168,15 +167,15 @@ id: 1648 10" Crescent Wrench - Price: $15.95</div>
     {t:"Create the project <code>search-inventory</code> in <code>workbook-3</code>, with Git and the package <code>com.pluralsight</code>.",
      d:"File > New > Project, name <b>search-inventory</b>, Location: Desktop > pluralsight > java-development > <b>workbook-3</b>. Java, Maven, JDK 17, GroupId <b>com.pluralsight</b>, tick <b>Create Git repository</b>. Then Git > GitHub > <b>Share Project on GitHub</b>.",
      ok:"the repository shows on github.com"},
-    {t:"Add the <code>Product</code> class: id, name, price.",
-     d:"New Java class <b>Product</b> in com.pluralsight, as on the workbook page: three private fields (price is a <b>double</b>), a constructor that takes all three, and <b>getId</b>, <b>getName</b>, <b>getPrice</b>.",
-     ok:"Product compiles with no red"},
-    {t:"Add <code>StoreApp</code> with <code>main</code> and <code>getInventory()</code>.",
-     d:"New class <b>StoreApp</b>. <b>getInventory()</b> is static, returns an <b>ArrayList</b> of Product objects and fills it with at least 5 products of your choice.",
+    {t:"Copy the two starter classes into <code>com.pluralsight</code>.",
+     d:"From the public repo, <b>workbook-3/starters/search-inventory-starter</b>: <b>Product.java</b> (three private fields, price a <b>double</b>, a constructor, getters and a <b>toString()</b>) and <b>SearchInventory.java</b>. Read them before you type anything: main already calls getInventory and prints each product.",
+     ok:"both classes compile with no red, and the run prints nothing yet (empty list)"},
+    {t:"Write <code>getInventory()</code>: at least 5 products.",
+     d:"Where the starter says <b>Write your code here</b>: <b>new Product(...)</b> for each item and <b>inventory.add(...)</b>. Any products you like.",
      ok:"getInventory returns a list with 5 or more products"},
-    {t:"Print the inventory.",
-     d:"main gets the list from getInventory, prints <b>We carry the following inventory:</b>, then one line per product with the workbook's <b>printf</b> format.",
-     ok:"the run looks like the one on the right"},
+    {t:"Run it.",
+     d:"main's for-each loop prints every product; each line comes from Product's <b>toString()</b>, that is why you see <b>Product{id=..., name='...', price=...}</b> and not an address.",
+     ok:"the run looks like the one on the right, with your products"},
     {t:"Bonus: load the products from <code>inventory.csv</code>.",
      d:"Put <b>inventory.csv</b> from DataFiles.zip at the project root, next to pom.xml. getInventory reads it a line at a time with a <b>BufferedReader</b>, splits each line on the pipe and builds a Product from the parts.",
      ok:"every line of the file prints, and a line added to the file prints too"},

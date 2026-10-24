@@ -105,13 +105,13 @@
       <div>
         <p class="lab">What you are building</p>
         <div class="box brief">
-          <p>The StoreApp from the HashMap pages. A static <code>HashMap&lt;Integer, Product&gt;</code> named <b>inventory</b> is filled by <code>loadInventory()</code> from inventory.csv, each product stored under its <b>id</b>. main asks for an item number and looks it up with <code>get</code>.</p>
+          <p>Start from the <b>starter</b> Raymond hands out (public repo, <b>workbook-3/starters/search-inventory-map-starter</b>). A static <code>HashMap&lt;Integer, Product&gt;</code> named <b>inventory</b>, and a main that already asks for an item number and looks it up with <code>get</code>. You write <code>loadInventory()</code>: every line of inventory.csv becomes a product stored under its <b>id</b>.</p>
           <p class="no">No list, no loop over every product, no search by name. The workbook says "so that users can search for products by name", but its own code keys by id and asks for an item #: the key is the id.</p>
         </div>
 
         <p class="lab" style="margin-top:18px">Do these in order</p>
         <div class="steps" id="steps"></div>
-        <div class="prog"><span id="progTxt">0 of 9 done</span><div class="bar"><i id="progBar"></i></div><button id="bClear">Clear ticks</button></div>
+        <div class="prog"><span id="progTxt">0 of 7 done</span><div class="bar"><i id="progBar"></i></div><button id="bClear">Clear ticks</button></div>
       </div>
 
       <div class="side">
@@ -168,17 +168,11 @@ We don't carry that product</div>
     {t:"Put <code>inventory.csv</code> at the project root.",
      d:"Take it from DataFiles.zip, or copy the one from search-inventory. Drop it next to <b>pom.xml</b>. One product per line: id, name, price, separated by a pipe.",
      ok:"inventory.csv shows in the Project panel at the same level as pom.xml"},
-    {t:"Add a <code>Product</code> class: id, name, price, a constructor, getters.",
-     d:"In com.pluralsight, the class the HashMap pages show: three private fields, a constructor that takes all three, and <b>getId</b>, <b>getName</b>, <b>getPrice</b>.",
-     ok:"Product compiles with no red"},
-    {t:"Add <code>StoreApp</code> with a static map named <code>inventory</code>.",
-     d:"A class with main. The map is a static field, outside main: key <b>Integer</b> (the product id), value <b>Product</b>.",
-     ok:"StoreApp compiles and inventory is visible from every method in the class"},
+    {t:"Copy the two starter classes into <code>com.pluralsight</code>.",
+     d:"From the public repo, <b>workbook-3/starters/search-inventory-map-starter</b>: <b>Product.java</b> (three private fields, a constructor, <b>getId</b>, <b>getName</b>, <b>getPrice</b>) and <b>SearchInventoryMap.java</b>. Read main: the map is a <b>static</b> field outside main, key <b>Integer</b> (the id), value <b>Product</b>; main calls loadInventory, reads a number with a Scanner, <b>get</b>s it from the map and checks for <b>null</b>.",
+     ok:"both classes compile; a run prints \"We don't carry that product\" for every id, since the map is still empty"},
     {t:"Write <code>loadInventory()</code>: every line of inventory.csv becomes a Product in the map.",
-     d:"A static method. Read the file line by line with <b>BufferedReader</b> inside try/catch, split each line on the pipe, build a Product, and <b>put</b> it in inventory with its id as the key.",
-     ok:"after the call, inventory.size() equals the number of lines in the file"},
-    {t:"In <code>main</code>, load the inventory, ask \"What item # are you interested in?\" and look the number up.",
-     d:"Call loadInventory first. Read the number with a Scanner and <b>get</b> it from the map. Null means \"We don't carry that product\"; otherwise print the name and the price with two decimals.",
+     d:"Where the starter says <b>Your code should be here</b>. Read the file line by line with <b>BufferedReader</b> inside try/catch, split each line on the pipe, build a Product, and <b>put</b> it in inventory with its id as the key.",
      ok:"a known id prints \"We carry ... and the price is $...\""},
     {t:"Test it with an id that is not in the file.",
      d:"Run it again and type a number no product has, such as 9999.",
