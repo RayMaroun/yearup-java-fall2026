@@ -71,6 +71,9 @@
   .mock.filled .pair .tpl{opacity:0;visibility:hidden}
   .mock.filled .pair .fil{opacity:1;visibility:visible}
   .pair .tpl{color:rgba(132,150,182,.62)}
+  /* the optional section, deleted in the filled example: heading struck, one mono note */
+  .mock.filled .sec[data-s="diagram"] .h2{text-decoration:line-through;opacity:.45}
+  .gone{display:block;font-family:var(--mono);font-size:.7rem;letter-spacing:.04em;color:var(--muted);opacity:.75}
   .pair .tpl .h1{color:rgba(238,242,251,.55)}
   .li{display:block;padding-left:16px;position:relative}
   .li::before{content:"";position:absolute;left:4px;top:.62em;width:5px;height:5px;border-radius:50%;background:currentColor;opacity:.7}
@@ -190,6 +193,14 @@
             </span>
           </button>
 
+          <button class="sec" data-s="diagram">
+            <span class="h2">Class Diagram</span>
+            <span class="pair">
+              <span class="tpl"><span class="img broken">Class Diagram</span></span>
+              <span class="fil"><span class="gone">section deleted: Trip Log has no class diagram</span></span>
+            </span>
+          </button>
+
           <button class="sec" data-s="feat">
             <span class="h2">Features</span>
             <span class="pair">
@@ -209,8 +220,8 @@
           <button class="sec" data-s="setup">
             <span class="h2">Setup</span>
             <span class="pair">
-              <span class="tpl"><span class="h3">Prerequisites</span><span class="li">Java 17 (Amazon Corretto), IntelliJ IDEA Community Edition</span><span class="h3">Running the application</span><span class="ol"><i>4.</i>Open <code>.../pluralsight/<span class="bad">YourMainClassName</span>.java</code></span><span class="ol"><i>5.</i>Run '<span class="bad">YourMainClassName</span>.main()'</span><span class="h3">Data files</span><span class="li">&nbsp;</span></span>
-              <span class="fil"><span class="h3">Prerequisites</span><span class="li">Java 17 (Amazon Corretto), IntelliJ IDEA Community Edition</span><span class="h3">Running the application</span><span class="ol"><i>4.</i>Open <code>.../pluralsight/TripLog.java</code></span><span class="ol"><i>5.</i>Run 'TripLog.main()'</span><span class="h3">Data files</span><span class="li"><code>trips.csv</code> sits at the project root, next to <code>pom.xml</code>.</span></span>
+              <span class="tpl"><span class="h3">Prerequisites</span><span class="li">Java 17 (Amazon Corretto), IntelliJ IDEA Community Edition</span><span class="h3">Running the application</span><span class="ol"><i>4.</i>Open <code>.../pluralsight/<span class="bad">YourMainClassName</span>.java</code></span><span class="ol"><i>5.</i>Run '<span class="bad">YourMainClassName</span>.main()'</span><span class="h3">Data and configuration</span><span class="li">&nbsp;</span></span>
+              <span class="fil"><span class="h3">Prerequisites</span><span class="li">Java 17 (Amazon Corretto), IntelliJ IDEA Community Edition</span><span class="h3">Running the application</span><span class="ol"><i>4.</i>Open <code>.../pluralsight/TripLog.java</code></span><span class="ol"><i>5.</i>Run 'TripLog.main()'</span><span class="h3">Data and configuration</span><span class="li"><code>trips.csv</code> sits at the project root, next to <code>pom.xml</code>.</span></span>
             </span>
           </button>
 
@@ -328,8 +339,15 @@ while ((line = reader.readLine()) != null) { ... }</span>This loop is where the 
       t:"An <b class=\"y\">empty heading</b>: the three to five sentences are still a comment.",
       f:"Who uses it, what it does, and <b class=\"g\">what it replaces</b>: a notebook that kept getting lost.",
       ex:"<p>Trip Log is a Java console application for someone who drives for work and needs to keep track of their trips. Each trip has a date, a start city, an end city and a distance in miles. The app reads the trips from a file when it starts, lets the user add new trips, and prints the total distance for a month. It replaces a notebook that kept getting lost.</p>"},
+    diagram:{name:"Class Diagram (optional)",
+      what:"Only when the project asks for one, Capstone 2 onward: the diagram exported as a PNG in the images folder.",
+      check:"Present when the project asked for it; gone, heading included, when it did not.",
+      miss:"The heading left in with a broken picture under it, in a project that has no diagram.",
+      t:"<b class=\"y\">A broken picture</b> under the heading: the template keeps the line for projects that need it.",
+      f:"<b class=\"g\">Deleted</b>, heading included: Trip Log has no class diagram. That is what optional means.",
+      ex:"<p>Trip Log has no class diagram, so the section was deleted.</p>"},
     feat:{name:"Features",
-      what:"One bullet per thing the app can do, in the order of your menu, bonuses marked.",
+      what:"One bullet per thing the app can do, in the order of your menu, bonuses marked. For an API, one line per endpoint: method, path, what it does.",
       check:"Every bullet works when the app runs.",
       miss:"Listing things that do not work. Half done goes under Future Work.",
       t:"<b class=\"y\">Three empty bullets</b>: nothing is listed yet.",
@@ -343,8 +361,8 @@ while ((line = reader.readLine()) != null) { ... }</span>This loop is where the 
       f:"<b class=\"g\">Three stories</b>, the same text as the project board cards.",
       ex:"<p>- As a driver, I want to add a trip in a few seconds, so that I record it before I forget.<br>- As a driver, I want the total miles for a month, so that I can fill in my expense form.<br>- As a driver, I want to search by city, so that I can find a trip I made last year.</p>"},
     setup:{name:"Setup",
-      what:"How a stranger gets the app running: what to install, the steps in IntelliJ, and every file the program reads or writes.",
-      check:"The real main class in steps 4 and 5, and every data file with where it sits.",
+      what:"How a stranger gets the app running: what to install, the steps in IntelliJ, and Data and configuration: data files, files the program creates, a database script, a settings file. Delete that part if there is nothing.",
+      check:"The real main class in steps 4 and 5, and every data file or setting with where it sits.",
       miss:"The main class name left as YourMainClassName.",
       t:"Prerequisites are written for you; <b class=\"y\">YourMainClassName</b> and the empty data file line are not.",
       f:"<b class=\"g\">TripLog</b> is the real main class, and trips.csv sits next to pom.xml.",
@@ -357,7 +375,7 @@ while ((line = reader.readLine()) != null) { ... }</span>This loop is where the 
       f:"Still <b class=\"g\">Java 17 and IntelliJ</b>: a short list is fine for a console app.",
       ex:"<p>- Java 17<br>- IntelliJ IDEA</p>"},
     demo:{name:"Demo",
-      what:"Screenshots of the app running in the IntelliJ console: the menu, one feature, one error message. A GIF is a bonus.",
+      what:"Screenshots of the app running: the IntelliJ console for a console app, Insomnia or Swagger for an API. The menu, one feature, one error message. A GIF is a bonus.",
       check:"The pictures show on the repository page.",
       miss:"An image path with a space in it, or the images folder never committed.",
       t:"<b class=\"y\">Two broken pictures</b>: images/menu.png does not exist yet.",
