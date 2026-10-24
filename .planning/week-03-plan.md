@@ -1,6 +1,6 @@
 # Week 3 idea list — DRAFT 2026-10-24 (built ahead of Ray's review on his instruction "do everything, make sure everything is ready"; nothing pushed)
 
-Source: fall Workbook 3a v7.2Y (Exceptions, File IO, Dates, ArrayList, HashMap), 3b (Agile, User Stories, GitHub Project Board), 3w Online Store. Fall set: 15 visuals (04 From One Line to One Object added 2026-10-24, 05 to 15 renumbered). Spring week 3 hub (14 visuals, 4 reference, 11 companions, 11 games) checked idea by idea. Fall deploys 3a, 3b, 3w only: 3c GitHub (README) is not in the fall set, the outline's "Debugging with IntelliJ" and "JAR files" are not in any fall PDF. Rule for every visual: ONE PICTURE YOU TOUCH (CLAUDE.md), calibration page `week-02/visuals/07-class-vs-object.html`.
+Source: fall Workbook 3a v7.2Y (Exceptions, File IO, Dates, ArrayList, HashMap), 3b (Agile, User Stories, GitHub Project Board), 3w Online Store. Fall set: 15 visuals (04 From Lines to Objects added 2026-10-24, 05 to 15 renumbered). Spring week 3 hub (14 visuals, 4 reference, 11 companions, 11 games) checked idea by idea. Fall deploys 3a, 3b, 3w only: 3c GitHub (README) is not in the fall set, the outline's "Debugging with IntelliJ" and "JAR files" are not in any fall PDF. Rule for every visual: ONE PICTURE YOU TOUCH (CLAUDE.md), calibration page `week-02/visuals/07-class-vs-object.html`.
 
 ## Visuals (14: 10 rebuild, 4 agile pages rebuilt to the rule, 2 spring pages dropped)
 | # | Idea | Spring page | Verdict | Example (from the fall demos, never an exercise) |
@@ -8,7 +8,7 @@ Source: fall Workbook 3a v7.2Y (Exceptions, File IO, Dates, ArrayList, HashMap),
 | 01 | Three kinds of errors: compile, logic, runtime | none | NEW | demo-01: `printLn` typo, discount math that prints a wrong price, index typed from the keyboard |
 | 02 | try and catch: the jump to catch, the program goes on | 01-try-catch-flow | REBUILD | demo-01: two numbers, a division, second number 0 |
 | 03 | Reading a file line by line until null | 02-buffered-reader | REBUILD | demo-02: poem.txt, readLine one press per line |
-| 04 | From one line to one object: split, parseInt, constructor | (new, 2026-10-24) | NEW | demo-02 Main2: "Tokyo|Japan|13960000", pick the separator, split, tap the number, new City. Added on Ray's ask after Main2 was added to demo-02 |
+| 04 | From lines to objects: the whole csv loop (readLine, split, parse, constructor, repeat until null) | (new, 2026-10-24) | NEW | demo-02 Main2: "Tokyo|Japan|13960000", pick the separator, split, tap the number, new City. Added on Ray's ask after Main2 was added to demo-02 |
 | 05 || Writing to a file: write, close, append true | 03-filewriter-bufferedwriter | REBUILD | demo-03: potato.txt lines, tomato.txt append |
 | 06 || LocalDate, LocalTime, LocalDateTime and their parts | 04-local-date-time | REBUILD | demo-04: today, getDayOfWeek, getMonthValue, getHour |
 | 07 || Date patterns: format and parse with a pattern | 05-datetime-formatter | REBUILD | demo-04: `MM/dd/yyyy` parse of 10/17/2026, `E, MMM dd, yyyy HH:mm:ss` format |

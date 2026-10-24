@@ -7,7 +7,7 @@ window.HUB_MANIFEST = {
     { file: "01-three-kinds-of-errors.html", title: "Three Kinds of Errors", group: "Workbook 3a · Section 1-1" },
     { file: "02-try-catch-flow.html", title: "try and catch", group: "Workbook 3a · Section 1-1" },
     { file: "03-reading-a-file.html", title: "Reading a File Line by Line", group: "Workbook 3a · Section 1-2" },
-    { file: "04-from-line-to-object.html", title: "From One Line to One Object", group: "Workbook 3a · Section 1-2" },
+    { file: "04-from-line-to-object.html", title: "From Lines to Objects", group: "Workbook 3a · Section 1-2" },
     { file: "05-writing-a-file.html", title: "Writing to a File", group: "Workbook 3a · Section 2-1" },
     { file: "06-date-and-time-objects.html", title: "LocalDate, LocalTime, LocalDateTime", group: "Workbook 3a · Section 2-2" },
     { file: "07-date-patterns.html", title: "Date Patterns", group: "Workbook 3a · Section 2-2" },
