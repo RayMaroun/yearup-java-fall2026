@@ -105,7 +105,7 @@
       <div>
         <p class="lab">What you are building</p>
         <div class="box brief">
-          <p>Start from the <b>starter</b> Raymond hands out (public repo, <b>workbook-3/starters/search-inventory-map-starter</b>). A static <code>HashMap&lt;Integer, Product&gt;</code> named <b>inventory</b>, and a main that already asks for an item number and looks it up with <code>get</code>. You write <code>loadInventory()</code>: every line of inventory.csv becomes a product stored under its <b>id</b>.</p>
+          <p>Start from the <b>starter</b> Raymond posts on Teams (two files to paste into a new project: Product.java and SearchInventoryMap.java). A static <code>HashMap&lt;Integer, Product&gt;</code> named <b>inventory</b>, and a main that already asks for an item number and looks it up with <code>get</code>. You write <code>loadInventory()</code>: every line of inventory.csv becomes a product stored under its <b>id</b>.</p>
           <p class="no">No list, no loop over every product, no search by name. The workbook says "so that users can search for products by name", but its own code keys by id and asks for an item #: the key is the id.</p>
         </div>
 
@@ -169,7 +169,7 @@ We don't carry that product</div>
      d:"Take it from DataFiles.zip, or copy the one from search-inventory. Drop it next to <b>pom.xml</b>. One product per line: id, name, price, separated by a pipe.",
      ok:"inventory.csv shows in the Project panel at the same level as pom.xml"},
     {t:"Copy the two starter classes into <code>com.pluralsight</code>.",
-     d:"From the public repo, <b>workbook-3/starters/search-inventory-map-starter</b>: <b>Product.java</b> (three private fields, a constructor, <b>getId</b>, <b>getName</b>, <b>getPrice</b>) and <b>SearchInventoryMap.java</b>. Read main: the map is a <b>static</b> field outside main, key <b>Integer</b> (the id), value <b>Product</b>; main calls loadInventory, reads a number with a Scanner, <b>get</b>s it from the map and checks for <b>null</b>.",
+     d:"From the starter Raymond posts on Teams: <b>Product.java</b> (three private fields, a constructor, <b>getId</b>, <b>getName</b>, <b>getPrice</b>) and <b>SearchInventoryMap.java</b>. Read main: the map is a <b>static</b> field outside main, key <b>Integer</b> (the id), value <b>Product</b>; main calls loadInventory, reads a number with a Scanner, <b>get</b>s it from the map and checks for <b>null</b>.",
      ok:"both classes compile; a run prints \"We don't carry that product\" for every id, since the map is still empty"},
     {t:"Write <code>loadInventory()</code>: every line of inventory.csv becomes a Product in the map.",
      d:"Where the starter says <b>Your code should be here</b>. Read the file line by line with <b>BufferedReader</b> inside try/catch, split each line on the pipe, build a Product, and <b>put</b> it in inventory with its id as the key.",
