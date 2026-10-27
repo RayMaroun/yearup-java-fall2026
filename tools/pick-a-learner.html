@@ -175,7 +175,7 @@
   var names=[], picked=[], angle=0, spinning=false, lastWinner=null, pairMode=false, pairFirst=null;
 
   /* ---------- storage ---------- */
-  var CLASS=(window.HUB_ROSTER&&window.HUB_ROSTER.length)?window.HUB_ROSTER.slice():SAMPLE.slice();
+  var CLASS=(window.HUB_ROSTER&&window.HUB_ROSTER.length)?window.HUB_ROSTER.map(function(n){return n.split(" ")[0];}):SAMPLE.slice();
   function load(){
     try{ names=JSON.parse(localStorage.getItem("hub-roster")||"[]"); picked=JSON.parse(localStorage.getItem("hub-picked")||"[]"); }catch(e){ names=[]; picked=[]; }
     if(!names.length) names=CLASS.slice();

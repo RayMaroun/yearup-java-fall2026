@@ -3,9 +3,10 @@
  * Only one workshop is live at a time. After every change here, bump the ?v= tag on the script line in submit.html, or browsers keep the old copy. Capstones are submitted in Brightspace, never here. */
 window.SUBMIT = {
   workshop: "Workshop 2 · Neighborhood Library",
+  repo:     "neighborhood-library",          /* example shown in the link box */
   opens:    "2026-10-23T13:00:00-04:00",   /* given Fri Oct 23 */
   deadline: "2026-10-29T08:30:00-04:00",   /* Thu Oct 29, before class starts */
-  /* next: Workshop 3 · Online Store, opens Thu Oct 29 after the intro, deadline 2026-11-05T08:30:00-05:00 */
+  /* next: Workshop 3 · Online Store, repo online-store, opens Thu Oct 29 after the intro, deadline 2026-11-05T08:30:00-05:00 */
   note:     "One submission per team is enough, but every team member submits the same link so each name is on the list. README.md at the root of the repo, project in pluralsight/workshops.",
   /* Google Form behind the page: "Workshop Submission - YearUp Fall 2026", published 2026-10-27, responses in the Sheet tab "Submissions". */
   form: {

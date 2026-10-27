@@ -103,23 +103,17 @@
 
     <div class="stats">
       <div class="stat"><div class="k">Deadline</div><div class="v" id="dlEt"></div><div class="s">Eastern time, before class</div></div>
-      <div class="stat"><div class="k">Time left</div><div class="v" id="left"></div><div class="s" id="dlLocal"></div></div>
+      <div class="stat"><div class="k">Time left</div><div class="v" id="left"></div><div class="s" id="leftNote"></div></div>
     </div>
 
     <form id="f" novalidate>
-      <div class="field row2">
-        <div>
-          <p class="lab">First name</p>
-          <select id="first" required><option value="">Choose your name</option></select>
-        </div>
-        <div>
-          <p class="lab">Last name</p>
-          <input type="text" id="last" placeholder="as on the roster" autocomplete="family-name" required>
-        </div>
+      <div class="field">
+        <p class="lab">Your name</p>
+        <select id="who" required><option value="">Choose your name</option></select>
       </div>
       <div class="field">
         <p class="lab">GitHub repository link</p>
-        <input type="url" id="link" placeholder="https://github.com/username/online-store" autocomplete="off" required>
+        <input type="url" id="link" placeholder="https://github.com/username/repository" autocomplete="off" required>
         <p class="note">The repository page, not a file inside it. It must be <b>public</b>.</p>
       </div>
       <button type="submit" class="btn primary" id="go">Submit</button>
@@ -141,24 +135,24 @@
   </div></div>
 </div>
 
-<script src="roster.js"></script>
-<script src="submit-config.js?v=2026-10-27b"></script>
+<script src="roster.js?v=2026-10-27c"></script>
+<script src="submit-config.js?v=2026-10-27c"></script>
 <script>
 (function(){
   var C = window.SUBMIT || {};
   var opens = new Date(C.opens), deadline = new Date(C.deadline);
   var $ = function(id){ return document.getElementById(id); };
   var fmtEt = new Intl.DateTimeFormat('en-US',{timeZone:'America/New_York',weekday:'short',month:'short',day:'numeric',hour:'numeric',minute:'2-digit'});
-  var fmtLocal = new Intl.DateTimeFormat(undefined,{weekday:'short',month:'short',day:'numeric',hour:'numeric',minute:'2-digit',timeZoneName:'short'});
+  var fmtStamp = new Intl.DateTimeFormat('en-US',{timeZone:'America/New_York',month:'short',day:'numeric',hour:'numeric',minute:'2-digit'});
 
   $('wsName').textContent = C.workshop || 'No workshop open';
   $('wsNote').textContent = C.note || '';
   $('dlEt').textContent = isNaN(deadline) ? '' : fmtEt.format(deadline) + ' ET';
-  $('dlLocal').textContent = isNaN(deadline) ? '' : 'Your time: ' + fmtLocal.format(deadline);
+  if (C.repo) $('link').placeholder = 'https://github.com/username/' + C.repo;
 
-  var roster = (window.HUB_ROSTER || []).slice().sort();
-  roster.forEach(function(n){ var o=document.createElement('option'); o.value=n; o.textContent=n; $('first').appendChild(o); });
-  try { var saved = JSON.parse(localStorage.getItem('hub-submit-me')||'null'); if(saved){ $('first').value=saved.first||''; $('last').value=saved.last||''; } } catch(e){}
+  var roster = (window.HUB_ROSTER || []).slice();
+  roster.forEach(function(n){ var o=document.createElement('option'); o.value=n; o.textContent=n; $('who').appendChild(o); });
+  try { var saved = localStorage.getItem('hub-submit-me'); if(saved && roster.indexOf(saved)>=0) $('who').value=saved; } catch(e){}
 
   function state(){
     var now = new Date();
@@ -173,6 +167,7 @@
     var pill = $('pill'); pill.className = 'pill ' + (s==='open'?'open':s==='soon'?'soon':'closed');
     pill.textContent = s==='open'?'open':s==='soon'?'opens soon':s==='closed'?'closed':'nothing open';
     var left = $('left'); left.className = 'v';
+    $('leftNote').textContent = s==='open' ? 'until the deadline' : '';
     if (s==='open'){
       var ms = deadline - now, d = Math.floor(ms/864e5), h = Math.floor(ms%864e5/36e5), m = Math.floor(ms%36e5/6e4), sec = Math.floor(ms%6e4/1e3);
       left.textContent = d>0 ? d+'d '+pad(h)+'h '+pad(m)+'m' : pad(h)+':'+pad(m)+':'+pad(sec);
@@ -199,18 +194,17 @@
   $('f').addEventListener('submit', function(ev){
     ev.preventDefault();
     if (state()!=='open'){ tick(); return; }
-    var first=$('first').value.trim(), last=$('last').value.trim(), link=$('link').value.trim().replace(/\.git$/,'');
-    if(!first){ say('Choose your first name from the list.','trouble'); $('first').focus(); return; }
-    if(!last){ say('Type your last name.','trouble'); $('last').focus(); return; }
+    var who=$('who').value.trim(), link=$('link').value.trim().replace(/\.git$/,'');
+    if(!who){ say('Choose your name from the list.','trouble'); $('who').focus(); return; }
     if(!GH.test(link)){ say('The link must look like https://github.com/username/repository','trouble'); $('link').focus(); return; }
     if(!C.form || !C.form.action || C.form.action.indexOf('FORM_PUBLIC_ID')>=0){ say('Submission is not wired up yet. Tell Raymond.','trouble'); return; }
-    var fd = new FormData(); fd.append(C.form.name, first+' '+last); fd.append(C.form.link, link);
+    var fd = new FormData(); fd.append(C.form.name, who); fd.append(C.form.link, link);
     $('go').disabled = true; say('Sending', 'acting');
     fetch(C.form.action, {method:'POST', mode:'no-cors', body:fd}).then(function(){
-      try { localStorage.setItem('hub-submit-me', JSON.stringify({first:first,last:last})); } catch(e){}
-      $('doneWho').textContent = first+' '+last+', '+C.workshop;
+      try { localStorage.setItem('hub-submit-me', who); } catch(e){}
+      $('doneWho').textContent = who+', '+C.workshop;
       $('doneLink').textContent = link;
-      $('doneWhen').textContent = 'Sent ' + fmtLocal.format(new Date()) + '. Raymond checks the repository after the deadline.';
+      $('doneWhen').textContent = 'Sent ' + fmtStamp.format(new Date()) + ' ET. Raymond checks the repository after the deadline.';
       $('f').classList.add('hidden'); $('done').classList.remove('hidden');
       $('go').disabled = false; say('Pick your name, paste the link, press Submit.');
     }).catch(function(){
