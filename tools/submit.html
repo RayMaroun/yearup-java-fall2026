@@ -136,7 +136,7 @@
 </div>
 
 <script src="roster.js?v=2026-10-27c"></script>
-<script src="submit-config.js?v=2026-10-27e"></script>
+<script src="submit-config.js?v=2026-10-28a"></script>
 <script>
 (function(){
   var C = window.SUBMIT || {};
@@ -202,10 +202,10 @@
     if(!who){ say('Choose your name from the list.','trouble'); $('who').focus(); return; }
     if(!GH.test(link)){ say('The link must look like https://github.com/username/repository','trouble'); $('link').focus(); return; }
     if(!C.form || !C.form.action || C.form.action.indexOf('FORM_PUBLIC_ID')>=0){ say('Submission is not wired up yet. Tell Raymond.','trouble'); return; }
-    var fd = new FormData(); fd.append(C.form.name, who); fd.append(C.form.link, link);
+    var fd = new FormData(); fd.append(C.form.name, who); fd.append(C.form.link, link); fd.append(C.form.workshop, C.workshop);
     $('go').disabled = true; say('Sending', 'acting');
     fetch(C.form.action, {method:'POST', mode:'no-cors', body:fd}).then(function(){
-      var when = 'Sent ' + fmtStamp.format(new Date()) + ' ET. Raymond checks the repository after the deadline.';
+      var when = 'Sent ' + fmtStamp.format(new Date()) + ' ET.';
       try { localStorage.setItem('hub-submit-me', who); localStorage.setItem(rkey, JSON.stringify({who:who, link:link, when:when})); } catch(e){}
       $('doneWho').textContent = who+', '+C.workshop;
       $('doneLink').textContent = link;

@@ -11,7 +11,8 @@ window.SUBMIT = {
   /* Google Form behind the page: "Workshop Submission - YearUp Fall 2026", published 2026-10-27, responses in the Sheet tab "Submissions". */
   form: {
     action: "https://docs.google.com/forms/d/e/1FAIpQLSd7-DuBhPXJg8p_GymnEAawJPZtRxu6J9rAmfGeyRkd5g-mgw/formResponse",
-    name:   "entry.1923989402",
-    link:   "entry.495839527"
+    name:     "entry.1923989402",
+    link:     "entry.495839527",
+    workshop: "entry.1902226794"     /* the page sends the live workshop name, so every Sheet row says which workshop it is */
   }
 };
