@@ -1,6 +1,6 @@
 /* Workshop submission window. Ray tells Claude the live workshop and its deadline; Claude edits this file and pushes.
  * Times carry an explicit offset: Eastern is -04:00 until Sat Nov 1 2026, -05:00 from Sun Nov 2 2026 on.
- * Only one workshop is live at a time. Capstones are submitted in Brightspace, never here. */
+ * Only one workshop is live at a time. After every change here, bump the ?v= tag on the script line in submit.html, or browsers keep the old copy. Capstones are submitted in Brightspace, never here. */
 window.SUBMIT = {
   workshop: "Workshop 2 · Neighborhood Library",
   opens:    "2026-10-23T13:00:00-04:00",   /* given Fri Oct 23 */
