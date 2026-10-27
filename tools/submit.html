@@ -125,7 +125,7 @@
       <p id="doneWho"></p>
       <p class="link" id="doneLink"></p>
       <p id="doneWhen"></p>
-      <p style="margin-top:14px"><button class="btn" id="again">Submit another link</button></p>
+      <p style="margin-top:14px;font-size:.8rem">One submission per learner. Sent the wrong link? Tell Raymond on Teams.</p>
     </div>
 
     <div class="closedbox hidden" id="closed">
@@ -136,7 +136,7 @@
 </div>
 
 <script src="roster.js?v=2026-10-27c"></script>
-<script src="submit-config.js?v=2026-10-27d"></script>
+<script src="submit-config.js?v=2026-10-27e"></script>
 <script>
 (function(){
   var C = window.SUBMIT || {};
@@ -155,6 +155,9 @@
   var roster = (window.HUB_ROSTER || []).slice();
   roster.forEach(function(n){ var o=document.createElement('option'); o.value=n; o.textContent=n; $('who').appendChild(o); });
   try { var saved = localStorage.getItem('hub-submit-me'); if(saved && roster.indexOf(saved)>=0) $('who').value=saved; } catch(e){}
+  /* one submission per browser per workshop: a stored receipt keeps the form hidden */
+  var rkey = 'hub-submit-done-' + (C.workshop||'');
+  try { var r = JSON.parse(localStorage.getItem(rkey)||'null'); if (r && r.who && r.link){ $('doneWho').textContent = r.who+', '+C.workshop; $('doneLink').textContent = r.link; $('doneWhen').textContent = r.when; $('done').classList.remove('hidden'); } } catch(e){}
 
   function state(){
     var now = new Date();
@@ -176,9 +179,9 @@
     } else if (s==='soon'){ left.textContent = 'opens ' + fmtEt.format(opens) + ' ET'; left.className='v gold'; }
     else { left.textContent = s==='closed' ? 'deadline passed' : ''; left.className='v warn'; }
 
-    var showForm = s==='open' && $('done').classList.contains('hidden');
-    $('f').classList.toggle('hidden', !showForm);
-    $('closed').classList.toggle('hidden', s==='open');
+    var received = !$('done').classList.contains('hidden');
+    $('f').classList.toggle('hidden', !(s==='open' && !received));
+    $('closed').classList.toggle('hidden', s==='open' || received);
     if (s!=='open'){
       $('closed').className = 'closedbox' + (s==='soon'?' soon':'');
       $('closedBig').textContent = s==='soon' ? 'Not open yet' : s==='closed' ? 'Closed' : 'Nothing to submit';
@@ -202,17 +205,17 @@
     var fd = new FormData(); fd.append(C.form.name, who); fd.append(C.form.link, link);
     $('go').disabled = true; say('Sending', 'acting');
     fetch(C.form.action, {method:'POST', mode:'no-cors', body:fd}).then(function(){
-      try { localStorage.setItem('hub-submit-me', who); } catch(e){}
+      var when = 'Sent ' + fmtStamp.format(new Date()) + ' ET. Raymond checks the repository after the deadline.';
+      try { localStorage.setItem('hub-submit-me', who); localStorage.setItem(rkey, JSON.stringify({who:who, link:link, when:when})); } catch(e){}
       $('doneWho').textContent = who+', '+C.workshop;
       $('doneLink').textContent = link;
-      $('doneWhen').textContent = 'Sent ' + fmtStamp.format(new Date()) + ' ET. Raymond checks the repository after the deadline.';
+      $('doneWhen').textContent = when;
       $('f').classList.add('hidden'); $('done').classList.remove('hidden');
       $('go').disabled = false; say('Pick your name, paste the link, press Submit.');
     }).catch(function(){
       $('go').disabled = false; say('Could not send. Check your connection and try again, or send the link to Raymond on Teams.','trouble');
     });
   });
-  $('again').addEventListener('click', function(){ $('done').classList.add('hidden'); $('link').value=''; tick(); $('link').focus(); });
 
   /* ambient dots */
   var cv=$('amb'), cx=cv.getContext('2d'), dots=[], W, H;
