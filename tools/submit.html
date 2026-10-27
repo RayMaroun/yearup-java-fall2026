@@ -1,0 +1,235 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Workshop Submission | Visual Hub Tools</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Sora:wght@500;700&family=Inter:wght@400;500&family=JetBrains+Mono:wght@400;500&display=swap">
+<style>
+  :root{
+    --bg:#080c17; --bg2:#0c1428; --surface:rgba(255,255,255,.045); --line:rgba(255,255,255,.09);
+    --ink:#eef2fb; --muted:#8496b6; --accent:#6ea0ff; --accent2:#8b7bff; --good:#46d98a; --warn:#ff6a6a;
+    --gold:#ffc862; --disp:'Sora',system-ui,sans-serif; --body:'Inter',system-ui,sans-serif;
+    --mono:'JetBrains Mono',ui-monospace,monospace;
+  }
+  *{box-sizing:border-box}
+  body{margin:0;min-height:100vh;color:var(--ink);font-family:var(--body);
+    background:radial-gradient(1200px 700px at 70% -10%,#141d38 0%,transparent 55%),
+               radial-gradient(900px 600px at 10% 110%,#161233 0%,transparent 50%),#080c17;
+    overflow-x:hidden}
+  #amb{position:fixed;inset:0;z-index:0;pointer-events:none;opacity:.6}
+  .back{position:relative;z-index:2;display:block;max-width:760px;margin:0 auto;padding:26px 24px 0;
+    width:100%;font-family:var(--mono);font-size:.8rem;letter-spacing:.04em;color:var(--muted);
+    text-decoration:none;transition:color .15s}
+  .back:hover{color:var(--accent)}
+  .wrap{position:relative;z-index:1;max-width:760px;margin:0 auto;padding:22px 24px 70px}
+  .tag{font-family:var(--mono);font-size:.72rem;letter-spacing:.22em;text-transform:uppercase;color:var(--accent);margin:0 0 14px}
+  h1{font-family:var(--disp);font-weight:700;font-size:clamp(2.3rem,6vw,3.6rem);line-height:1;margin:0 0 12px;
+    letter-spacing:-.03em;background:linear-gradient(180deg,#fff,#b9c6e6);-webkit-background-clip:text;
+    background-clip:text;color:transparent}
+  .lede{color:var(--muted);max-width:64ch;font-size:1.05rem;margin:0 0 26px;line-height:1.5}
+  .lede b{color:var(--ink)}
+  .stage{position:relative;background:linear-gradient(180deg,rgba(255,255,255,.03),rgba(255,255,255,.01));
+    border:1px solid var(--line);border-radius:24px;padding:8px;
+    box-shadow:0 1px 0 rgba(255,255,255,.06) inset,0 30px 80px -30px rgba(0,0,0,.8)}
+  .panel{border-radius:18px;padding:26px;background:linear-gradient(180deg,rgba(110,160,255,.06),rgba(139,123,255,.03));border:1px solid var(--line)}
+  .head{display:flex;justify-content:space-between;align-items:flex-start;gap:16px;flex-wrap:wrap;margin-bottom:22px}
+  .ws{font-family:var(--disp);font-weight:700;font-size:1.5rem;letter-spacing:-.02em;margin:0 0 4px}
+  .lab{font-family:var(--mono);font-size:.7rem;letter-spacing:.12em;text-transform:uppercase;color:var(--muted);margin:0 0 8px}
+  .pill{font-family:var(--mono);font-size:.68rem;letter-spacing:.1em;text-transform:uppercase;padding:6px 12px;border-radius:999px;
+    border:1px solid var(--line);background:rgba(0,0,0,.35);color:var(--muted);white-space:nowrap}
+  .pill.open{border-color:rgba(70,217,138,.5);color:var(--good)}
+  .pill.closed{border-color:rgba(255,106,106,.5);color:var(--warn)}
+  .pill.soon{border-color:rgba(255,200,98,.5);color:var(--gold)}
+  .stats{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin:0 0 22px}
+  @media (max-width:520px){.stats{grid-template-columns:1fr}}
+  .stat{background:rgba(255,255,255,.03);border:1px solid var(--line);border-radius:12px;padding:11px 13px}
+  .stat .k{font-family:var(--mono);font-size:.62rem;letter-spacing:.1em;text-transform:uppercase;color:var(--muted)}
+  .stat .v{font-family:var(--disp);font-weight:700;font-size:1.25rem;font-variant-numeric:tabular-nums;margin-top:3px}
+  .stat .v.warn{color:var(--warn)}
+  .stat .v.gold{color:var(--gold)}
+  .stat .s{font-size:.74rem;color:var(--muted);margin-top:2px}
+  .field{margin-bottom:16px}
+  .row2{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+  @media (max-width:520px){.row2{grid-template-columns:1fr}}
+  select,input[type=text],input[type=url]{width:100%;font-family:var(--mono);font-size:.86rem;color:var(--ink);background:rgba(0,0,0,.32);
+    border:1px solid var(--line);border-radius:12px;padding:11px 12px;appearance:none;-webkit-appearance:none}
+  select{background-image:linear-gradient(45deg,transparent 50%,var(--muted) 50%),linear-gradient(135deg,var(--muted) 50%,transparent 50%);
+    background-position:calc(100% - 18px) 50%,calc(100% - 13px) 50%;background-size:5px 5px;background-repeat:no-repeat;cursor:pointer}
+  select option{background:#0c1428;color:var(--ink)}
+  select:focus,input:focus{outline:none;border-color:var(--accent)}
+  .note{font-size:.8rem;color:var(--muted);line-height:1.5;margin:6px 0 0}
+  .note b{color:var(--gold)}
+  .btn{font-family:var(--body);font-weight:500;font-size:.9rem;padding:11px 18px;border-radius:11px;cursor:pointer;
+    border:1px solid var(--line);background:var(--surface);color:var(--ink);transition:.15s}
+  .btn:hover{border-color:var(--accent);color:var(--accent)}
+  .btn.primary{border-color:rgba(110,160,255,.5);background:rgba(110,160,255,.12)}
+  .btn:disabled{opacity:.35;cursor:not-allowed}
+  .btn:focus-visible{outline:2px solid var(--accent);outline-offset:2px}
+  .status{font-family:var(--mono);font-size:.82rem;line-height:1.5;padding:10px 14px;border-left:3px solid var(--accent);
+    background:rgba(255,255,255,.03);border-radius:0 12px 12px 0;margin-top:18px;color:var(--muted)}
+  .status.acting{border-color:var(--good);color:var(--good)}
+  .status.trouble{border-color:var(--warn);color:var(--warn)}
+  .done{text-align:center;padding:30px 10px}
+  .done .big{font-family:var(--disp);font-weight:700;font-size:1.6rem;color:var(--good);margin:0 0 8px}
+  .done p{color:var(--muted);margin:0 0 6px;font-size:.95rem}
+  .done .link{font-family:var(--mono);font-size:.8rem;color:var(--ink);word-break:break-all}
+  .closedbox{text-align:center;padding:36px 10px}
+  .closedbox .big{font-family:var(--disp);font-weight:700;font-size:1.6rem;color:var(--warn);margin:0 0 8px}
+  .closedbox p{color:var(--muted);margin:0;font-size:.95rem}
+  .closedbox.soon .big{color:var(--gold)}
+  .hidden{display:none}
+  @media (prefers-reduced-motion:reduce){*{transition:none!important}}
+</style>
+</head>
+<body>
+<canvas id="amb"></canvas>
+<a class="back" href="../index.html">&#8592; Visual Hub</a>
+<div class="wrap">
+  <p class="tag">Tools</p>
+  <h1>Workshop Submission</h1>
+  <p class="lede"><b>Submit the link to your workshop repository before the deadline.</b> Capstones are submitted in Brightspace, not here.</p>
+
+  <div class="stage"><div class="panel">
+    <div class="head">
+      <div>
+        <p class="lab">Live now</p>
+        <p class="ws" id="wsName">Loading</p>
+        <p class="note" id="wsNote"></p>
+      </div>
+      <span class="pill" id="pill">checking</span>
+    </div>
+
+    <div class="stats">
+      <div class="stat"><div class="k">Deadline</div><div class="v" id="dlEt"></div><div class="s">Eastern time, before class</div></div>
+      <div class="stat"><div class="k">Time left</div><div class="v" id="left"></div><div class="s" id="dlLocal"></div></div>
+    </div>
+
+    <form id="f" novalidate>
+      <div class="field row2">
+        <div>
+          <p class="lab">First name</p>
+          <select id="first" required><option value="">Choose your name</option></select>
+        </div>
+        <div>
+          <p class="lab">Last name</p>
+          <input type="text" id="last" placeholder="as on the roster" autocomplete="family-name" required>
+        </div>
+      </div>
+      <div class="field">
+        <p class="lab">GitHub repository link</p>
+        <input type="url" id="link" placeholder="https://github.com/username/online-store" autocomplete="off" required>
+        <p class="note">The repository page, not a file inside it. It must be <b>public</b>.</p>
+      </div>
+      <button type="submit" class="btn primary" id="go">Submit</button>
+      <div class="status" id="status">Pick your name, paste the link, press Submit.</div>
+    </form>
+
+    <div class="done hidden" id="done">
+      <p class="big">Received</p>
+      <p id="doneWho"></p>
+      <p class="link" id="doneLink"></p>
+      <p id="doneWhen"></p>
+      <p style="margin-top:14px"><button class="btn" id="again">Submit another link</button></p>
+    </div>
+
+    <div class="closedbox hidden" id="closed">
+      <p class="big" id="closedBig">Closed</p>
+      <p id="closedMsg"></p>
+    </div>
+  </div></div>
+</div>
+
+<script src="roster.js"></script>
+<script src="submit-config.js"></script>
+<script>
+(function(){
+  var C = window.SUBMIT || {};
+  var opens = new Date(C.opens), deadline = new Date(C.deadline);
+  var $ = function(id){ return document.getElementById(id); };
+  var fmtEt = new Intl.DateTimeFormat('en-US',{timeZone:'America/New_York',weekday:'short',month:'short',day:'numeric',hour:'numeric',minute:'2-digit'});
+  var fmtLocal = new Intl.DateTimeFormat(undefined,{weekday:'short',month:'short',day:'numeric',hour:'numeric',minute:'2-digit',timeZoneName:'short'});
+
+  $('wsName').textContent = C.workshop || 'No workshop open';
+  $('wsNote').textContent = C.note || '';
+  $('dlEt').textContent = isNaN(deadline) ? '' : fmtEt.format(deadline) + ' ET';
+  $('dlLocal').textContent = isNaN(deadline) ? '' : 'Your time: ' + fmtLocal.format(deadline);
+
+  var roster = (window.HUB_ROSTER || []).slice().sort();
+  roster.forEach(function(n){ var o=document.createElement('option'); o.value=n; o.textContent=n; $('first').appendChild(o); });
+  try { var saved = JSON.parse(localStorage.getItem('hub-submit-me')||'null'); if(saved){ $('first').value=saved.first||''; $('last').value=saved.last||''; } } catch(e){}
+
+  function state(){
+    var now = new Date();
+    if (!C.workshop || isNaN(deadline)) return 'none';
+    if (!isNaN(opens) && now < opens) return 'soon';
+    if (now > deadline) return 'closed';
+    return 'open';
+  }
+  function pad(n){ return (n<10?'0':'')+n; }
+  function tick(){
+    var s = state(), now = new Date();
+    var pill = $('pill'); pill.className = 'pill ' + (s==='open'?'open':s==='soon'?'soon':'closed');
+    pill.textContent = s==='open'?'open':s==='soon'?'opens soon':s==='closed'?'closed':'nothing open';
+    var left = $('left'); left.className = 'v';
+    if (s==='open'){
+      var ms = deadline - now, d = Math.floor(ms/864e5), h = Math.floor(ms%864e5/36e5), m = Math.floor(ms%36e5/6e4), sec = Math.floor(ms%6e4/1e3);
+      left.textContent = d>0 ? d+'d '+pad(h)+'h '+pad(m)+'m' : pad(h)+':'+pad(m)+':'+pad(sec);
+      if (ms < 36e5) left.className = 'v warn'; else if (ms < 864e5) left.className = 'v gold';
+    } else if (s==='soon'){ left.textContent = 'opens ' + fmtEt.format(opens) + ' ET'; left.className='v gold'; }
+    else { left.textContent = s==='closed' ? 'deadline passed' : ''; left.className='v warn'; }
+
+    var showForm = s==='open' && $('done').classList.contains('hidden');
+    $('f').classList.toggle('hidden', !showForm);
+    $('closed').classList.toggle('hidden', s==='open');
+    if (s!=='open'){
+      $('closed').className = 'closedbox' + (s==='soon'?' soon':'');
+      $('closedBig').textContent = s==='soon' ? 'Not open yet' : s==='closed' ? 'Closed' : 'Nothing to submit';
+      $('closedMsg').textContent = s==='soon' ? 'Submissions for ' + C.workshop + ' open ' + fmtEt.format(opens) + ' ET.'
+        : s==='closed' ? 'Submissions for ' + C.workshop + ' closed ' + fmtEt.format(deadline) + ' ET. Talk to Raymond if you missed it.'
+        : 'No workshop is open for submission right now.';
+    }
+  }
+  tick(); setInterval(tick, 1000);
+
+  var GH = /^https:\/\/github\.com\/[A-Za-z0-9-]+\/[A-Za-z0-9._-]+\/?$/;
+  function say(msg, cls){ var st=$('status'); st.textContent=msg; st.className='status'+(cls?' '+cls:''); }
+
+  $('f').addEventListener('submit', function(ev){
+    ev.preventDefault();
+    if (state()!=='open'){ tick(); return; }
+    var first=$('first').value.trim(), last=$('last').value.trim(), link=$('link').value.trim().replace(/\.git$/,'');
+    if(!first){ say('Choose your first name from the list.','trouble'); $('first').focus(); return; }
+    if(!last){ say('Type your last name.','trouble'); $('last').focus(); return; }
+    if(!GH.test(link)){ say('The link must look like https://github.com/username/repository','trouble'); $('link').focus(); return; }
+    if(!C.form || !C.form.action || C.form.action.indexOf('FORM_PUBLIC_ID')>=0){ say('Submission is not wired up yet. Tell Raymond.','trouble'); return; }
+    var fd = new FormData(); fd.append(C.form.name, first+' '+last); fd.append(C.form.link, link);
+    $('go').disabled = true; say('Sending', 'acting');
+    fetch(C.form.action, {method:'POST', mode:'no-cors', body:fd}).then(function(){
+      try { localStorage.setItem('hub-submit-me', JSON.stringify({first:first,last:last})); } catch(e){}
+      $('doneWho').textContent = first+' '+last+', '+C.workshop;
+      $('doneLink').textContent = link;
+      $('doneWhen').textContent = 'Sent ' + fmtLocal.format(new Date()) + '. Raymond checks the repository after the deadline.';
+      $('f').classList.add('hidden'); $('done').classList.remove('hidden');
+      $('go').disabled = false; say('Pick your name, paste the link, press Submit.');
+    }).catch(function(){
+      $('go').disabled = false; say('Could not send. Check your connection and try again, or send the link to Raymond on Teams.','trouble');
+    });
+  });
+  $('again').addEventListener('click', function(){ $('done').classList.add('hidden'); $('link').value=''; tick(); $('link').focus(); });
+
+  /* ambient dots */
+  var cv=$('amb'), cx=cv.getContext('2d'), dots=[], W, H;
+  function size(){ W=cv.width=innerWidth; H=cv.height=innerHeight; }
+  size(); addEventListener('resize', size);
+  for (var i=0;i<60;i++) dots.push({x:Math.random()*2000,y:Math.random()*1200,r:Math.random()*1.4+.3,vx:(Math.random()-.5)*.15,vy:(Math.random()-.5)*.15});
+  var still = matchMedia('(prefers-reduced-motion: reduce)').matches;
+  (function draw(){ cx.clearRect(0,0,W,H); cx.fillStyle='rgba(110,160,255,.35)';
+    dots.forEach(function(d){ if(!still){ d.x+=d.vx; d.y+=d.vy; if(d.x<0)d.x=W; if(d.x>W)d.x=0; if(d.y<0)d.y=H; if(d.y>H)d.y=0; }
+      cx.beginPath(); cx.arc(d.x%W,d.y%H,d.r,0,6.283); cx.fill(); });
+    if(!still) requestAnimationFrame(draw); })();
+})();
+</script>
+</body>
+</html>
