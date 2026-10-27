@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Payroll Calculator 2 | Week 3 Visual Hub</title>
+<title>Payroll File Calculator | Week 3 Visual Hub</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Sora:wght@500;700&family=Inter:wght@400;500&family=JetBrains+Mono:wght@400;500&display=swap">
 <style>
@@ -92,54 +92,54 @@
 </head>
 <body>
 
-<a class="back" href="../index.html#payroll-calculator-2">&#8592; Week 3 index</a>
+<a class="back" href="../index.html#payroll-file-calculator">&#8592; Week 3 index</a>
 
 <canvas id="amb"></canvas>
 <div class="wrap">
-  <p class="tag">Workbook 3a &middot; Section 2-1 &middot; Exercise 1</p>
-  <h1>Payroll Calculator 2</h1>
-  <p class="lede"><b>The same payroll, written to a file you name instead of printed to the screen.</b></p>
+  <p class="tag">Workbook 3a &middot; Section 1-2 &middot; Exercise 3</p>
+  <h1>Payroll File Calculator</h1>
+  <p class="lede"><b>Read a csv file line by line, turn every line into an Employee, print what each one earned.</b></p>
 
   <div class="stage">
     <div class="cols">
       <div>
         <p class="lab">What you are building</p>
         <div class="box brief">
-          <p>Your payroll calculator in a <b>new project</b>. It asks which file to read and which payroll file to create, then writes one line per employee, <code>id|name|gross pay</code>, into that new file. Bonus: a name ending in <code>.json</code> gets a JSON array instead.</p>
-          <p class="no">The workbook says continue the previous program. Here every exercise gets its own project and repository, so payroll-calculator stays as you pushed it. The console shows only the two questions.</p>
+          <p>A program that opens <code>employees.csv</code>, where each line is <code>id|name|hours-worked|pay-rate</code>. For every line it builds an <b>Employee</b> object and prints the id, the name and the <b>gross pay</b>: hours worked times pay rate.</p>
+          <p class="no">Nobody types anything: all the data comes from the file. No overtime, no taxes, no writing to a file yet (that is Payroll File Calculator 2).</p>
         </div>
 
         <p class="lab" style="margin-top:18px">Do these in order</p>
         <div class="steps" id="steps"></div>
-        <div class="prog"><span id="progTxt">0 of 6 done</span><div class="bar"><i id="progBar"></i></div><button id="bClear">Clear ticks</button></div>
+        <div class="prog"><span id="progTxt">0 of 8 done</span><div class="bar"><i id="progBar"></i></div><button id="bClear">Clear ticks</button></div>
       </div>
 
       <div class="side">
         <div>
           <p class="lab">What a finished run looks like</p>
-          <div class="console"><div class="cl">run</div>Enter the name of the file to process: employees.csv
-Enter the name of the payroll file to create: payroll-sept-2023.csv</div>
-          <div class="console" style="margin-top:8px"><div class="cl">payroll-sept-2023.csv</div>10|Dana Wyatt|656.25
-20|Ezra Aiden|284.75
-30|Brittany Thibbs|660.00
-<span class="mu">...</span></div>
-          <p class="note">Yours will differ if your data or rounding differs. One line per employee, pipes between fields.</p>
+          <div class="console"><div class="cl">run</div>10  Dana Wyatt         $656.25
+20  Ezra Aiden         $284.75
+30  Brittany Thibbs    $660.00
+40  Zephaniah Hughes   $20.00</div>
+          <p class="note">Yours may be formatted differently. The four amounts must match.</p>
         </div>
         <div>
           <p class="lab">Where people get stuck</p>
           <ul class="stuck">
-            <li><b>The new file is there but empty.</b> The writer was never closed, so the text stayed in its buffer.</li>
-            <li><b>"Where did my file go?"</b> A bare file name lands at the project root, next to pom.xml, not in src.</li>
-            <li><b>employees.csv is now empty.</b> The same name was typed for both questions, and opening the writer wiped it. Copy it in again.</li>
+            <li><b>Every line splits into single characters.</b> <code>split("|")</code> treats the pipe as "or". Escape it: <code>"\\|"</code>.</li>
+            <li><b>NumberFormatException.</b> A token has a space at the end or start. Trim it before parsing.</li>
+            <li><b>FileNotFoundException.</b> employees.csv is inside src or a package. It goes at the project root, next to pom.xml.</li>
+            <li><b>Red under new FileReader.</b> Opening a file can throw: it needs try/catch.</li>
           </ul>
         </div>
         <div>
           <p class="lab">Pages that help</p>
           <div class="links">
-            <a href="../visuals/05-writing-a-file.html">Writing to a file</a>
-            <a href="../visuals/03-reading-a-file.html">Reading a file</a>
-            <a href="../reference/cheat-sheet.html">Cheat sheet</a>
-            <a href="../reference/common-errors.html">Common errors</a>
+            <a href="../visuals/03-reading-a-file.html">Reading a file line by line</a>
+            <a href="../visuals/04-from-line-to-object.html">From lines to objects</a>
+            <a href="../visuals/01-three-kinds-of-errors.html">Three kinds of errors</a>
+            <a href="../reference/cheat-sheet.html">Week 3 cheat sheet</a>
+            <a href="../reference/common-errors.html">What the red text means</a>
           </div>
         </div>
       </div>
@@ -148,7 +148,7 @@ Enter the name of the payroll file to create: payroll-sept-2023.csv</div>
 
   <div class="take">
     <p class="tk">The one idea</p>
-    <p><b>Writing mirrors reading: open, write line by line, close.</b> Nothing reaches the file until the writer is closed.</p>
+    <p><b>One line of text, one object.</b> Split the line, convert each piece to its type, hand the pieces to the constructor.</p>
   </div>
 
   <div id="rail"></div>
@@ -159,25 +159,31 @@ Enter the name of the payroll file to create: payroll-sept-2023.csv</div>
   "use strict";
   var $=function(s){return document.querySelector(s);};
   var reduce=matchMedia("(prefers-reduced-motion: reduce)").matches;
-  var KEY="hub-ex-payroll-calculator-2";
+  var KEY="hub-ex-payroll-file-calculator";
 
   /* each step: what to do (the workbook's words, plain), what it means, how you know it worked */
   var STEPS=[
-    {t:"Create a new project named <code>payroll-calculator-2</code>, with Git, and copy your payroll-calculator code into it.",
-     d:"New Project, Maven, JDK 17, GroupId <b>com.pluralsight</b>, <b>Create Git repository</b> ticked, Location workbook-3. Copy <b>Employee</b> and your main class into com.pluralsight, and <b>employees.csv</b> to the project root, next to pom.xml. Run it once, then Git > GitHub > Share Project on GitHub.",
-     ok:"payroll-calculator-2 prints the same payroll as before and has its own repository"},
-    {t:"Ask for the file to read and the payroll file to create.",
-     d:"Two Scanner questions, worded as the workbook shows. The first name goes to your FileReader instead of the fixed employees.csv.",
-     ok:"typing employees.csv still reads every employee"},
-    {t:"Write each employee to the new file instead of the screen.",
-     d:"Open a <b>FileWriter</b> on the second name, wrapped in a <b>BufferedWriter</b>. Each employee becomes one line, <code>id|name|gross pay</code>, with the gross pay to two decimals. Close the writer when the loop ends.",
-     ok:"the console shows only the two questions"},
-    {t:"Open the new file and check it.",
-     d:"It appears in the Project panel at the root; right-click the project and Reload from Disk if it does not.",
-     ok:"one line per employee, pipes between the fields"},
-    {t:"Bonus: write JSON when the name ends in <code>.json</code>.",
-     d:"Look at how the payroll file name ends. JSON means square brackets around the list and one <code>{ \"id\": ..., \"name\" : ..., \"grossPay\" : ... }</code> per employee, commas between them, none after the last.",
-     ok:"payroll-sept-2023.json opens as a JSON array"},
+    {t:"Create the project <code>payroll-file-calculator</code> in <code>workbook-3</code>, with Git, and share it on GitHub.",
+     d:"File > New > Project, Location: Desktop > pluralsight > java-development > <b>workbook-3</b>. Java, Maven, JDK 17, GroupId <b>com.pluralsight</b>, tick <b>Create Git repository</b>. Add a class with <b>main</b>, for example <b>PayrollCalculator</b>. Then Git > GitHub > <b>Share Project on GitHub</b>.",
+     ok:"the class shows a green run arrow and the repository is on github.com"},
+    {t:"Put <code>employees.csv</code> from DataFiles.zip at the project root.",
+     d:"Unzip DataFiles.zip and drag employees.csv onto the project folder in the Project panel, next to <b>pom.xml</b>, not into src.",
+     ok:"employees.csv and pom.xml sit side by side"},
+    {t:"Create the class <code>Employee</code> with four private fields.",
+     d:"<b>employeeId</b>, <b>name</b>, <b>hoursWorked</b>, <b>payRate</b>. Pick types from the data: 52.5 hours and 12.50 an hour have decimals.",
+     ok:"four private fields, no red"},
+    {t:"Add a constructor, the getters and setters, and <code>getGrossPay()</code>.",
+     d:"A constructor taking all four values. Code > Generate writes the constructor, getters and setters for you. <b>getGrossPay()</b> returns hours worked times pay rate; no field stores it.",
+     ok:"Employee compiles with getEmployeeId, getName and getGrossPay"},
+    {t:"In main, open the file with a <code>FileReader</code> wrapped in a <code>BufferedReader</code>.",
+     d:"The file name is just <b>employees.csv</b>, read from the project root. Wrap the file work in try/catch.",
+     ok:"it runs with no FileNotFoundException"},
+    {t:"Read each line and split it on the <code>|</code> character.",
+     d:"<b>readLine()</b> gives one line per call and null once the file is over. <b>split</b> gives an array of four tokens.",
+     ok:"a test print shows four tokens for every line"},
+    {t:"Turn the tokens into an <code>Employee</code> and printf its id, name and gross pay. Repeat for every line.",
+     d:"Tokens are Strings: parse the numbers into the field types, then call the constructor. Print with <b>getEmployeeId()</b>, <b>getName()</b>, <b>getGrossPay()</b>, money with two decimals.",
+     ok:"four lines print, Dana Wyatt at 656.25"},
     {t:"Commit and push.",
      d:"Git > Commit, a short message that says what changed, then <b>Commit and Push</b>.",
      ok:"github.com shows the new commit"}
@@ -215,6 +221,6 @@ Enter the name of the payroll file to create: payroll-sept-2023.csv</div>
 </script>
 <script src="../manifest.js"></script>
 <script src="../../assets/rail.js"></script>
-<script>Rail.render(document.getElementById("rail"),{week:3,kind:"exercises",current:"payroll-calculator-2"});</script>
+<script>Rail.render(document.getElementById("rail"),{week:3,kind:"exercises",current:"payroll-file-calculator"});</script>
 </body>
 </html>
