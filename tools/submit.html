@@ -103,7 +103,7 @@
 
     <div class="stats">
       <div class="stat"><div class="k">Deadline</div><div class="v" id="dlEt"></div><div class="s">Eastern time, before class</div></div>
-      <div class="stat"><div class="k">Time left</div><div class="v" id="left"></div><div class="s" id="leftNote"></div></div>
+      <div class="stat"><div class="k">Time left</div><div class="v" id="left"></div><div class="s" id="dlLocal"></div></div>
     </div>
 
     <form id="f" novalidate>
@@ -136,7 +136,7 @@
 </div>
 
 <script src="roster.js?v=2026-10-27c"></script>
-<script src="submit-config.js?v=2026-10-27c"></script>
+<script src="submit-config.js?v=2026-10-27d"></script>
 <script>
 (function(){
   var C = window.SUBMIT || {};
@@ -144,10 +144,12 @@
   var $ = function(id){ return document.getElementById(id); };
   var fmtEt = new Intl.DateTimeFormat('en-US',{timeZone:'America/New_York',weekday:'short',month:'short',day:'numeric',hour:'numeric',minute:'2-digit'});
   var fmtStamp = new Intl.DateTimeFormat('en-US',{timeZone:'America/New_York',month:'short',day:'numeric',hour:'numeric',minute:'2-digit'});
+  var fmtLocal = new Intl.DateTimeFormat(undefined,{weekday:'short',month:'short',day:'numeric',hour:'numeric',minute:'2-digit',timeZoneName:'short'});
 
   $('wsName').textContent = C.workshop || 'No workshop open';
   $('wsNote').textContent = C.note || '';
   $('dlEt').textContent = isNaN(deadline) ? '' : fmtEt.format(deadline) + ' ET';
+  $('dlLocal').textContent = isNaN(deadline) ? '' : 'Your time: ' + fmtLocal.format(deadline);
   if (C.repo) $('link').placeholder = 'https://github.com/username/' + C.repo;
 
   var roster = (window.HUB_ROSTER || []).slice();
@@ -167,7 +169,6 @@
     var pill = $('pill'); pill.className = 'pill ' + (s==='open'?'open':s==='soon'?'soon':'closed');
     pill.textContent = s==='open'?'open':s==='soon'?'opens soon':s==='closed'?'closed':'nothing open';
     var left = $('left'); left.className = 'v';
-    $('leftNote').textContent = s==='open' ? 'until the deadline' : '';
     if (s==='open'){
       var ms = deadline - now, d = Math.floor(ms/864e5), h = Math.floor(ms%864e5/36e5), m = Math.floor(ms%36e5/6e4), sec = Math.floor(ms%6e4/1e3);
       left.textContent = d>0 ? d+'d '+pad(h)+'h '+pad(m)+'m' : pad(h)+':'+pad(m)+':'+pad(sec);
