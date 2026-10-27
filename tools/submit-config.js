@@ -7,7 +7,8 @@ window.SUBMIT = {
   opens:    "2026-10-23T13:00:00-04:00",   /* given Fri Oct 23 */
   deadline: "2026-10-29T08:30:00-04:00",   /* Thu Oct 29, before class starts */
   /* next: Workshop 3 · Online Store, repo online-store, opens Thu Oct 29 after the intro, deadline 2026-11-05T08:30:00-05:00 */
-  note:     "Your own repository, public, with README.md at the root. Project in pluralsight/workshops.",
+  note:     "Your own repository, public. Project in pluralsight/workshops.",
+  /* from Workshop 3 on the note adds: "README.md at the root of the repository" (README is taught Thu Oct 29) */
   /* Google Form behind the page: "Workshop Submission - YearUp Fall 2026", published 2026-10-27, responses in the Sheet tab "Submissions". */
   form: {
     action: "https://docs.google.com/forms/d/e/1FAIpQLSd7-DuBhPXJg8p_GymnEAawJPZtRxu6J9rAmfGeyRkd5g-mgw/formResponse",
