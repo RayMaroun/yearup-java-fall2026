@@ -107,13 +107,13 @@
       <div>
         <p class="lab">What you are building</p>
         <div class="box brief">
-          <p>Your own project in your own repository, like the first two workshops. The program loads <b>products.csv</b> into a list of <b>Product</b> objects. From the home screen the customer browses or searches the products, adds some to a <b>cart</b>, then views the cart with its total and removes what they do not want.</p>
-          <p class="no">No logins, no real payment, and the cart is gone when the program ends. Check Out is only a menu option until you do the bonus.</p>
+          <p>Your own project in your own repository, like the first two workshops. The program loads <b>products.csv</b> into a list of <b>Product</b> objects. From the home screen the customer browses or searches the products, adds some to a <b>cart</b>, then views the cart with its total and checks out with a cash payment.</p>
+          <p class="no">No logins, no real card payment, and the cart is gone when the program ends. Check Out takes cash and gives change.</p>
         </div>
 
         <p class="lab" style="margin-top:18px">Do these in order</p>
         <div class="steps" id="steps"></div>
-        <div class="prog"><span id="progTxt">0 of 17 done</span><div class="bar"><i id="progBar"></i></div><button id="bClear">Clear ticks</button></div>
+        <div class="prog"><span id="progTxt">0 of 15 done</span><div class="bar"><i id="progBar"></i></div><button id="bClear">Clear ticks</button></div>
       </div>
 
       <div class="side">
@@ -128,7 +128,7 @@ SKU     Product Name                Price
 AV1051  JBL Bluetooth Speaker       89.95
 GM1148  Retro Handheld Arcade       24.45
 <span class="mu">...</span>
-S - Search, A - Add to cart, B - Back: A
+S - Search by SKU, A - Add to cart, B - Back: A
 Enter the SKU: GM1148
 Retro Handheld Arcade added to your cart.
 
@@ -136,7 +136,10 @@ Choose an option: 2
 
 GM1148  Retro Handheld Arcade       24.45
 Total: $24.45
-C - Check Out, R - Remove, B - Back: B</div>
+C - Check Out, B - Back: C
+Amount owed: $24.45. Cash: 30
+Change: $5.55
+Receipt: Retro Handheld Arcade 24.45, change given 5.55</div>
           <p class="note">The screens come from the workshop; your wording, layout and menus will differ.</p>
         </div>
         <div>
@@ -144,7 +147,7 @@ C - Check Out, R - Remove, B - Back: B</div>
           <ul class="stuck">
             <li><b>NumberFormatException: For input string: "Price".</b> The header line was read as a product. Read it once before the loop and ignore it.</li>
             <li><b>Where does the cart live?</b> It is a second ArrayList of Product. Adding puts the same Product from the inventory into it; nothing new to build.</li>
-            <li><b>ConcurrentModificationException on remove.</b> You removed from the cart inside a for-each over the cart. Find the product first, remove it after the loop.</li>
+            <li><b>The change is wrong by a cent.</b> Doubles add up with tiny errors. Round the total to two decimals before you compare it with the cash.</li>
           </ul>
         </div>
         <div>
@@ -165,7 +168,7 @@ C - Check Out, R - Remove, B - Back: B</div>
 
   <div class="take">
     <p class="tk">The one idea</p>
-    <p><b>Two lists of the same Product.</b> The inventory holds everything the file gave you; the cart holds what the customer picked. Every screen reads one of them or moves a product into or out of the cart.</p>
+    <p><b>Two lists of the same Product.</b> The inventory holds everything the file gave you; the cart holds what the customer picked. Every screen reads one of them or moves a product into the cart; check out empties it.</p>
   </div>
 
   <div id="rail"></div>
@@ -204,27 +207,25 @@ C - Check Out, R - Remove, B - Back: B</div>
      t:"Fill in <code>displayProducts</code>: list every product the store sells.",
      d:"One line per product with its SKU, name, price and department, in columns.",
      ok:"every product from the file shows once"},
-    {t:"Let the customer search or filter by name, by price range or by department.",
-     d:"Price range asks for a lowest and a highest price. Show only the products that match.",
-     ok:"each search shows the right products, or says none matched"},
+    {t:"Let the customer search by product id.",
+     d:"Ask for the SKU and use <b>findProductById</b> to find it. Show that one product, or say none matched.",
+     ok:"a real SKU shows its product, a wrong one gets a message"},
     {t:"Add a product to the cart, and go back to the home screen.",
-     d:"Ask for the SKU and use <b>findProductById</b> to find it. Say so when no product has that SKU.",
+     d:"Ask for the SKU, find it the same way, and add that Product to the cart list. Say so when no product has that SKU.",
      ok:"the product shows up when you open the cart"},
     {g:"Cart screen",
      t:"Fill in <code>displayCart</code>: the line items and the total.",
      d:"Every product in the cart, then the total sales amount of the cart.",
      ok:"the total is the sum of the prices shown"},
-    {t:"Remove a product from the cart, and go back to the home screen.",
-     d:"Prompt the customer for the product to remove, then take it out of the cart.",
-     ok:"it is gone from the cart and the total drops"},
-    {t:"Show a Check Out option on the cart screen.",
-     d:"An option only for now; it does nothing until the bonus.",
-     ok:"the cart screen offers Check Out, Remove and Back"},
-    {g:"Bonus",
-     t:"Bonus: fill in <code>checkOut</code> for a cash payment.",
-     d:"Show the amount owed and ask for the cash amount. If it is enough, show the change and a receipt: order date, all line items, sales total, amount paid, change given. Then clear the cart and go back to the home screen.",
+    {t:"Offer Check Out and Back on the cart screen.",
+     d:"C calls <b>checkOut</b> with the cart and the total; B goes back to the home screen.",
+     ok:"the cart screen offers Check Out and Back"},
+    {g:"Check out",
+     t:"Fill in <code>checkOut</code> for a cash payment.",
+     d:"Show the amount owed and ask for the cash amount. If it is enough, show the change and a receipt on screen: all line items and the change given. Then clear the cart and go back to the home screen. If it is not enough, say so and keep the cart.",
      ok:"the receipt prints and the cart is empty after"},
-    {t:"Bonus: show each product once in the cart, with its quantity.",
+    {g:"Bonus",
+     t:"Bonus: show each product once in the cart, with its quantity.",
      d:"Adding the same product twice shows it once with a quantity of 2, not two lines.",
      ok:"no product appears twice in the cart"},
     {t:"Bonus: save the receipt to a file in a <code>Receipts</code> folder.",
