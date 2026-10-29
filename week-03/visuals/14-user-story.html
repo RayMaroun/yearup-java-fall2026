@@ -201,8 +201,8 @@
     {txt:"Set up the project repository.", users:["dev"],
      chips:[[["developer","dev"],["rider","r"],["user","v"]],
             [["a shared repository with a starter project","dev"],["to set things up","v"]],
-            [["every teammate can push code from day one","dev"],["it is done","v"]]],
-     done:{dev:"every teammate clones the repository and runs the starter project."}}
+            [["I can push code from day one","dev"],["it is done","v"]]],
+     done:{dev:"the developer clones the repository and runs the starter project."}}
   ];
   var ri=0, pick=[null,null,null], open=-1, mvp=false, written=[{},{},{},{}];
   var slotsEl=$("#slots"),sent=$("#sent"),doneEl=$("#done"),story=$("#story"),status=$("#status"),caption=$("#caption"),star=$("#bStar");
@@ -301,7 +301,7 @@
   var START='The requirement on top is <b class="a">vague</b>: it names no user. Pick who the story is for in <b class="a">As a</b>.';
   $("#bNext").addEventListener("click",function(){
     var n=(ri+1)%REQS.length;
-    loadReq(n,n===3?'This requirement is <b class="a">work for the team</b>, not a feature riders see. Who is the story for?'
+    loadReq(n,n===3?'This requirement is <b class="a">work for the developer</b>, not a feature riders see. Who is the story for?'
       :'A new vague requirement. Turn it into a story for <b class="a">one user type</b>.');
   });
   $("#bReset").addEventListener("click",function(){ written=[{},{},{},{}]; loadReq(0,START); });

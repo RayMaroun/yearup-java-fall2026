@@ -39,7 +39,7 @@ window.HUB_MANIFEST = {
     { file: "search-inventory-map.html", title: "Search Inventory Map", group: "Workbook 3a · Section 4-1", desc: "The same products in a HashMap keyed by id; look one up, say so when it is not there." },
     { file: "user-stories.html", title: "User Stories", group: "Workbook 3b · Section 2-1", desc: "Turn eight hardware store requirements into user stories: As a..., I want..., so that..." },
     { file: "github-project-board.html", title: "GitHub Project Board", group: "Workbook 3b · Section 3-1", desc: "A board named Hardware Store Project, a Testing column, one card per user story, with descriptions." },
-    { file: "online-store.html", title: "Online Store", group: "Workshop 3w", desc: "Team workshop: products.csv into a list, a home screen, display and search products, a cart with a total." }
+    { file: "online-store.html", title: "Online Store", group: "Workshop 3w", desc: "Workshop: products.csv into a list, a home screen, display and search products, a cart with a total." }
   ],
   games: [
     { file: "exception-hunter.html", title: "Exception Hunter", group: "Workbook 3a · Section 1-1", desc: "A short program and an input flash up: runs fine, or which exception? Fifteen rounds." },

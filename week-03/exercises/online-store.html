@@ -100,14 +100,14 @@
 <div class="wrap">
   <p class="tag">Workshop 3w &middot; Online Store</p>
   <h1>Online Store</h1>
-  <p class="lede"><b>A team-built store front in the terminal: products from a file, a search, a cart with a total.</b></p>
+  <p class="lede"><b>A store front in the terminal: products from a file, a search, a cart with a total.</b></p>
 
   <div class="stage">
     <div class="cols">
       <div>
         <p class="lab">What you are building</p>
         <div class="box brief">
-          <p>A team project in one shared repository. The program loads <b>products.csv</b> into a list of <b>Product</b> objects. From the home screen the customer browses or searches the products, adds some to a <b>cart</b>, then views the cart with its total and removes what they do not want.</p>
+          <p>Your own project in your own repository, like the first two workshops. The program loads <b>products.csv</b> into a list of <b>Product</b> objects. From the home screen the customer browses or searches the products, adds some to a <b>cart</b>, then views the cart with its total and removes what they do not want.</p>
           <p class="no">No logins, no real payment, and the cart is gone when the program ends. Check Out is only a menu option until you do the bonus.</p>
         </div>
 
@@ -137,7 +137,7 @@ Choose an option: 2
 GM1148  Retro Handheld Arcade       24.45
 Total: $24.45
 C - Check Out, R - Remove, B - Back: B</div>
-          <p class="note">The screens come from the workshop; your team's wording, layout and menus will differ.</p>
+          <p class="note">The screens come from the workshop; your wording, layout and menus will differ.</p>
         </div>
         <div>
           <p class="lab">Where people get stuck</p>
@@ -181,15 +181,12 @@ C - Check Out, R - Remove, B - Back: B</div>
   /* each step: group label on the first step of a group, what to do, how in IntelliJ terms, how you know it worked */
   var STEPS=[
     {g:"Setup",
-     t:"Form your team and read every requirement together.",
-     d:"Plan the three screens in your notebooks and agree who builds which one, so you do not all edit the same method.",
-     ok:"everyone knows which screen they own"},
-    {t:"One member creates the project <code>online-store</code> in <code>workshops</code> and shares it as a public repository.",
+     t:"Read every requirement before you write code.",
+     d:"Plan the three screens in your notebook: what each one shows, what the user types, and where it goes next.",
+     ok:"you can describe the three screens without looking at the workbook"},
+    {t:"Create the project <code>online-store</code> in <code>workshops</code> and share it as a public repository.",
      d:"File > New > Project, name <b>online-store</b>, Location: Desktop > pluralsight > <b>workshops</b>. Java, Maven, JDK 17, GroupId <b>com.pluralsight</b>, tick <b>Create Git repository</b>. Then Git > GitHub > <b>Share Project on GitHub</b> with Private unticked. One repository per workshop.",
      ok:"the repository is public on github.com"},
-    {t:"Give every teammate admin access, then each teammate clones the repository.",
-     d:"On github.com: Settings > Collaborators, add each teammate. Teammates: File > New > <b>Project from Version Control</b>, paste the repository URL, into Desktop > pluralsight > workshops.",
-     ok:"every teammate has the project open and can push"},
     {t:"Add Raymond's starter <code>Store.java</code> and <code>Product</code> class, and <code>products.csv</code>.",
      d:"The two classes go in src/main/java/com/pluralsight. <b>products.csv</b> goes at the project root, next to pom.xml. Store.java has the TODO methods <b>loadInventory</b>, <b>displayProducts</b>, <b>displayCart</b>, <b>checkOut</b> and <b>findProductById</b>.",
      ok:"the project runs and the TODOs show in the editor"},
@@ -235,8 +232,8 @@ C - Check Out, R - Remove, B - Back: B</div>
      ok:"a file like 20261029-143005.txt appears in Receipts"},
     {g:"Hand in",
      t:"Add the <code>README.md</code>, then commit and push.",
-     d:"Copy Raymond's README template (public repo, <b>templates/readme-template.md</b>) to the project root as <b>README.md</b>, next to pom.xml, and fill every section; the instructions are comments and vanish as you replace them. The <a href=\"../reference/your-readme.html\">Your README</a> page shows what each section is for. Git > Commit, <b>Commit and Push</b>, often, from every teammate. Everything is pushed before Thursday's class next week, as Raymond announces.",
-     ok:"github.com shows the README and commits from the whole team"}
+     d:"Copy Raymond's README template (public repo, <b>templates/readme-template.md</b>) to the project root as <b>README.md</b>, next to pom.xml, and fill every section; the instructions are comments and vanish as you replace them. The <a href=\"../reference/your-readme.html\">Your README</a> page shows what each section is for. Git > Commit, <b>Commit and Push</b>, often. Everything is pushed before Thursday's class next week, as Raymond announces.",
+     ok:"github.com shows the README and your commits"}
   ];
   var done=[]; try{ done=JSON.parse(localStorage.getItem(KEY)||"[]"); }catch(e){ done=[]; }
   var stepsEl=$("#steps");
