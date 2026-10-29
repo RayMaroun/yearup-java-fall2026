@@ -75,11 +75,10 @@
   .parts{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:10px}
   .part{border:1px solid var(--line);border-radius:12px;padding:11px 13px 12px;background:rgba(6,10,20,.45);min-width:0}
   .part .k{font-family:var(--mono);font-size:.6rem;letter-spacing:.14em;text-transform:uppercase;margin:0 0 7px;color:var(--accent)}
-  .part.looks .k{color:var(--good)} .part.watch .k{color:var(--warn)} .part.commit .k{color:var(--gold)}
+  .part.looks .k{color:var(--good)} .part.watch .k{color:var(--warn)}
   .part p,.part li{font-size:.86rem;line-height:1.5;color:#c9d4ea;margin:0}
   .part ul,.part ol{margin:0;padding-left:18px;display:flex;flex-direction:column;gap:5px}
   .part.do{grid-column:1 / -1}
-  .part .cmd{display:inline-block;font-family:var(--mono);font-size:.78rem;color:#ffe2a8;background:rgba(255,200,98,.08);border:1px solid rgba(255,200,98,.3);border-radius:7px;padding:4px 9px;margin-top:2px}
   .part .pre{font-family:var(--mono);font-size:.74rem;line-height:1.5;color:#bcd0ff;background:#05070e;border:1px solid var(--line);border-radius:8px;padding:7px 10px;margin:4px 0 0;white-space:pre;overflow-x:auto}
   .part .pre i{font-style:normal;color:#6f7f9e}
 
@@ -103,7 +102,7 @@
   <div class="before">
     <div class="b"><b>Before you start</b>Read the PDF in Brightspace twice. Open the <a href="requirements-checklist.html">Requirements Checklist</a> next to this page.</div>
     <div class="b"><b>Work in this order</b>Board and stories first, then the code one TODO at a time, README last. Every step uses the one before it.</div>
-    <div class="b"><b>Commit after every step</b>One commit per step is the "commit history" the spec asks for, and it saves your work when something breaks.</div>
+    <div class="b"><b>Commit often</b>At least four commits a day, every day. Each message says what you did, in a full sentence, so the history reads like a diary of the project. One commit per step is the floor, not the target.</div>
     <div class="b"><b>Stuck for 20 minutes?</b>Bring the step number and what your screen shows to office hours. "Step 6, the line goes in the file but the next run does not load it" gets you an answer fast.</div>
   </div>
 
@@ -127,7 +126,6 @@
           </ol></div>
           <div class="part looks"><p class="k">Done looks like</p><p>The repository page on GitHub shows <code>pom.xml</code>, <code>src</code> and <code>transactions.csv</code>. The project is red in IntelliJ, and that is expected: step 3 fixes it.</p></div>
           <div class="part watch"><p class="k">Watch out</p><ul><li>The <code>target</code> folder must not be pushed. Keep the <code>.gitignore</code> from the starter.</li><li>The repository must be public, check the badge next to its name.</li></ul></div>
-          <div class="part commit"><p class="k">Commit</p><span class="cmd">Initial project setup with starter files</span></div>
         </div>
       </section>
 
@@ -152,7 +150,6 @@ Acceptance criteria
           </ol></div>
           <div class="part looks"><p class="k">Done looks like</p><p>The board has about ten cards, all in Todo. Each card has a story in the As a, I want, so that shape and two or three acceptance criteria you could tick. No code written yet.</p></div>
           <div class="part watch"><p class="k">Watch out</p><ul><li>Stories describe what the user gets, not "write the loop". If the card says a method name, it is a task, not a story.</li><li>One feature per card. "The ledger" is four cards: all, deposits, payments, reports.</li><li>Do not skip this to "get to the code". The board is how you know what is left on Thursday.</li></ul></div>
-          <div class="part commit"><p class="k">Commit</p><span class="cmd">No commit, the board lives on GitHub</span></div>
         </div>
       </section>
 
@@ -168,7 +165,6 @@ Acceptance criteria
           </ol></div>
           <div class="part looks"><p class="k">Done looks like</p><p>The project compiles and the red in <code>FinancialTracker</code> is gone. Running it shows the Home menu. In a scratch test, building one Transaction and printing it gives back the file line you started from.</p></div>
           <div class="part watch"><p class="k">Watch out</p><ul><li>A field kept as text is the mistake that comes back in steps 7, 9 and 10. Decide the types now, not when the report breaks.</li><li>Same name and same package as the starter expects: <code>Transaction</code> in <code>com.pluralsight</code>.</li><li><code>4400.0</code> is not the file format. Two decimals, the way money was printed in week 1.</li></ul></div>
-          <div class="part commit"><p class="k">Commit</p><span class="cmd">Add Transaction class</span></div>
         </div>
       </section>
 
@@ -184,7 +180,6 @@ Acceptance criteria
           </ol></div>
           <div class="part looks"><p class="k">Done looks like</p><p>A temporary print of the list after loading shows 21 lines with the starter file, each one equal to its line in the file, because <code>toString</code> is the file format. Delete the file, run again: it is created empty and the app still starts.</p></div>
           <div class="part watch"><p class="k">Watch out</p><ul><li>The pipe is a special character for <code>split</code>. If every character becomes its own piece, look up how to escape it.</li><li>Dates parse only when the text is exactly <code>yyyy-MM-dd</code>. A space at the end of a line breaks it.</li><li>The file path is relative to the project root, which is where IntelliJ runs the app.</li></ul></div>
-          <div class="part commit"><p class="k">Commit</p><span class="cmd">Load transactions from transactions.csv</span></div>
         </div>
       </section>
 
@@ -199,7 +194,6 @@ Acceptance criteria
           </ol></div>
           <div class="part looks"><p class="k">Done looks like</p><p>You can say, without looking, which method <code>D</code> calls on Home, which one <code>A</code> calls on Ledger, and why <code>H</code> brings Home back.</p></div>
           <div class="part watch"><p class="k">Watch out</p><ul><li>The starter reads every answer with <code>nextLine</code> and one Scanner that is passed into the methods. Keep it that way. A second Scanner on <code>System.in</code>, or a <code>nextInt</code> in the middle, makes the menus skip inputs.</li><li>The Home title says "Welcome to TransactionApp". Changing it is the bonus in step 13, not now.</li></ul></div>
-          <div class="part commit"><p class="k">Commit</p><span class="cmd">No commit, nothing changed</span></div>
         </div>
       </section>
 
@@ -214,7 +208,6 @@ Acceptance criteria
           </ol></div>
           <div class="part looks"><p class="k">Done looks like</p><p>Open <code>transactions.csv</code> after a deposit: one new line at the bottom, same format as the others, nothing else changed. Run the app again and the count from step 4 is one higher.</p></div>
           <div class="part watch"><p class="k">Watch out</p><ul><li>If the file ends up with only the new line, your writer replaced the file instead of adding to it. Find out how to open it so it adds. Step 4's count tells you at once.</li><li>Write a line break after the line, or the next deposit glues to this one.</li><li>A date typed in the wrong format throws. Catch it and ask again instead of crashing.</li></ul></div>
-          <div class="part commit"><p class="k">Commit</p><span class="cmd">Add deposit, append to the file</span></div>
         </div>
       </section>
 
@@ -229,7 +222,6 @@ Acceptance criteria
           </ol></div>
           <div class="part looks"><p class="k">Done looks like</p><p>The new line in the file ends with a minus amount, for example <code>|-48.30</code>, and loads back as a negative number next run.</p></div>
           <div class="part watch"><p class="k">Watch out</p><ul><li>Do not ask the user to type the minus. If they do anyway, reject it like any non-positive amount.</li></ul></div>
-          <div class="part commit"><p class="k">Commit</p><span class="cmd">Make payment stored as a negative amount</span></div>
         </div>
       </section>
 
@@ -243,7 +235,6 @@ Acceptance criteria
           </ol></div>
           <div class="part looks"><p class="k">Done looks like</p><p>The top line of <code>A</code> is the latest date in the file (with the starter file, <code>2026-11-03</code>). Columns line up. <code>H</code> brings the Home menu back.</p></div>
           <div class="part watch"><p class="k">Watch out</p><ul><li>"Newest first" is in the spec and is the first thing Raymond checks. Oldest first is the most common miss.</li><li>Negative amounts need room for the sign in the column width.</li><li>Do not print the <code>toString</code> here. That is the file format, the ledger is a table for people.</li></ul></div>
-          <div class="part commit"><p class="k">Commit</p><span class="cmd">Ledger: all entries newest first</span></div>
         </div>
       </section>
 
@@ -257,7 +248,6 @@ Acceptance criteria
           </ol></div>
           <div class="part looks"><p class="k">Done looks like</p><p><code>D</code> shows only positive amounts, <code>P</code> only negative ones, both newest first, and together they add up to the lines of <code>A</code>.</p></div>
           <div class="part watch"><p class="k">Watch out</p><ul><li>If both lists look the same, the amount is probably still a <code>String</code>. Back to step 3.</li></ul></div>
-          <div class="part commit"><p class="k">Commit</p><span class="cmd">Ledger: deposits and payments</span></div>
         </div>
       </section>
 
@@ -272,7 +262,6 @@ Acceptance criteria
           </ol></div>
           <div class="part looks"><p class="k">Done looks like</p><p>With the starter file in the first week of November: Month To Date shows the two November rows, Previous Month the three October rows, Year To Date every 2026 row, Previous Year every 2025 row. An empty result prints a message, not nothing.</p></div>
           <div class="part watch"><p class="k">Watch out</p><ul><li>A transaction on the first of the month must count. Check what the date comparison you use does with the boundary day.</li><li>Previous Month in January is December of last year. Test that case.</li><li>Do not compare dates as text.</li></ul></div>
-          <div class="part commit"><p class="k">Commit</p><span class="cmd">Reports: month to date, previous month, year to date, previous year</span></div>
         </div>
       </section>
 
@@ -286,7 +275,6 @@ Acceptance criteria
           </ol></div>
           <div class="part looks"><p class="k">Done looks like</p><p><code>shell</code> finds the Gasoline rows. A vendor that is not in the file prints "no transactions found" and the Reports menu comes back.</p></div>
           <div class="part watch"><p class="k">Watch out</p><ul><li>Comparing strings with <code>==</code> is the bug that finds nothing.</li></ul></div>
-          <div class="part commit"><p class="k">Commit</p><span class="cmd">Reports: search by vendor</span></div>
         </div>
       </section>
 
@@ -301,7 +289,6 @@ Acceptance criteria
           </ol></div>
           <div class="part looks"><p class="k">Done looks like</p><p>All five blank prints every row. Vendor only prints the same as step 11. Start and end dates only prints the same as a date report with those dates. Combined filters narrow the rows further, never widen them.</p></div>
           <div class="part watch"><p class="k">Watch out</p><ul><li>Filters combine with AND. A row has to pass every filter that was given.</li></ul></div>
-          <div class="part commit"><p class="k">Commit</p><span class="cmd">Custom search on the reports screen</span></div>
         </div>
       </section>
 
@@ -316,8 +303,7 @@ Acceptance criteria
             <li>Move the last cards to Done on the board. Rehearse the ten minutes once with the Demo Day page.</li>
           </ol></div>
           <div class="part looks"><p class="k">Done looks like</p><p>Every required box is ticked. The repository shows a README with a title, a description and how to run it. The commit list reads like this guide. You know what you will type in the demo.</p></div>
-          <div class="part watch"><p class="k">Watch out</p><ul><li>Push. A project that only exists on your laptop does not exist on demo day.</li><li>Submit in Brightspace, not on the workshop form.</li></ul></div>
-          <div class="part commit"><p class="k">Commit</p><span class="cmd">Add README and final touches</span></div>
+          <div class="part watch"><p class="k">Watch out</p><ul><li>Push. A project that only exists on your laptop does not exist on demo day.</li><li>Look at your commit list on GitHub. Fewer than four a day, or messages like "update", is what Raymond will ask about.</li><li>Submit in Brightspace, not on the workshop form.</li></ul></div>
         </div>
       </section>
 
