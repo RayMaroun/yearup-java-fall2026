@@ -187,7 +187,7 @@
 
   function say(html,tone,line){
     caption.className="caption"+(tone?" "+tone:"");
-    status.innerHTML=html+(line?'<span class="line">'+line+'</span>':"");
+    status.innerHTML=html+(line&&/Exception/.test(line)?'<span class="line">'+line+'</span>':"");
   }
   function clean(s){return s.replace(/\|/g,"/");}
   function two(n){return (Math.round(n*100)/100).toFixed(2);}

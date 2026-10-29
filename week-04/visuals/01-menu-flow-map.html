@@ -214,7 +214,7 @@
 
   function say(html,tone,line){
     caption.className="caption"+(tone?" "+tone:"");
-    status.innerHTML=html+(line?'<span class="line">'+line+'</span>':"");
+    status.innerHTML=html+(line&&/Exception/.test(line)?'<span class="line">'+line+'</span>':"");
   }
   function cap(s){return s.charAt(0).toUpperCase()+s.slice(1);}
 

@@ -199,7 +199,7 @@
 
   function say(html,tone,line){
     caption.className="caption"+(tone?" "+tone:"");
-    status.innerHTML=html+(line?'<span class="line">'+line+'</span>':"");
+    status.innerHTML=html+(line&&/Exception/.test(line)?'<span class="line">'+line+'</span>':"");
   }
   function esc(s){return s.replace(/[&<>"]/g,function(c){return {"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c];});}
   function quoted(s){return '<span class="q">"</span>'+esc(s)+'<span class="q">"</span>';}

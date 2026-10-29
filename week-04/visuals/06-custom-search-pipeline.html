@@ -223,7 +223,7 @@
 
   function say(html,tone,line){
     caption.className="caption"+(tone?" "+tone:"");
-    status.innerHTML=html+(line?'<span class="line">'+esc(line)+'</span>':"");
+    status.innerHTML=html+(line&&/Exception/.test(line)?'<span class="line">'+esc(line)+'</span>':"");
   }
   function esc(s){return String(s).replace(/[&<>"]/g,function(c){return {"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c];});}
   function money(a){return (a<0?"-":"")+Math.abs(a).toFixed(2);}
