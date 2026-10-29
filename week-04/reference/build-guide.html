@@ -102,7 +102,7 @@
 
   <div class="before">
     <div class="b"><b>Before you start</b>Read the PDF in Brightspace twice. Open the <a href="requirements-checklist.html">Requirements Checklist</a> next to this page.</div>
-    <div class="b"><b>Work in this order</b>Every step uses the one before it. Skipping ahead is how you end up with a report that cannot read the file.</div>
+    <div class="b"><b>Work in this order</b>Board and stories first, then the code one TODO at a time, README last. Every step uses the one before it.</div>
     <div class="b"><b>Commit after every step</b>One commit per step is the "commit history" the spec asks for, and it saves your work when something breaks.</div>
     <div class="b"><b>Stuck for 20 minutes?</b>Bring the step number and what your screen shows to office hours. "Step 6, the line goes in the file but the next run does not load it" gets you an answer fast.</div>
   </div>
@@ -132,17 +132,17 @@
       </section>
 
       <section class="step" id="s2">
-        <div class="head"><span class="num">2</span><div><h2>README and project board</h2><div class="meta"><a class="chip" href="../../week-03/reference/your-readme.html">Your README</a><a class="chip" href="../../week-03/visuals/15-project-board.html">The Project Board</a></div></div>
+        <div class="head"><span class="num">2</span><div><h2>Project board and user stories, before any code</h2><div class="meta"><a class="chip" href="../../week-03/visuals/14-user-story.html">A User Story</a><a class="chip" href="../../week-03/visuals/15-project-board.html">The Project Board</a><span class="chip t">Fri Oct 30, in class</span></div></div>
           <label class="done-box"><input type="checkbox" data-s="2">done</label></div>
         <div class="parts">
           <div class="part do"><p class="k">Do</p><ol>
-            <li>Copy the README template from the public repo (<code>templates/readme-template.md</code>) to <code>README.md</code> at the root of your project. Fill the name and the description now, the rest at step 13.</li>
-            <li>Create a GitHub project board on the repository. One card per feature of the spec: add deposit, make payment, ledger all, deposits, payments, each report, search by vendor, custom search. Write each as a user story: As a user, I want ..., so that ...</li>
-            <li>Columns Todo, In Progress, Done. Move the card you work on. The board is part of the demo.</li>
+            <li>Create a GitHub project board on the repository, columns Todo, In Progress, Done.</li>
+            <li>Read the spec and write one user story per feature: add deposit, make payment, ledger all, deposits, payments, each of the four date reports, search by vendor, custom search, README. As a user, I want ..., so that ... Each story is a card in Todo.</li>
+            <li>From here on, move the card you are working on to In Progress and to Done when its step is ticked. The board is part of the demo.</li>
           </ol></div>
-          <div class="part looks"><p class="k">Done looks like</p><p>The repository home page shows your README under the files. The board has about ten cards, all in Todo.</p></div>
-          <div class="part watch"><p class="k">Watch out</p><ul><li>The README is required, not a bonus. An empty template is worse than a short real one.</li><li>Stories describe what the user gets, not "write the loop".</li></ul></div>
-          <div class="part commit"><p class="k">Commit</p><span class="cmd">Add README and project board link</span></div>
+          <div class="part looks"><p class="k">Done looks like</p><p>The board has about ten cards, all in Todo, each one a real user story. No code written yet.</p></div>
+          <div class="part watch"><p class="k">Watch out</p><ul><li>Stories describe what the user gets, not "write the loop".</li><li>Do not skip this to "get to the code". The board is how you know what is left on Thursday.</li></ul></div>
+          <div class="part commit"><p class="k">Commit</p><span class="cmd">No commit, the board lives on GitHub</span></div>
         </div>
       </section>
 
@@ -296,18 +296,18 @@
       </section>
 
       <section class="step" id="s13">
-        <div class="head"><span class="num">13</span><div><h2>Finish, polish, rehearse</h2><div class="meta"><a class="chip" href="demo-day.html">Demo Day</a><a class="chip" href="requirements-checklist.html">Requirements Checklist</a></div></div>
+        <div class="head"><span class="num">13</span><div><h2>README, polish, rehearse</h2><div class="meta"><a class="chip" href="../../week-03/reference/your-readme.html">Your README</a><a class="chip" href="demo-day.html">Demo Day</a><a class="chip" href="requirements-checklist.html">Requirements Checklist</a></div></div>
           <label class="done-box"><input type="checkbox" data-s="13">done</label></div>
         <div class="parts">
           <div class="part do"><p class="k">Do</p><ol>
             <li>Go through the Requirements Checklist and tick every box by running the app, not from memory.</li>
-            <li>Finish the README: what the app does, how to run it, a screenshot or two of the menus, the one piece of code you are proud of.</li>
+            <li>Write the README now that there is something to describe. Copy the template from the public repo (<code>templates/readme-template.md</code>) to <code>README.md</code> at the root of the project and fill it: what the app does, how to run it, a screenshot or two of the menus, the one piece of code you are proud of.</li>
             <li>Bonus if there is time: a name for your app and a starter screen. A restaurant, a record store, anything you like, the transactions stay the same.</li>
             <li>Move the last cards to Done on the board. Rehearse the ten minutes once with the Demo Day page.</li>
           </ol></div>
           <div class="part looks"><p class="k">Done looks like</p><p>Every required box is ticked. The repository shows a README with a title, a description and how to run it. The commit list reads like this guide. You know what you will type in the demo.</p></div>
           <div class="part watch"><p class="k">Watch out</p><ul><li>Push. A project that only exists on your laptop does not exist on demo day.</li><li>Submit in Brightspace, not on the workshop form.</li></ul></div>
-          <div class="part commit"><p class="k">Commit</p><span class="cmd">README, final touches</span></div>
+          <div class="part commit"><p class="k">Commit</p><span class="cmd">Add README and final touches</span></div>
         </div>
       </section>
 
