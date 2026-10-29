@@ -74,6 +74,7 @@ for (const wk of weekDirs) {
   try { man = loadManifest(manPath); }
   catch (err) { console.warn(`[search] ${wk}/manifest.js failed to evaluate: ${err.message}`); continue; }
   if (!man) { console.warn(`[search] ${wk}/manifest.js did not set window.HUB_MANIFEST`); continue; }
+  if (man.live === false) { console.log(`[search] ${wk} skipped: manifest says live:false`); continue; }
   weeksRead++;
   const week = Number(man.week) || parseInt(wk.split('-')[1], 10);
   const weekLabel = 'Week ' + week;

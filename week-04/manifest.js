@@ -2,6 +2,7 @@
  * Plan in .planning/week-04-plan.md (2026-10-29). The rail and the week index read this. */
 window.HUB_MANIFEST = {
   week: 4,
+  live: false,            // flip to true on Ray's go, then rebuild the search index
   title: "Capstone 1 · Accounting Ledger",
   visuals: [
     { file: "01-menu-flow-map.html", title: "Menu Flow Map", group: "Capstone 1 · hints", desc: "Press the letters and watch the path: Home, Ledger, Reports, and the way back from each." },
