@@ -1,0 +1,332 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Date Range Reports | Week 4 Visual Hub</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Sora:wght@500;700&family=Inter:wght@400;500&family=JetBrains+Mono:wght@400;500&display=swap">
+<style>
+  :root{
+    --bg:#080c17; --bg2:#0c1428; --surface:rgba(255,255,255,.045); --line:rgba(255,255,255,.09);
+    --ink:#eef2fb; --muted:#8496b6; --accent:#6ea0ff; --accent2:#8b7bff; --good:#46d98a; --warn:#ff6a6a;
+    --gold:#ffc862; --disp:'Sora',system-ui,sans-serif; --body:'Inter',system-ui,sans-serif;
+    --mono:'JetBrains Mono',ui-monospace,monospace;
+  }
+  *{box-sizing:border-box}
+  body{margin:0;min-height:100vh;color:var(--ink);font-family:var(--body);
+    background:radial-gradient(1200px 700px at 70% -10%,#141d38 0%,transparent 55%),
+               radial-gradient(900px 600px at 10% 110%,#161233 0%,transparent 50%),#080c17;
+    overflow-x:hidden}
+  #amb{position:fixed;inset:0;z-index:0;pointer-events:none;opacity:.6}
+  .back{position:relative;z-index:2;display:block;max-width:1120px;margin:0 auto;padding:26px 24px 0;
+    width:100%;font-family:var(--mono);font-size:.8rem;letter-spacing:.04em;color:var(--muted);
+    text-decoration:none;transition:color .15s}
+  .back:hover{color:var(--accent)}
+  .wrap{position:relative;z-index:1;max-width:1120px;margin:0 auto;padding:22px 24px 70px}
+  .tag{font-family:var(--mono);font-size:.72rem;letter-spacing:.22em;text-transform:uppercase;color:var(--accent);margin:0 0 14px}
+  h1{font-family:var(--disp);font-weight:700;font-size:clamp(2.3rem,6vw,3.6rem);line-height:1;margin:0 0 12px;
+    letter-spacing:-.03em;background:linear-gradient(180deg,#fff,#b9c6e6);-webkit-background-clip:text;
+    background-clip:text;color:transparent}
+  .lede{color:var(--muted);max-width:64ch;font-size:1.05rem;margin:0 0 26px;line-height:1.5}
+  .lede b{color:var(--ink)}
+  code{font-family:var(--mono);font-size:.92em;color:#bcd0ff}
+
+  /* ---------- the stage IS the picture ---------- */
+  .stage{position:relative;background:linear-gradient(180deg,rgba(255,255,255,.03),rgba(255,255,255,.01));
+    border:1px solid var(--line);border-radius:24px;padding:22px;
+    box-shadow:0 1px 0 rgba(255,255,255,.06) inset,0 30px 80px -30px rgba(0,0,0,.8)}
+
+  /* report buttons and the today chip */
+  .top{display:flex;flex-wrap:wrap;gap:8px;align-items:center;margin-bottom:18px}
+  .rep{font-family:var(--mono);font-size:.8rem;font-weight:500;padding:9px 13px;border-radius:11px;cursor:pointer;
+    border:1px solid var(--line);background:rgba(0,0,0,.25);color:#ffcb6b;transition:.15s}
+  .rep:hover{border-color:var(--gold);background:rgba(255,200,98,.1)}
+  .rep.on{border-color:var(--gold);background:rgba(255,200,98,.16);color:#fff;box-shadow:0 0 22px -8px rgba(255,200,98,.9)}
+  .today{margin-left:auto;display:flex;align-items:center;gap:8px;font-family:var(--mono);font-size:.78rem;color:var(--muted);
+    padding:6px 10px 6px 12px;border-radius:999px;border:1px solid rgba(255,200,98,.4);background:rgba(255,200,98,.06)}
+  .today b{font-weight:500;color:var(--gold);font-variant-numeric:tabular-nums}
+  .today input{width:52px;font-family:var(--mono);font-size:.82rem;padding:5px 8px;border-radius:8px;border:1px solid var(--line);
+    background:rgba(0,0,0,.3);color:var(--ink);outline:none;text-align:center;transition:border-color .15s}
+  .today input:focus{border-color:var(--accent)}
+  .today small{font-size:.62rem;letter-spacing:.1em;text-transform:uppercase}
+
+  /* the timeline: two year rows */
+  .year{position:relative;display:grid;grid-template-columns:30px 1fr;gap:10px;align-items:center;margin-bottom:6px}
+  .yl{font-family:var(--disp);font-weight:700;font-size:.9rem;color:var(--muted);writing-mode:vertical-rl;transform:rotate(180deg);text-align:center;justify-self:center}
+  .track{position:relative;padding:20px 0 20px}
+  .cells{display:grid;grid-template-columns:repeat(12,minmax(0,1fr));gap:3px}
+  .cell{position:relative;height:74px;border-radius:9px;border:1px solid var(--line);background:rgba(6,10,20,.5);cursor:pointer;
+    overflow:hidden;transition:border-color .15s,background .15s;touch-action:none;user-select:none}
+  .cell:hover{border-color:rgba(110,160,255,.6)}
+  .cell.now{border-color:rgba(255,200,98,.6)}
+  .cell .m{position:absolute;top:5px;left:0;right:0;text-align:center;font-family:var(--mono);font-size:.62rem;letter-spacing:.08em;
+    text-transform:uppercase;color:var(--muted);pointer-events:none}
+  .cell.now .m{color:var(--gold)}
+  .band{position:absolute;top:0;bottom:0;background:rgba(110,160,255,.22);border-top:2px solid rgba(110,160,255,.7);
+    pointer-events:none;transition:opacity .3s}
+  .tline{position:absolute;top:0;bottom:0;width:2px;margin-left:-1px;background:var(--gold);box-shadow:0 0 10px rgba(255,200,98,.9);pointer-events:none}
+  .tline::after{content:"today";position:absolute;top:22px;left:5px;font-family:var(--mono);font-size:.52rem;letter-spacing:.1em;
+    text-transform:uppercase;color:var(--gold);white-space:nowrap}
+  .cell.late .tline::after{left:auto;right:5px}
+  .dot{position:absolute;bottom:12px;width:10px;height:10px;margin-left:-5px;border-radius:999px;background:rgba(132,150,182,.45);
+    border:1px solid rgba(255,255,255,.25);pointer-events:none;transition:background .3s,box-shadow .3s,transform .3s}
+  .dot.in{background:var(--good);border-color:#fff;box-shadow:0 0 12px rgba(70,217,138,.9);transform:scale(1.25)}
+  .dot.in.pay{background:#ff8f8f;box-shadow:0 0 12px rgba(255,106,106,.9)}
+  .edge{position:absolute;font-family:var(--mono);font-size:.68rem;color:#bcd0ff;white-space:nowrap;pointer-events:none;
+    font-variant-numeric:tabular-nums;transition:opacity .3s}
+  .edge.s{top:0;transform:translateX(0)} .edge.s::before{content:"start ";color:var(--muted)}
+  .edge.e{bottom:0;transform:translateX(-100%)} .edge.e::after{content:" end";color:var(--muted)}
+  .edge.off{top:0;left:0;color:var(--muted)}
+  .edge.off::before{content:"\2190  ";color:var(--muted)}
+
+  /* the sample rows as chips */
+  .rows{display:flex;flex-wrap:wrap;gap:6px;margin-top:14px;padding-top:14px;border-top:1px dashed var(--line)}
+  .chip{font-family:var(--mono);font-size:.68rem;padding:5px 9px;border-radius:999px;border:1px solid var(--line);
+    background:rgba(0,0,0,.25);color:var(--muted);font-variant-numeric:tabular-nums;transition:.3s;white-space:nowrap}
+  .chip b{font-weight:500;color:#c9d4ea}
+  .chip .amt{color:#9fe3b6} .chip.pay .amt{color:#ff8f8f}
+  .chip.in{border-color:rgba(70,217,138,.7);background:rgba(70,217,138,.1);color:var(--ink)}
+  .chip.in b{color:#fff}
+  .chip.in.pay{border-color:rgba(255,106,106,.6);background:rgba(255,106,106,.08)}
+
+  /* the one sentence */
+  .caption{display:flex;gap:14px;align-items:flex-start;margin:18px 2px 0;padding-top:16px;border-top:1px solid var(--line)}
+  .caption .t{flex:1;font-size:1.05rem;line-height:1.55;color:var(--ink);padding-left:16px;border-left:3px solid var(--accent);transition:border-color .3s}
+  .caption .t .line{display:block;margin-top:6px;font-family:var(--mono);font-size:.8rem;color:#bcd0ff;opacity:.9}
+  .caption.y .t{border-left-color:var(--gold)} .caption.g .t{border-left-color:var(--good)} .caption.w .t{border-left-color:var(--warn)}
+  .caption b.a{color:var(--accent)} .caption b.y{color:var(--gold)} .caption b.g{color:var(--good)} .caption b.w{color:var(--warn)}
+  .reset{font-family:var(--body);font-weight:500;font-size:.84rem;padding:8px 14px;border-radius:11px;cursor:pointer;
+    border:1px solid var(--line);background:transparent;color:var(--muted);transition:.15s;flex-shrink:0}
+  .reset:hover{border-color:var(--accent);color:var(--accent)}
+  button:focus-visible,input:focus-visible{outline:2px solid var(--accent);outline-offset:2px}
+
+  .take{margin-top:22px;background:linear-gradient(180deg,rgba(110,160,255,.08),rgba(139,123,255,.04));
+    border:1px solid var(--line);border-left:3px solid var(--accent);border-radius:12px;padding:16px 18px}
+  .take .tk{font-family:var(--mono);font-size:.66rem;letter-spacing:.14em;text-transform:uppercase;color:var(--accent);margin:0 0 8px}
+  .take p{margin:0;font-size:.95rem;color:var(--ink);line-height:1.55}
+  .take b{color:#fff}
+
+  @media (max-width:900px){.cell{height:64px}.cell .m{font-size:.54rem;letter-spacing:.02em}.edge{font-size:.6rem}}
+  @media (max-width:640px){
+    .today{margin-left:0;width:100%}
+    .year{grid-template-columns:1fr}.yl{writing-mode:horizontal-tb;transform:none;justify-self:start}
+    .cells{grid-template-columns:repeat(6,minmax(0,1fr))}.cell{height:58px}
+    .tline::after{display:none}
+  }
+  @media (prefers-reduced-motion:reduce){*{animation-duration:.01ms!important;transition-duration:.01ms!important}#amb{display:none}}
+</style>
+</head>
+<body>
+<a class="back" href="../index.html#04-date-range-reports">&#8592; Week 4 index</a>
+<canvas id="amb"></canvas>
+<div class="wrap">
+  <p class="tag">Capstone 1 &middot; hints</p>
+  <h1>Date Range Reports</h1>
+  <p class="lede"><b>Set today, press a report, and watch which rows fall inside its range.</b></p>
+
+  <div class="stage">
+    <div class="top">
+      <button class="rep" data-r="mtd">1) Month To Date</button>
+      <button class="rep" data-r="pm">2) Previous Month</button>
+      <button class="rep" data-r="ytd">3) Year To Date</button>
+      <button class="rep" data-r="py">4) Previous Year</button>
+      <label class="today"><small>today</small><b id="todayTxt">2026-11-06</b><small>day</small>
+        <input id="inDay" value="6" inputmode="numeric" maxlength="2" aria-label="day of the month"></label>
+    </div>
+    <div id="timeline"></div>
+    <div class="rows" id="rows"></div>
+    <div class="caption" id="caption">
+      <div class="t" id="status"></div>
+      <button class="reset" id="bReset">Reset</button>
+    </div>
+  </div>
+
+  <div class="take">
+    <p class="tk">The one idea</p>
+    <p><b>Every report asks the same question: is this date between a start and an end, inclusive?</b> Only the two dates change.
+    One helper that takes a start and an end, and keeps the rows that fall between them, serves all four reports.</p>
+  </div>
+  <div id="rail"></div>
+</div>
+<script>
+(function(){
+  "use strict";
+  var $=function(s){return document.querySelector(s);};
+  var reduce=matchMedia("(prefers-reduced-motion: reduce)").matches;
+  var MON=["Jan","Feb","Mar","Apr","May","Jun","Jul","Aug","Sep","Oct","Nov","Dec"];
+  var YEARS=[2025,2026];
+  var ROWS=[
+    {d:"2025-01-15",t:"Invoice 1001 paid",a:1500.00},
+    {d:"2025-06-10",t:"Udemy",a:-70.00},
+    {d:"2025-10-14",t:"Shell",a:-45.00},
+    {d:"2025-11-05",t:"Salary deposit",a:4200.00},
+    {d:"2025-12-20",t:"Target",a:-210.75},
+    {d:"2026-01-05",t:"Salary deposit",a:4400.00},
+    {d:"2026-06-27",t:"Ticketmaster",a:-150.00},
+    {d:"2026-09-15",t:"Invoice 1042 paid",a:1750.00},
+    {d:"2026-10-03",t:"Salary deposit",a:4400.00},
+    {d:"2026-10-22",t:"Shell",a:-48.30},
+    {d:"2026-11-02",t:"Salary deposit",a:4400.00},
+    {d:"2026-11-03",t:"Chipotle",a:-14.85}
+  ];
+  var DEF={y:2026,m:11,d:6};
+  var today={y:DEF.y,m:DEF.m,d:DEF.d}, active=null;
+  var tl=$("#timeline"), rowsEl=$("#rows"), status=$("#status"), caption=$("#caption"), inDay=$("#inDay"), todayTxt=$("#todayTxt");
+
+  /* pure date helpers, no Date object so no time zone surprises */
+  function dim(y,m){ return new Date(Date.UTC(y,m,0)).getUTCDate(); }
+  function key(o){ return o.y*10000+o.m*100+o.d; }
+  function iso(o){ return o.y+"-"+(o.m<10?"0":"")+o.m+"-"+(o.d<10?"0":"")+o.d; }
+  function parse(s){ var p=s.split("-"); return {y:+p[0],m:+p[1],d:+p[2]}; }
+  function between(x,s,e){ var k=key(x); return k>=key(s)&&k<=key(e); }
+  function money(a){ var s=Math.abs(a).toFixed(2); return (a<0?"-":"")+s; }
+
+  /* the four reports: only start and end differ */
+  function range(r){
+    if(r==="mtd") return {s:{y:today.y,m:today.m,d:1},e:{y:today.y,m:today.m,d:today.d}};
+    if(r==="pm"){ var pm=today.m-1,py=today.y; if(pm===0){pm=12;py=today.y-1;} return {s:{y:py,m:pm,d:1},e:{y:py,m:pm,d:dim(py,pm)}}; }
+    if(r==="ytd") return {s:{y:today.y,m:1,d:1},e:{y:today.y,m:today.m,d:today.d}};
+    return {s:{y:today.y-1,m:1,d:1},e:{y:today.y-1,m:12,d:31}};
+  }
+  var NAME={mtd:"Month To Date",pm:"Previous Month",ytd:"Year To Date",py:"Previous Year"};
+  var LINE={mtd:"LocalDate start = today.withDayOfMonth(1);",
+            pm:"LocalDate start = today.minusMonths(1).withDayOfMonth(1);",
+            ytd:"LocalDate start = today.withDayOfYear(1);",
+            py:"LocalDate start = LocalDate.of(today.getYear() - 1, 1, 1);"};
+
+  /* build the picture once */
+  YEARS.forEach(function(y){
+    var yr=document.createElement("div"); yr.className="year";
+    var html='<div class="yl">'+y+'</div><div class="track" id="tr'+y+'"><div class="cells">';
+    for(var m=1;m<=12;m++){
+      html+='<div class="cell" id="c'+y+'-'+m+'" data-y="'+y+'" data-m="'+m+'"><span class="m">'+MON[m-1]+'</span>'
+          +'<div class="band" id="b'+y+'-'+m+'" style="display:none"></div></div>';
+    }
+    html+='</div><span class="edge s" id="es'+y+'" style="display:none"></span><span class="edge e" id="ee'+y+'" style="display:none"></span>'
+        +'<span class="edge off" id="eo'+y+'" style="display:none"></span></div>';
+    yr.innerHTML=html; tl.appendChild(yr);
+  });
+  ROWS.forEach(function(r,i){
+    var o=parse(r.d), cell=$("#c"+o.y+"-"+o.m);
+    var dot=document.createElement("span"); dot.className="dot"+(r.a<0?" pay":""); dot.id="d"+i;
+    dot.style.left=((o.d-.5)/dim(o.y,o.m)*100)+"%"; cell.appendChild(dot);
+    var ch=document.createElement("span"); ch.className="chip"+(r.a<0?" pay":""); ch.id="ch"+i;
+    ch.innerHTML='<b>'+r.d+'</b> '+r.t+' <span class="amt">'+money(r.a)+'</span>'; rowsEl.appendChild(ch);
+  });
+  var tline=document.createElement("span"); tline.className="tline";
+
+  function say(html,tone,line){
+    caption.className="caption"+(tone?" "+tone:"");
+    status.innerHTML=html+(line?'<span class="line">'+line+'</span>':"");
+  }
+
+  function drawToday(){
+    document.querySelectorAll(".cell.now").forEach(function(c){ c.classList.remove("now","late"); });
+    var cell=$("#c"+today.y+"-"+today.m), n=dim(today.y,today.m);
+    cell.classList.add("now"); if(today.d>n/2) cell.classList.add("late");
+    tline.style.left=((today.d-.5)/n*100)+"%"; cell.appendChild(tline);
+    todayTxt.textContent=iso(today); inDay.value=today.d;
+  }
+
+  /* shade the active range and light the rows; returns the count */
+  function drawRange(){
+    document.querySelectorAll(".band").forEach(function(b){ b.style.display="none"; });
+    document.querySelectorAll(".edge").forEach(function(e){ e.style.display="none"; });
+    var count=0, onEdge=0;
+    if(!active){
+      ROWS.forEach(function(r,i){ $("#d"+i).classList.remove("in"); $("#ch"+i).classList.remove("in"); });
+      return {n:0,edge:0};
+    }
+    var rg=range(active), s=rg.s, e=rg.e;
+    for(var y=s.y;y<=e.y;y++){
+      if(YEARS.indexOf(y)<0) continue;
+      for(var m=1;m<=12;m++){
+        var ms=(y===s.y&&m<s.m)||(y===e.y&&m>e.m); if(y<s.y||y>e.y||ms) continue;
+        var n=dim(y,m), d0=(y===s.y&&m===s.m)?s.d:1, d1=(y===e.y&&m===e.m)?e.d:n;
+        var b=$("#b"+y+"-"+m); b.style.display=""; b.style.left=((d0-1)/n*100)+"%"; b.style.width=((d1-d0+1)/n*100)+"%";
+      }
+    }
+    if(YEARS.indexOf(s.y)>=0){ var es=$("#es"+s.y); es.style.display=""; es.style.left=(((s.m-1)+(s.d-1)/dim(s.y,s.m))/12*100)+"%"; es.textContent=iso(s); }
+    if(YEARS.indexOf(e.y)>=0){ var ee=$("#ee"+e.y); ee.style.display=""; ee.style.left=(((e.m-1)+e.d/dim(e.y,e.m))/12*100)+"%"; ee.textContent=iso(e); }
+    if(YEARS.indexOf(s.y)<0){ var eo=$("#eo"+YEARS[0]); eo.style.display=""; eo.textContent=iso(s)+" to "+iso(e)+", left of this picture"; }
+    ROWS.forEach(function(r,i){
+      var o=parse(r.d), inside=between(o,s,e);
+      $("#d"+i).classList.toggle("in",inside); $("#ch"+i).classList.toggle("in",inside);
+      if(inside){ count++; if(key(o)===key(s)||key(o)===key(e)) onEdge++; }
+    });
+    return {n:count,edge:onEdge,s:s,e:e};
+  }
+
+  function report(r){
+    active=r;
+    document.querySelectorAll(".rep").forEach(function(b){ b.classList.toggle("on",b.getAttribute("data-r")===r); });
+    var res=drawRange(), n=res.n, s=res.s, e=res.e;
+    var rows=n===1?"1 row falls":n+" rows fall";
+    var extra="";
+    if(r==="pm"&&today.m===1) extra=' January steps back a <b class="y">year</b> for the previous month.';
+    if(r==="py") extra=' A previous year is always the <b class="a">full year</b>, whatever today is.';
+    if(res.edge>0) extra+=' A row dated on the start or the end <b class="g">counts</b>: the range is inclusive.';
+    if(YEARS.indexOf(s.y)<0) extra=' That year is left of this picture, so no row here lights.';
+    say('<b class="a">'+NAME[r]+'</b> runs from <b class="a">'+iso(s)+'</b> to <b class="a">'+iso(e)+'</b>, inclusive. <b class="g">'+rows+'</b> inside.'+extra,
+      "",LINE[r]);
+  }
+
+  function setToday(y,m,d,tone,warnTxt){
+    today={y:y,m:m,d:d}; drawToday();
+    if(active){
+      var res=drawRange(), n=res.n;
+      var edge=(active==="pm"&&m===1)?' January steps back a <b class="y">year</b>: the previous month is <b class="y">December '+(y-1)+'</b>.':'';
+      say((warnTxt||'Today is now <b class="y">'+iso(today)+'</b>.')+' <b class="a">'+NAME[active]+'</b> is now <b class="a">'+iso(res.s)+'</b> to <b class="a">'+iso(res.e)+'</b>, '
+        +(n===1?'1 row':n+' rows')+' inside.'+edge, tone||"y", active==="pm"?"today.minusMonths(1)":"");
+    } else {
+      say((warnTxt||'Today is now <b class="y">'+iso(today)+'</b>.')+' Press a report to shade its range.',tone||"y");
+    }
+  }
+  function pickCell(cell){
+    var y=+cell.getAttribute("data-y"), m=+cell.getAttribute("data-m"), n=dim(y,m), d=Math.min(today.d,n);
+    if(y===today.y&&m===today.m) return;
+    setToday(y,m,d);
+  }
+  function applyDay(){
+    var d=parseInt(inDay.value,10), n=dim(today.y,today.m);
+    if(isNaN(d)||d<1){ setToday(today.y,today.m,1,"w",'<b class="w">Day must be 1 or more</b>, so today is <b class="y">'+iso({y:today.y,m:today.m,d:1})+'</b>.'); return; }
+    if(d>n){ setToday(today.y,today.m,n,"w",'<b class="w">'+MON[today.m-1]+' '+today.y+' has '+n+' days</b>, so today is <b class="y">'+iso({y:today.y,m:today.m,d:n})+'</b>.'); return; }
+    if(d===today.d){ inDay.value=d; return; }
+    setToday(today.y,today.m,d);
+  }
+  function reset(){
+    active=null; document.querySelectorAll(".rep").forEach(function(b){ b.classList.remove("on"); });
+    today={y:DEF.y,m:DEF.m,d:DEF.d}; drawToday(); drawRange();
+    say('Today is <b class="y">'+iso(today)+'</b>, demo day. Twelve rows sit on their dates. Press a report to shade its range, or click a month to move today.');
+  }
+
+  document.querySelectorAll(".rep").forEach(function(b){ b.addEventListener("click",function(){ report(b.getAttribute("data-r")); }); });
+  $("#bReset").addEventListener("click",reset);
+  inDay.addEventListener("keydown",function(e){ if(e.key==="Enter") applyDay(); });
+  inDay.addEventListener("change",applyDay);
+  var dragging=false;
+  tl.addEventListener("pointerdown",function(e){ var c=e.target.closest(".cell"); if(!c) return; dragging=true; pickCell(c); });
+  tl.addEventListener("pointermove",function(e){ if(!dragging) return; var el=document.elementFromPoint(e.clientX,e.clientY); var c=el&&el.closest(".cell"); if(c) pickCell(c); });
+  addEventListener("pointerup",function(){ dragging=false; });
+  addEventListener("pointercancel",function(){ dragging=false; });
+  reset();
+
+  /* ambient canvas */
+  var cv=$("#amb"),ctx=cv.getContext&&cv.getContext("2d"),parts=[];
+  function sizeC(){if(!ctx)return;cv.width=innerWidth;cv.height=innerHeight;}
+  function initParts(){parts=[];for(var i=0;i<46;i++)parts.push({x:Math.random(),y:Math.random(),
+    r:Math.random()*1.6+.3,s:Math.random()*.02+.004,o:Math.random()*.4+.1});}
+  function drawC(){if(!ctx)return;ctx.clearRect(0,0,cv.width,cv.height);
+    parts.forEach(function(p){p.y-=p.s/60;if(p.y<-.02)p.y=1.02;
+      ctx.beginPath();ctx.arc(p.x*cv.width,p.y*cv.height,p.r,0,7);
+      ctx.fillStyle="rgba(140,170,255,"+p.o+")";ctx.fill();});
+    requestAnimationFrame(drawC);}
+  if(ctx&&!reduce){sizeC();initParts();drawC();addEventListener("resize",sizeC);}
+})();
+</script>
+<script src="../manifest.js"></script>
+<script src="../../assets/rail.js"></script>
+<script>Rail.render(document.getElementById("rail"),{week:4,kind:"visuals",current:"04-date-range-reports"});</script>
+</body>
+</html>

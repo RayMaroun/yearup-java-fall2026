@@ -1,0 +1,332 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Menu Flow Map | Week 4 Visual Hub</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Sora:wght@500;700&family=Inter:wght@400;500&family=JetBrains+Mono:wght@400;500&display=swap">
+<style>
+  :root{
+    --bg:#080c17; --bg2:#0c1428; --surface:rgba(255,255,255,.045); --line:rgba(255,255,255,.09);
+    --ink:#eef2fb; --muted:#8496b6; --accent:#6ea0ff; --accent2:#8b7bff; --good:#46d98a; --warn:#ff6a6a;
+    --gold:#ffc862; --disp:'Sora',system-ui,sans-serif; --body:'Inter',system-ui,sans-serif;
+    --mono:'JetBrains Mono',ui-monospace,monospace;
+  }
+  *{box-sizing:border-box}
+  body{margin:0;min-height:100vh;color:var(--ink);font-family:var(--body);
+    background:radial-gradient(1200px 700px at 70% -10%,#141d38 0%,transparent 55%),
+               radial-gradient(900px 600px at 10% 110%,#161233 0%,transparent 50%),#080c17;
+    overflow-x:hidden}
+  #amb{position:fixed;inset:0;z-index:0;pointer-events:none;opacity:.6}
+  .back{position:relative;z-index:2;display:block;max-width:1120px;margin:0 auto;padding:26px 24px 0;
+    width:100%;font-family:var(--mono);font-size:.8rem;letter-spacing:.04em;color:var(--muted);
+    text-decoration:none;transition:color .15s}
+  .back:hover{color:var(--accent)}
+  .wrap{position:relative;z-index:1;max-width:1120px;margin:0 auto;padding:22px 24px 70px}
+  .tag{font-family:var(--mono);font-size:.72rem;letter-spacing:.22em;text-transform:uppercase;color:var(--accent);margin:0 0 14px}
+  h1{font-family:var(--disp);font-weight:700;font-size:clamp(2.3rem,6vw,3.6rem);line-height:1;margin:0 0 12px;
+    letter-spacing:-.03em;background:linear-gradient(180deg,#fff,#b9c6e6);-webkit-background-clip:text;
+    background-clip:text;color:transparent}
+  .lede{color:var(--muted);max-width:64ch;font-size:1.05rem;margin:0 0 26px;line-height:1.5}
+  .lede b{color:var(--ink)}
+  code{font-family:var(--mono);font-size:.92em;color:#bcd0ff}
+
+  /* ---------- the stage IS the picture ---------- */
+  .stage{position:relative;background:linear-gradient(180deg,rgba(255,255,255,.03),rgba(255,255,255,.01));
+    border:1px solid var(--line);border-radius:24px;padding:22px;
+    box-shadow:0 1px 0 rgba(255,255,255,.06) inset,0 30px 80px -30px rgba(0,0,0,.8)}
+  .board{display:grid;grid-template-columns:minmax(0,1fr) 64px minmax(0,1fr) 64px minmax(0,1fr);gap:14px;align-items:stretch}
+
+  /* a screen, drawn as a small terminal */
+  .scr{position:relative;display:flex;flex-direction:column;border-radius:16px;border:1px solid rgba(255,255,255,.14);
+    background:#05070e;overflow:hidden;opacity:.42;transition:opacity .3s,border-color .3s,box-shadow .3s,transform .3s}
+  .scr.lit{opacity:1;border-color:rgba(110,160,255,.75);box-shadow:0 0 0 3px rgba(110,160,255,.14),0 0 40px -8px rgba(110,160,255,.75)}
+  .scr.flash{box-shadow:0 0 0 3px rgba(70,217,138,.25),0 0 40px -8px rgba(70,217,138,.85);border-color:rgba(70,217,138,.8)}
+  .bar{display:flex;align-items:center;gap:6px;padding:9px 12px;background:rgba(255,255,255,.05);border-bottom:1px solid var(--line)}
+  .bar i{width:9px;height:9px;border-radius:50%;background:rgba(255,255,255,.18)}
+  .bar i:nth-child(1){background:rgba(255,106,106,.7)} .bar i:nth-child(2){background:rgba(255,200,98,.7)} .bar i:nth-child(3){background:rgba(70,217,138,.7)}
+  .bar span{margin-left:auto;font-family:var(--mono);font-size:.6rem;letter-spacing:.14em;text-transform:uppercase;color:var(--muted)}
+  .body{padding:12px 12px 10px;flex:1;display:flex;flex-direction:column}
+  .who{font-family:var(--disp);font-weight:700;font-size:1.15rem;margin:0 0 8px;color:var(--ink);letter-spacing:-.01em}
+  .scr.lit .who{color:#dbe6ff}
+  .menu{display:flex;flex-direction:column;gap:4px}
+  .opt{display:flex;align-items:center;gap:9px;width:100%;text-align:left;font-family:var(--mono);font-size:.8rem;padding:7px 9px;border-radius:9px;
+    cursor:pointer;border:1px solid transparent;background:transparent;color:#c9d4ea;transition:background .15s,border-color .15s,color .15s}
+  .opt b{font-weight:500;color:var(--gold);min-width:1.6em}
+  .opt:hover:not(:disabled){background:rgba(255,200,98,.08);border-color:rgba(255,200,98,.45)}
+  .opt:disabled{cursor:not-allowed}
+  .scr:not(.lit) .opt b{color:rgba(255,200,98,.6)}
+  .opt.hit{background:rgba(255,200,98,.16);border-color:var(--gold);color:#fff}
+  .opt.go{background:rgba(110,160,255,.18);border-color:var(--accent);color:#fff}
+  .opt.out{background:rgba(255,106,106,.16);border-color:var(--warn);color:#fff}
+  .out b{color:var(--warn)}
+  .say{margin-top:8px;font-family:var(--mono);font-size:.68rem;line-height:1.45;color:#9fe3b6;min-height:36px;padding:6px 9px;border-radius:8px;
+    border:1px dashed rgba(70,217,138,.35);background:rgba(70,217,138,.05);opacity:0;transition:opacity .3s}
+  .say.show{opacity:1}
+  .loop{margin-top:auto;padding-top:9px;display:flex;align-items:center;gap:7px;font-family:var(--mono);font-size:.62rem;letter-spacing:.1em;
+    text-transform:uppercase;color:rgba(132,150,182,.55);transition:color .3s}
+  .loop b{font-weight:500;font-size:1rem;line-height:1;display:inline-block;transition:transform .6s cubic-bezier(.2,.9,.3,1)}
+  .loop.on{color:var(--good)} .loop.on b{transform:rotate(-360deg)}
+  .prompt{font-family:var(--mono);font-size:.7rem;color:rgba(132,150,182,.8);margin:8px 0 0}
+  .prompt::after{content:"_";color:var(--accent);animation:blink 1s steps(2) infinite}
+  .scr:not(.lit) .prompt::after{animation:none;opacity:0}
+  @keyframes blink{to{opacity:0}}
+
+  /* goodbye state on Home */
+  .bye{position:absolute;inset:0;display:none;flex-direction:column;align-items:center;justify-content:center;gap:6px;background:rgba(5,7,14,.92);
+    font-family:var(--disp);font-weight:700;font-size:1.8rem;color:var(--warn);letter-spacing:-.02em}
+  .bye small{font-family:var(--mono);font-weight:400;font-size:.66rem;letter-spacing:.14em;text-transform:uppercase;color:var(--muted)}
+  .scr.ended{opacity:.55;border-color:rgba(255,106,106,.6);box-shadow:0 0 36px -10px rgba(255,106,106,.7)}
+  .scr.ended .bye{display:flex}
+
+  /* the paths between screens */
+  .path{display:flex;flex-direction:column;align-items:center;justify-content:center;gap:18px}
+  .arr{display:flex;flex-direction:column;align-items:center;gap:2px;font-family:var(--mono);font-size:.66rem;color:rgba(132,150,182,.4);transition:color .3s}
+  .arr b{font-weight:500;font-size:1.7rem;line-height:1;transition:transform .5s cubic-bezier(.2,.9,.3,1)}
+  .arr.fwd.on{color:var(--accent)} .arr.fwd.on b{transform:translateX(10px)}
+  .arr.bk.on{color:var(--gold)} .arr.bk.on b{transform:translateX(-10px)}
+
+  @media (max-width:860px){
+    .board{grid-template-columns:1fr;gap:10px}
+    .path{flex-direction:row;gap:40px;padding:2px 0}
+    .arr b{transform:rotate(90deg)}
+    .arr.fwd.on b{transform:rotate(90deg) translateX(8px)} .arr.bk.on b{transform:rotate(90deg) translateX(-8px)}
+  }
+
+  /* the one sentence */
+  .caption{display:flex;gap:14px;align-items:flex-start;margin:18px 2px 0;padding-top:16px;border-top:1px solid var(--line)}
+  .caption .t{flex:1;font-size:1.05rem;line-height:1.55;color:var(--ink);padding-left:16px;border-left:3px solid var(--accent);transition:border-color .3s}
+  .caption .t .line{display:block;margin-top:6px;font-family:var(--mono);font-size:.8rem;color:#bcd0ff;opacity:.9}
+  .caption.y .t{border-left-color:var(--gold)} .caption.g .t{border-left-color:var(--good)} .caption.w .t{border-left-color:var(--warn)}
+  .caption b.a{color:var(--accent)} .caption b.y{color:var(--gold)} .caption b.g{color:var(--good)} .caption b.w{color:var(--warn)}
+  .reset{font-family:var(--body);font-weight:500;font-size:.84rem;padding:8px 14px;border-radius:11px;cursor:pointer;
+    border:1px solid var(--line);background:transparent;color:var(--muted);transition:.15s;flex-shrink:0}
+  .reset:hover{border-color:var(--accent);color:var(--accent)}
+  .reset.need{border-color:var(--warn);color:var(--warn)}
+  button:focus-visible{outline:2px solid var(--accent);outline-offset:2px}
+
+  .take{margin-top:22px;background:linear-gradient(180deg,rgba(110,160,255,.08),rgba(139,123,255,.04));
+    border:1px solid var(--line);border-left:3px solid var(--accent);border-radius:12px;padding:16px 18px}
+  .take .tk{font-family:var(--mono);font-size:.66rem;letter-spacing:.14em;text-transform:uppercase;color:var(--accent);margin:0 0 8px}
+  .take p{margin:0;font-size:.95rem;color:var(--ink);line-height:1.55}
+  .take b{color:#fff}
+  @media (prefers-reduced-motion:reduce){*{animation-duration:.01ms!important;transition-duration:.01ms!important}#amb{display:none}}
+</style>
+</head>
+<body>
+<a class="back" href="../index.html#01-menu-flow-map">&#8592; Week 4 index</a>
+<canvas id="amb"></canvas>
+<div class="wrap">
+  <p class="tag">Capstone 1 &middot; hints</p>
+  <h1>Menu Flow Map</h1>
+  <p class="lede"><b>Three screens, three loops. Press a letter and watch where it takes you.</b></p>
+
+  <div class="stage">
+    <div class="board" id="board">
+
+      <div class="scr lit" id="sHome" data-s="home">
+        <div class="bar"><i></i><i></i><i></i><span>screen 1</span></div>
+        <div class="body">
+          <p class="who">Home</p>
+          <div class="menu">
+            <button class="opt" data-s="home" data-k="D"><b>D)</b> Add Deposit</button>
+            <button class="opt" data-s="home" data-k="P"><b>P)</b> Make Payment (Debit)</button>
+            <button class="opt" data-s="home" data-k="L"><b>L)</b> Ledger</button>
+            <button class="opt" data-s="home" data-k="X"><b>X)</b> Exit</button>
+          </div>
+          <p class="prompt">Choose an option: </p>
+          <div class="say" id="sayHome"></div>
+          <div class="loop" id="loopHome"><b>&#8635;</b> outer loop</div>
+        </div>
+        <div class="bye">Goodbye<small>the outer loop ended</small></div>
+      </div>
+
+      <div class="path">
+        <div class="arr fwd" id="aL"><b>&rarr;</b>L</div>
+        <div class="arr bk" id="aH"><b>&larr;</b>H</div>
+      </div>
+
+      <div class="scr" id="sLedger" data-s="ledger">
+        <div class="bar"><i></i><i></i><i></i><span>screen 2</span></div>
+        <div class="body">
+          <p class="who">Ledger</p>
+          <div class="menu">
+            <button class="opt" data-s="ledger" data-k="A" disabled><b>A)</b> All</button>
+            <button class="opt" data-s="ledger" data-k="D" disabled><b>D)</b> Deposits</button>
+            <button class="opt" data-s="ledger" data-k="P" disabled><b>P)</b> Payments</button>
+            <button class="opt" data-s="ledger" data-k="R" disabled><b>R)</b> Reports</button>
+            <button class="opt" data-s="ledger" data-k="H" disabled><b>H)</b> Home</button>
+          </div>
+          <p class="prompt">Choose an option: </p>
+          <div class="say" id="sayLedger"></div>
+          <div class="loop" id="loopLedger"><b>&#8635;</b> inner loop</div>
+        </div>
+      </div>
+
+      <div class="path">
+        <div class="arr fwd" id="aR"><b>&rarr;</b>R</div>
+        <div class="arr bk" id="a0"><b>&larr;</b>0</div>
+      </div>
+
+      <div class="scr" id="sReports" data-s="reports">
+        <div class="bar"><i></i><i></i><i></i><span>screen 3</span></div>
+        <div class="body">
+          <p class="who">Reports</p>
+          <div class="menu">
+            <button class="opt" data-s="reports" data-k="1" disabled><b>1)</b> Month To Date</button>
+            <button class="opt" data-s="reports" data-k="2" disabled><b>2)</b> Previous Month</button>
+            <button class="opt" data-s="reports" data-k="3" disabled><b>3)</b> Year To Date</button>
+            <button class="opt" data-s="reports" data-k="4" disabled><b>4)</b> Previous Year</button>
+            <button class="opt" data-s="reports" data-k="5" disabled><b>5)</b> Search by Vendor</button>
+            <button class="opt" data-s="reports" data-k="0" disabled><b>0)</b> Back</button>
+          </div>
+          <p class="prompt">Choose an option: </p>
+          <div class="say" id="sayReports"></div>
+          <div class="loop" id="loopReports"><b>&#8635;</b> innermost loop</div>
+        </div>
+      </div>
+
+    </div>
+    <div class="caption" id="caption">
+      <div class="t" id="status">The app starts on <b class="a">Home</b>. Only the lit screen is listening. Press one of its letters.</div>
+      <button class="reset" id="bReset">Reset</button>
+    </div>
+  </div>
+
+  <div class="take">
+    <p class="tk">The one idea</p>
+    <p><b>Three screens, three loops, one inside the other.</b> Each screen is a loop that prints its menu, reads one choice, and
+    runs a <code>switch</code> where every letter is a case. Most cases do their job and the loop prints the menu again.
+    Only <b>X</b> leaves the Home loop, only <b>H</b> leaves the Ledger loop, only <b>0</b> leaves the Reports loop.</p>
+  </div>
+  <div id="rail"></div>
+</div>
+<script>
+(function(){
+  "use strict";
+  var $=function(s){return document.querySelector(s);};
+  var reduce=matchMedia("(prefers-reduced-motion: reduce)").matches;
+  var SCR={home:$("#sHome"),ledger:$("#sLedger"),reports:$("#sReports")};
+  var NAME={home:"Home",ledger:"Ledger",reports:"Reports"};
+  var cur="home", ended=false;
+  var status=$("#status"),caption=$("#caption"),bReset=$("#bReset");
+
+  function say(html,tone,line){
+    caption.className="caption"+(tone?" "+tone:"");
+    status.innerHTML=html+(line?'<span class="line">'+line+'</span>':"");
+  }
+  function cap(s){return s.charAt(0).toUpperCase()+s.slice(1);}
+
+  /* which screen is lit; its buttons are the only live ones */
+  function light(s){
+    cur=s;
+    Object.keys(SCR).forEach(function(k){
+      SCR[k].classList.toggle("lit",k===s);
+      SCR[k].querySelectorAll(".opt").forEach(function(b){ b.disabled=(k!==s)||ended; });
+      $("#say"+cap(k)).classList.remove("show");
+    });
+  }
+  function mark(btn,cls){
+    btn.classList.add(cls);
+    setTimeout(function(){ btn.classList.remove(cls); },700);
+  }
+  /* a letter that does its job and stays: flash the card, show what printed, spin the loop badge */
+  function stay(s,btn,text){
+    var card=SCR[s], sayEl=$("#say"+cap(s)), lp=$("#loop"+cap(s));
+    mark(btn,"hit");
+    card.classList.add("flash"); setTimeout(function(){ card.classList.remove("flash"); },700);
+    sayEl.textContent=text; sayEl.classList.add("show");
+    lp.classList.remove("on"); void lp.offsetWidth; lp.classList.add("on");
+    setTimeout(function(){ lp.classList.remove("on"); },1200);
+  }
+  /* a letter that moves: light the arrow, then the next card */
+  function move(btn,arrowId,to,cls){
+    mark(btn,cls);
+    var a=$("#"+arrowId); a.classList.add("on");
+    setTimeout(function(){ a.classList.remove("on"); },1100);
+    setTimeout(function(){ light(to); },reduce?0:220);
+  }
+
+  var ACT={
+    home:{
+      D:function(b){ stay("home",b,"asks the deposit questions, saves one line, back to this menu");
+        say('<b class="g">D</b> asks the deposit questions and saves the line. <b class="g">Home is a loop</b>: after D the menu prints again.',"g",'case "D" -> addDeposit();'); },
+      P:function(b){ stay("home",b,"asks the payment questions, saves one line, back to this menu");
+        say('<b class="g">P</b> asks the payment questions and saves the line. <b class="g">Home is a loop</b>: after P the menu prints again.',"g",'case "P" -> makePayment();'); },
+      L:function(b){ move(b,"aL","ledger","go");
+        say('<b class="a">L</b> opens the <b class="a">Ledger</b> screen: a second loop starts inside the Home loop. Home is waiting underneath.',"",'case "L" -> showLedger();'); },
+      X:function(b){ mark(b,"out"); ended=true; light("home"); SCR.home.classList.add("ended"); bReset.classList.add("need");
+        say('<b class="w">X</b> is the only letter that leaves the Home loop. The app has ended. Press <b class="w">Reset</b> to run it again.',"w",'case "X" -> running = false;'); }
+    },
+    ledger:{
+      A:function(b){ stay("ledger",b,"prints every entry, newest first, back to this menu");
+        say('<b class="g">A</b> prints all entries, newest first. <b class="g">Ledger is a loop</b>: after A the menu prints again.',"g",'case "A" -> showAll();'); },
+      D:function(b){ stay("ledger",b,"prints only the deposits, back to this menu");
+        say('<b class="g">D</b> prints only the deposits. <b class="g">Ledger is a loop</b>: after D the menu prints again. Same letter as Home, different switch.',"g",'case "D" -> showDeposits();'); },
+      P:function(b){ stay("ledger",b,"prints only the payments, back to this menu");
+        say('<b class="g">P</b> prints only the payments. <b class="g">Ledger is a loop</b>: after P the menu prints again.',"g",'case "P" -> showPayments();'); },
+      R:function(b){ move(b,"aR","reports","go");
+        say('<b class="a">R</b> opens <b class="a">Reports</b>: a third loop, inside Ledger, inside Home. Two screens are now waiting underneath.',"",'case "R" -> showReports();'); },
+      H:function(b){ move(b,"aH","home","hit");
+        say('<b class="y">H</b> leaves the Ledger loop. Control falls back into the Home loop, and the <b class="y">Home</b> menu prints again.',"y",'case "H" -> return;'); }
+    },
+    reports:{
+      "1":function(b){ stay("reports",b,"prints Month To Date, back to this menu");
+        say('<b class="g">1</b> prints the Month To Date report. <b class="g">Reports is a loop</b>: after 1 the menu prints again.',"g",'case "1" -> monthToDate();'); },
+      "2":function(b){ stay("reports",b,"prints Previous Month, back to this menu");
+        say('<b class="g">2</b> prints the Previous Month report. <b class="g">Reports is a loop</b>: after 2 the menu prints again.',"g",'case "2" -> previousMonth();'); },
+      "3":function(b){ stay("reports",b,"prints Year To Date, back to this menu");
+        say('<b class="g">3</b> prints the Year To Date report. <b class="g">Reports is a loop</b>: after 3 the menu prints again.',"g",'case "3" -> yearToDate();'); },
+      "4":function(b){ stay("reports",b,"prints Previous Year, back to this menu");
+        say('<b class="g">4</b> prints the Previous Year report. <b class="g">Reports is a loop</b>: after 4 the menu prints again.',"g",'case "4" -> previousYear();'); },
+      "5":function(b){ stay("reports",b,"asks for a vendor name, prints that vendor's entries, back to this menu");
+        say('<b class="g">5</b> asks for a vendor name and prints that vendor\'s entries. <b class="g">Reports is a loop</b>: after 5 the menu prints again.',"g",'case "5" -> searchByVendor();'); },
+      "0":function(b){ move(b,"a0","ledger","hit");
+        say('<b class="y">0</b> leaves the Reports loop. Control falls back into the Ledger loop, and the <b class="y">Ledger</b> menu prints again.',"y",'case "0" -> return;'); }
+    }
+  };
+
+  function press(s,k){
+    if(ended||s!==cur) return;
+    var b=document.querySelector('.opt[data-s="'+s+'"][data-k="'+k+'"]');
+    if(!b||!ACT[s][k]) return;
+    ACT[s][k](b);
+  }
+  function reset(){
+    ended=false; SCR.home.classList.remove("ended"); bReset.classList.remove("need");
+    document.querySelectorAll(".arr").forEach(function(a){ a.classList.remove("on"); });
+    light("home");
+    say('The app starts on <b class="a">Home</b>. Only the lit screen is listening. Press one of its letters.');
+  }
+
+  $("#board").addEventListener("click",function(e){
+    var b=e.target.closest("button.opt"); if(!b||b.disabled) return;
+    press(b.getAttribute("data-s"),b.getAttribute("data-k"));
+  });
+  bReset.addEventListener("click",reset);
+  /* typing the letter works like the real app */
+  addEventListener("keydown",function(e){
+    if(e.metaKey||e.ctrlKey||e.altKey) return;
+    var k=e.key.length===1?e.key.toUpperCase():"";
+    if(k&&ACT[cur][k]){ e.preventDefault(); press(cur,k); }
+  });
+
+  /* ambient canvas */
+  var cv=$("#amb"),ctx=cv.getContext&&cv.getContext("2d"),parts=[];
+  function sizeC(){if(!ctx)return;cv.width=innerWidth;cv.height=innerHeight;}
+  function initParts(){parts=[];for(var i=0;i<46;i++)parts.push({x:Math.random(),y:Math.random(),
+    r:Math.random()*1.6+.3,s:Math.random()*.02+.004,o:Math.random()*.4+.1});}
+  function drawC(){if(!ctx)return;ctx.clearRect(0,0,cv.width,cv.height);
+    parts.forEach(function(p){p.y-=p.s/60;if(p.y<-.02)p.y=1.02;
+      ctx.beginPath();ctx.arc(p.x*cv.width,p.y*cv.height,p.r,0,7);
+      ctx.fillStyle="rgba(140,170,255,"+p.o+")";ctx.fill();});
+    requestAnimationFrame(drawC);}
+  if(ctx&&!reduce){sizeC();initParts();drawC();addEventListener("resize",sizeC);}
+})();
+</script>
+<script src="../manifest.js"></script>
+<script src="../../assets/rail.js"></script>
+<script>Rail.render(document.getElementById("rail"),{week:4,kind:"visuals",current:"01-menu-flow-map"});</script>
+</body>
+</html>

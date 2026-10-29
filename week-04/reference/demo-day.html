@@ -1,0 +1,304 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Demo Day | Week 4 Visual Hub</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Sora:wght@500;700&family=Inter:wght@400;500&family=JetBrains+Mono:wght@400;500&display=swap">
+<style>
+  :root{
+    --bg:#080c17; --bg2:#0c1428; --surface:rgba(255,255,255,.045); --line:rgba(255,255,255,.09);
+    --ink:#eef2fb; --muted:#8496b6; --accent:#6ea0ff; --accent2:#8b7bff; --good:#46d98a; --warn:#ff6a6a;
+    --gold:#ffc862; --disp:'Sora',system-ui,sans-serif; --body:'Inter',system-ui,sans-serif;
+    --mono:'JetBrains Mono',ui-monospace,monospace;
+  }
+  *{box-sizing:border-box}
+  body{margin:0;min-height:100vh;color:var(--ink);font-family:var(--body);
+    background:radial-gradient(1200px 700px at 70% -10%,#141d38 0%,transparent 55%),
+               radial-gradient(900px 600px at 10% 110%,#161233 0%,transparent 50%),#080c17;
+    overflow-x:hidden}
+  #amb{position:fixed;inset:0;z-index:0;pointer-events:none;opacity:.6}
+  .back{position:relative;z-index:2;display:block;max-width:1120px;margin:0 auto;padding:26px 24px 0;
+    width:100%;font-family:var(--mono);font-size:.8rem;letter-spacing:.04em;color:var(--muted);
+    text-decoration:none;transition:color .15s}
+  .back:hover{color:var(--accent)}
+  .wrap{position:relative;z-index:1;max-width:1120px;margin:0 auto;padding:22px 24px 70px}
+  .tag{font-family:var(--mono);font-size:.72rem;letter-spacing:.22em;text-transform:uppercase;color:var(--accent);margin:0 0 14px}
+  h1.page{font-family:var(--disp);font-weight:700;font-size:clamp(2.3rem,6vw,3.6rem);line-height:1;margin:0 0 12px;
+    letter-spacing:-.03em;background:linear-gradient(180deg,#fff,#b9c6e6);-webkit-background-clip:text;
+    background-clip:text;color:transparent}
+  .lede{color:var(--muted);max-width:64ch;font-size:1.05rem;margin:0 0 26px;line-height:1.5}
+  .lede b{color:var(--ink)}
+  code{font-family:var(--mono);font-size:.88em;color:#bcd0ff}
+
+  /* ---------- stage ---------- */
+  .stage{position:relative;background:linear-gradient(180deg,rgba(255,255,255,.03),rgba(255,255,255,.01));
+    border:1px solid var(--line);border-radius:24px;padding:22px;
+    box-shadow:0 1px 0 rgba(255,255,255,.06) inset,0 30px 80px -30px rgba(0,0,0,.8)}
+  .stage + .stage{margin-top:18px}
+  .lab{font-family:var(--mono);font-size:.7rem;letter-spacing:.12em;text-transform:uppercase;color:var(--muted)}
+  .stage h2{font-family:var(--disp);font-weight:700;font-size:1.25rem;letter-spacing:-.01em;margin:4px 0 14px}
+  .stage h2 small{display:block;font-family:var(--body);font-weight:400;font-size:.88rem;color:var(--muted);margin-top:4px;letter-spacing:0}
+
+  /* the frame line */
+  .frame{display:flex;gap:14px;align-items:flex-start;margin:0 0 18px;padding:14px 16px;border:1px solid var(--line);
+    border-radius:16px;background:rgba(6,10,20,.5)}
+  .frame .t{flex:1;font-size:1.05rem;line-height:1.55;padding-left:16px;border-left:3px solid var(--accent)}
+  .frame b{color:#fff}
+
+  /* the ten-minute bar */
+  .bar{display:grid;grid-template-columns:1fr 1fr 2fr 2fr 3fr 1fr;gap:4px;margin:0 0 6px}
+  .bar span{display:block;height:34px;border-radius:9px;border:1px solid rgba(110,160,255,.35);background:rgba(110,160,255,.12);
+    font-family:var(--mono);font-size:.68rem;color:#dbe6ff;display:flex;align-items:center;justify-content:center;white-space:nowrap;overflow:hidden;
+    transition:background .2s,border-color .2s}
+  .bar span.demo{background:rgba(255,200,98,.12);border-color:rgba(255,200,98,.5);color:var(--gold)}
+  .bar span.on{background:rgba(110,160,255,.3);border-color:var(--accent)}
+  .bar span.demo.on{background:rgba(255,200,98,.3);border-color:var(--gold)}
+  .ticks{display:flex;justify-content:space-between;font-family:var(--mono);font-size:.62rem;color:var(--muted);margin:0 2px 18px}
+
+  /* the six sections */
+  .guide{margin:0;padding:0;list-style:none;counter-reset:s}
+  .guide > li{display:grid;grid-template-columns:44px 1fr auto;gap:0 14px;align-items:start;padding:14px 10px;
+    border-top:1px solid var(--line);counter-increment:s;border-radius:12px;transition:background .2s}
+  .guide > li:first-child{border-top:0}
+  .guide > li:hover{background:rgba(110,160,255,.05)}
+  .guide .n{font-family:var(--disp);font-weight:700;font-size:1.3rem;color:var(--accent);line-height:1.1;
+    width:44px;height:44px;border-radius:12px;display:flex;align-items:center;justify-content:center;background:rgba(110,160,255,.1);border:1px solid rgba(110,160,255,.3)}
+  .guide .n::before{content:counter(s)}
+  .guide h3{font-family:var(--disp);font-weight:700;font-size:1.05rem;margin:9px 0 6px;letter-spacing:-.01em}
+  .guide ul{margin:0;padding-left:18px;color:#c9d4ea;font-size:.92rem;line-height:1.55}
+  .guide ul li{margin:2px 0}
+  .chip{font-family:var(--mono);font-size:.74rem;padding:6px 12px;border-radius:999px;border:1px solid rgba(110,160,255,.4);
+    background:rgba(110,160,255,.12);color:#dbe6ff;white-space:nowrap;margin-top:10px}
+  .chip.demo{border-color:rgba(255,200,98,.5);background:rgba(255,200,98,.12);color:var(--gold)}
+  .note{margin:14px 2px 0;padding-top:14px;border-top:1px solid var(--line);color:var(--muted);font-size:.92rem;line-height:1.5}
+  .note b{color:var(--ink);font-weight:500}
+
+  /* before you present */
+  .checks{margin:0;padding:0;list-style:none}
+  .checks li{border-top:1px solid var(--line)}
+  .checks li:first-child{border-top:0}
+  .checks label{display:flex;gap:14px;align-items:flex-start;padding:12px 10px;cursor:pointer;border-radius:12px;transition:background .15s}
+  .checks label:hover{background:rgba(110,160,255,.05)}
+  .checks input{appearance:none;-webkit-appearance:none;flex-shrink:0;width:22px;height:22px;margin:1px 0 0;border-radius:7px;
+    border:1px solid rgba(255,255,255,.25);background:rgba(0,0,0,.3);cursor:pointer;position:relative;transition:background .15s,border-color .15s}
+  .checks input:checked{background:rgba(70,217,138,.2);border-color:var(--good)}
+  .checks input:checked::after{content:"";position:absolute;left:7px;top:3px;width:5px;height:10px;border:solid var(--good);border-width:0 2px 2px 0;transform:rotate(45deg)}
+  .checks input:focus-visible{outline:2px solid var(--accent);outline-offset:2px}
+  .checks .w{font-size:.95rem;line-height:1.5;color:#dfe6f5;transition:color .15s}
+  .checks input:checked ~ .w{color:var(--muted)}
+  .checks .w b{color:var(--ink);font-weight:500}
+  .checks input:checked ~ .w b{color:var(--muted)}
+
+  /* the one sentence */
+  .caption{display:flex;gap:14px;align-items:flex-start;margin:14px 2px 0;padding-top:14px;border-top:1px solid var(--line)}
+  .caption .t{flex:1;font-size:1.05rem;line-height:1.55;color:var(--ink);padding-left:16px;border-left:3px solid var(--accent);transition:border-color .3s}
+  .caption.g .t{border-left-color:var(--good)}
+  .caption b.g{color:var(--good)} .caption b.a{color:var(--accent)}
+  .reset{font-family:var(--body);font-weight:500;font-size:.84rem;padding:8px 14px;border-radius:11px;cursor:pointer;
+    border:1px solid var(--line);background:transparent;color:var(--muted);transition:.15s;flex-shrink:0}
+  .reset:hover{border-color:var(--accent);color:var(--accent)}
+  button:focus-visible{outline:2px solid var(--accent);outline-offset:2px}
+
+  /* questions */
+  .qs{margin:0;padding:0;list-style:none;display:grid;grid-template-columns:1fr 1fr;gap:10px}
+  .qs li{padding:14px 16px;border:1px solid var(--line);border-radius:14px;background:rgba(6,10,20,.5);font-size:.95rem;line-height:1.5;
+    display:flex;gap:12px;align-items:flex-start}
+  .qs li::before{content:"?";flex-shrink:0;font-family:var(--disp);font-weight:700;color:var(--gold);width:26px;height:26px;border-radius:8px;
+    display:flex;align-items:center;justify-content:center;background:rgba(255,200,98,.1);border:1px solid rgba(255,200,98,.4)}
+  .qs li:last-child:nth-child(odd){grid-column:1 / -1}
+
+  .take{margin-top:22px;background:linear-gradient(180deg,rgba(110,160,255,.08),rgba(139,123,255,.04));
+    border:1px solid var(--line);border-left:3px solid var(--accent);border-radius:12px;padding:16px 18px}
+  .take .tk{font-family:var(--mono);font-size:.66rem;letter-spacing:.14em;text-transform:uppercase;color:var(--accent);margin:0 0 8px}
+  .take p{margin:0;font-size:.95rem;color:var(--ink);line-height:1.55}
+  .take b{color:#fff}
+
+  @media (max-width:820px){
+    .qs{grid-template-columns:1fr}
+    .qs li:last-child:nth-child(odd){grid-column:auto}
+  }
+  @media (max-width:520px){
+    .wrap{padding:18px 16px 60px}
+    .back{padding:22px 16px 0}
+    .stage{padding:14px 12px 12px}
+    .guide > li{grid-template-columns:36px 1fr}
+    .guide .n{width:36px;height:36px;font-size:1.1rem}
+    .guide .chip{grid-column:2;justify-self:start;margin-top:2px}
+    .bar span{font-size:0}
+    .frame,.caption{flex-direction:column}
+  }
+  @media (prefers-reduced-motion:reduce){*{animation-duration:.01ms!important;transition-duration:.01ms!important}#amb{display:none}}
+</style>
+</head>
+<body>
+<a class="back" href="../index.html#demo-day">&#8592; Week 4 index</a>
+<canvas id="amb"></canvas>
+<div class="wrap">
+  <p class="tag">Week 4 &middot; Reference &middot; Capstone guide</p>
+  <h1 class="page">Demo Day</h1>
+  <p class="lede">Ten minutes, six parts, one scenario you have typed before. <b>Read the guide, then tick the list before you start.</b></p>
+
+  <div class="stage">
+    <div class="frame"><p class="t" style="margin:0">Each learner gets <b>10 minutes</b> on demo day, <b>Friday, November 6</b>. Run through the screens, show one piece of code you are proud of, take questions.</p></div>
+
+    <p class="lab">The ten minutes</p>
+    <div class="bar" id="bar" aria-hidden="true">
+      <span data-s="1">1 min</span><span data-s="2">1 min</span><span data-s="3">2 min</span><span data-s="4">2 min</span><span class="demo" data-s="5">3 min</span><span data-s="6">1 min</span>
+    </div>
+    <div class="ticks" aria-hidden="true"><span>0:00</span><span>5:00</span><span>10:00</span></div>
+
+    <ol class="guide" id="guide">
+      <li data-s="1">
+        <span class="n"></span>
+        <div>
+          <h3>Introduction</h3>
+          <ul>
+            <li>Introduce yourself.</li>
+            <li>Provide a brief overview of the project.</li>
+          </ul>
+        </div>
+        <span class="chip">1 min</span>
+      </li>
+      <li data-s="2">
+        <span class="n"></span>
+        <div>
+          <h3>Challenges &amp; Solutions</h3>
+          <ul>
+            <li>Discuss a significant challenge you faced during the project.</li>
+            <li>Explain how you overcame it and any lessons learned.</li>
+          </ul>
+        </div>
+        <span class="chip">1 min</span>
+      </li>
+      <li data-s="3">
+        <span class="n"></span>
+        <div>
+          <h3>GitHub Repository Review</h3>
+          <ul>
+            <li>Navigate to the repository.</li>
+            <li>Show and discuss the commit history, emphasizing major milestones or changes.</li>
+            <li>Open and discuss the README file, highlighting its contents and structure.</li>
+            <li>Review the GitHub project board, explaining its layout, tasks, and progression.</li>
+          </ul>
+        </div>
+        <span class="chip">2 min</span>
+      </li>
+      <li data-s="4">
+        <span class="n"></span>
+        <div>
+          <h3>Code Deep Dive</h3>
+          <ul>
+            <li>Start with a high-level explanation of the code structure.</li>
+            <li>Delve into specific sections of the code, highlighting main features and functions.</li>
+          </ul>
+        </div>
+        <span class="chip">2 min</span>
+      </li>
+      <li data-s="5">
+        <span class="n"></span>
+        <div>
+          <h3>Live Demo</h3>
+          <ul>
+            <li>Run the program.</li>
+            <li>Conduct a brief demonstration of the main features, ensuring to engage the audience.</li>
+          </ul>
+        </div>
+        <span class="chip demo">3 min</span>
+      </li>
+      <li data-s="6">
+        <span class="n"></span>
+        <div>
+          <h3>Q&amp;A Session</h3>
+          <ul>
+            <li>Open the floor to questions from the audience.</li>
+            <li>Address each question confidently and clearly.</li>
+          </ul>
+        </div>
+        <span class="chip">1 min</span>
+      </li>
+    </ol>
+    <p class="note"><b>From Raymond:</b> This is to help you during the presentation. Feel free to change the order of the steps however you like.</p>
+    <p class="note">The minutes are a budget, not a rule. The live demo is the part people remember, so protect its three.</p>
+  </div>
+
+  <div class="stage">
+    <h2>Before you present<small>Tick each one on the day. Nothing is saved; the list is clean every time you open it.</small></h2>
+    <ul class="checks" id="checks">
+      <li><label><input type="checkbox"><span class="w">The app runs from a <b>fresh start</b> with <code>transactions.csv</code> in the project root.</span></label></li>
+      <li><label><input type="checkbox"><span class="w">The <b>repository</b>, the <b>README</b> and the <b>project board</b> are open in browser tabs.</span></label></li>
+      <li><label><input type="checkbox"><span class="w">The project is open in <b>IntelliJ</b> with the file you will show.</span></label></li>
+      <li><label><input type="checkbox"><span class="w">Other windows closed, <b>notifications off</b>.</span></label></li>
+      <li><label><input type="checkbox"><span class="w">You know which <b>scenario</b> you will type: one deposit, one payment, the ledger, one report.</span></label></li>
+      <li><label><input type="checkbox"><span class="w">You <b>timed yourself</b> once.</span></label></li>
+    </ul>
+    <div class="caption" id="cap">
+      <p class="t" id="capT" style="margin:0">Six things to check. Tick them as you go.</p>
+      <button class="reset" id="reset" type="button">Reset</button>
+    </div>
+  </div>
+
+  <div class="stage">
+    <h2>What Raymond may ask<small>Plain questions about your own project. Know where the answer lives in your code before Friday.</small></h2>
+    <ul class="qs">
+      <li>Why is a payment stored as a negative number?</li>
+      <li>What happens if <code>transactions.csv</code> is missing?</li>
+      <li>Show me where the ledger is sorted newest first.</li>
+      <li>Which part was hardest and what did you change?</li>
+      <li>What would you add with one more day?</li>
+    </ul>
+  </div>
+
+  <div class="take">
+    <p class="tk">The one idea</p>
+    <p><b>A demo is a rehearsed walk, not a tour of everything.</b> One scenario typed from memory, one piece of code you can explain without reading it, and the rest of the ten minutes is yours.</p>
+  </div>
+  <div id="rail"></div>
+</div>
+<script>
+(function(){
+  "use strict";
+  var $=function(s){return document.querySelector(s);};
+  var $$=function(s){return Array.prototype.slice.call(document.querySelectorAll(s));};
+  var reduce=matchMedia("(prefers-reduced-motion: reduce)").matches;
+
+  /* hover a section, its slice of the ten minutes lights */
+  var slices=$$("#bar span");
+  function light(n){slices.forEach(function(s){s.classList.toggle("on",s.getAttribute("data-s")===n);});}
+  $$("#guide > li").forEach(function(li){
+    li.addEventListener("mouseenter",function(){light(li.getAttribute("data-s"));});
+    li.addEventListener("mouseleave",function(){light(null);});
+  });
+
+  /* the check list, never saved */
+  var boxes=$$("#checks input"),cap=$("#cap"),capT=$("#capT");
+  function say(){
+    var done=boxes.filter(function(b){return b.checked;}).length,all=boxes.length;
+    cap.classList.toggle("g",done===all);
+    if(done===0)capT.textContent="Six things to check. Tick them as you go.";
+    else if(done===all)capT.innerHTML="<b class=\"g\">All six ticked.</b> Close this tab, open IntelliJ, start your ten minutes.";
+    else capT.innerHTML="<b class=\"a\">"+done+" of "+all+"</b> ticked. "+(all-done)+" to go before you start.";
+  }
+  boxes.forEach(function(b){b.checked=false;b.addEventListener("change",say);});
+  $("#reset").addEventListener("click",function(){boxes.forEach(function(b){b.checked=false;});say();});
+  say();
+
+  /* ambient canvas */
+  var cv=$("#amb"),ctx=cv.getContext&&cv.getContext("2d"),parts=[];
+  function sizeC(){if(!ctx)return;cv.width=innerWidth;cv.height=innerHeight;}
+  function initParts(){parts=[];for(var i=0;i<46;i++)parts.push({x:Math.random(),y:Math.random(),
+    r:Math.random()*1.6+.3,s:Math.random()*.02+.004,o:Math.random()*.4+.1});}
+  function drawC(){if(!ctx)return;ctx.clearRect(0,0,cv.width,cv.height);
+    parts.forEach(function(p){p.y-=p.s/60;if(p.y<-.02)p.y=1.02;
+      ctx.beginPath();ctx.arc(p.x*cv.width,p.y*cv.height,p.r,0,7);
+      ctx.fillStyle="rgba(140,170,255,"+p.o+")";ctx.fill();});
+    requestAnimationFrame(drawC);}
+  if(ctx&&!reduce){sizeC();initParts();drawC();addEventListener("resize",sizeC);}
+})();
+</script>
+<script src="../manifest.js"></script>
+<script src="../../assets/rail.js"></script>
+<script>Rail.render(document.getElementById("rail"),{week:4,kind:"reference",current:"demo-day"});</script>
+</body>
+</html>

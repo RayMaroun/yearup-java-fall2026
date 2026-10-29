@@ -1,0 +1,377 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Build Guide | Week 4 Visual Hub</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Sora:wght@500;700&family=Inter:wght@400;500&family=JetBrains+Mono:wght@400;500&display=swap">
+<style>
+  :root{
+    --bg:#080c17; --bg2:#0c1428; --surface:rgba(255,255,255,.045); --line:rgba(255,255,255,.09);
+    --ink:#eef2fb; --muted:#8496b6; --accent:#6ea0ff; --accent2:#8b7bff; --good:#46d98a; --warn:#ff6a6a;
+    --gold:#ffc862; --disp:'Sora',system-ui,sans-serif; --body:'Inter',system-ui,sans-serif;
+    --mono:'JetBrains Mono',ui-monospace,monospace;
+  }
+  *{box-sizing:border-box}
+  body{margin:0;min-height:100vh;color:var(--ink);font-family:var(--body);
+    background:radial-gradient(1200px 700px at 70% -10%,#141d38 0%,transparent 55%),
+               radial-gradient(900px 600px at 10% 110%,#161233 0%,transparent 50%),#080c17;
+    overflow-x:hidden}
+  #amb{position:fixed;inset:0;z-index:0;pointer-events:none;opacity:.6}
+  .back{position:relative;z-index:2;display:block;max-width:1120px;margin:0 auto;padding:26px 24px 0;
+    width:100%;font-family:var(--mono);font-size:.8rem;letter-spacing:.04em;color:var(--muted);
+    text-decoration:none;transition:color .15s}
+  .back:hover{color:var(--accent)}
+  .wrap{position:relative;z-index:1;max-width:1120px;margin:0 auto;padding:22px 24px 70px}
+  .tag{font-family:var(--mono);font-size:.72rem;letter-spacing:.22em;text-transform:uppercase;color:var(--accent);margin:0 0 14px}
+  h1{font-family:var(--disp);font-weight:700;font-size:clamp(2.3rem,6vw,3.6rem);line-height:1;margin:0 0 12px;
+    letter-spacing:-.03em;background:linear-gradient(180deg,#fff,#b9c6e6);-webkit-background-clip:text;
+    background-clip:text;color:transparent}
+  .lede{color:var(--muted);max-width:64ch;font-size:1.05rem;margin:0 0 22px;line-height:1.5}
+  .lede b{color:var(--ink)}
+  code{font-family:var(--mono);font-size:.88em;color:#bcd0ff;white-space:nowrap}
+  a{color:var(--accent)}
+
+  /* before you start */
+  .before{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:10px;margin:0 0 26px}
+  .before .b{padding:12px 14px;border:1px solid var(--line);border-radius:14px;background:var(--surface);font-size:.86rem;line-height:1.45;color:#c9d4ea}
+  .before .b b{display:block;font-family:var(--mono);font-size:.62rem;letter-spacing:.14em;text-transform:uppercase;color:var(--gold);margin:0 0 5px;font-weight:500}
+
+  /* layout: sticky step list + cards */
+  .board{display:grid;grid-template-columns:230px minmax(0,1fr);gap:18px;align-items:start}
+  .side{position:sticky;top:16px;border:1px solid var(--line);border-radius:16px;background:rgba(6,10,20,.55);padding:12px}
+  .side .lab{font-family:var(--mono);font-size:.62rem;letter-spacing:.14em;text-transform:uppercase;color:var(--muted);margin:0 0 8px;display:flex;justify-content:space-between}
+  .side .lab b{color:var(--good);font-weight:500}
+  .side ol{list-style:none;margin:0;padding:0;display:flex;flex-direction:column;gap:3px}
+  .side a{display:flex;gap:9px;align-items:center;padding:6px 8px;border-radius:9px;color:var(--muted);text-decoration:none;font-size:.82rem;line-height:1.25;transition:.15s;border:1px solid transparent}
+  .side a:hover{color:var(--ink);border-color:var(--line)}
+  .side a.now{color:var(--ink);background:rgba(110,160,255,.12);border-color:rgba(110,160,255,.35)}
+  .side .n{flex-shrink:0;width:22px;height:22px;border-radius:7px;display:flex;align-items:center;justify-content:center;font-family:var(--mono);font-size:.68rem;
+    background:rgba(110,160,255,.12);color:var(--accent);border:1px solid rgba(110,160,255,.3)}
+  .side a.ok .n{background:rgba(70,217,138,.14);color:var(--good);border-color:rgba(70,217,138,.45)}
+  .side a.ok{color:#9fb0d0}
+  .side .reset{margin-top:10px;width:100%;font-family:var(--body);font-weight:500;font-size:.78rem;padding:7px 10px;border-radius:9px;cursor:pointer;
+    border:1px solid var(--line);background:transparent;color:var(--muted);transition:.15s}
+  .side .reset:hover{border-color:var(--accent);color:var(--accent)}
+
+  .steps{display:flex;flex-direction:column;gap:14px;min-width:0}
+  .step{border:1px solid var(--line);border-radius:18px;background:linear-gradient(180deg,rgba(255,255,255,.03),rgba(255,255,255,.01));padding:18px 20px 16px;scroll-margin-top:14px;transition:border-color .3s}
+  .step.ok{border-color:rgba(70,217,138,.4)}
+  .step.ok .num{background:rgba(70,217,138,.14);color:var(--good);border-color:rgba(70,217,138,.5)}
+  .head{display:flex;gap:12px;align-items:flex-start;margin:0 0 12px}
+  .num{flex-shrink:0;width:40px;height:40px;border-radius:11px;display:flex;align-items:center;justify-content:center;font-family:var(--disp);font-weight:700;font-size:1rem;
+    background:rgba(110,160,255,.14);color:var(--accent);border:1px solid rgba(110,160,255,.3)}
+  .head h2{font-family:var(--disp);font-weight:700;font-size:1.25rem;letter-spacing:-.01em;margin:4px 0 4px}
+  .head .meta{display:flex;flex-wrap:wrap;gap:6px;align-items:center}
+  .chip{font-family:var(--mono);font-size:.64rem;letter-spacing:.06em;padding:3px 9px;border-radius:999px;border:1px solid var(--line);color:var(--muted);text-decoration:none;transition:.15s}
+  a.chip{color:#c4b8ff;border-color:rgba(139,123,255,.4);background:rgba(139,123,255,.08)}
+  a.chip:hover{border-color:#c4b8ff}
+  .chip.t{color:var(--gold);border-color:rgba(255,200,98,.35)}
+  .done-box{margin-left:auto;display:flex;align-items:center;gap:7px;font-family:var(--mono);font-size:.7rem;color:var(--muted);cursor:pointer;white-space:nowrap;padding-top:8px}
+  .done-box input{accent-color:var(--good);width:16px;height:16px;cursor:pointer;margin:0}
+  .step.ok .done-box{color:var(--good)}
+
+  .parts{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:10px}
+  .part{border:1px solid var(--line);border-radius:12px;padding:11px 13px 12px;background:rgba(6,10,20,.45);min-width:0}
+  .part .k{font-family:var(--mono);font-size:.6rem;letter-spacing:.14em;text-transform:uppercase;margin:0 0 7px;color:var(--accent)}
+  .part.looks .k{color:var(--good)} .part.watch .k{color:var(--warn)} .part.commit .k{color:var(--gold)}
+  .part p,.part li{font-size:.86rem;line-height:1.5;color:#c9d4ea;margin:0}
+  .part ul,.part ol{margin:0;padding-left:18px;display:flex;flex-direction:column;gap:5px}
+  .part.do{grid-column:1 / -1}
+  .part .cmd{display:inline-block;font-family:var(--mono);font-size:.78rem;color:#ffe2a8;background:rgba(255,200,98,.08);border:1px solid rgba(255,200,98,.3);border-radius:7px;padding:4px 9px;margin-top:2px}
+  .part .pre{font-family:var(--mono);font-size:.74rem;line-height:1.5;color:#bcd0ff;background:#05070e;border:1px solid var(--line);border-radius:8px;padding:7px 10px;margin:4px 0 0;white-space:pre;overflow-x:auto}
+  .part .pre i{font-style:normal;color:#6f7f9e}
+
+  .after{margin-top:26px;background:linear-gradient(180deg,rgba(110,160,255,.08),rgba(139,123,255,.04));
+    border:1px solid var(--line);border-left:3px solid var(--accent);border-radius:12px;padding:16px 18px}
+  .after .tk{font-family:var(--mono);font-size:.66rem;letter-spacing:.14em;text-transform:uppercase;color:var(--accent);margin:0 0 8px}
+  .after p{margin:0;font-size:.95rem;color:var(--ink);line-height:1.55}
+  .after b{color:#fff}
+  @media (max-width:860px){.board{grid-template-columns:1fr}.side{position:static}.parts{grid-template-columns:1fr}}
+  @media (prefers-reduced-motion:reduce){*{transition-duration:.01ms!important}#amb{display:none}}
+</style>
+</head>
+<body>
+<a class="back" href="../index.html#build-guide">&#8592; Week 4 index</a>
+<canvas id="amb"></canvas>
+<div class="wrap">
+  <p class="tag">Capstone 1 &middot; Accounting Ledger &middot; Build Guide</p>
+  <h1>Build Guide</h1>
+  <p class="lede"><b>Thirteen steps, in the order to build them.</b> Each step says what to do, what it looks like when it works, what usually goes wrong, and what to commit. Tick a step when its "done looks like" is true on your screen.</p>
+
+  <div class="before">
+    <div class="b"><b>Before you start</b>Read the PDF in Brightspace twice. Open the <a href="requirements-checklist.html">Requirements Checklist</a> next to this page.</div>
+    <div class="b"><b>Work in this order</b>Every step uses the one before it. Skipping ahead is how you end up with a report that cannot read the file.</div>
+    <div class="b"><b>Commit after every step</b>One commit per step is the "commit history" the spec asks for, and it saves your work when something breaks.</div>
+    <div class="b"><b>Stuck for 20 minutes?</b>Bring the step number and what your screen shows to office hours. "Step 6, the line goes in the file but the next run does not load it" gets you an answer fast.</div>
+  </div>
+
+  <div class="board">
+    <nav class="side" aria-label="Steps">
+      <p class="lab"><span>Steps</span><b id="count">0 of 13</b></p>
+      <ol id="toc"></ol>
+      <button class="reset" id="reset" type="button">Clear ticks</button>
+    </nav>
+
+    <div class="steps" id="steps">
+
+      <section class="step" id="s1">
+        <div class="head"><span class="num">1</span><div><h2>Project and repository</h2><div class="meta"><span class="chip t">Fri Oct 30, in class</span></div></div>
+          <label class="done-box"><input type="checkbox" data-s="1">done</label></div>
+        <div class="parts">
+          <div class="part do"><p class="k">Do</p><ol>
+            <li>Create the folder <code>pluralsight/capstones</code> if it does not exist. In IntelliJ, New Project, Maven, Java 17, group <code>com.pluralsight</code>. Name it something an employer would click on, for example <code>accounting-ledger</code>.</li>
+            <li>Paste the starter from Raymond's Teams message: <code>FinancialTracker.java</code> into <code>src/main/java/com/pluralsight</code>, <code>transactions.csv</code> in the project root next to <code>pom.xml</code>.</li>
+            <li>Create a public repository on GitHub with the same name, connect the project, push.</li>
+          </ol></div>
+          <div class="part looks"><p class="k">Done looks like</p><p>The repository page on GitHub shows <code>pom.xml</code>, <code>src</code> and <code>transactions.csv</code>. The project is red in IntelliJ, and that is expected: step 3 fixes it.</p></div>
+          <div class="part watch"><p class="k">Watch out</p><ul><li>The <code>target</code> folder must not be pushed. Keep the <code>.gitignore</code> from the starter.</li><li>The repository must be public, check the badge next to its name.</li></ul></div>
+          <div class="part commit"><p class="k">Commit</p><span class="cmd">Initial project setup with starter files</span></div>
+        </div>
+      </section>
+
+      <section class="step" id="s2">
+        <div class="head"><span class="num">2</span><div><h2>README and project board</h2><div class="meta"><a class="chip" href="../../week-03/reference/your-readme.html">Your README</a><a class="chip" href="../../week-03/visuals/15-project-board.html">The Project Board</a></div></div>
+          <label class="done-box"><input type="checkbox" data-s="2">done</label></div>
+        <div class="parts">
+          <div class="part do"><p class="k">Do</p><ol>
+            <li>Copy the README template from the public repo (<code>templates/readme-template.md</code>) to <code>README.md</code> at the root of your project. Fill the name and the description now, the rest at step 13.</li>
+            <li>Create a GitHub project board on the repository. One card per feature of the spec: add deposit, make payment, ledger all, deposits, payments, each report, search by vendor, custom search. Write each as a user story: As a user, I want ..., so that ...</li>
+            <li>Columns Todo, In Progress, Done. Move the card you work on. The board is part of the demo.</li>
+          </ol></div>
+          <div class="part looks"><p class="k">Done looks like</p><p>The repository home page shows your README under the files. The board has about ten cards, all in Todo.</p></div>
+          <div class="part watch"><p class="k">Watch out</p><ul><li>The README is required, not a bonus. An empty template is worse than a short real one.</li><li>Stories describe what the user gets, not "write the loop".</li></ul></div>
+          <div class="part commit"><p class="k">Commit</p><span class="cmd">Add README and project board link</span></div>
+        </div>
+      </section>
+
+      <section class="step" id="s3">
+        <div class="head"><span class="num">3</span><div><h2>The Transaction class</h2><div class="meta"><a class="chip" href="../visuals/02-one-line-one-object.html">One Line, One Object</a></div></div>
+          <label class="done-box"><input type="checkbox" data-s="3">done</label></div>
+        <div class="parts">
+          <div class="part do"><p class="k">Do</p><ol>
+            <li>Read one line of the file: <code>date|time|description|vendor|amount</code>. One line is one object, so the class has five fields, one per piece.</li>
+            <li>Pick the type each field needs later: the date is a <code>LocalDate</code> (the reports will ask "is it after this day?"), the time a <code>LocalTime</code>, description and vendor are <code>String</code>, the amount a <code>double</code> (the ledger will compare it with zero).</li>
+            <li>Write the constructor that takes all five, and a getter for each field. Nothing else yet.</li>
+          </ol></div>
+          <div class="part looks"><p class="k">Done looks like</p><p>The project compiles. The red in <code>FinancialTracker</code> is gone. Running it shows the Home menu, and the letters do nothing yet.</p></div>
+          <div class="part watch"><p class="k">Watch out</p><ul><li>Amount as a <code>String</code> is the mistake that breaks steps 7, 9 and 10. Make it a <code>double</code> now.</li><li>Same name and same package as the starter expects: <code>Transaction</code> in <code>com.pluralsight</code>.</li></ul></div>
+          <div class="part commit"><p class="k">Commit</p><span class="cmd">Add Transaction class</span></div>
+        </div>
+      </section>
+
+      <section class="step" id="s4">
+        <div class="head"><span class="num">4</span><div><h2>Load the file at start</h2><div class="meta"><a class="chip" href="../visuals/05-load-then-append.html">Load Then Append</a><a class="chip" href="../../week-03/visuals/04-from-line-to-object.html">From Lines to Objects</a></div></div>
+          <label class="done-box"><input type="checkbox" data-s="4">done</label></div>
+        <div class="parts">
+          <div class="part do"><p class="k">Do</p><ol>
+            <li>If <code>transactions.csv</code> does not exist, create it empty. The spec says the app creates the file.</li>
+            <li>Open it with a <code>BufferedReader</code>. Loop: read a line, stop when it is <code>null</code>.</li>
+            <li>For each line: split on the pipe, parse the date, the time and the amount, build a <code>Transaction</code>, add it to the list.</li>
+            <li>Wrap the file work in try and catch. Close the reader.</li>
+          </ol></div>
+          <div class="part looks"><p class="k">Done looks like</p><p>A temporary print of the list size after loading says <code>21</code> with the starter file. Delete the file, run again: it is created empty and the app still starts.</p></div>
+          <div class="part watch"><p class="k">Watch out</p><ul><li>The pipe is special in <code>split</code>. Use <code>"\\|"</code>, or every character becomes its own piece.</li><li>Dates parse only when the text is exactly <code>yyyy-MM-dd</code>. A space at the end of a line breaks it: trim.</li><li>The file path is relative to the project root, which is where IntelliJ runs the app.</li></ul></div>
+          <div class="part commit"><p class="k">Commit</p><span class="cmd">Load transactions from transactions.csv</span></div>
+        </div>
+      </section>
+
+      <section class="step" id="s5">
+        <div class="head"><span class="num">5</span><div><h2>Home screen loop</h2><div class="meta"><a class="chip" href="../visuals/01-menu-flow-map.html">Menu Flow Map</a></div></div>
+          <label class="done-box"><input type="checkbox" data-s="5">done</label></div>
+        <div class="parts">
+          <div class="part do"><p class="k">Do</p><ol>
+            <li>Print the four options exactly as the spec writes them: <code>D) Add Deposit</code>, <code>P) Make Payment (Debit)</code>, <code>L) Ledger</code>, <code>X) Exit</code>.</li>
+            <li>Read one line, trim it, make it upper case so <code>d</code> and <code>D</code> both work.</li>
+            <li>A loop that keeps showing the menu until <code>X</code>. Each letter is one case; an unknown letter prints a short message and the menu comes back.</li>
+          </ol></div>
+          <div class="part looks"><p class="k">Done looks like</p><p>The menu prints, <code>L</code> prints "Ledger" (a placeholder for now) and the menu prints again, <code>q</code> says "not an option" and the menu prints again, <code>X</code> ends the program.</p></div>
+          <div class="part watch"><p class="k">Watch out</p><ul><li>Mixing <code>nextInt</code> and <code>nextLine</code> on the same Scanner eats inputs. Read everything with <code>nextLine</code> and parse what needs a number.</li><li>One Scanner for the whole app, passed into the methods. Two Scanners on <code>System.in</code> fight each other.</li></ul></div>
+          <div class="part commit"><p class="k">Commit</p><span class="cmd">Home menu loop</span></div>
+        </div>
+      </section>
+
+      <section class="step" id="s6">
+        <div class="head"><span class="num">6</span><div><h2>Add a deposit</h2><div class="meta"><a class="chip" href="../visuals/03-deposit-or-payment.html">Deposit or Payment</a><a class="chip" href="../visuals/05-load-then-append.html">Load Then Append</a></div></div>
+          <label class="done-box"><input type="checkbox" data-s="6">done</label></div>
+        <div class="parts">
+          <div class="part do"><p class="k">Do</p><ol>
+            <li>Ask for the date and time as one text in the format <code>yyyy-MM-dd HH:mm:ss</code>, then the description, the vendor, the amount.</li>
+            <li>Parse the date and time with a formatter for that pattern. Parse the amount; if it is not positive, say so and ask again.</li>
+            <li>Build the <code>Transaction</code>, add it to the list, and append one line to the file in the exact file format, amount with two decimals.</li>
+          </ol></div>
+          <div class="part looks"><p class="k">Done looks like</p><p>Open <code>transactions.csv</code> after a deposit: one new line at the bottom, same format as the others, nothing else changed. Run the app again and the count from step 4 is one higher.</p></div>
+          <div class="part watch"><p class="k">Watch out</p><ul><li>The writer must be in append mode, or the file is wiped and only the new line remains. Step 4's count tells you at once.</li><li>Write a line break after the line, or the next deposit glues to this one.</li><li><code>%.2f</code> for the amount. <code>4400.0</code> in the file is not the format.</li></ul></div>
+          <div class="part commit"><p class="k">Commit</p><span class="cmd">Add deposit, append to the file</span></div>
+        </div>
+      </section>
+
+      <section class="step" id="s7">
+        <div class="head"><span class="num">7</span><div><h2>Make a payment</h2><div class="meta"><a class="chip" href="../visuals/03-deposit-or-payment.html">Deposit or Payment</a></div></div>
+          <label class="done-box"><input type="checkbox" data-s="7">done</label></div>
+        <div class="parts">
+          <div class="part do"><p class="k">Do</p><ol>
+            <li>Same questions as the deposit. The user types a positive amount.</li>
+            <li>Before storing, make the amount negative. That sign is what makes it a payment; there is no other field for it.</li>
+            <li>Same append to the file. If steps 6 and 7 share one method with a flag, better.</li>
+          </ol></div>
+          <div class="part looks"><p class="k">Done looks like</p><p>The new line in the file ends with a minus amount, for example <code>|-48.30</code>, and loads back as a negative number next run.</p></div>
+          <div class="part watch"><p class="k">Watch out</p><ul><li>Do not ask the user to type the minus. If they do anyway, reject it like any non-positive amount.</li></ul></div>
+          <div class="part commit"><p class="k">Commit</p><span class="cmd">Make payment stored as a negative amount</span></div>
+        </div>
+      </section>
+
+      <section class="step" id="s8">
+        <div class="head"><span class="num">8</span><div><h2>Ledger menu and All</h2><div class="meta"><a class="chip" href="../visuals/01-menu-flow-map.html">Menu Flow Map</a></div></div>
+          <label class="done-box"><input type="checkbox" data-s="8">done</label></div>
+        <div class="parts">
+          <div class="part do"><p class="k">Do</p><ol>
+            <li>A second loop like the Home one, with <code>A) All</code>, <code>D) Deposits</code>, <code>P) Payments</code>, <code>R) Reports</code>, <code>H) Home</code>. <code>H</code> ends this loop and the Home menu shows again.</li>
+            <li><code>A</code> prints every transaction, one per line, in columns: date, time, description, vendor, amount. Use <code>printf</code> with widths so the columns line up.</li>
+            <li>Newest first. Sort the list by date, then by time, descending, before printing. Or walk the list from the last index down to zero if your file is always in order, but sorting is safer.</li>
+          </ol></div>
+          <div class="part looks"><p class="k">Done looks like</p><p>The top line of <code>A</code> is the latest date in the file (with the starter file, <code>2026-11-03</code>). Columns line up. <code>H</code> brings the Home menu back.</p></div>
+          <div class="part watch"><p class="k">Watch out</p><ul><li>"Newest first" is in the spec and is the first thing Raymond checks. Oldest first is the most common miss.</li><li>Negative amounts need room for the sign in the column width.</li></ul></div>
+          <div class="part commit"><p class="k">Commit</p><span class="cmd">Ledger menu, all entries newest first</span></div>
+        </div>
+      </section>
+
+      <section class="step" id="s9">
+        <div class="head"><span class="num">9</span><div><h2>Deposits and payments</h2><div class="meta"><a class="chip" href="../visuals/03-deposit-or-payment.html">Deposit or Payment</a></div></div>
+          <label class="done-box"><input type="checkbox" data-s="9">done</label></div>
+        <div class="parts">
+          <div class="part do"><p class="k">Do</p><ol>
+            <li>Same printing as All, with one test in the loop: amount greater than zero for Deposits, less than zero for Payments.</li>
+            <li>Put the "print one transaction as a row" code in one method and call it from all three, so the columns never drift apart.</li>
+          </ol></div>
+          <div class="part looks"><p class="k">Done looks like</p><p><code>D</code> shows only positive amounts, <code>P</code> only negative ones, both newest first, and together they add up to the lines of <code>A</code>.</p></div>
+          <div class="part watch"><p class="k">Watch out</p><ul><li>If both lists look the same, the amount is probably still a <code>String</code>. Back to step 3.</li></ul></div>
+          <div class="part commit"><p class="k">Commit</p><span class="cmd">Ledger: deposits and payments</span></div>
+        </div>
+      </section>
+
+      <section class="step" id="s10">
+        <div class="head"><span class="num">10</span><div><h2>Reports menu and the four date reports</h2><div class="meta"><a class="chip" href="../visuals/04-date-range-reports.html">Date Range Reports</a></div></div>
+          <label class="done-box"><input type="checkbox" data-s="10">done</label></div>
+        <div class="parts">
+          <div class="part do"><p class="k">Do</p><ol>
+            <li>A third loop: <code>1) Month To Date</code>, <code>2) Previous Month</code>, <code>3) Year To Date</code>, <code>4) Previous Year</code>, <code>5) Search by Vendor</code>, <code>0) Back</code>. <code>0</code> ends this loop and the Ledger menu shows again.</li>
+            <li>Every date report is the same question: is the transaction date between a start and an end, both included? Write one method that takes a start and an end and prints the matching rows. The four reports only compute the two dates and call it.</li>
+            <li>The dates, from <code>LocalDate.now()</code>: Month To Date is the first of this month to today. Previous Month is the first to the last day of last month. Year To Date is January 1 to today. Previous Year is January 1 to December 31 of last year.</li>
+          </ol></div>
+          <div class="part looks"><p class="k">Done looks like</p><p>With the starter file in the first week of November: Month To Date shows the two November rows, Previous Month the three October rows, Year To Date every 2026 row, Previous Year every 2025 row. An empty result prints a message, not nothing.</p></div>
+          <div class="part watch"><p class="k">Watch out</p><ul><li><code>isAfter</code> and <code>isBefore</code> exclude the boundary day. A transaction on the first of the month must count, so test "not before start and not after end".</li><li>Previous Month in January is December of last year. <code>minusMonths(1)</code> handles that; subtracting one from the month number does not.</li><li>Do not compare dates as text.</li></ul></div>
+          <div class="part commit"><p class="k">Commit</p><span class="cmd">Reports: month to date, previous month, year to date, previous year</span></div>
+        </div>
+      </section>
+
+      <section class="step" id="s11">
+        <div class="head"><span class="num">11</span><div><h2>Search by vendor</h2><div class="meta"></div></div>
+          <label class="done-box"><input type="checkbox" data-s="11">done</label></div>
+        <div class="parts">
+          <div class="part do"><p class="k">Do</p><ol>
+            <li>Ask for the vendor name. Loop over the list and print the rows whose vendor matches, ignoring case.</li>
+            <li>Decide whether "matches" means the whole name or contains the text. Either is fine. Write your choice in the README and keep it the same in the custom search.</li>
+          </ol></div>
+          <div class="part looks"><p class="k">Done looks like</p><p><code>shell</code> finds the Gasoline rows. A vendor that is not in the file prints "no transactions found" and the Reports menu comes back.</p></div>
+          <div class="part watch"><p class="k">Watch out</p><ul><li>Comparing strings with <code>==</code> is the bug that finds nothing. Use the String methods.</li></ul></div>
+          <div class="part commit"><p class="k">Commit</p><span class="cmd">Reports: search by vendor</span></div>
+        </div>
+      </section>
+
+      <section class="step" id="s12">
+        <div class="head"><span class="num">12</span><div><h2>Custom search (bonus)</h2><div class="meta"><a class="chip" href="../visuals/06-custom-search-pipeline.html">Custom Search Pipeline</a><span class="chip t">only after 1 to 11 work</span></div></div>
+          <label class="done-box"><input type="checkbox" data-s="12">done</label></div>
+        <div class="parts">
+          <div class="part do"><p class="k">Do</p><ol>
+            <li>Add <code>6) Custom Search</code> to the Reports menu. Ask for five values in this order: start date, end date, description, vendor, amount. Enter with nothing typed means "no filter".</li>
+            <li>One loop over the list. For each value: if the user typed something and the row does not match it, skip the row. A blank value skips the test, not the row.</li>
+            <li>Dates and amount need parsing only when they are not blank; keep them as <code>null</code> otherwise.</li>
+          </ol></div>
+          <div class="part looks"><p class="k">Done looks like</p><p>All five blank prints every row. Vendor only prints the same as step 11. Start and end dates only prints the same as a date report with those dates. Combined filters narrow the rows further, never widen them.</p></div>
+          <div class="part watch"><p class="k">Watch out</p><ul><li>Parsing a blank date throws. Check for blank before parsing.</li><li>Filters combine with AND. A row has to pass every filter that was given.</li></ul></div>
+          <div class="part commit"><p class="k">Commit</p><span class="cmd">Custom search on the reports screen</span></div>
+        </div>
+      </section>
+
+      <section class="step" id="s13">
+        <div class="head"><span class="num">13</span><div><h2>Finish, polish, rehearse</h2><div class="meta"><a class="chip" href="demo-day.html">Demo Day</a><a class="chip" href="requirements-checklist.html">Requirements Checklist</a></div></div>
+          <label class="done-box"><input type="checkbox" data-s="13">done</label></div>
+        <div class="parts">
+          <div class="part do"><p class="k">Do</p><ol>
+            <li>Go through the Requirements Checklist and tick every box by running the app, not from memory.</li>
+            <li>Finish the README: what the app does, how to run it, a screenshot or two of the menus, the one piece of code you are proud of.</li>
+            <li>Bonus if there is time: a name for your app and a starter screen. A restaurant, a record store, anything you like, the transactions stay the same.</li>
+            <li>Move the last cards to Done on the board. Rehearse the ten minutes once with the Demo Day page.</li>
+          </ol></div>
+          <div class="part looks"><p class="k">Done looks like</p><p>Every required box is ticked. The repository shows a README with a title, a description and how to run it. The commit list reads like this guide. You know what you will type in the demo.</p></div>
+          <div class="part watch"><p class="k">Watch out</p><ul><li>Push. A project that only exists on your laptop does not exist on demo day.</li><li>Submit in Brightspace, not on the workshop form.</li></ul></div>
+          <div class="part commit"><p class="k">Commit</p><span class="cmd">README, final touches</span></div>
+        </div>
+      </section>
+
+    </div>
+  </div>
+
+  <div class="after">
+    <p class="tk">If you only remember one thing</p>
+    <p><b>Steps 3 to 8 are the project.</b> A Transaction class, a file that loads, a menu that loops, a deposit that lands in the file, and a ledger that prints newest first. Get those five working and pushed before you touch anything else, then every report is one loop with one test.</p>
+  </div>
+  <div id="rail"></div>
+</div>
+<script>
+(function(){
+  "use strict";
+  var KEY="hub-cap1-build-guide", N=13;
+  var toc=document.getElementById("toc"), count=document.getElementById("count");
+  var state={};
+  try{ state=JSON.parse(localStorage.getItem(KEY)||"{}")||{}; }catch(e){ state={}; }
+  function save(){ try{ localStorage.setItem(KEY,JSON.stringify(state)); }catch(e){} }
+
+  var titles=[];
+  for(var i=1;i<=N;i++){ var h=document.querySelector("#s"+i+" h2"); titles.push(h?h.textContent:"Step "+i); }
+  toc.innerHTML=titles.map(function(t,i){ return '<li><a href="#s'+(i+1)+'" data-s="'+(i+1)+'"><span class="n">'+(i+1)+'</span><span>'+t+'</span></a></li>'; }).join("");
+
+  function paint(){
+    var done=0;
+    for(var i=1;i<=N;i++){
+      var ok=!!state[i];
+      if(ok) done++;
+      var sec=document.getElementById("s"+i), box=sec.querySelector("input[data-s]"), a=toc.querySelector('a[data-s="'+i+'"]');
+      box.checked=ok; sec.classList.toggle("ok",ok); a.classList.toggle("ok",ok);
+    }
+    count.textContent=done+" of "+N;
+  }
+  document.getElementById("steps").addEventListener("change",function(e){
+    var box=e.target.closest("input[data-s]"); if(!box) return;
+    state[box.getAttribute("data-s")]=box.checked; save(); paint();
+  });
+  document.getElementById("reset").addEventListener("click",function(){ state={}; save(); paint(); });
+  paint();
+
+  /* mark the step in view */
+  var links=toc.querySelectorAll("a");
+  if("IntersectionObserver" in window){
+    var io=new IntersectionObserver(function(entries){
+      entries.forEach(function(en){
+        if(!en.isIntersecting) return;
+        var id=en.target.id;
+        links.forEach(function(a){ a.classList.toggle("now",a.getAttribute("href")==="#"+id); });
+      });
+    },{rootMargin:"-30% 0px -60% 0px"});
+    for(var k=1;k<=N;k++) io.observe(document.getElementById("s"+k));
+  }
+
+  var cv=document.getElementById("amb"),ctx=cv.getContext&&cv.getContext("2d"),parts=[],reduce=matchMedia("(prefers-reduced-motion: reduce)").matches;
+  function sizeC(){if(!ctx)return;cv.width=innerWidth;cv.height=innerHeight;}
+  function initParts(){parts=[];for(var i=0;i<46;i++)parts.push({x:Math.random(),y:Math.random(),r:Math.random()*1.6+.3,s:Math.random()*.02+.004,o:Math.random()*.4+.1});}
+  function drawC(){if(!ctx)return;ctx.clearRect(0,0,cv.width,cv.height);parts.forEach(function(p){p.y-=p.s/60;if(p.y<-.02)p.y=1.02;ctx.beginPath();ctx.arc(p.x*cv.width,p.y*cv.height,p.r,0,7);ctx.fillStyle="rgba(140,170,255,"+p.o+")";ctx.fill();});requestAnimationFrame(drawC);}
+  if(ctx&&!reduce){sizeC();initParts();drawC();addEventListener("resize",sizeC);}
+})();
+</script>
+<script src="../manifest.js"></script>
+<script src="../../assets/rail.js"></script>
+<script>Rail.render(document.getElementById("rail"),{week:4,kind:"reference",current:"build-guide"});</script>
+</body>
+</html>
