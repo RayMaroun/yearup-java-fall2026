@@ -137,11 +137,21 @@
         <div class="parts">
           <div class="part do"><p class="k">Do</p><ol>
             <li>Create a GitHub project board on the repository, columns Todo, In Progress, Done.</li>
-            <li>Read the spec and write one user story per feature: add deposit, make payment, ledger all, deposits, payments, each of the four date reports, search by vendor, custom search, README. As a user, I want ..., so that ... Each story is a card in Todo.</li>
+            <li>Read the spec and write one user story per feature: add deposit, make payment, ledger all, deposits, payments, each of the four date reports, search by vendor, custom search, README. Each story is a card in Todo.</li>
+            <li>To turn a spec line into a story, answer three questions about it. Who uses this? (here, always the person running the app). What do they want to do, in their words, not yours? Why would they want it? Then write: As a ..., I want ..., so that ...</li>
+            <li>Worked example from the spec line "D) Add Deposit, prompt the user for the deposit information and save it to the CSV file":
+              <div class="pre">As a user, I want to add a deposit with its date, description, vendor and amount,
+so that the money I received is saved in my ledger.
+
+Acceptance criteria
+<i>-</i> I am asked for the date and time, the description, the vendor and the amount
+<i>-</i> the amount must be positive
+<i>-</i> after saving, the deposit is a new line at the end of transactions.csv</div>
+              The acceptance criteria are the spec's own words turned into things you can check. Two or three per card is enough.</li>
             <li>From here on, move the card you are working on to In Progress and to Done when its step is ticked. The board is part of the demo.</li>
           </ol></div>
-          <div class="part looks"><p class="k">Done looks like</p><p>The board has about ten cards, all in Todo, each one a real user story. No code written yet.</p></div>
-          <div class="part watch"><p class="k">Watch out</p><ul><li>Stories describe what the user gets, not "write the loop".</li><li>Do not skip this to "get to the code". The board is how you know what is left on Thursday.</li></ul></div>
+          <div class="part looks"><p class="k">Done looks like</p><p>The board has about ten cards, all in Todo. Each card has a story in the As a, I want, so that shape and two or three acceptance criteria you could tick. No code written yet.</p></div>
+          <div class="part watch"><p class="k">Watch out</p><ul><li>Stories describe what the user gets, not "write the loop". If the card says a method name, it is a task, not a story.</li><li>One feature per card. "The ledger" is four cards: all, deposits, payments, reports.</li><li>Do not skip this to "get to the code". The board is how you know what is left on Thursday.</li></ul></div>
           <div class="part commit"><p class="k">Commit</p><span class="cmd">No commit, the board lives on GitHub</span></div>
         </div>
       </section>
