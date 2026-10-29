@@ -152,11 +152,11 @@
         <div class="parts">
           <div class="part do"><p class="k">Do</p><ol>
             <li>Read one line of the file: <code>date|time|description|vendor|amount</code>. One line is one object, so the class has five fields, one per piece.</li>
-            <li>Pick the type each field needs later: the date is a <code>LocalDate</code> (the reports will ask "is it after this day?"), the time a <code>LocalTime</code>, description and vendor are <code>String</code>, the amount a <code>double</code> (the ledger will compare it with zero).</li>
+            <li>Pick the type of each field by asking what the rest of the app will do with it later: compare it, sort by it, add it up, print it. Text is the wrong answer for most of them.</li>
             <li>Write the constructor that takes all five, and a getter for each field. Nothing else yet.</li>
           </ol></div>
           <div class="part looks"><p class="k">Done looks like</p><p>The project compiles. The red in <code>FinancialTracker</code> is gone. Running it shows the Home menu, and the letters do nothing yet.</p></div>
-          <div class="part watch"><p class="k">Watch out</p><ul><li>Amount as a <code>String</code> is the mistake that breaks steps 7, 9 and 10. Make it a <code>double</code> now.</li><li>Same name and same package as the starter expects: <code>Transaction</code> in <code>com.pluralsight</code>.</li></ul></div>
+          <div class="part watch"><p class="k">Watch out</p><ul><li>A field kept as text is the mistake that comes back in steps 7, 9 and 10. Decide the types now, not when the report breaks.</li><li>Same name and same package as the starter expects: <code>Transaction</code> in <code>com.pluralsight</code>.</li></ul></div>
           <div class="part commit"><p class="k">Commit</p><span class="cmd">Add Transaction class</span></div>
         </div>
       </section>
@@ -167,12 +167,12 @@
         <div class="parts">
           <div class="part do"><p class="k">Do</p><ol>
             <li>If <code>transactions.csv</code> does not exist, create it empty. The spec says the app creates the file.</li>
-            <li>Open it with a <code>BufferedReader</code>. Loop: read a line, stop when it is <code>null</code>.</li>
-            <li>For each line: split on the pipe, parse the date, the time and the amount, build a <code>Transaction</code>, add it to the list.</li>
-            <li>Wrap the file work in try and catch. Close the reader.</li>
+            <li>Read it line by line until there are no lines left, the way the week 3 exercises read their files.</li>
+            <li>For each line: split it into its five pieces, turn each piece into the type your field needs, build a <code>Transaction</code>, add it to the list.</li>
+            <li>File work can fail. Handle that, and close what you open.</li>
           </ol></div>
           <div class="part looks"><p class="k">Done looks like</p><p>A temporary print of the list size after loading says <code>21</code> with the starter file. Delete the file, run again: it is created empty and the app still starts.</p></div>
-          <div class="part watch"><p class="k">Watch out</p><ul><li>The pipe is special in <code>split</code>. Use <code>"\\|"</code>, or every character becomes its own piece.</li><li>Dates parse only when the text is exactly <code>yyyy-MM-dd</code>. A space at the end of a line breaks it: trim.</li><li>The file path is relative to the project root, which is where IntelliJ runs the app.</li></ul></div>
+          <div class="part watch"><p class="k">Watch out</p><ul><li>The pipe is a special character for <code>split</code>. If every character becomes its own piece, look up how to escape it.</li><li>Dates parse only when the text is exactly <code>yyyy-MM-dd</code>. A space at the end of a line breaks it.</li><li>The file path is relative to the project root, which is where IntelliJ runs the app.</li></ul></div>
           <div class="part commit"><p class="k">Commit</p><span class="cmd">Load transactions from transactions.csv</span></div>
         </div>
       </section>
@@ -198,11 +198,11 @@
         <div class="parts">
           <div class="part do"><p class="k">Do</p><ol>
             <li>Ask for the date and time as one text in the format <code>yyyy-MM-dd HH:mm:ss</code>, then the description, the vendor, the amount.</li>
-            <li>Parse the date and time with a formatter for that pattern. Parse the amount; if it is not positive, say so and ask again.</li>
-            <li>Build the <code>Transaction</code>, add it to the list, and append one line to the file in the exact file format, amount with two decimals.</li>
+            <li>Turn the text into your date and time types (week 3, date patterns). Check the amount is positive; if not, say so and ask again.</li>
+            <li>Build the <code>Transaction</code>, add it to the list, and add one line to the end of the file in the exact file format, amount with two decimals.</li>
           </ol></div>
           <div class="part looks"><p class="k">Done looks like</p><p>Open <code>transactions.csv</code> after a deposit: one new line at the bottom, same format as the others, nothing else changed. Run the app again and the count from step 4 is one higher.</p></div>
-          <div class="part watch"><p class="k">Watch out</p><ul><li>The writer must be in append mode, or the file is wiped and only the new line remains. Step 4's count tells you at once.</li><li>Write a line break after the line, or the next deposit glues to this one.</li><li><code>%.2f</code> for the amount. <code>4400.0</code> in the file is not the format.</li></ul></div>
+          <div class="part watch"><p class="k">Watch out</p><ul><li>If the file ends up with only the new line, your writer replaced the file instead of adding to it. Find out how to open it so it adds. Step 4's count tells you at once.</li><li>Write a line break after the line, or the next deposit glues to this one.</li><li><code>4400.0</code> in the file is not the format. Two decimals, the way money was printed in week 1.</li></ul></div>
           <div class="part commit"><p class="k">Commit</p><span class="cmd">Add deposit, append to the file</span></div>
         </div>
       </section>
@@ -229,7 +229,7 @@
           <div class="part do"><p class="k">Do</p><ol>
             <li>A second loop like the Home one, with <code>A) All</code>, <code>D) Deposits</code>, <code>P) Payments</code>, <code>R) Reports</code>, <code>H) Home</code>. <code>H</code> ends this loop and the Home menu shows again.</li>
             <li><code>A</code> prints every transaction, one per line, in columns: date, time, description, vendor, amount. Use <code>printf</code> with widths so the columns line up.</li>
-            <li>Newest first. Sort the list by date, then by time, descending, before printing. Or walk the list from the last index down to zero if your file is always in order, but sorting is safer.</li>
+            <li>Newest first. Decide how you get that order, and check it with the top line.</li>
           </ol></div>
           <div class="part looks"><p class="k">Done looks like</p><p>The top line of <code>A</code> is the latest date in the file (with the starter file, <code>2026-11-03</code>). Columns line up. <code>H</code> brings the Home menu back.</p></div>
           <div class="part watch"><p class="k">Watch out</p><ul><li>"Newest first" is in the spec and is the first thing Raymond checks. Oldest first is the most common miss.</li><li>Negative amounts need room for the sign in the column width.</li></ul></div>
@@ -257,11 +257,11 @@
         <div class="parts">
           <div class="part do"><p class="k">Do</p><ol>
             <li>A third loop: <code>1) Month To Date</code>, <code>2) Previous Month</code>, <code>3) Year To Date</code>, <code>4) Previous Year</code>, <code>5) Search by Vendor</code>, <code>0) Back</code>. <code>0</code> ends this loop and the Ledger menu shows again.</li>
-            <li>Every date report is the same question: is the transaction date between a start and an end, both included? Write one method that takes a start and an end and prints the matching rows. The four reports only compute the two dates and call it.</li>
-            <li>The dates, from <code>LocalDate.now()</code>: Month To Date is the first of this month to today. Previous Month is the first to the last day of last month. Year To Date is January 1 to today. Previous Year is January 1 to December 31 of last year.</li>
+            <li>Every date report is the same question: is the transaction date between a start and an end, both included? One method that takes a start and an end can serve all four.</li>
+            <li>Work out the four pairs of dates on paper before you code them, starting from today. The Date Range Reports picture shows where each range starts and ends.</li>
           </ol></div>
           <div class="part looks"><p class="k">Done looks like</p><p>With the starter file in the first week of November: Month To Date shows the two November rows, Previous Month the three October rows, Year To Date every 2026 row, Previous Year every 2025 row. An empty result prints a message, not nothing.</p></div>
-          <div class="part watch"><p class="k">Watch out</p><ul><li><code>isAfter</code> and <code>isBefore</code> exclude the boundary day. A transaction on the first of the month must count, so test "not before start and not after end".</li><li>Previous Month in January is December of last year. <code>minusMonths(1)</code> handles that; subtracting one from the month number does not.</li><li>Do not compare dates as text.</li></ul></div>
+          <div class="part watch"><p class="k">Watch out</p><ul><li>A transaction on the first of the month must count. Check what the date comparison you use does with the boundary day.</li><li>Previous Month in January is December of last year. Test that case.</li><li>Do not compare dates as text.</li></ul></div>
           <div class="part commit"><p class="k">Commit</p><span class="cmd">Reports: month to date, previous month, year to date, previous year</span></div>
         </div>
       </section>
@@ -275,7 +275,7 @@
             <li>Decide whether "matches" means the whole name or contains the text. Either is fine. Write your choice in the README and keep it the same in the custom search.</li>
           </ol></div>
           <div class="part looks"><p class="k">Done looks like</p><p><code>shell</code> finds the Gasoline rows. A vendor that is not in the file prints "no transactions found" and the Reports menu comes back.</p></div>
-          <div class="part watch"><p class="k">Watch out</p><ul><li>Comparing strings with <code>==</code> is the bug that finds nothing. Use the String methods.</li></ul></div>
+          <div class="part watch"><p class="k">Watch out</p><ul><li>Comparing strings with <code>==</code> is the bug that finds nothing.</li></ul></div>
           <div class="part commit"><p class="k">Commit</p><span class="cmd">Reports: search by vendor</span></div>
         </div>
       </section>
@@ -286,11 +286,11 @@
         <div class="parts">
           <div class="part do"><p class="k">Do</p><ol>
             <li>Add <code>6) Custom Search</code> to the Reports menu. Ask for five values in this order: start date, end date, description, vendor, amount. Enter with nothing typed means "no filter".</li>
-            <li>One loop over the list. For each value: if the user typed something and the row does not match it, skip the row. A blank value skips the test, not the row.</li>
-            <li>Dates and amount need parsing only when they are not blank; keep them as <code>null</code> otherwise.</li>
+            <li>One loop over the list. Work out what "blank means no filter" has to mean for each of your five tests.</li>
+            <li>A blank date or amount cannot be turned into a date or a number. Decide what you do with it before you parse.</li>
           </ol></div>
           <div class="part looks"><p class="k">Done looks like</p><p>All five blank prints every row. Vendor only prints the same as step 11. Start and end dates only prints the same as a date report with those dates. Combined filters narrow the rows further, never widen them.</p></div>
-          <div class="part watch"><p class="k">Watch out</p><ul><li>Parsing a blank date throws. Check for blank before parsing.</li><li>Filters combine with AND. A row has to pass every filter that was given.</li></ul></div>
+          <div class="part watch"><p class="k">Watch out</p><ul><li>Filters combine with AND. A row has to pass every filter that was given.</li></ul></div>
           <div class="part commit"><p class="k">Commit</p><span class="cmd">Custom search on the reports screen</span></div>
         </div>
       </section>
@@ -316,7 +316,7 @@
 
   <div class="after">
     <p class="tk">If you only remember one thing</p>
-    <p><b>Steps 3 to 8 are the project.</b> A Transaction class, a file that loads, a menu that loops, a deposit that lands in the file, and a ledger that prints newest first. Get those five working and pushed before you touch anything else, then every report is one loop with one test.</p>
+    <p><b>Steps 3 to 8 are the project.</b> A Transaction class, a file that loads, a menu that loops, a deposit that lands in the file, and a ledger that prints newest first. Get those five working and pushed before you touch anything else. When a step says "find out how", that is the part you are being asked to learn, so look it up in the workbook and the week 3 pages before you ask.</p>
   </div>
   <div id="rail"></div>
 </div>
