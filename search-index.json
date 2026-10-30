@@ -1137,7 +1137,7 @@
     "desc": "",
     "group": "Workbook 3b · Section 3-1",
     "url": "week-03/visuals/15-project-board.html",
-    "text": "← Week 3 index Workbook 3b · Section 3-1 · Agile Project Management Tools The Project Board Five stories wait in Todo. Open one, then walk it across the board. Project board Bus Tracker Todo Prioritize In Progress Done + Add column A new board has three columns. Every story starts in Todo , the backlog. Reset The one idea The board shows who is on what, what is left and what is done. Each story is a card that starts in Todo, MVP cards on top, and carries its own acceptance criteria. It walks left to right, In Progress, QA/Testing, Done, and the code is committed when it reaches Done."
+    "text": "← Week 3 index Workbook 3b · Section 3-1 · Agile Project Management Tools The Project Board Five stories wait in Todo. Open one, tick its tasks, then walk it across the board. Project board Bus Tracker Todo Prioritize In Progress Done + Add column A new board has three columns. Every story starts in Todo , the backlog. Reset The one idea The board shows who is on what, what is left and what is done. A card's title is the user story, and its description is a checklist of the technical tasks that finish it. Cards start in Todo, MVP on top, and walk left to right: In Progress, QA/Testing, Done. Commit when a task closes, not only when the card does."
   },
   {
     "week": 3,
@@ -1297,7 +1297,7 @@
     "desc": "A board named Hardware Store Project, a Testing column, one card per user story, with descriptions.",
     "group": "Workbook 3b · Section 3-1",
     "url": "week-03/exercises/github-project-board.html",
-    "text": "← Week 3 index Workbook 3b · Section 3-1 · Exercise 1 GitHub Project Board Your hardware store user stories, moved onto a board on github.com: one card each, in Todo, ready to plan. What you are building A GitHub project board named Hardware Store Project , with the columns Todo, In Progress, Testing and Done. Every user story you wrote in the Module 2 exercise becomes a card in Todo , and each card holds its story and details. No code, no IntelliJ, no repository: everything happens on github.com. You are not building the store, only planning it. Do these in order 0 of 6 done Clear ticks What a finished board looks like board view Hardware Store Project Todo one card per story In Progress empty Testing empty Done empty open a card: the story, then a checklist Card titles and details are yours and will differ. Where people get stuck A table, not columns. Table was picked in the dialog. Make a new project and choose Board. Every card says Draft. That is expected; the workbook keeps them as drafts. Testing sits after Done. Drag it by its name to the left of Done. Pages that help The project board A user story Glossary The one idea Todo is the backlog. Every story starts there, and a card moves one column right each time the work behind it moves on."
+    "text": "← Week 3 index Workbook 3b · Section 3-1 · Exercise 1 GitHub Project Board Your hardware store user stories, moved onto a board on github.com: one card each, in Todo, ready to plan. What you are building A GitHub project board named Hardware Store Project , with the columns Todo, In Progress, Testing and Done. Every user story you wrote in the Module 2 exercise becomes a card in Todo : the story is the card title, and the description is a checklist of the tasks that finish it. No code, no IntelliJ, no repository: everything happens on github.com. You are not building the store, only planning it. Do these in order 0 of 6 done Clear ticks What a finished board looks like board view Hardware Store Project Todo one card per story In Progress empty Testing empty Done empty open a card: the story on top, the task list under it Card titles and details are yours and will differ. Where people get stuck A table, not columns. Table was picked in the dialog. Make a new project and choose Board. Every card says Draft. That is expected; the workbook keeps them as drafts. Testing sits after Done. Drag it by its name to the left of Done. Pages that help The project board A user story Glossary The one idea Todo is the backlog. Every story starts there, and a card moves one column right each time the work behind it moves on."
   },
   {
     "week": 3,
@@ -1388,5 +1388,105 @@
     "group": "Week 3",
     "url": "week-03/games/bug-hunter-3.html",
     "text": "← Week 3 index Workbook 3a · all sections · Game Bug Hunter 3 Fifteen snippets, one week 3 bug each: files, dates, lists, maps. Click the line you would change, then pick the fix. One point for the line, one for the fix. Game which line? score 0 / 30 Pick the fix Bug Hunter 3 A short piece of Java appears. One line is wrong: it does not compile, crashes, or does the wrong thing. If a line is missing, click the line it belongs after. Then pick the fix that repairs it. Start Round over Play again round 0 / 15 Press Start . Keys 1 to 9 pick a line, A B C pick a fix, Enter moves on. Next Restart look for: split on a regex character · a reader left open · a writer that wipes the file · missing parentheses · a primitive in <> · index size() · == on Strings · a null from get · mm vs MM · parse without a formatter · a missing import · a silent catch · changing a list mid for-each The one idea Week 3 bugs live at the edges. The last index is size() - 1 , a map answers null for a key it does not have, a pattern letter means one exact field ( MM month, mm minute), and a file is opened, used, then closed. When something fails, let the catch block say so."
+  },
+  {
+    "week": 4,
+    "weekLabel": "Week 4",
+    "section": "Visuals",
+    "title": "Menu Flow Map",
+    "desc": "Press the letters and watch the path: Home, Ledger, Reports, and the way back from each.",
+    "group": "Capstone 1 · hints",
+    "url": "week-04/visuals/01-menu-flow-map.html",
+    "text": "← Week 4 index Capstone 1 · hints Menu Flow Map Three screens, three loops. Press a letter and watch where it takes you. screen 1 Home D) Add Deposit P) Make Payment (Debit) L) Ledger X) Exit Choose an option: ↻ outer loop Goodbye the outer loop ended → L ← H screen 2 Ledger A) All D) Deposits P) Payments R) Reports H) Home Choose an option: ↻ inner loop → R ← 0 screen 3 Reports 1) Month To Date 2) Previous Month 3) Year To Date 4) Previous Year 5) Search by Vendor 0) Back Choose an option: ↻ innermost loop The app starts on Home . Only the lit screen is listening. Press one of its letters. Reset The one idea Three screens, three loops, one inside the other. Each screen is a loop that prints its menu, reads one choice, and runs a switch where every letter is a case. Most cases do their job and the loop prints the menu again. Only X leaves the Home loop, only H leaves the Ledger loop, only 0 leaves the Reports loop."
+  },
+  {
+    "week": 4,
+    "weekLabel": "Week 4",
+    "section": "Visuals",
+    "title": "One Line, One Object",
+    "desc": "A csv line splits on the pipe into five fields, and each field has a type. That is your Transaction class.",
+    "group": "Capstone 1 · hints",
+    "url": "week-04/visuals/02-one-line-one-object.html",
+    "text": "← Week 4 index Capstone 1 · hints One Line, One Object Tap a line of the file, then tap each piece to give it a name and a type. file on disk transactions.csv date | time | description | vendor | amount Nothing split yet. Tap a line above and it breaks at the pipes . class · the one you write first Transaction 5 fields keep amount a String Reset The one idea One line of the file is one object, and the five pieces between the pipes are its five fields. Each field takes the type the rest of the app will ask of it: dates that compare, an amount that adds up, text that prints. Transaction is the first class to write, because every other screen holds a list of them."
+  },
+  {
+    "week": 4,
+    "weekLabel": "Week 4",
+    "section": "Visuals",
+    "title": "Deposit or Payment",
+    "desc": "The user types a positive number. Flip the switch and see what gets stored, and what the ledger filters on later.",
+    "group": "Capstone 1 · hints",
+    "url": "week-04/visuals/03-deposit-or-payment.html",
+    "text": "← Week 4 index Capstone 1 · hints Deposit or Payment Type an amount, flip the switch, press Save. Watch the sign in the file. what the user sees D) Add Deposit Deposit Payment description vendor amount positive number, no sign Save to transactions.csv → write balance 4239.10 transactions.csv ledger D) Deposits P) Payments Three lines in the file. The deposit is positive , the two payments are negative . The switch is on Deposit. Reset The one idea The user always types a positive number. A deposit is stored as it is, a payment is stored with a minus in front. That sign is the only thing that separates deposits from payments later, so the Transaction has no extra field for the type."
+  },
+  {
+    "week": 4,
+    "weekLabel": "Week 4",
+    "section": "Visuals",
+    "title": "Date Range Reports",
+    "desc": "Pick today on the calendar and the four report ranges shade themselves. Rows light when they fall inside.",
+    "group": "Capstone 1 · hints",
+    "url": "week-04/visuals/04-date-range-reports.html",
+    "text": "← Week 4 index Capstone 1 · hints Date Range Reports Set today, press a report, and watch which rows fall inside its range. 1) Month To Date 2) Previous Month 3) Year To Date 4) Previous Year today 2026-11-06 day Reset The one idea Every report asks the same question: is this date between a start and an end, inclusive? Only the two dates change. One helper that takes a start and an end, and keeps the rows that fall between them, serves all four reports."
+  },
+  {
+    "week": 4,
+    "weekLabel": "Week 4",
+    "section": "Visuals",
+    "title": "Load Then Append",
+    "desc": "Start reads the whole file into the list. A new deposit appends one line. Start again and it is still there.",
+    "group": "Capstone 1 · hints",
+    "url": "week-04/visuals/05-load-then-append.html",
+    "text": "← Week 4 index Capstone 1 · hints Load Then Append Start the app, add a deposit, exit, start again. Watch which side keeps the line. on disk file on disk transactions.csv end of file how the app saves a new transaction append to the end rewrite the file each save → load not running the program FinancialTracker Start Add deposit Exit in memory ArrayList<Transaction> Empty. Press Start to load the file. 0 transactions Reset The one idea The file is the truth, the list is a copy. Read the whole file once when the app starts, keep the list in memory while it runs, and append one line to the file for each new transaction. Never rewrite the file: the list disappears at exit, the file is what the next Start finds."
+  },
+  {
+    "week": 4,
+    "weekLabel": "Week 4",
+    "section": "Visuals",
+    "title": "Custom Search Pipeline",
+    "desc": "Five filters, fill the ones you want. Rows drop out stage by stage and a blank filter lets everything through.",
+    "group": "Capstone 1 · hints",
+    "url": "week-04/visuals/06-custom-search-pipeline.html",
+    "text": "← Week 4 index Capstone 1 · hints Custom Search Pipeline Five gates, fill the ones you want. Press Search and watch the rows drop. the list 8 transactions Search swap gate order 8 in &ge; this day gate 1 Start Date open &le; this day gate 2 End Date open ignore case gate 3 Description open ignore case gate 4 Vendor open equals gate 5 Amount open Two gates are filled, three are blank . Press Search to send the 8 rows through all five. Reset The one idea One loop over the list, and for each of the five values the same two-part test: if the user typed something and the row does not match, skip it. A blank value skips the test , not the row. Five tests that all have to say yes is an AND, so the order of the gates never changes what comes out."
+  },
+  {
+    "week": 4,
+    "weekLabel": "Week 4",
+    "section": "Visuals",
+    "title": "The Commit Message",
+    "desc": "type: what changed, a blank line, bullets on what you did. The five types, six commits from this capstone, the usual bad lines rewritten, and a box to check your own.",
+    "group": "Capstone 1 · hints",
+    "url": "week-04/visuals/07-commit-message.html",
+    "text": "← Week 4 index Capstone 1 · hints The Commit Message A subject line that says what changed, a blank line, then bullets that say what you did. What you type in the IntelliJ commit box feat: add month to date report (empty line, press Enter twice) - Filter transactions from the first of the month to today - Print them newest first in the ledger format - Show a message when the month has no transactions type: What kind of change. One of the five below, lowercase, with the colon. subject What changed, as an order: add , fix , show , remove , rename . Under 50 characters, no period. Not \"added\", not \"update\", not \"stuff\". blank line Not optional. Without it Git glues the bullets into the subject and GitHub shows one long title. - bullets What you did, one change per line, two to four lines. Skip them when the subject says it all, a README commit does not need bullets. The five types you need feat: A feature the user can see: a menu option, a report, a search. fix: Something was wrong and now it is right. docs: README, comments, the board. No code behavior changes. refactor: Code moved or cleaned, same behavior: a method extracted, a name changed. chore: Project housekeeping: pom.xml, .gitignore, the csv sample file. Six commits from this capstone feat: add Transaction class with five fields - Fields date, time, description, vendor, amount - Constructor and getters, no setters feat: load transactions from the csv at start - Create the file when it does not exist - Split each line o"
+  },
+  {
+    "week": 4,
+    "weekLabel": "Week 4",
+    "section": "Reference",
+    "title": "Build Guide",
+    "desc": "Thirteen steps from empty project to demo, in the order to build them. Each one says what done looks like, what goes wrong, and what to commit.",
+    "group": "Capstone guide",
+    "url": "week-04/reference/build-guide.html",
+    "text": "← Week 4 index Capstone 1 · Accounting Ledger · Build Guide Build Guide Thirteen steps, in the order of the TODOs in the starter. Each step says what to do, what it looks like when it works, what usually goes wrong, and what to commit. Tick a step when its \"done looks like\" is true on your screen. Before you start Read the PDF in Brightspace twice. Open the Requirements Checklist next to this page. Work in this order Board and stories first, then the code one TODO at a time, README last. Every step uses the one before it. Commit often At least four commits a day, every day. Each message is type: what changed (feat, fix, docs, refactor, chore), a blank line, then bullets on what you did, so the history reads like a diary of the project. The shape is on The Commit Message . One commit per step is the floor, not the target. Stuck for 20 minutes? Bring the step number and what your screen shows to office hours. \"Step 6, the line goes in the file but the next run does not load it\" gets you an answer fast. Steps 0 of 13 Clear ticks 1 Project and repository Fri Oct 30, in class done Do Create the folder pluralsight/capstones if it does not exist. In IntelliJ, New Project, Maven, Java 17, group com.pluralsight . Name it something an employer would click on, for example accounting-ledger . Paste the starter from Raymond's Teams message: FinancialTracker.java into src/main/java/com/pluralsight , transactions.csv in the project root next to pom.xml . Create a public repository on GitHub"
+  },
+  {
+    "week": 4,
+    "weekLabel": "Week 4",
+    "section": "Reference",
+    "title": "Requirements Checklist",
+    "desc": "The spec as tick boxes, screen by screen, with the exact letters and labels. Tick them before you demo.",
+    "group": "Capstone guide",
+    "url": "week-04/reference/requirements-checklist.html",
+    "text": "← Week 4 index Week 4 · Reference · Capstone guide Requirements Checklist The capstone spec as tick boxes, screen by screen, with the exact letters and labels. Tick them as you build, and again before you demo. 0 of 0 done required 0 of 0 Reset Required items first. Bonus items are extra. The PDF in Brightspace is the spec; this page only lists it. Ticks are saved in this browser only. The one idea Complete means every required box is ticked and you can show each one running. The letters, numbers and labels on the screens are part of the spec, so match them exactly."
+  },
+  {
+    "week": 4,
+    "weekLabel": "Week 4",
+    "section": "Reference",
+    "title": "Demo Day",
+    "desc": "The ten minutes, section by section: introduction, challenges, repository, code, live demo, questions. And what to check before you start.",
+    "group": "Capstone guide",
+    "url": "week-04/reference/demo-day.html",
+    "text": "← Week 4 index Week 4 · Reference · Capstone guide Demo Day Ten minutes, six parts, one scenario you have typed before. Read the guide, then tick the list before you start. Each learner gets 10 minutes on demo day, Friday, November 6 . Run through the screens, show one piece of code you are proud of, take questions. The ten minutes 1 min 1 min 2 min 2 min 3 min 1 min 0:00 5:00 10:00 Introduction Introduce yourself. Provide a brief overview of the project. 1 min Challenges & Solutions Discuss a significant challenge you faced during the project. Explain how you overcame it and any lessons learned. 1 min GitHub Repository Review Navigate to the repository. Show and discuss the commit history, emphasizing major milestones or changes. Open and discuss the README file, highlighting its contents and structure. Review the GitHub project board, explaining its layout, tasks, and progression. 2 min Code Deep Dive Start with a high-level explanation of the code structure. Delve into specific sections of the code, highlighting main features and functions. 2 min Live Demo Run the program. Conduct a brief demonstration of the main features, ensuring to engage the audience. 3 min Q&A Session Open the floor to questions from the audience. Address each question confidently and clearly. 1 min From Raymond: This is to help you during the presentation. Feel free to change the order of the steps however you like. The minutes are a budget, not a rule. The live demo is the part people remember, so "
   }
 ]
