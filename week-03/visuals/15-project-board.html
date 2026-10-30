@@ -71,8 +71,7 @@
     border-radius:999px;padding:1px 6px;flex-shrink:0;margin-top:2px}
   .det{display:none;margin-top:8px;padding-top:8px;border-top:1px solid var(--line)}
   .kc.open .det{display:block;animation:pop .3s}
-  .story{font-size:.78rem;line-height:1.45;color:#c9d4ea;margin:0 0 8px}
-  .story i{font-style:normal;color:var(--accent)}
+  .ttl i{font-style:normal;color:var(--accent)}
   .ac{font-family:var(--mono);font-size:.56rem;letter-spacing:.12em;text-transform:uppercase;color:var(--muted);margin:0 0 4px}
   .ck{display:flex;gap:7px;align-items:flex-start;font-size:.76rem;line-height:1.35;color:#c9d4ea;padding:3px 0;cursor:pointer}
   .ck input{margin:1px 0 0;accent-color:var(--good);cursor:pointer;flex-shrink:0}
@@ -114,7 +113,7 @@
 <div class="wrap">
   <p class="tag">Workbook 3b &middot; Section 3-1 &middot; Agile Project Management Tools</p>
   <h1>The Project Board</h1>
-  <p class="lede"><b>Five stories wait in Todo. Open one, then walk it across the board.</b></p>
+  <p class="lede"><b>Five stories wait in Todo. Open one, tick its tasks, then walk it across the board.</b></p>
 
   <div class="stage">
     <p class="bname">Project board <b>Bus Tracker</b></p>
@@ -132,9 +131,9 @@
 
   <div class="take">
     <p class="tk">The one idea</p>
-    <p><b>The board shows who is on what, what is left and what is done.</b> Each story is a card that starts in Todo,
-    MVP cards on top, and carries its own acceptance criteria. It walks left to right, In Progress, QA/Testing, Done,
-    and the code is committed when it reaches Done.</p>
+    <p><b>The board shows who is on what, what is left and what is done.</b> A card's title is the user story, and its
+    description is a checklist of the technical tasks that finish it. Cards start in Todo, MVP on top, and walk left to
+    right: In Progress, QA/Testing, Done. Commit when a task closes, not only when the card does.</p>
   </div>
   <div id="rail"></div>
 </div>
@@ -144,17 +143,19 @@
   var $=function(s,r){return (r||document).querySelector(s);};
   var reduce=matchMedia("(prefers-reduced-motion: reduce)").matches;
   var NAMES={todo:"Todo",prog:"In Progress",qa:"QA/Testing",done:"Done"};
+  /* t = short name used in the sentence under the board; the card title is the whole user story;
+     a = the technical tasks that finish the story, the checklist in the card's description */
   var STORIES=[
     {t:"Night mode",mvp:false,w:"a dark screen at night",s:"the app is easy on my eyes",
-      a:["Switch between light and dark","Remember my choice"]},
+      a:["Add a darkMode field to Settings","Add menu option N) Night mode that flips it","Save the choice to settings.txt","Read settings.txt at start"]},
     {t:"Find my stop",mvp:true,w:"to find my stop by its number or street",s:"I can pick it quickly",
-      a:["Search by stop number","Search by street name","Show \"Stop not found\" for unknown input"]},
+      a:["Create the Stop class: number, street, name","Read stops.csv into an ArrayList of Stop","Write findByNumber(int)","Write findByStreet(String)","Print \"Stop not found\" when nothing matches"]},
     {t:"Late bus alert",mvp:false,w:"an alert when my bus is running late",s:"I can plan around it",
-      a:["Alert when the bus is 5 or more minutes late","Show the new arrival time"]},
+      a:["Compare the planned time with the live time","Print an alert when the delay is 5 minutes or more","Print the new arrival time"]},
     {t:"See the next bus",mvp:true,w:"to see when the next bus reaches my stop",s:"I leave home on time",
-      a:["Show the next arrival time for a stop","Count down in minutes","Say \"No more buses today\" after the last one"]},
+      a:["Create the Arrival class: stop, time","Read timetable.csv into an ArrayList of Arrival","Find the first arrival after now","Print the minutes left","Print \"No more buses today\" after the last one"]},
     {t:"Save my stop",mvp:false,w:"to save the stop I use every day",s:"I do not search for it each morning",
-      a:["Save one favorite stop","Open the app on that stop"]}
+      a:["Add a favoriteStop field to Settings","Add menu option F) Save this stop","Open the app on the saved stop"]}
   ];
   var board=$("#board"),status=$("#status"),caption=$("#caption"),bAdd=$("#bAdd");
   var order,hasQA,cards;
@@ -167,9 +168,8 @@
     var list=s.a.map(function(x,i){
       return '<label class="ck"><input type="checkbox" data-i="'+i+'"><span>'+x+'</span></label>';
     }).join("");
-    el.innerHTML='<div class="kt"><button class="ttl" aria-expanded="false">'+s.t+'</button>'+(s.mvp?'<span class="mvp">MVP</span>':"")+'</div>'
-      +'<div class="det"><p class="story"><i>As a</i> rider, <i>I want</i> '+s.w+' <i>so that</i> '+s.s+'.</p>'
-      +'<p class="ac">Acceptance criteria</p>'+list+'</div>'
+    el.innerHTML='<div class="kt"><button class="ttl" aria-expanded="false"><i>As a</i> rider, <i>I want</i> '+s.w+' <i>so that</i> '+s.s+'.</button>'+(s.mvp?'<span class="mvp">MVP</span>':"")+'</div>'
+      +'<div class="det"><p class="ac">Tasks</p>'+list+'</div>'
       +'<div class="kf"><button class="mv b" aria-label="Move left">←</button><span class="cm">✓ committed</span>'
       +'<button class="mv f" aria-label="Move right">→</button></div>';
     return {t:s.t,mvp:s.mvp,col:"todo",el:el,n:s.a.length};
@@ -229,22 +229,22 @@
     lit(c);
     if(dir<0){ say(q(c)+' moved back to <b class="a">'+NAMES[to]+'</b>.'+(to==="todo"?" It is back in the backlog.":"")); return; }
     if(to==="prog") say(q(c)+' moved to <b class="a">In Progress</b>: this is the card you are working on now.');
-    else if(to==="qa") say(q(c)+' moved to <b class="y">QA/Testing</b>: the code is written, now it is checked against the acceptance criteria.',"y");
+    else if(to==="qa") say(q(c)+' moved to <b class="y">QA/Testing</b>: the tasks are done, now someone runs the app and checks the story works as written.',"y");
     else say(q(c)+' moved to <b class="g">Done</b>. Commit now: one commit after closing each task.',"g");
   }
   function toggle(c){
     var open=c.el.classList.toggle("open");
     $(".ttl",c.el).setAttribute("aria-expanded",open?"true":"false");
     lit(c);
-    say(open?'The details live on the card: '+q(c)+' holds its user story and the acceptance criteria to tick off.'
+    say(open?'The title is the user story. Inside, '+q(c)+' lists the technical tasks that finish it: classes, files, methods. Tick them as you build.'
             :q(c)+' is closed. Tap its title to open it again.');
   }
   function tick(c){
     var boxes=c.el.querySelectorAll(".ck input"),n=0;
     boxes.forEach(function(b){ b.parentNode.classList.toggle("on",b.checked); if(b.checked) n++; });
     lit(c);
-    if(n===c.n) say('Every criterion on '+q(c)+' is checked: this story is ready to move toward Done.',"g");
-    else say(q(c)+': <b class="a">'+n+' of '+c.n+'</b> acceptance criteria checked.');
+    if(n===c.n) say('Every task on '+q(c)+' is done: the story is finished, move it toward Done.',"g");
+    else say(q(c)+': <b class="a">'+n+' of '+c.n+'</b> tasks done. The story is finished when the list is.');
   }
 
   function reset(){

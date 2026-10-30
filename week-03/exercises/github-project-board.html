@@ -105,7 +105,7 @@
       <div>
         <p class="lab">What you are building</p>
         <div class="box brief">
-          <p>A <b>GitHub project board</b> named <b>Hardware Store Project</b>, with the columns Todo, In Progress, <b>Testing</b> and Done. Every user story you wrote in the Module 2 exercise becomes a card in <b>Todo</b>, and each card holds its story and details.</p>
+          <p>A <b>GitHub project board</b> named <b>Hardware Store Project</b>, with the columns Todo, In Progress, <b>Testing</b> and Done. Every user story you wrote in the Module 2 exercise becomes a card in <b>Todo</b>: the story is the card title, and the description is a checklist of the tasks that finish it.</p>
           <p class="no">No code, no IntelliJ, no repository: everything happens on github.com. You are not building the store, only planning it.</p>
         </div>
 
@@ -122,7 +122,7 @@ Todo         one card per story
 In Progress  empty
 Testing      empty
 Done         empty
-<span class="mu">open a card: the story, then a checklist</span></div>
+<span class="mu">open a card: the story on top, the task list under it</span></div>
           <p class="note">Card titles and details are yours and will differ.</p>
         </div>
         <div>
@@ -174,9 +174,9 @@ Done         empty
     {t:"Add a card to <b>Todo</b> for each user story from the Module 2 exercise.",
      d:"Click <b>+ Add item</b> at the bottom of Todo, type a short title for the story and press Enter. Repeat for every story.",
      ok:"Todo holds one card per story"},
-    {t:"Give each card a description: the story and its details.",
-     d:"Click the card's <b>title</b> to open it, then <b>Edit</b> on the description. Write the full As a..., I want..., so that... sentence, then the acceptance criteria as a checklist (<code>- [ ]</code> per line). Finish with <b>Update comment</b>.",
-     ok:"every card opens to its story and a checklist"},
+    {t:"Title = the user story, description = the task checklist.",
+     d:"The card title is the full As a..., I want..., so that... sentence. Click it to open the card, then <b>Edit</b> on the description and list the technical tasks that finish the story as a checklist (<code>- [ ]</code> per line): the class to create, the file to read, the method to write, the message to print. Finish with <b>Update comment</b>.",
+     ok:"every card opens to a checklist of tasks under its story title"},
     {t:"Nothing to commit or push: the board lives on GitHub.",
      d:"It saves as you go. Raymond can see it if the project is <b>public</b> or shared with him: set that in the project's <b>Settings</b>.",
      ok:"the board opens from your GitHub profile under Projects"}

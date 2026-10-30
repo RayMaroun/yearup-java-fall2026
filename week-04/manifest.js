@@ -10,7 +10,8 @@ window.HUB_MANIFEST = {
     { file: "03-deposit-or-payment.html", title: "Deposit or Payment", group: "Capstone 1 · hints", desc: "The user types a positive number. Flip the switch and see what gets stored, and what the ledger filters on later." },
     { file: "04-date-range-reports.html", title: "Date Range Reports", group: "Capstone 1 · hints", desc: "Pick today on the calendar and the four report ranges shade themselves. Rows light when they fall inside." },
     { file: "05-load-then-append.html", title: "Load Then Append", group: "Capstone 1 · hints", desc: "Start reads the whole file into the list. A new deposit appends one line. Start again and it is still there." },
-    { file: "06-custom-search-pipeline.html", title: "Custom Search Pipeline", group: "Capstone 1 · hints", desc: "Five filters, fill the ones you want. Rows drop out stage by stage and a blank filter lets everything through." }
+    { file: "06-custom-search-pipeline.html", title: "Custom Search Pipeline", group: "Capstone 1 · hints", desc: "Five filters, fill the ones you want. Rows drop out stage by stage and a blank filter lets everything through." },
+    { file: "07-commit-message.html", title: "The Commit Message", group: "Capstone 1 · hints", desc: "Tick what you just did, build the line from a verb and the thing, press Commit. The history shows which lines a stranger can read." }
   ],
   reference: [
     { file: "build-guide.html", title: "Build Guide", group: "Capstone guide", desc: "Thirteen steps from empty project to demo, in the order to build them. Each one says what done looks like, what goes wrong, and what to commit." },
