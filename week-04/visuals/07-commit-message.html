@@ -34,68 +34,54 @@
   .stage{position:relative;background:linear-gradient(180deg,rgba(255,255,255,.03),rgba(255,255,255,.01));
     border:1px solid var(--line);border-radius:24px;padding:22px;
     box-shadow:0 1px 0 rgba(255,255,255,.06) inset,0 30px 80px -30px rgba(0,0,0,.8)}
-  .pic{display:grid;grid-template-columns:minmax(0,1.25fr) minmax(0,1fr);gap:12px}
-  .panel{border-radius:18px;border:1px solid var(--line);background:rgba(6,10,20,.5);padding:14px;min-width:0}
-  .ph{display:flex;align-items:center;gap:8px;font-family:var(--mono);font-size:.68rem;letter-spacing:.14em;text-transform:uppercase;
-    color:var(--muted);padding:0 2px 10px;border-bottom:1px solid var(--line);margin-bottom:12px}
-  .ph b{font-family:var(--disp);font-weight:500;font-size:.95rem;letter-spacing:0;text-transform:none;color:var(--ink)}
+  .lab{font-family:var(--mono);font-size:.66rem;letter-spacing:.14em;text-transform:uppercase;color:var(--muted);margin:0 0 10px}
 
-  /* changes list */
-  .lab{font-family:var(--mono);font-size:.62rem;letter-spacing:.14em;text-transform:uppercase;color:var(--muted);margin:0 0 6px}
-  .chg{display:flex;flex-direction:column;gap:5px;margin-bottom:14px}
-  .ch{display:flex;gap:9px;align-items:flex-start;text-align:left;width:100%;border-radius:10px;padding:7px 9px;cursor:pointer;
-    border:1px solid transparent;background:transparent;color:var(--ink);font-family:var(--body);transition:.15s}
-  .ch:hover{background:rgba(255,255,255,.04);border-color:var(--line)}
-  .ch.on{background:rgba(110,160,255,.1);border-color:rgba(110,160,255,.5)}
-  .ch .bx{width:14px;height:14px;border-radius:4px;border:1.5px solid var(--muted);flex-shrink:0;margin-top:2px;position:relative}
-  .ch.on .bx{border-color:var(--accent);background:var(--accent)}
-  .ch.on .bx::after{content:"";position:absolute;left:4px;top:1px;width:4px;height:8px;border:solid #0a1020;border-width:0 2px 2px 0;transform:rotate(45deg)}
-  .ch .f{font-family:var(--mono);font-size:.74rem;color:#bcd0ff;display:block}
-  .ch .d{font-size:.78rem;color:var(--muted);line-height:1.35;display:block;margin-top:2px}
-  .ch.on .d{color:#c9d4ea}
+  /* the template, drawn big */
+  .tpl{display:flex;flex-wrap:wrap;gap:10px;align-items:stretch;margin-bottom:8px}
+  .part{flex:1 1 200px;border-radius:14px;padding:14px 16px;border:1px solid var(--line);background:rgba(6,10,20,.5);min-width:0}
+  .part .w{font-family:var(--mono);font-size:1.35rem;font-weight:500;margin:0 0 6px}
+  .part.v{border-color:rgba(255,200,98,.45)} .part.v .w{color:var(--gold)}
+  .part.o{border-color:rgba(110,160,255,.45)} .part.o .w{color:var(--accent)}
+  .part.y{border-color:rgba(70,217,138,.35)} .part.y .w{color:var(--good)}
+  .part p{margin:0;font-size:.84rem;line-height:1.45;color:#c9d4ea}
+  .part p b{color:var(--ink)}
+  .rules{display:flex;flex-wrap:wrap;gap:8px 18px;margin:0 2px 20px;font-family:var(--mono);font-size:.74rem;color:var(--muted)}
+  .rules span b{color:var(--ink);font-weight:500}
 
-  /* message box */
-  .msg{border-radius:12px;border:1px solid rgba(255,255,255,.14);background:rgba(0,0,0,.3);padding:12px 12px 10px;min-height:74px}
-  .slots{display:flex;flex-wrap:wrap;gap:6px;align-items:center;font-family:var(--mono);font-size:.92rem;min-height:30px}
-  .slot{border-radius:8px;padding:4px 9px;border:1px dashed rgba(132,150,182,.5);color:var(--muted);font-size:.78rem;letter-spacing:.04em}
-  .slot.full{border-style:solid;border-color:rgba(110,160,255,.5);background:rgba(110,160,255,.12);color:var(--ink);font-size:.92rem;letter-spacing:0}
-  .slot.full.v{color:var(--gold)}
-  .slot.raw{border-style:solid;border-color:rgba(255,106,106,.5);background:rgba(255,106,106,.1);color:#ffd0d0;font-size:.92rem;letter-spacing:0}
-  .mf{display:flex;align-items:center;justify-content:space-between;gap:10px;margin-top:10px}
-  .cnt{font-family:var(--mono);font-size:.7rem;color:var(--muted)}
-  .cnt.y{color:var(--gold)} .cnt.w{color:var(--warn)}
-  .commit{font-family:var(--body);font-weight:500;font-size:.86rem;padding:8px 16px;border-radius:11px;cursor:pointer;
+  /* examples */
+  .two{display:grid;grid-template-columns:1fr 1fr;gap:14px}
+  .box{border-radius:18px;border:1px solid var(--line);background:rgba(6,10,20,.5);padding:14px;min-width:0}
+  .ex{display:flex;flex-direction:column;gap:0}
+  .ln{display:flex;gap:10px;align-items:flex-start;padding:8px 2px;border-bottom:1px dashed rgba(255,255,255,.07);font-family:var(--mono);font-size:.84rem;line-height:1.45}
+  .ln:last-child{border-bottom:0}
+  .ln .dt{width:10px;height:10px;border-radius:50%;flex-shrink:0;margin-top:6px;background:var(--good)}
+  .ln .m{color:var(--ink);word-break:break-word}
+  .ln .m i{font-style:normal;color:var(--gold)}
+  .ln .m u{text-decoration:none;color:var(--accent)}
+  .ln .m em{font-style:normal;color:var(--good)}
+  .ln .n{margin-left:auto;flex-shrink:0;font-size:.66rem;color:var(--muted);padding-top:4px}
+  .rw{display:grid;grid-template-columns:minmax(0,.7fr) 18px minmax(0,1.3fr);gap:8px;align-items:center;padding:8px 2px;border-bottom:1px dashed rgba(255,255,255,.07);font-family:var(--mono);font-size:.82rem}
+  .rw:last-child{border-bottom:0}
+  .rw .b{color:var(--warn);text-decoration:line-through;text-decoration-color:rgba(255,106,106,.6)}
+  .rw .ar{color:var(--muted);text-align:center}
+  .rw .g{color:var(--ink);word-break:break-word}
+  .rw .g i{font-style:normal;color:var(--gold)}
+  .why{font-size:.76rem;color:var(--muted);font-family:var(--body);grid-column:1/-1;margin:-4px 0 2px;line-height:1.4}
+
+  /* try your own */
+  .try{margin-top:14px;border-radius:18px;border:1px solid var(--line);background:rgba(6,10,20,.5);padding:14px}
+  .tr{display:flex;gap:8px;align-items:center;flex-wrap:wrap}
+  .tr input{flex:1 1 320px;min-width:0;font-family:var(--mono);font-size:.95rem;padding:10px 12px;border-radius:11px;color:var(--ink);
+    border:1px solid rgba(255,255,255,.14);background:rgba(0,0,0,.3);outline:0}
+  .tr input:focus{border-color:var(--accent);box-shadow:0 0 0 3px rgba(110,160,255,.18)}
+  .btn{font-family:var(--body);font-weight:500;font-size:.86rem;padding:9px 16px;border-radius:11px;cursor:pointer;
     border:1px solid rgba(110,160,255,.5);background:rgba(110,160,255,.14);color:#dbe6ff;transition:.15s}
-  .commit:hover{background:rgba(110,160,255,.26);border-color:var(--accent)}
-  .commit:disabled{opacity:.35;cursor:default}
-
-  /* chips */
-  .rows{display:flex;flex-direction:column;gap:10px;margin-top:14px}
-  .row .lab{margin-bottom:5px}
-  .chips{display:flex;flex-wrap:wrap;gap:6px}
-  .chip{font-family:var(--mono);font-size:.78rem;padding:5px 11px;border-radius:999px;cursor:pointer;transition:.15s;
-    border:1px solid var(--line);background:var(--surface);color:#c9d4ea}
-  .chip:hover{border-color:var(--accent);color:var(--ink)}
-  .chip.v{color:var(--gold)} .chip.v:hover{border-color:var(--gold)}
-  .chip.on{background:rgba(110,160,255,.18);border-color:var(--accent);color:var(--ink)}
-  .chip.v.on{background:rgba(255,200,98,.14);border-color:var(--gold);color:var(--gold)}
-  .chip.bad{color:var(--muted);border-style:dashed} .chip.bad:hover{border-color:var(--warn);color:#ffd0d0}
-
-  /* history */
-  .log{display:flex;flex-direction:column;gap:0;min-height:200px}
-  .cmt{display:flex;gap:10px;align-items:flex-start;padding:8px 2px;border-bottom:1px dashed rgba(255,255,255,.07);animation:pop .3s}
-  .cmt .dt{width:11px;height:11px;border-radius:50%;flex-shrink:0;margin-top:4px;border:2px solid var(--accent);background:var(--bg)}
-  .cmt.g .dt{border-color:var(--good);background:var(--good)}
-  .cmt.w .dt{border-color:var(--warn)}
-  .cmt .m{font-family:var(--mono);font-size:.82rem;line-height:1.4;color:var(--ink);word-break:break-word}
-  .cmt.w .m{color:var(--muted)}
-  .cmt .h{font-family:var(--mono);font-size:.62rem;color:var(--muted);margin-left:auto;flex-shrink:0;padding-top:3px}
-  .cmt.seed .m{color:var(--muted)}
-  .empty{font-family:var(--mono);font-size:.74rem;color:var(--muted);padding:8px 2px}
+  .btn:hover{background:rgba(110,160,255,.26);border-color:var(--accent)}
+  .cnt{font-family:var(--mono);font-size:.72rem;color:var(--muted)}
+  .cnt.y{color:var(--gold)} .cnt.w{color:var(--warn)}
 
   .caption{display:flex;gap:14px;align-items:flex-start;margin:18px 2px 0;padding-top:16px;border-top:1px solid var(--line)}
   .caption .t{flex:1;font-size:1.05rem;line-height:1.55;color:var(--ink);padding-left:16px;border-left:3px solid var(--accent);transition:border-color .3s}
-  .caption .t .line{display:block;margin-top:6px;font-family:var(--mono);font-size:.8rem;color:#bcd0ff;opacity:.9}
   .caption.y .t{border-left-color:var(--gold)} .caption.g .t{border-left-color:var(--good)} .caption.w .t{border-left-color:var(--warn)}
   .caption b.a{color:var(--accent)} .caption b.y{color:var(--gold)} .caption b.g{color:var(--good)} .caption b.w{color:var(--warn)}
   .reset{font-family:var(--body);font-weight:500;font-size:.84rem;padding:8px 14px;border-radius:11px;cursor:pointer;
@@ -108,8 +94,7 @@
   .take .tk{font-family:var(--mono);font-size:.66rem;letter-spacing:.14em;text-transform:uppercase;color:var(--accent);margin:0 0 8px}
   .take p{margin:0;font-size:.95rem;color:var(--ink);line-height:1.55}
   .take b{color:#fff}
-  @keyframes pop{from{opacity:0;transform:translateY(-4px)}to{opacity:1;transform:none}}
-  @media (max-width:760px){.pic{grid-template-columns:1fr}}
+  @media (max-width:760px){.two{grid-template-columns:1fr}}
   @media (prefers-reduced-motion:reduce){*{animation-duration:.01ms!important;transition-duration:.01ms!important}#amb{display:none}}
 </style>
 </head>
@@ -119,41 +104,57 @@
 <div class="wrap">
   <p class="tag">Capstone 1 &middot; hints</p>
   <h1>The Commit Message</h1>
-  <p class="lede"><b>Tick what you just did, build the line from the chips, press Commit.</b></p>
+  <p class="lede"><b>One line that says what changed. Verb first, then the thing, then why if it helps.</b></p>
 
   <div class="stage">
-    <div class="pic">
-      <div class="panel">
-        <p class="ph">IntelliJ <b>Commit</b></p>
-        <p class="lab">Changes</p>
-        <div class="chg" id="chg"></div>
-        <p class="lab">Commit message</p>
-        <div class="msg">
-          <div class="slots" id="slots"></div>
-          <div class="mf"><span class="cnt" id="cnt">0 characters</span><button class="commit" id="bCommit">Commit</button></div>
-        </div>
-        <div class="rows">
-          <div class="row"><p class="lab">Verb, what the code does now</p><div class="chips" id="verbs"></div></div>
-          <div class="row"><p class="lab">What changed</p><div class="chips" id="whats"><span class="empty">tick a change first</span></div></div>
-          <div class="row"><p class="lab">The usual, press one</p><div class="chips" id="usual"></div></div>
+    <p class="lab">The shape of the line</p>
+    <div class="tpl">
+      <div class="part v"><p class="w">Verb</p><p>What the code does now, as an order: <b>Add</b>, <b>Fix</b>, <b>Show</b>, <b>Remove</b>, <b>Rename</b>. Not "added", not "fixing", not "update".</p></div>
+      <div class="part o"><p class="w">What changed</p><p>The method, the class, the screen or the file. <b>Name it.</b> "stuff", "code", "bug" and "changes" name nothing.</p></div>
+      <div class="part y"><p class="w">Why, if it helps</p><p>Optional. Adds the reason or the place: <b>so the ledger loads</b>, <b>for the demo</b>. Skip it when the first two parts say it all.</p></div>
+    </div>
+    <div class="rules"><span><b>Capital</b> first letter</span><span><b>Under 50</b> characters</span><span><b>No period</b> at the end</span><span><b>One commit</b> per task, at least four a day</span></div>
+
+    <div class="two">
+      <div class="box">
+        <p class="lab">Six lines from this capstone</p>
+        <div class="ex">
+          <div class="ln"><span class="dt"></span><span class="m"><i>Add</i> <u>Transaction class with five fields</u></span><span class="n">38</span></div>
+          <div class="ln"><span class="dt"></span><span class="m"><i>Add</i> <u>loadTransactions</u> <em>to read the csv</em></span><span class="n">36</span></div>
+          <div class="ln"><span class="dt"></span><span class="m"><i>Fix</i> <u>payment stored as a positive amount</u></span><span class="n">39</span></div>
+          <div class="ln"><span class="dt"></span><span class="m"><i>Show</i> <u>ledger newest first</u></span><span class="n">24</span></div>
+          <div class="ln"><span class="dt"></span><span class="m"><i>Add</i> <u>month to date report</u></span><span class="n">24</span></div>
+          <div class="ln"><span class="dt"></span><span class="m"><i>Add</i> <u>README</u> <em>with title and how to run</em></span><span class="n">36</span></div>
         </div>
       </div>
-      <div class="panel">
-        <p class="ph">GitHub <b>Commits</b> <span style="margin-left:auto">accounting-ledger</span></p>
-        <div class="log" id="log"></div>
+      <div class="box">
+        <p class="lab">The usual, and what they should have been</p>
+        <div class="ex">
+          <div class="rw"><span class="b">update</span><span class="ar">&#8594;</span><span class="g"><i>Add</i> deposit menu option</span><span class="why">Update what? A verb alone says nothing.</span></div>
+          <div class="rw"><span class="b">fixed it</span><span class="ar">&#8594;</span><span class="g"><i>Fix</i> ledger crash on an empty file</span><span class="why">Fixed what? Name the thing.</span></div>
+          <div class="rw"><span class="b">final version</span><span class="ar">&#8594;</span><span class="g"><i>Add</i> custom search by vendor</span><span class="why">Nothing is final, say what this commit changed.</span></div>
+          <div class="rw"><span class="b">asdf</span><span class="ar">&#8594;</span><span class="g"><i>Rename</i> amount to balance in Transaction</span><span class="why">A keyboard roll stays in the history forever.</span></div>
+          <div class="rw"><span class="b">changes</span><span class="ar">&#8594;</span><span class="g"><i>Remove</i> unused parseDouble method</span><span class="why">Every commit is changes. Which ones?</span></div>
+        </div>
       </div>
     </div>
+
+    <div class="try">
+      <p class="lab">Try your own line, optional</p>
+      <div class="tr"><input id="inp" type="text" maxlength="90" placeholder="Add previous month report" spellcheck="false" aria-label="Your commit message"><button class="btn" id="bCheck">Check</button><span class="cnt" id="cnt">0 characters</span></div>
+    </div>
+
     <div class="caption" id="caption">
-      <div class="t" id="status">One line, two parts: a <b class="y">verb</b> first, then <b class="a">what changed</b>. Capital letter, under 50 characters, no period. Someone reading the history should know what changed without opening the code.</div>
+      <div class="t" id="status">Someone reading the history on GitHub should know what changed without opening the code. The six lines on the left do that. The five on the right do not.</div>
       <button class="reset" id="bReset">Reset</button>
     </div>
   </div>
 
   <div class="take">
     <p class="tk">The one idea</p>
-    <p><b>A commit message is one line a stranger reads in the history and knows what changed.</b> Verb first, the thing second:
-    Add loadTransactions to read the csv, Fix payment stored as positive, Show ledger newest first. "update", "final" and
-    "asdf" are the lines Raymond will ask about. One commit per task, at least four a day.</p>
+    <p><b>A commit message is one line a stranger reads in the history and knows what changed.</b> Verb first, the thing second,
+    under 50 characters: Add loadTransactions to read the csv, Fix payment stored as a positive amount, Show ledger newest first.
+    "update", "final" and "asdf" are the lines Raymond will ask about.</p>
   </div>
   <div id="rail"></div>
 </div>
@@ -162,125 +163,39 @@
   "use strict";
   var $=function(s,r){return (r||document).querySelector(s);};
   var reduce=matchMedia("(prefers-reduced-motion: reduce)").matches;
-
-  var VERBS=["Add","Fix","Show","Create","Write","Remove","Rename","Update"];
-  var CHANGES=[
-    {f:"FinancialTracker.java",d:"wrote loadTransactions: every csv line becomes a Transaction in the list",ok:["Add","Write"],
-      w:[{t:"loadTransactions to read the csv into the list",k:1},{t:"stuff",k:0},{t:"the file",k:0}]},
-    {f:"FinancialTracker.java",d:"a payment was stored with a positive amount, now it is negative",ok:["Fix"],
-      w:[{t:"payment stored as a positive amount",k:1},{t:"bug",k:0},{t:"the thing from yesterday",k:0}]},
-    {f:"FinancialTracker.java",d:"displayLedger prints newest first instead of file order",ok:["Show","Fix"],
-      w:[{t:"ledger newest first",k:1},{t:"ledger",k:0},{t:"changes",k:0}]},
-    {f:"Transaction.java",d:"new class: five fields, a constructor and getters",ok:["Add","Create","Write"],
-      w:[{t:"Transaction class with five fields and getters",k:1},{t:"class",k:0},{t:"new file",k:0}]},
-    {f:"README.md",d:"wrote the title, the description and how to run it",ok:["Add","Write"],
-      w:[{t:"README with title, description and how to run",k:1},{t:"readme stuff",k:0},{t:"docs",k:0}]}
-  ];
-  var USUAL=[
-    {t:"update",why:"Update what? A verb with nothing after it is a shrug."},
-    {t:"final",why:"Nothing is final, there will be a commit after this one. Say what changed."},
-    {t:"asdf",why:"A keyboard roll, kept forever in the history."},
-    {t:"fixed it",why:"Fixed what? Fix + the thing: Fix payment stored as a positive amount."},
-    {t:"changes",why:"Every commit is changes. Which ones?"},
-    {t:"done",why:"Done with what? The history should read like a diary, and this page of it is blank."}
-  ];
-  var chg=$("#chg"),slots=$("#slots"),cnt=$("#cnt"),verbs=$("#verbs"),whats=$("#whats"),usual=$("#usual"),log=$("#log"),
-      bCommit=$("#bCommit"),status=$("#status"),caption=$("#caption");
-  var sel=null,verb=null,what=null,raw=null;
+  var inp=$("#inp"),cnt=$("#cnt"),status=$("#status"),caption=$("#caption");
+  var VERBS=["add","fix","show","remove","rename","create","write","print","move","read","save","load","sort","display","handle","split","format","validate","parse","clean","delete"];
+  var VAGUE=["stuff","code","bug","changes","things","it","file","files","update","updates","work","final","version","done","asdf","test","wip"];
+  var START='Someone reading the history on GitHub should know what changed without opening the code. The six lines on the left do that. The five on the right do not.';
 
   function say(html,tone){ caption.className="caption"+(tone?" "+tone:""); status.innerHTML=html; }
   function esc(s){ return s.replace(/&/g,"&amp;").replace(/</g,"&lt;"); }
-  function line(){ if(raw) return raw; return (verb||"")+(verb&&what?" ":"")+(what||""); }
+  function count(){ var n=inp.value.length; cnt.textContent=n+" characters"+(n>50?", over 50":""); cnt.className="cnt"+(n>72?" w":n>50?" y":""); }
 
-  function render(){
-    chg.querySelectorAll(".ch").forEach(function(b,i){ b.classList.toggle("on",sel===i); });
-    verbs.querySelectorAll(".chip").forEach(function(b){ b.classList.toggle("on",b.textContent===verb); });
-    if(sel===null){ whats.innerHTML='<span class="empty">tick a change first</span>'; }
-    else{
-      whats.innerHTML=CHANGES[sel].w.map(function(o){ return '<button class="chip'+(what===o.t?" on":"")+'">'+esc(o.t)+'</button>'; }).join("");
-    }
-    if(raw){ slots.innerHTML='<span class="slot raw">'+esc(raw)+'</span>'; }
-    else{
-      slots.innerHTML=(verb?'<span class="slot full v">'+verb+'</span>':'<span class="slot">verb</span>')
-        +(what?'<span class="slot full">'+esc(what)+'</span>':'<span class="slot">what changed</span>');
-    }
-    var n=line().length; cnt.textContent=n+" characters"+(n>50?", over 50":"");
-    cnt.className="cnt"+(n>72?" w":n>50?" y":"");
-    bCommit.disabled=!(raw||(verb&&what));
+  function check(){
+    var raw=inp.value.trim(),q='<b class="w">"'+esc(raw)+'"</b>';
+    if(!raw){ say('Type a line first.'); return; }
+    var words=raw.split(/\s+/),first=words[0],fl=first.toLowerCase().replace(/[^a-z]/g,"");
+    if(words.length===1){ say(q+': one word. '+(VERBS.indexOf(fl)>=0?'The verb is there, now the thing: '+first+' what?':'What changed? Verb first, then the thing.'),"w"); return; }
+    if(VAGUE.indexOf(fl)>=0){ say(q+': "'+esc(first)+'" is not a verb that says what the code does. Start with Add, Fix, Show, Remove or Rename.',"w"); return; }
+    if(/ed$|ing$/.test(fl)&&VERBS.indexOf(fl)<0){ say(q+': write the verb as an order, "'+esc(first.replace(/(ed|ing)$/,""))+'", not "'+esc(first)+'".',"w"); return; }
+    if(VERBS.indexOf(fl)<0){ say(q+': the first word should be the verb: Add, Fix, Show, Remove, Rename. Then the thing.',"y"); return; }
+    var rest=words.slice(1).map(function(w){return w.toLowerCase().replace(/[^a-z]/g,"");});
+    var vague=rest.filter(function(w){return VAGUE.indexOf(w)>=0;});
+    if(rest.every(function(w){return VAGUE.indexOf(w)>=0||w.length<3;})){ say(q+': the verb is right, the rest names nothing. Name the method, the class or the screen.',"w"); return; }
+    var notes=[];
+    if(first[0]!==first[0].toUpperCase()) notes.push("capital first letter");
+    if(/\.$/.test(raw)) notes.push("no period at the end");
+    if(raw.length>50) notes.push("trim to 50 characters");
+    if(vague.length) notes.push('"'+vague[0]+'" could be more specific');
+    if(notes.length) say('<b class="y">"'+esc(raw)+'"</b>: almost. '+notes.join(", ")+'.',"y");
+    else say('<b class="g">"'+esc(raw)+'"</b>, '+raw.length+' characters. A stranger reads it and knows what changed.',"g");
   }
-
-  function addLog(msg,cls,when){
-    var e=document.createElement("div"); e.className="cmt "+cls;
-    e.innerHTML='<span class="dt"></span><span class="m">'+esc(msg)+'</span><span class="h">'+when+'</span>';
-    var first=log.firstChild; if(first) log.insertBefore(e,first); else log.appendChild(e);
-  }
-
-  function commit(){
-    var msg=line(); if(!msg) return;
-    if(raw){
-      var u=USUAL.filter(function(x){return x.t===raw;})[0];
-      addLog(msg,"w","just now");
-      say('<b class="w">"'+esc(msg)+'"</b> is in the history now. '+(u?u.why:"")+'',"w");
-      raw=null; render(); return;
-    }
-    var c=CHANGES[sel],w=c.w.filter(function(x){return x.t===what;})[0];
-    var okVerb=c.ok.indexOf(verb)>=0;
-    if(verb==="Update"){
-      addLog(msg,"w","just now");
-      say('<b class="w">"'+esc(msg)+'"</b>: Update says a change happened, not which one. You '+esc(c.d.split(":")[0].split(",")[0])+'. Which verb is that: '+c.ok.join(", ")+'?',"w");
-    }else if(!okVerb){
-      addLog(msg,"w","just now");
-      say('<b class="w">"'+esc(msg)+'"</b>: '+verb+' is not what happened. You '+esc(c.d)+'. The verb says what the code does now: '+c.ok.join(" or ")+'.',"w");
-    }else if(!w.k){
-      addLog(msg,"w","just now");
-      say('<b class="w">"'+esc(msg)+'"</b>: the verb is right, the rest says nothing. Name the method, the class or the screen: '+esc(c.w[0].t)+'.',"w");
-    }else{
-      addLog(msg,"g","just now");
-      var n=msg.length;
-      say('<b class="g">"'+esc(msg)+'"</b>, '+n+' characters. Three weeks from now this line still tells you what changed, and the history on GitHub reads like a diary.'+(n>50?' A bit long: trim to 50 if you can.':''),"g");
-    }
-    verb=null; what=null; render();
-  }
-
-  function seed(){
-    log.innerHTML="";
-    addLog("Initial commit","seed","yesterday");
-    addLog("Add project board with user stories","seed","yesterday");
-  }
-  function reset(){ sel=null; verb=null; what=null; raw=null; seed(); render();
-    say('One line, two parts: a <b class="y">verb</b> first, then <b class="a">what changed</b>. Capital letter, under 50 characters, no period. Someone reading the history should know what changed without opening the code.'); }
-
-  chg.innerHTML=CHANGES.map(function(c,i){
-    return '<button class="ch"><span class="bx"></span><span><span class="f">'+c.f+'</span><span class="d">'+esc(c.d)+'</span></span></button>';
-  }).join("");
-  verbs.innerHTML=VERBS.map(function(v){ return '<button class="chip v">'+v+'</button>'; }).join("");
-  usual.innerHTML=USUAL.map(function(u){ return '<button class="chip bad">'+u.t+'</button>'; }).join("");
-
-  chg.addEventListener("click",function(e){
-    var b=e.target.closest(".ch"); if(!b) return;
-    var i=Array.prototype.indexOf.call(chg.children,b);
-    sel=(sel===i)?null:i; what=null; raw=null; render();
-    if(sel===null) say('No change ticked. Tick the file you worked on, then say what you did to it.');
-    else say('You ticked <b class="a">'+CHANGES[sel].f+'</b>: you '+esc(CHANGES[sel].d)+'. Now pick the verb and the thing.');
-  });
-  verbs.addEventListener("click",function(e){
-    var b=e.target.closest(".chip"); if(!b) return;
-    verb=(verb===b.textContent)?null:b.textContent; raw=null; render();
-    if(verb) say('<b class="y">'+verb+'</b> goes first. It says what the code does now, as an order: Add, Fix, Show. Not "added", not "fixing".');
-  });
-  whats.addEventListener("click",function(e){
-    var b=e.target.closest(".chip"); if(!b) return;
-    what=(what===b.textContent)?null:b.textContent; raw=null; render();
-    if(what&&!verb) say('Now the verb. What does the code do that it did not do before?');
-    else if(what) say('Line ready. Press <b class="a">Commit</b> and see how it reads in the history.');
-  });
-  usual.addEventListener("click",function(e){
-    var b=e.target.closest(".chip"); if(!b) return;
-    raw=b.textContent; verb=null; what=null; render(); commit();
-  });
-  bCommit.addEventListener("click",commit);
-  $("#bReset").addEventListener("click",reset);
-  reset();
+  inp.addEventListener("input",count);
+  inp.addEventListener("keydown",function(e){ if(e.key==="Enter") check(); });
+  $("#bCheck").addEventListener("click",check);
+  $("#bReset").addEventListener("click",function(){ inp.value=""; count(); say(START); });
+  count();
 
   var cv=$("#amb"),ctx=cv.getContext&&cv.getContext("2d"),parts=[];
   function sizeC(){if(!ctx)return;cv.width=innerWidth;cv.height=innerHeight;}

@@ -11,7 +11,7 @@ window.HUB_MANIFEST = {
     { file: "04-date-range-reports.html", title: "Date Range Reports", group: "Capstone 1 · hints", desc: "Pick today on the calendar and the four report ranges shade themselves. Rows light when they fall inside." },
     { file: "05-load-then-append.html", title: "Load Then Append", group: "Capstone 1 · hints", desc: "Start reads the whole file into the list. A new deposit appends one line. Start again and it is still there." },
     { file: "06-custom-search-pipeline.html", title: "Custom Search Pipeline", group: "Capstone 1 · hints", desc: "Five filters, fill the ones you want. Rows drop out stage by stage and a blank filter lets everything through." },
-    { file: "07-commit-message.html", title: "The Commit Message", group: "Capstone 1 · hints", desc: "Tick what you just did, build the line from a verb and the thing, press Commit. The history shows which lines a stranger can read." }
+    { file: "07-commit-message.html", title: "The Commit Message", group: "Capstone 1 · hints", desc: "The shape of a good commit line: verb, what changed, why if it helps. Six good lines from this capstone, five usual bad ones rewritten, and a box to check your own." }
   ],
   reference: [
     { file: "build-guide.html", title: "Build Guide", group: "Capstone guide", desc: "Thirteen steps from empty project to demo, in the order to build them. Each one says what done looks like, what goes wrong, and what to commit." },
