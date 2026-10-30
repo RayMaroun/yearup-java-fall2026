@@ -36,44 +36,39 @@
     box-shadow:0 1px 0 rgba(255,255,255,.06) inset,0 30px 80px -30px rgba(0,0,0,.8)}
   .lab{font-family:var(--mono);font-size:.66rem;letter-spacing:.14em;text-transform:uppercase;color:var(--muted);margin:0 0 10px}
 
-  /* the template, drawn big */
-  .tpl{display:flex;flex-wrap:wrap;gap:10px;align-items:stretch;margin-bottom:8px}
-  .part{flex:1 1 200px;border-radius:14px;padding:14px 16px;border:1px solid var(--line);background:rgba(6,10,20,.5);min-width:0}
-  .part .w{font-family:var(--mono);font-size:1.35rem;font-weight:500;margin:0 0 6px}
-  .part.v{border-color:rgba(255,200,98,.45)} .part.v .w{color:var(--gold)}
-  .part.o{border-color:rgba(110,160,255,.45)} .part.o .w{color:var(--accent)}
-  .part.y{border-color:rgba(70,217,138,.35)} .part.y .w{color:var(--good)}
-  .part p{margin:0;font-size:.84rem;line-height:1.45;color:#c9d4ea}
-  .part p b{color:var(--ink)}
-  .rules{display:flex;flex-wrap:wrap;gap:8px 18px;margin:0 2px 20px;font-family:var(--mono);font-size:.74rem;color:var(--muted)}
-  .rules span b{color:var(--ink);font-weight:500}
-
-  /* examples */
-  .two{display:grid;grid-template-columns:1fr 1fr;gap:14px}
+  /* the shape: a commit drawn as it is typed in the IntelliJ box, with a label per part */
+  .shape{display:grid;grid-template-columns:minmax(0,1.1fr) minmax(0,1fr);gap:14px;margin-bottom:18px}
   .box{border-radius:18px;border:1px solid var(--line);background:rgba(6,10,20,.5);padding:14px;min-width:0}
-  .ex{display:flex;flex-direction:column;gap:0}
-  .ln{display:flex;gap:10px;align-items:flex-start;padding:8px 2px;border-bottom:1px dashed rgba(255,255,255,.07);font-family:var(--mono);font-size:.84rem;line-height:1.45}
-  .ln:last-child{border-bottom:0}
-  .ln .dt{width:10px;height:10px;border-radius:50%;flex-shrink:0;margin-top:6px;background:var(--good)}
-  .ln .m{color:var(--ink);word-break:break-word}
-  .ln .m i{font-style:normal;color:var(--gold)}
-  .ln .m u{text-decoration:none;color:var(--accent)}
-  .ln .m em{font-style:normal;color:var(--good)}
-  .ln .n{margin-left:auto;flex-shrink:0;font-size:.66rem;color:var(--muted);padding-top:4px}
-  .rw{display:grid;grid-template-columns:minmax(0,.7fr) 18px minmax(0,1.3fr);gap:8px;align-items:center;padding:8px 2px;border-bottom:1px dashed rgba(255,255,255,.07);font-family:var(--mono);font-size:.82rem}
-  .rw:last-child{border-bottom:0}
-  .rw .b{color:var(--warn);text-decoration:line-through;text-decoration-color:rgba(255,106,106,.6)}
-  .rw .ar{color:var(--muted);text-align:center}
-  .rw .g{color:var(--ink);word-break:break-word}
-  .rw .g i{font-style:normal;color:var(--gold)}
-  .why{font-size:.76rem;color:var(--muted);font-family:var(--body);grid-column:1/-1;margin:-4px 0 2px;line-height:1.4}
+  .typed{font-family:var(--mono);font-size:.95rem;line-height:1.6;border-radius:12px;border:1px solid rgba(255,255,255,.14);background:rgba(0,0,0,.3);padding:12px 14px;white-space:pre-wrap;word-break:break-word}
+  .typed .ty{color:var(--gold)} .typed .su{color:var(--accent)} .typed .bl{color:var(--muted);font-style:italic;font-size:.78rem} .typed .bu{color:var(--good)}
+  .parts{display:flex;flex-direction:column;gap:8px}
+  .part{border-radius:12px;padding:10px 12px;border:1px solid var(--line);background:rgba(255,255,255,.03)}
+  .part .w{font-family:var(--mono);font-size:.95rem;font-weight:500;margin:0 0 3px}
+  .part.v .w{color:var(--gold)} .part.o .w{color:var(--accent)} .part.b .w{color:var(--muted)} .part.y .w{color:var(--good)}
+  .part p{margin:0;font-size:.82rem;line-height:1.45;color:#c9d4ea}
+  .part p b{color:var(--ink)}
 
-  /* try your own */
+  .types{display:flex;flex-wrap:wrap;gap:8px;margin-bottom:18px}
+  .tp{flex:1 1 150px;border-radius:12px;border:1px solid rgba(255,200,98,.3);background:rgba(255,200,98,.05);padding:9px 12px;min-width:0}
+  .tp .k{font-family:var(--mono);font-size:.95rem;color:var(--gold);margin:0 0 2px}
+  .tp p{margin:0;font-size:.78rem;line-height:1.4;color:#c9d4ea}
+
+  .two{display:grid;grid-template-columns:1fr 1fr;gap:14px}
+  .ex{display:flex;flex-direction:column;gap:10px}
+  .cm{font-family:var(--mono);font-size:.8rem;line-height:1.5;border-radius:10px;border:1px solid rgba(255,255,255,.08);background:rgba(0,0,0,.22);padding:8px 11px;white-space:pre-wrap;word-break:break-word}
+  .cm .ty{color:var(--gold)} .cm .su{color:var(--ink)} .cm .bu{color:#bfe9d0}
+  .rw{display:flex;flex-direction:column;gap:4px;padding:8px 2px;border-bottom:1px dashed rgba(255,255,255,.07)}
+  .rw:last-child{border-bottom:0}
+  .rw .b{font-family:var(--mono);font-size:.82rem;color:var(--warn);text-decoration:line-through;text-decoration-color:rgba(255,106,106,.6)}
+  .rw .g{font-family:var(--mono);font-size:.82rem;color:var(--ink)} .rw .g i{font-style:normal;color:var(--gold)}
+  .rw .why{font-size:.76rem;color:var(--muted);line-height:1.4}
+
   .try{margin-top:14px;border-radius:18px;border:1px solid var(--line);background:rgba(6,10,20,.5);padding:14px}
-  .tr{display:flex;gap:8px;align-items:center;flex-wrap:wrap}
-  .tr input{flex:1 1 320px;min-width:0;font-family:var(--mono);font-size:.95rem;padding:10px 12px;border-radius:11px;color:var(--ink);
+  .tr{display:flex;gap:8px;align-items:flex-start;flex-wrap:wrap}
+  .tr textarea{flex:1 1 360px;min-width:0;min-height:96px;resize:vertical;font-family:var(--mono);font-size:.9rem;line-height:1.5;padding:10px 12px;border-radius:11px;color:var(--ink);
     border:1px solid rgba(255,255,255,.14);background:rgba(0,0,0,.3);outline:0}
-  .tr input:focus{border-color:var(--accent);box-shadow:0 0 0 3px rgba(110,160,255,.18)}
+  .tr textarea:focus{border-color:var(--accent);box-shadow:0 0 0 3px rgba(110,160,255,.18)}
+  .tr .side{display:flex;flex-direction:column;gap:8px;align-items:flex-start}
   .btn{font-family:var(--body);font-weight:500;font-size:.86rem;padding:9px 16px;border-radius:11px;cursor:pointer;
     border:1px solid rgba(110,160,255,.5);background:rgba(110,160,255,.14);color:#dbe6ff;transition:.15s}
   .btn:hover{background:rgba(110,160,255,.26);border-color:var(--accent)}
@@ -87,14 +82,14 @@
   .reset{font-family:var(--body);font-weight:500;font-size:.84rem;padding:8px 14px;border-radius:11px;cursor:pointer;
     border:1px solid var(--line);background:transparent;color:var(--muted);transition:.15s;flex-shrink:0}
   .reset:hover{border-color:var(--accent);color:var(--accent)}
-  button:focus-visible{outline:2px solid var(--accent);outline-offset:2px}
+  button:focus-visible,textarea:focus-visible{outline:2px solid var(--accent);outline-offset:2px}
 
   .take{margin-top:22px;background:linear-gradient(180deg,rgba(110,160,255,.08),rgba(139,123,255,.04));
     border:1px solid var(--line);border-left:3px solid var(--accent);border-radius:12px;padding:16px 18px}
   .take .tk{font-family:var(--mono);font-size:.66rem;letter-spacing:.14em;text-transform:uppercase;color:var(--accent);margin:0 0 8px}
   .take p{margin:0;font-size:.95rem;color:var(--ink);line-height:1.55}
   .take b{color:#fff}
-  @media (max-width:760px){.two{grid-template-columns:1fr}}
+  @media (max-width:760px){.two,.shape{grid-template-columns:1fr}}
   @media (prefers-reduced-motion:reduce){*{animation-duration:.01ms!important;transition-duration:.01ms!important}#amb{display:none}}
 </style>
 </head>
@@ -104,56 +99,88 @@
 <div class="wrap">
   <p class="tag">Capstone 1 &middot; hints</p>
   <h1>The Commit Message</h1>
-  <p class="lede"><b>One line that says what changed. Verb first, then the thing, then why if it helps.</b></p>
+  <p class="lede"><b>A subject line that says what changed, a blank line, then bullets that say what you did.</b></p>
 
   <div class="stage">
-    <p class="lab">The shape of the line</p>
-    <div class="tpl">
-      <div class="part v"><p class="w">Verb</p><p>What the code does now, as an order: <b>Add</b>, <b>Fix</b>, <b>Show</b>, <b>Remove</b>, <b>Rename</b>. Not "added", not "fixing", not "update".</p></div>
-      <div class="part o"><p class="w">What changed</p><p>The method, the class, the screen or the file. <b>Name it.</b> "stuff", "code", "bug" and "changes" name nothing.</p></div>
-      <div class="part y"><p class="w">Why, if it helps</p><p>Optional. Adds the reason or the place: <b>so the ledger loads</b>, <b>for the demo</b>. Skip it when the first two parts say it all.</p></div>
+    <div class="shape">
+      <div class="box">
+        <p class="lab">What you type in the IntelliJ commit box</p>
+        <div class="typed"><span class="ty">feat:</span> <span class="su">add month to date report</span>
+<span class="bl">(empty line, press Enter twice)</span>
+<span class="bu">- Filter transactions from the first of the month to today
+- Print them newest first in the ledger format
+- Show a message when the month has no transactions</span></div>
+      </div>
+      <div class="parts">
+        <div class="part v"><p class="w">type:</p><p>What kind of change. One of the five below, lowercase, with the colon.</p></div>
+        <div class="part o"><p class="w">subject</p><p>What changed, as an order: <b>add</b>, <b>fix</b>, <b>show</b>, <b>remove</b>, <b>rename</b>. Under 50 characters, no period. Not "added", not "update", not "stuff".</p></div>
+        <div class="part b"><p class="w">blank line</p><p>Not optional. Without it Git glues the bullets into the subject and GitHub shows one long title.</p></div>
+        <div class="part y"><p class="w">- bullets</p><p>What you did, one change per line, two to four lines. Skip them when the subject says it all, a README commit does not need bullets.</p></div>
+      </div>
     </div>
-    <div class="rules"><span><b>Capital</b> first letter</span><span><b>Under 50</b> characters</span><span><b>No period</b> at the end</span><span><b>One commit</b> per task, at least four a day</span></div>
+
+    <p class="lab">The five types you need</p>
+    <div class="types">
+      <div class="tp"><p class="k">feat:</p><p>A feature the user can see: a menu option, a report, a search.</p></div>
+      <div class="tp"><p class="k">fix:</p><p>Something was wrong and now it is right.</p></div>
+      <div class="tp"><p class="k">docs:</p><p>README, comments, the board. No code behavior changes.</p></div>
+      <div class="tp"><p class="k">refactor:</p><p>Code moved or cleaned, same behavior: a method extracted, a name changed.</p></div>
+      <div class="tp"><p class="k">chore:</p><p>Project housekeeping: pom.xml, .gitignore, the csv sample file.</p></div>
+    </div>
 
     <div class="two">
       <div class="box">
-        <p class="lab">Six lines from this capstone</p>
+        <p class="lab">Six commits from this capstone</p>
         <div class="ex">
-          <div class="ln"><span class="dt"></span><span class="m"><i>Add</i> <u>Transaction class with five fields</u></span><span class="n">38</span></div>
-          <div class="ln"><span class="dt"></span><span class="m"><i>Add</i> <u>loadTransactions</u> <em>to read the csv</em></span><span class="n">36</span></div>
-          <div class="ln"><span class="dt"></span><span class="m"><i>Fix</i> <u>payment stored as a positive amount</u></span><span class="n">39</span></div>
-          <div class="ln"><span class="dt"></span><span class="m"><i>Show</i> <u>ledger newest first</u></span><span class="n">24</span></div>
-          <div class="ln"><span class="dt"></span><span class="m"><i>Add</i> <u>month to date report</u></span><span class="n">24</span></div>
-          <div class="ln"><span class="dt"></span><span class="m"><i>Add</i> <u>README</u> <em>with title and how to run</em></span><span class="n">36</span></div>
+          <div class="cm"><span class="ty">feat:</span> <span class="su">add Transaction class with five fields</span>
+<span class="bu">- Fields date, time, description, vendor, amount
+- Constructor and getters, no setters</span></div>
+          <div class="cm"><span class="ty">feat:</span> <span class="su">load transactions from the csv at start</span>
+<span class="bu">- Create the file when it does not exist
+- Split each line on the pipe, one Transaction per line
+- Skip a line that does not have five fields</span></div>
+          <div class="cm"><span class="ty">fix:</span> <span class="su">store payment amount as negative</span>
+<span class="bu">- The user types a positive number, the sign flips before saving
+- Ledger payments filter now finds them</span></div>
+          <div class="cm"><span class="ty">feat:</span> <span class="su">show ledger newest first</span></div>
+          <div class="cm"><span class="ty">refactor:</span> <span class="su">extract parseDate helper</span>
+<span class="bu">- Used by the reports menu and the custom search
+- Returns null on a bad date instead of crashing</span></div>
+          <div class="cm"><span class="ty">docs:</span> <span class="su">add README with title and run steps</span></div>
         </div>
       </div>
       <div class="box">
         <p class="lab">The usual, and what they should have been</p>
         <div class="ex">
-          <div class="rw"><span class="b">update</span><span class="ar">&#8594;</span><span class="g"><i>Add</i> deposit menu option</span><span class="why">Update what? A verb alone says nothing.</span></div>
-          <div class="rw"><span class="b">fixed it</span><span class="ar">&#8594;</span><span class="g"><i>Fix</i> ledger crash on an empty file</span><span class="why">Fixed what? Name the thing.</span></div>
-          <div class="rw"><span class="b">final version</span><span class="ar">&#8594;</span><span class="g"><i>Add</i> custom search by vendor</span><span class="why">Nothing is final, say what this commit changed.</span></div>
-          <div class="rw"><span class="b">asdf</span><span class="ar">&#8594;</span><span class="g"><i>Rename</i> amount to balance in Transaction</span><span class="why">A keyboard roll stays in the history forever.</span></div>
-          <div class="rw"><span class="b">changes</span><span class="ar">&#8594;</span><span class="g"><i>Remove</i> unused parseDouble method</span><span class="why">Every commit is changes. Which ones?</span></div>
+          <div class="rw"><span class="b">update</span><span class="g"><i>feat:</i> add deposit menu option</span><span class="why">Update what? The type and the subject say what kind and what.</span></div>
+          <div class="rw"><span class="b">fixed it</span><span class="g"><i>fix:</i> stop ledger crash on an empty file</span><span class="why">Fixed what? Name the thing, as an order.</span></div>
+          <div class="rw"><span class="b">final version</span><span class="g"><i>feat:</i> add custom search by vendor</span><span class="why">Nothing is final. Say what this commit changed.</span></div>
+          <div class="rw"><span class="b">asdf</span><span class="g"><i>refactor:</i> rename amount to balance in Transaction</span><span class="why">A keyboard roll stays in the history forever.</span></div>
+          <div class="rw"><span class="b">changes</span><span class="g"><i>chore:</i> add transactions.csv sample file</span><span class="why">Every commit is changes. Which ones?</span></div>
+          <div class="rw"><span class="b">Added the reports and fixed the ledger and README</span><span class="g">three commits: <i>feat:</i> add reports menu, <i>fix:</i> ..., <i>docs:</i> ...</span><span class="why">One change per commit. "and" in a subject means split it.</span></div>
         </div>
       </div>
     </div>
 
     <div class="try">
-      <p class="lab">Try your own line, optional</p>
-      <div class="tr"><input id="inp" type="text" maxlength="90" placeholder="Add previous month report" spellcheck="false" aria-label="Your commit message"><button class="btn" id="bCheck">Check</button><span class="cnt" id="cnt">0 characters</span></div>
+      <p class="lab">Try your own, optional: subject, blank line, bullets</p>
+      <div class="tr"><textarea id="inp" spellcheck="false" aria-label="Your commit message" placeholder="feat: add previous month report
+
+- Compute the first and last day of last month
+- Print the matching transactions newest first"></textarea>
+        <div class="side"><button class="btn" id="bCheck">Check</button><span class="cnt" id="cnt">subject 0 characters</span></div></div>
     </div>
 
     <div class="caption" id="caption">
-      <div class="t" id="status">Someone reading the history on GitHub should know what changed without opening the code. The six lines on the left do that. The five on the right do not.</div>
+      <div class="t" id="status">Someone reading the history on GitHub sees the subject lines only. The bullets open when they click one. Both should make sense without opening the code.</div>
       <button class="reset" id="bReset">Reset</button>
     </div>
   </div>
 
   <div class="take">
     <p class="tk">The one idea</p>
-    <p><b>A commit message is one line a stranger reads in the history and knows what changed.</b> Verb first, the thing second,
-    under 50 characters: Add loadTransactions to read the csv, Fix payment stored as a positive amount, Show ledger newest first.
+    <p><b>type: what changed, a blank line, then bullets on what you did.</b> feat, fix, docs, refactor or chore, a subject under 50
+    characters as an order, two to four bullets when the subject cannot hold it. One change per commit, at least four a day.
     "update", "final" and "asdf" are the lines Raymond will ask about.</p>
   </div>
   <div id="rail"></div>
@@ -164,35 +191,52 @@
   var $=function(s,r){return (r||document).querySelector(s);};
   var reduce=matchMedia("(prefers-reduced-motion: reduce)").matches;
   var inp=$("#inp"),cnt=$("#cnt"),status=$("#status"),caption=$("#caption");
-  var VERBS=["add","fix","show","remove","rename","create","write","print","move","read","save","load","sort","display","handle","split","format","validate","parse","clean","delete"];
-  var VAGUE=["stuff","code","bug","changes","things","it","file","files","update","updates","work","final","version","done","asdf","test","wip"];
-  var START='Someone reading the history on GitHub should know what changed without opening the code. The six lines on the left do that. The five on the right do not.';
+  var TYPES=["feat","fix","docs","refactor","chore","test","style"];
+  var VERBS=["add","fix","show","remove","rename","create","write","print","move","read","save","load","sort","display","handle","split","format","validate","parse","clean","delete","stop","extract","store","use","make","change","replace","set","compute","filter","count"];
+  var VAGUE=["stuff","code","bug","changes","things","it","file","files","update","updates","work","final","version","done","asdf","test","wip","things"];
+  var START='Someone reading the history on GitHub sees the subject lines only. The bullets open when they click one. Both should make sense without opening the code.';
 
   function say(html,tone){ caption.className="caption"+(tone?" "+tone:""); status.innerHTML=html; }
   function esc(s){ return s.replace(/&/g,"&amp;").replace(/</g,"&lt;"); }
-  function count(){ var n=inp.value.length; cnt.textContent=n+" characters"+(n>50?", over 50":""); cnt.className="cnt"+(n>72?" w":n>50?" y":""); }
+  function subject(){ return (inp.value.split("\n")[0]||"").trim(); }
+  function count(){ var n=subject().length; cnt.textContent="subject "+n+" characters"+(n>50?", over 50":""); cnt.className="cnt"+(n>72?" w":n>50?" y":""); }
 
   function check(){
-    var raw=inp.value.trim(),q='<b class="w">"'+esc(raw)+'"</b>';
-    if(!raw){ say('Type a line first.'); return; }
-    var words=raw.split(/\s+/),first=words[0],fl=first.toLowerCase().replace(/[^a-z]/g,"");
-    if(words.length===1){ say(q+': one word. '+(VERBS.indexOf(fl)>=0?'The verb is there, now the thing: '+first+' what?':'What changed? Verb first, then the thing.'),"w"); return; }
-    if(VAGUE.indexOf(fl)>=0){ say(q+': "'+esc(first)+'" is not a verb that says what the code does. Start with Add, Fix, Show, Remove or Rename.',"w"); return; }
+    var lines=inp.value.replace(/\r/g,"").split("\n"),sub=lines[0].trim(),q='<b class="w">"'+esc(sub)+'"</b>';
+    if(!sub){ say('Type a subject line first.'); return; }
+    var m=sub.match(/^([a-zA-Z]+)(\([^)]*\))?:\s*(.*)$/);
+    if(!m){
+      var w=sub.split(/\s+/)[0].toLowerCase().replace(/[^a-z]/g,"");
+      if(TYPES.indexOf(w)>=0) say(q+': the type needs a colon right after it, "'+w+':".',"w");
+      else if(sub.split(/\s+/).length===1) say(q+': one word. Start with a type, then say what changed: feat: add deposit menu option.',"w");
+      else say(q+': no type. Start with feat:, fix:, docs:, refactor: or chore:, then what changed.',"w");
+      return;
+    }
+    var type=m[1],rest=m[3].trim();
+    if(TYPES.indexOf(type)<0){ say(q+': "'+esc(type)+'" is not a type. Use feat, fix, docs, refactor or chore.',"w"); return; }
+    if(type!==type.toLowerCase()){ say(q+': the type is lowercase, "'+type.toLowerCase()+':".',"y"); return; }
+    if(!rest){ say(q+': the type is there, now the subject. '+type+': what?',"w"); return; }
+    var words=rest.split(/\s+/),first=words[0],fl=first.toLowerCase().replace(/[^a-z]/g,"");
+    if(VAGUE.indexOf(fl)>=0&&words.length===1){ say(q+': "'+esc(first)+'" names nothing. Name the method, the class or the screen.',"w"); return; }
     if(/ed$|ing$/.test(fl)&&VERBS.indexOf(fl)<0){ say(q+': write the verb as an order, "'+esc(first.replace(/(ed|ing)$/,""))+'", not "'+esc(first)+'".',"w"); return; }
-    if(VERBS.indexOf(fl)<0){ say(q+': the first word should be the verb: Add, Fix, Show, Remove, Rename. Then the thing.',"y"); return; }
-    var rest=words.slice(1).map(function(w){return w.toLowerCase().replace(/[^a-z]/g,"");});
-    var vague=rest.filter(function(w){return VAGUE.indexOf(w)>=0;});
-    if(rest.every(function(w){return VAGUE.indexOf(w)>=0||w.length<3;})){ say(q+': the verb is right, the rest names nothing. Name the method, the class or the screen.',"w"); return; }
+    var body=words.slice(1).map(function(x){return x.toLowerCase().replace(/[^a-z]/g,"");});
+    if(words.length>1&&body.every(function(x){return VAGUE.indexOf(x)>=0||x.length<3;})){ say(q+': the verb is right, the rest names nothing. Name the method, the class or the screen.',"w"); return; }
     var notes=[];
-    if(first[0]!==first[0].toUpperCase()) notes.push("capital first letter");
-    if(/\.$/.test(raw)) notes.push("no period at the end");
-    if(raw.length>50) notes.push("trim to 50 characters");
-    if(vague.length) notes.push('"'+vague[0]+'" could be more specific');
-    if(notes.length) say('<b class="y">"'+esc(raw)+'"</b>: almost. '+notes.join(", ")+'.',"y");
-    else say('<b class="g">"'+esc(raw)+'"</b>, '+raw.length+' characters. A stranger reads it and knows what changed.',"g");
+    if(/\.$/.test(sub)) notes.push("no period at the end of the subject");
+    if(sub.length>50) notes.push("subject over 50 characters, trim it");
+    if(/\band\b/.test(rest)) notes.push('"and" in a subject usually means two commits');
+    if(VERBS.indexOf(fl)<0) notes.push('start the subject with a verb as an order (add, fix, show)');
+    var bullets=lines.slice(1).map(function(l){return l.trim();}).filter(function(l){return l;});
+    var hasBody=bullets.length>0;
+    if(hasBody&&lines[1].trim()!=="") notes.push("put a blank line between the subject and the bullets");
+    var bad=bullets.filter(function(l){return !/^[-*]\s+\S/.test(l);});
+    if(hasBody&&bad.length) notes.push('start every body line with "- "');
+    var vagueB=bullets.filter(function(l){ var ws=l.replace(/^[-*]\s+/,"").split(/\s+/).map(function(x){return x.toLowerCase().replace(/[^a-z]/g,"");}); return ws.every(function(x){return VAGUE.indexOf(x)>=0||x.length<3;}); });
+    if(vagueB.length) notes.push('"'+esc(vagueB[0])+'" says nothing, bullets name what you did');
+    if(notes.length){ say('<b class="y">"'+esc(sub)+'"</b>: almost. '+notes.join("; ")+'.',"y"); return; }
+    say('<b class="g">"'+esc(sub)+'"</b>, '+sub.length+' characters'+(hasBody?', '+bullets.length+' bullet'+(bullets.length>1?'s':'')+' under it':', subject only')+'. A stranger reads it and knows what changed.',"g");
   }
   inp.addEventListener("input",count);
-  inp.addEventListener("keydown",function(e){ if(e.key==="Enter") check(); });
   $("#bCheck").addEventListener("click",check);
   $("#bReset").addEventListener("click",function(){ inp.value=""; count(); say(START); });
   count();
