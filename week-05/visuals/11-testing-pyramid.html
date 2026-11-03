@@ -1,0 +1,353 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>The Testing Pyramid | Week 5 Visual Hub</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Sora:wght@500;700&family=Inter:wght@400;500&family=JetBrains+Mono:wght@400;500&display=swap">
+<style>
+  :root{
+    --bg:#080c17; --bg2:#0c1428; --surface:rgba(255,255,255,.045); --line:rgba(255,255,255,.09);
+    --ink:#eef2fb; --muted:#8496b6; --accent:#6ea0ff; --accent2:#8b7bff; --good:#46d98a; --warn:#ff6a6a;
+    --gold:#ffc862; --disp:'Sora',system-ui,sans-serif; --body:'Inter',system-ui,sans-serif;
+    --mono:'JetBrains Mono',ui-monospace,monospace;
+  }
+  *{box-sizing:border-box}
+  body{margin:0;min-height:100vh;color:var(--ink);font-family:var(--body);
+    background:radial-gradient(1200px 700px at 70% -10%,#141d38 0%,transparent 55%),
+               radial-gradient(900px 600px at 10% 110%,#161233 0%,transparent 50%),#080c17;
+    overflow-x:hidden}
+  #amb{position:fixed;inset:0;z-index:0;pointer-events:none;opacity:.6}
+  .back{position:relative;z-index:2;display:block;max-width:1120px;margin:0 auto;padding:26px 24px 0;
+    width:100%;font-family:var(--mono);font-size:.8rem;letter-spacing:.04em;color:var(--muted);
+    text-decoration:none;transition:color .15s}
+  .back:hover{color:var(--accent)}
+  .wrap{position:relative;z-index:1;max-width:1120px;margin:0 auto;padding:22px 24px 70px}
+  .tag{font-family:var(--mono);font-size:.72rem;letter-spacing:.22em;text-transform:uppercase;color:var(--accent);margin:0 0 14px}
+  h1{font-family:var(--disp);font-weight:700;font-size:clamp(2.3rem,6vw,3.6rem);line-height:1;margin:0 0 12px;
+    letter-spacing:-.03em;background:linear-gradient(180deg,#fff,#b9c6e6);-webkit-background-clip:text;
+    background-clip:text;color:transparent}
+  .lede{color:var(--muted);max-width:64ch;font-size:1.05rem;margin:0 0 26px;line-height:1.5}
+  .lede b{color:var(--ink)}
+  code{font-family:var(--mono);font-size:.92em;color:#bcd0ff}
+
+  /* ---------- the stage IS the picture ---------- */
+  .stage{position:relative;background:linear-gradient(180deg,rgba(255,255,255,.03),rgba(255,255,255,.01));
+    border:1px solid var(--line);border-radius:24px;padding:22px;
+    box-shadow:0 1px 0 rgba(255,255,255,.06) inset,0 30px 80px -30px rgba(0,0,0,.8)}
+  .board{display:grid;grid-template-columns:minmax(0,1.8fr) minmax(0,1fr);gap:22px;align-items:start}
+  @media (max-width:1000px){.board{grid-template-columns:1fr}}
+
+  /* the pyramid: three bands, each a slice of one trapezoid */
+  .pyr{max-width:680px;width:100%;margin:0 auto}
+  .band{position:relative;height:128px;margin-bottom:6px;cursor:pointer;outline:none;
+    clip-path:polygon(var(--a) 0,calc(100% - var(--a)) 0,calc(100% - var(--b)) 100%,var(--b) 100%);
+    background:var(--tint);transition:background .3s,box-shadow .3s}
+  .band.e2e{--a:34%;--b:22.7%;--m:29%;--tint:rgba(139,123,255,.16)}
+  .band.integ{--a:22.7%;--b:11.3%;--m:17.5%;--tint:rgba(124,141,255,.13)}
+  .band.unit{--a:11.3%;--b:0%;--m:6.5%;--tint:rgba(110,160,255,.10)}
+  .band:hover{background:rgba(110,160,255,.2)}
+  .band.sel{background:rgba(110,160,255,.26);box-shadow:inset 0 3px 0 rgba(110,160,255,.9),inset 0 -3px 0 rgba(110,160,255,.9)}
+  .band.run{background:rgba(255,200,98,.16);box-shadow:inset 0 3px 0 rgba(255,200,98,.85),inset 0 -3px 0 rgba(255,200,98,.85)}
+  .band:focus-visible{box-shadow:inset 0 0 0 3px var(--accent)}
+  .band.lock{cursor:default}
+  .in{position:absolute;top:10px;bottom:10px;left:var(--m);right:var(--m);display:flex;flex-direction:column;
+    align-items:center;justify-content:center;gap:7px}
+  .lab{font-family:var(--disp);font-weight:700;font-size:1rem;letter-spacing:-.01em;white-space:nowrap;display:flex;gap:8px;align-items:baseline}
+  .lab small{font-family:var(--mono);font-weight:400;font-size:.68rem;color:var(--muted);letter-spacing:.04em}
+  .lab .tm{font-family:var(--mono);font-weight:500;font-size:.72rem;color:var(--good);opacity:0;transition:opacity .3s}
+  .lab .tm.on{opacity:1} .band.run .lab .tm{color:var(--gold)}
+
+  /* the scene inside a band: the app's four parts, lit where one test reaches */
+  .scene{display:none;flex-direction:column;align-items:center;gap:4px}
+  .band.sel .scene{display:flex}
+  .parts{display:flex;align-items:center;justify-content:center;flex-wrap:wrap;gap:0}
+  .chip{font-family:var(--mono);font-size:.6rem;padding:4px 6px;border-radius:7px;white-space:nowrap;
+    border:1px dashed rgba(132,150,182,.35);color:rgba(132,150,182,.55);background:rgba(0,0,0,.18)}
+  .chip.on{border:1px solid rgba(110,160,255,.85);color:#dbe6ff;background:rgba(110,160,255,.22);
+    box-shadow:0 0 16px -4px rgba(110,160,255,.8);animation:pop .4s both}
+  .chip.tap{position:relative}
+  .chip.tap::before{content:"";position:absolute;right:-3px;top:-4px;width:8px;height:8px;border-radius:50%;
+    background:var(--gold);box-shadow:0 0 0 0 rgba(255,200,98,.6);animation:tap 1.2s ease-out 2}
+  .cn{position:relative;width:12px;height:2px;background:rgba(132,150,182,.25)}
+  .cn.on{background:rgba(255,200,98,.75)}
+  .band.sel .cn.on::after{content:"";position:absolute;top:-2px;left:0;width:6px;height:6px;border-radius:50%;
+    background:var(--gold);animation:travel .5s ease-in-out var(--d,0s) 2 alternate both}
+  .chk{font-family:var(--mono);font-size:.6rem;color:var(--muted);white-space:nowrap}
+  .chk b{font-weight:500;color:var(--gold)}
+
+  /* one dot = one test */
+  .dots{display:flex;flex-wrap:wrap;justify-content:center;gap:3px;max-width:100%}
+  .d{width:5px;height:5px;border-radius:2px;background:rgba(188,208,255,.35);transition:background .15s}
+  .d.ok{background:var(--good);box-shadow:0 0 4px rgba(70,217,138,.6)}
+
+  /* the code the pyramid stands on */
+  .code{display:flex;align-items:center;gap:10px;flex-wrap:wrap;justify-content:space-between;margin-top:4px;
+    padding:10px 12px;border-radius:12px;background:#05070e;border:1px solid var(--line);font-family:var(--mono);font-size:.74rem;color:var(--muted)}
+  .code .file{color:#c9d4ea} .code .file i{font-style:normal;color:rgba(132,150,182,.7);margin-left:8px}
+  .code .file i.chg{color:var(--gold)}
+  .chgbtn{font-family:var(--mono);font-size:.8rem;padding:9px 14px;border-radius:10px;cursor:pointer;
+    border:1px solid rgba(255,200,98,.5);background:rgba(255,200,98,.1);color:var(--gold);transition:.15s}
+  .chgbtn:hover{background:rgba(255,200,98,.2);border-color:var(--gold)}
+  .chgbtn:disabled{opacity:.35;cursor:not-allowed}
+
+  /* gauges for the band you tapped */
+  .card{position:relative;border-radius:16px;padding:16px 18px 14px;border:1px solid rgba(255,255,255,.14);background:rgba(255,255,255,.04)}
+  .hd{font-family:var(--mono);font-size:.62rem;letter-spacing:.16em;text-transform:uppercase;color:var(--muted);margin:0 0 4px}
+  .who{font-family:var(--disp);font-weight:700;font-size:1.35rem;margin:0 0 14px;color:var(--ink);letter-spacing:-.01em;transition:color .3s}
+  .who.none{color:var(--muted)}
+  .gg{margin-bottom:14px}
+  .gg:last-child{margin-bottom:2px}
+  .gt{display:flex;justify-content:space-between;gap:8px;font-family:var(--mono);font-size:.72rem;color:#c9d4ea;margin-bottom:6px}
+  .gt b{font-weight:500;color:var(--accent);font-variant-numeric:tabular-nums}
+  .tr{height:12px;border-radius:7px;background:rgba(0,0,0,.35);border:1px solid var(--line);overflow:hidden}
+  .fi{height:100%;width:0;border-radius:7px;background:linear-gradient(90deg,rgba(110,160,255,.55),var(--accent));
+    transition:width .7s cubic-bezier(.2,.9,.3,1)}
+  .ends{display:flex;justify-content:space-between;font-family:var(--mono);font-size:.56rem;letter-spacing:.08em;
+    text-transform:uppercase;color:rgba(132,150,182,.6);margin-top:4px}
+
+  @media (max-width:600px){
+    .band{height:146px}
+    .band.e2e{--a:15%;--b:10%;--m:12%} .band.integ{--a:10%;--b:5%;--m:7%} .band.unit{--a:5%;--b:0%;--m:2.5%}
+  }
+
+  /* the one sentence */
+  .caption{display:flex;gap:14px;align-items:flex-start;margin:18px 2px 0;padding-top:16px;border-top:1px solid var(--line)}
+  .caption .t{flex:1;font-size:1.05rem;line-height:1.55;color:var(--ink);padding-left:16px;border-left:3px solid var(--accent);transition:border-color .3s}
+  .caption .t .line{display:block;margin-top:6px;font-family:var(--mono);font-size:.8rem;color:#bcd0ff;opacity:.9}
+  .caption.y .t{border-left-color:var(--gold)} .caption.g .t{border-left-color:var(--good)}
+  .caption b.a{color:var(--accent)} .caption b.y{color:var(--gold)} .caption b.g{color:var(--good)}
+  .reset{font-family:var(--body);font-weight:500;font-size:.84rem;padding:8px 14px;border-radius:11px;cursor:pointer;
+    border:1px solid var(--line);background:transparent;color:var(--muted);transition:.15s;flex-shrink:0}
+  .reset:hover{border-color:var(--accent);color:var(--accent)}
+  button:focus-visible,input:focus-visible{outline:2px solid var(--accent);outline-offset:2px}
+
+  @keyframes pop{from{transform:scale(.6);opacity:0}to{transform:scale(1);opacity:1}}
+  @keyframes travel{from{left:0}to{left:6px}}
+  @keyframes tap{0%{box-shadow:0 0 0 0 rgba(255,200,98,.6)}100%{box-shadow:0 0 0 10px rgba(255,200,98,0)}}
+  .take{margin-top:22px;background:linear-gradient(180deg,rgba(110,160,255,.08),rgba(139,123,255,.04));
+    border:1px solid var(--line);border-left:3px solid var(--accent);border-radius:12px;padding:16px 18px}
+  .take .tk{font-family:var(--mono);font-size:.66rem;letter-spacing:.14em;text-transform:uppercase;color:var(--accent);margin:0 0 8px}
+  .take p{margin:0;font-size:.95rem;color:var(--ink);line-height:1.55}
+  .take b{color:#fff}
+  @media (prefers-reduced-motion:reduce){*{animation-duration:.01ms!important;transition-duration:.01ms!important}#amb{display:none}}
+</style>
+</head>
+<body>
+<a class="back" href="../index.html#11-testing-pyramid">&#8592; Week 5 index</a>
+<canvas id="amb"></canvas>
+<div class="wrap">
+  <p class="tag">Workbook 4a &middot; Section 3-1 &middot; Types of Software Testing</p>
+  <h1>The Testing Pyramid</h1>
+  <p class="lede"><b>Tap a level of the pyramid, then change one line of code.</b></p>
+
+  <div class="stage">
+    <div class="board">
+      <div>
+        <div class="pyr" id="pyr">
+          <div class="band e2e" data-k="e2e" role="button" tabindex="0" aria-label="End-to-End tests">
+            <div class="in">
+              <span class="lab">End-to-End <small>5 tests</small><span class="tm" id="tm-e2e"></span></span>
+              <div class="scene">
+                <div class="parts">
+                  <span class="chip on tap">screen</span><span class="cn on" style="--d:0s"></span>
+                  <span class="chip on">Ride</span><span class="cn on" style="--d:.15s"></span>
+                  <span class="chip on">Scooter</span><span class="cn on" style="--d:.3s"></span>
+                  <span class="chip on">database</span>
+                </div>
+                <span class="chk">a rider taps <b>Unlock</b>, rides, sees the fare</span>
+              </div>
+              <div class="dots" id="dots-e2e"></div>
+            </div>
+          </div>
+          <div class="band integ" data-k="integ" role="button" tabindex="0" aria-label="Integration tests">
+            <div class="in">
+              <span class="lab">Integration <small>40 tests</small><span class="tm" id="tm-integ"></span></span>
+              <div class="scene">
+                <div class="parts">
+                  <span class="chip">screen</span><span class="cn"></span>
+                  <span class="chip on">Ride</span><span class="cn on"></span>
+                  <span class="chip on">Scooter</span><span class="cn"></span>
+                  <span class="chip">database</span>
+                </div>
+                <span class="chk">the Ride asks the Scooter <b>getBattery()</b></span>
+              </div>
+              <div class="dots" id="dots-integ"></div>
+            </div>
+          </div>
+          <div class="band unit" data-k="unit" role="button" tabindex="0" aria-label="Unit tests">
+            <div class="in">
+              <span class="lab">Unit <small>200 tests</small><span class="tm" id="tm-unit"></span></span>
+              <div class="scene">
+                <div class="parts">
+                  <span class="chip">screen</span><span class="cn"></span>
+                  <span class="chip">Ride</span><span class="cn"></span>
+                  <span class="chip on">Scooter</span><span class="cn"></span>
+                  <span class="chip">database</span>
+                </div>
+                <span class="chk">one Scooter, alone: <b>unlock()</b>, is it unlocked?</span>
+              </div>
+              <div class="dots" id="dots-unit"></div>
+            </div>
+          </div>
+          <div class="code">
+            <span class="file">Scooter.java<i id="ln">line 12</i></span>
+            <button class="chgbtn" id="bChange">change one line of code</button>
+          </div>
+        </div>
+      </div>
+
+      <div class="card" id="gauges">
+        <p class="hd">one test at this level</p>
+        <p class="who none" id="gWho">tap a band</p>
+        <div class="gg"><div class="gt"><span>how many you write</span><b id="v0"></b></div>
+          <div class="tr"><div class="fi" id="f0"></div></div><div class="ends"><span>few</span><span>many</span></div></div>
+        <div class="gg"><div class="gt"><span>how fast one runs</span><b id="v1"></b></div>
+          <div class="tr"><div class="fi" id="f1"></div></div><div class="ends"><span>slow</span><span>fast</span></div></div>
+        <div class="gg"><div class="gt"><span>how costly to set up</span><b id="v2"></b></div>
+          <div class="tr"><div class="fi" id="f2"></div></div><div class="ends"><span>cheap</span><span>costly</span></div></div>
+      </div>
+    </div>
+    <div class="caption" id="caption">
+      <div class="t" id="status">An app that rents <b class="a">scooters</b>, and its automated tests. Each dot is one test, stacked by level.</div>
+      <button class="reset" id="bReset">Reset</button>
+    </div>
+  </div>
+
+  <div class="take">
+    <p class="tk">The one idea</p>
+    <p><b>Many unit tests at the bottom, fewer integration tests, few end-to-end tests on top.</b> The bottom is fast and
+    cheap, the top is slow and needs setup. Every change re-runs every test, so the shape keeps the wait short. By hand,
+    a tester would repeat every check after every change.</p>
+  </div>
+  <div id="rail"></div>
+</div>
+<script>
+(function(){
+  "use strict";
+  var $=function(s){return document.querySelector(s);};
+  var reduce=matchMedia("(prefers-reduced-motion: reduce)").matches;
+  /* count, seconds for one test, gauge widths (many, fast, costly), gauge texts */
+  var L={
+    unit:{name:"Unit",count:200,each:0.01,w:[100,96,14],v:["200","10 ms","low"]},
+    integ:{name:"Integration",count:40,each:0.5,w:[20,55,50],v:["40","0.5 s","medium"]},
+    e2e:{name:"End-to-End",count:5,each:30,w:[3,8,92],v:["5","30 s","high"]}
+  };
+  var ORDER=["unit","integ","e2e"], SPEEDUP=25;
+  var caption=$("#caption"),status=$("#status"),bChange=$("#bChange");
+  var running=false, token=0;
+
+  function say(html,tone,line){
+    caption.className="caption"+(tone?" "+tone:"");
+    status.innerHTML=html+(line?'<span class="line">'+line+'</span>':"");
+  }
+  function fmt(s){
+    if(s<60){ var r=s<10?Math.round(s*10)/10:Math.round(s); return r+" s"; }
+    var m=Math.floor(s/60), r2=Math.round(s-m*60);
+    return m+" min"+(r2?" "+r2+" s":"");
+  }
+  function band(k){ return document.querySelector('.band[data-k="'+k+'"]'); }
+
+  ORDER.forEach(function(k){
+    var box=$("#dots-"+k);
+    for(var i=0;i<L[k].count;i++){ var d=document.createElement("span"); d.className="d"; box.appendChild(d); }
+  });
+
+  var SAYS={
+    unit:'A <b class="a">unit test</b> touches <b class="a">one object</b>, the Scooter, alone. Each runs in about 10 ms, so you write the most.',
+    integ:'An <b class="a">integration test</b> checks <b class="a">two parts talking</b>: the Ride asks the Scooter for its battery. Slower, so fewer.',
+    e2e:'An <b class="a">end-to-end test</b> drives <b class="a">the whole app</b> as a rider sees it, screen to database. Heavy setup, 30 s each: the fewest.'
+  };
+  function pick(k){
+    if(running) return;
+    ORDER.forEach(function(o){ band(o).classList.toggle("sel",o===k); });
+    var g=L[k];
+    $("#gWho").textContent=g.name; $("#gWho").classList.remove("none");
+    for(var i=0;i<3;i++){ $("#f"+i).style.width=g.w[i]+"%"; $("#v"+i).textContent=g.v[i]; }
+    say(SAYS[k]);
+  }
+
+  function setDots(k,n){
+    var ds=$("#dots-"+k).children;
+    for(var i=0;i<ds.length;i++) ds[i].classList.toggle("ok",i<n);
+  }
+  function clearRun(){
+    ORDER.forEach(function(k){ setDots(k,0); band(k).classList.remove("run"); var t=$("#tm-"+k); t.textContent=""; t.classList.remove("on"); });
+  }
+  function finishBand(k){
+    var g=L[k]; setDots(k,g.count); band(k).classList.remove("run");
+    var t=$("#tm-"+k); t.textContent=fmt(g.count*g.each); t.classList.add("on");
+  }
+  function lockBands(on){ ORDER.forEach(function(k){ band(k).classList.toggle("lock",on); }); }
+
+  function done(){
+    running=false; bChange.disabled=false; lockBands(false);
+    var total=0, all=0;
+    ORDER.forEach(function(k){ total+=L[k].count*L[k].each; all+=L[k].count; });
+    say('One changed line re-ran all <b class="g">'+all+'</b> tests in <b class="g">'+fmt(total)+'</b>. The 200 unit tests took 2 s, the 5 end-to-end tests 2 min 30 s, the longest overall. Flip the pyramid and the same '+all+' tests take about 2 hours.',"g");
+  }
+
+  function runBand(i,my){
+    if(my!==token) return;
+    if(i>=ORDER.length){ done(); return; }
+    var k=ORDER[i], g=L[k], sim=g.count*g.each, dur=sim/SPEEDUP*1000, t0=null, tm=$("#tm-"+k);
+    band(k).classList.add("run"); tm.classList.add("on");
+    function step(ts){
+      if(my!==token) return;
+      if(t0===null) t0=ts;
+      var p=Math.min(1,(ts-t0)/dur);
+      setDots(k,Math.floor(p*g.count)); tm.textContent=fmt(p*sim);
+      if(p<1) requestAnimationFrame(step); else { finishBand(k); runBand(i+1,my); }
+    }
+    requestAnimationFrame(step);
+  }
+
+  function change(){
+    if(running) return;
+    token++; clearRun();
+    ORDER.forEach(function(o){ band(o).classList.remove("sel"); });
+    $("#ln").classList.add("chg"); $("#ln").textContent="line 12 changed";
+    if(reduce){ ORDER.forEach(finishBand); done(); return; }
+    running=true; bChange.disabled=true; lockBands(true);
+    say('Line 12 of Scooter.java changed, so <b class="y">every test runs again</b>, bottom band first.',"y");
+    runBand(0,token);
+  }
+
+  function reset(){
+    token++; running=false; bChange.disabled=false; lockBands(false); clearRun();
+    ORDER.forEach(function(o){ band(o).classList.remove("sel"); });
+    $("#ln").classList.remove("chg"); $("#ln").textContent="line 12";
+    $("#gWho").textContent="tap a band"; $("#gWho").classList.add("none");
+    for(var i=0;i<3;i++){ $("#f"+i).style.width="0"; $("#v"+i).textContent=""; }
+    say('An app that rents <b class="a">scooters</b>, and its automated tests. Each dot is one test, stacked by level.');
+  }
+
+  $("#pyr").addEventListener("click",function(e){
+    var b=e.target.closest(".band"); if(b) pick(b.getAttribute("data-k"));
+  });
+  $("#pyr").addEventListener("keydown",function(e){
+    var b=e.target.closest(".band"); if(!b) return;
+    if(e.key==="Enter"||e.key===" "){ e.preventDefault(); pick(b.getAttribute("data-k")); }
+  });
+  bChange.addEventListener("click",change);
+  $("#bReset").addEventListener("click",reset);
+
+  /* ambient canvas */
+  var cv=$("#amb"),ctx=cv.getContext&&cv.getContext("2d"),parts=[];
+  function sizeC(){if(!ctx)return;cv.width=innerWidth;cv.height=innerHeight;}
+  function initParts(){parts=[];for(var i=0;i<46;i++)parts.push({x:Math.random(),y:Math.random(),
+    r:Math.random()*1.6+.3,s:Math.random()*.02+.004,o:Math.random()*.4+.1});}
+  function drawC(){if(!ctx)return;ctx.clearRect(0,0,cv.width,cv.height);
+    parts.forEach(function(p){p.y-=p.s/60;if(p.y<-.02)p.y=1.02;
+      ctx.beginPath();ctx.arc(p.x*cv.width,p.y*cv.height,p.r,0,7);
+      ctx.fillStyle="rgba(140,170,255,"+p.o+")";ctx.fill();});
+    requestAnimationFrame(drawC);}
+  if(ctx&&!reduce){sizeC();initParts();drawC();addEventListener("resize",sizeC);}
+})();
+</script>
+<script src="../manifest.js"></script>
+<script src="../../assets/rail.js"></script>
+<script>Rail.render(document.getElementById("rail"),{week:5,kind:"visuals",current:"11-testing-pyramid"});</script>
+</body>
+</html>

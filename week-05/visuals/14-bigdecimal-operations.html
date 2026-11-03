@@ -1,0 +1,292 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>BigDecimal Operations | Week 5 Visual Hub</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Sora:wght@500;700&family=Inter:wght@400;500&family=JetBrains+Mono:wght@400;500&display=swap">
+<style>
+  :root{
+    --bg:#080c17; --bg2:#0c1428; --surface:rgba(255,255,255,.045); --line:rgba(255,255,255,.09);
+    --ink:#eef2fb; --muted:#8496b6; --accent:#6ea0ff; --accent2:#8b7bff; --good:#46d98a; --warn:#ff6a6a;
+    --gold:#ffc862; --disp:'Sora',system-ui,sans-serif; --body:'Inter',system-ui,sans-serif;
+    --mono:'JetBrains Mono',ui-monospace,monospace;
+  }
+  *{box-sizing:border-box}
+  body{margin:0;min-height:100vh;color:var(--ink);font-family:var(--body);
+    background:radial-gradient(1200px 700px at 70% -10%,#141d38 0%,transparent 55%),
+               radial-gradient(900px 600px at 10% 110%,#161233 0%,transparent 50%),#080c17;
+    overflow-x:hidden}
+  #amb{position:fixed;inset:0;z-index:0;pointer-events:none;opacity:.6}
+  .back{position:relative;z-index:2;display:block;max-width:1120px;margin:0 auto;padding:26px 24px 0;
+    width:100%;font-family:var(--mono);font-size:.8rem;letter-spacing:.04em;color:var(--muted);
+    text-decoration:none;transition:color .15s}
+  .back:hover{color:var(--accent)}
+  .wrap{position:relative;z-index:1;max-width:1120px;margin:0 auto;padding:22px 24px 70px}
+  .tag{font-family:var(--mono);font-size:.72rem;letter-spacing:.22em;text-transform:uppercase;color:var(--accent);margin:0 0 14px}
+  h1{font-family:var(--disp);font-weight:700;font-size:clamp(2.3rem,6vw,3.6rem);line-height:1;margin:0 0 12px;
+    letter-spacing:-.03em;background:linear-gradient(180deg,#fff,#b9c6e6);-webkit-background-clip:text;
+    background-clip:text;color:transparent}
+  .lede{color:var(--muted);max-width:64ch;font-size:1.05rem;margin:0 0 26px;line-height:1.5}
+  .lede b{color:var(--ink)}
+  code{font-family:var(--mono);font-size:.92em;color:#bcd0ff}
+
+  /* ---------- the stage IS the picture ---------- */
+  .stage{position:relative;background:linear-gradient(180deg,rgba(255,255,255,.03),rgba(255,255,255,.01));
+    border:1px solid var(--line);border-radius:24px;padding:22px;
+    box-shadow:0 1px 0 rgba(255,255,255,.06) inset,0 30px 80px -30px rgba(0,0,0,.8)}
+  .board{display:grid;grid-template-columns:minmax(0,1.25fr) 96px minmax(0,1fr);gap:16px;align-items:stretch;min-height:380px}
+  .card{position:relative;border-radius:16px;padding:16px 18px 14px}
+  .hd{font-family:var(--mono);font-size:.62rem;letter-spacing:.16em;text-transform:uppercase;color:var(--muted);margin:0 0 4px}
+  .hd i{font-style:normal;color:#82aaff}
+
+  /* the variable box */
+  .box{border:2px solid rgba(110,160,255,.55);background:rgba(110,160,255,.06);transition:border-color .3s,box-shadow .3s}
+  .box.flash{box-shadow:0 0 0 3px rgba(255,200,98,.16),0 0 34px -6px rgba(255,200,98,.6);border-color:var(--gold)}
+  .box.hold{box-shadow:0 0 0 3px rgba(255,106,106,.14);border-color:rgba(255,106,106,.7)}
+  .slotv{display:flex;align-items:baseline;gap:14px;flex-wrap:wrap;margin:10px 0 6px;padding:16px 16px;border-radius:12px;
+    background:rgba(0,0,0,.32);border:1px solid var(--line);min-height:78px}
+  .big{font-family:var(--mono);font-weight:500;font-size:clamp(1.7rem,3.6vw,2.4rem);color:#f78c6c;font-variant-numeric:tabular-nums;line-height:1}
+  .big.pop{animation:pop .45s}
+  .was{font-family:var(--mono);font-size:1rem;color:var(--muted);text-decoration:line-through}
+  .sc{font-family:var(--mono);font-size:.66rem;letter-spacing:.08em;padding:3px 8px;border-radius:999px;border:1px solid var(--line);
+    color:var(--muted);white-space:nowrap}
+  .sc.grow{color:var(--gold);border-color:rgba(255,200,98,.6);background:rgba(255,200,98,.1)}
+  .scrow{display:flex;justify-content:flex-end;margin-bottom:12px}
+  .ops{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:7px;padding-top:12px;border-top:1px solid var(--line)}
+  .ops button{font-family:var(--mono);font-size:.74rem;padding:8px 4px 7px;border-radius:9px;cursor:pointer;line-height:1.35;
+    border:1px solid var(--line);background:rgba(0,0,0,.25);color:#ffcb6b;transition:.15s}
+  .ops button small{display:block;font-size:.62rem;color:var(--muted)}
+  .ops button:hover{border-color:var(--gold);background:rgba(255,200,98,.1)}
+  .ops button:disabled{opacity:.35;cursor:not-allowed}
+  .ops .lose{grid-column:1/-1;color:#ffb0b0;border-style:dashed;border-color:rgba(255,106,106,.45)}
+  .ops .lose:hover{border-color:var(--warn);background:rgba(255,106,106,.1)}
+
+  /* the arrow: cartTotal = */
+  .arrow{display:flex;flex-direction:column;align-items:center;justify-content:center;gap:6px;
+    font-family:var(--mono);font-size:.72rem;color:rgba(132,150,182,.45);text-align:center;transition:color .3s}
+  .arrow b{font-weight:500;font-size:1.9rem;line-height:1;transition:transform .5s cubic-bezier(.2,.9,.3,1)}
+  .arrow.on{color:var(--gold)} .arrow.on b{transform:translateX(-10px)}
+  .arrow.miss{color:var(--warn)} .arrow.miss span{text-decoration:line-through}
+
+  /* the new-object lane */
+  .lane{border:1px dashed rgba(255,255,255,.12);border-radius:16px;padding:14px;display:flex;flex-direction:column;gap:9px}
+  .lane .hd{margin-bottom:2px}
+  .none{flex:1;display:flex;align-items:center;justify-content:center;text-align:center;font-family:var(--mono);font-size:.78rem;
+    color:var(--muted);line-height:1.7}
+  .nobj{border-radius:12px;padding:10px 12px;border:1px solid rgba(255,255,255,.18);background:rgba(255,255,255,.045);
+    opacity:0;transform:translateY(-14px) scale(.94);transition:opacity .45s,transform .5s cubic-bezier(.2,.9,.3,1),border-color .3s}
+  .nobj.show{opacity:1;transform:none}
+  .nobj.fresh{border-color:rgba(110,160,255,.75);box-shadow:0 0 22px -8px rgba(110,160,255,.8)}
+  .nobj.old{opacity:.42}
+  .nobj.lost{border-style:dashed;border-color:rgba(255,106,106,.6);background:rgba(255,106,106,.05)}
+  .nobj.lost.gone{opacity:.22;transition:opacity 1.6s ease .5s}
+  .nobj .top{display:flex;justify-content:space-between;align-items:center;gap:8px;font-family:var(--mono);font-size:.58rem;
+    letter-spacing:.12em;text-transform:uppercase;color:var(--muted)}
+  .nobj .top em{font-style:normal;letter-spacing:.06em;text-transform:none;color:var(--good)}
+  .nobj.lost .top em{color:var(--warn)}
+  .nobj .v{font-family:var(--mono);font-size:1.15rem;color:#f78c6c;margin:4px 0 2px;font-variant-numeric:tabular-nums}
+  .nobj .from{font-family:var(--mono);font-size:.68rem;color:var(--muted)}
+  .ghost{position:fixed;z-index:5;pointer-events:none;font-family:var(--mono);font-size:1.15rem;color:var(--gold);
+    transition:transform .6s cubic-bezier(.4,.1,.2,1),opacity .6s}
+
+  @media (max-width:820px){.board{grid-template-columns:1fr}.arrow{flex-direction:row;min-height:0}.arrow b{transform:rotate(90deg)}
+    .arrow.on b{transform:rotate(90deg) translateX(-6px)}}
+  @media (max-width:520px){.ops{grid-template-columns:repeat(2,minmax(0,1fr))}}
+
+  /* the one sentence */
+  .caption{display:flex;gap:14px;align-items:flex-start;margin:18px 2px 0;padding-top:16px;border-top:1px solid var(--line)}
+  .caption .t{flex:1;font-size:1.05rem;line-height:1.55;color:var(--ink);padding-left:16px;border-left:3px solid var(--accent);transition:border-color .3s}
+  .caption .t .line{display:block;margin-top:6px;font-family:var(--mono);font-size:.8rem;color:#bcd0ff;opacity:.9}
+  .caption.y .t{border-left-color:var(--gold)} .caption.g .t{border-left-color:var(--good)} .caption.w .t{border-left-color:var(--warn)}
+  .caption.w .t .line{color:#ffb0b0}
+  .caption b.a{color:var(--accent)} .caption b.y{color:var(--gold)} .caption b.g{color:var(--good)} .caption b.w{color:var(--warn)}
+  .reset{font-family:var(--body);font-weight:500;font-size:.84rem;padding:8px 14px;border-radius:11px;cursor:pointer;
+    border:1px solid var(--line);background:transparent;color:var(--muted);transition:.15s;flex-shrink:0}
+  .reset:hover{border-color:var(--accent);color:var(--accent)}
+  button:focus-visible,input:focus-visible{outline:2px solid var(--accent);outline-offset:2px}
+
+  @keyframes pop{from{transform:scale(.6);opacity:0}to{transform:scale(1);opacity:1}}
+  .take{margin-top:22px;background:linear-gradient(180deg,rgba(110,160,255,.08),rgba(139,123,255,.04));
+    border:1px solid var(--line);border-left:3px solid var(--accent);border-radius:12px;padding:16px 18px}
+  .take .tk{font-family:var(--mono);font-size:.66rem;letter-spacing:.14em;text-transform:uppercase;color:var(--accent);margin:0 0 8px}
+  .take p{margin:0;font-size:.95rem;color:var(--ink);line-height:1.55}
+  .take b{color:#fff}
+  @media (prefers-reduced-motion:reduce){*{animation-duration:.01ms!important;transition-duration:.01ms!important}#amb{display:none}}
+</style>
+</head>
+<body>
+<a class="back" href="../index.html#14-bigdecimal-operations">&#8592; Week 5 index</a>
+<canvas id="amb"></canvas>
+<div class="wrap">
+  <p class="tag">Workbook 4a &middot; Section 4-1 &middot; BigDecimal</p>
+  <h1>BigDecimal Operations</h1>
+  <p class="lede"><b>Press a button on the cart total and watch where each answer goes.</b></p>
+
+  <div class="stage">
+    <div class="board">
+      <div class="card box" id="box">
+        <p class="hd"><i>BigDecimal</i> cartTotal &middot; the variable</p>
+        <div class="slotv"><span class="was" id="was"></span><span class="big" id="big">0</span></div>
+        <div class="scrow"><span class="sc" id="sc">scale 0</span></div>
+        <div class="ops" id="ops">
+          <button data-op="add" data-n="keyboard" data-v="49.99">.add(keyboard)<small>49.99</small></button>
+          <button data-op="add" data-n="mouse" data-v="19.99">.add(mouse)<small>19.99</small></button>
+          <button data-op="add" data-n="cable" data-v="7.50">.add(cable)<small>7.50</small></button>
+          <button data-op="subtract" data-n="coupon" data-v="5.00">.subtract(coupon)<small>5.00</small></button>
+          <button data-op="multiply" data-n="tax" data-v="1.075">.multiply(1.075)<small>7.5% tax</small></button>
+          <button data-op="setScale" data-n="" data-v="">.setScale(2, HALF_UP)<small>round to cents</small></button>
+          <button class="lose" data-op="lose" data-n="keyboard" data-v="49.99">.add(keyboard) without assigning<small>no cartTotal =</small></button>
+        </div>
+      </div>
+      <div class="arrow" id="arrow"><b>&larr;</b><span id="arrowT">cartTotal =</span></div>
+      <div class="lane" id="lane">
+        <p class="hd">new objects &middot; what each call returns</p>
+        <div class="none" id="none"><span>Nothing returned yet.<br>Every call builds a new BigDecimal here.</span></div>
+      </div>
+    </div>
+    <div class="caption" id="caption">
+      <div class="t" id="status">cartTotal holds <b class="a">0</b>, BigDecimal.ZERO. Each button asks it for a result.</div>
+      <button class="reset" id="bReset">Reset</button>
+    </div>
+  </div>
+
+  <div class="take">
+    <p class="tk">The one idea</p>
+    <p><b>A BigDecimal never changes: add, subtract, multiply and setScale each return a new one, so write <code>cartTotal = cartTotal.add(price);</code></b>
+    Multiply grows the scale, <code>setScale(2, RoundingMode.HALF_UP)</code> brings it back to cents. Compare with <code>compareTo</code>, never <code>==</code> or <code>equals</code>, and give <code>divide</code> a scale and a rounding mode too.</p>
+  </div>
+  <div id="rail"></div>
+</div>
+<script>
+(function(){
+  "use strict";
+  var $=function(s){return document.querySelector(s);};
+  var reduce=matchMedia("(prefers-reduced-motion: reduce)").matches;
+  var X="×", MAXLANE=5;
+
+  /* exact decimals: unscaled BigInt + scale, like java.math.BigDecimal */
+  function p10(n){ return BigInt("1"+"0".repeat(n)); }
+  function D(str){ var neg=str.charAt(0)==="-"; if(neg) str=str.slice(1);
+    var p=str.split("."), f=p[1]||"", u=BigInt(p[0]+f); return {u:neg?-u:u,s:f.length}; }
+  function add(a,b){ var s=Math.max(a.s,b.s); return {u:a.u*p10(s-a.s)+b.u*p10(s-b.s),s:s}; }
+  function sub(a,b){ var s=Math.max(a.s,b.s); return {u:a.u*p10(s-a.s)-b.u*p10(s-b.s),s:s}; }
+  function mul(a,b){ return {u:a.u*b.u,s:a.s+b.s}; }
+  function setScale(a,n){
+    if(a.s<=n) return {u:a.u*p10(n-a.s),s:n};
+    var d=p10(a.s-n), neg=a.u<BigInt(0), abs=neg?-a.u:a.u, q=abs/d, r=abs%d;
+    if(r*BigInt(2)>=d) q=q+BigInt(1);                     /* HALF_UP: a tie goes away from zero */
+    return {u:neg?-q:q,s:n};
+  }
+  function str(a){ var neg=a.u<BigInt(0), t=(neg?-a.u:a.u).toString();
+    if(a.s>0){ while(t.length<a.s+1) t="0"+t; t=t.slice(0,t.length-a.s)+"."+t.slice(t.length-a.s); }
+    return (neg?"-":"")+t; }
+
+  var total=D("0"), busy=false;
+  var box=$("#box"),big=$("#big"),was=$("#was"),sc=$("#sc"),lane=$("#lane"),none=$("#none"),
+      arrow=$("#arrow"),arrowT=$("#arrowT"),status=$("#status"),caption=$("#caption");
+
+  function say(html,tone,line){
+    caption.className="caption"+(tone?" "+tone:"");
+    status.innerHTML=html+(line?'<span class="line">'+line+'</span>':"");
+  }
+  function showTotal(prev){
+    big.textContent=str(total); was.textContent=prev===null?"":str(prev);
+    sc.textContent="scale "+total.s; sc.classList.toggle("grow",total.s>2);
+    big.classList.remove("pop"); void big.offsetWidth; big.classList.add("pop");
+  }
+  function addObj(val,from,lost){
+    none.style.display="none";
+    lane.querySelectorAll(".nobj").forEach(function(e){ e.classList.remove("fresh"); if(!e.classList.contains("lost")) e.classList.add("old"); });
+    var el=document.createElement("div"); el.className="nobj"+(lost?" lost":" fresh");
+    el.innerHTML='<div class="top"><span>new BigDecimal \u00b7 scale '+val.s+'</span><em>'+(lost?"nobody holds it":"cartTotal =")+'</em></div>'
+      +'<div class="v">'+str(val)+'</div><div class="from">'+from+'</div>';
+    var first=lane.querySelector(".nobj"); if(first) lane.insertBefore(el,first); else lane.appendChild(el);
+    var all=lane.querySelectorAll(".nobj"); if(all.length>MAXLANE) all[all.length-1].remove();
+    setTimeout(function(){ el.classList.add("show"); },reduce?0:20);
+    return el;
+  }
+  function fly(el,done){
+    if(reduce){ done(); return; }
+    var a=el.querySelector(".v").getBoundingClientRect(), b=big.getBoundingClientRect();
+    var g=document.createElement("div"); g.className="ghost"; g.textContent=el.querySelector(".v").textContent;
+    g.style.left=a.left+"px"; g.style.top=a.top+"px"; document.body.appendChild(g);
+    void g.offsetWidth;
+    g.style.transform="translate("+(b.left-a.left)+"px,"+(b.top-a.top+6)+"px) scale(1.5)"; g.style.opacity=".2";
+    setTimeout(function(){ g.remove(); done(); },620);
+  }
+
+  function press(op,name,v){
+    if(busy) return;
+    var arg=v?D(v):null, prev=total, res, from, line, html, tone;
+    if(op==="add"||op==="lose"){ res=add(total,arg); from=str(total)+" + "+v; }
+    else if(op==="subtract"){ res=sub(total,arg); from=str(total)+" - "+v; }
+    else if(op==="multiply"){ res=mul(total,arg); from=str(total)+" "+X+" "+v; }
+    else { res=setScale(total,2); from=str(total)+" to 2 places, HALF_UP"; }
+
+    if(op==="lose"){
+      var el=addObj(res,from,true);
+      arrow.className="arrow miss"; arrowT.textContent="no cartTotal =";
+      box.classList.add("hold"); setTimeout(function(){ el.classList.add("gone"); },reduce?0:60);
+      setTimeout(function(){ box.classList.remove("hold"); arrow.className="arrow"; arrowT.textContent="cartTotal ="; },1400);
+      say('add built <b class="w">'+str(res)+'</b>, but no variable holds it, so it is lost. cartTotal still says <b class="a">'+str(total)
+        +'</b>: a BigDecimal never changes itself, you must assign the result.',"w","cartTotal.add(keyboard.getPrice());");
+      return;
+    }
+    if(op==="setScale"){
+      line="cartTotal = cartTotal.setScale(2, RoundingMode.HALF_UP);"; tone="g";
+      html=prev.s>2
+        ? 'setScale cut <b class="y">'+str(prev)+'</b> back to two places, rounding half up: <b class="g">'+str(res)+'</b>, cents again, in a new object.'
+        : 'cartTotal already had '+(prev.s===2?"two places":prev.s+" places")+', so setScale returned a new object worth <b class="g">'+str(res)+'</b>.';
+    } else if(op==="multiply"){
+      line="cartTotal = cartTotal.multiply(new BigDecimal(\"1.075\"));"; tone="y";
+      html='multiply adds the scales, '+prev.s+' places plus 3 gives '+res.s+': '+str(prev)+' '+X+' 1.075 = <b class="y">'+str(res)
+        +'</b>. Exact, but not cents yet.';
+    } else {
+      line="cartTotal = cartTotal."+op+"("+name+(name==="coupon"?"":".getPrice()")+");"; tone="";
+      html=op+' returned a <b class="a">new</b> BigDecimal, '+str(res)+', and <b class="y">cartTotal =</b> moved it into the box. The old '
+        +str(prev)+' was replaced, never changed.';
+    }
+    busy=true;
+    var el2=addObj(res,from,false);
+    arrow.className="arrow on";
+    setTimeout(function(){
+      fly(el2,function(){
+        total=res; showTotal(prev); box.classList.add("flash");
+        setTimeout(function(){ box.classList.remove("flash"); arrow.className="arrow"; busy=false; },reduce?0:500);
+      });
+    },reduce?0:380);
+    say(html,tone,line);
+  }
+
+  function reset(){
+    total=D("0"); busy=false; lane.querySelectorAll(".nobj").forEach(function(e){ e.remove(); });
+    none.style.display=""; big.textContent="0"; was.textContent=""; sc.textContent="scale 0"; sc.classList.remove("grow");
+    arrow.className="arrow"; arrowT.textContent="cartTotal =";
+    say('cartTotal holds <b class="a">0</b>, BigDecimal.ZERO. Each button asks it for a result.');
+  }
+  $("#ops").addEventListener("click",function(e){
+    var b=e.target.closest("button[data-op]"); if(!b) return;
+    press(b.getAttribute("data-op"),b.getAttribute("data-n"),b.getAttribute("data-v"));
+  });
+  $("#bReset").addEventListener("click",reset);
+
+  /* ambient canvas */
+  var cv=$("#amb"),ctx=cv.getContext&&cv.getContext("2d"),parts=[];
+  function sizeC(){if(!ctx)return;cv.width=innerWidth;cv.height=innerHeight;}
+  function initParts(){parts=[];for(var i=0;i<46;i++)parts.push({x:Math.random(),y:Math.random(),
+    r:Math.random()*1.6+.3,s:Math.random()*.02+.004,o:Math.random()*.4+.1});}
+  function drawC(){if(!ctx)return;ctx.clearRect(0,0,cv.width,cv.height);
+    parts.forEach(function(p){p.y-=p.s/60;if(p.y<-.02)p.y=1.02;
+      ctx.beginPath();ctx.arc(p.x*cv.width,p.y*cv.height,p.r,0,7);
+      ctx.fillStyle="rgba(140,170,255,"+p.o+")";ctx.fill();});
+    requestAnimationFrame(drawC);}
+  if(ctx&&!reduce){sizeC();initParts();drawC();addEventListener("resize",sizeC);}
+})();
+</script>
+<script src="../manifest.js"></script>
+<script src="../../assets/rail.js"></script>
+<script>Rail.render(document.getElementById("rail"),{week:5,kind:"visuals",current:"14-bigdecimal-operations"});</script>
+</body>
+</html>

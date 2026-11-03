@@ -1,0 +1,332 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Exact or Drift? | Week 5 Visual Hub</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Sora:wght@500;700&family=Inter:wght@400;500&family=JetBrains+Mono:wght@400;500&display=swap">
+<style>
+  :root{
+    --bg:#080c17; --bg2:#0c1428; --surface:rgba(255,255,255,.045); --line:rgba(255,255,255,.09);
+    --ink:#eef2fb; --muted:#8496b6; --accent:#6ea0ff; --accent2:#8b7bff; --good:#46d98a; --warn:#ff6a6a;
+    --gold:#ffc862; --disp:'Sora',system-ui,sans-serif; --body:'Inter',system-ui,sans-serif;
+    --mono:'JetBrains Mono',ui-monospace,monospace;
+  }
+  *{box-sizing:border-box}
+  body{margin:0;min-height:100vh;color:var(--ink);font-family:var(--body);
+    background:radial-gradient(1200px 700px at 70% -10%,#141d38 0%,transparent 55%),
+               radial-gradient(900px 600px at 10% 110%,#161233 0%,transparent 50%),#080c17;
+    overflow-x:hidden}
+  #amb{position:fixed;inset:0;z-index:0;pointer-events:none;opacity:.6}
+  .back{position:relative;z-index:2;display:block;max-width:1120px;margin:0 auto;padding:26px 24px 0;
+    width:100%;font-family:var(--mono);font-size:.8rem;letter-spacing:.04em;color:var(--muted);
+    text-decoration:none;transition:color .15s}
+  .back:hover{color:var(--accent)}
+  .wrap{position:relative;z-index:1;max-width:1120px;margin:0 auto;padding:22px 24px 70px}
+  .tag{font-family:var(--mono);font-size:.72rem;letter-spacing:.22em;text-transform:uppercase;color:var(--accent);margin:0 0 14px}
+  h1{font-family:var(--disp);font-weight:700;font-size:clamp(2.3rem,6vw,3.6rem);line-height:1;margin:0 0 12px;
+    letter-spacing:-.03em;background:linear-gradient(180deg,#fff,#b9c6e6);-webkit-background-clip:text;
+    background-clip:text;color:transparent}
+  .lede{color:var(--muted);max-width:64ch;font-size:1.05rem;margin:0 0 26px;line-height:1.5}
+  .lede b{color:var(--ink)}
+  .lede code,.take code,.caption code{font-family:var(--mono);font-size:.92em;color:#bcd0ff}
+
+  /* ---------- stage: picture first, one toolbar, support below ---------- */
+  .stage{position:relative;background:linear-gradient(180deg,rgba(255,255,255,.03),rgba(255,255,255,.01));
+    border:1px solid var(--line);border-radius:24px;padding:18px 18px 14px;
+    box-shadow:0 1px 0 rgba(255,255,255,.06) inset,0 30px 80px -30px rgba(0,0,0,.8)}
+  .topbar{display:flex;align-items:center;gap:10px;margin:0 0 14px;flex-wrap:wrap}
+  .topbar .lab{margin:0 4px 0 0}
+  .lab{font-family:var(--mono);font-size:.7rem;letter-spacing:.12em;text-transform:uppercase;color:var(--muted);margin:0 0 10px}
+  .chips{display:flex;flex-wrap:wrap;gap:6px}
+  .chip{font-family:var(--mono);font-size:.74rem;padding:5px 11px;border-radius:999px;cursor:pointer;
+    border:1px solid var(--line);background:rgba(0,0,0,.25);color:var(--muted);transition:.15s}
+  .chip:hover{border-color:var(--accent);color:var(--accent)}
+  .chip.on{border-color:rgba(110,160,255,.6);background:rgba(110,160,255,.14);color:var(--ink)}
+  .chip:focus-visible,.btn:focus-visible,.focus:focus-visible{outline:2px solid var(--accent);outline-offset:2px}
+  .focus{margin-left:auto;font-family:var(--mono);font-size:.68rem;letter-spacing:.1em;text-transform:uppercase;padding:6px 12px;
+    border-radius:999px;border:1px solid var(--line);background:rgba(0,0,0,.25);color:var(--muted);cursor:pointer;transition:.15s}
+  .focus:hover{border-color:var(--accent);color:var(--accent)}
+  body.solo .focus{border-color:rgba(255,200,98,.6);color:var(--gold);background:rgba(255,200,98,.1)}
+
+  /* ---------- game board ---------- */
+  .pic{position:relative;height:390px;border:1px solid var(--line);border-radius:18px;background:rgba(6,10,20,.5);overflow:hidden;
+    display:flex;flex-direction:column;align-items:center;justify-content:center;gap:22px;padding:20px}
+  .pic .zone{position:absolute;left:18px;top:14px;font-family:var(--mono);font-size:.62rem;letter-spacing:.14em;text-transform:uppercase;color:rgba(132,150,182,.55)}
+  .hud{position:absolute;right:18px;top:12px;display:flex;gap:14px;font-family:var(--mono);font-size:.72rem;color:var(--muted)}
+  .hud b{color:var(--ink);font-weight:500}
+  .code{font-family:var(--mono);font-size:clamp(.95rem,2.1vw,1.3rem);line-height:1.55;color:var(--ink);padding:18px 30px;border:1px solid var(--line);border-radius:16px;
+    background:rgba(0,0,0,.3);min-width:300px;max-width:100%;white-space:pre;overflow-x:auto;transition:border-color .2s,box-shadow .2s,transform .2s}
+  .code .ty{color:#c9a7ff} .code .nm{color:var(--gold)} .code .cs{color:var(--accent)} .code .st{color:#9fe6b8}
+  .code .sp{background:rgba(255,200,98,.28);border-radius:3px;box-shadow:0 0 0 1px rgba(255,200,98,.35) inset}
+  .after{font-family:var(--mono);font-size:.82rem;color:var(--muted);min-height:1.3em}
+  .after b{color:var(--ink);font-weight:500}
+  .code.good{border-color:rgba(70,217,138,.7);box-shadow:0 0 28px -8px rgba(70,217,138,.8)}
+  .code.bad{border-color:rgba(255,106,106,.7);box-shadow:0 0 28px -8px rgba(255,106,106,.8);animation:shake .3s}
+  @keyframes shake{25%{transform:translateX(-6px)}75%{transform:translateX(6px)}}
+  .opts{display:flex;flex-wrap:wrap;gap:8px;justify-content:center;max-width:620px}
+  .opt{font-family:var(--mono);font-size:.9rem;padding:10px 18px;border-radius:11px;cursor:pointer;border:1px solid var(--line);background:var(--surface);color:var(--ink);transition:.15s}
+  .opt:hover{border-color:var(--accent);color:var(--accent)}
+  .opt:disabled{cursor:default}
+  .opt.hit{border-color:rgba(70,217,138,.7);background:rgba(70,217,138,.14);color:var(--good)}
+  .opt.miss{border-color:rgba(255,106,106,.7);background:rgba(255,106,106,.12);color:var(--warn)}
+  .opt.dim{opacity:.4}
+  .key{display:inline-block;margin-left:6px;font-size:.62rem;color:var(--muted)}
+  .screen{position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:12px;background:rgba(6,10,20,.92);transition:opacity .25s}
+  .screen.off{opacity:0;pointer-events:none}
+  .screen h2{font-family:var(--disp);font-weight:700;font-size:1.6rem;margin:0;color:var(--ink)}
+  .screen p{margin:0;color:var(--muted);font-size:.95rem;text-align:center;max-width:46ch;line-height:1.5}
+  .screen .big{font-family:var(--disp);font-weight:700;font-size:2.6rem;color:var(--accent)}
+  .screen .big.gold{color:var(--gold)} .screen .big.good{color:var(--good)}
+  .bar{position:absolute;left:0;right:0;bottom:0;height:4px;background:rgba(255,255,255,.06)}
+  .bar i{display:block;height:100%;width:0;background:var(--accent);transition:width .25s}
+  .misses{font-family:var(--mono);font-size:.72rem;color:var(--muted);line-height:1.6;text-align:left;max-width:680px;max-height:160px;overflow-y:auto;padding:0 8px}
+  .misses b{color:var(--warn);font-weight:500} .misses i{font-style:normal;color:var(--good)}
+  /* caption: the one sentence, right under the picture */
+  .caption{display:flex;gap:16px;align-items:flex-start;margin:14px 4px 0;min-height:56px}
+  .caption .n{flex-shrink:0;font-family:var(--disp);font-weight:700;font-size:1.35rem;color:var(--accent);font-variant-numeric:tabular-nums;
+    line-height:1.2;min-width:3.2rem}
+  .caption .n small{display:block;font-family:var(--mono);font-weight:400;font-size:.58rem;letter-spacing:.14em;text-transform:uppercase;color:var(--muted)}
+  .caption .t{font-size:1.02rem;line-height:1.55;color:var(--ink);padding-left:16px;border-left:3px solid var(--accent);transition:border-color .3s}
+  body.solo .caption .t{font-size:1.18rem}
+  .caption.cut .t{border-left-color:var(--warn)} .caption.left .t{border-left-color:var(--gold)} .caption.ok .t{border-left-color:var(--good)}
+  .caption b.g{color:var(--good)} .caption b.w{color:var(--warn)} .caption b.a{color:var(--accent)} .caption b.y{color:var(--gold)}
+
+  /* toolbar: same on every page */
+  .toolbar{display:flex;align-items:center;gap:10px;margin:16px 0 0;padding-top:14px;border-top:1px solid var(--line)}
+  .btn{font-family:var(--body);font-weight:500;font-size:.86rem;padding:9px 16px;border-radius:11px;cursor:pointer;
+    border:1px solid var(--line);background:var(--surface);color:var(--ink);transition:.15s}
+  .btn:hover{border-color:var(--accent);color:var(--accent)}
+  .btn.primary{border-color:rgba(110,160,255,.5);background:rgba(110,160,255,.12);padding:9px 22px}
+  .btn:disabled{opacity:.35;cursor:not-allowed}
+  .btn.ghost{background:transparent;color:var(--muted);margin-left:auto}
+  .dots{display:flex;gap:5px;align-items:center;margin:0 6px}
+  .dots i{display:block;width:8px;height:8px;border-radius:50%;background:rgba(255,255,255,.12);transition:.2s}
+  .dots i.done{background:rgba(110,160,255,.45)}
+  .dots i.now{background:var(--accent);transform:scale(1.35);box-shadow:0 0 10px rgba(110,160,255,.7)}
+  .hint{font-family:var(--mono);font-size:.68rem;color:var(--muted);margin:10px 4px 0;line-height:1.5}
+  .hint b{color:var(--accent)}
+
+  .toolbar .btn.primary{min-width:120px}
+  .take{margin-top:22px;background:linear-gradient(180deg,rgba(110,160,255,.08),rgba(139,123,255,.04));
+    border:1px solid var(--line);border-left:3px solid var(--accent);border-radius:12px;padding:16px 18px}
+  .take .tk{font-family:var(--mono);font-size:.66rem;letter-spacing:.14em;text-transform:uppercase;color:var(--accent);margin:0 0 8px}
+  .take p{margin:0;font-size:.95rem;color:var(--ink);line-height:1.55}
+  .take b{color:#fff}
+
+  .pic{height:440px}
+  .kind{font-family:var(--mono);font-size:.7rem;letter-spacing:.12em;text-transform:uppercase;padding:4px 12px;border-radius:999px;border:1px solid var(--line);color:var(--muted)}
+  .kind.dbl{border-color:rgba(255,200,98,.5);color:var(--gold);background:rgba(255,200,98,.08)}
+  .kind.bd{border-color:rgba(110,160,255,.5);color:var(--accent);background:rgba(110,160,255,.1)}
+  .code{font-size:clamp(.85rem,1.8vw,1.08rem)}
+  .opts.col{flex-direction:column;align-items:stretch;width:min(640px,100%)}
+  .opts.col .opt{text-align:left;font-size:.8rem;word-break:break-all;padding:8px 14px}
+  .ans{font-family:var(--mono);font-size:1.05rem;padding:10px 16px;width:min(420px,100%);border-radius:11px;border:1px solid var(--line);
+    background:var(--surface);color:var(--ink);text-align:center;outline:none;transition:border-color .15s}
+  .ans:focus{border-color:rgba(110,160,255,.6);box-shadow:0 0 0 3px rgba(110,160,255,.15)}
+  .ans.good{border-color:rgba(70,217,138,.7);color:var(--good)}
+  .ans.bad{border-color:rgba(255,106,106,.7);color:var(--warn)}
+  .hide{display:none!important}
+  .after{word-break:break-all;text-align:center;max-width:100%}
+  @media (max-width:640px){.pic{height:auto;min-height:440px;padding:44px 12px 20px}.wrap{padding:22px 16px 70px}.back{padding:26px 16px 0}.code{min-width:0;padding:14px 16px}}
+  @media (prefers-reduced-motion:reduce){*{animation-duration:.01ms!important;transition-duration:.01ms!important}#amb{display:none}}
+</style></head>
+<body>
+
+<a class="back" href="../index.html#exact-or-drift">&#8592; Week 5 index</a>
+
+<canvas id="amb"></canvas>
+<div class="wrap">
+  <p class="tag">Workbook 4a &middot; Section 4-1 &middot; Game</p>
+  <h1>Exact or Drift?</h1>
+  <p class="lede"><b>A money calculation in double or in BigDecimal. Say exactly what prints. Twelve rounds.</b></p>
+
+  <div class="stage">
+    <div class="topbar">
+      <span class="lab">Game</span>
+    </div>
+
+    <div class="pic" id="pic">
+      <span class="zone">what prints?</span>
+      <div class="hud"><span>score <b id="hScore">0</b></span><span>time <b id="hTime">0.0s</b></span></div>
+      <span class="kind" id="kind">&nbsp;</span>
+      <div class="code" id="value">&nbsp;</div>
+      <input class="ans" id="ans" type="text" autocomplete="off" spellcheck="false" placeholder="type exactly what prints" aria-label="Your answer">
+      <div class="opts col hide" id="opts"></div>
+      <div class="after" id="after"></div>
+      <div class="bar"><i id="bar"></i></div>
+      <div class="screen" id="startScr">
+        <h2>Exact or Drift?</h2>
+        <p>Read the lines, then type what the println shows and press Enter. Every decimal place counts. When the output is long, pick it from four with keys 1 to 4.</p>
+        <button class="btn primary" id="bStart">Start</button>
+      </div>
+      <div class="screen off" id="endScr">
+        <h2>Round over</h2>
+        <div class="big" id="endScore"></div>
+        <p id="endMsg"></p>
+        <div class="misses" id="endMiss"></div>
+        <button class="btn primary" id="bAgain">Play again</button>
+      </div>
+    </div>
+
+    <div class="caption" id="caption">
+      <div class="n" id="stepno"><small>round</small>0 / 12</div>
+      <div class="t" id="status">Press <b class="a">Start</b>. Enter submits a typed answer, keys 1 to 4 pick one.</div>
+    </div>
+    <p class="hint">double = binary, most decimals are close, not exact &middot; BigDecimal from a String = exact, keeps its decimal places &middot; every BigDecimal method returns a new object</p>
+  </div>
+
+  <div class="take">
+    <p class="tk">The one idea</p>
+    <p><b>A double stores the nearest binary value, so cents drift; a BigDecimal built from a String stores the decimal exactly.</b> Build it from a String, assign every result (<code>total = total.add(price);</code>), round with <code>setScale(2, RoundingMode.HALF_UP)</code>, and compare with <code>compareTo</code>, never <code>equals</code>.</p>
+  </div>
+
+  <div id="rail"></div>
+</div>
+
+<script>
+(function(){
+  "use strict";
+  var $=function(s){return document.querySelector(s);};
+  var reduce=matchMedia("(prefers-reduced-motion: reduce)").matches;
+
+  // Every answer below was printed by running these exact lines in Java 17 (javac 17.0.20.1).
+  // t: "dbl" or "bd". ans: the exact println output. opts: present when the output is long (pick one of four).
+  var ROUNDS=[
+    {t:"dbl",code:["double total = 0.1 + 0.2;","System.out.println(total);"],ans:"0.30000000000000004",
+     opts:["0.3","0.30","0.30000000000000004","0.29999999999999999"],
+     why:"0.1 and 0.2 are stored as the nearest binary values, and their sum lands just above 0.3. That is drift."},
+    {t:"dbl",code:["double price = 19.99;","System.out.println(price * 3);"],ans:"59.97",
+     why:"this one happens to print clean: Java prints the shortest text for the stored double, and here that is 59.97. The stored value is still an approximation."},
+    {t:"bd",code:["BigDecimal a = new BigDecimal(\"0.10\");","BigDecimal b = new BigDecimal(\"0.20\");","System.out.println(a.add(b));"],ans:"0.30",
+     why:"built from Strings the values are exact, and add keeps two decimal places, so it prints 0.30, not 0.3."},
+    {t:"bd",code:["System.out.println(new BigDecimal(0.1));"],ans:"0.1000000000000000055511151231257827021181583404541015625",
+     opts:["0.1","0.10","0.1000000000000000055511151231257827021181583404541015625","0.09999999999999999"],
+     why:"new BigDecimal(0.1) copies the double exactly, approximation included. Build it from the String \"0.1\" instead."},
+    {t:"bd",code:["BigDecimal total = new BigDecimal(\"53.74625\");","System.out.println(total.setScale(2, RoundingMode.HALF_UP));"],ans:"53.75",
+     why:"setScale(2, HALF_UP) keeps two decimal places. The next digit is 6, so the 4 rounds up: 53.75."},
+    {t:"bd",code:["BigDecimal total = new BigDecimal(\"100.00\");","total.add(new BigDecimal(\"25.00\"));","System.out.println(total);"],ans:"100.00",
+     why:"add returns a NEW BigDecimal and nobody kept it. total never changed. Write total = total.add(...)."},
+    {t:"bd",code:["BigDecimal a = new BigDecimal(\"49.99\");","BigDecimal b = new BigDecimal(\"75.00\");","System.out.println(a.compareTo(b));"],ans:"-1",
+     why:"compareTo gives -1 when a is smaller, 0 when equal, 1 when larger. 49.99 is less than 75.00."},
+    {t:"bd",code:["BigDecimal a = new BigDecimal(\"5.0\");","BigDecimal b = new BigDecimal(\"5.00\");","System.out.println(a.equals(b));"],ans:"false",
+     why:"equals also checks the scale: one decimal place against two. Same value, different scale, so false."},
+    {t:"bd",code:["BigDecimal a = new BigDecimal(\"5.0\");","BigDecimal b = new BigDecimal(\"5.00\");","System.out.println(a.compareTo(b));"],ans:"0",
+     why:"compareTo looks at the value only, and 5.0 and 5.00 are the same value. That is why money is compared with compareTo."},
+    {t:"dbl",code:["double price = 1.10;","System.out.println(price * 3);"],ans:"3.3000000000000003",
+     opts:["3.3","3.30","3.3000000000000003","3.2999999999999998"],
+     why:"1.10 is not exact in binary, and multiplying carries the error into the last digit. That is drift."},
+    {t:"bd",code:["BigDecimal subtotal = new BigDecimal(\"72.48\");","BigDecimal taxRate = new BigDecimal(\"1.075\");","System.out.println(subtotal.multiply(taxRate));"],ans:"77.91600",
+     why:"multiply adds the decimal places (2 + 3 = 5) and is exact: 77.91600. Round to cents with setScale afterwards."},
+    {t:"dbl",code:["double paid = 2.00;","double cost = 1.10;","System.out.println(paid - cost);"],ans:"0.8999999999999999",
+     opts:["0.9","0.90","0.8999999999999999","0.9000000000000001"],
+     why:"the change should be 0.90, but 1.10 is stored a hair high, so the difference lands just under 0.9."}
+  ];
+
+  // ---------- drawing ----------
+  var tmp=document.createElement("div");
+  function esc(s){ tmp.textContent=String(s); return tmp.innerHTML; }
+  function hl(line){
+    var parts=line.split(/("[^"]*")/);
+    return parts.map(function(p){
+      if(/^"/.test(p)) return '<span class="st">'+esc(p)+'</span>';
+      return esc(p).replace(/\b(BigDecimal|double|RoundingMode)\b(?=[ .(])/g,'<span class="ty">$1</span>')
+        .replace(/\.(add|setScale|compareTo|equals|multiply|println)\(/g,'.<span class="cs">$1</span>(');
+    }).join("");
+  }
+  function norm(s){ return String(s).replace(/["'\s]/g,"").toLowerCase(); }
+  // same number, different number of decimal places (only meaningful for plain decimals)
+  function sameValue(a,b){ return /^-?\d+(\.\d+)?$/.test(a)&&/^-?\d+(\.\d+)?$/.test(b)&&Number(a)===Number(b); }
+
+  // ---------- game ----------
+  var N=ROUNDS.length, round=[], at=0, score=0, misses=[], t0=0, timer=null, busy=false, live=false;
+
+  function shuffle(a){ a=a.slice(); for(var i=a.length-1;i>0;i--){ var j=Math.floor(Math.random()*(i+1)); var t=a[i]; a[i]=a[j]; a[j]=t; } return a; }
+  function tick(){ $("#hTime").textContent=((performance.now()-t0)/1000).toFixed(1)+"s"; }
+  function showQ(){
+    var q=round[at];
+    $("#kind").textContent=q.t==="dbl"?"double":"BigDecimal"; $("#kind").className="kind "+q.t;
+    $("#value").innerHTML=q.code.map(hl).join("\n"); $("#value").className="code"; $("#after").innerHTML="";
+    var ans=$("#ans"), opts=$("#opts");
+    if(q.opts){
+      ans.classList.add("hide"); opts.classList.remove("hide");
+      q.shown=shuffle(q.opts);
+      opts.innerHTML=q.shown.map(function(o,i){ return '<button class="opt" data-i="'+i+'">'+esc(o)+'<span class="key">'+(i+1)+'</span></button>'; }).join("");
+      $("#status").innerHTML="Long output. <b class=\"a\">Pick the one that prints</b> (keys 1 to 4).";
+    } else {
+      opts.classList.add("hide"); opts.innerHTML=""; ans.classList.remove("hide");
+      ans.value=""; ans.className="ans"; ans.disabled=false; ans.focus();
+      $("#status").innerHTML="Type exactly what prints, every decimal place. <b class=\"a\">Enter</b> submits.";
+    }
+    $("#caption").className="caption";
+    $("#stepno").innerHTML="<small>round</small>"+(at+1)+" / "+N; $("#bar").style.width=(100*at/N)+"%";
+  }
+  function start(){
+    round=shuffle(ROUNDS); at=0; score=0; misses=[]; busy=false; live=true;
+    $("#hScore").textContent="0"; $("#startScr").classList.add("off"); $("#endScr").classList.add("off");
+    showQ(); t0=performance.now(); if(timer) clearInterval(timer); timer=setInterval(tick,100);
+  }
+  function judge(given,good){
+    var q=round[at];
+    $("#value").className="code "+(good?"good":"bad");
+    $("#after").innerHTML="prints <b>"+esc(q.ans)+"</b>";
+    var verdict=q.t==="dbl"?(q.opts?"Drift":"Looks exact"):"Exact";
+    if(good){
+      score++; $("#hScore").textContent=String(score); $("#caption").className="caption ok";
+      $("#status").innerHTML='<b class="g">'+verdict+'.</b> '+esc(q.why.charAt(0).toUpperCase()+q.why.slice(1));
+    } else {
+      misses.push([q,given]); $("#caption").className="caption cut";
+      var extra=sameValue(norm(given),q.ans)?"Right value, wrong decimal places. ":"";
+      $("#status").innerHTML='Not <b class="w">'+esc(given||"(blank)")+'</b>. It prints <b class="g">'+esc(q.ans)+'</b>: '+extra+esc(q.why);
+    }
+    setTimeout(function(){ at++; busy=false; if(at>=N) end(); else showQ(); }, reduce?500:(good?1800:4200));
+  }
+  function submitTyped(){
+    if(!live||busy||round[at].opts) return;
+    var typed=$("#ans").value; if(!typed.trim()) return;
+    busy=true; var q=round[at], good=norm(typed)===norm(q.ans);
+    $("#ans").disabled=true; $("#ans").className="ans "+(good?"good":"bad");
+    judge(typed.trim(),good);
+  }
+  function pick(i){
+    if(!live||busy||!round[at].opts) return;
+    var q=round[at]; if(i<0||i>=q.shown.length) return;
+    busy=true; var given=q.shown[i], good=given===q.ans;
+    Array.prototype.forEach.call(document.querySelectorAll(".opt"),function(b){
+      var o=q.shown[Number(b.getAttribute("data-i"))]; b.disabled=true;
+      if(o===q.ans) b.classList.add("hit"); else if(o===given) b.classList.add("miss"); else b.classList.add("dim"); });
+    judge(given,good);
+  }
+  function end(){
+    live=false; clearInterval(timer); tick(); $("#bar").style.width="100%";
+    var secs=((performance.now()-t0)/1000).toFixed(1);
+    $("#endScore").textContent=score+" / "+N; $("#endScore").className="big "+(score===N?"good":score>=9?"":"gold");
+    $("#endMsg").textContent=(score===N?"Perfect. ":score>=9?"Solid. ":"Keep going. ")+secs+" seconds.";
+    $("#endMiss").innerHTML=misses.map(function(m){ var q=m[0];
+      return '<div><b>'+esc(q.code[q.code.length-1])+'</b> <i>'+esc(q.ans)+'</i>: '+esc(q.why)+'</div>'; }).join("");
+    $("#endScr").classList.remove("off");
+    $("#stepno").innerHTML="<small>round</small>"+N+" / "+N; $("#caption").className="caption";
+    $("#status").innerHTML="Round over. <b class=\"a\">Play again</b> shuffles the twelve rounds.";
+  }
+  $("#opts").addEventListener("click",function(e){ var b=e.target.closest(".opt"); if(b) pick(Number(b.getAttribute("data-i"))); });
+  $("#ans").addEventListener("keydown",function(e){ if(e.key==="Enter"){ e.preventDefault(); submitTyped(); } });
+  $("#bStart").addEventListener("click",start); $("#bAgain").addEventListener("click",start);
+  document.addEventListener("keydown",function(e){ if(/INPUT|TEXTAREA/.test(e.target.tagName)||e.ctrlKey||e.metaKey||e.altKey) return;
+    if(live&&/^[1-4]$/.test(e.key)){ pick(Number(e.key)-1); return; }
+    if((e.code==="Space"||e.key==="Enter")&&!live&&e.target.tagName!=="BUTTON"){ e.preventDefault(); start(); } });
+
+  var cv=$("#amb"),ctx=cv.getContext&&cv.getContext("2d"),parts=[];
+  function sizeC(){if(!ctx)return;cv.width=innerWidth;cv.height=innerHeight;}
+  function initParts(){parts=[];for(var i=0;i<46;i++)parts.push({x:Math.random(),y:Math.random(),r:Math.random()*1.6+.3,s:Math.random()*.02+.004,o:Math.random()*.4+.1});}
+  function drawC(){if(!ctx)return;ctx.clearRect(0,0,cv.width,cv.height);
+    parts.forEach(function(p){p.y-=p.s/60;if(p.y<-.02)p.y=1.02;ctx.beginPath();ctx.arc(p.x*cv.width,p.y*cv.height,p.r,0,7);
+      ctx.fillStyle="rgba(140,170,255,"+p.o+")";ctx.fill();});requestAnimationFrame(drawC);}
+  if(ctx&&!reduce){sizeC();initParts();drawC();addEventListener("resize",sizeC);}
+})();
+</script>
+<script src="../manifest.js"></script>
+<script src="../../assets/rail.js"></script>
+<script>Rail.render(document.getElementById("rail"),{week:5,kind:"games",current:"exact-or-drift"});</script>
+</body>
+</html>

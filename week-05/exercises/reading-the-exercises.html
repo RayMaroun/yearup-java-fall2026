@@ -1,0 +1,188 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Reading This Week's Exercises | Week 5 Visual Hub</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Sora:wght@500;700&family=Inter:wght@400;500&family=JetBrains+Mono:wght@400;500&display=swap">
+<style>
+  :root{
+    --bg:#080c17; --bg2:#0c1428; --surface:rgba(255,255,255,.045); --line:rgba(255,255,255,.09);
+    --ink:#eef2fb; --muted:#8496b6; --accent:#6ea0ff; --accent2:#8b7bff; --good:#46d98a; --warn:#ff6a6a;
+    --gold:#ffc862; --disp:'Sora',system-ui,sans-serif; --body:'Inter',system-ui,sans-serif;
+    --mono:'JetBrains Mono',ui-monospace,monospace;
+  }
+  *{box-sizing:border-box}
+  body{margin:0;min-height:100vh;color:var(--ink);font-family:var(--body);
+    background:radial-gradient(1200px 700px at 70% -10%,#141d38 0%,transparent 55%),
+               radial-gradient(900px 600px at 10% 110%,#161233 0%,transparent 50%),#080c17;
+    overflow-x:hidden}
+  #amb{position:fixed;inset:0;z-index:0;pointer-events:none;opacity:.6}
+  .back{position:relative;z-index:2;display:block;max-width:1120px;margin:0 auto;padding:26px 24px 0;
+    width:100%;font-family:var(--mono);font-size:.8rem;letter-spacing:.04em;color:var(--muted);
+    text-decoration:none;transition:color .15s}
+  .back:hover{color:var(--accent)}
+  .wrap{position:relative;z-index:1;max-width:1120px;margin:0 auto;padding:22px 24px 70px}
+  .tag{font-family:var(--mono);font-size:.72rem;letter-spacing:.22em;text-transform:uppercase;color:var(--accent);margin:0 0 14px}
+  h1{font-family:var(--disp);font-weight:700;font-size:clamp(2.3rem,6vw,3.6rem);line-height:1;margin:0 0 12px;
+    letter-spacing:-.03em;background:linear-gradient(180deg,#fff,#b9c6e6);-webkit-background-clip:text;
+    background-clip:text;color:transparent}
+  .lede{color:var(--muted);max-width:64ch;font-size:1.05rem;margin:0 0 26px;line-height:1.5}
+  .lede b{color:var(--ink)}
+  .lede code,.take code,.caption code{font-family:var(--mono);font-size:.92em;color:#bcd0ff}
+
+  /* ---------- reading page: tap a sentence, see what it asks for ---------- */
+  .stage{position:relative;background:linear-gradient(180deg,rgba(255,255,255,.03),rgba(255,255,255,.01));
+    border:1px solid var(--line);border-radius:24px;padding:18px;
+    box-shadow:0 1px 0 rgba(255,255,255,.06) inset,0 30px 80px -30px rgba(0,0,0,.8)}
+  .lab{font-family:var(--mono);font-size:.7rem;letter-spacing:.12em;text-transform:uppercase;color:var(--muted);margin:0 0 10px}
+  .picker{display:flex;flex-wrap:wrap;gap:6px;margin:0 0 14px}
+  .picker button{font-family:var(--body);font-weight:500;font-size:.86rem;padding:8px 14px;border-radius:999px;border:1px solid var(--line);
+    background:var(--surface);color:var(--muted);cursor:pointer;transition:.15s}
+  .picker button:hover{color:var(--accent);border-color:var(--accent)}
+  .picker button.on{background:rgba(110,160,255,.16);color:var(--ink);border-color:rgba(110,160,255,.45)}
+  .cols{display:grid;grid-template-columns:minmax(0,1.25fr) minmax(0,1fr);gap:16px;align-items:start}
+  @media (max-width:860px){.cols{grid-template-columns:1fr}}
+  .paper{background:#f4f1e8;color:#1b1f2a;border-radius:16px;padding:22px 24px 18px;font-family:Georgia,'Times New Roman',serif;
+    box-shadow:0 20px 50px -20px rgba(0,0,0,.9);position:relative}
+  .paper .ph{font-family:var(--body);font-weight:500;font-size:.72rem;letter-spacing:.12em;text-transform:uppercase;color:#6b7280;margin:0 0 6px}
+  .paper h2{font-family:var(--body);font-size:1.15rem;margin:0 0 14px;color:#111827}
+  .paper p{margin:0 0 10px;line-height:1.7;font-size:1rem}
+  .paper .mono{font-family:var(--mono);font-size:.9em;background:#e9e5d8;padding:1px 5px;border-radius:5px}
+  .paper .sample{font-family:var(--mono);font-size:.82rem;background:#1b1f2a;color:#d7e0ff;border-radius:10px;padding:10px 12px;white-space:pre;margin:8px 0 12px;line-height:1.55}
+  .s{cursor:pointer;border-radius:5px;padding:1px 3px;margin:0 -3px;transition:background .15s,box-shadow .15s;border-bottom:1px dashed rgba(17,24,39,.35)}
+  .s:hover{background:rgba(110,160,255,.18)}
+  .s.on{background:#ffe9a8;box-shadow:0 0 0 2px #ffc862;border-bottom-color:transparent}
+  .paper .hint{font-family:var(--body);font-size:.78rem;color:#6b7280;margin:12px 0 0;border-top:1px solid #d9d4c4;padding-top:10px}
+  .answer{background:rgba(6,10,20,.5);border:1px solid var(--line);border-radius:18px;padding:16px 18px;position:sticky;top:16px}
+  .answer .quote{font-family:Georgia,serif;font-style:italic;color:var(--muted);font-size:.95rem;line-height:1.55;margin:0 0 12px;padding-left:12px;border-left:3px solid var(--gold);min-height:2.4em}
+  .answer .asks{font-size:1.02rem;line-height:1.6;color:var(--ink);margin:0 0 10px}
+  .answer .asks b{color:#fff}
+  .answer .line{font-family:var(--mono);font-size:.84rem;color:#bcd0ff;background:#05070e;border:1px solid var(--line);border-radius:10px;padding:9px 12px;margin:0 0 10px;white-space:pre-wrap}
+  .answer .why{font-size:.86rem;color:var(--muted);line-height:1.5;margin:0}
+  .answer .why b{color:var(--gold);font-weight:500}
+  .answer .kw{display:inline-block;font-family:var(--mono);font-size:.64rem;letter-spacing:.1em;text-transform:uppercase;color:var(--accent);
+    border:1px solid rgba(110,160,255,.4);border-radius:999px;padding:3px 9px;margin:0 0 10px}
+  .answer .nav{display:flex;gap:8px;margin-top:12px}
+  .answer .nav button{font-family:var(--mono);font-size:.68rem;letter-spacing:.08em;text-transform:uppercase;color:var(--muted);background:transparent;
+    border:1px solid var(--line);border-radius:999px;padding:5px 11px;cursor:pointer}
+  .answer .nav button:hover{color:var(--accent);border-color:var(--accent)}
+  .words{margin-top:16px}
+  .words .grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(300px,1fr));gap:8px}
+  .word{border:1px solid var(--line);border-radius:12px;background:rgba(255,255,255,.025);padding:10px 13px;cursor:pointer;transition:.15s}
+  .word:hover{border-color:var(--accent)}
+  .word .w{font-family:Georgia,serif;font-style:italic;color:var(--ink);font-size:.95rem}
+  .word .m{display:none;font-size:.85rem;color:var(--muted);line-height:1.5;margin-top:6px}
+  .word .m code{font-family:var(--mono);font-size:.9em;color:#bcd0ff}
+  .word.open .m{display:block}
+  .word.open{border-color:rgba(255,200,98,.5);background:rgba(255,200,98,.05)}
+  .take{margin-top:22px;background:linear-gradient(180deg,rgba(110,160,255,.08),rgba(139,123,255,.04));
+    border:1px solid var(--line);border-left:3px solid var(--accent);border-radius:12px;padding:16px 18px}
+  .take .tk{font-family:var(--mono);font-size:.66rem;letter-spacing:.14em;text-transform:uppercase;color:var(--accent);margin:0 0 8px}
+  .take p{margin:0;font-size:.95rem;color:var(--ink);line-height:1.55}
+  .take b{color:#fff}
+  @media (prefers-reduced-motion:reduce){*{animation-duration:.01ms!important;transition-duration:.01ms!important}#amb{display:none}}
+</style>
+</head>
+<body>
+
+<a class="back" href="../index.html#reading-the-exercises">&#8592; Week 5 index</a>
+
+<canvas id="amb"></canvas>
+<div class="wrap">
+  <p class="tag">Before you start &middot; Week 5</p>
+  <h1>Reading This Week&rsquo;s Exercises</h1>
+  <p class="lede"><b>Tap any sentence of an exercise and see what it is really asking you to write.</b> Three made-up exercises in the workbook&rsquo;s own words, so you learn the words, not the answers.</p>
+
+  <div class="stage">
+    <p class="lab">Pick an exercise</p>
+    <div class="picker" id="picker"></div>
+    <div class="cols">
+      <div class="paper" id="paper"></div>
+      <div class="answer" id="answer">
+        <span class="kw" id="aKw">tap a sentence</span>
+        <p class="quote" id="aQuote">Every sentence on the paper is a job. Tap one.</p>
+        <p class="asks" id="aAsks">The sentence lights up here, and this box says what it asks you to do in code terms: which file, which member, which kind of method.</p>
+        <div class="line" id="aLine" style="display:none"></div>
+        <p class="why" id="aWhy"></p>
+        <div class="nav"><button id="bPrev">&larr; previous sentence</button><button id="bNext">next sentence &rarr;</button></div>
+      </div>
+    </div>
+    <div class="words">
+      <p class="lab">The words the workbook uses this week, and what they mean for your code (tap one)</p>
+      <div class="grid" id="words"></div>
+    </div>
+  </div>
+
+  <div class="take">
+    <p class="tk">The one idea</p>
+    <p><b>An exercise is a list of jobs hidden in sentences.</b> Read it once for the story, then once more sentence by sentence, and write down the job each one gives you before you type anything.</p>
+  </div>
+
+  <div id="rail"></div>
+</div>
+
+<script>
+(function(){
+  "use strict";
+  var $=function(s){return document.querySelector(s);};
+  var reduce=matchMedia("(prefers-reduced-motion: reduce)").matches;
+  var EX=[{"id": "gym", "name": "Gym Memberships", "tag": "A class that knows things (like 4a Section 2-1)", "title": "Exercise: Gym Memberships", "intro": "A gym keeps track of its members and what each one pays. In this exercise you will create a class that knows everything about one membership.", "parts": [["In IntelliJ create a new Java application named gym-memberships.", "project", "New Maven project in IntelliJ: JDK 17, GroupId com.pluralsight, the name exactly as written, in your workbook-4 folder, Create Git repository ticked, then Share Project on GitHub. No code yet.", "Project · gym-memberships · workbook-4", "The name in the exercise is the project name, the folder name and the GitHub repository name. One exercise, one project."], ["Use the main() method in the Main class to create and test your logic in the classes.", "main", "Main.java is where objects get made and their getters get called. The class you are about to write does not print anything; main does.", "Main.java · main() · creates and prints", "\"Create and test your logic\" means main is your test drive, not the place the logic lives. The logic goes in the class."], ["The Membership class is responsible for knowing everything related to one gym membership.", "class", "A new file Membership.java next to Main.java, same package. One object of it is one membership.", "Membership.java · public class", "\"Responsible for knowing\" points at fields and getters: things the object knows. Things it does would be methods."], ["It should manage the following information using private variables: memberId, name, monthlyFee, monthsPaid and premium.", "fields", "Five private fields at the top of Membership.java. Pick each type from the data: a whole number, text, money, a whole number, a yes or no.", "Membership.java · 5 private fields · int, String, BigDecimal, int, boolean", "\"Private variables\", \"backing variables\" and \"data members\" all mean fields marked private. Nothing outside the class reaches them directly."], ["The monthlyFee is money, so store it as a BigDecimal, not a double.", "BigDecimal", "The type of the monthlyFee field is BigDecimal, and it needs the import from java.math. When you make one, build it from text so the cents stay exact.", "Membership.java · field type · BigDecimal", "\"Money\" is the signal for BigDecimal all week. A double drifts by tiny fractions of a cent; a BigDecimal does not."], ["Each class should have a constructor that sets the initial value of each backing variable.", "constructor", "One constructor in Membership.java with a parameter for every field, in the order listed, each one assigned to its field with this.", "Membership.java · constructor · 5 parameters, no return type", "\"Sets the initial value\" is the constructor's whole job. It has the class name and no return type, not even void."], ["Create the class with the following getters: getMemberId(), getName(), getMonthlyFee(), getMonthsPaid() and isPremium().", "getters", "Five public methods in Membership.java, no parameters, each returning one field with the field's type. The boolean one starts with is.", "Membership.java · 5 getters · isPremium() returns boolean", "A getter that starts with \"is\" is a Boolean getter: isPremium() reads the field premium. IntelliJ can generate them all with Alt+Insert or Cmd+N."], ["Include the following derived getter: getTotalPaid(), which returns the monthly fee multiplied by the months paid.", "derived getter", "One more public method in Membership.java, no parameters, returning a BigDecimal it calculates from two fields. Multiply with a BigDecimal method, not the * sign.", "Membership.java · derived getter · returns BigDecimal", "\"Derived\" means computed from other fields when it is called. The int has to become a BigDecimal before the two can be multiplied."], ["NOTE: Not all getters should have a backing variable. Do not create a totalPaid variable.", "no field", "Nothing to add. A check on the step before: there is no totalPaid field anywhere in Membership.java.", "Membership.java · no totalPaid field", "A stored total goes stale the moment monthsPaid changes. A derived getter is always right because it calculates on every call."], ["In main(), create two Membership objects and display each member's name and total paid.", "objects", "Back in Main.java: two new Membership objects with different values, then one print line each that calls getName() and getTotalPaid().", "Main.java · 2 objects · calls getters", "\"Create two objects\" is two uses of new. \"Display\" with getters proves the class works without main touching a private field."], ["Ensure all your changes are committed and pushed to GitHub.", "git", "Commit panel in IntelliJ, a message, Commit and Push. Then check the repository page on GitHub shows your files.", "IntelliJ · Commit and Push", "The last line of every exercise. There is no step to send a link: Raymond follows your GitHub profile."]]}, {"id": "garage", "name": "Parking Garage", "tag": "Methods, overloading and static (like 4a Sections 2-2, 2-3, 4-2)", "title": "Exercise: Parking Garage", "intro": "A parking garage needs to know which spots are taken and how many cars came in today. In this exercise you will give a class methods that change its state, one method written two ways, and a count shared by every spot.", "parts": [["Create a new Java application named parking-garage.", "project", "New Maven project with this exact name in workbook-4, Git ticked, shared on GitHub.", "Project · parking-garage · workbook-4", "Same first step every time. Make it automatic."], ["Create a ParkingSpot class with private variables for spotNumber, licensePlate and occupied.", "fields", "A new file ParkingSpot.java with three private fields: a whole number, text, and a yes or no.", "ParkingSpot.java · 3 private fields · int, String, boolean", "\"Private variables for\" lists the fields. The names in the sentence are the field names you use."], ["Add a constructor that takes only the spot number. A new spot starts empty.", "constructor", "A constructor in ParkingSpot.java with one parameter. It sets spotNumber from the parameter and sets the other two fields to their empty starting values itself.", "ParkingSpot.java · constructor · 1 parameter", "\"Takes only\" tells you the parameter list. \"Starts empty\" tells you what the constructor sets for the fields that have no parameter."], ["Add a park(String licensePlate) method that marks the spot as occupied and stores the plate.", "method", "A public void method in ParkingSpot.java with one String parameter. It changes two fields of this spot and returns nothing.", "ParkingSpot.java · instance method · void, changes state", "\"Marks\" and \"stores\" are verbs that change fields. A method that changes state is usually void: the change is the result."], ["A car cannot park in a spot that is already occupied. In that case display a message and leave the spot as it is.", "check", "Inside park, before anything changes: an if on the occupied field. When it is taken, print one line and change nothing.", "ParkingSpot.java · inside park() · if on occupied", "\"Cannot\" is a rule the object enforces on itself. The check lives in the class, so main can never put two cars in one spot."], ["Add a leave() method that empties the spot.", "method", "A public void method in ParkingSpot.java with no parameters that puts the fields back to how a new spot starts.", "ParkingSpot.java · instance method · void, no parameters", "\"Empties\" means the opposite of park. Same fields, starting values again."], ["Overload the park method: the second version takes the plate and the number of hours, and also stores the hours.", "overload", "A second method in ParkingSpot.java also named park, with two parameters: a String and an int. It needs a new private field for the hours.", "ParkingSpot.java · second park() · same name, different parameters", "\"Overload\" means same name, different parameter list. Java picks the version from the arguments in the call. A different return type alone does not count."], ["Keep track of how many cars have parked today across all spots with a static variable named carsToday.", "static field", "One private static int field in ParkingSpot.java. Both park versions add one to it, but only when the car actually parks.", "ParkingSpot.java · static field · int, one for the whole class", "\"Across all spots\" is the signal for static: one value shared by every ParkingSpot, not one per object."], ["Add a static getCarsToday() method so main() can read the count without a ParkingSpot object.", "static method", "A public static method in ParkingSpot.java, no parameters, returning the int. Main calls it on the class name, not on a spot.", "ParkingSpot.java · static getter · called as ParkingSpot.getCarsToday()", "\"Without an object\" always means static. A static method can read static fields but not the fields of one spot."], ["In main(), create three spots, park a car in two of them, try to park in a spot that is taken, then display carsToday.", "objects", "In Main.java: three new ParkingSpot objects, calls to both park versions, one call that should be refused, then one print of the static getter.", "Main.java · 3 objects · both park versions + static getter", "The refused park should print your message and not change the count. If the count says 3, the check is in the wrong place."], ["Ensure all your changes are committed and pushed to GitHub.", "git", "Commit and Push from IntelliJ. Check GitHub.", "IntelliJ · Commit and Push", "Last line, every time."]]}, {"id": "clinic", "name": "Pet Clinic", "tag": "Unit tests and BigDecimal (like 4a Sections 3-2 and 4-1)", "title": "Exercise: Pet Clinic", "intro": "A pet clinic charges for each visit: an exam fee plus every vaccine. In this exercise you will write the class and then prove with unit tests that the bill adds up.", "parts": [["Create a new Java application named pet-clinic.", "project", "New Maven project, this exact name, workbook-4, Git ticked, shared on GitHub.", "Project · pet-clinic · workbook-4", "First step, as always."], ["Create a Visit class with private variables for petName, examFee and vaccineCount. The exam fee is money and must be a BigDecimal.", "fields", "A new file Visit.java with three private fields and a constructor that sets all three. The fee field is a BigDecimal.", "Visit.java · 3 private fields + constructor · String, BigDecimal, int", "\"Must be a BigDecimal\" is not a hint, it is a rule. Money is never a double this week."], ["Each vaccine costs $18.50. Add a derived getter getTotal() that returns the exam fee plus the cost of the vaccines, rounded to two decimals.", "derived getter", "A public method in Visit.java, no parameters, returning a BigDecimal. Inside: multiply, add, then set the scale to two with a rounding mode.", "Visit.java · derived getter · returns BigDecimal, scale 2", "\"Rounded to two decimals\" with BigDecimal means setScale with a RoundingMode. Without the rounding mode it can throw an ArithmeticException."], ["Add the JUnit dependency to your pom.xml and reload Maven.", "pom.xml", "pom.xml at the project root: a dependencies section with the JUnit dependency, then the Maven reload button that appears in the editor.", "pom.xml · dependencies · reload Maven", "Until Maven reloads, @Test and the assertions stay red. That is the dependency missing, not your code."], ["Create a VisitTest unit test class to test the methods of the Visit class.", "test class", "A new class VisitTest.java under src/test/java/com/pluralsight, not under src/main. IntelliJ makes it from Visit with Navigate, Test, Create New Test.", "src/test/java · VisitTest.java", "The test class is named after the class it tests, plus Test. Tests live in their own folder and never ship with the app."], ["Write a test named getTotal_withTwoVaccines_includesVaccineCost.", "test method", "One public void method in VisitTest.java with no parameters and the @Test annotation above it. The name says what is called, with what, and what should happen.", "VisitTest.java · @Test method · void, no parameters", "A test name reads like a sentence: method, situation, expected result. When it fails, the name alone tells you what broke."], ["Arrange: create a Visit for a pet with an exam fee of $65.00 and 2 vaccines.", "arrange", "The first lines inside the test: one new Visit with those values, the fee built as a BigDecimal from text.", "VisitTest.java · Arrange · one new object", "Arrange is the setup: everything the test needs before anything happens. No calls to the method under test yet."], ["Act: call getTotal() and keep the result.", "act", "One line: call the method under test once and store what it returns in a local variable.", "VisitTest.java · Act · one call, one variable", "Act is a single action. If you need two calls here, it is probably two tests."], ["Assert: verify that the total is $102.00.", "assert", "One assertion comparing the expected amount with the result from Act. Expected goes first, actual second.", "VisitTest.java · Assert · assertEquals(expected, actual)", "BigDecimal equals checks the scale too: 102.00 and 102.0 are not equal. The setScale in getTotal() is what lets this pass."], ["How many tests should you write? What should the total be when a pet gets no vaccines?", "more tests", "A second @Test method in VisitTest.java for the zero vaccines case, with its own Arrange, Act and Assert.", "VisitTest.java · second @Test method", "A question in an exercise is a test you are expected to write. Edge cases like zero are where bugs hide."], ["Run the tests and make sure they all pass.", "run", "The green arrow next to VisitTest, or right-click the test folder and Run. The results panel lists each test with a check or a cross.", "IntelliJ · Run VisitTest", "\"Make sure they all pass\" means green before you commit. A red one tells you either the class or the expected value is wrong."], ["Ensure all your changes are committed and pushed to GitHub.", "git", "Commit and Push. Check GitHub, including the src/test folder.", "IntelliJ · Commit and Push", "Done."]]}];
+  var WORDS=[["Create a new Java application named x", "A new IntelliJ Maven project called exactly x, in your workbook-4 folder, with Create Git repository ticked, then Share Project on GitHub. Every exercise starts here."], ["The X class is responsible for knowing ...", "A new file X.java. What it knows becomes private fields and getters; what it does becomes methods."], ["private variables / backing variables / data members", "The fields of the class, each marked <code>private</code>. Only the class's own methods touch them."], ["a constructor that sets the initial value of each backing variable", "A constructor with one parameter per field, each assigned with <code>this.field = field</code>. Class name, no return type."], ["Create the class with the following getters", "One public method per name in the list, no parameters, returning the field. Alt+Insert or Cmd+N generates them."], ["getters that start with is", "Boolean getters: <code>isPremium()</code> returns the boolean field <code>premium</code>."], ["derived getter / not all getters have a backing variable", "A getter that calculates its answer from other fields every time it is called. No field of its own."], ["a method that marks / stores / empties ...", "A method that changes the object's fields, usually <code>void</code>. The change is the result."], ["Overload the method / a second version that takes ...", "Same method name, different parameter list. Java picks the version from the arguments."], ["money / prices / balances", "A <code>BigDecimal</code>, built from text: <code>new BigDecimal(\"18.50\")</code>. Never a double."], ["rounded to two decimals (BigDecimal)", "<code>setScale(2, RoundingMode.HALF_UP)</code>. Leaving out the rounding mode can throw."], ["across all objects / shared by every ...", "A <code>static</code> field: one value for the whole class, not one per object."], ["without an object / call it on the class", "A <code>static</code> method, called as <code>ClassName.method()</code>."], ["Ensure that the constructor is private", "A utility class: only static methods, and nobody can use <code>new</code> on it."], ["Add the JUnit dependency", "A dependency in <code>pom.xml</code>, then reload Maven so <code>@Test</code> stops being red."], ["Create an XTest unit test class", "XTest.java under <code>src/test/java</code>, one <code>@Test</code> method per behavior."], ["Arrange, Act, Assert", "Inside one test: set up the object, call the method once, check the result. In that order."], ["verify that ... / should be ...", "An assertion: <code>assertEquals(expected, actual)</code>, <code>assertTrue</code>, <code>assertFalse</code>."], ["How many tests should you write?", "One test per thing that can happen, including the edge cases: zero, already taken, not allowed."], ["The X class has a Y / uses a Y", "A field in X whose type is the class Y. X calls Y's methods through it."], ["Ensure all your changes are committed and pushed", "Commit and Push in IntelliJ. There is no step to send a link; Raymond follows your GitHub profile."]];
+  var cur=0, sel=-1;
+  var escBox=document.createElement("div");
+  function esc(t){escBox.textContent=String(t);return escBox.innerHTML;}
+  var picker=$("#picker"), paper=$("#paper");
+  picker.innerHTML=EX.map(function(e,i){return '<button data-i="'+i+'"'+(i===0?' class="on"':'')+'>'+esc(e.name)+'</button>';}).join("");
+  picker.addEventListener("click",function(ev){var b=ev.target.closest("button"); if(!b) return; cur=+b.getAttribute("data-i"); sel=-1; draw(); resetAnswer();});
+  function draw(){
+    var e=EX[cur];
+    Array.prototype.forEach.call(picker.querySelectorAll("button"),function(b,i){b.classList.toggle("on",i===cur);});
+    var h='<p class="ph">'+esc(e.tag)+'</p><h2>'+esc(e.title)+'</h2><p>'+esc(e.intro)+'</p>';
+    e.parts.forEach(function(p,i){
+      var txt=esc(p[0]).replace(/(gym-memberships|parking-garage|pet-clinic|pom\.xml|main\(\)|getMemberId\(\)|getName\(\)|getMonthlyFee\(\)|getMonthsPaid\(\)|isPremium\(\)|getTotalPaid\(\)|getCarsToday\(\)|getTotal\(\)|leave\(\)|park\(String licensePlate\)|getTotal_withTwoVaccines_includesVaccineCost|\bMain\b|\bMembership\b|\bParkingSpot\b|\bVisitTest\b|\bVisit\b|\bBigDecimal\b|\bmemberId\b|\bmonthlyFee\b|\bmonthsPaid\b|\bpremium\b|\btotalPaid\b|\bspotNumber\b|\blicensePlate\b|\bcarsToday\b|\bpetName\b|\bexamFee\b|\bvaccineCount\b)/g,'<span class="mono">$1</span>');
+      h+='<p><span class="s'+(i===sel?' on':'')+'" data-i="'+i+'">'+txt+'</span></p>';
+    });
+    h+='<p class="hint">Made up for this page. It is not one of this week\'s exercises, but it is written the way they are.</p>';
+    paper.innerHTML=h;
+  }
+  function resetAnswer(){
+    $("#aKw").textContent="tap a sentence"; $("#aQuote").textContent="Every sentence on the paper is a job. Tap one.";
+    $("#aAsks").innerHTML="The sentence lights up here, and this box says what it asks you to do in code terms: which file, which member, which kind of method.";
+    $("#aLine").style.display="none"; $("#aWhy").textContent="";
+  }
+  function show(i){
+    var e=EX[cur]; if(i<0||i>=e.parts.length) return; sel=i; var p=e.parts[i];
+    Array.prototype.forEach.call(paper.querySelectorAll(".s"),function(s,k){s.classList.toggle("on",k===i);});
+    $("#aKw").textContent=p[1]; $("#aQuote").textContent=p[0]; $("#aAsks").textContent=p[2];
+    var ln=$("#aLine"); ln.textContent=p[3]; ln.style.display="block"; $("#aWhy").innerHTML=esc(p[4]).replace(/^(\"[^\"]+\"|[A-Z][^.]*?\b(?:means|is|are|tells you|always means|sets|gives you)\b)/,function(m){return m;});
+    var box=$("#answer"); if(!reduce){box.style.transition="none";box.style.boxShadow="0 0 0 2px rgba(255,200,98,.55)";setTimeout(function(){box.style.transition="box-shadow .5s";box.style.boxShadow="none";},40);}
+  }
+  paper.addEventListener("click",function(ev){var s=ev.target.closest(".s"); if(!s) return; show(+s.getAttribute("data-i"));});
+  $("#bNext").addEventListener("click",function(){show(sel<0?0:Math.min(sel+1,EX[cur].parts.length-1));});
+  $("#bPrev").addEventListener("click",function(){show(sel<=0?0:sel-1);});
+  document.addEventListener("keydown",function(ev){
+    if(/INPUT|TEXTAREA|BUTTON/.test(ev.target.tagName)) return;
+    if(ev.key==="ArrowDown"||ev.key==="j"){ev.preventDefault();$("#bNext").click();}
+    if(ev.key==="ArrowUp"||ev.key==="k"){ev.preventDefault();$("#bPrev").click();}
+  });
+  var words=$("#words");
+  words.innerHTML=WORDS.map(function(w){return '<div class="word"><div class="w">'+esc(w[0])+'</div><div class="m">'+w[1]+'</div></div>';}).join("");
+  words.addEventListener("click",function(ev){var c=ev.target.closest(".word"); if(c) c.classList.toggle("open");});
+  draw();
+
+  var cv=$("#amb"),ctx=cv.getContext&&cv.getContext("2d"),parts=[];
+  function sizeC(){if(!ctx)return;cv.width=innerWidth;cv.height=innerHeight;}
+  function initParts(){parts=[];for(var i=0;i<46;i++)parts.push({x:Math.random(),y:Math.random(),r:Math.random()*1.6+.3,s:Math.random()*.02+.004,o:Math.random()*.4+.1});}
+  function drawC(){if(!ctx)return;ctx.clearRect(0,0,cv.width,cv.height);
+    parts.forEach(function(p){p.y-=p.s/60;if(p.y<-.02)p.y=1.02;ctx.beginPath();ctx.arc(p.x*cv.width,p.y*cv.height,p.r,0,7);
+      ctx.fillStyle="rgba(140,170,255,"+p.o+")";ctx.fill();});requestAnimationFrame(drawC);}
+  if(ctx&&!reduce){sizeC();initParts();drawC();addEventListener("resize",sizeC);}
+})();
+</script>
+<script src="../manifest.js"></script>
+<script src="../../assets/rail.js"></script>
+<script>Rail.render(document.getElementById("rail"),{week:5,kind:"exercises",current:"reading-the-exercises"});</script>
+</body>
+</html>

@@ -1,0 +1,387 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Bug Hunter 5 | Week 5 Visual Hub</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Sora:wght@500;700&family=Inter:wght@400;500&family=JetBrains+Mono:wght@400;500&display=swap">
+<style>
+  :root{
+    --bg:#080c17; --bg2:#0c1428; --surface:rgba(255,255,255,.045); --line:rgba(255,255,255,.09);
+    --ink:#eef2fb; --muted:#8496b6; --accent:#6ea0ff; --accent2:#8b7bff; --good:#46d98a; --warn:#ff6a6a;
+    --gold:#ffc862; --disp:'Sora',system-ui,sans-serif; --body:'Inter',system-ui,sans-serif;
+    --mono:'JetBrains Mono',ui-monospace,monospace;
+  }
+  *{box-sizing:border-box}
+  body{margin:0;min-height:100vh;color:var(--ink);font-family:var(--body);
+    background:radial-gradient(1200px 700px at 70% -10%,#141d38 0%,transparent 55%),
+               radial-gradient(900px 600px at 10% 110%,#161233 0%,transparent 50%),#080c17;
+    overflow-x:hidden}
+  #amb{position:fixed;inset:0;z-index:0;pointer-events:none;opacity:.6}
+  .back{position:relative;z-index:2;display:block;max-width:1120px;margin:0 auto;padding:26px 24px 0;
+    width:100%;font-family:var(--mono);font-size:.8rem;letter-spacing:.04em;color:var(--muted);
+    text-decoration:none;transition:color .15s}
+  .back:hover{color:var(--accent)}
+  .wrap{position:relative;z-index:1;max-width:1120px;margin:0 auto;padding:22px 24px 70px}
+  .tag{font-family:var(--mono);font-size:.72rem;letter-spacing:.22em;text-transform:uppercase;color:var(--accent);margin:0 0 14px}
+  h1{font-family:var(--disp);font-weight:700;font-size:clamp(2.3rem,6vw,3.6rem);line-height:1;margin:0 0 12px;
+    letter-spacing:-.03em;background:linear-gradient(180deg,#fff,#b9c6e6);-webkit-background-clip:text;
+    background-clip:text;color:transparent}
+  .lede{color:var(--muted);max-width:64ch;font-size:1.05rem;margin:0 0 26px;line-height:1.5}
+  .lede b{color:var(--ink)}
+  .lede code,.take code,.caption code{font-family:var(--mono);font-size:.92em;color:#bcd0ff}
+
+  /* ---------- stage: picture first, one toolbar, support below ---------- */
+  .stage{position:relative;background:linear-gradient(180deg,rgba(255,255,255,.03),rgba(255,255,255,.01));
+    border:1px solid var(--line);border-radius:24px;padding:18px 18px 14px;
+    box-shadow:0 1px 0 rgba(255,255,255,.06) inset,0 30px 80px -30px rgba(0,0,0,.8)}
+  .topbar{display:flex;align-items:center;gap:10px;margin:0 0 14px;flex-wrap:wrap}
+  .topbar .lab{margin:0 4px 0 0}
+  .lab{font-family:var(--mono);font-size:.7rem;letter-spacing:.12em;text-transform:uppercase;color:var(--muted);margin:0 0 10px}
+  .chips{display:flex;flex-wrap:wrap;gap:6px}
+  .chip{font-family:var(--mono);font-size:.74rem;padding:5px 11px;border-radius:999px;cursor:pointer;
+    border:1px solid var(--line);background:rgba(0,0,0,.25);color:var(--muted);transition:.15s}
+  .chip:hover{border-color:var(--accent);color:var(--accent)}
+  .chip.on{border-color:rgba(110,160,255,.6);background:rgba(110,160,255,.14);color:var(--ink)}
+  .chip:focus-visible,.btn:focus-visible,.focus:focus-visible{outline:2px solid var(--accent);outline-offset:2px}
+  .focus{margin-left:auto;font-family:var(--mono);font-size:.68rem;letter-spacing:.1em;text-transform:uppercase;padding:6px 12px;
+    border-radius:999px;border:1px solid var(--line);background:rgba(0,0,0,.25);color:var(--muted);cursor:pointer;transition:.15s}
+  .focus:hover{border-color:var(--accent);color:var(--accent)}
+  body.solo .focus{border-color:rgba(255,200,98,.6);color:var(--gold);background:rgba(255,200,98,.1)}
+
+
+  /* ---------- game board ---------- */
+  .pic{position:relative;height:390px;border:1px solid var(--line);border-radius:18px;background:rgba(6,10,20,.5);overflow:hidden;
+    display:flex;flex-direction:column;align-items:center;justify-content:center;padding:40px 20px 24px}
+  .pic .zone{position:absolute;left:18px;top:14px;font-family:var(--mono);font-size:.62rem;letter-spacing:.14em;text-transform:uppercase;color:rgba(132,150,182,.55)}
+  .hud{position:absolute;right:18px;top:12px;display:flex;gap:14px;font-family:var(--mono);font-size:.72rem;color:var(--muted)}
+  .hud b{color:var(--ink);font-weight:500}
+  .code{width:100%;max-width:700px;border:1px solid var(--line);border-radius:14px;background:rgba(0,0,0,.3);padding:8px 0;transition:border-color .2s}
+  .code.bad{animation:shake .3s}
+  @keyframes shake{25%{transform:translateX(-6px)}75%{transform:translateX(6px)}}
+  .ln{display:flex;width:100%;align-items:baseline;gap:14px;padding:4px 16px;border:0;border-left:3px solid transparent;background:transparent;
+    color:#c9d4ea;font-family:var(--mono);font-size:.92rem;line-height:1.55;text-align:left;cursor:pointer;transition:background .15s,border-color .15s}
+  .ln:hover{background:rgba(110,160,255,.08);border-left-color:var(--accent)}
+  .ln:disabled{cursor:default}
+  .ln .no{flex-shrink:0;width:1.4em;text-align:right;color:var(--muted);font-size:.78rem}
+  .ln .src{white-space:pre;overflow:hidden;text-overflow:ellipsis}
+  .ln.hit{background:rgba(70,217,138,.12);border-left-color:var(--good)}
+  .ln.miss{background:rgba(255,106,106,.12);border-left-color:var(--warn)}
+  .ln.dim{opacity:.45}
+  .cm{color:#6b7a99;font-style:italic}
+  .kw{color:#c792ea} .ty{color:#6ea0ff} .st{color:#9ee493} .nm{color:#ffc862} .fn{color:#7fdbca}
+  .screen{position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:12px;background:rgba(6,10,20,.92);transition:opacity .25s;padding:20px}
+  .screen.off{opacity:0;pointer-events:none}
+  .screen h2{font-family:var(--disp);font-weight:700;font-size:1.6rem;margin:0;color:var(--ink)}
+  .screen p{margin:0;color:var(--muted);font-size:.95rem;text-align:center;max-width:46ch;line-height:1.5}
+  .screen .big{font-family:var(--disp);font-weight:700;font-size:2.6rem;color:var(--accent)}
+  .screen .big.gold{color:var(--gold)} .screen .big.good{color:var(--good)}
+  .bar{position:absolute;left:0;right:0;bottom:0;height:4px;background:rgba(255,255,255,.06)}
+  .bar i{display:block;height:100%;width:0;background:var(--accent);transition:width .25s}
+  .misses{font-family:var(--mono);font-size:.72rem;color:var(--muted);line-height:1.6;text-align:left;max-width:640px;max-height:130px;overflow-y:auto}
+  .misses div{margin:0 0 4px}
+  .misses b{color:var(--warn);font-weight:500;white-space:pre}
+  /* caption: the one sentence, right under the picture */
+  .caption{display:flex;gap:16px;align-items:flex-start;margin:14px 4px 0;min-height:56px}
+  .caption .n{flex-shrink:0;font-family:var(--disp);font-weight:700;font-size:1.35rem;color:var(--accent);font-variant-numeric:tabular-nums;
+    line-height:1.2;min-width:3.2rem}
+  .caption .n small{display:block;font-family:var(--mono);font-weight:400;font-size:.58rem;letter-spacing:.14em;text-transform:uppercase;color:var(--muted)}
+  .caption .t{font-size:1.02rem;line-height:1.55;color:var(--ink);padding-left:16px;border-left:3px solid var(--accent);transition:border-color .3s}
+  body.solo .caption .t{font-size:1.18rem}
+  .caption.cut .t{border-left-color:var(--warn)} .caption.left .t{border-left-color:var(--gold)} .caption.ok .t{border-left-color:var(--good)}
+  .caption b.g{color:var(--good)} .caption b.w{color:var(--warn)} .caption b.a{color:var(--accent)} .caption b.y{color:var(--gold)}
+
+  /* toolbar: same on every page */
+  .toolbar{display:flex;align-items:center;gap:10px;margin:16px 0 0;padding-top:14px;border-top:1px solid var(--line)}
+  .btn{font-family:var(--body);font-weight:500;font-size:.86rem;padding:9px 16px;border-radius:11px;cursor:pointer;
+    border:1px solid var(--line);background:var(--surface);color:var(--ink);transition:.15s}
+  .btn:hover{border-color:var(--accent);color:var(--accent)}
+  .btn.primary{border-color:rgba(110,160,255,.5);background:rgba(110,160,255,.12);padding:9px 22px}
+  .btn:disabled{opacity:.35;cursor:not-allowed}
+  .btn.ghost{background:transparent;color:var(--muted);margin-left:auto}
+  .dots{display:flex;gap:5px;align-items:center;margin:0 6px}
+  .dots i{display:block;width:8px;height:8px;border-radius:50%;background:rgba(255,255,255,.12);transition:.2s}
+  .dots i.done{background:rgba(110,160,255,.45)}
+  .dots i.now{background:var(--accent);transform:scale(1.35);box-shadow:0 0 10px rgba(110,160,255,.7)}
+  .hint{font-family:var(--mono);font-size:.68rem;color:var(--muted);margin:10px 4px 0;line-height:1.5}
+  .hint b{color:var(--accent)}
+
+  .toolbar .btn.primary{min-width:120px}
+  .take{margin-top:22px;background:linear-gradient(180deg,rgba(110,160,255,.08),rgba(139,123,255,.04));
+    border:1px solid var(--line);border-left:3px solid var(--accent);border-radius:12px;padding:16px 18px}
+  .take .tk{font-family:var(--mono);font-size:.66rem;letter-spacing:.14em;text-transform:uppercase;color:var(--accent);margin:0 0 8px}
+  .take p{margin:0;font-size:.95rem;color:var(--ink);line-height:1.55}
+  .take b{color:#fff}
+  @media (prefers-reduced-motion:reduce){*{animation-duration:.01ms!important;transition-duration:.01ms!important}#amb{display:none}}
+
+
+  /* ---------- week 5: line first, then the fix ---------- */
+  .pic{height:auto;min-height:560px;justify-content:flex-start;gap:14px;padding:46px 20px 26px}
+  .fixes{width:100%;max-width:700px;display:flex;flex-direction:column;gap:8px;transition:opacity .2s}
+  .fixes.off{opacity:0;pointer-events:none}
+  .fixes .lab{margin:2px 0 0}
+  .opt{display:flex;align-items:baseline;gap:12px;width:100%;padding:9px 14px;border-radius:12px;cursor:pointer;text-align:left;
+    border:1px solid var(--line);background:rgba(0,0,0,.25);color:#c9d4ea;font-family:var(--mono);font-size:.86rem;line-height:1.5;transition:.15s}
+  .opt:hover{border-color:var(--accent);background:rgba(110,160,255,.08)}
+  .opt:disabled{cursor:default}
+  .opt .k{flex-shrink:0;font-size:.7rem;color:var(--muted);border:1px solid var(--line);border-radius:6px;padding:0 6px}
+  .opt .c{white-space:pre-wrap;word-break:break-word}
+  .opt .why{display:none;margin-top:4px;font-family:var(--body);font-size:.8rem;color:var(--muted);white-space:normal}
+  .opt.right{border-color:rgba(70,217,138,.6);background:rgba(70,217,138,.12)}
+  .opt.wrong{border-color:rgba(255,106,106,.6);background:rgba(255,106,106,.12)}
+  .opt.dim{opacity:.5}
+  .opt.right .why,.opt.wrong .why,.opt.dim .why{display:block}
+  .opt:focus-visible{outline:2px solid var(--accent);outline-offset:2px}
+  .ln .src{white-space:pre;overflow-x:auto;text-overflow:clip}
+  @media (max-width:640px){.ln{font-size:.78rem;gap:8px;padding:4px 10px}.opt{font-size:.78rem}.pic{padding:46px 10px 24px}}
+</style>
+</head>
+<body>
+
+<a class="back" href="../index.html#bug-hunter-5">&#8592; Week 5 index</a>
+
+<canvas id="amb"></canvas>
+<div class="wrap">
+  <p class="tag">Workbook 4a &middot; all sections &middot; Game</p>
+  <h1>Bug Hunter 5</h1>
+  <p class="lede"><b>Fifteen snippets, one week 5 bug each: classes, constructors, tests, BigDecimal, static.</b> Click the line you would change, then pick the fix. One point for the line, one for the fix.</p>
+
+  <div class="stage">
+    <div class="topbar">
+      <span class="lab">Game</span>
+    </div>
+
+    <div class="pic" id="pic">
+      <span class="zone" id="zone">which line?</span>
+      <div class="hud"><span>score <b id="hScore">0</b> / 30</span></div>
+      <div class="code" id="code"></div>
+      <div class="fixes off" id="fixes">
+        <p class="lab">Pick the fix</p>
+        <div id="opts" style="display:flex;flex-direction:column;gap:8px"></div>
+      </div>
+      <div class="bar"><i id="bar"></i></div>
+      <div class="screen" id="startScr">
+        <h2>Bug Hunter 5</h2>
+        <p>A short piece of Java appears. One line is wrong: it does not compile, crashes, does the wrong thing, or hides a test. Then pick the fix that repairs it.</p>
+        <button class="btn primary" id="bStart">Start</button>
+      </div>
+      <div class="screen off" id="endScr">
+        <h2>Round over</h2>
+        <div class="big" id="endScore"></div>
+        <p id="endMsg"></p>
+        <div class="misses" id="endMiss"></div>
+        <button class="btn primary" id="bAgain">Play again</button>
+      </div>
+    </div>
+
+    <div class="caption" id="caption">
+      <div class="n" id="stepno"><small>round</small>0 / 15</div>
+      <div class="t" id="status">Press <b class="a">Start</b>. Keys 1 to 9 pick a line, A B C pick a fix, Enter moves on.</div>
+    </div>
+
+    <div class="toolbar">
+      <button class="btn primary" id="bNext" disabled>Next</button>
+      <button class="btn ghost" id="bRestart">Restart</button>
+    </div>
+    <p class="hint">look for: a private field read from outside &middot; a parameter assigned to itself &middot; a getter returning the wrong field &middot; a setter with no parameter &middot; two overloads with one parameter list &middot; an instance method on the class name &middot; an instance field in a static method &middot; new BigDecimal(0.1) &middot; setScale with no RoundingMode &middot; add not reassigned &middot; equals on BigDecimal &middot; a private @Test &middot; assertEquals backwards &middot; a test in src/main &middot; a counter in the wrong place</p>
+  </div>
+
+  <div class="take">
+    <p class="tk">The one idea</p>
+    <p><b>Week 5 bugs hide in who owns what.</b> A field is private to its class and set with <code>this.</code>, a method that needs an object is called on an object, a <code>BigDecimal</code> is built from a String, rounded with a <code>RoundingMode</code>, reassigned after every operation and compared with <code>compareTo</code>. A test is public or package-private, lives in <code>src/test/java</code>, and names the expected value first.</p>
+  </div>
+
+  <div id="rail"></div>
+</div>
+
+<script>
+(function(){
+  "use strict";
+  var $=function(s){return document.querySelector(s);};
+  var reduce=matchMedia("(prefers-reduced-motion: reduce)").matches;
+
+  var MAIN="inside main";
+  /* b = the line to click (alt = other lines that also count), x[0] = the right fix, x[1..2] = wrong fixes with why they fail */
+  var POOL=[
+    {f:"Main.java",b:3,w:'firstName is private, so only code inside Person can touch it: firstName has private access in Person. Go through the getter',l:[
+      '// Person has: private String firstName; public String getFirstName()','Person person1 = new Person("Raymond", "Maroun", 55);','System.out.println(person1.firstName);','person1.setAge(56);','System.out.println(person1.getAge());'],
+     x:[['System.out.println(person1.getFirstName());','the public getter hands out the value of the private field: Raymond'],
+        ['System.out.println(person1.firstName());','does not compile: cannot find symbol, there is no method called firstName()'],
+        ['System.out.println(Person.firstName);','does not compile: still private, and a field that belongs to each object cannot be read through the class name']]},
+    {f:"Person.java",b:5,w:'firstName = firstName copies the parameter onto itself, so the field is never set and getFirstName() returns null. this.firstName names the field',l:[
+      'public class Person {','    private String firstName;','    private int age;','    public Person(String firstName, int age) {','        firstName = firstName;','        this.age = age;','    }','    public String getFirstName() { return firstName; }','}'],
+     x:[['        this.firstName = firstName;','this.firstName is the field, firstName is the parameter: the name is stored'],
+        ['        firstName = this.firstName;','backwards: copies the empty field (null) into the parameter, the field stays null'],
+        ['        this.firstName = this.firstName;','the field is copied onto itself: still null']]},
+    {f:"Car.java",b:8,w:'getModel hands back make, so new Car("Ford", "Mustang").getModel() is "Ford". A getter returns its own field',l:[
+      '// want: new Car("Ford", "Mustang").getModel() is "Mustang"','public class Car {','    private String make;','    private String model;','    public Car(String make, String model) {','        this.make = make; this.model = model;','    }','    public String getModel() { return make; }','}'],
+     x:[['    public String getModel() { return model; }','returns the model field: Mustang'],
+        ['    public String getModel() { return this.make; }','this. changes nothing: still the make, still Ford'],
+        ['    public String getModel() { return Model; }','does not compile: Java is case sensitive, cannot find symbol Model']]},
+    {f:"Learner.java",b:5,w:'setGrade has no parameter, so grade = grade copies the field onto itself and alice.setGrade(10) does not compile: method setGrade in class Learner cannot be applied to given types. A setter takes the new value',l:[
+      '// used in main as: alice.setGrade(10);','public class Learner {','    private int grade;','    public int getGrade() { return grade; }','    public void setGrade() {','        this.grade = grade;','    }','}'],
+     x:[['    public void setGrade(int grade) {','now grade is the parameter, so this.grade = grade stores the 10'],
+        ['    public void setGrade(grade) {','does not compile: a parameter needs a type, <identifier> expected'],
+        ['    public int setGrade() {','does not compile: missing return statement, and there is still no parameter']]},
+    {f:"Car.java",b:6,w:'both methods are brake(int): method brake(int) is already defined in class Car. Overloads need different parameter lists. The stop version takes nothing',l:[
+      'public class Car {','    private int speed;','    public void brake(int change) {','        speed -= change;','    }','    public void brake(int change) {   // called as car.brake(): stop','        speed = 0;','    }','}'],
+     x:[['    public void brake() {','no parameters: a different list, so both versions live side by side'],
+        ['    public void brake(int stop) {','parameter names do not count, only types: still brake(int), still already defined'],
+        ['    public int brake(int change) {','the return type is not part of the signature: still brake(int), still already defined']]},
+    {f:MAIN,b:3,w:'greet is an instance method, so it needs an object: non-static method greet() cannot be referenced from a static context. Call it on person1',l:[
+      '// Person has: public void greet() { ... }','Person person1 = new Person("Raymond", 55);','Person.greet();','System.out.println(person1.getName() + " said hello");'],
+     x:[['person1.greet();','an object in front of the dot: greet runs for person1'],
+        ['new Person.greet();','does not compile: Java reads Person.greet as a class name, cannot find symbol class greet'],
+        ['Person.greet(person1);','does not compile: greet takes no arguments, and it still needs an object in front']]},
+    {f:"Learner.java",b:6,w:'a static method belongs to the class, not to one Learner, so there is no name to read: non-static variable name cannot be referenced from a static context',l:[
+      'public class Learner {','    private static String schoolName = "Greenwood High";','    private String name;','    public static void changeSchool(String newName) {','        schoolName = newName;','        System.out.println(name + " moved to " + newName);','    }','}'],
+     x:[['        System.out.println("Everyone moved to " + newName);','uses only the parameter: the static method reads nothing that belongs to one object'],
+        ['        System.out.println(this.name + " moved to " + newName);','does not compile: non-static variable this cannot be referenced from a static context'],
+        ['        System.out.println(Learner.name + " moved to " + newName);','does not compile: name belongs to each object, the class name cannot reach it']]},
+    {f:MAIN,b:1,w:'the double 0.1 is already an approximation, and new BigDecimal(0.1) copies it exactly: prints 0.3000000000000000166533453693773481063544750213623046875. Build it from a String',l:[
+      'BigDecimal price = new BigDecimal(0.1);','BigDecimal quantity = new BigDecimal("3");','BigDecimal total = price.multiply(quantity);','System.out.println(total);   // want: 0.3'],
+     x:[['BigDecimal price = new BigDecimal("0.1");','the String is read as the exact decimal 0.1: prints 0.3'],
+        ['BigDecimal price = new BigDecimal(1 / 10);','1 / 10 is int division, so this is new BigDecimal(0): prints 0'],
+        ['BigDecimal price = new BigDecimal(0.1).setScale(1);','the long value does not fit one decimal exactly: ArithmeticException: Rounding necessary']]},
+    {f:MAIN,b:3,w:'24.50 times 0.0825 is 2.021250, which does not fit two decimals, and setScale(2) alone is not allowed to round: ArithmeticException: Rounding necessary. Say how to round',l:[
+      'Product lamp = new Product("Lamp", new BigDecimal("24.50"));','BigDecimal tax = lamp.getPrice().multiply(new BigDecimal("0.0825"));','BigDecimal rounded = tax.setScale(2);','System.out.println("Tax: " + rounded);   // want: Tax: 2.02'],
+     x:[['BigDecimal rounded = tax.setScale(2, RoundingMode.HALF_UP);','two decimals, rounded half up: Tax: 2.02'],
+        ['BigDecimal rounded = tax.setScale(2, RoundingMode.UNNECESSARY);','UNNECESSARY means "never round": same ArithmeticException: Rounding necessary'],
+        ['BigDecimal rounded = tax.setScale(RoundingMode.HALF_UP);','does not compile: setScale needs the number of decimals first']]},
+    {f:MAIN,b:2,w:'a BigDecimal never changes: add returns a new one, and this line throws it away. total is still 100.00. Reassign the result',l:[
+      'BigDecimal total = new BigDecimal("100.00");','total.add(new BigDecimal("25.00"));','System.out.println(total);   // want: 125.00'],
+     x:[['total = total.add(new BigDecimal("25.00"));','the new BigDecimal goes back into total: prints 125.00'],
+        ['total += new BigDecimal("25.00");','does not compile: bad operand types for binary operator +, BigDecimal is an object, not a number type'],
+        ['BigDecimal sum = total.add(new BigDecimal("25.00"));','compiles, but line 3 still prints total, which is still 100.00']]},
+    {f:MAIN,b:3,w:'equals on BigDecimal also compares the scale, and 20.0 (one decimal) is not 20.00 (two): Still owing prints. compareTo compares only the value',l:[
+      'BigDecimal paid = new BigDecimal("20.0");','BigDecimal price = new BigDecimal("20.00");','if (paid.equals(price)) {','    System.out.println("Paid in full");','} else {','    System.out.println("Still owing");','}'],
+     x:[['if (paid.compareTo(price) == 0) {','0 means same value, whatever the scale: Paid in full'],
+        ['if (paid == price) {','== asks if they are the same object: two new objects, false, Still owing'],
+        ['if (paid.compareTo(price)) {','does not compile: compareTo returns an int, and if needs a boolean']]},
+    {f:"CarTest.java (src/test/java)",b:3,w:'JUnit 5 does not run a private @Test method: it is skipped in silence, so the test can never fail. Make it public or leave the access word off',l:[
+      'class CarTest {','    @Test','    private void accelerate_should_increaseCarSpeed() {','        Car car = new Car("Ford", "Mustang");','        car.accelerate(15);','        assertEquals(15, car.getSpeed());','    }','}'],
+     x:[['    public void accelerate_should_increaseCarSpeed() {','a public void instance method: JUnit finds it and runs it'],
+        ['    public static void accelerate_should_increaseCarSpeed() {','JUnit 5 skips static @Test methods too: still never runs'],
+        ['    private void accelerate_should_increaseCarSpeed() throws Exception {','still private, still skipped']]},
+    {f:"CarTest.java",b:8,w:'it passes today, but the order is backwards: assertEquals reads (expected, actual). When it fails, the report says expected: <the real speed> but was: <5>, which points you at the wrong number. Expected goes first',l:[
+      '@Test','public void brake_should_decreaseCarSpeed() {','    Car car = new Car("Toyota", "Prius");','    int expectedSpeed = 5;','    car.accelerate(15);','    car.brake(10);','    int actualSpeed = car.getSpeed();','    assertEquals(actualSpeed, expectedSpeed);','}'],
+     x:[['    assertEquals(expectedSpeed, actualSpeed);','expected first, actual second: a failure now reads expected: <5> but was: <the real speed>'],
+        ['    assertEquals(actualSpeed, actualSpeed);','compares the speed with itself: always passes, tests nothing'],
+        ['    assertTrue(expectedSpeed, actualSpeed);','does not compile: assertTrue wants a boolean, not two ints']]},
+    {f:"project folders",b:5,w:'the JUnit dependency has scope test, so code under src/main cannot see it: package org.junit.jupiter.api does not exist, and the whole app stops compiling. Tests live under src/test/java',l:[
+      'demo-02-unit-testing','  pom.xml   // junit-jupiter, scope test','  src/main/java/com/pluralsight/Car.java','  src/main/java/com/pluralsight/Main.java','  src/main/java/com/pluralsight/CarTest.java','  src/test/java/com/pluralsight/   // empty'],
+     x:[['move CarTest.java to src/test/java/com/pluralsight/','same package as Car, in the test folder: it compiles and IntelliJ runs it'],
+        ['move CarTest.java to src/test/','outside src/test/java, Maven does not compile it: the test never runs'],
+        ['change the JUnit scope in pom.xml from test to compile','the app compiles again, but JUnit now ships inside it and the test still sits with the production code']]},
+    {f:"Learner.java",b:7,alt:[5],w:'the count goes up every time someone asks for it, not every time a Learner is made: make two Learners, call getCount() three times, and it says 3. Count in the constructor',l:[
+      '// want: getCount() = how many Learners were made','public class Learner {','    private static int count = 0;','    private String name;','    public Learner(String name) { this.name = name; }','    public static int getCount() {','        return ++count;','    }','}'],
+     x:[['move count++; into the constructor and return count; in the getter','one new Learner, one more in the count; asking does not change it'],
+        ['return count++; in the getter','still counts the questions, not the Learners: the first call says 0'],
+        ['make count non-static: private int count = 0;','does not compile: non-static variable count cannot be referenced from a static context']]}
+  ];
+  var KW=/^(public|private|static|void|class|final|if|else|while|for|do|break|continue|return|new|this|null|try|catch|import|true|false|throws)$/;
+  var TY=/^(int|long|double|float|char|boolean|String|Scanner|Integer|ArrayList|HashMap|BufferedReader|FileReader|FileWriter|BufferedWriter|File|IOException|BigDecimal|RoundingMode|Person|Car|Learner|Product|Test|Exception)$/;
+  var N=15, round=[], at=0, score=0, misses=[], phase="idle", lineOk=false, order=[];
+
+  function esc(s){ return s.replace(/&/g,"\u0026amp;").replace(/</g,"\u0026lt;").replace(/>/g,"\u0026gt;"); }
+  function splitComment(src){
+    var q=false;
+    for(var i=0;i<src.length-1;i++){
+      if(src[i]==='"'&&src[i-1]!=="\\") q=!q;
+      if(!q&&src[i]==="/"&&src[i+1]==="/") return [src.slice(0,i),src.slice(i)];
+    }
+    return [src,""];
+  }
+  function hl(full){
+    var parts=splitComment(full), src=parts[0];
+    var re=/("(?:[^"\\]|\\.)*"|'(?:[^'\\]|\\.)*'|\b\d[\d_]*(?:\.\d+)?[LfFdD]?\b|[A-Za-z_]\w*)/g, out="", last=0, m;
+    while((m=re.exec(src))){
+      out+=esc(src.slice(last,m.index)); var t=m[0], c="";
+      if(t[0]==='"'||t[0]==="'") c="st"; else if(/^\d/.test(t)) c="nm"; else if(KW.test(t)) c="kw"; else if(TY.test(t)) c="ty";
+      else if(/^\s*\(/.test(src.slice(re.lastIndex))) c="fn";
+      out+=c?'<span class="'+c+'">'+esc(t)+'</span>':esc(t); last=re.lastIndex;
+    }
+    out+=esc(src.slice(last));
+    return parts[1]?out+'<span class="cm">'+esc(parts[1])+'</span>':out;
+  }
+  function shuffle(a){ a=a.slice(); for(var i=a.length-1;i>0;i--){ var j=Math.floor(Math.random()*(i+1)); var t=a[i]; a[i]=a[j]; a[j]=t; } return a; }
+  function lines(){ return document.querySelectorAll(".ln"); }
+  function opts(){ return document.querySelectorAll(".opt"); }
+  function isCode(t){ return !/^(add|check|change|call|loop|wrap|write|move|make) /.test(t)&&!/^return count\+\+;/.test(t); }
+  function showSnip(){
+    var s=round[at]; phase="line"; lineOk=false;
+    $("#zone").textContent=s.f; $("#code").className="code";
+    $("#code").innerHTML=s.l.map(function(x,i){ return '<button class="ln" data-n="'+(i+1)+'"><span class="no">'+(i+1)+'</span><span class="src">'+hl(x)+'</span></button>'; }).join("");
+    order=shuffle([0,1,2]);
+    $("#opts").innerHTML=order.map(function(k,i){ var c=s.x[k];
+      return '<button class="opt" data-k="'+k+'" tabindex="-1"><span class="k">'+"ABC"[i]+'</span><span><span class="c">'+(isCode(c[0])?hl(c[0].trim()):esc(c[0]))+'</span><span class="why">'+esc(c[1])+'</span></span></button>'; }).join("");
+    $("#fixes").className="fixes off"; $("#bNext").disabled=true;
+    $("#caption").className="caption"; $("#status").innerHTML="One line is wrong. <b class=\"a\">Which one would you change?</b>";
+    $("#stepno").innerHTML="<small>round</small>"+(at+1)+" / "+N; $("#bar").style.width=(100*at/N)+"%";
+  }
+  function start(){
+    round=shuffle(POOL).slice(0,N); at=0; score=0; misses=[];
+    $("#hScore").textContent="0"; $("#startScr").classList.add("off"); $("#endScr").classList.add("off");
+    showSnip();
+  }
+  function goodLine(s,n){ return n===s.b||(s.alt||[]).indexOf(n)>=0; }
+  function pickLine(n){
+    if(phase!=="line") return; var s=round[at]; if(n<1||n>s.l.length) return;
+    lineOk=goodLine(s,n); phase="fix";
+    Array.prototype.forEach.call(lines(),function(b){ var k=+b.getAttribute("data-n"); b.disabled=true;
+      b.classList.add(k===(lineOk?n:s.b)?"hit":k===n?"miss":"dim"); });
+    if(lineOk){ score++; $("#hScore").textContent=String(score); $("#caption").className="caption ok";
+      $("#status").innerHTML='<b class="g">Right line.</b> '+(s.miss?'Something is missing after it. ':'')+'Now <b class="a">pick the fix</b> (A, B or C).'; }
+    else { $("#code").className="code bad"; $("#caption").className="caption cut";
+      $("#status").innerHTML='<b class="w">Line '+n+'</b> is fine. The bug is '+(s.miss?'right after':'on')+' <b class="g">line '+s.b+'</b>. Now <b class="a">pick the fix</b> (A, B or C).'; }
+    $("#fixes").className="fixes";
+    Array.prototype.forEach.call(opts(),function(o){ o.removeAttribute("tabindex"); });
+  }
+  function pickFix(i){
+    if(phase!=="fix") return; var s=round[at], btns=opts(); if(i<0||i>2) return;
+    phase="done"; var k=+btns[i].getAttribute("data-k"), ok=k===0;
+    Array.prototype.forEach.call(btns,function(b,j){ var kk=+b.getAttribute("data-k"); b.disabled=true;
+      b.classList.add(kk===0?"right":j===i?"wrong":"dim"); });
+    if(ok){ score++; $("#hScore").textContent=String(score); }
+    if(!ok||!lineOk) misses.push(s);
+    $("#caption").className="caption "+(ok&&lineOk?"ok":ok||lineOk?"left":"cut");
+    $("#status").innerHTML=(ok?'<b class="g">Right fix.</b> ':'<b class="w">Not that one.</b> ')+esc(s.w)+'.';
+    $("#bNext").disabled=false; $("#bNext").textContent=at+1>=N?"See score":"Next"; $("#bNext").focus();
+  }
+  function next(){ if(phase!=="done") return; at++; if(at>=N) end(); else showSnip(); }
+  function end(){
+    phase="idle"; $("#bar").style.width="100%"; $("#bNext").disabled=true; $("#bNext").textContent="Next";
+    var max=2*N;
+    $("#endScore").textContent=score+" / "+max; $("#endScore").className="big "+(score===max?"good":score>=22?"":"gold");
+    $("#endMsg").textContent=score===max?"Perfect: every line, every fix.":score>=22?"Solid. Read the misses below.":"Keep going. Read the misses below, then play again.";
+    $("#endMiss").innerHTML=misses.map(function(s){ return '<div><b>'+esc(splitComment(s.l[s.b-1])[0].trim())+'</b> '+esc(s.w)+'</div>'; }).join("");
+    $("#endScr").classList.remove("off");
+    $("#stepno").innerHTML="<small>round</small>"+N+" / "+N; $("#caption").className="caption"; $("#status").innerHTML="Round over. <b class=\"a\">Play again</b> shuffles the fifteen snippets.";
+  }
+  $("#code").addEventListener("click",function(e){ var b=e.target.closest(".ln"); if(b) pickLine(+b.getAttribute("data-n")); });
+  $("#opts").addEventListener("click",function(e){ var b=e.target.closest(".opt"); if(b) pickFix(Array.prototype.indexOf.call(opts(),b)); });
+  $("#bStart").addEventListener("click",start); $("#bAgain").addEventListener("click",start);
+  $("#bRestart").addEventListener("click",start); $("#bNext").addEventListener("click",next);
+  document.addEventListener("keydown",function(e){ if(/INPUT|TEXTAREA/.test(e.target.tagName)) return;
+    var playing=$("#startScr").classList.contains("off")&&$("#endScr").classList.contains("off");
+    if(!playing){ if(e.code==="Space"||e.key==="Enter"){ e.preventDefault(); start(); } return; }
+    var k=parseInt(e.key,10);
+    if(phase==="line"&&k>=1&&k<=9) pickLine(k);
+    else if(phase==="fix"){ var i="abc".indexOf(e.key.toLowerCase()); if(i>=0&&e.key.length===1) pickFix(i); }
+    else if(phase==="done"&&(e.key==="Enter"||e.code==="Space")){ e.preventDefault(); next(); } });
+
+  var cv=$("#amb"),ctx=cv.getContext&&cv.getContext("2d"),parts=[];
+  function sizeC(){if(!ctx)return;cv.width=innerWidth;cv.height=innerHeight;}
+  function initParts(){parts=[];for(var i=0;i<46;i++)parts.push({x:Math.random(),y:Math.random(),r:Math.random()*1.6+.3,s:Math.random()*.02+.004,o:Math.random()*.4+.1});}
+  function drawC(){if(!ctx)return;ctx.clearRect(0,0,cv.width,cv.height);
+    parts.forEach(function(p){p.y-=p.s/60;if(p.y<-.02)p.y=1.02;ctx.beginPath();ctx.arc(p.x*cv.width,p.y*cv.height,p.r,0,7);
+      ctx.fillStyle="rgba(140,170,255,"+p.o+")";ctx.fill();});requestAnimationFrame(drawC);}
+  if(ctx&&!reduce){sizeC();initParts();drawC();addEventListener("resize",sizeC);}
+})();
+</script>
+<script src="../manifest.js"></script>
+<script src="../../assets/rail.js"></script>
+<script>Rail.render(document.getElementById("rail"),{week:5,kind:"games",current:"bug-hunter-5"});</script>
+</body>
+</html>

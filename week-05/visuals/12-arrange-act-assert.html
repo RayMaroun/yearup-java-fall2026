@@ -1,0 +1,273 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Arrange, Act, Assert | Week 5 Visual Hub</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Sora:wght@500;700&family=Inter:wght@400;500&family=JetBrains+Mono:wght@400;500&display=swap">
+<style>
+  :root{
+    --bg:#080c17; --bg2:#0c1428; --surface:rgba(255,255,255,.045); --line:rgba(255,255,255,.09);
+    --ink:#eef2fb; --muted:#8496b6; --accent:#6ea0ff; --accent2:#8b7bff; --good:#46d98a; --warn:#ff6a6a;
+    --gold:#ffc862; --disp:'Sora',system-ui,sans-serif; --body:'Inter',system-ui,sans-serif;
+    --mono:'JetBrains Mono',ui-monospace,monospace;
+  }
+  *{box-sizing:border-box}
+  body{margin:0;min-height:100vh;color:var(--ink);font-family:var(--body);
+    background:radial-gradient(1200px 700px at 70% -10%,#141d38 0%,transparent 55%),
+               radial-gradient(900px 600px at 10% 110%,#161233 0%,transparent 50%),#080c17;
+    overflow-x:hidden}
+  #amb{position:fixed;inset:0;z-index:0;pointer-events:none;opacity:.6}
+  .back{position:relative;z-index:2;display:block;max-width:1120px;margin:0 auto;padding:26px 24px 0;
+    width:100%;font-family:var(--mono);font-size:.8rem;letter-spacing:.04em;color:var(--muted);
+    text-decoration:none;transition:color .15s}
+  .back:hover{color:var(--accent)}
+  .wrap{position:relative;z-index:1;max-width:1120px;margin:0 auto;padding:22px 24px 70px}
+  .tag{font-family:var(--mono);font-size:.72rem;letter-spacing:.22em;text-transform:uppercase;color:var(--accent);margin:0 0 14px}
+  h1{font-family:var(--disp);font-weight:700;font-size:clamp(2.3rem,6vw,3.6rem);line-height:1;margin:0 0 12px;
+    letter-spacing:-.03em;background:linear-gradient(180deg,#fff,#b9c6e6);-webkit-background-clip:text;
+    background-clip:text;color:transparent}
+  .lede{color:var(--muted);max-width:64ch;font-size:1.05rem;margin:0 0 26px;line-height:1.5}
+  .lede b{color:var(--ink)}
+  code{font-family:var(--mono);font-size:.92em;color:#bcd0ff}
+
+  /* ---------- the stage IS the picture ---------- */
+  .stage{position:relative;background:linear-gradient(180deg,rgba(255,255,255,.03),rgba(255,255,255,.01));
+    border:1px solid var(--line);border-radius:24px;padding:22px;
+    box-shadow:0 1px 0 rgba(255,255,255,.06) inset,0 30px 80px -30px rgba(0,0,0,.8)}
+  .board{display:grid;grid-template-columns:minmax(0,1.6fr) minmax(0,1fr);gap:22px;align-items:start;min-height:380px}
+  @media (max-width:820px){.board{grid-template-columns:1fr}.pair{grid-template-columns:1fr 1fr}}
+
+  .card{position:relative;border-radius:16px;padding:16px 18px 14px}
+  .hd{font-family:var(--mono);font-size:.62rem;letter-spacing:.16em;text-transform:uppercase;color:var(--muted);margin:0 0 4px}
+  .who{font-family:var(--disp);font-weight:700;font-size:1.35rem;margin:0 0 12px;color:var(--ink);letter-spacing:-.01em}
+
+  /* the test: three stacked stages */
+  .test{border:1px solid rgba(255,255,255,.14);background:rgba(6,10,20,.5);transition:border-color .3s,box-shadow .3s}
+  .test.pass{border-color:rgba(70,217,138,.7);box-shadow:0 0 30px -10px rgba(70,217,138,.8)}
+  .test.fail{border-color:rgba(255,106,106,.7);box-shadow:0 0 30px -10px rgba(255,106,106,.8)}
+  .thead{display:flex;align-items:center;justify-content:space-between;gap:10px;margin-bottom:12px;flex-wrap:wrap}
+  .tname{font-family:var(--mono);font-size:.9rem;color:#c9d4ea;word-break:break-all}
+  .tname i{font-style:normal;color:#82aaff;margin-right:8px}
+  .chip{font-family:var(--mono);font-size:.66rem;letter-spacing:.1em;text-transform:uppercase;padding:4px 10px;border-radius:999px;
+    border:1px solid var(--line);color:var(--muted);white-space:nowrap;transition:.3s}
+  .chip.pass{color:var(--good);border-color:rgba(70,217,138,.6);background:rgba(70,217,138,.1)}
+  .chip.fail{color:var(--warn);border-color:rgba(255,106,106,.6);background:rgba(255,106,106,.1)}
+  .step{display:grid;grid-template-columns:96px 1fr auto;gap:12px;align-items:center;padding:12px 12px;border-radius:12px;
+    border:1px solid var(--line);background:rgba(255,255,255,.025);margin-bottom:8px;transition:border-color .3s,background .3s,opacity .3s}
+  .step.off{opacity:.45}
+  .step.did{border-color:rgba(110,160,255,.45);background:rgba(110,160,255,.07)}
+  .step .k{font-family:var(--mono);font-size:.7rem;letter-spacing:.16em;text-transform:uppercase;color:var(--accent)}
+  .step .d{font-size:.86rem;color:var(--muted);line-height:1.4}
+  .step button{font-family:var(--mono);font-size:.8rem;padding:9px 12px;border-radius:10px;cursor:pointer;white-space:nowrap;
+    border:1px solid var(--line);background:rgba(0,0,0,.25);transition:.15s}
+  .step button:disabled{opacity:.3;cursor:not-allowed}
+  .bNew{color:#dbe6ff;border-color:rgba(110,160,255,.55)!important;background:rgba(110,160,255,.14)!important}
+  .bNew:hover:not(:disabled){background:rgba(110,160,255,.26)!important}
+  .bNew b{font-weight:500;color:var(--gold)}
+  .bCall{color:#ffcb6b}
+  .bCall:hover:not(:disabled){border-color:var(--gold);background:rgba(255,200,98,.1)}
+  .step.as{grid-template-columns:96px 1fr auto}
+  .pair{grid-column:1/-1;display:grid;grid-template-columns:1fr 40px 1fr;gap:8px;align-items:center;margin-top:4px}
+  .box{border:1px solid var(--line);border-radius:10px;padding:8px 10px;background:rgba(0,0,0,.25);text-align:center;transition:.3s}
+  .box small{display:block;font-family:var(--mono);font-size:.56rem;letter-spacing:.14em;text-transform:uppercase;color:var(--muted);margin-bottom:4px}
+  .box input,.box .v{font-family:var(--mono);font-size:1.3rem;color:var(--ink);font-variant-numeric:tabular-nums}
+  .box input{width:5ch;text-align:center;background:transparent;border:1px solid var(--line);border-radius:8px;padding:2px 4px;outline:none;transition:border-color .15s}
+  .box input:focus{border-color:var(--accent)}
+  .box .v{display:inline-block;min-width:3ch}
+  .eq{text-align:center;font-family:var(--mono);font-size:1.2rem;color:var(--muted);transition:color .3s}
+  .pair.pass .box{border-color:rgba(70,217,138,.7);background:rgba(70,217,138,.1)} .pair.pass .eq{color:var(--good)}
+  .pair.fail .box{border-color:rgba(255,106,106,.7);background:rgba(255,106,106,.1)} .pair.fail .eq{color:var(--warn)}
+
+  /* the car object */
+  .objs{min-height:100%;align-self:stretch;display:flex}
+  .empty{flex:1;display:flex;align-items:center;justify-content:center;min-height:300px;font-family:var(--mono);font-size:.82rem;
+    color:var(--muted);text-align:center;line-height:1.7;border:1px dashed rgba(255,255,255,.08);border-radius:16px;padding:16px}
+  .empty b{color:var(--accent);font-weight:500}
+  .obj{flex:1;align-self:start;padding:14px 14px 12px;border:1px solid rgba(255,255,255,.18);background:rgba(255,255,255,.045);opacity:0;transform:translateX(-40px) scale(.9);
+    transition:opacity .45s,transform .55s cubic-bezier(.2,.9,.3,1)}
+  .obj.show{opacity:1;transform:none}
+  .row{display:flex;align-items:center;justify-content:space-between;gap:10px;font-family:var(--mono);font-size:.82rem;
+    padding:8px 10px;border-radius:9px;margin-bottom:5px;border:1px solid transparent;transition:background .3s,border-color .3s}
+  .row .f{color:#c9d4ea}
+  .row .val{color:#f78c6c;font-variant-numeric:tabular-nums} .row .val.s{color:#c3e88d}
+  .row .val s{color:var(--muted);margin-right:6px}
+  .row.chg{background:rgba(255,200,98,.12);border-color:rgba(255,200,98,.55)}
+  .row.chg .val{color:var(--gold);animation:pop .45s}
+  .row.read{background:rgba(110,160,255,.1);border-color:rgba(110,160,255,.5)}
+
+  /* the one sentence */
+  .caption{display:flex;gap:14px;align-items:flex-start;margin:18px 2px 0;padding-top:16px;border-top:1px solid var(--line)}
+  .caption .t{flex:1;font-size:1.05rem;line-height:1.55;color:var(--ink);padding-left:16px;border-left:3px solid var(--accent);transition:border-color .3s}
+  .caption .t .line{display:block;margin-top:6px;font-family:var(--mono);font-size:.8rem;color:#bcd0ff;opacity:.9}
+  .caption.y .t{border-left-color:var(--gold)} .caption.g .t{border-left-color:var(--good)} .caption.w .t{border-left-color:var(--warn)}
+  .caption.w .t .line{color:#ffb0b0}
+  .caption b.a{color:var(--accent)} .caption b.y{color:var(--gold)} .caption b.g{color:var(--good)} .caption b.w{color:var(--warn)}
+  .reset{font-family:var(--body);font-weight:500;font-size:.84rem;padding:8px 14px;border-radius:11px;cursor:pointer;
+    border:1px solid var(--line);background:transparent;color:var(--muted);transition:.15s;flex-shrink:0}
+  .reset:hover{border-color:var(--accent);color:var(--accent)}
+  button:focus-visible,input:focus-visible{outline:2px solid var(--accent);outline-offset:2px}
+  @media (max-width:560px){.step,.step.as{grid-template-columns:1fr}.pair{grid-template-columns:1fr 32px 1fr}}
+
+  @keyframes pop{from{transform:scale(.6);opacity:0}to{transform:scale(1);opacity:1}}
+  .take{margin-top:22px;background:linear-gradient(180deg,rgba(110,160,255,.08),rgba(139,123,255,.04));
+    border:1px solid var(--line);border-left:3px solid var(--accent);border-radius:12px;padding:16px 18px}
+  .take .tk{font-family:var(--mono);font-size:.66rem;letter-spacing:.14em;text-transform:uppercase;color:var(--accent);margin:0 0 8px}
+  .take p{margin:0;font-size:.95rem;color:var(--ink);line-height:1.55}
+  .take b{color:#fff}
+  @media (prefers-reduced-motion:reduce){*{animation-duration:.01ms!important;transition-duration:.01ms!important}#amb{display:none}}
+</style>
+</head>
+<body>
+<a class="back" href="../index.html#12-arrange-act-assert">&#8592; Week 5 index</a>
+<canvas id="amb"></canvas>
+<div class="wrap">
+  <p class="tag">Workbook 4a &middot; Section 3-2 &middot; Parts of a unit test</p>
+  <h1>Arrange, Act, Assert</h1>
+  <p class="lede"><b>One test, three steps. Run them in order, then change what you expect.</b></p>
+
+  <div class="stage">
+    <div class="board">
+      <div class="card test" id="test">
+        <div class="thead">
+          <span class="tname"><i>@Test</i>accelerate_should_increaseCarSpeed()</span>
+          <span class="chip" id="chip">not run</span>
+        </div>
+        <div class="step" id="sArr">
+          <span class="k">Arrange</span>
+          <span class="d">Set up the object under test.</span>
+          <button class="bNew" id="bArr"><b>new</b> Car()</button>
+        </div>
+        <div class="step off" id="sAct">
+          <span class="k">Act</span>
+          <span class="d">Call the one method being tested.</span>
+          <button class="bCall" id="bAct" disabled>.accelerate(10)</button>
+        </div>
+        <div class="step as off" id="sAs">
+          <span class="k">Assert</span>
+          <span class="d">Check the result: expected first, actual second.</span>
+          <button class="bCall" id="bAs" disabled>assertEquals</button>
+          <div class="pair" id="pair">
+            <div class="box"><small>expected</small><input id="inExp" value="10" inputmode="numeric" maxlength="4" aria-label="expected speed"></div>
+            <div class="eq" id="eq">?</div>
+            <div class="box"><small>actual</small><span class="v" id="act">-</span></div>
+          </div>
+        </div>
+      </div>
+      <div class="objs" id="objs">
+        <div class="empty" id="empty"><span>No car yet.<br>Press <b>new</b> Car() in Arrange.</span></div>
+      </div>
+    </div>
+    <div class="caption" id="caption">
+      <div class="t" id="status">One test with <b class="a">three stages</b>. Nothing is set up yet, so there is no car to test.</div>
+      <button class="reset" id="bReset">Reset</button>
+    </div>
+  </div>
+
+  <div class="take">
+    <p class="tk">The one idea</p>
+    <p><b>Arrange sets up, Act calls the one method under test, Assert compares expected with actual.</b> When they match the
+    test passes. When they do not, JUnit fails it and tells you both values, so a wrong expectation or a wrong method is caught at once.</p>
+  </div>
+  <div id="rail"></div>
+</div>
+<script>
+(function(){
+  "use strict";
+  var $=function(s){return document.querySelector(s);};
+  var reduce=matchMedia("(prefers-reduced-motion: reduce)").matches;
+  var speed=null, acted=false;
+  var objs=$("#objs"),empty=$("#empty"),status=$("#status"),caption=$("#caption");
+
+  function say(html,tone,line){
+    caption.className="caption"+(tone?" "+tone:"");
+    status.innerHTML=html;
+    if(line){ var l=document.createElement("span"); l.className="line"; l.textContent=line; status.appendChild(l); }
+  }
+  function verdict(state){
+    $("#test").className="card test"+(state?" "+state:"");
+    $("#pair").className="pair"+(state?" "+state:"");
+    var c=$("#chip"); c.className="chip"+(state?" "+state:"");
+    c.textContent=state==="pass"?"passed":state==="fail"?"failed":"not run";
+    $("#eq").textContent=state==="pass"?"=":state==="fail"?"≠":"?";
+  }
+
+  function arrange(){
+    if(speed!==null) return;
+    speed=0;
+    var el=document.createElement("div"); el.className="card obj"; el.id="car";
+    el.innerHTML='<p class="hd">object \u00b7 Car</p><p class="who">car</p>'
+      +'<div class="row"><span class="f">make</span><span class="val s">"Ford"</span></div>'
+      +'<div class="row"><span class="f">model</span><span class="val s">"Mustang"</span></div>'
+      +'<div class="row" id="rSpeed"><span class="f">speed</span><span class="val">0</span></div>';
+    empty.style.display="none"; objs.appendChild(el);
+    setTimeout(function(){ el.classList.add("show"); },reduce?0:30);
+    $("#bArr").disabled=true; $("#sArr").classList.add("did");
+    $("#sAct").classList.remove("off"); $("#bAct").disabled=false;
+    say('<b class="g">Arrange</b> built the object under test: a new car standing still at <b class="g">speed 0</b>.',
+      "g",'Car car = new Car("Ford", "Mustang");');
+  }
+  function act(){
+    if(speed===null||acted) return;
+    var old=speed; speed+=10; acted=true;
+    var row=$("#rSpeed"),val=row.querySelector(".val");
+    row.classList.remove("read","chg"); void row.offsetWidth; row.classList.add("chg");
+    val.innerHTML="<s>"+old+"</s>"+speed;
+    $("#bAct").disabled=true; $("#sAct").classList.add("did");
+    $("#sAs").classList.remove("off"); $("#bAs").disabled=false;
+    say('<b class="y">Act</b> called the one method under test. accelerate added 10: speed went from '+old+' to <b class="y">'+speed+'</b>.',
+      "y","car.accelerate(10);");
+  }
+  function assert(){
+    if(!acted) return;
+    var inp=$("#inExp"), exp=parseInt(inp.value,10);
+    if(isNaN(exp)){ exp=10; }
+    inp.value=exp;
+    var row=$("#rSpeed"); row.classList.remove("chg"); row.classList.add("read");
+    $("#act").textContent=speed; $("#sAs").classList.add("did");
+    if(exp===speed){
+      verdict("pass");
+      say('<b class="g">Assert</b> laid expected '+exp+' next to actual '+speed+'. They match, so the test <b class="g">passed</b>.',
+        "g","assertEquals("+exp+", car.getSpeed());");
+    }else{
+      verdict("fail");
+      say('<b class="w">Assert</b> laid expected '+exp+' next to actual '+speed+'. They differ, so JUnit <b class="w">fails</b> the test and prints both.',
+        "w","expected: <"+exp+"> but was: <"+speed+">");
+    }
+  }
+  function reset(){
+    speed=null; acted=false;
+    var c=$("#car"); if(c) c.remove();
+    empty.style.display="";
+    $("#bArr").disabled=false; $("#bAct").disabled=true; $("#bAs").disabled=true;
+    $("#sArr").className="step"; $("#sAct").className="step off"; $("#sAs").className="step as off";
+    $("#inExp").value="10"; $("#act").textContent="-";
+    verdict("");
+    say('One test with <b class="a">three stages</b>. Nothing is set up yet, so there is no car to test.');
+  }
+  $("#bArr").addEventListener("click",arrange);
+  $("#bAct").addEventListener("click",act);
+  $("#bAs").addEventListener("click",assert);
+  $("#bReset").addEventListener("click",reset);
+  $("#inExp").addEventListener("keydown",function(e){ if(e.key==="Enter"){ e.preventDefault(); assert(); } });
+  $("#inExp").addEventListener("input",function(){ if($("#test").classList.contains("pass")||$("#test").classList.contains("fail")){ verdict(""); $("#sAs").classList.remove("did"); } });
+
+  /* ambient canvas */
+  var cv=$("#amb"),ctx=cv.getContext&&cv.getContext("2d"),parts=[];
+  function sizeC(){if(!ctx)return;cv.width=innerWidth;cv.height=innerHeight;}
+  function initParts(){parts=[];for(var i=0;i<46;i++)parts.push({x:Math.random(),y:Math.random(),
+    r:Math.random()*1.6+.3,s:Math.random()*.02+.004,o:Math.random()*.4+.1});}
+  function drawC(){if(!ctx)return;ctx.clearRect(0,0,cv.width,cv.height);
+    parts.forEach(function(p){p.y-=p.s/60;if(p.y<-.02)p.y=1.02;
+      ctx.beginPath();ctx.arc(p.x*cv.width,p.y*cv.height,p.r,0,7);
+      ctx.fillStyle="rgba(140,170,255,"+p.o+")";ctx.fill();});
+    requestAnimationFrame(drawC);}
+  if(ctx&&!reduce){sizeC();initParts();drawC();addEventListener("resize",sizeC);}
+})();
+</script>
+<script src="../manifest.js"></script>
+<script src="../../assets/rail.js"></script>
+<script>Rail.render(document.getElementById("rail"),{week:5,kind:"visuals",current:"12-arrange-act-assert"});</script>
+</body>
+</html>

@@ -1,0 +1,406 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Pick the Assertion | Week 5 Visual Hub</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Sora:wght@500;700&family=Inter:wght@400;500&family=JetBrains+Mono:wght@400;500&display=swap">
+<style>
+  :root{
+    --bg:#080c17; --bg2:#0c1428; --surface:rgba(255,255,255,.045); --line:rgba(255,255,255,.09);
+    --ink:#eef2fb; --muted:#8496b6; --accent:#6ea0ff; --accent2:#8b7bff; --good:#46d98a; --warn:#ff6a6a;
+    --gold:#ffc862; --disp:'Sora',system-ui,sans-serif; --body:'Inter',system-ui,sans-serif;
+    --mono:'JetBrains Mono',ui-monospace,monospace;
+  }
+  *{box-sizing:border-box}
+  body{margin:0;min-height:100vh;color:var(--ink);font-family:var(--body);
+    background:radial-gradient(1200px 700px at 70% -10%,#141d38 0%,transparent 55%),
+               radial-gradient(900px 600px at 10% 110%,#161233 0%,transparent 50%),#080c17;
+    overflow-x:hidden}
+  #amb{position:fixed;inset:0;z-index:0;pointer-events:none;opacity:.6}
+  .back{position:relative;z-index:2;display:block;max-width:1120px;margin:0 auto;padding:26px 24px 0;
+    width:100%;font-family:var(--mono);font-size:.8rem;letter-spacing:.04em;color:var(--muted);
+    text-decoration:none;transition:color .15s}
+  .back:hover{color:var(--accent)}
+  .wrap{position:relative;z-index:1;max-width:1120px;margin:0 auto;padding:22px 24px 70px}
+  .tag{font-family:var(--mono);font-size:.72rem;letter-spacing:.22em;text-transform:uppercase;color:var(--accent);margin:0 0 14px}
+  h1{font-family:var(--disp);font-weight:700;font-size:clamp(2.3rem,6vw,3.6rem);line-height:1;margin:0 0 12px;
+    letter-spacing:-.03em;background:linear-gradient(180deg,#fff,#b9c6e6);-webkit-background-clip:text;
+    background-clip:text;color:transparent}
+  .lede{color:var(--muted);max-width:64ch;font-size:1.05rem;margin:0 0 26px;line-height:1.5}
+  .lede b{color:var(--ink)}
+  .lede code,.take code,.caption code{font-family:var(--mono);font-size:.92em;color:#bcd0ff}
+
+  /* ---------- stage: picture first, one toolbar, support below ---------- */
+  .stage{position:relative;background:linear-gradient(180deg,rgba(255,255,255,.03),rgba(255,255,255,.01));
+    border:1px solid var(--line);border-radius:24px;padding:18px 18px 14px;
+    box-shadow:0 1px 0 rgba(255,255,255,.06) inset,0 30px 80px -30px rgba(0,0,0,.8)}
+  .topbar{display:flex;align-items:center;gap:10px;margin:0 0 14px;flex-wrap:wrap}
+  .topbar .lab{margin:0 4px 0 0}
+  .lab{font-family:var(--mono);font-size:.7rem;letter-spacing:.12em;text-transform:uppercase;color:var(--muted);margin:0 0 10px}
+  .chips{display:flex;flex-wrap:wrap;gap:6px}
+  .chip{font-family:var(--mono);font-size:.74rem;padding:5px 11px;border-radius:999px;cursor:pointer;
+    border:1px solid var(--line);background:rgba(0,0,0,.25);color:var(--muted);transition:.15s}
+  .chip:hover{border-color:var(--accent);color:var(--accent)}
+  .chip.on{border-color:rgba(110,160,255,.6);background:rgba(110,160,255,.14);color:var(--ink)}
+  .chip:focus-visible,.btn:focus-visible,.focus:focus-visible{outline:2px solid var(--accent);outline-offset:2px}
+  .focus{margin-left:auto;font-family:var(--mono);font-size:.68rem;letter-spacing:.1em;text-transform:uppercase;padding:6px 12px;
+    border-radius:999px;border:1px solid var(--line);background:rgba(0,0,0,.25);color:var(--muted);cursor:pointer;transition:.15s}
+  .focus:hover{border-color:var(--accent);color:var(--accent)}
+  body.solo .focus{border-color:rgba(255,200,98,.6);color:var(--gold);background:rgba(255,200,98,.1)}
+
+  /* ---------- game board ---------- */
+  .pic{position:relative;min-height:470px;border:1px solid var(--line);border-radius:18px;background:rgba(6,10,20,.5);overflow:hidden;
+    display:flex;flex-direction:column;align-items:center;justify-content:center;gap:22px;padding:20px}
+  .pic .zone{position:absolute;left:18px;top:14px;font-family:var(--mono);font-size:.62rem;letter-spacing:.14em;text-transform:uppercase;color:rgba(132,150,182,.55)}
+  .hud{position:absolute;right:18px;top:12px;display:flex;gap:14px;font-family:var(--mono);font-size:.72rem;color:var(--muted)}
+  .hud b{color:var(--ink);font-weight:500}
+  .code{font-family:var(--mono);font-size:clamp(.95rem,2.1vw,1.3rem);line-height:1.55;color:var(--ink);padding:18px 30px;border:1px solid var(--line);border-radius:16px;
+    background:rgba(0,0,0,.3);min-width:300px;max-width:100%;white-space:pre;overflow-x:auto;transition:border-color .2s,box-shadow .2s,transform .2s}
+  .code .ty{color:#c9a7ff} .code .nm{color:var(--gold)} .code .cs{color:var(--accent)} .code .st{color:#9fe6b8}
+  .code .sp{background:rgba(255,200,98,.28);border-radius:3px;box-shadow:0 0 0 1px rgba(255,200,98,.35) inset}
+  .after{font-family:var(--mono);font-size:.82rem;color:var(--muted);min-height:1.3em}
+  .after b{color:var(--ink);font-weight:500}
+  .code.good{border-color:rgba(70,217,138,.7);box-shadow:0 0 28px -8px rgba(70,217,138,.8)}
+  .code.bad{border-color:rgba(255,106,106,.7);box-shadow:0 0 28px -8px rgba(255,106,106,.8);animation:shake .3s}
+  @keyframes shake{25%{transform:translateX(-6px)}75%{transform:translateX(6px)}}
+  .opts{display:flex;flex-wrap:wrap;gap:8px;justify-content:center;max-width:620px}
+  .opt{font-family:var(--mono);font-size:.9rem;padding:10px 18px;border-radius:11px;cursor:pointer;border:1px solid var(--line);background:var(--surface);color:var(--ink);transition:.15s}
+  .opt:hover{border-color:var(--accent);color:var(--accent)}
+  .opt:disabled{cursor:default}
+  .opt.hit{border-color:rgba(70,217,138,.7);background:rgba(70,217,138,.14);color:var(--good)}
+  .opt.miss{border-color:rgba(255,106,106,.7);background:rgba(255,106,106,.12);color:var(--warn)}
+  .opt.dim{opacity:.4}
+  .key{display:inline-block;margin-left:6px;font-size:.62rem;color:var(--muted)}
+  .screen{position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:12px;background:rgba(6,10,20,.92);transition:opacity .25s}
+  .screen.off{opacity:0;pointer-events:none}
+  .screen h2{font-family:var(--disp);font-weight:700;font-size:1.6rem;margin:0;color:var(--ink)}
+  .screen p{margin:0;color:var(--muted);font-size:.95rem;text-align:center;max-width:46ch;line-height:1.5}
+  .screen .big{font-family:var(--disp);font-weight:700;font-size:2.6rem;color:var(--accent)}
+  .screen .big.gold{color:var(--gold)} .screen .big.good{color:var(--good)}
+  .bar{position:absolute;left:0;right:0;bottom:0;height:4px;background:rgba(255,255,255,.06)}
+  .bar i{display:block;height:100%;width:0;background:var(--accent);transition:width .25s}
+  .misses{font-family:var(--mono);font-size:.72rem;color:var(--muted);line-height:1.6;text-align:left;max-width:680px;max-height:160px;overflow-y:auto;padding:0 8px}
+  .misses b{color:var(--warn);font-weight:500} .misses i{font-style:normal;color:var(--good)}
+  /* caption: the one sentence, right under the picture */
+  .caption{display:flex;gap:16px;align-items:flex-start;margin:14px 4px 0;min-height:56px}
+  .caption .n{flex-shrink:0;font-family:var(--disp);font-weight:700;font-size:1.35rem;color:var(--accent);font-variant-numeric:tabular-nums;
+    line-height:1.2;min-width:3.2rem}
+  .caption .n small{display:block;font-family:var(--mono);font-weight:400;font-size:.58rem;letter-spacing:.14em;text-transform:uppercase;color:var(--muted)}
+  .caption .t{font-size:1.02rem;line-height:1.55;color:var(--ink);padding-left:16px;border-left:3px solid var(--accent);transition:border-color .3s}
+  body.solo .caption .t{font-size:1.18rem}
+  .caption.cut .t{border-left-color:var(--warn)} .caption.left .t{border-left-color:var(--gold)} .caption.ok .t{border-left-color:var(--good)}
+  .caption b.g{color:var(--good)} .caption b.w{color:var(--warn)} .caption b.a{color:var(--accent)} .caption b.y{color:var(--gold)}
+
+  /* toolbar: same on every page */
+  .toolbar{display:flex;align-items:center;gap:10px;margin:16px 0 0;padding-top:14px;border-top:1px solid var(--line)}
+  .btn{font-family:var(--body);font-weight:500;font-size:.86rem;padding:9px 16px;border-radius:11px;cursor:pointer;
+    border:1px solid var(--line);background:var(--surface);color:var(--ink);transition:.15s}
+  .btn:hover{border-color:var(--accent);color:var(--accent)}
+  .btn.primary{border-color:rgba(110,160,255,.5);background:rgba(110,160,255,.12);padding:9px 22px}
+  .btn:disabled{opacity:.35;cursor:not-allowed}
+  .btn.ghost{background:transparent;color:var(--muted);margin-left:auto}
+  .dots{display:flex;gap:5px;align-items:center;margin:0 6px}
+  .dots i{display:block;width:8px;height:8px;border-radius:50%;background:rgba(255,255,255,.12);transition:.2s}
+  .dots i.done{background:rgba(110,160,255,.45)}
+  .dots i.now{background:var(--accent);transform:scale(1.35);box-shadow:0 0 10px rgba(110,160,255,.7)}
+  .hint{font-family:var(--mono);font-size:.68rem;color:var(--muted);margin:10px 4px 0;line-height:1.5}
+  .hint b{color:var(--accent)}
+
+  .toolbar .btn.primary{min-width:120px}
+  .goal{font-family:var(--disp);font-weight:500;font-size:clamp(1.05rem,2.3vw,1.35rem);color:var(--ink);text-align:center;max-width:44ch;line-height:1.4;margin-top:18px}
+  .goal b{color:var(--gold);font-weight:500}
+  .code{font-size:clamp(.78rem,1.6vw,.92rem);padding:12px 22px}
+  .code .cm{color:var(--muted)}
+  .opts{flex-direction:column;align-items:stretch;max-width:720px;width:100%}
+  .opt{text-align:left;font-size:clamp(.78rem,1.6vw,.9rem);white-space:pre-wrap;word-break:break-word;display:flex;align-items:center;gap:10px}
+  .opt .key{margin:0;flex-shrink:0;min-width:1.4em;font-size:.7rem}
+  .take{margin-top:22px;background:linear-gradient(180deg,rgba(110,160,255,.08),rgba(139,123,255,.04));
+    border:1px solid var(--line);border-left:3px solid var(--accent);border-radius:12px;padding:16px 18px}
+  .take .tk{font-family:var(--mono);font-size:.66rem;letter-spacing:.14em;text-transform:uppercase;color:var(--accent);margin:0 0 8px}
+  .take p{margin:0;font-size:.95rem;color:var(--ink);line-height:1.55}
+  .take b{color:#fff}
+  @media (prefers-reduced-motion:reduce){*{animation-duration:.01ms!important;transition-duration:.01ms!important}#amb{display:none}}
+</style>
+</head>
+<body>
+
+<a class="back" href="../index.html#pick-the-assertion">&#8592; Week 5 index</a>
+
+<canvas id="amb"></canvas>
+<div class="wrap">
+  <p class="tag">Workbook 4a &middot; Section 3-2 &middot; Game</p>
+  <h1>Pick the Assertion</h1>
+  <p class="lede"><b>A test wants to check one thing. Pick the assertion that says exactly that.</b> Fifteen rounds.</p>
+
+  <div class="stage">
+    <div class="topbar">
+      <span class="lab">Game</span>
+    </div>
+
+    <div class="pic" id="pic">
+      <span class="zone">which line asserts it?</span>
+      <div class="hud"><span>score <b id="hScore">0</b></span><span>time <b id="hTime">0.0s</b></span></div>
+      <div class="goal" id="goal">&nbsp;</div>
+      <div class="code" id="value">&nbsp;</div>
+      <div class="opts" id="opts"></div>
+      <div class="bar"><i id="bar"></i></div>
+      <div class="screen" id="startScr">
+        <h2>Pick the Assertion</h2>
+        <p>Read what the test wants to check and the variables in play. Four assertion lines, one is right. Click it, or press 1 to 4.</p>
+        <button class="btn primary" id="bStart">Start</button>
+      </div>
+      <div class="screen off" id="endScr">
+        <h2>Round over</h2>
+        <div class="big" id="endScore"></div>
+        <p id="endMsg"></p>
+        <div class="misses" id="endMiss"></div>
+        <button class="btn primary" id="bAgain">Play again</button>
+      </div>
+    </div>
+
+    <div class="caption" id="caption">
+      <div class="n" id="stepno"><small>round</small>0 / 15</div>
+      <div class="t" id="status">Press <b class="a">Start</b>. Keys 1 to 4 answer.</div>
+    </div>
+    <p class="hint">assertEquals(expected, actual) &middot; assertNotEquals(unexpected, actual) &middot; assertArrayEquals(expectedArray, actualArray) &middot; assertTrue / assertFalse(boolean) &middot; assertNull / assertNotNull(object) &middot; assertThrows(X.class, () -&gt; call)</p>
+  </div>
+
+  <div class="take">
+    <p class="tk">The one idea</p>
+    <p><b>The assertion is the sentence your test says out loud.</b> Pick the one that matches the check: equal values with expected first, a true or false condition, null or not null, or an exception thrown by a call wrapped in a lambda. The right one fails for the right reason and prints a message you can read.</p>
+  </div>
+
+  <div id="rail"></div>
+</div>
+
+<script>
+(function(){
+  "use strict";
+  var $=function(s){return document.querySelector(s);};
+  var reduce=matchMedia("(prefers-reduced-motion: reduce)").matches;
+
+  // ---------- a tiny Car, same rules as the Java class: speed starts at 0, brake never goes below 0 ----------
+  function carSpeed(ops){ var s=0; ops.forEach(function(o){ if(o[0]==="accelerate") s+=o[1]; else s=o[1]>s?0:s-o[1]; }); return s; }
+
+  // ---------- rounds ----------
+  // goal: {k, a, b} = the one assertion that states the check. k: eq, ne, arr, t, f, nul, nn, thr.
+  // opts: the three wrong lines, {k, a, b, lam, why}. The right line is built from the goal.
+  // judge() decides right or wrong by comparing structure, so exactly one option can pass; check() proves it on load.
+  var R=[];
+  (function(){
+    var ops=[["accelerate",10]], e=carSpeed(ops);
+    R.push({goal:"The car's speed is <b>"+e+"</b> after <b>accelerate(10)</b>.",
+      vars:['Car car = new Car("Ford", "Mustang");','int expectedSpeed = '+e+';','car.accelerate(10);','int actualSpeed = car.getSpeed();'],
+      g:{k:"eq",a:"expectedSpeed",b:"actualSpeed"},
+      opts:[{k:"eq",a:"actualSpeed",b:"expectedSpeed"},{k:"ne",a:"expectedSpeed",b:"actualSpeed"},
+        {k:"t",a:"actualSpeed",why:"assertTrue takes a boolean, and actualSpeed is an int: this does not compile"}]});
+  })();
+  (function(){
+    var ops=[["accelerate",15],["brake",10]], e=carSpeed(ops);
+    R.push({goal:"After speeding up by 15, <b>brake(10)</b> leaves the speed at <b>"+e+"</b>.",
+      vars:['Car car = new Car("Toyota", "Prius");','int speedUpBy = 15;','int slowDownBy = 10;','int expectedSpeed = '+e+';','car.accelerate(speedUpBy);','car.brake(slowDownBy);','int actualSpeed = car.getSpeed();'],
+      g:{k:"eq",a:"expectedSpeed",b:"actualSpeed"},
+      opts:[{k:"eq",a:"actualSpeed",b:"expectedSpeed"},
+        {k:"eq",a:"speedUpBy",b:"actualSpeed",why:"speedUpBy is 15, the speed before brake(10); the expected value is expectedSpeed, "+e},
+        {k:"f",a:"actualSpeed == 0",why:"that only says the car is still moving; a speed of 7 would pass too, so it does not check "+e}]});
+  })();
+  (function(){
+    var ops=[["accelerate",15],["brake",20]], e=carSpeed(ops);
+    R.push({goal:"Braking by more than the current speed stops the car: speed is <b>"+e+"</b>.",
+      vars:['Car car = new Car("Toyota", "Rav4");','int expectedSpeed = '+e+';','car.accelerate(15);','car.brake(20);','int actualSpeed = car.getSpeed();'],
+      g:{k:"eq",a:"expectedSpeed",b:"actualSpeed"},
+      opts:[{k:"eq",a:"actualSpeed",b:"expectedSpeed"},
+        {k:"nul",a:"actualSpeed",why:"an int is never null, so this always fails; the test wants the value "+e},
+        {k:"ne",a:"expectedSpeed",b:"actualSpeed"}]});
+  })();
+  (function(){
+    var ops=[["accelerate",5]], e=carSpeed(ops);
+    R.push({goal:"The speed <b>changed</b> after <b>accelerate(5)</b>: it is no longer the starting speed.",
+      vars:['Car car = new Car("Ford", "Mustang");','int startSpeed = car.getSpeed();','car.accelerate(5);','int actualSpeed = car.getSpeed();   // '+e],
+      g:{k:"ne",a:"startSpeed",b:"actualSpeed"},
+      opts:[{k:"eq",a:"startSpeed",b:"actualSpeed"},{k:"ne",a:"actualSpeed",b:"startSpeed"},
+        {k:"t",a:"actualSpeed",why:"assertTrue takes a boolean, and actualSpeed is an int: this does not compile"}]});
+  })();
+  R.push({goal:"The playlist <b>is empty</b> after <b>clear()</b>.",
+    vars:['Playlist playlist = new Playlist();','playlist.add("Intro");','playlist.clear();'],
+    g:{k:"t",a:"playlist.isEmpty()"},
+    opts:[{k:"f",a:"playlist.isEmpty()"},
+      {k:"nul",a:"playlist",why:"an empty playlist is still an object; empty is not null, so this fails"},
+      {k:"eq",a:"playlist.size()",b:"0",why:"expected and actual are swapped: 0 is the expected value and goes first"}]});
+  R.push({goal:"The playlist is <b>not empty</b> after one <b>add</b>.",
+    vars:['Playlist playlist = new Playlist();','playlist.add("Intro");'],
+    g:{k:"f",a:"playlist.isEmpty()"},
+    opts:[{k:"t",a:"playlist.isEmpty()"},
+      {k:"nn",a:"playlist",why:"that only checks the playlist object exists; an empty playlist would pass too"},
+      {k:"f",a:"playlist",why:"assertFalse takes a boolean, and playlist is an object: this does not compile"}]});
+  R.push({goal:"The playlist has <b>2</b> songs after two <b>add</b> calls.",
+    vars:['Playlist playlist = new Playlist();','playlist.add("Intro");','playlist.add("Outro");','int expectedSize = 2;','int actualSize = playlist.size();'],
+    g:{k:"eq",a:"expectedSize",b:"actualSize"},
+    opts:[{k:"eq",a:"actualSize",b:"expectedSize"},
+      {k:"f",a:"playlist.isEmpty()",why:"that only checks it is not empty; one song would pass too, so it does not check 2"},
+      {k:"eq",a:"expectedSize",b:"playlist",why:"this compares the number 2 with the Playlist object, not its size: it always fails"}]});
+  R.push({goal:"The pet's <b>name is not null</b> after the constructor.",
+    vars:['Pet pet = new Pet("Biscuit");','String name = pet.getName();'],
+    g:{k:"nn",a:"name"},
+    opts:[{k:"nul",a:"name"},
+      {k:"nn",a:"pet",why:"that checks the pet object, which new always gives you; the test is about the name"},
+      {k:"t",a:"name",why:"assertTrue takes a boolean, and name is a String: this does not compile"}]});
+  R.push({goal:"A pet made with the empty constructor has <b>no name yet</b>: the name <b>is null</b>.",
+    vars:['Pet pet = new Pet();','String name = pet.getName();'],
+    g:{k:"nul",a:"name"},
+    opts:[{k:"nn",a:"name"},
+      {k:"nul",a:"pet",why:"pet holds the object new just made, so this fails; the test is about the name"},
+      {k:"f",a:"name",why:"assertFalse takes a boolean, and name is a String: this does not compile"}]});
+  R.push({goal:"The full name is <b>\"Ada Lovelace\"</b>.",
+    vars:['Contact contact = new Contact("Ada", "Lovelace");','String expectedFullName = "Ada Lovelace";','String actualFullName = contact.getFullName();'],
+    g:{k:"eq",a:"expectedFullName",b:"actualFullName"},
+    opts:[{k:"eq",a:"actualFullName",b:"expectedFullName"},
+      {k:"t",a:"expectedFullName == actualFullName",why:"== compares String references, not the text; two equal names built separately fail. assertEquals compares the text"},
+      {k:"nn",a:"actualFullName",why:"that only checks a name came back; \"Ada\" alone would pass too"}]});
+  R.push({goal:"The lamp <b>is off</b> after <b>turnOff()</b>.",
+    vars:['Lamp lamp = new Lamp();','lamp.turnOn();','lamp.turnOff();'],
+    g:{k:"f",a:"lamp.isOn()"},
+    opts:[{k:"t",a:"lamp.isOn()"},
+      {k:"nn",a:"lamp",why:"that only checks the lamp object exists; a lamp left on would pass too"},
+      {k:"f",a:"lamp",why:"assertFalse takes a boolean, and lamp is an object: this does not compile"}]});
+  R.push({goal:"The tank <b>is full</b> after <b>fillUp()</b>.",
+    vars:['FuelTank tank = new FuelTank(50);','tank.fillUp();'],
+    g:{k:"t",a:"tank.isFull()"},
+    opts:[{k:"f",a:"tank.isFull()"},
+      {k:"eq",a:"tank.isFull()",b:"true",why:"expected and actual are swapped: true is the expected value and goes first, and assertTrue says it more simply"},
+      {k:"nn",a:"tank",why:"that only checks the tank object exists; an empty tank would pass too"}]});
+  R.push({goal:"Sorting <b>{8, 3, 5}</b> gives <b>{3, 5, 8}</b>.",
+    vars:['int[] scores = {8, 3, 5};','int[] expected = {3, 5, 8};','Arrays.sort(scores);'],
+    g:{k:"arr",a:"expected",b:"scores"},
+    opts:[{k:"eq",a:"expected",b:"scores",why:"assertEquals on two arrays compares references: two different arrays fail even with the same values"},
+      {k:"arr",a:"scores",b:"expected"},
+      {k:"t",a:"scores.length == 3",why:"that only checks the length; {8, 3, 5} unsorted would pass too"}]});
+  R.push({goal:"Withdrawing too much <b>throws IllegalArgumentException</b>.",
+    vars:['BankAccount account = new BankAccount(100);','// withdraw(500) is more than the balance; withdraw returns void'],
+    g:{k:"thr",a:"IllegalArgumentException",b:"account.withdraw(500)",lam:true},
+    opts:[{k:"thr",a:"IllegalArgumentException",b:"account.withdraw(500)",lam:false},
+      {k:"thr",a:"NullPointerException",b:"account.withdraw(500)",lam:true},
+      {k:"t",a:"account.getBalance() < 500",why:"that checks the balance; withdraw is never called, so nothing about the exception is tested"}]});
+  R.push({goal:"Setting a countdown to <b>-3</b> minutes <b>throws IllegalArgumentException</b>.",
+    vars:['Countdown countdown = new Countdown();','// minutes must be 0 or more; setMinutes returns void'],
+    g:{k:"thr",a:"IllegalArgumentException",b:"countdown.setMinutes(-3)",lam:true},
+    opts:[{k:"thr",a:"IllegalArgumentException",b:"countdown.setMinutes(-3)",lam:false},
+      {k:"thr",a:"IllegalStateException",b:"countdown.setMinutes(-3)",lam:true},
+      {k:"nn",a:"countdown",why:"that only checks the countdown exists; setMinutes is never called"}]});
+
+  var NAME={eq:"assertEquals",ne:"assertNotEquals",arr:"assertArrayEquals",t:"assertTrue",f:"assertFalse",nul:"assertNull",nn:"assertNotNull",thr:"assertThrows"};
+  function text(o){
+    if(o.k==="thr") return "assertThrows("+o.a+".class, "+(o.lam?"() -> ":"")+o.b+");";
+    if(o.b!==undefined) return NAME[o.k]+"("+o.a+", "+o.b+");";
+    return NAME[o.k]+"("+o.a+");";
+  }
+  function same(o,g){ return o.k===g.k&&o.a===g.a&&o.b===g.b&&!!o.lam===!!g.lam; }
+  // the why for every line, right or wrong
+  function judge(o,g){
+    if(same(o,g)){
+      var ok={eq:"expected first, actual second: it passes only when the two are equal, and a failure prints expected and actual the right way round",
+        ne:"the starting value first, the new value second: it fails only if they are still equal",
+        arr:"assertArrayEquals compares the length and every element, expected array first",
+        t:"assertTrue passes only when "+g.a+" is true",f:"assertFalse passes only when "+g.a+" is false",
+        nul:"assertNull passes only when "+g.a+" is null",nn:"assertNotNull passes as long as "+g.a+" holds something",
+        thr:"the lambda hands the call to assertThrows, which runs it and passes only if "+g.a+" is thrown"};
+      return {ok:true,why:ok[g.k]};
+    }
+    if(o.why) return {ok:false,why:o.why};
+    if(o.k==="ne"&&g.k==="ne"&&o.a===g.b&&o.b===g.a) return {ok:false,why:"the order is swapped: the value it must not equal, "+g.a+", goes first and the actual value second. It passes today, but a failure message would read backwards"};
+    if(o.k===g.k&&o.a===g.b&&o.b===g.a) return {ok:false,why:"expected and actual are swapped: "+g.a+" goes first. It passes today, but a failure would print the two values backwards"};
+    if(o.k==="thr"&&g.k==="thr"&&!o.lam) return {ok:false,why:"without () -> the call runs right away, before assertThrows can catch anything: this does not compile"};
+    if(o.k==="thr"&&g.k==="thr"&&o.a!==g.a) return {ok:false,why:"the call throws "+g.a+", not "+o.a+": a different exception makes assertThrows fail"};
+    var P={"ne>eq":"assertNotEquals passes when the two differ: the opposite of this check",
+      "eq>ne":"assertEquals passes only when they are equal; the test wants them different",
+      "f>t":"assertFalse passes only when "+o.a+" is false; the test wants it true",
+      "t>f":"assertTrue passes only when "+o.a+" is true; the test wants it false",
+      "nul>nn":"assertNull is the opposite: it passes only when "+o.a+" is null",
+      "nn>nul":"assertNotNull is the opposite: it passes only when "+o.a+" holds something"};
+    var p=P[o.k+">"+g.k]; if(p&&o.a===g.a&&o.b===g.b) return {ok:false,why:p};
+    return null;
+  }
+  // every round: one right line, three wrong lines, each with its why
+  function check(){
+    R.forEach(function(r,i){
+      var lines=[r.g].concat(r.opts), rights=0;
+      lines.forEach(function(o){ var j=judge(o,r.g); if(!j) throw new Error("round "+(i+1)+": no why for "+text(o)); if(j.ok) rights++; });
+      if(rights!==1||r.opts.length!==3) throw new Error("round "+(i+1)+": "+rights+" right lines");
+    });
+  }
+
+  // ---------- drawing ----------
+  var AMP=String.fromCharCode(38), ENT={"<":"lt;",">":"gt;","\"":"quot;"};
+  function esc(s){ return String(s).replace(/[<>"]/g,function(c){ return AMP+ENT[c]; }); }
+  function hl(line){
+    var cut=line.indexOf("//"), code=cut>=0?line.slice(0,cut):line, cm=cut>=0?line.slice(cut):"";
+    var h=code.split(/("[^"]*")/).map(function(part,i){
+      if(i%2) return '<span class="st">'+esc(part)+'</span>';
+      return esc(part).replace(/\b(int|String|new)\b/g,'<span class="ty">$1</span>')
+        .replace(/\.(accelerate|brake|add|clear|turnOn|turnOff|fillUp|sort|getSpeed|getName|getFullName|size)\(/g,'.<span class="cs">$1</span>(');
+    }).join("");
+    return h+(cm?'<span class="cm">'+esc(cm)+'</span>':"");
+  }
+
+  // ---------- game ----------
+  var N=R.length, round=[], at=0, score=0, misses=[], t0=0, timer=null, busy=false, live=false, cur=[];
+
+  function shuffle(a){ a=a.slice(); for(var i=a.length-1;i>0;i--){ var j=Math.floor(Math.random()*(i+1)); var t=a[i]; a[i]=a[j]; a[j]=t; } return a; }
+  function tick(){ $("#hTime").textContent=((performance.now()-t0)/1000).toFixed(1)+"s"; }
+  function show(){
+    var r=round[at];
+    $("#goal").innerHTML=r.goal;
+    $("#value").innerHTML=r.vars.map(hl).join("\n"); $("#value").className="code";
+    cur=shuffle([r.g].concat(r.opts));
+    $("#opts").innerHTML=cur.map(function(o,i){ return '<button class="opt" data-i="'+i+'"><span class="key">'+(i+1)+'</span><span>'+esc(text(o))+'</span></button>'; }).join("");
+    $("#stepno").innerHTML="<small>round</small>"+(at+1)+" / "+N; $("#bar").style.width=(100*at/N)+"%";
+  }
+  function start(){
+    round=shuffle(R); at=0; score=0; misses=[]; busy=false; live=true;
+    $("#hScore").textContent="0"; $("#startScr").classList.add("off"); $("#endScr").classList.add("off");
+    $("#caption").className="caption"; $("#status").innerHTML="Read the check, then the variables. <b class=\"a\">Which line says it?</b>";
+    show(); t0=performance.now(); if(timer) clearInterval(timer); timer=setInterval(tick,100);
+  }
+  function answer(i){
+    if(!live||busy||at>=round.length||!cur[i]) return; busy=true;
+    var r=round[at], o=cur[i], j=judge(o,r.g), right=judge(r.g,r.g);
+    Array.prototype.forEach.call(document.querySelectorAll(".opt"),function(b){ var k=Number(b.getAttribute("data-i")); b.disabled=true;
+      if(same(cur[k],r.g)) b.classList.add("hit"); else if(k===i) b.classList.add("miss"); else b.classList.add("dim"); });
+    $("#value").className="code "+(j.ok?"good":"bad");
+    if(j.ok){ score++; $("#hScore").textContent=String(score); $("#caption").className="caption ok"; $("#status").innerHTML='<b class="g">Right.</b> '+esc(j.why)+'.'; }
+    else { misses.push([r,o,j]); $("#caption").className="caption cut"; $("#status").innerHTML='<b class="w">'+esc(text(o))+'</b> '+esc(j.why)+'. The line is <b class="g">'+esc(text(r.g))+'</b>'; }
+    setTimeout(function(){ at++; busy=false; if(at>=N) end(); else show(); }, reduce?300:(j.ok?1600:4200));
+  }
+  function end(){
+    live=false; clearInterval(timer); tick(); $("#bar").style.width="100%";
+    var secs=((performance.now()-t0)/1000).toFixed(1);
+    $("#endScore").textContent=score+" / "+N; $("#endScore").className="big "+(score===N?"good":score>=11?"":"gold");
+    $("#endMsg").textContent=(score===N?"Perfect. ":score>=11?"Solid. ":"Keep going. ")+secs+" seconds.";
+    $("#endMiss").innerHTML=misses.map(function(m){ return '<div><b>'+esc(text(m[1]))+'</b> '+esc(m[2].why)+'. <i>'+esc(text(m[0].g))+'</i></div>'; }).join("");
+    $("#endScr").classList.remove("off");
+    $("#stepno").innerHTML="<small>round</small>"+N+" / "+N; $("#caption").className="caption"; $("#status").innerHTML="Round over. <b class=\"a\">Play again</b> shuffles the fifteen checks.";
+  }
+  $("#opts").addEventListener("click",function(e){ var b=e.target.closest(".opt"); if(b) answer(Number(b.getAttribute("data-i"))); });
+  $("#bStart").addEventListener("click",start); $("#bAgain").addEventListener("click",start);
+  document.addEventListener("keydown",function(e){ if(/INPUT|TEXTAREA/.test(e.target.tagName)||e.ctrlKey||e.metaKey||e.altKey) return;
+    if(live&&/^[1-4]$/.test(e.key)){ answer(Number(e.key)-1); return; }
+    if((e.code==="Space"||e.key==="Enter")&&!live&&e.target.tagName!=="BUTTON"){ e.preventDefault(); start(); } });
+
+  var cv=$("#amb"),ctx=cv.getContext&&cv.getContext("2d"),parts=[];
+  function sizeC(){if(!ctx)return;cv.width=innerWidth;cv.height=innerHeight;}
+  function initParts(){parts=[];for(var i=0;i<46;i++)parts.push({x:Math.random(),y:Math.random(),r:Math.random()*1.6+.3,s:Math.random()*.02+.004,o:Math.random()*.4+.1});}
+  function drawC(){if(!ctx)return;ctx.clearRect(0,0,cv.width,cv.height);
+    parts.forEach(function(p){p.y-=p.s/60;if(p.y<-.02)p.y=1.02;ctx.beginPath();ctx.arc(p.x*cv.width,p.y*cv.height,p.r,0,7);
+      ctx.fillStyle="rgba(140,170,255,"+p.o+")";ctx.fill();});requestAnimationFrame(drawC);}
+  if(ctx&&!reduce){sizeC();initParts();drawC();addEventListener("resize",sizeC);}
+
+  check();
+})();
+</script>
+<script src="../manifest.js"></script>
+<script src="../../assets/rail.js"></script>
+<script>Rail.render(document.getElementById("rail"),{week:5,kind:"games",current:"pick-the-assertion"});</script>
+</body>
+</html>

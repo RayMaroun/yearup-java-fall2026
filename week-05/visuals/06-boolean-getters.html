@@ -1,0 +1,242 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Boolean Getters | Week 5 Visual Hub</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Sora:wght@500;700&family=Inter:wght@400;500&family=JetBrains+Mono:wght@400;500&display=swap">
+<style>
+  :root{
+    --bg:#080c17; --bg2:#0c1428; --surface:rgba(255,255,255,.045); --line:rgba(255,255,255,.09);
+    --ink:#eef2fb; --muted:#8496b6; --accent:#6ea0ff; --accent2:#8b7bff; --good:#46d98a; --warn:#ff6a6a;
+    --gold:#ffc862; --disp:'Sora',system-ui,sans-serif; --body:'Inter',system-ui,sans-serif;
+    --mono:'JetBrains Mono',ui-monospace,monospace;
+  }
+  *{box-sizing:border-box}
+  body{margin:0;min-height:100vh;color:var(--ink);font-family:var(--body);
+    background:radial-gradient(1200px 700px at 70% -10%,#141d38 0%,transparent 55%),
+               radial-gradient(900px 600px at 10% 110%,#161233 0%,transparent 50%),#080c17;
+    overflow-x:hidden}
+  #amb{position:fixed;inset:0;z-index:0;pointer-events:none;opacity:.6}
+  .back{position:relative;z-index:2;display:block;max-width:1120px;margin:0 auto;padding:26px 24px 0;
+    width:100%;font-family:var(--mono);font-size:.8rem;letter-spacing:.04em;color:var(--muted);
+    text-decoration:none;transition:color .15s}
+  .back:hover{color:var(--accent)}
+  .wrap{position:relative;z-index:1;max-width:1120px;margin:0 auto;padding:22px 24px 70px}
+  .tag{font-family:var(--mono);font-size:.72rem;letter-spacing:.22em;text-transform:uppercase;color:var(--accent);margin:0 0 14px}
+  h1{font-family:var(--disp);font-weight:700;font-size:clamp(2.3rem,6vw,3.6rem);line-height:1;margin:0 0 12px;
+    letter-spacing:-.03em;background:linear-gradient(180deg,#fff,#b9c6e6);-webkit-background-clip:text;
+    background-clip:text;color:transparent}
+  .lede{color:var(--muted);max-width:64ch;font-size:1.05rem;margin:0 0 26px;line-height:1.5}
+  .lede b{color:var(--ink)}
+  code{font-family:var(--mono);font-size:.92em;color:#bcd0ff}
+
+  /* ---------- the stage IS the picture ---------- */
+  .stage{position:relative;background:linear-gradient(180deg,rgba(255,255,255,.03),rgba(255,255,255,.01));
+    border:1px solid var(--line);border-radius:24px;padding:22px;
+    box-shadow:0 1px 0 rgba(255,255,255,.06) inset,0 30px 80px -30px rgba(0,0,0,.8)}
+  .board{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1.5fr);gap:22px;align-items:stretch;min-height:340px}
+  @media (max-width:820px){.board{grid-template-columns:1fr}}
+
+  .card{position:relative;border-radius:16px;padding:16px 18px 14px}
+  .hd{font-family:var(--mono);font-size:.62rem;letter-spacing:.16em;text-transform:uppercase;color:var(--muted);margin:0 0 4px}
+  .who{font-family:var(--disp);font-weight:700;font-size:1.35rem;margin:0 0 12px;color:var(--ink);letter-spacing:-.01em}
+  .row{display:flex;align-items:center;justify-content:space-between;gap:10px;font-family:var(--mono);font-size:.82rem;
+    padding:8px 10px;border-radius:9px;margin-bottom:5px;border:1px solid transparent;transition:background .3s,border-color .3s}
+  .row .f{color:#c9d4ea;white-space:nowrap} .row .f i{font-style:normal;color:#82aaff;margin-right:6px}
+  .sect{font-family:var(--mono);font-size:.58rem;letter-spacing:.14em;text-transform:uppercase;color:rgba(132,150,182,.7);margin:12px 0 6px 2px}
+  .row.chg{background:rgba(255,200,98,.12);border-color:rgba(255,200,98,.55)}
+
+  /* the object */
+  .obj{border:1px solid rgba(255,255,255,.18);background:rgba(255,255,255,.045)}
+  .val{color:#f78c6c;font-variant-numeric:tabular-nums} .val.s{color:#c3e88d}
+  .step{display:flex;align-items:center;gap:6px}
+  .step button{width:30px;height:28px;font-family:var(--mono);font-size:.95rem;border-radius:8px;cursor:pointer;
+    border:1px solid var(--line);background:rgba(0,0,0,.25);color:#ffcb6b;transition:.15s}
+  .step button:hover{border-color:var(--gold);background:rgba(255,200,98,.1)}
+  .step button:disabled{opacity:.3;cursor:not-allowed}
+  .step .val{min-width:2.2ch;text-align:center;font-size:1rem}
+  .mrow{color:#c9d4ea;padding:5px 10px}
+  .mrow i{font-style:normal;color:#82aaff;margin-right:6px}
+  .mrow em{font-style:normal;font-size:.62rem;letter-spacing:.06em;color:var(--muted)}
+  .ask{width:100%;margin-top:12px;font-family:var(--mono);font-weight:500;font-size:1rem;padding:12px;border-radius:12px;cursor:pointer;
+    border:1px solid rgba(255,200,98,.5);background:rgba(255,200,98,.1);color:var(--gold);transition:.15s}
+  .ask:hover{background:rgba(255,200,98,.2);border-color:var(--gold)}
+  .ask small{display:block;font-size:.6rem;letter-spacing:.1em;text-transform:uppercase;color:var(--muted);margin-top:3px}
+
+  /* the rule */
+  .rule{border:2px dashed rgba(110,160,255,.45);background:rgba(110,160,255,.04);display:flex;flex-direction:column}
+  .expr{display:flex;align-items:center;justify-content:center;gap:12px;flex-wrap:wrap;margin:10px 0 6px;font-family:var(--mono)}
+  .tok{min-width:62px;text-align:center;font-size:1.5rem;padding:10px 14px;border-radius:12px;border:1px solid var(--line);
+    background:rgba(0,0,0,.28);color:#c9d4ea;transition:border-color .3s,color .3s,background .3s}
+  .tok.op{min-width:0;border-color:transparent;background:none;color:#89ddff}
+  .tok.age{color:#f78c6c} .tok.age.on{border-color:rgba(255,200,98,.7);color:var(--gold);animation:pop .4s}
+  .eq{font-size:1.5rem;color:var(--muted)}
+  .res{min-width:96px;text-align:center;font-family:var(--mono);font-size:1.5rem;padding:10px 14px;border-radius:12px;
+    border:1px dashed rgba(132,150,182,.45);color:rgba(132,150,182,.6);transition:border-color .3s,color .3s,background .3s,box-shadow .3s}
+  .res.t{border:1px solid var(--good);color:var(--good);background:rgba(70,217,138,.1);box-shadow:0 0 28px -8px rgba(70,217,138,.8);animation:pop .4s}
+  .res.f{border:1px solid var(--warn);color:var(--warn);background:rgba(255,106,106,.1);box-shadow:0 0 28px -8px rgba(255,106,106,.8);animation:pop .4s}
+  .res.old{opacity:.35;box-shadow:none}
+  .track{margin-top:auto;padding-top:18px}
+  .cells{display:grid;grid-template-columns:repeat(16,minmax(0,1fr));gap:3px;position:relative}
+  .cell{height:34px;border-radius:6px;display:flex;align-items:center;justify-content:center;font-family:var(--mono);font-size:.66rem;
+    color:rgba(132,150,182,.75);border:1px solid rgba(255,106,106,.22);background:rgba(255,106,106,.04);transition:.25s}
+  .cell.yes{border-color:rgba(70,217,138,.25);background:rgba(70,217,138,.05)}
+  .cell.gate{box-shadow:-3px 0 0 0 var(--ink)}
+  .cell.here{color:var(--ink);font-weight:500;border-color:var(--gold);background:rgba(255,200,98,.16);transform:translateY(-3px)}
+  .cell.here.lt{border-color:var(--warn);background:rgba(255,106,106,.2)}
+  .cell.here.lg{border-color:var(--good);background:rgba(70,217,138,.22)}
+  .legend{display:flex;justify-content:space-between;margin-top:7px;font-family:var(--mono);font-size:.6rem;letter-spacing:.08em;color:var(--muted)}
+  .legend .lf{color:rgba(255,106,106,.8)} .legend .lt{color:rgba(70,217,138,.85)}
+  @media (max-width:520px){.cell{font-size:.5rem;height:28px}.tok,.res,.eq{font-size:1.15rem}.tok{min-width:46px;padding:8px 10px}}
+
+  /* the one sentence */
+  .caption{display:flex;gap:14px;align-items:flex-start;margin:18px 2px 0;padding-top:16px;border-top:1px solid var(--line)}
+  .caption .t{flex:1;font-size:1.05rem;line-height:1.55;color:var(--ink);padding-left:16px;border-left:3px solid var(--accent);transition:border-color .3s}
+  .caption .t .line{display:block;margin-top:6px;font-family:var(--mono);font-size:.8rem;color:#bcd0ff;opacity:.9}
+  .caption.y .t{border-left-color:var(--gold)} .caption.g .t{border-left-color:var(--good)} .caption.w .t{border-left-color:var(--warn)}
+  .caption b.a{color:var(--accent)} .caption b.y{color:var(--gold)} .caption b.g{color:var(--good)} .caption b.w{color:var(--warn)}
+  .reset{font-family:var(--body);font-weight:500;font-size:.84rem;padding:8px 14px;border-radius:11px;cursor:pointer;
+    border:1px solid var(--line);background:transparent;color:var(--muted);transition:.15s;flex-shrink:0}
+  .reset:hover{border-color:var(--accent);color:var(--accent)}
+  button:focus-visible,input:focus-visible{outline:2px solid var(--accent);outline-offset:2px}
+
+  @keyframes pop{from{transform:scale(.6);opacity:0}to{transform:scale(1);opacity:1}}
+  .take{margin-top:22px;background:linear-gradient(180deg,rgba(110,160,255,.08),rgba(139,123,255,.04));
+    border:1px solid var(--line);border-left:3px solid var(--accent);border-radius:12px;padding:16px 18px}
+  .take .tk{font-family:var(--mono);font-size:.66rem;letter-spacing:.14em;text-transform:uppercase;color:var(--accent);margin:0 0 8px}
+  .take p{margin:0;font-size:.95rem;color:var(--ink);line-height:1.55}
+  .take b{color:#fff}
+  @media (prefers-reduced-motion:reduce){*{animation-duration:.01ms!important;transition-duration:.01ms!important}#amb{display:none}}
+</style>
+</head>
+<body>
+<a class="back" href="../index.html#06-boolean-getters">&#8592; Week 5 index</a>
+<canvas id="amb"></canvas>
+<div class="wrap">
+  <p class="tag">Workbook 4a &middot; Section 2-1</p>
+  <h1>Boolean Getters</h1>
+  <p class="lede"><b>Step the age across 18 and ask the object if it is an adult.</b></p>
+
+  <div class="stage">
+    <div class="board">
+      <div class="card obj">
+        <p class="hd">object &middot; Person</p>
+        <p class="who">alana</p>
+        <div class="row"><span class="f"><i>String</i>firstName</span><span class="val s">"Alana"</span></div>
+        <div class="row" id="ageRow"><span class="f"><i>int</i>age</span>
+          <span class="step"><button id="bDown" aria-label="age minus one">&minus;</button><span class="val" id="ageVal">17</span><button id="bUp" aria-label="age plus one">+</button></span></div>
+        <p class="sect">getters</p>
+        <div class="row mrow"><span><i>int</i>getAge()</span><em>get: hands back a value</em></div>
+        <div class="row mrow"><span><i>boolean</i>isAdult()</span><em>is: answers yes or no</em></div>
+        <button class="ask" id="bAsk">alana.isAdult()<small>is, not get: it returns a boolean</small></button>
+      </div>
+      <div class="card rule">
+        <p class="hd">inside isAdult() &middot; the rule</p>
+        <div class="expr" aria-live="polite">
+          <span class="tok age" id="tAge">age</span><span class="tok op">&gt;=</span><span class="tok">18</span>
+          <span class="eq">&rarr;</span><span class="res" id="res">?</span>
+        </div>
+        <div class="track">
+          <div class="cells" id="cells"></div>
+          <div class="legend"><span class="lf">10 to 17: false</span><span class="lt">18 and up: true</span></div>
+        </div>
+      </div>
+    </div>
+    <div class="caption" id="caption">
+      <div class="t" id="status">Alana is <b class="y">17</b>. There is no adult field on the card: <b class="a">isAdult()</b> works the answer out from age.</div>
+      <button class="reset" id="bReset">Reset</button>
+    </div>
+  </div>
+
+  <div class="take">
+    <p class="tk">The one idea</p>
+    <p><b>A getter that returns a boolean starts with is, not get, because it answers a yes or no question.</b>
+    It can return a boolean field, or, like <code>isAdult()</code>, check a rule on other fields, fresh on every call.</p>
+  </div>
+  <div id="rail"></div>
+</div>
+<script>
+(function(){
+  "use strict";
+  var $=function(s){return document.querySelector(s);};
+  var reduce=matchMedia("(prefers-reduced-motion: reduce)").matches;
+  var MIN=10, MAX=25, START=17;
+  var age=START, last=null;
+  var status=$("#status"),caption=$("#caption"),tAge=$("#tAge"),res=$("#res"),cells=$("#cells"),ageRow=$("#ageRow");
+
+  for(var a=MIN;a<=MAX;a++){
+    var c=document.createElement("div");
+    c.className="cell"+(a>=18?" yes":"")+(a===18?" gate":"");
+    c.textContent=a; c.setAttribute("data-a",a); cells.appendChild(c);
+  }
+  function say(html,tone,line){
+    caption.className="caption"+(tone?" "+tone:"");
+    status.innerHTML=html+(line?'<span class="line">'+line+'</span>':"");
+  }
+  function mark(asked){
+    cells.querySelectorAll(".cell").forEach(function(c){
+      var on=+c.getAttribute("data-a")===age;
+      c.classList.toggle("here",on);
+      c.classList.toggle("lt",on&&asked===false);
+      c.classList.toggle("lg",on&&asked===true);
+    });
+    $("#bDown").disabled=age<=MIN; $("#bUp").disabled=age>=MAX;
+    $("#ageVal").textContent=age;
+  }
+  function restart(el,cls){ el.classList.remove(cls); void el.offsetWidth; el.classList.add(cls); }
+
+  function setAge(d){
+    var n=age+d; if(n<MIN||n>MAX) return;
+    age=n; tAge.textContent="age"; tAge.classList.remove("on");
+    if(res.classList.contains("t")||res.classList.contains("f")) res.classList.add("old");
+    restart(ageRow,"chg"); setTimeout(function(){ ageRow.classList.remove("chg"); },reduce?0:700);
+    mark(null);
+    say('setAge('+age+'): age is now <b class="y">'+age+'</b>. The answer is not stored anywhere, so press <b class="a">isAdult()</b> to ask again.',
+      "y","alana.setAge("+age+");");
+  }
+  function ask(){
+    var ans=age>=18, flip=last!==null&&last!==ans;
+    tAge.textContent=age; restart(tAge,"on");
+    res.className="res"; void res.offsetWidth; res.className="res "+(ans?"t":"f"); res.textContent=ans?"true":"false";
+    mark(ans);
+    var head='<b class="'+(ans?"g":"w")+'">'+age+' >= 18</b> is <b class="'+(ans?"g":"w")+'">'+ans+'</b>';
+    var tail;
+    if(age===18&&flip) tail=". One year flipped the answer, and 18 itself counts because the rule is >=, not >.";
+    else if(age===17&&flip) tail=". One year back and the same question gets the other answer.";
+    else if(age===18) tail=". 18 itself counts: the rule is >=, not >.";
+    else if(age===17) tail=". One more year and the answer changes. Press + and ask again.";
+    else tail=ans?", so isAdult() returns true.":", so isAdult() returns false. Step age up past 17 and ask again.";
+    say(head+tail, ans?"g":"w", "boolean adult = alana.isAdult(); // "+ans);
+    last=ans;
+  }
+  function reset(){
+    age=START; last=null; tAge.textContent="age"; tAge.classList.remove("on");
+    res.className="res"; res.textContent="?"; mark(null);
+    say('Alana is <b class="y">17</b>. There is no adult field on the card: <b class="a">isAdult()</b> works the answer out from age.');
+  }
+  $("#bDown").addEventListener("click",function(){ setAge(-1); });
+  $("#bUp").addEventListener("click",function(){ setAge(1); });
+  $("#bAsk").addEventListener("click",ask);
+  $("#bReset").addEventListener("click",reset);
+  mark(null);
+
+  /* ambient canvas */
+  var cv=$("#amb"),ctx=cv.getContext&&cv.getContext("2d"),parts=[];
+  function sizeC(){if(!ctx)return;cv.width=innerWidth;cv.height=innerHeight;}
+  function initParts(){parts=[];for(var i=0;i<46;i++)parts.push({x:Math.random(),y:Math.random(),
+    r:Math.random()*1.6+.3,s:Math.random()*.02+.004,o:Math.random()*.4+.1});}
+  function drawC(){if(!ctx)return;ctx.clearRect(0,0,cv.width,cv.height);
+    parts.forEach(function(p){p.y-=p.s/60;if(p.y<-.02)p.y=1.02;
+      ctx.beginPath();ctx.arc(p.x*cv.width,p.y*cv.height,p.r,0,7);
+      ctx.fillStyle="rgba(140,170,255,"+p.o+")";ctx.fill();});
+    requestAnimationFrame(drawC);}
+  if(ctx&&!reduce){sizeC();initParts();drawC();addEventListener("resize",sizeC);}
+})();
+</script>
+<script src="../manifest.js"></script>
+<script src="../../assets/rail.js"></script>
+<script>Rail.render(document.getElementById("rail"),{week:5,kind:"visuals",current:"06-boolean-getters"});</script>
+</body>
+</html>

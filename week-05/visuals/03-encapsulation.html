@@ -1,0 +1,313 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Encapsulation | Week 5 Visual Hub</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Sora:wght@500;700&family=Inter:wght@400;500&family=JetBrains+Mono:wght@400;500&display=swap">
+<style>
+  :root{
+    --bg:#080c17; --bg2:#0c1428; --surface:rgba(255,255,255,.045); --line:rgba(255,255,255,.09);
+    --ink:#eef2fb; --muted:#8496b6; --accent:#6ea0ff; --accent2:#8b7bff; --good:#46d98a; --warn:#ff6a6a;
+    --gold:#ffc862; --disp:'Sora',system-ui,sans-serif; --body:'Inter',system-ui,sans-serif;
+    --mono:'JetBrains Mono',ui-monospace,monospace;
+  }
+  *{box-sizing:border-box}
+  body{margin:0;min-height:100vh;color:var(--ink);font-family:var(--body);
+    background:radial-gradient(1200px 700px at 70% -10%,#141d38 0%,transparent 55%),
+               radial-gradient(900px 600px at 10% 110%,#161233 0%,transparent 50%),#080c17;
+    overflow-x:hidden}
+  #amb{position:fixed;inset:0;z-index:0;pointer-events:none;opacity:.6}
+  .back{position:relative;z-index:2;display:block;max-width:1120px;margin:0 auto;padding:26px 24px 0;
+    width:100%;font-family:var(--mono);font-size:.8rem;letter-spacing:.04em;color:var(--muted);
+    text-decoration:none;transition:color .15s}
+  .back:hover{color:var(--accent)}
+  .wrap{position:relative;z-index:1;max-width:1120px;margin:0 auto;padding:22px 24px 70px}
+  .tag{font-family:var(--mono);font-size:.72rem;letter-spacing:.22em;text-transform:uppercase;color:var(--accent);margin:0 0 14px}
+  h1{font-family:var(--disp);font-weight:700;font-size:clamp(2.3rem,6vw,3.6rem);line-height:1;margin:0 0 12px;
+    letter-spacing:-.03em;background:linear-gradient(180deg,#fff,#b9c6e6);-webkit-background-clip:text;
+    background-clip:text;color:transparent}
+  .lede{color:var(--muted);max-width:64ch;font-size:1.05rem;margin:0 0 26px;line-height:1.5}
+  .lede b{color:var(--ink)}
+  code{font-family:var(--mono);font-size:.92em;color:#bcd0ff}
+
+  /* ---------- the stage IS the picture ---------- */
+  .stage{position:relative;background:linear-gradient(180deg,rgba(255,255,255,.03),rgba(255,255,255,.01));
+    border:1px solid var(--line);border-radius:24px;padding:22px;
+    box-shadow:0 1px 0 rgba(255,255,255,.06) inset,0 30px 80px -30px rgba(0,0,0,.8)}
+  .board{position:relative;display:grid;grid-template-columns:minmax(0,1fr) 90px minmax(0,1.7fr);gap:0;align-items:stretch;min-height:360px}
+  @media (max-width:820px){.board{grid-template-columns:1fr;gap:56px}.gap{display:none}}
+
+  .card{position:relative;border-radius:16px;padding:16px 18px 14px}
+  .hd{font-family:var(--mono);font-size:.62rem;letter-spacing:.16em;text-transform:uppercase;color:var(--muted);margin:0 0 4px}
+  .who{font-family:var(--disp);font-weight:700;font-size:1.35rem;margin:0 0 12px;color:var(--ink);letter-spacing:-.01em}
+  .row{display:flex;align-items:center;justify-content:space-between;gap:10px;font-family:var(--mono);font-size:.82rem;
+    padding:8px 10px;border-radius:9px;margin-bottom:5px;border:1px solid transparent;transition:background .3s,border-color .3s}
+  .row .f{color:#c9d4ea;white-space:nowrap} .row .f i{font-style:normal;color:#82aaff;margin-right:6px}
+  .sect{font-family:var(--mono);font-size:.58rem;letter-spacing:.14em;text-transform:uppercase;color:rgba(132,150,182,.7);margin:12px 0 6px 2px}
+  .val{color:#f78c6c;white-space:nowrap;font-variant-numeric:tabular-nums}
+  .val.s{color:#c3e88d}
+  .val s{color:var(--muted);margin-right:6px}
+  .row.chg{background:rgba(255,200,98,.12);border-color:rgba(255,200,98,.55)}
+  .row.chg .val{color:var(--gold);animation:pop .45s}
+  .row.lit{background:rgba(110,160,255,.1);border-color:rgba(110,160,255,.5)}
+
+  /* main: outside the class */
+  .main{border:1px solid rgba(255,255,255,.18);background:rgba(255,255,255,.045);align-self:center}
+  .main .who{color:#c9d4ea}
+  .reach{width:100%;font-family:var(--mono);font-size:.82rem;padding:10px 12px;border-radius:11px;cursor:pointer;text-align:left;
+    border:1px dashed rgba(255,106,106,.45);background:rgba(255,106,106,.05);color:#ffc2c2;transition:.15s}
+  .reach:hover{border-color:var(--warn);background:rgba(255,106,106,.1)}
+  .reach small{display:block;font-family:var(--body);font-size:.7rem;color:var(--muted);margin-top:3px}
+  .hold{margin-top:12px;padding-top:12px;border-top:1px solid var(--line)}
+  .hold .row{background:rgba(0,0,0,.25)}
+  .hold .val{min-width:80px;text-align:right}
+  .hold .val:empty::after{content:"nothing yet";color:rgba(132,150,182,.45);font-size:.62rem;letter-spacing:.1em;text-transform:uppercase}
+
+  .gap{display:flex;align-items:center;justify-content:center;font-family:var(--mono);font-size:.62rem;
+    letter-spacing:.12em;text-transform:uppercase;color:rgba(132,150,182,.35);writing-mode:vertical-rl}
+
+  /* the locked box */
+  .box{display:grid;grid-template-columns:170px minmax(0,1fr);border:2px solid rgba(110,160,255,.55);background:rgba(110,160,255,.05);
+    border-radius:18px;overflow:visible;position:relative;transition:border-color .3s,box-shadow .3s}
+  .box.hit{border-color:var(--warn);box-shadow:0 0 0 3px rgba(255,106,106,.18),0 0 34px -6px rgba(255,106,106,.7)}
+  .door{padding:16px 12px;border-right:2px solid rgba(110,160,255,.55);background:rgba(0,0,0,.2);border-radius:16px 0 0 16px;
+    display:flex;flex-direction:column;gap:8px;transition:border-color .3s}
+  .box.hit .door{border-right-color:rgba(110,160,255,.55)}
+  .door .hd{color:var(--good)}
+  .door button{font-family:var(--mono);font-size:.78rem;padding:9px 8px;border-radius:10px;cursor:pointer;text-align:left;
+    border:1px solid var(--line);background:rgba(0,0,0,.3);color:#ffcb6b;transition:.15s}
+  .door button:hover{border-color:var(--gold);background:rgba(255,200,98,.1)}
+  .door button.on{border-color:var(--gold);background:rgba(255,200,98,.16)}
+  .setter{display:flex;flex-direction:column;gap:6px;margin-top:6px;padding-top:10px;border-top:1px solid var(--line)}
+  .setter input{width:100%;font-family:var(--mono);font-size:.84rem;padding:8px 10px;border-radius:9px;border:1px solid var(--line);
+    background:rgba(0,0,0,.35);color:var(--ink);outline:none;transition:border-color .15s}
+  .setter input:focus{border-color:var(--accent)}
+  .inside{padding:16px 18px 14px}
+  .inside .who{color:#bcd0ff}
+  .lk{display:inline-block;margin-right:8px;color:rgba(132,150,182,.6);font-size:.66rem;letter-spacing:.08em}
+
+  /* the lock on the wall */
+  .lock{position:absolute;left:-19px;top:22px;width:36px;height:40px;z-index:3;pointer-events:none}
+  .lock .shk{position:absolute;left:8px;top:0;width:20px;height:20px;border:3px solid #9fb6e8;border-bottom:none;border-radius:11px 11px 0 0;transition:border-color .3s}
+  .lock .bd{position:absolute;left:2px;top:15px;width:32px;height:24px;border-radius:6px;background:#1a2440;border:2px solid #9fb6e8;transition:.3s}
+  .lock .bd::after{content:"";position:absolute;left:12px;top:6px;width:4px;height:8px;border-radius:2px;background:#9fb6e8;transition:background .3s}
+  .box.hit .lock .shk{border-color:var(--warn)} .box.hit .lock .bd{border-color:var(--warn);background:#3a1620}
+  .box.hit .lock .bd::after{background:var(--warn)}
+  .box.hit .lock{animation:shake .45s}
+  .blocked{position:absolute;left:24px;top:-26px;font-family:var(--mono);font-size:.7rem;color:var(--warn);white-space:nowrap;
+    opacity:0;transition:opacity .3s}
+  .box.hit .blocked{opacity:1}
+
+  /* moving things */
+  .hand,.chip{position:absolute;left:0;top:0;z-index:5;pointer-events:none;font-family:var(--mono);font-size:.78rem;
+    padding:5px 10px;border-radius:999px;white-space:nowrap;opacity:0}
+  .hand{background:rgba(255,106,106,.14);border:1px solid var(--warn);color:#ffc2c2}
+  .chip{background:rgba(70,217,138,.14);border:1px solid var(--good);color:#c3e88d}
+
+  /* the one sentence */
+  .caption{display:flex;gap:14px;align-items:flex-start;margin:18px 2px 0;padding-top:16px;border-top:1px solid var(--line)}
+  .caption .t{flex:1;font-size:1.05rem;line-height:1.55;color:var(--ink);padding-left:16px;border-left:3px solid var(--accent);transition:border-color .3s}
+  .caption .t .line{display:block;margin-top:6px;font-family:var(--mono);font-size:.8rem;color:#bcd0ff;opacity:.9}
+  .caption.y .t{border-left-color:var(--gold)} .caption.g .t{border-left-color:var(--good)} .caption.w .t{border-left-color:var(--warn)}
+  .caption.w .t .line{color:#ffb0b0}
+  .caption b.a{color:var(--accent)} .caption b.y{color:var(--gold)} .caption b.g{color:var(--good)} .caption b.w{color:var(--warn)}
+  .reset{font-family:var(--body);font-weight:500;font-size:.84rem;padding:8px 14px;border-radius:11px;cursor:pointer;
+    border:1px solid var(--line);background:transparent;color:var(--muted);transition:.15s;flex-shrink:0}
+  .reset:hover{border-color:var(--accent);color:var(--accent)}
+  button:focus-visible,input:focus-visible{outline:2px solid var(--accent);outline-offset:2px}
+
+  @keyframes pop{from{transform:scale(.6);opacity:0}to{transform:scale(1);opacity:1}}
+  @keyframes shake{0%,100%{transform:translateX(0)}25%{transform:translateX(-4px)}50%{transform:translateX(4px)}75%{transform:translateX(-2px)}}
+  .take{margin-top:22px;background:linear-gradient(180deg,rgba(110,160,255,.08),rgba(139,123,255,.04));
+    border:1px solid var(--line);border-left:3px solid var(--accent);border-radius:12px;padding:16px 18px}
+  .take .tk{font-family:var(--mono);font-size:.66rem;letter-spacing:.14em;text-transform:uppercase;color:var(--accent);margin:0 0 8px}
+  .take p{margin:0;font-size:.95rem;color:var(--ink);line-height:1.55}
+  .take b{color:#fff}
+  @media (max-width:520px){.box{grid-template-columns:1fr}.door{border-right:none;border-bottom:2px solid rgba(110,160,255,.55);border-radius:16px 16px 0 0}
+    .lock{left:calc(50% - 18px);top:-21px}.blocked{left:44px;top:6px}}
+  @media (prefers-reduced-motion:reduce){*{animation-duration:.01ms!important;transition-duration:.01ms!important}#amb{display:none}}
+</style>
+</head>
+<body>
+<a class="back" href="../index.html#03-encapsulation">&#8592; Week 5 index</a>
+<canvas id="amb"></canvas>
+<div class="wrap">
+  <p class="tag">Workbook 4a &middot; Section 2-1</p>
+  <h1>Encapsulation</h1>
+  <p class="lede"><b>The fields are locked inside. Try to reach in, then use the door.</b></p>
+
+  <div class="stage">
+    <div class="board" id="board">
+      <div class="card main" id="main">
+        <p class="hd">outside the class</p>
+        <p class="who">main</p>
+        <button class="reach" id="bReach">p1.firstName<small>reach in and read the field directly</small></button>
+        <div class="hold">
+          <p class="sect">what main is holding</p>
+          <div class="row" id="holdRow"><span class="f" id="holdName">value</span><span class="val" id="holdVal"></span></div>
+        </div>
+      </div>
+      <div class="gap">outside &middot; inside</div>
+      <div class="box" id="box">
+        <div class="lock" id="lock"><span class="shk"></span><span class="bd"></span><span class="blocked">private</span></div>
+        <div class="door">
+          <p class="hd">public &middot; the door</p>
+          <button id="bGetFirst">getFirstName()</button>
+          <button id="bGetAge">getAge()</button>
+          <div class="setter">
+            <input id="inAge" value="36" inputmode="numeric" maxlength="3" aria-label="new age">
+            <button id="bSetAge">setAge(int)</button>
+          </div>
+        </div>
+        <div class="inside">
+          <p class="hd">object p1 &middot; Person</p>
+          <p class="who">p1</p>
+          <p class="sect">private fields</p>
+          <div class="row" id="rFirst"><span class="f"><span class="lk">private</span><i>String</i>firstName</span><span class="val s">"Raymond"</span></div>
+          <div class="row" id="rLast"><span class="f"><span class="lk">private</span><i>String</i>lastName</span><span class="val s">"Maroun"</span></div>
+          <div class="row" id="rAge"><span class="f"><span class="lk">private</span><i>int</i>age</span><span class="val" id="ageVal">35</span></div>
+        </div>
+      </div>
+      <div class="hand" id="hand">p1.firstName</div>
+      <div class="chip" id="chip"></div>
+    </div>
+    <div class="caption" id="caption">
+      <div class="t" id="status"><b class="a">p1</b> is a Person. Its three fields are <b class="a">private</b>: main stands outside the box and can only use the door.</div>
+      <button class="reset" id="bReset">Reset</button>
+    </div>
+  </div>
+
+  <div class="take">
+    <p class="tk">The one idea</p>
+    <p><b>Private fields, public door.</b> Mark the fields <code>private</code> so no code outside the class can touch them, then give the class
+    public getters to read them and setters to change them. The compiler holds the lock: <code>p1.firstName</code> in main does not compile,
+    <code>p1.getFirstName()</code> does.</p>
+  </div>
+  <div id="rail"></div>
+</div>
+<script>
+(function(){
+  "use strict";
+  var $=function(s){return document.querySelector(s);};
+  var reduce=matchMedia("(prefers-reduced-motion: reduce)").matches;
+  var START_AGE=35, age=START_AGE, busy=false;
+  var board=$("#board"),box=$("#box"),hand=$("#hand"),chip=$("#chip"),status=$("#status"),caption=$("#caption");
+  var hitTimer=null;
+
+  function say(html,tone,line){
+    caption.className="caption"+(tone?" "+tone:"");
+    status.innerHTML=html+(line?'<span class="line">'+line+'</span>':"");
+  }
+  /* position of an element's center (or edge) relative to the board */
+  function pt(el,ax,ay){
+    var b=board.getBoundingClientRect(),r=el.getBoundingClientRect();
+    return {x:r.left-b.left+r.width*ax,y:r.top-b.top+r.height*ay};
+  }
+  function fly(el,pts,dur,done){
+    var w=el.offsetWidth,h=el.offsetHeight;
+    var frames=pts.map(function(p,i){
+      return {transform:"translate("+(p.x-w/2)+"px,"+(p.y-h/2)+"px)",opacity:(i===0?0:1)};
+    });
+    if(reduce||!el.animate){ done(); return; }
+    var a=el.animate(frames,{duration:dur,easing:"cubic-bezier(.3,.8,.3,1)",fill:"forwards"});
+    a.onfinish=function(){ done(); setTimeout(function(){ el.getAnimations().forEach(function(x){x.cancel();}); },350); };
+  }
+  function clearLit(){
+    ["#rFirst","#rLast","#rAge","#holdRow"].forEach(function(s){ $(s).classList.remove("lit","chg"); });
+    document.querySelectorAll(".door button").forEach(function(b){ b.classList.remove("on"); });
+  }
+  function flash(row,cls){ row.classList.remove(cls); void row.offsetWidth; row.classList.add(cls); }
+
+  function reach(){
+    if(busy) return; busy=true; clearLit();
+    box.classList.remove("hit"); clearTimeout(hitTimer);
+    var from=pt($("#bReach"),1,.5), lock=pt($("#lock"),0,.6);
+    lock.x-=hand.offsetWidth/2;
+    fly(hand,[from,{x:(from.x+lock.x)/2,y:(from.y+lock.y)/2},lock],700,function(){
+      void box.offsetWidth; box.classList.add("hit");
+      hitTimer=setTimeout(function(){ box.classList.remove("hit"); },1600);
+      say('main reached for <b class="w">p1.firstName</b> and was <b class="w">stopped at the lock</b>. A private field cannot be read from outside its class, so this line does not compile.',
+        "w","firstName has private access in Person");
+      busy=false;
+    });
+  }
+  function give(field,valueText,isStr,btn,line,html){
+    if(busy) return; busy=true; clearLit();
+    btn.classList.add("on");
+    var row=$(field); row.classList.add("lit");
+    chip.textContent=valueText;
+    var a=pt(row,.85,.5), d=pt(btn,.5,.5), m=pt($("#holdVal"),.5,.5);
+    fly(chip,[a,d,m],900,function(){
+      var hv=$("#holdVal"); hv.className="val"+(isStr?" s":""); hv.textContent=valueText;
+      $("#holdName").textContent=isStr?"String name":"int age";
+      flash($("#holdRow"),"chg");
+      say(html,"g",line);
+      busy=false;
+    });
+  }
+  function getFirst(){
+    give("#rFirst",'"Raymond"',true,$("#bGetFirst"),"String name = p1.getFirstName();",
+      'main asked through the door. <b class="g">getFirstName()</b> runs inside the class and hands back the value, <b class="g">"Raymond"</b>. The field stays inside.');
+  }
+  function getAge(){
+    give("#rAge",String(age),false,$("#bGetAge"),"int age = p1.getAge();",
+      'main asked through the door. <b class="g">getAge()</b> runs inside the class and hands back <b class="g">'+age+'</b>. The field stays inside.');
+  }
+  function setAge(){
+    if(busy) return;
+    var raw=$("#inAge").value.trim();
+    if(!/^\d{1,3}$/.test(raw)){
+      clearLit();
+      say('setAge takes an <b class="a">int</b>. Type a whole number on the door, then press <b class="y">setAge(int)</b>.');
+      $("#inAge").focus(); return;
+    }
+    busy=true; clearLit();
+    var n=parseInt(raw,10), btn=$("#bSetAge"), row=$("#rAge"), old=age;
+    btn.classList.add("on");
+    chip.textContent=String(n);
+    var d=pt(btn,.5,.5), t=pt(row,.85,.5);
+    fly(chip,[d,{x:(d.x+t.x)/2,y:t.y},t],700,function(){
+      age=n;
+      $("#ageVal").innerHTML=(old!==n?"<s>"+old+"</s>":"")+n;
+      flash(row,"chg");
+      say('main passed '+n+' through the door. <b class="y">setAge('+n+')</b> runs inside the class and writes the field: <b class="y">'+old+' → '+n+'</b>. Only code inside Person touches it.',
+        "y","p1.setAge("+n+");");
+      $("#inAge").value=String(n+1);
+      busy=false;
+    });
+  }
+  function reset(){
+    if(busy) return;
+    age=START_AGE; clearLit(); box.classList.remove("hit");
+    $("#ageVal").textContent=String(START_AGE);
+    $("#holdVal").textContent=""; $("#holdVal").className="val"; $("#holdName").textContent="value";
+    $("#inAge").value="36";
+    say('<b class="a">p1</b> is a Person. Its three fields are <b class="a">private</b>: main stands outside the box and can only use the door.');
+  }
+  $("#bReach").addEventListener("click",reach);
+  $("#bGetFirst").addEventListener("click",getFirst);
+  $("#bGetAge").addEventListener("click",getAge);
+  $("#bSetAge").addEventListener("click",setAge);
+  $("#bReset").addEventListener("click",reset);
+  $("#inAge").addEventListener("keydown",function(e){ if(e.key==="Enter"){ e.preventDefault(); setAge(); } });
+
+  /* ambient canvas */
+  var cv=$("#amb"),ctx=cv.getContext&&cv.getContext("2d"),parts=[];
+  function sizeC(){if(!ctx)return;cv.width=innerWidth;cv.height=innerHeight;}
+  function initParts(){parts=[];for(var i=0;i<46;i++)parts.push({x:Math.random(),y:Math.random(),
+    r:Math.random()*1.6+.3,s:Math.random()*.02+.004,o:Math.random()*.4+.1});}
+  function drawC(){if(!ctx)return;ctx.clearRect(0,0,cv.width,cv.height);
+    parts.forEach(function(p){p.y-=p.s/60;if(p.y<-.02)p.y=1.02;
+      ctx.beginPath();ctx.arc(p.x*cv.width,p.y*cv.height,p.r,0,7);
+      ctx.fillStyle="rgba(140,170,255,"+p.o+")";ctx.fill();});
+    requestAnimationFrame(drawC);}
+  if(ctx&&!reduce){sizeC();initParts();drawC();addEventListener("resize",sizeC);}
+})();
+</script>
+<script src="../manifest.js"></script>
+<script src="../../assets/rail.js"></script>
+<script>Rail.render(document.getElementById("rail"),{week:5,kind:"visuals",current:"03-encapsulation"});</script>
+</body>
+</html>

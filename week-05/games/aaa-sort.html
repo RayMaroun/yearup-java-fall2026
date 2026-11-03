@@ -1,0 +1,436 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>AAA Sort | Week 5 Visual Hub</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Sora:wght@500;700&family=Inter:wght@400;500&family=JetBrains+Mono:wght@400;500&display=swap">
+<style>
+  :root{
+    --bg:#080c17; --bg2:#0c1428; --surface:rgba(255,255,255,.045); --line:rgba(255,255,255,.09);
+    --ink:#eef2fb; --muted:#8496b6; --accent:#6ea0ff; --accent2:#8b7bff; --good:#46d98a; --warn:#ff6a6a;
+    --gold:#ffc862; --disp:'Sora',system-ui,sans-serif; --body:'Inter',system-ui,sans-serif;
+    --mono:'JetBrains Mono',ui-monospace,monospace;
+  }
+  *{box-sizing:border-box}
+  body{margin:0;min-height:100vh;color:var(--ink);font-family:var(--body);
+    background:radial-gradient(1200px 700px at 70% -10%,#141d38 0%,transparent 55%),
+               radial-gradient(900px 600px at 10% 110%,#161233 0%,transparent 50%),#080c17;
+    overflow-x:hidden}
+  #amb{position:fixed;inset:0;z-index:0;pointer-events:none;opacity:.6}
+  .back{position:relative;z-index:2;display:block;max-width:1120px;margin:0 auto;padding:26px 24px 0;
+    width:100%;font-family:var(--mono);font-size:.8rem;letter-spacing:.04em;color:var(--muted);
+    text-decoration:none;transition:color .15s}
+  .back:hover{color:var(--accent)}
+  .wrap{position:relative;z-index:1;max-width:1120px;margin:0 auto;padding:22px 24px 70px}
+  .tag{font-family:var(--mono);font-size:.72rem;letter-spacing:.22em;text-transform:uppercase;color:var(--accent);margin:0 0 14px}
+  h1{font-family:var(--disp);font-weight:700;font-size:clamp(2.3rem,6vw,3.6rem);line-height:1;margin:0 0 12px;
+    letter-spacing:-.03em;background:linear-gradient(180deg,#fff,#b9c6e6);-webkit-background-clip:text;
+    background-clip:text;color:transparent}
+  .lede{color:var(--muted);max-width:64ch;font-size:1.05rem;margin:0 0 26px;line-height:1.5}
+  .lede b{color:var(--ink)}
+  .take code,.caption code{font-family:var(--mono);font-size:.92em;color:#bcd0ff}
+
+  .stage{position:relative;background:linear-gradient(180deg,rgba(255,255,255,.03),rgba(255,255,255,.01));
+    border:1px solid var(--line);border-radius:24px;padding:18px 18px 14px;
+    box-shadow:0 1px 0 rgba(255,255,255,.06) inset,0 30px 80px -30px rgba(0,0,0,.8)}
+  .topbar{display:flex;align-items:center;gap:10px;margin:0 0 14px;flex-wrap:wrap}
+  .lab{font-family:var(--mono);font-size:.7rem;letter-spacing:.12em;text-transform:uppercase;color:var(--muted);margin:0}
+
+  /* ---------- game board ---------- */
+  .pic{position:relative;min-height:460px;border:1px solid var(--line);border-radius:18px;background:rgba(6,10,20,.5);overflow:hidden;
+    display:flex;flex-direction:column;align-items:center;justify-content:flex-start;gap:14px;padding:44px 22px 26px}
+  .pic .zone{position:absolute;left:18px;top:14px;font-family:var(--mono);font-size:.62rem;letter-spacing:.14em;text-transform:uppercase;color:rgba(132,150,182,.55)}
+  .hud{position:absolute;right:18px;top:12px;display:flex;gap:14px;font-family:var(--mono);font-size:.72rem;color:var(--muted)}
+  .hud b{color:var(--ink);font-weight:500}
+  @keyframes shake{25%{transform:translateX(-6px)}75%{transform:translateX(6px)}}
+  .screen{position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:12px;background:rgba(6,10,20,.94);transition:opacity .25s;overflow-y:auto;padding:20px}
+  .screen.off{opacity:0;pointer-events:none}
+  .screen h2{font-family:var(--disp);font-weight:700;font-size:1.6rem;margin:0;color:var(--ink)}
+  .screen p{margin:0;color:var(--muted);font-size:.95rem;text-align:center;max-width:52ch;line-height:1.5}
+  .screen .big{font-family:var(--disp);font-weight:700;font-size:2.6rem;color:var(--accent)}
+  .screen .big.gold{color:var(--gold)} .screen .big.good{color:var(--good)}
+  .bar{position:absolute;left:0;right:0;bottom:0;height:4px;background:rgba(255,255,255,.06)}
+  .bar i{display:block;height:100%;width:0;background:var(--accent);transition:width .25s}
+  .misses{font-family:var(--mono);font-size:.74rem;color:var(--muted);line-height:1.7;text-align:left;max-width:640px}
+  .misses div{margin-bottom:6px}
+  .misses b{color:var(--warn);font-weight:500}
+
+  .q{font-family:var(--disp);font-weight:500;font-size:1.08rem;color:var(--ink);text-align:center;margin:0;line-height:1.4;max-width:680px}
+  .q small{display:block;font-family:var(--mono);font-weight:400;font-size:.62rem;letter-spacing:.14em;text-transform:uppercase;color:var(--accent);margin-bottom:6px}
+  .q .fn{font-family:var(--mono);font-size:.92em;color:var(--gold)}
+
+  /* the test method: fixed frame lines and three sections */
+  .prog{width:100%;max-width:720px;display:flex;flex-direction:column;gap:3px;padding:10px;border:1px dashed rgba(255,255,255,.14);
+    border-radius:14px;background:rgba(0,0,0,.25);transition:border-color .2s,box-shadow .2s}
+  .prog.good{border-style:solid;border-color:rgba(70,217,138,.7);box-shadow:0 0 28px -8px rgba(70,217,138,.8)}
+  .prog.bad{border-style:solid;border-color:rgba(255,106,106,.7);box-shadow:0 0 28px -8px rgba(255,106,106,.8);animation:shake .3s}
+  .fr{font-family:var(--mono);font-size:.84rem;line-height:1.3;padding:4px 10px;color:rgba(132,150,182,.6);white-space:pre}
+  .sec{margin:4px 0 4px 22px;padding:6px 6px 6px 10px;border-left:2px solid rgba(255,255,255,.1);border-radius:0 10px 10px 0;background:rgba(255,255,255,.015)}
+  .sec .sh{font-family:var(--mono);font-size:.8rem;color:rgba(132,150,182,.75);margin:0 0 4px 2px}
+  .sec.s-arrange{border-left-color:rgba(110,160,255,.55)} .sec.s-arrange .sh{color:var(--accent)}
+  .sec.s-act{border-left-color:rgba(255,200,98,.6)} .sec.s-act .sh{color:var(--gold)}
+  .sec.s-assert{border-left-color:rgba(70,217,138,.55)} .sec.s-assert .sh{color:var(--good)}
+  .sec .emp{font-family:var(--mono);font-size:.7rem;color:rgba(132,150,182,.4);padding:5px 4px}
+  .slot{display:flex;flex-direction:column;align-items:stretch;width:100%;text-align:left;font:inherit;color:inherit;margin:0 0 3px;
+    border:1px solid transparent;border-radius:8px;background:rgba(255,255,255,.03);padding:0;cursor:pointer;transition:border-color .15s,background .15s}
+  .slot .in{display:flex;align-items:center;gap:10px;font-family:var(--mono);font-size:.84rem;line-height:1.3;padding:5px 10px;white-space:pre;min-height:28px}
+  .slot .cd{flex:1;min-width:0;overflow:hidden;text-overflow:ellipsis}
+  .prog:not(.lock) .slot:hover{border-color:rgba(255,200,98,.6)}
+  .slot.ok{border-color:rgba(70,217,138,.35)}
+  .slot.err{border-color:rgba(255,106,106,.8);background:rgba(255,106,106,.12)}
+  .slot.err .cd{color:var(--warn)}
+  .slot .why{font-family:var(--body);font-size:.8rem;color:var(--warn);padding:0 10px 6px 10px;white-space:normal}
+  .prog.lock .slot{cursor:default}
+  .slot:focus-visible,.pick:focus-visible,.btn:focus-visible{outline:2px solid var(--accent);outline-offset:2px}
+
+  /* the tray: each line with its three section buttons */
+  .tray{width:100%;max-width:720px}
+  .tray .lab{margin:0 0 8px 2px}
+  .cards{display:flex;flex-direction:column;gap:6px;min-height:40px;padding:8px;border-radius:14px;border:1px solid var(--line);background:rgba(0,0,0,.18)}
+  .card{display:flex;align-items:center;gap:10px;flex-wrap:wrap;padding:6px 8px 6px 12px;border-radius:9px;border:1px solid var(--line);background:var(--surface)}
+  .card .cd{flex:1;min-width:200px;font-family:var(--mono);font-size:.8rem;line-height:1.3;white-space:pre;overflow:hidden;text-overflow:ellipsis}
+  .picks{display:flex;gap:5px}
+  .pick{font-family:var(--mono);font-size:.7rem;padding:5px 10px;border-radius:999px;cursor:pointer;border:1px solid var(--line);background:transparent;color:var(--muted);transition:.15s}
+  .pick.p-arrange:hover{border-color:var(--accent);color:var(--accent)}
+  .pick.p-act:hover{border-color:var(--gold);color:var(--gold)}
+  .pick.p-assert:hover{border-color:var(--good);color:var(--good)}
+  .cards .none{font-family:var(--mono);font-size:.72rem;color:rgba(132,150,182,.5);padding:6px 4px}
+
+  .kw{color:var(--accent2)} .ty{color:var(--gold)} .st{color:#9fe0b8} .as{color:var(--good)}
+  .slot.err .kw,.slot.err .ty,.slot.err .st,.slot.err .as{color:inherit}
+
+  .row{display:flex;gap:10px;flex-wrap:wrap;justify-content:center}
+  .caption{display:flex;gap:16px;align-items:flex-start;margin:14px 4px 0;min-height:56px}
+  .caption .n{flex-shrink:0;font-family:var(--disp);font-weight:700;font-size:1.35rem;color:var(--accent);font-variant-numeric:tabular-nums;line-height:1.2;min-width:3.6rem}
+  .caption .n small{display:block;font-family:var(--mono);font-weight:400;font-size:.58rem;letter-spacing:.14em;text-transform:uppercase;color:var(--muted)}
+  .caption .t{flex:1;font-size:1.02rem;line-height:1.55;color:var(--ink);padding-left:16px;border-left:3px solid var(--accent);transition:border-color .3s}
+  .caption.cut .t{border-left-color:var(--warn)} .caption.left .t{border-left-color:var(--gold)} .caption.ok .t{border-left-color:var(--good)}
+  .caption b.g{color:var(--good)} .caption b.w{color:var(--warn)} .caption b.a{color:var(--accent)} .caption b.y{color:var(--gold)}
+  .btn{font-family:var(--body);font-weight:500;font-size:.86rem;padding:9px 16px;border-radius:11px;cursor:pointer;
+    border:1px solid var(--line);background:var(--surface);color:var(--ink);transition:.15s}
+  .btn:hover{border-color:var(--accent);color:var(--accent)}
+  .btn.primary{border-color:rgba(110,160,255,.5);background:rgba(110,160,255,.12);padding:9px 22px;min-width:120px}
+  .btn:disabled{opacity:.35;cursor:not-allowed}
+  .btn.ghost{background:transparent;color:var(--muted)}
+  .caption .btn.ghost{flex-shrink:0;align-self:center}
+  .hint{font-family:var(--mono);font-size:.68rem;color:var(--muted);margin:10px 4px 0;line-height:1.5}
+  .hint b{color:var(--accent)}
+
+  .take{margin-top:22px;background:linear-gradient(180deg,rgba(110,160,255,.08),rgba(139,123,255,.04));
+    border:1px solid var(--line);border-left:3px solid var(--accent);border-radius:12px;padding:16px 18px}
+  .take .tk{font-family:var(--mono);font-size:.66rem;letter-spacing:.14em;text-transform:uppercase;color:var(--accent);margin:0 0 8px}
+  .take p{margin:0;font-size:.95rem;color:var(--ink);line-height:1.55}
+  .take b{color:#fff}
+  @media (prefers-reduced-motion:reduce){*{animation-duration:.01ms!important;transition-duration:.01ms!important}#amb{display:none}}
+  @media (max-width:640px){.wrap{padding:18px 16px 60px}.back{padding:22px 16px 0}.stage{padding:12px}.pic{padding:44px 8px 22px}
+    .slot .in,.fr,.sec .sh{font-size:.72rem}.sec{margin-left:8px}.card .cd{font-size:.72rem;min-width:0;flex-basis:100%}.caption{flex-wrap:wrap}}
+</style>
+</head>
+<body>
+
+<a class="back" href="../index.html#aaa-sort">&#8592; Week 5 index</a>
+
+<canvas id="amb"></canvas>
+<div class="wrap">
+  <p class="tag">Workbook 4a &middot; Section 3-2 &middot; Game</p>
+  <h1>AAA Sort</h1>
+  <p class="lede"><b>The lines of a JUnit test are shuffled. Put each one under Arrange, Act or Assert, in order.</b></p>
+
+  <div class="stage">
+    <div class="topbar"><span class="lab">Game</span></div>
+
+    <div class="pic" id="pic">
+      <span class="zone">sort the test</span>
+      <div class="hud"><span>score <b id="hScore">0</b></span></div>
+      <p class="q" id="q"></p>
+      <div class="prog" id="prog"></div>
+      <div class="tray">
+        <p class="lab">unsorted lines</p>
+        <div class="cards" id="cards"></div>
+      </div>
+      <div class="row"><button class="btn ghost" id="bFix" disabled>Show the sorted test</button><button class="btn primary" id="bCheck" disabled>Check</button></div>
+      <div class="bar"><i id="bar"></i></div>
+      <div class="screen" id="startScr">
+        <h2>AAA Sort</h2>
+        <p>Each round is one test method with its lines shuffled. Press Arrange, Act or Assert next to a line to add it to the end of that section. Click a placed line to send it back. When every line is placed, press Check. Ten tests.</p>
+        <button class="btn primary" id="bStart">Start</button>
+      </div>
+      <div class="screen off" id="endScr">
+        <h2>Tests sorted</h2>
+        <div class="big" id="endScore"></div>
+        <p id="endMsg"></p>
+        <div class="misses" id="endMiss"></div>
+        <button class="btn primary" id="bAgain">Play again</button>
+      </div>
+    </div>
+
+    <div class="caption" id="caption">
+      <div class="n" id="stepno"><small>round</small>0 / 10</div>
+      <div class="t" id="status">Press <b class="a">Start</b>. Ten small JUnit tests to sort.</div>
+      <button class="btn ghost" id="bRestart">Restart</button>
+    </div>
+    <p class="hint">press a section next to a line to place it &middot; click a placed line to send it back &middot; <b>Enter</b> checks, then goes to the next test</p>
+  </div>
+
+  <div class="take">
+    <p class="tk">The one idea</p>
+    <p><b>Arrange sets up, Act calls the one method under test, Assert checks the result.</b> A call that only prepares the object, like <code>accelerate</code> before testing <code>brake</code>, belongs in Arrange; reading a value to compare it belongs in Assert.</p>
+  </div>
+
+  <div id="rail"></div>
+</div>
+
+<script>
+(function(){
+  "use strict";
+  var $=function(s){return document.querySelector(s);};
+  var reduce=matchMedia("(prefers-reduced-motion: reduce)").matches;
+
+  var SECS=["arrange","act","assert"];
+  var SNAME={arrange:"Arrange",act:"Act",assert:"Assert"};
+
+  /* each test: its name, the method under test, the lines and the rules.
+     A line is [text, section, why it belongs there].
+     A rule [x, y, why] means line x must come before line y inside the same section (y uses x).
+     The rules are complete: lines with no rule between them may swap. Section order fixes everything across sections. */
+  var TESTS=[
+    { name:"accelerate_should_increaseCarSpeed", cls:"Car", method:"accelerate",
+      lines:{a:["Car car = new Car(\"Bugatti\", \"Chevron\");","arrange","Creating the object under test is setup: Arrange."],
+             b:["car.accelerate(15);","act","accelerate is the method under test: Act."],
+             c:["assertEquals(15, car.getSpeed());","assert","Checking the speed after the call: Assert."]},
+      rules:[] },
+
+    { name:"accelerate_should_increaseCarSpeed", cls:"Car", method:"accelerate",
+      lines:{a:["Car car = new Car(\"Ford\", \"Mustang\");","arrange","Creating the object under test is setup: Arrange."],
+             b:["int speedChange = 15;","arrange","The input is a variable declared in Arrange, not a magic number."],
+             c:["car.accelerate(speedChange);","act","accelerate is the method under test: Act."],
+             d:["int actualSpeed = car.getSpeed();","assert","Reading the result to compare it is part of Assert."],
+             e:["assertEquals(15, actualSpeed);","assert","The assertion itself: Assert."]},
+      rules:[["d","e","actualSpeed is used before it is declared."]] },
+
+    { name:"brake_should_decreaseCarSpeed", cls:"Car", method:"brake",
+      lines:{a:["Car car = new Car(\"Toyota\", \"Prius\");","arrange","Creating the object under test is setup: Arrange."],
+             b:["car.accelerate(15);","arrange","This test is about brake. accelerate only gets the car moving first: a setup call, Arrange."],
+             c:["car.brake(10);","act","brake is the method under test: Act."],
+             d:["int actualSpeed = car.getSpeed();","assert","Reading the result to compare it is part of Assert."],
+             e:["assertEquals(5, actualSpeed);","assert","The assertion itself: Assert."]},
+      rules:[["a","b","accelerate is called on car before car exists."],
+             ["d","e","actualSpeed is used before it is declared."]] },
+
+    { name:"brake_should_stopCar_whenChangeIsGreater", cls:"Car", method:"brake",
+      lines:{a:["Car car = new Car(\"Toyota\", \"Rav4\");","arrange","Creating the object under test is setup: Arrange."],
+             b:["int expectedSpeed = 0;","arrange","The expected result is declared up front, in Arrange."],
+             c:["car.accelerate(15);","arrange","This test is about brake. accelerate only gets the car moving first: a setup call, Arrange."],
+             d:["car.brake(20);","act","brake is the method under test: Act."],
+             e:["assertEquals(expectedSpeed, car.getSpeed());","assert","The assertion itself: Assert."]},
+      rules:[["a","c","accelerate is called on car before car exists."]] },
+
+    { name:"increment_should_addOne", cls:"Counter", method:"increment",
+      lines:{a:["Counter counter = new Counter();","arrange","Creating the object under test is setup: Arrange."],
+             b:["counter.increment();","act","increment is the method under test: Act."],
+             c:["assertEquals(1, counter.getCount());","assert","Checking the count after the call: Assert."]},
+      rules:[] },
+
+    { name:"reset_should_setCountToZero", cls:"Counter", method:"reset",
+      lines:{a:["Counter counter = new Counter();","arrange","Creating the object under test is setup: Arrange."],
+             b:["counter.incrementBy(7);","arrange","This test is about reset. incrementBy only puts a count in first: a setup call, Arrange."],
+             c:["counter.reset();","act","reset is the method under test: Act."],
+             d:["assertEquals(0, counter.getCount());","assert","Checking the count after the call: Assert."]},
+      rules:[["a","b","incrementBy is called on counter before counter exists."]] },
+
+    { name:"raise_should_increaseTarget", cls:"Thermostat", method:"raise",
+      lines:{a:["Thermostat thermostat = new Thermostat(20);","arrange","Creating the object under test is setup: Arrange."],
+             b:["int expectedTarget = 23;","arrange","The expected result is declared up front, in Arrange."],
+             c:["thermostat.raise(3);","act","raise is the method under test: Act."],
+             d:["int actualTarget = thermostat.getTarget();","assert","Reading the result to compare it is part of Assert."],
+             e:["assertEquals(expectedTarget, actualTarget);","assert","The assertion itself: Assert."]},
+      rules:[["d","e","actualTarget is used before it is declared."]] },
+
+    { name:"isHeating_should_returnTrue_whenColderThanTarget", cls:"Thermostat", method:"isHeating",
+      lines:{a:["Thermostat thermostat = new Thermostat(21);","arrange","Creating the object under test is setup: Arrange."],
+             b:["int currentTemp = 18;","arrange","The input is a variable declared in Arrange."],
+             c:["boolean heating = thermostat.isHeating(currentTemp);","act","isHeating is the method under test. Calling it and keeping what it returns is Act."],
+             d:["assertTrue(heating);","assert","The assertion itself: Assert."]},
+      rules:[] },
+
+    { name:"addSong_should_increaseSongCount", cls:"Playlist", method:"addSong",
+      lines:{a:["Playlist playlist = new Playlist(\"Morning Run\");","arrange","Creating the object under test is setup: Arrange."],
+             b:["playlist.addSong(\"Sunrise\");","act","addSong is the method under test: Act."],
+             c:["assertEquals(1, playlist.getSongCount());","assert","Checking the count after the call: Assert."],
+             d:["assertFalse(playlist.isEmpty());","assert","A second check on the same result: still Assert."]},
+      rules:[] },
+
+    { name:"removeSong_should_decreaseSongCount", cls:"Playlist", method:"removeSong",
+      lines:{a:["Playlist playlist = new Playlist(\"Morning Run\");","arrange","Creating the object under test is setup: Arrange."],
+             b:["playlist.addSong(\"Sunrise\");","arrange","This test is about removeSong. addSong only fills the playlist first: a setup call, Arrange."],
+             c:["playlist.addSong(\"Tempo\");","arrange","This test is about removeSong. addSong only fills the playlist first: a setup call, Arrange."],
+             d:["playlist.removeSong(\"Sunrise\");","act","removeSong is the method under test: Act."],
+             e:["assertEquals(1, playlist.getSongCount());","assert","Checking the count after the call: Assert."]},
+      rules:[["a","b","addSong is called on playlist before playlist exists."],
+             ["a","c","addSong is called on playlist before playlist exists."]] }
+  ];
+
+  var N=TESTS.length;
+  var at=0, score=0, misses=[], state="idle";
+  var tc=null, ids=[], placed=null, tray=[], marks={}, failed=false;
+
+  function shuffle(a){ a=a.slice(); for(var i=a.length-1;i>0;i--){ var j=Math.floor(Math.random()*(i+1)); var t=a[i]; a[i]=a[j]; a[j]=t; } return a; }
+  function esc(s){ var d=document.createElement("span"); d.textContent=String(s); return d.innerHTML; }
+  function code(s){ return "<code>"+esc(s)+"</code>"; }
+  function setCap(c,html){ $("#caption").className="caption"+(c?" "+c:""); $("#status").innerHTML=html; }
+  function txt(id){ return tc.lines[id][0]; }
+
+  /* syntax tint: strings first, then keywords, types and assertions outside strings */
+  function paint(s){
+    return String(s).split(/("(?:[^"\\]|\\.)*")/).map(function(part,i){
+      if(i%2===1) return '<span class="st">'+esc(part)+'</span>';
+      var h=esc(part);
+      h=h.replace(/\b(new|true|false|public|void)\b/g,'<span class="kw">$1</span>');
+      h=h.replace(/\b(int|boolean|Car|Counter|Thermostat|Playlist)\b/g,'<span class="ty">$1</span>');
+      h=h.replace(/\b(assertEquals|assertTrue|assertFalse)\b/g,'<span class="as">$1</span>');
+      return h;
+    }).join("");
+  }
+  function secOf(id){ for(var k=0;k<SECS.length;k++){ if(placed[SECS[k]].indexOf(id)>=0) return SECS[k]; } return null; }
+
+  /* the check: wrong section first, then the order rules inside a section; returns why by line id */
+  function evaluate(){
+    var m={};
+    ids.forEach(function(id){ var s=secOf(id); if(s!==tc.lines[id][1]) m[id]="Not "+SNAME[s]+". "+tc.lines[id][2]; });
+    tc.rules.forEach(function(r){
+      var s=secOf(r[0]); if(s!==secOf(r[1])||m[r[0]]||m[r[1]]) return;
+      if(placed[s].indexOf(r[0])>placed[s].indexOf(r[1])) m[r[1]]=r[2];
+    });
+    return m;
+  }
+
+  function render(){
+    var html='<div class="fr"><span class="kw">@Test</span></div>'+
+      '<div class="fr">'+paint("public void ")+esc(tc.name)+'() {</div>';
+    SECS.forEach(function(s){
+      html+='<div class="sec s-'+s+'"><p class="sh">// '+s+'</p>';
+      if(!placed[s].length) html+='<div class="emp">empty</div>';
+      placed[s].forEach(function(id){
+        var c="slot";
+        if(state==="shown") c+=marks[id]!==undefined?" err":" ok";
+        var why=(state==="shown"&&marks[id]!==undefined)?'<span class="why">'+esc(marks[id])+'</span>':"";
+        html+='<button type="button" class="'+c+'" data-id="'+id+'"'+(state!=="play"?' tabindex="-1"':'')+'><span class="in"><span class="cd">'+paint(txt(id))+'</span></span>'+why+'</button>';
+      });
+      html+='</div>';
+    });
+    html+='<div class="fr">}</div>';
+    $("#prog").innerHTML=html;
+
+    $("#cards").innerHTML=tray.length?tray.map(function(id){
+      return '<div class="card"><span class="cd">'+paint(txt(id))+'</span><span class="picks">'+
+        SECS.map(function(s){ return '<button type="button" class="pick p-'+s+'" data-id="'+id+'" data-s="'+s+'"'+(state!=="play"?" disabled":"")+'>'+SNAME[s]+'</button>'; }).join("")+
+        '</span></div>';
+    }).join(""):'<span class="none">every line is placed</span>';
+    if(state==="play") $("#bCheck").disabled=tray.length>0;
+  }
+
+  function showRound(){
+    tc=TESTS[at]; ids=Object.keys(tc.lines); state="play"; marks={}; failed=false;
+    placed={arrange:[],act:[],assert:[]};
+    tray=shuffle(ids);
+    $("#q").innerHTML="<small>test "+(at+1)+" · "+esc(tc.cls)+"Test</small>The method under test is <span class=\"fn\">"+esc(tc.method)+"</span>.";
+    $("#prog").className="prog";
+    $("#bCheck").textContent="Check"; $("#bFix").disabled=true;
+    render();
+    $("#stepno").innerHTML="<small>round</small>"+(at+1)+" / "+N; $("#bar").style.width=(100*at/N)+"%";
+    setCap("","Sort the "+ids.length+" lines. A line goes to the end of the section you press.");
+  }
+  function start(){
+    at=0; score=0; misses=[];
+    $("#hScore").textContent="0"; $("#startScr").classList.add("off"); $("#endScr").classList.add("off");
+    showRound();
+  }
+  function place(id,s){
+    if(state!=="play"||tray.indexOf(id)<0) return;
+    placed[s].push(id); tray.splice(tray.indexOf(id),1); render();
+    if(!tray.length) setCap("","Every line is placed. Press <b class=\"a\">Check</b>, or click a line to send it back.");
+    else setCap("",code(txt(id))+" went under <b class=\"a\">"+SNAME[s]+"</b>, line "+placed[s].length+" of that section.");
+  }
+  function unplace(id){
+    if(state!=="play") return;
+    var s=secOf(id); if(!s) return;
+    placed[s].splice(placed[s].indexOf(id),1); tray.push(id); render();
+    setCap("left",code(txt(id))+" went back to the tray.");
+  }
+  function check(){
+    if(state==="shown"){ at++; if(at>=N) end(); else showRound(); return; }
+    if(state!=="play"||tray.length) return;
+    marks=evaluate();
+    var order=[].concat(placed.arrange,placed.act,placed.assert);
+    var bad=order.filter(function(id){ return marks[id]!==undefined; });
+    var ok=bad.length===0;
+    state="shown";
+    $("#prog").className="prog lock "+(ok?"good":"bad");
+    if(ok){
+      score++; $("#hScore").textContent=String(score);
+      setCap("ok","<b class=\"g\">Sorted.</b> Setup in Arrange, the one call to <b class=\"y\">"+esc(tc.method)+"</b> in Act, the checks in Assert.");
+    } else {
+      failed=true;
+      misses.push({name:tc.name,msg:txt(bad[0])+": "+marks[bad[0]]});
+      setCap("cut","<b class=\"w\">"+bad.length+(bad.length===1?" line is":" lines are")+" off.</b> "+code(txt(bad[0]))+": "+esc(marks[bad[0]]));
+      $("#bFix").disabled=false;
+    }
+    render();
+    $("#bCheck").disabled=false;
+    $("#bCheck").textContent=at+1>=N?"Finish":"Next";
+  }
+  function showFix(){
+    if(state!=="shown"||!failed) return;
+    placed={arrange:[],act:[],assert:[]};
+    ids.forEach(function(id){ placed[tc.lines[id][1]].push(id); });
+    marks={}; tray=[];
+    $("#prog").className="prog lock good"; render(); $("#bFix").disabled=true;
+    setCap("left","The sorted test. Lines in the same section with no link between them may swap.");
+  }
+  function end(){
+    state="end"; $("#bar").style.width="100%";
+    $("#endScore").textContent=score+" / "+N; $("#endScore").className="big "+(score===N?"good":score>=7?"":"gold");
+    $("#endMsg").textContent=score===N?"Perfect. Every test was set up, run and checked in the right place.":score>=7?"Solid. The misses are below.":"Keep going. The misses are below.";
+    $("#endMiss").innerHTML=misses.map(function(m){ return "<div><b>"+esc(m.name)+"</b>: "+esc(m.msg)+"</div>"; }).join("");
+    $("#endScr").classList.remove("off");
+    $("#stepno").innerHTML="<small>round</small>"+N+" / "+N;
+    setCap("","Game over. <b class=\"a\">Play again</b> shuffles the lines again.");
+  }
+  function restart(){
+    state="idle"; at=0; score=0; misses=[]; tc=null;
+    $("#hScore").textContent="0"; $("#q").innerHTML=""; $("#prog").innerHTML=""; $("#prog").className="prog"; $("#cards").innerHTML="";
+    $("#bCheck").disabled=true; $("#bFix").disabled=true; $("#bCheck").textContent="Check"; $("#bar").style.width="0";
+    $("#endScr").classList.add("off"); $("#startScr").classList.remove("off");
+    $("#stepno").innerHTML="<small>round</small>0 / "+N;
+    setCap("","Press <b class=\"a\">Start</b>. Ten small JUnit tests to sort.");
+  }
+
+  $("#cards").addEventListener("click",function(e){ var b=e.target.closest(".pick"); if(b) place(b.getAttribute("data-id"),b.getAttribute("data-s")); });
+  $("#prog").addEventListener("click",function(e){ var b=e.target.closest(".slot"); if(b) unplace(b.getAttribute("data-id")); });
+  $("#bCheck").addEventListener("click",function(){ this.blur(); check(); });
+  $("#bFix").addEventListener("click",function(){ this.blur(); showFix(); });
+  $("#bStart").addEventListener("click",function(){ this.blur(); start(); });
+  $("#bAgain").addEventListener("click",function(){ this.blur(); start(); });
+  $("#bRestart").addEventListener("click",function(){ this.blur(); restart(); });
+  document.addEventListener("keydown",function(e){
+    if(/INPUT|TEXTAREA|BUTTON/.test(e.target.tagName)||e.metaKey||e.ctrlKey||e.altKey) return;
+    if(state==="idle"){ if(e.key==="Enter"||e.code==="Space"){ e.preventDefault(); start(); } return; }
+    if(e.key==="Enter"&&(state==="play"||state==="shown")){ e.preventDefault(); check(); }
+  });
+
+  var cv=$("#amb"),ctx=cv.getContext&&cv.getContext("2d"),parts=[];
+  function sizeC(){if(!ctx)return;cv.width=innerWidth;cv.height=innerHeight;}
+  function initParts(){parts=[];for(var i=0;i<46;i++)parts.push({x:Math.random(),y:Math.random(),r:Math.random()*1.6+.3,s:Math.random()*.02+.004,o:Math.random()*.4+.1});}
+  function drawC(){if(!ctx)return;ctx.clearRect(0,0,cv.width,cv.height);
+    parts.forEach(function(p){p.y-=p.s/60;if(p.y<-.02)p.y=1.02;ctx.beginPath();ctx.arc(p.x*cv.width,p.y*cv.height,p.r,0,7);
+      ctx.fillStyle="rgba(140,170,255,"+p.o+")";ctx.fill();});requestAnimationFrame(drawC);}
+  if(ctx&&!reduce){sizeC();initParts();drawC();addEventListener("resize",sizeC);}
+})();
+</script>
+<script src="../manifest.js"></script>
+<script src="../../assets/rail.js"></script>
+<script>Rail.render(document.getElementById("rail"),{week:5,kind:"games",current:"aaa-sort"});</script>
+</body>
+</html>

@@ -1,0 +1,268 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Thinking in Objects | Week 5 Visual Hub</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Sora:wght@500;700&family=Inter:wght@400;500&family=JetBrains+Mono:wght@400;500&display=swap">
+<style>
+  :root{
+    --bg:#080c17; --bg2:#0c1428; --surface:rgba(255,255,255,.045); --line:rgba(255,255,255,.09);
+    --ink:#eef2fb; --muted:#8496b6; --accent:#6ea0ff; --accent2:#8b7bff; --good:#46d98a; --warn:#ff6a6a;
+    --gold:#ffc862; --disp:'Sora',system-ui,sans-serif; --body:'Inter',system-ui,sans-serif;
+    --mono:'JetBrains Mono',ui-monospace,monospace;
+  }
+  *{box-sizing:border-box}
+  body{margin:0;min-height:100vh;color:var(--ink);font-family:var(--body);
+    background:radial-gradient(1200px 700px at 70% -10%,#141d38 0%,transparent 55%),
+               radial-gradient(900px 600px at 10% 110%,#161233 0%,transparent 50%),#080c17;
+    overflow-x:hidden}
+  #amb{position:fixed;inset:0;z-index:0;pointer-events:none;opacity:.6}
+  .back{position:relative;z-index:2;display:block;max-width:1120px;margin:0 auto;padding:26px 24px 0;
+    width:100%;font-family:var(--mono);font-size:.8rem;letter-spacing:.04em;color:var(--muted);
+    text-decoration:none;transition:color .15s}
+  .back:hover{color:var(--accent)}
+  .wrap{position:relative;z-index:1;max-width:1120px;margin:0 auto;padding:22px 24px 70px}
+  .tag{font-family:var(--mono);font-size:.72rem;letter-spacing:.22em;text-transform:uppercase;color:var(--accent);margin:0 0 14px}
+  h1{font-family:var(--disp);font-weight:700;font-size:clamp(2.3rem,6vw,3.6rem);line-height:1;margin:0 0 12px;
+    letter-spacing:-.03em;background:linear-gradient(180deg,#fff,#b9c6e6);-webkit-background-clip:text;
+    background-clip:text;color:transparent}
+  .lede{color:var(--muted);max-width:64ch;font-size:1.05rem;margin:0 0 26px;line-height:1.5}
+  .lede b{color:var(--ink)}
+  code{font-family:var(--mono);font-size:.92em;color:#bcd0ff}
+
+  /* ---------- the stage IS the picture ---------- */
+  .stage{position:relative;background:linear-gradient(180deg,rgba(255,255,255,.03),rgba(255,255,255,.01));
+    border:1px solid var(--line);border-radius:24px;padding:22px;
+    box-shadow:0 1px 0 rgba(255,255,255,.06) inset,0 30px 80px -30px rgba(0,0,0,.8)}
+
+  /* the shop */
+  .shop{position:relative;border-radius:18px;padding:16px 16px 0;background:rgba(6,10,20,.5);border:1px solid var(--line);overflow:hidden}
+  .sign{display:flex;justify-content:center;margin:0 0 14px}
+  .sign span{font-family:var(--disp);font-weight:700;font-size:.95rem;letter-spacing:.06em;color:#bcd0ff;
+    padding:6px 18px;border-radius:999px;border:1px solid rgba(110,160,255,.4);background:rgba(110,160,255,.08)}
+  .floor{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:14px;position:relative;z-index:1}
+  .shop::after{content:"";position:absolute;left:0;right:0;bottom:0;height:46px;
+    background:linear-gradient(180deg,rgba(255,255,255,.035),rgba(255,255,255,.01));border-top:1px solid var(--line)}
+  @media (max-width:720px){.floor{grid-template-columns:1fr}}
+
+  .spot{position:relative;min-height:330px;margin-bottom:16px}
+  .thing{position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:flex-end;gap:10px;
+    padding:12px 8px 8px;border-radius:16px;cursor:pointer;border:1px dashed rgba(132,150,182,.28);background:transparent;
+    color:var(--ink);font-family:var(--body);transition:opacity .35s,transform .45s cubic-bezier(.2,.9,.3,1),border-color .2s,background .2s}
+  .thing:hover{border-color:var(--accent);background:rgba(110,160,255,.06)}
+  .thing svg{width:100%;max-width:200px;height:auto;flex:1;min-height:0}
+  .thing .nm{font-family:var(--disp);font-weight:700;font-size:1.1rem}
+  .thing .tap{font-family:var(--mono);font-size:.66rem;letter-spacing:.12em;text-transform:uppercase;color:var(--accent)}
+  .spot.open .thing{opacity:0;transform:scale(.85);pointer-events:none}
+
+  .card{position:absolute;inset:0;border-radius:16px;padding:16px 16px 14px;border:1px solid rgba(255,255,255,.18);
+    background:rgba(255,255,255,.045);opacity:0;transform:scale(.9) translateY(18px);pointer-events:none;
+    transition:opacity .4s .12s,transform .5s .12s cubic-bezier(.2,.9,.3,1),border-color .3s,box-shadow .3s}
+  .spot.open .card{opacity:1;transform:none;pointer-events:auto}
+  .card.act{border-color:rgba(110,160,255,.75);box-shadow:0 0 26px -8px rgba(110,160,255,.8)}
+  .hd{font-family:var(--mono);font-size:.62rem;letter-spacing:.16em;text-transform:uppercase;color:var(--muted);margin:0 0 4px}
+  .who{font-family:var(--disp);font-weight:700;font-size:1.35rem;margin:0 0 6px;color:var(--ink);letter-spacing:-.01em}
+  .sect{font-family:var(--mono);font-size:.6rem;letter-spacing:.14em;text-transform:uppercase;margin:12px 0 6px 2px}
+  .sect.k{color:#82aaff} .sect.d{color:var(--gold)}
+  .row{display:flex;align-items:center;justify-content:space-between;gap:10px;font-family:var(--mono);font-size:.8rem;
+    padding:7px 10px;border-radius:9px;margin-bottom:5px;border:1px solid var(--line);background:rgba(0,0,0,.22);
+    opacity:0;transform:translateX(-12px);transition:opacity .35s,transform .4s cubic-bezier(.2,.9,.3,1)}
+  .spot.open .row{opacity:1;transform:none}
+  .spot.open .row:nth-of-type(1){transition-delay:.45s} .spot.open .row:nth-of-type(2){transition-delay:.6s}
+  .spot.open .d+.row{transition-delay:.8s}
+  .row .f{color:#c9d4ea;white-space:nowrap}
+  .row .v{color:#f78c6c;white-space:nowrap;font-variant-numeric:tabular-nums} .row .v.s{color:#c3e88d}
+  .row.m{color:#ffcb6b;border-color:rgba(255,200,98,.3);background:rgba(255,200,98,.06)}
+  .row.m .f{color:#ffcb6b}
+  .row.m small{color:var(--muted);font-family:var(--body);font-size:.74rem}
+
+  /* the one sentence */
+  .caption{display:flex;gap:14px;align-items:flex-start;margin:18px 2px 0;padding-top:16px;border-top:1px solid var(--line)}
+  .caption .t{flex:1;font-size:1.05rem;line-height:1.55;color:var(--ink);padding-left:16px;border-left:3px solid var(--accent);transition:border-color .3s}
+  .caption .t .line{display:block;margin-top:6px;font-family:var(--mono);font-size:.8rem;color:#bcd0ff;opacity:.9}
+  .caption.y .t{border-left-color:var(--gold)} .caption.g .t{border-left-color:var(--good)}
+  .caption b.a{color:var(--accent)} .caption b.y{color:var(--gold)} .caption b.g{color:var(--good)}
+  .reset{font-family:var(--body);font-weight:500;font-size:.84rem;padding:8px 14px;border-radius:11px;cursor:pointer;
+    border:1px solid var(--line);background:transparent;color:var(--muted);transition:.15s;flex-shrink:0}
+  .reset:hover{border-color:var(--accent);color:var(--accent)}
+  button:focus-visible,input:focus-visible{outline:2px solid var(--accent);outline-offset:2px}
+
+  .take{margin-top:22px;background:linear-gradient(180deg,rgba(110,160,255,.08),rgba(139,123,255,.04));
+    border:1px solid var(--line);border-left:3px solid var(--accent);border-radius:12px;padding:16px 18px}
+  .take .tk{font-family:var(--mono);font-size:.66rem;letter-spacing:.14em;text-transform:uppercase;color:var(--accent);margin:0 0 8px}
+  .take p{margin:0;font-size:.95rem;color:var(--ink);line-height:1.55}
+  .take b{color:#fff}
+  @media (prefers-reduced-motion:reduce){*{animation-duration:.01ms!important;transition-duration:.01ms!important;transition-delay:0s!important}#amb{display:none}}
+</style>
+</head>
+<body>
+<a class="back" href="../index.html#01-thinking-in-objects">&#8592; Week 5 index</a>
+<canvas id="amb"></canvas>
+<div class="wrap">
+  <p class="tag">Workbook 4a &middot; Section 1-1</p>
+  <h1>Thinking in Objects</h1>
+  <p class="lede"><b>A bike shop has three things in it. Tap each one and see it as an object.</b></p>
+
+  <div class="stage">
+    <div class="shop">
+      <div class="sign"><span>The Bike Shop</span></div>
+      <div class="floor">
+
+        <div class="spot" id="spot-bike">
+          <button class="thing" data-k="bike" aria-label="Tap the bike">
+            <svg viewBox="0 0 200 150" fill="none" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+              <circle cx="48" cy="104" r="32" stroke="#8496b6" stroke-width="5"/>
+              <circle cx="152" cy="104" r="32" stroke="#8496b6" stroke-width="5"/>
+              <circle cx="48" cy="104" r="3" fill="#8496b6"/><circle cx="152" cy="104" r="3" fill="#8496b6"/>
+              <path d="M48 104 L84 58 L136 58 L100 104 Z" stroke="#6ea0ff" stroke-width="6"/>
+              <path d="M84 58 L76 40 M64 40 L90 40" stroke="#6ea0ff" stroke-width="6"/>
+              <path d="M136 58 L152 104 M136 58 L132 38 L146 32" stroke="#6ea0ff" stroke-width="6"/>
+              <circle cx="100" cy="104" r="7" stroke="#ffc862" stroke-width="4"/>
+            </svg>
+            <span class="nm">Bike</span><span class="tap">tap</span>
+          </button>
+          <div class="card" id="card-bike">
+            <p class="hd">object &middot; Bike</p>
+            <p class="who">bike</p>
+            <p class="sect k">knows</p>
+            <div class="row"><span class="f">frameSize</span><span class="v">54 cm</span></div>
+            <div class="row"><span class="f">price</span><span class="v">$650.00</span></div>
+            <p class="sect d">does</p>
+            <div class="row m"><span class="f">shiftGear()</span><small>changes gear</small></div>
+          </div>
+        </div>
+
+        <div class="spot" id="spot-mechanic">
+          <button class="thing" data-k="mechanic" aria-label="Tap the mechanic">
+            <svg viewBox="0 0 200 150" fill="none" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+              <circle cx="92" cy="32" r="18" stroke="#8496b6" stroke-width="5"/>
+              <path d="M74 24 Q92 6 110 24" stroke="#6ea0ff" stroke-width="6"/>
+              <path d="M62 146 L62 80 Q62 58 92 58 Q122 58 122 80 L122 146" stroke="#6ea0ff" stroke-width="6"/>
+              <path d="M78 58 L78 146 M106 58 L106 146" stroke="#6ea0ff" stroke-width="3" opacity=".5"/>
+              <path d="M122 82 L150 104" stroke="#8496b6" stroke-width="6"/>
+              <path d="M146 100 L170 76" stroke="#ffc862" stroke-width="6"/>
+              <path d="M164 70 Q172 62 180 70 L172 78" stroke="#ffc862" stroke-width="5"/>
+            </svg>
+            <span class="nm">Mechanic</span><span class="tap">tap</span>
+          </button>
+          <div class="card" id="card-mechanic">
+            <p class="hd">object &middot; Mechanic</p>
+            <p class="who">mechanic</p>
+            <p class="sect k">knows</p>
+            <div class="row"><span class="f">name</span><span class="v s">"Dana"</span></div>
+            <div class="row"><span class="f">yearsOfExperience</span><span class="v">6</span></div>
+            <p class="sect d">does</p>
+            <div class="row m"><span class="f">repair(bike)</span><small>fixes a bike</small></div>
+          </div>
+        </div>
+
+        <div class="spot" id="spot-customer">
+          <button class="thing" data-k="customer" aria-label="Tap the customer">
+            <svg viewBox="0 0 200 150" fill="none" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+              <circle cx="100" cy="32" r="18" stroke="#8496b6" stroke-width="5"/>
+              <path d="M70 146 L70 80 Q70 58 100 58 Q130 58 130 80 L130 146" stroke="#6ea0ff" stroke-width="6"/>
+              <path d="M70 84 L48 110" stroke="#8496b6" stroke-width="6"/>
+              <rect x="26" y="104" width="34" height="24" rx="4" stroke="#ffc862" stroke-width="5"/>
+              <path d="M26 114 L60 114" stroke="#ffc862" stroke-width="3"/>
+              <path d="M130 84 L146 112" stroke="#8496b6" stroke-width="6"/>
+            </svg>
+            <span class="nm">Customer</span><span class="tap">tap</span>
+          </button>
+          <div class="card" id="card-customer">
+            <p class="hd">object &middot; Customer</p>
+            <p class="who">customer</p>
+            <p class="sect k">knows</p>
+            <div class="row"><span class="f">name</span><span class="v s">"Sam"</span></div>
+            <div class="row"><span class="f">budget</span><span class="v">$800.00</span></div>
+            <p class="sect d">does</p>
+            <div class="row m"><span class="f">pay(amount)</span><small>pays for a bike</small></div>
+          </div>
+        </div>
+
+      </div>
+    </div>
+    <div class="caption" id="caption">
+      <div class="t" id="status">Three things in the shop. Each one <b class="a">knows</b> something and <b class="y">does</b> something. Tap one.</div>
+      <button class="reset" id="bReset">Reset</button>
+    </div>
+  </div>
+
+  <div class="take">
+    <p class="tk">The one idea</p>
+    <p><b>Look at the world as things that know and do.</b> What a thing knows becomes its fields, what it does becomes
+    its methods. Object Oriented Programming models software on the world around it, one object per thing.</p>
+  </div>
+  <div id="rail"></div>
+</div>
+<script>
+(function(){
+  "use strict";
+  var $=function(s){return document.querySelector(s);};
+  var reduce=matchMedia("(prefers-reduced-motion: reduce)").matches;
+  var KEYS=["bike","mechanic","customer"];
+  var SAYS={
+    bike:'A <b>Bike</b> knows its <b class="a">frame size and price</b>. What it does: <b class="y">it shifts gears</b>.',
+    mechanic:'A <b>Mechanic</b> knows a <b class="a">name and years of experience</b>. What a mechanic does: <b class="y">repairs a bike</b>.',
+    customer:'A <b>Customer</b> knows a <b class="a">name and a budget</b>. What a customer does: <b class="y">pays</b>.'
+  };
+  var open={};
+  var status=$("#status"),caption=$("#caption");
+
+  function say(html,tone){
+    caption.className="caption"+(tone?" "+tone:"");
+    status.innerHTML=html;
+  }
+  function count(){ return KEYS.filter(function(k){ return open[k]; }).length; }
+  function lit(k){ KEYS.forEach(function(x){ $("#card-"+x).classList.toggle("act",x===k); }); }
+
+  function tapThing(k){
+    open[k]=true;
+    $("#spot-"+k).classList.add("open");
+    lit(k);
+    if(count()===KEYS.length){
+      say(SAYS[k]+' All three are objects now: what each one <b class="a">knows</b> are its fields, what it <b class="y">does</b> are its methods.',"g");
+    } else {
+      say(SAYS[k],"y");
+    }
+  }
+  function tapCard(k){
+    lit(k);
+    say(SAYS[k],count()===KEYS.length?"g":"y");
+  }
+  function reset(){
+    open={};
+    KEYS.forEach(function(k){ $("#spot-"+k).classList.remove("open"); $("#card-"+k).classList.remove("act"); });
+    say('Three things in the shop. Each one <b class="a">knows</b> something and <b class="y">does</b> something. Tap one.');
+  }
+
+  document.querySelectorAll(".thing").forEach(function(b){
+    b.addEventListener("click",function(){
+      var k=b.getAttribute("data-k");
+      tapThing(k);
+      var c=$("#card-"+k); c.setAttribute("tabindex","-1");
+      setTimeout(function(){ c.focus({preventScroll:true}); },reduce?0:120);
+    });
+  });
+  KEYS.forEach(function(k){ $("#card-"+k).addEventListener("click",function(){ tapCard(k); }); });
+  $("#bReset").addEventListener("click",reset);
+
+  /* ambient canvas */
+  var cv=$("#amb"),ctx=cv.getContext&&cv.getContext("2d"),parts=[];
+  function sizeC(){if(!ctx)return;cv.width=innerWidth;cv.height=innerHeight;}
+  function initParts(){parts=[];for(var i=0;i<46;i++)parts.push({x:Math.random(),y:Math.random(),
+    r:Math.random()*1.6+.3,s:Math.random()*.02+.004,o:Math.random()*.4+.1});}
+  function drawC(){if(!ctx)return;ctx.clearRect(0,0,cv.width,cv.height);
+    parts.forEach(function(p){p.y-=p.s/60;if(p.y<-.02)p.y=1.02;
+      ctx.beginPath();ctx.arc(p.x*cv.width,p.y*cv.height,p.r,0,7);
+      ctx.fillStyle="rgba(140,170,255,"+p.o+")";ctx.fill();});
+    requestAnimationFrame(drawC);}
+  if(ctx&&!reduce){sizeC();initParts();drawC();addEventListener("resize",sizeC);}
+})();
+</script>
+<script src="../manifest.js"></script>
+<script src="../../assets/rail.js"></script>
+<script>Rail.render(document.getElementById("rail"),{week:5,kind:"visuals",current:"01-thinking-in-objects"});</script>
+</body>
+</html>

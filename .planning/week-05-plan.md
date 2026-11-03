@@ -1,0 +1,33 @@
+# Week 5 idea list — DRAFT 2026-11-04 (built ahead of Ray's review on his instruction "finish everything so the work is ready for me to review"; nothing pushed)
+
+Source: fall Workbook 4a v7.2Y (M1 Thinking in Objects, M2 Classes / Methods / Overloading, M3 Unit Testing, M4 BigDecimal (NEW) and Static, M5 Class Interactions, M6 optional), 4w Car Dealership. Spring week 5 hub (14 visuals, 4 reference, 9 companions, 10 games; no overloading page, no BigDecimal page) checked idea by idea. Outline: Mon M1 S1-S2 + M2 S1, Tue M2 S2-S3 + M3 S1, Wed M3 S2 + M4, Thu M5 + lab, Fri workshop. Rule for every visual: ONE PICTURE YOU TOUCH (CLAUDE.md), calibration page `week-02/visuals/07-class-vs-object.html`. Examples from `04.Weeks/Week 05/demos/` (demo-01 Person and Employee; demo-02 Car and CarTest; demo-03 Product cart with BigDecimal; demo-04 Person and Learner with a static counter) or invented. NEVER the exercises: hotel objects and responsibilities, hotel operations (Room, Employee, Reservation, Hotel), unit tests on Room and Employee, money-math, NameFormatter and static classes, Blackjack (Card, Hand, Deck), Car Dealership.
+
+## Visuals (17: 11 rebuild, 6 new, 3 spring pages dropped)
+| # | Idea | Spring page | Verdict | Example |
+|---|---|---|---|---|
+| 01 | Thinking in objects: the world split into things that KNOW and DO | 01-thinking-in-objects | REBUILD | invented: a bike shop (Bike, Mechanic, Customer), tap a thing to see what it knows and does |
+| 02 | Specialization: one object, one job; responsibilities drawn as cards | 02-know-vs-do | REBUILD | invented: bike shop roles |
+| 03 | Encapsulation: private fields behind a locked box, getters and setters are the door | none | NEW | demo-01: Person firstName, lastName, age; a direct access press is blocked with the compiler error, a getter press answers |
+| 04 | The constructor: new runs it, parameters fill the fields, this.x = x | none | NEW | demo-01: new Person("Ray", "Maroun", 35) fills three slots one per press |
+| 05 | Derived getters: computed from fields, no backing variable | 03-derived-getters | REBUILD | demo-01: getFullName from firstName and lastName; change a field, the derived value follows |
+| 06 | Boolean getters: isX returns true or false from a rule | 04-boolean-getters | REBUILD | demo-01 or workbook: isAdult = age >= 18; slide the age across 18 |
+| 07 | Default access: package-private, who can see what | 05-default-access | REBUILD | demo-01: Person in com.pluralsight, a class in another package knocks |
+| 08 | Methods change the object's own state: a press calls work(), energy drops | none | NEW | demo-01: Person energy 100, work(hours) subtracts, eat() restores |
+| 09 | Method overloading: same name, different parameter lists; the arguments pick the version | none (missing in spring) | NEW | demo-01: Person(firstName, lastName) vs Person(firstName, lastName, age): drag arguments in, the matching constructor lights |
+| 10 | Cohesion: a class that does one job vs one that does everything | 06-cohesion-coupling | REBUILD | invented: a Printer that also sends email; split it |
+| 11 | The testing pyramid: many unit tests, fewer integration, few end to end | 07-testing-pyramid | REBUILD | invented |
+| 12 | Arrange, Act, Assert: one test, three steps, pass or fail | 09-aaa-anatomy | REBUILD | demo-02: Car speed 0, accelerate(10), assertEquals(10, speed); change the expected value and watch it fail |
+| 13 | Why doubles drift: 0.1 ten times vs BigDecimal, one press per addition | none | NEW | demo-03: cents added one per press; double shows 0.30000000000000004, BigDecimal shows 0.30 |
+| 14 | BigDecimal operations return a new object: assign it, round with setScale | none | NEW | demo-03: cart total add, subtract, multiply by 1.075, then setScale(2, HALF_UP); the unassigned add shows total unchanged |
+| 15 | Instance vs static members: one counter shared by every object | 11-instance-vs-static | REBUILD | demo-04: Learner objects with their own names, one static schoolName shared by all, Learner.changeSchool changes it for every object |
+| 16 | Utility classes: only static methods, no object needed | 12-static-classes | REBUILD | demo-04 and Math: Math.pow(5,2) without new; new Math() blocked |
+| 17 | Has-a and class communication: one object holds another and calls its method | 13-has-a-relationship + 14-class-communication | REBUILD (merged) | invented: a Team has Players, team.printRoster() calls each player's getName |
+DROPPED: 08-junit-setup (a setup checklist, belongs in the JUnit reference page); 10-junit-assertions picker (becomes the game Pick the Assertion); 14 merged into 17 (one has-a picture carries both the holding and the call).
+
+## Reference (4): cheat-sheet (class anatomy, constructors, getters, overloading, JUnit, BigDecimal, static), glossary, common-errors (cannot find symbol on a private field, missing constructor match, non-static from static context, setScale without RoundingMode ArithmeticException, BigDecimal equals vs compareTo, @Test not found: dependency missing), junit-reference (dependency, setup in IntelliJ, naming, assertions table).
+
+## Exercise companions (10 + the "Reading This Week's Exercises" page = 11)
+hotel-objects (1-1, on paper), hotel-responsibilities (1-2, on paper), hotel-operations (2-1: Room, Employee, Main in one project), hotel-operations-2 (2-2: new project, copy in, checkIn/checkOut/cleanRoom, punchIn/punchOut), hotel-operations-3 (2-3: new project, copy in, punchTimeCard, Hotel with bookRoom overloads), hotel-operations-testing (3-2: new project, copy in, RoomTest and EmployeeTest), money-math (4-1, NEW), static-classes (4-2: NameFormatter plus the second static exercise, check the text for one or two projects), blackjack (5-1), car-dealership (workshop 4w). Fall wording: setWeekend(boolean weekend), bookRoom(int roomCount, boolean suite), checkOut(), cleanRoom(), isAdult age >= 18, faceUp, "Final Steps" ends with commit and push. No "send your URL" step.
+NEW: `exercises/reading-the-exercises.html` as in week 3 (invented exercises in the workbook's house style with the week's words).
+
+## Games (10): know-vs-do-sorter, derived-or-stored, overload-matcher (NEW: a call with arguments, pick the overload that runs), pyramid-climber, aaa-sort, pick-the-assertion, exact-or-drift (NEW: double or BigDecimal, what prints), static-or-instance, has-a-hunter, bug-hunter-5. Dropped: flashcard-quiz-4 (flat quiz), card-night (it is the Blackjack exercise).

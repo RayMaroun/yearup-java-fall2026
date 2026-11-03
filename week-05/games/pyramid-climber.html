@@ -1,0 +1,329 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Pyramid Climber | Week 5 Visual Hub</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Sora:wght@500;700&family=Inter:wght@400;500&family=JetBrains+Mono:wght@400;500&display=swap">
+<style>
+  :root{
+    --bg:#080c17; --bg2:#0c1428; --surface:rgba(255,255,255,.045); --line:rgba(255,255,255,.09);
+    --ink:#eef2fb; --muted:#8496b6; --accent:#6ea0ff; --accent2:#8b7bff; --good:#46d98a; --warn:#ff6a6a;
+    --gold:#ffc862; --disp:'Sora',system-ui,sans-serif; --body:'Inter',system-ui,sans-serif;
+    --mono:'JetBrains Mono',ui-monospace,monospace;
+  }
+  *{box-sizing:border-box}
+  body{margin:0;min-height:100vh;color:var(--ink);font-family:var(--body);
+    background:radial-gradient(1200px 700px at 70% -10%,#141d38 0%,transparent 55%),
+               radial-gradient(900px 600px at 10% 110%,#161233 0%,transparent 50%),#080c17;
+    overflow-x:hidden}
+  #amb{position:fixed;inset:0;z-index:0;pointer-events:none;opacity:.6}
+  .back{position:relative;z-index:2;display:block;max-width:1120px;margin:0 auto;padding:26px 24px 0;
+    width:100%;font-family:var(--mono);font-size:.8rem;letter-spacing:.04em;color:var(--muted);
+    text-decoration:none;transition:color .15s}
+  .back:hover{color:var(--accent)}
+  .wrap{position:relative;z-index:1;max-width:1120px;margin:0 auto;padding:22px 24px 70px}
+  .tag{font-family:var(--mono);font-size:.72rem;letter-spacing:.22em;text-transform:uppercase;color:var(--accent);margin:0 0 14px}
+  h1{font-family:var(--disp);font-weight:700;font-size:clamp(2.3rem,6vw,3.6rem);line-height:1;margin:0 0 12px;
+    letter-spacing:-.03em;background:linear-gradient(180deg,#fff,#b9c6e6);-webkit-background-clip:text;
+    background-clip:text;color:transparent}
+  .lede{color:var(--muted);max-width:64ch;font-size:1.05rem;margin:0 0 26px;line-height:1.5}
+  .lede b{color:var(--ink)}
+  .lede code,.take code,.caption code{font-family:var(--mono);font-size:.92em;color:#bcd0ff}
+
+  /* ---------- stage: picture first, one toolbar, support below ---------- */
+  .stage{position:relative;background:linear-gradient(180deg,rgba(255,255,255,.03),rgba(255,255,255,.01));
+    border:1px solid var(--line);border-radius:24px;padding:18px 18px 14px;
+    box-shadow:0 1px 0 rgba(255,255,255,.06) inset,0 30px 80px -30px rgba(0,0,0,.8)}
+  .topbar{display:flex;align-items:center;gap:10px;margin:0 0 14px;flex-wrap:wrap}
+  .topbar .lab{margin:0 4px 0 0}
+  .lab{font-family:var(--mono);font-size:.7rem;letter-spacing:.12em;text-transform:uppercase;color:var(--muted);margin:0 0 10px}
+  .chips{display:flex;flex-wrap:wrap;gap:6px}
+  .chip{font-family:var(--mono);font-size:.74rem;padding:5px 11px;border-radius:999px;cursor:pointer;
+    border:1px solid var(--line);background:rgba(0,0,0,.25);color:var(--muted);transition:.15s}
+  .chip:hover{border-color:var(--accent);color:var(--accent)}
+  .chip.on{border-color:rgba(110,160,255,.6);background:rgba(110,160,255,.14);color:var(--ink)}
+  .chip:focus-visible,.btn:focus-visible,.focus:focus-visible{outline:2px solid var(--accent);outline-offset:2px}
+  .focus{margin-left:auto;font-family:var(--mono);font-size:.68rem;letter-spacing:.1em;text-transform:uppercase;padding:6px 12px;
+    border-radius:999px;border:1px solid var(--line);background:rgba(0,0,0,.25);color:var(--muted);cursor:pointer;transition:.15s}
+  .focus:hover{border-color:var(--accent);color:var(--accent)}
+  body.solo .focus{border-color:rgba(255,200,98,.6);color:var(--gold);background:rgba(255,200,98,.1)}
+
+  /* ---------- game board ---------- */
+  .pic{position:relative;height:390px;border:1px solid var(--line);border-radius:18px;background:rgba(6,10,20,.5);overflow:hidden;
+    display:flex;flex-direction:column;align-items:center;justify-content:center;gap:22px;padding:20px}
+  .pic .zone{position:absolute;left:18px;top:14px;font-family:var(--mono);font-size:.62rem;letter-spacing:.14em;text-transform:uppercase;color:rgba(132,150,182,.55)}
+  .hud{position:absolute;right:18px;top:12px;display:flex;gap:14px;font-family:var(--mono);font-size:.72rem;color:var(--muted)}
+  .hud b{color:var(--ink);font-weight:500}
+  .code{font-family:var(--mono);font-size:clamp(.95rem,2.1vw,1.3rem);line-height:1.55;color:var(--ink);padding:18px 30px;border:1px solid var(--line);border-radius:16px;
+    background:rgba(0,0,0,.3);min-width:300px;max-width:100%;white-space:pre;overflow-x:auto;transition:border-color .2s,box-shadow .2s,transform .2s}
+  .code .ty{color:#c9a7ff} .code .nm{color:var(--gold)} .code .cs{color:var(--accent)} .code .st{color:#9fe6b8}
+  .code .sp{background:rgba(255,200,98,.28);border-radius:3px;box-shadow:0 0 0 1px rgba(255,200,98,.35) inset}
+  .after{font-family:var(--mono);font-size:.82rem;color:var(--muted);min-height:1.3em}
+  .after b{color:var(--ink);font-weight:500}
+  .code.good{border-color:rgba(70,217,138,.7);box-shadow:0 0 28px -8px rgba(70,217,138,.8)}
+  .code.bad{border-color:rgba(255,106,106,.7);box-shadow:0 0 28px -8px rgba(255,106,106,.8);animation:shake .3s}
+  @keyframes shake{25%{transform:translateX(-6px)}75%{transform:translateX(6px)}}
+  .opts{display:flex;flex-wrap:wrap;gap:8px;justify-content:center;max-width:620px}
+  .opt{font-family:var(--mono);font-size:.9rem;padding:10px 18px;border-radius:11px;cursor:pointer;border:1px solid var(--line);background:var(--surface);color:var(--ink);transition:.15s}
+  .opt:hover{border-color:var(--accent);color:var(--accent)}
+  .opt:disabled{cursor:default}
+  .opt.hit{border-color:rgba(70,217,138,.7);background:rgba(70,217,138,.14);color:var(--good)}
+  .opt.miss{border-color:rgba(255,106,106,.7);background:rgba(255,106,106,.12);color:var(--warn)}
+  .opt.dim{opacity:.4}
+  .key{display:inline-block;margin-left:6px;font-size:.62rem;color:var(--muted)}
+  .screen{position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:12px;background:rgba(6,10,20,.92);transition:opacity .25s}
+  .screen.off{opacity:0;pointer-events:none}
+  .screen h2{font-family:var(--disp);font-weight:700;font-size:1.6rem;margin:0;color:var(--ink)}
+  .screen p{margin:0;color:var(--muted);font-size:.95rem;text-align:center;max-width:46ch;line-height:1.5}
+  .screen .big{font-family:var(--disp);font-weight:700;font-size:2.6rem;color:var(--accent)}
+  .screen .big.gold{color:var(--gold)} .screen .big.good{color:var(--good)}
+  .bar{position:absolute;left:0;right:0;bottom:0;height:4px;background:rgba(255,255,255,.06)}
+  .bar i{display:block;height:100%;width:0;background:var(--accent);transition:width .25s}
+  .misses{font-family:var(--mono);font-size:.72rem;color:var(--muted);line-height:1.6;text-align:left;max-width:680px;max-height:160px;overflow-y:auto;padding:0 8px}
+  .misses b{color:var(--warn);font-weight:500} .misses i{font-style:normal;color:var(--good)}
+  /* caption: the one sentence, right under the picture */
+  .caption{display:flex;gap:16px;align-items:flex-start;margin:14px 4px 0;min-height:56px}
+  .caption .n{flex-shrink:0;font-family:var(--disp);font-weight:700;font-size:1.35rem;color:var(--accent);font-variant-numeric:tabular-nums;
+    line-height:1.2;min-width:3.2rem}
+  .caption .n small{display:block;font-family:var(--mono);font-weight:400;font-size:.58rem;letter-spacing:.14em;text-transform:uppercase;color:var(--muted)}
+  .caption .t{font-size:1.02rem;line-height:1.55;color:var(--ink);padding-left:16px;border-left:3px solid var(--accent);transition:border-color .3s}
+  body.solo .caption .t{font-size:1.18rem}
+  .caption.cut .t{border-left-color:var(--warn)} .caption.left .t{border-left-color:var(--gold)} .caption.ok .t{border-left-color:var(--good)}
+  .caption b.g{color:var(--good)} .caption b.w{color:var(--warn)} .caption b.a{color:var(--accent)} .caption b.y{color:var(--gold)}
+
+  /* toolbar: same on every page */
+  .toolbar{display:flex;align-items:center;gap:10px;margin:16px 0 0;padding-top:14px;border-top:1px solid var(--line)}
+  .btn{font-family:var(--body);font-weight:500;font-size:.86rem;padding:9px 16px;border-radius:11px;cursor:pointer;
+    border:1px solid var(--line);background:var(--surface);color:var(--ink);transition:.15s}
+  .btn:hover{border-color:var(--accent);color:var(--accent)}
+  .btn.primary{border-color:rgba(110,160,255,.5);background:rgba(110,160,255,.12);padding:9px 22px}
+  .btn:disabled{opacity:.35;cursor:not-allowed}
+  .btn.ghost{background:transparent;color:var(--muted);margin-left:auto}
+  .dots{display:flex;gap:5px;align-items:center;margin:0 6px}
+  .dots i{display:block;width:8px;height:8px;border-radius:50%;background:rgba(255,255,255,.12);transition:.2s}
+  .dots i.done{background:rgba(110,160,255,.45)}
+  .dots i.now{background:var(--accent);transform:scale(1.35);box-shadow:0 0 10px rgba(110,160,255,.7)}
+  .hint{font-family:var(--mono);font-size:.68rem;color:var(--muted);margin:10px 4px 0;line-height:1.5}
+  .hint b{color:var(--accent)}
+
+  .toolbar .btn.primary{min-width:120px}
+  .take{margin-top:22px;background:linear-gradient(180deg,rgba(110,160,255,.08),rgba(139,123,255,.04));
+    border:1px solid var(--line);border-left:3px solid var(--accent);border-radius:12px;padding:16px 18px}
+  .take .tk{font-family:var(--mono);font-size:.66rem;letter-spacing:.14em;text-transform:uppercase;color:var(--accent);margin:0 0 8px}
+  .take p{margin:0;font-size:.95rem;color:var(--ink);line-height:1.55}
+  .take b{color:#fff}
+  @media (prefers-reduced-motion:reduce){*{animation-duration:.01ms!important;transition-duration:.01ms!important}#amb{display:none}}
+  /* ---------- pyramid climber ---------- */
+  .pic{height:430px;flex-direction:row;gap:26px;padding:44px 22px 22px}
+  .pyr{flex:0 0 300px;height:100%;display:flex;flex-direction:column-reverse;align-items:center;gap:3px;position:relative}
+  .lvl{height:calc((100% - 42px)/15);border-radius:4px;background:rgba(255,255,255,.05);border:1px solid rgba(255,255,255,.07);
+    display:flex;align-items:center;justify-content:center;font-family:var(--mono);font-size:.56rem;color:rgba(132,150,182,.5);
+    transition:background .3s,border-color .3s,box-shadow .3s,color .3s}
+  .lvl.b-u.lit{background:rgba(110,160,255,.42);border-color:rgba(110,160,255,.7);color:var(--ink)}
+  .lvl.b-i.lit{background:rgba(139,123,255,.45);border-color:rgba(139,123,255,.75);color:var(--ink)}
+  .lvl.b-e.lit{background:rgba(255,200,98,.45);border-color:rgba(255,200,98,.8);color:#1a1405}
+  .lvl.top{box-shadow:0 0 18px -2px rgba(70,217,138,.85);border-color:var(--good)}
+  .lvl.slip{background:rgba(255,106,106,.3);border-color:rgba(255,106,106,.7);animation:shake .3s}
+  .bands{position:absolute;right:-6px;top:0;bottom:0;width:0}
+  .bands span{position:absolute;right:0;transform:translateY(50%);font-family:var(--mono);font-size:.6rem;letter-spacing:.1em;text-transform:uppercase;white-space:nowrap}
+  .side{flex:1;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:20px;min-width:0}
+  .obj{display:flex;flex-direction:column;align-items:center;gap:12px;padding:20px 28px;border:1px solid var(--line);border-radius:16px;
+    background:rgba(0,0,0,.3);width:100%;max-width:560px;text-align:center;transition:border-color .2s,box-shadow .2s,transform .2s}
+  .obj .cls{font-family:var(--mono);font-size:.72rem;letter-spacing:.12em;text-transform:uppercase;color:var(--muted)}
+  .obj .say{font-family:var(--disp);font-weight:500;font-size:clamp(1.05rem,2.2vw,1.35rem);line-height:1.4;color:var(--ink)}
+  .obj.good{border-color:rgba(70,217,138,.7);box-shadow:0 0 28px -8px rgba(70,217,138,.8)}
+  .obj.bad{border-color:rgba(255,106,106,.7);box-shadow:0 0 28px -8px rgba(255,106,106,.8);animation:shake .3s}
+  .opt{min-width:150px}
+  .opt small{display:block;font-family:var(--body);font-size:.7rem;color:var(--muted);margin-top:2px}
+  @media (max-width:760px){.pic{flex-direction:column;height:auto;min-height:620px}.pyr{flex:0 0 260px;width:100%;max-width:300px}}
+</style>
+</head>
+<body>
+
+<a class="back" href="../index.html#pyramid-climber">&#8592; Week 5 index</a>
+
+<canvas id="amb"></canvas>
+<div class="wrap">
+  <p class="tag">Workbook 4a &middot; Section 3-1 &middot; Game</p>
+  <h1>Pyramid Climber</h1>
+  <p class="lede"><b>Every automated test sits on one level of the testing pyramid.</b> Name the level of fifteen tests and climb.</p>
+
+  <div class="stage">
+    <div class="topbar">
+      <span class="lab">Game</span>
+    </div>
+
+    <div class="pic" id="pic">
+      <span class="zone">unit, integration or end-to-end?</span>
+      <div class="hud"><span>level <b id="hScore">0</b> / 15</span><span>time <b id="hTime">0.0s</b></span></div>
+      <div class="pyr" id="pyr"></div>
+      <div class="side">
+        <div class="obj" id="value"><span class="cls">This test</span><span class="say" id="say">&nbsp;</span></div>
+        <div class="after" id="after"></div>
+        <div class="opts" id="opts"></div>
+      </div>
+      <div class="bar"><i id="bar"></i></div>
+      <div class="screen" id="startScr">
+        <h2>Pyramid Climber</h2>
+        <p>Each card describes one automated test. Press U for Unit, I for Integration, E for End-to-End. Every right answer climbs one level.</p>
+        <button class="btn primary" id="bStart">Start</button>
+      </div>
+      <div class="screen off" id="endScr">
+        <h2>Climb over</h2>
+        <div class="big" id="endScore"></div>
+        <p id="endMsg"></p>
+        <div class="misses" id="endMiss"></div>
+        <button class="btn primary" id="bAgain">Play again</button>
+      </div>
+    </div>
+
+    <div class="caption" id="caption">
+      <div class="n" id="stepno"><small>round</small>0 / 15</div>
+      <div class="t" id="status">Press <b class="a">Start</b>. Keys U, I and E answer.</div>
+    </div>
+    <p class="hint">UNIT = the methods of one object &middot; INTEGRATION = objects or sub-systems working together &middot; END-TO-END = the full experience of a user</p>
+  </div>
+
+  <div class="take">
+    <p class="tk">The one idea</p>
+    <p><b>Ask how much of the system the test touches.</b> One object's methods is a Unit test: fast, and most of your tests. Objects or sub-systems talking to each other, such as a real database or file, is an Integration test: slower, fewer. A user's whole path through the app is an End-to-End test: the most setup, the fewest tests, at the top.</p>
+  </div>
+
+  <div id="rail"></div>
+</div>
+
+<script>
+(function(){
+  "use strict";
+  var $=function(s){return document.querySelector(s);};
+  var reduce=matchMedia("(prefers-reduced-motion: reduce)").matches;
+
+  // Level names exactly as Workbook 4a Section 3-1 names them.
+  var ANS=["U","I","E"];
+  var LABEL={U:"Unit",I:"Integration",E:"End-to-End"};
+  var SUB={U:"one object's methods",I:"objects working together",E:"a user's full path"};
+
+  // [description, level, why]. U = verifies the methods of one object; I = verifies the interaction between
+  // objects or sub-systems (a real database, file, web service, another real class); E = the full experience of a user.
+  var POOL=[
+    ["checks that accelerate(10) sets a scooter's speed to 10","U","one method of one object, nothing else is involved"],
+    ["checks that a new Thermostat starts at 68 degrees","U","it checks one object's constructor and nothing outside it"],
+    ["checks that getFullName() joins the first and last name with a space","U","one getter on one object, fast and isolated"],
+    ["checks that a Thermostat refuses a target temperature above 90","U","it checks one method's rule inside one class"],
+    ["checks that calling increment() three times on a Counter gives 3","U","only the Counter's own methods run"],
+    ["checks that toCelsius(212) returns 100","U","one method, one input, one expected value"],
+    ["checks that isOverdue() returns true for a library book due yesterday","U","one method on one object answers the question"],
+    ["checks that a new Timer starts at 0 and reset() puts it back to 0","U","the test never leaves the Timer class"],
+    ["checks that withdraw(50) on a wallet holding 40 leaves the balance at 40","U","one object's method and its own field, nothing else"],
+    ["the order service talks to the real database and the saved order comes back","I","two sub-systems, the service and the database, must work together"],
+    ["a Library object lends a real Book object and the book's status becomes checked out","I","it verifies the interaction between two objects"],
+    ["the report class reads a real CSV file from disk and builds its list","I","the class and the file system have to work together"],
+    ["the checkout class calls the real tax calculator class and uses its result","I","it checks that two real classes talk to each other correctly"],
+    ["the login service asks the real user database whether the password matches","I","the service and the database are tested together, without a user"],
+    ["the weather class calls the real forecast web service and reads its reply","I","two sub-systems talk over the network, no user is involved"],
+    ["the playlist class hands a song to the real audio player class, which reports what is playing","I","the test checks the hand-off between two objects"],
+    ["a user logs in through the browser and sees the dashboard","E","it follows a user through the whole app, screen to database and back"],
+    ["a script opens the library website, searches for a book, borrows it and sees it under My Loans","E","it plays out a user's full path through the running app"],
+    ["a user fills in the sign up form, clicks Submit and receives the welcome email","E","every part of the system runs, from the form to the email"],
+    ["a script starts the console app, types menu choice 1, enters a name and reads the printed receipt","E","it drives the whole program the way a user would"],
+    ["a robot clicks through the whole checkout on the website, from cart to order confirmation","E","the full user experience, the most setup and the slowest run"],
+    ["a user opens the mobile app, books a table, and the booking appears on the restaurant's screen","E","it verifies the whole journey across every part of the system"]
+  ];
+
+  function esc(s){ var A=String.fromCharCode(38); return String(s).replace(/[<>"]/g,function(c){ return A+({"<":"lt;",">":"gt;","\"":"quot;"})[c]; }); }
+
+  // ---------- pyramid: 15 levels, bands as the workbook draws them (most Unit, fewer Integration, fewest End-to-End) ----------
+  var N=15, BAND=[], BOUNDS={U:[0,6],I:[7,11],E:[12,14]};
+  (function(){
+    var html="", i;
+    for(i=0;i<N;i++){
+      var b=i<=6?"u":i<=11?"i":"e"; BAND.push(b);
+      html+='<div class="lvl b-'+b+'" style="width:'+(100-i*5.6)+'%">'+(i+1)+'</div>';
+    }
+    html+='<div class="bands">'+
+      '<span style="bottom:'+(100*3.5/N)+'%;color:var(--accent)">Unit</span>'+
+      '<span style="bottom:'+(100*9.5/N)+'%;color:var(--accent2)">Integration</span>'+
+      '<span style="bottom:'+(100*13.5/N)+'%;color:var(--gold)">End-to-End</span></div>';
+    $("#pyr").innerHTML=html;
+  })();
+  function lvls(){ return document.querySelectorAll("#pyr .lvl"); }
+  function paint(){
+    Array.prototype.forEach.call(lvls(),function(el,i){
+      el.classList.toggle("lit",i<score); el.classList.toggle("top",i===score-1); el.classList.remove("slip"); });
+  }
+
+  // ---------- game ----------
+  var round=[], at=0, score=0, misses=[], t0=0, timer=null, busy=false, live=false;
+
+  function shuffle(a){ a=a.slice(); for(var i=a.length-1;i>0;i--){ var j=Math.floor(Math.random()*(i+1)); var t=a[i]; a[i]=a[j]; a[j]=t; } return a; }
+  // deal 6 Unit, 5 Integration, 4 End-to-End, shuffled
+  function deal(){
+    var by={U:[],I:[],E:[]};
+    shuffle(POOL).forEach(function(it){ by[it[1]].push(it); });
+    return shuffle(by.U.slice(0,6).concat(by.I.slice(0,5),by.E.slice(0,4)));
+  }
+  function buildOpts(){ $("#opts").innerHTML=ANS.map(function(t){ return '<button class="opt" data-t="'+t+'">'+LABEL[t]+'<span class="key">'+t+'</span><small>'+SUB[t]+'</small></button>'; }).join(""); }
+  function tick(){ $("#hTime").textContent=((performance.now()-t0)/1000).toFixed(1)+"s"; }
+  function showVal(){
+    var v=round[at]; $("#say").textContent=v[0]; $("#value").className="obj"; $("#after").innerHTML="";
+    Array.prototype.forEach.call(document.querySelectorAll(".opt"),function(b){ b.className="opt"; b.disabled=false; });
+    $("#stepno").innerHTML="<small>round</small>"+(at+1)+" / "+N; $("#bar").style.width=(100*at/N)+"%";
+  }
+  function start(){
+    round=deal(); at=0; score=0; misses=[]; busy=false; live=true; paint();
+    $("#hScore").textContent="0"; $("#startScr").classList.add("off"); $("#endScr").classList.add("off");
+    $("#caption").className="caption"; $("#status").innerHTML="How much of the system does this test touch? <b class=\"a\">Unit, Integration or End-to-End?</b>";
+    showVal(); t0=performance.now(); if(timer) clearInterval(timer); timer=setInterval(tick,100);
+  }
+  function answer(t){
+    if(!live||busy||at>=round.length) return; busy=true;
+    var v=round[at], good=t===v[1], res=LABEL[v[1]];
+    Array.prototype.forEach.call(document.querySelectorAll(".opt"),function(b){ b.disabled=true;
+      if(b.getAttribute("data-t")===v[1]) b.classList.add("hit"); else if(b.getAttribute("data-t")===t) b.classList.add("miss"); else b.classList.add("dim"); });
+    $("#value").className="obj "+(good?"good":"bad");
+    if(good){
+      score++; $("#hScore").textContent=String(score); paint();
+      $("#after").innerHTML="climbed to level <b>"+score+"</b>";
+      $("#caption").className="caption ok"; $("#status").innerHTML='<b class="g">'+res+'</b>: '+esc(v[2])+'.';
+    } else {
+      misses.push(v);
+      if(score<N){ var el=lvls()[score]; el.classList.remove("slip"); void el.offsetWidth; el.classList.add("slip"); }
+      $("#after").innerHTML="no climb, still on level <b>"+score+"</b>";
+      $("#caption").className="caption cut"; $("#status").innerHTML='Not <b class="w">'+LABEL[t]+'</b>. It is <b class="g">'+res+'</b>: '+esc(v[2])+'.';
+    }
+    setTimeout(function(){ at++; busy=false; if(at>=N) end(); else showVal(); }, reduce?300:(good?1300:2800));
+  }
+  function end(){
+    live=false; clearInterval(timer); tick(); $("#bar").style.width="100%";
+    var secs=((performance.now()-t0)/1000).toFixed(1);
+    $("#endScore").textContent="Level "+score+" / "+N; $("#endScore").className="big "+(score===N?"good":score>=11?"":"gold");
+    $("#endMsg").textContent=(score===N?"Top of the pyramid. ":score>=11?"Almost at the top. ":"Keep climbing. ")+secs+" seconds.";
+    $("#endMiss").innerHTML=misses.length?misses.map(function(v){
+      return '<div><b>'+esc(v[0])+'</b> <i>'+LABEL[v[1]]+'</i>: '+esc(v[2])+'</div>'; }).join(""):"";
+    $("#endScr").classList.remove("off");
+    $("#stepno").innerHTML="<small>round</small>"+N+" / "+N; $("#caption").className="caption"; $("#status").innerHTML="Climb over. <b class=\"a\">Play again</b> deals fifteen new tests.";
+  }
+  $("#opts").addEventListener("click",function(e){ var b=e.target.closest(".opt"); if(b) answer(b.getAttribute("data-t")); });
+  $("#bStart").addEventListener("click",start); $("#bAgain").addEventListener("click",start);
+  document.addEventListener("keydown",function(e){ if(/INPUT|TEXTAREA/.test(e.target.tagName)||e.ctrlKey||e.metaKey||e.altKey) return;
+    var k=e.key.toUpperCase(); if(live&&ANS.indexOf(k)>=0){ answer(k); return; }
+    if((e.code==="Space"||e.key==="Enter")&&!live&&e.target.tagName!=="BUTTON"){ e.preventDefault(); start(); } });
+
+  var cv=$("#amb"),ctx=cv.getContext&&cv.getContext("2d"),parts=[];
+  function sizeC(){if(!ctx)return;cv.width=innerWidth;cv.height=innerHeight;}
+  function initParts(){parts=[];for(var i=0;i<46;i++)parts.push({x:Math.random(),y:Math.random(),r:Math.random()*1.6+.3,s:Math.random()*.02+.004,o:Math.random()*.4+.1});}
+  function drawC(){if(!ctx)return;ctx.clearRect(0,0,cv.width,cv.height);
+    parts.forEach(function(p){p.y-=p.s/60;if(p.y<-.02)p.y=1.02;ctx.beginPath();ctx.arc(p.x*cv.width,p.y*cv.height,p.r,0,7);
+      ctx.fillStyle="rgba(140,170,255,"+p.o+")";ctx.fill();});requestAnimationFrame(drawC);}
+  if(ctx&&!reduce){sizeC();initParts();drawC();addEventListener("resize",sizeC);}
+
+  buildOpts(); paint();
+})();
+</script>
+<script src="../manifest.js"></script>
+<script src="../../assets/rail.js"></script>
+<script>Rail.render(document.getElementById("rail"),{week:5,kind:"games",current:"pyramid-climber"});</script>
+</body>
+</html>

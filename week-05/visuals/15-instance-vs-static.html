@@ -1,0 +1,301 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Instance vs Static | Week 5 Visual Hub</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Sora:wght@500;700&family=Inter:wght@400;500&family=JetBrains+Mono:wght@400;500&display=swap">
+<style>
+  :root{
+    --bg:#080c17; --bg2:#0c1428; --surface:rgba(255,255,255,.045); --line:rgba(255,255,255,.09);
+    --ink:#eef2fb; --muted:#8496b6; --accent:#6ea0ff; --accent2:#8b7bff; --good:#46d98a; --warn:#ff6a6a;
+    --gold:#ffc862; --disp:'Sora',system-ui,sans-serif; --body:'Inter',system-ui,sans-serif;
+    --mono:'JetBrains Mono',ui-monospace,monospace;
+  }
+  *{box-sizing:border-box}
+  body{margin:0;min-height:100vh;color:var(--ink);font-family:var(--body);
+    background:radial-gradient(1200px 700px at 70% -10%,#141d38 0%,transparent 55%),
+               radial-gradient(900px 600px at 10% 110%,#161233 0%,transparent 50%),#080c17;
+    overflow-x:hidden}
+  #amb{position:fixed;inset:0;z-index:0;pointer-events:none;opacity:.6}
+  .back{position:relative;z-index:2;display:block;max-width:1120px;margin:0 auto;padding:26px 24px 0;
+    width:100%;font-family:var(--mono);font-size:.8rem;letter-spacing:.04em;color:var(--muted);
+    text-decoration:none;transition:color .15s}
+  .back:hover{color:var(--accent)}
+  .wrap{position:relative;z-index:1;max-width:1120px;margin:0 auto;padding:22px 24px 70px}
+  .tag{font-family:var(--mono);font-size:.72rem;letter-spacing:.22em;text-transform:uppercase;color:var(--accent);margin:0 0 14px}
+  h1{font-family:var(--disp);font-weight:700;font-size:clamp(2.3rem,6vw,3.6rem);line-height:1;margin:0 0 12px;
+    letter-spacing:-.03em;background:linear-gradient(180deg,#fff,#b9c6e6);-webkit-background-clip:text;
+    background-clip:text;color:transparent}
+  .lede{color:var(--muted);max-width:64ch;font-size:1.05rem;margin:0 0 26px;line-height:1.5}
+  .lede b{color:var(--ink)}
+  code{font-family:var(--mono);font-size:.92em;color:#bcd0ff}
+
+  /* ---------- the stage IS the picture ---------- */
+  .stage{position:relative;background:linear-gradient(180deg,rgba(255,255,255,.03),rgba(255,255,255,.01));
+    border:1px solid var(--line);border-radius:24px;padding:22px;
+    box-shadow:0 1px 0 rgba(255,255,255,.06) inset,0 30px 80px -30px rgba(0,0,0,.8)}
+  .board{position:relative}
+  #wires{position:absolute;inset:0;width:100%;height:100%;pointer-events:none;z-index:2;overflow:visible}
+  #wires path{fill:none;stroke:rgba(255,200,98,.45);stroke-width:2;transition:stroke .3s}
+  #wires path.live{stroke:var(--gold);stroke-dasharray:10 8;animation:flow .6s linear}
+  @keyframes flow{from{stroke-dashoffset:90}to{stroke-dashoffset:0}}
+
+  .card{position:relative;z-index:1;border-radius:16px;padding:16px 18px 14px}
+  .hd{font-family:var(--mono);font-size:.62rem;letter-spacing:.16em;text-transform:uppercase;color:var(--muted);margin:0 0 4px}
+  .who{font-family:var(--disp);font-weight:700;font-size:1.35rem;margin:0 0 12px;color:var(--ink);letter-spacing:-.01em}
+  .row{display:flex;align-items:center;justify-content:space-between;gap:10px;font-family:var(--mono);font-size:.82rem;
+    padding:8px 10px;border-radius:9px;margin-bottom:5px;border:1px solid transparent;transition:background .3s,border-color .3s}
+  .row .f{color:#c9d4ea;white-space:nowrap} .row .f i{font-style:normal;color:#82aaff;margin-right:6px}
+  .sect{font-family:var(--mono);font-size:.58rem;letter-spacing:.14em;text-transform:uppercase;color:rgba(132,150,182,.7);margin:0 0 6px 2px}
+
+  /* the class card */
+  .cls{border:2px dashed rgba(110,160,255,.6);background:rgba(12,20,40,.92);display:grid;
+    grid-template-columns:minmax(0,1fr) minmax(0,1.15fr);gap:22px;align-items:end}
+  .cls .who{color:#bcd0ff}
+  .slot{flex:0 0 58px;height:20px;border-radius:6px;border:1px dashed rgba(132,150,182,.5);position:relative}
+  .slot::after{content:"per object";position:absolute;inset:0;display:flex;align-items:center;justify-content:center;
+    font-size:.5rem;letter-spacing:.08em;text-transform:uppercase;color:rgba(132,150,182,.5)}
+  .new{width:100%;margin-top:10px;font-family:var(--mono);font-weight:500;font-size:.95rem;padding:11px;border-radius:12px;cursor:pointer;
+    border:1px solid rgba(110,160,255,.55);background:rgba(110,160,255,.14);color:#dbe6ff;transition:.15s}
+  .new:hover{background:rgba(110,160,255,.26);border-color:var(--accent)}
+  .new:disabled{opacity:.35;cursor:not-allowed}
+  .new b{font-weight:500;color:var(--gold)}
+  .static .call{display:grid;grid-template-columns:minmax(0,1fr) auto;gap:8px;margin-bottom:10px}
+  input{width:100%;min-width:0;font-family:var(--mono);font-size:.82rem;padding:8px 10px;border-radius:10px;border:1px solid var(--line);
+    background:rgba(0,0,0,.3);color:var(--ink);outline:none;transition:border-color .15s}
+  input:focus{border-color:var(--accent)}
+  .gbtn{font-family:var(--mono);font-size:.74rem;padding:8px 10px;border-radius:10px;cursor:pointer;white-space:nowrap;
+    border:1px solid var(--line);background:rgba(0,0,0,.25);color:#ffcb6b;transition:.15s}
+  .gbtn:hover{border-color:var(--gold);background:rgba(255,200,98,.1)}
+  .shared{display:flex;align-items:center;justify-content:space-between;gap:12px;padding:12px 14px;border-radius:12px;
+    border:2px solid rgba(255,200,98,.6);background:rgba(255,200,98,.07);font-family:var(--mono);transition:box-shadow .3s}
+  .shared.chg{box-shadow:0 0 0 3px rgba(255,200,98,.18),0 0 34px -6px rgba(255,200,98,.7)}
+  .shared .f{font-size:.8rem;color:#c9d4ea;white-space:nowrap} .shared .f i{font-style:normal;color:var(--gold);margin-right:6px}
+  .shared .v{font-size:.92rem;color:#c3e88d;text-align:right;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+  .shared .v s{color:var(--muted);margin-right:8px}
+  .shared small{display:block;font-size:.5rem;letter-spacing:.12em;text-transform:uppercase;color:var(--gold);margin-bottom:2px}
+
+  /* objects */
+  .objs{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:14px;margin-top:64px}
+  .obj{padding:0 14px 12px;border:1px solid rgba(255,255,255,.18);background:rgba(16,22,40,.92);
+    transition:opacity .45s,transform .55s cubic-bezier(.2,.9,.3,1),border-color .3s,box-shadow .3s}
+  .obj.enter{opacity:0;transform:translateY(-30px) scale(.92)}
+  .obj.act{border-color:rgba(110,160,255,.75);box-shadow:0 0 26px -8px rgba(110,160,255,.8)}
+  .port{display:flex;justify-content:space-between;gap:8px;align-items:center;margin:0 -14px 12px;padding:8px 14px;
+    border-bottom:1px dashed rgba(255,200,98,.4);border-radius:15px 15px 0 0;background:rgba(255,200,98,.05);
+    font-family:var(--mono);font-size:.72rem;color:rgba(255,200,98,.75)}
+  .port .v{color:var(--gold);overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+  .port .v.pop{animation:pop .45s}
+  .obj .val{color:#f78c6c;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+  .obj .val.s{color:#c3e88d}
+  .obj .val s{color:var(--muted);margin-right:6px}
+  .row.chg{background:rgba(255,200,98,.12);border-color:rgba(255,200,98,.55)}
+  .row.chg .val{color:var(--gold);animation:pop .45s}
+  .acts{display:grid;grid-template-columns:minmax(0,1fr) auto;gap:6px;margin-top:10px;padding-top:10px;border-top:1px solid var(--line)}
+
+  @media (max-width:820px){
+    .cls{grid-template-columns:1fr;gap:14px}
+    .objs{grid-template-columns:1fr;margin-top:26px;padding-left:26px}
+  }
+
+  /* the one sentence */
+  .caption{display:flex;gap:14px;align-items:flex-start;margin:18px 2px 0;padding-top:16px;border-top:1px solid var(--line)}
+  .caption .t{flex:1;font-size:1.05rem;line-height:1.55;color:var(--ink);padding-left:16px;border-left:3px solid var(--accent);transition:border-color .3s}
+  .caption .t .line{display:block;margin-top:6px;font-family:var(--mono);font-size:.8rem;color:#bcd0ff;opacity:.9}
+  .caption.y .t{border-left-color:var(--gold)} .caption.g .t{border-left-color:var(--good)}
+  .caption b.a{color:var(--accent)} .caption b.y{color:var(--gold)} .caption b.g{color:var(--good)}
+  .reset{font-family:var(--body);font-weight:500;font-size:.84rem;padding:8px 14px;border-radius:11px;cursor:pointer;
+    border:1px solid var(--line);background:transparent;color:var(--muted);transition:.15s;flex-shrink:0}
+  .reset:hover{border-color:var(--accent);color:var(--accent)}
+  button:focus-visible,input:focus-visible{outline:2px solid var(--accent);outline-offset:2px}
+
+  @keyframes pop{from{transform:scale(.6);opacity:0}to{transform:scale(1);opacity:1}}
+  .take{margin-top:22px;background:linear-gradient(180deg,rgba(110,160,255,.08),rgba(139,123,255,.04));
+    border:1px solid var(--line);border-left:3px solid var(--accent);border-radius:12px;padding:16px 18px}
+  .take .tk{font-family:var(--mono);font-size:.66rem;letter-spacing:.14em;text-transform:uppercase;color:var(--accent);margin:0 0 8px}
+  .take p{margin:0;font-size:.95rem;color:var(--ink);line-height:1.55}
+  .take b{color:#fff}
+  @media (prefers-reduced-motion:reduce){*{animation-duration:.01ms!important;transition-duration:.01ms!important}#amb{display:none}}
+</style>
+</head>
+<body>
+<a class="back" href="../index.html#15-instance-vs-static">&#8592; Week 5 index</a>
+<canvas id="amb"></canvas>
+<div class="wrap">
+  <p class="tag">Workbook 4a &middot; Section 4-2</p>
+  <h1>Instance vs Static</h1>
+  <p class="lede"><b>Each object keeps its own name. The school lives once, on the class. Change both.</b></p>
+
+  <div class="stage">
+    <div class="board" id="board">
+      <svg id="wires" aria-hidden="true"></svg>
+      <div class="card cls" id="cls">
+        <div>
+          <p class="hd">class &middot; the blueprint</p>
+          <p class="who">Learner</p>
+          <p class="sect">instance: one per object</p>
+          <div class="row"><span class="f"><i>String</i>name</span><span class="slot"></span></div>
+          <div class="row"><span class="f"><i>int</i>grade</span><span class="slot"></span></div>
+          <button class="new" id="bNew"><b>new</b> Learner("Carol", 11)</button>
+        </div>
+        <div class="static">
+          <p class="sect">static: one copy, on the class</p>
+          <div class="call">
+            <input id="inSchool" value="Lakeside Academy" maxlength="22" aria-label="new school name">
+            <button class="gbtn" id="bSchool">Learner.changeSchool(...)</button>
+          </div>
+          <div class="shared" id="shared">
+            <span class="f"><small>the only copy</small><i>static String</i>schoolName</span>
+            <span class="v" id="sharedV">"Greenwood High"</span>
+          </div>
+        </div>
+      </div>
+      <div class="objs" id="objs"></div>
+    </div>
+    <div class="caption" id="caption">
+      <div class="t" id="status"></div>
+      <button class="reset" id="bReset">Reset</button>
+    </div>
+  </div>
+
+  <div class="take">
+    <p class="tk">The one idea</p>
+    <p><b>An instance field lives in every object; a static field lives once, on the class.</b> Changing one object's name
+    touches that object only. Changing the static school through <code>Learner.changeSchool(...)</code> needs no object,
+    and every Learner, old or new, sees the same single value.</p>
+  </div>
+  <div id="rail"></div>
+</div>
+<script>
+(function(){
+  "use strict";
+  var $=function(s){return document.querySelector(s);};
+  var reduce=matchMedia("(prefers-reduced-motion: reduce)").matches;
+  var START=[{id:"alice",name:"Alice",grade:10,next:"Alicia"},{id:"bob",name:"Bob",grade:9,next:"Robert"}];
+  var THIRD={id:"carol",name:"Carol",grade:11,next:"Caroline"};
+  var school, objs, objsEl=$("#objs"), svg=$("#wires"), board=$("#board"), shared=$("#shared"), sharedV=$("#sharedV");
+  var status=$("#status"), caption=$("#caption"), NS="http://www.w3.org/2000/svg";
+
+  function clean(s){return s.replace(/[<>&"\\]/g,"").trim();}
+  function say(html,tone,line){
+    caption.className="caption"+(tone?" "+tone:"");
+    status.innerHTML=html+(line?'<span class="line">'+line+'</span>':"");
+  }
+  function others(k){
+    var o=objs.filter(function(x,i){return i!==k;}).map(function(x){return x.id;});
+    return o.length===1?o[0]+"'s name":o.join(" and ")+"'s names";
+  }
+
+  function addCard(d,animate){
+    var k=objs.length, o={id:d.id,name:d.name,grade:d.grade};
+    objs.push(o);
+    var el=document.createElement("div"); el.className="card obj"+(animate&&!reduce?" enter":""); el.id="o"+k;
+    el.innerHTML='<div class="port"><span>schoolName \u2191</span><span class="v">"'+school+'"</span></div>'
+      +'<p class="hd">object '+(k+1)+' \u00b7 Learner</p><p class="who">'+o.id+'</p>'
+      +'<div class="row" id="n'+k+'"><span class="f">name</span><span class="val s">"'+o.name+'"</span></div>'
+      +'<div class="row"><span class="f">grade</span><span class="val">'+o.grade+'</span></div>'
+      +'<div class="acts"><input value="'+d.next+'" maxlength="14" aria-label="new name for '+o.id+'" data-k="'+k+'">'
+      +'<button class="gbtn" data-k="'+k+'">'+o.id+'.setName(...)</button></div>';
+    objsEl.appendChild(el);
+    if(animate&&!reduce){ requestAnimationFrame(function(){ requestAnimationFrame(function(){ el.classList.remove("enter"); }); }); }
+    return el;
+  }
+
+  /* wires: from the one shared slot down to each object's port */
+  function drawWires(liveAll,onlyK){
+    var b=board.getBoundingClientRect(), s=shared.getBoundingClientRect();
+    var sx=s.left+s.width/2-b.left, sy=s.bottom-b.top;
+    var cards=objsEl.querySelectorAll(".obj"), stacked=false;
+    if(cards.length>1){ stacked=cards[1].getBoundingClientRect().top>cards[0].getBoundingClientRect().bottom-2; }
+    svg.innerHTML="";
+    cards.forEach(function(c,i){
+      var p=c.querySelector(".port").getBoundingClientRect(), d;
+      if(stacked){
+        var gx=8, ty=p.top+p.height/2-b.top;
+        d="M"+sx+" "+sy+" V"+(sy+12)+" H"+gx+" V"+ty+" H"+(p.left-b.left);
+      }else{
+        var tx=p.left+p.width/2-b.left, ty2=p.top-b.top, my=(sy+ty2)/2;
+        d="M"+sx+" "+sy+" C"+sx+" "+my+" "+tx+" "+my+" "+tx+" "+ty2;
+      }
+      var path=document.createElementNS(NS,"path"); path.setAttribute("d",d);
+      if(!reduce&&(liveAll||onlyK===i)) path.setAttribute("class","live");
+      svg.appendChild(path);
+    });
+  }
+
+  function lit(k){ objs.forEach(function(o,i){ var e=$("#o"+i); if(e) e.classList.toggle("act",i===k); }); }
+
+  function setName(k){
+    var inp=objsEl.querySelector('input[data-k="'+k+'"]'), v=clean(inp.value); if(!v) return;
+    var o=objs[k], old=o.name, row=$("#n"+k);
+    o.name=v;
+    row.classList.remove("chg"); void row.offsetWidth; row.classList.add("chg");
+    row.querySelector(".val").innerHTML='<s>"'+old+'"</s>"'+v+'"';
+    lit(k); drawWires(false,-1);
+    say('<b class="y">'+o.id+'.setName</b> changed '+o.id+"'s own copy: "+old+' \u2192 '+v+'. '
+      +others(k)+' did not move.',"y",o.id+'.setName("'+v+'");');
+  }
+
+  function changeSchool(){
+    var v=clean($("#inSchool").value); if(!v) return;
+    var old=school; school=v;
+    sharedV.innerHTML=(old!==v?'<s>"'+old+'"</s>':"")+'"'+v+'"';
+    shared.classList.remove("chg"); void shared.offsetWidth; shared.classList.add("chg");
+    lit(-1); drawWires(true);
+    setTimeout(function(){
+      objsEl.querySelectorAll(".port .v").forEach(function(p){
+        p.textContent='"'+v+'"'; p.classList.remove("pop"); void p.offsetWidth; p.classList.add("pop");
+      });
+    },reduce?0:550);
+    setTimeout(function(){ shared.classList.remove("chg"); },1200);
+    say('<b class="y">One copy, one change.</b> The class slot now holds '+v+', and all '+objs.length
+      +' objects read it through their wires. No object was needed, and none has its own copy.',
+      "y",'Learner.changeSchool("'+v+'");');
+  }
+
+  function makeNew(){
+    if(objs.length>=3) return;
+    addCard(THIRD,true); $("#bNew").disabled=true; lit(2);
+    setTimeout(function(){ drawWires(false,2); },reduce?0:560);
+    say('<b class="g">new</b> built <b class="g">carol</b> with her own name and grade. She stores no school: '
+      +'she is wired to the same one slot and already reads '+school+'.',"g",'Learner carol = new Learner("Carol", 11);');
+  }
+
+  function reset(){
+    school="Greenwood High"; objs=[]; objsEl.innerHTML="";
+    sharedV.textContent='"'+school+'"'; $("#inSchool").value="Lakeside Academy"; $("#bNew").disabled=false;
+    START.forEach(function(d){ addCard(d,false); });
+    drawWires(false,-1);
+    say('Two Learner objects, <b class="a">each with its own name</b>. Above them, <b class="y">one schoolName</b> lives on the class, wired to both.');
+  }
+
+  $("#bSchool").addEventListener("click",changeSchool);
+  $("#inSchool").addEventListener("keydown",function(e){ if(e.key==="Enter") changeSchool(); });
+  $("#bNew").addEventListener("click",makeNew);
+  $("#bReset").addEventListener("click",reset);
+  objsEl.addEventListener("click",function(e){ var b=e.target.closest("button[data-k]"); if(b) setName(+b.getAttribute("data-k")); });
+  objsEl.addEventListener("keydown",function(e){ var t=e.target; if(e.key==="Enter"&&t.matches("input[data-k]")) setName(+t.getAttribute("data-k")); });
+  addEventListener("resize",function(){ drawWires(false,-1); });
+  if(document.fonts&&document.fonts.ready) document.fonts.ready.then(function(){ drawWires(false,-1); });
+  reset();
+
+  /* ambient canvas */
+  var cv=$("#amb"),ctx=cv.getContext&&cv.getContext("2d"),parts=[];
+  function sizeC(){if(!ctx)return;cv.width=innerWidth;cv.height=innerHeight;}
+  function initParts(){parts=[];for(var i=0;i<46;i++)parts.push({x:Math.random(),y:Math.random(),
+    r:Math.random()*1.6+.3,s:Math.random()*.02+.004,o:Math.random()*.4+.1});}
+  function drawC(){if(!ctx)return;ctx.clearRect(0,0,cv.width,cv.height);
+    parts.forEach(function(p){p.y-=p.s/60;if(p.y<-.02)p.y=1.02;
+      ctx.beginPath();ctx.arc(p.x*cv.width,p.y*cv.height,p.r,0,7);
+      ctx.fillStyle="rgba(140,170,255,"+p.o+")";ctx.fill();});
+    requestAnimationFrame(drawC);}
+  if(ctx&&!reduce){sizeC();initParts();drawC();addEventListener("resize",sizeC);}
+})();
+</script>
+<script src="../manifest.js"></script>
+<script src="../../assets/rail.js"></script>
+<script>Rail.render(document.getElementById("rail"),{week:5,kind:"visuals",current:"15-instance-vs-static"});</script>
+</body>
+</html>
