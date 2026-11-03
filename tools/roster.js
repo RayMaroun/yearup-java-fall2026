@@ -5,6 +5,6 @@ window.HUB_ROSTER = [
   "Adrian Lewis", "Alana Kendrick", "Amanda Charles", "Andile Gracious Ncube", "Autumn Carter",
   "Brendan West", "Daniel Daube", "Fabricio Baliño", "Isaiah Covington", "Jacob Davis",
   "Jada Keels", "Jamison Harris", "Jarin Villanueva", "Jennifer Hernandez Vazquez", "Kaleab Tsegaye",
-  "Latel Williams", "Maalik McCutchen", "Marcus Hester", "Mark Evans", "Mohammad Tayeb",
+  "Latel Williams", "Maalik McCutchen", "Mark Evans", "Mohammad Tayeb",
   "Nahom Hagos", "Natanim Mekuria Sintayehu", "Tavius Swain", "Tony Zhang", "Zion Freeman"
 ];
