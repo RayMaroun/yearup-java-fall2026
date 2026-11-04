@@ -131,7 +131,7 @@ Class booking class, time, member
             <li><b>Only people.</b> A room key, a receipt and a room service order are objects too.</li>
             <li><b>Actions in the list.</b> "Checks in" is something done, not known. Keep it for the next exercise.</li>
             <li><b>Too vague.</b> "Info" is not an attribute. Name it: room number, nightly rate.</li>
-            <li><b>Stuck on how a hotel works.</b> Ask Raymond before guessing.</li>
+            <li><b>Stuck on how a hotel works.</b> Look it up: how check-in, room service and housekeeping work at a real hotel.</li>
           </ul>
         </div>
         <div>
@@ -163,7 +163,7 @@ Class booking class, time, member
 
   var STEPS=[
     {t:'With your group, talk through how a hotel operates.',
-     d:'Open a text file or a doc in your <b>workbook-4</b> folder, or use the Teams chat if Raymond asks for that. Ask Raymond anything about hotels you are not sure of.',
+     d:'Open a text file or a doc in your <b>workbook-4</b> folder. Anything about hotels you are not sure of, look up.',
      ok:'your group agrees on who works there and what a guest goes through'},
     {t:'Read the seven scenarios in the workbook and pick out the nouns.',
      d:'Front desk, clerk, guest, room, key, receipt: the hint says objects hide in the nouns.',
@@ -177,9 +177,9 @@ Class booking class, time, member
     {t:'Brainstorm one or two scenarios of your own and add any new objects.',
      d:'Parking, a pool, a lost key: whatever your group thinks a hotel also does.',
      ok:'your list grew from at least one scenario that is not in the workbook'},
-    {t:'Share your list the way Raymond asks in class.',
-     d:'Each group presents its list to the class. This is a paper exercise, so there is no project and nothing to commit.',
-     ok:'your group has shared its list with the class'}
+    {t:'Keep your list for the next exercise.',
+     d:'This is a paper exercise: nothing to commit and nothing to hand in. The responsibilities exercise starts from this list.',
+     ok:'your list is saved where you can find it tomorrow'}
   ];
   var done=[]; try{ done=JSON.parse(localStorage.getItem(KEY)||"[]"); }catch(e){ done=[]; }
   var stepsEl=$("#steps");

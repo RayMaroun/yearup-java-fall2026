@@ -164,7 +164,7 @@ Trainer    KNOW  the classes they teach
 
   var STEPS=[
     {t:"Sit with the same group and put your Objects at a Hotel list on the table.",
-     d:"Use the list from Section 1-1. Work on paper or in the shared doc, whichever Raymond asks for.",
+     d:"Use the list from Section 1-1. Work on paper or in the same doc as before.",
      ok:"the whole group sees the same object list"},
     {t:"Draw the table: one row per object, a KNOW column and a DO column.",
      d:"KNOW is information to keep track of. DO is a task or action. The workbook says there are only these two kinds.",
@@ -178,9 +178,9 @@ Trainer    KNOW  the classes they teach
     {t:"Walk each scenario through your table.",
      d:"Read the scenario again and point at the object that does each part. A part with no owner is a missing row or a missing DO.",
      ok:"all seven scenarios can be told from your table alone"},
-    {t:"Share your table with the class.",
-     d:"The way Raymond asks: read it out, show the paper, or post a photo.",
-     ok:"your group has shared and heard the others"}
+    {t:"Keep your table.",
+     d:"This is a paper exercise: nothing to commit and nothing to hand in. The Room, Reservation and Employee classes you write next come straight out of it.",
+     ok:"your table is saved where you can find it"}
   ];
   var done=[]; try{ done=JSON.parse(localStorage.getItem(KEY)||"[]"); }catch(e){ done=[]; }
   var stepsEl=$("#steps");
