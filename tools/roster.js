@@ -6,5 +6,5 @@ window.HUB_ROSTER = [
   "Brendan West", "Daniel Daube", "Fabricio Baliño", "Isaiah Covington", "Jacob Davis",
   "Jada Keels", "Jamison Harris", "Jarin Villanueva", "Jennifer Hernandez Vazquez", "Kaleab Tsegaye",
   "Latel Williams", "Maalik McCutchen", "Mark Evans", "Mohammad Tayeb",
-  "Nahom Hagos", "Natanim Mekuria Sintayehu", "Tavius Swain", "Tony Zhang", "Zion Freeman"
+  "Nahom Hagos", "Natanim Mekuria Sintayehu", "Tony Zhang", "Zion Freeman"
 ];
