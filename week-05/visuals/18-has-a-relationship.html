@@ -61,7 +61,11 @@
   .part:hover{border-color:var(--gold)}
   .part.on{border-color:var(--gold);background:rgba(255,200,98,.14);transform:translateY(-3px)}
   .part.engine .nm::before{content:"\25A3  ";color:var(--accent)}
-  .part.wheel .nm::before{content:"\25CE  ";color:var(--accent)}
+  .part.list{min-width:200px}
+  .part.list .nm::before{content:"\2630  ";color:var(--accent)}
+  .chips{display:flex;gap:6px;flex-wrap:wrap;margin-top:6px}
+  .chip{font-family:var(--mono);font-size:.68rem;padding:4px 8px;border-radius:8px;border:1px solid rgba(255,255,255,.18);background:rgba(0,0,0,.25);color:#c9d4ea}
+  .chip::before{content:"\25CE ";color:var(--accent)}
 
   .ctl{display:flex;gap:10px;margin-top:16px;flex-wrap:wrap}
   .ctl button{font-family:var(--body);font-weight:500;font-size:.95rem;padding:11px 18px;border-radius:12px;cursor:pointer;
@@ -111,13 +115,13 @@
       <button class="reset" id="bReset">Reset</button>
     </div>
     <div class="caption" id="caption">
-      <div class="t" id="status">An Engine and four Wheels, each a complete object with its own facts. The Car is also an object, with facts of its own. Right now none of them has anything to do with the others.</div>
+      <div class="t" id="status">An Engine, and a list of Wheels, each a complete object with its own facts. The Car is also an object, with facts of its own. Right now none of them has anything to do with the others.</div>
     </div>
   </div>
 
   <div class="take">
     <p class="tk">The one idea</p>
-    <p><b>Has-a: an object keeps other objects inside it, as its parts.</b> A Car has an Engine and has Wheels.
+    <p><b>Has-a: an object keeps other objects inside it, as its parts.</b> A Car has an Engine, and has a list of Wheels.
     The parts stay what they are, each with its own facts; the Car is the thing that is made of them.</p>
   </div>
   <div id="rail"></div>
@@ -127,37 +131,37 @@
   "use strict";
   var $=function(s){return document.querySelector(s);};
   var PARTS=[{k:"engine",nm:"Engine",f:"horsepower <b>150</b>"},
-             {k:"wheel",nm:"Wheel",f:"size <b>17 in</b>"},{k:"wheel",nm:"Wheel",f:"size <b>17 in</b>"},
-             {k:"wheel",nm:"Wheel",f:"size <b>17 in</b>"},{k:"wheel",nm:"Wheel",f:"size <b>17 in</b>"}];
+             {k:"list",nm:"Wheels",f:"a list holding <b>4</b> Wheel objects",chips:["front left","front right","rear left","rear right"]}];
   var inside=false, sel=-1;
   var out=$("#outside"),inn=$("#inside"),car=$("#car"),has=$("#has"),status=$("#status"),caption=$("#caption"),btn=$("#bToggle");
 
   function say(html,tone){ caption.className="caption"+(tone?" "+tone:""); status.innerHTML=html; }
   function partEl(p,i){ var d=document.createElement("div"); d.className="part "+p.k+(sel===i?" on":""); d.setAttribute("data-i",i);
-    d.innerHTML='<div class="nm">'+p.nm+'</div><div class="f">'+p.f+'</div>'; return d; }
+    d.innerHTML='<div class="nm">'+p.nm+'</div><div class="f">'+p.f+'</div>'+(p.chips?'<div class="chips">'+p.chips.map(function(c){return '<span class="chip">'+c+'</span>';}).join('')+'</div>':''); return d; }
   function render(){
     out.innerHTML=""; inn.innerHTML="";
     if(inside){ var g=document.createElement("div"); g.className="gone"; g.textContent="nothing out here: the parts are inside the car"; out.appendChild(g); }
     else { var e=document.createElement("div"); e.className="empty"; e.textContent="empty: a car with no parts"; inn.appendChild(e); }
     PARTS.forEach(function(p,i){ (inside?inn:out).appendChild(partEl(p,i)); });
     car.classList.toggle("full",inside);
-    has.innerHTML=inside?'a Car has: <b>an Engine</b> &middot; a Car has: <b>4 Wheels</b>':'a Car has: <b>nothing yet</b>';
+    has.innerHTML=inside?'a Car has: <b>an Engine</b> &middot; a Car has: <b>a list of Wheels</b>':'a Car has: <b>nothing yet</b>';
     btn.textContent=inside?"take the parts out":"put the parts in";
   }
   function toggle(){
     inside=!inside; sel=-1; render();
-    if(inside) say('Now the Car <b class="a">has</b> an Engine and <b class="a">has</b> four Wheels. They are inside it: part of what the Car is. That is a has-a relationship.',"g");
-    else say('The parts are out again, and they are <b class="y">unchanged</b>: the same Engine, the same Wheels. Being inside the Car never made them less of an object.',"y");
+    if(inside) say('Now the Car <b class="a">has</b> an Engine and <b class="a">has</b> a list of Wheels. They are inside it: part of what the Car is. That is a has-a relationship. One part, or a whole list of parts: both are has-a.',"g");
+    else say('The parts are out again, and they are <b class="y">unchanged</b>: the same Engine, the same list of Wheels. Being inside the Car never made them less of an object.',"y");
   }
   function pick(e){
     var el=e.target.closest(".part"); if(!el) return;
     sel=+el.getAttribute("data-i"); render();
     var p=PARTS[sel];
-    if(inside) say('This '+p.nm+' is <b class="y">inside the Car</b>, and it is still <b class="a">its own object</b>, with its own facts. The Car does not become an engine or a wheel; it holds them.',"y");
+    if(p.k==="list") say((inside?'Inside the Car, ':'')+'the <b class="y">Wheels</b> part is a <b class="a">list</b>: one holder with four Wheel objects in it. The Car holds the list, the list holds the wheels. Has-a works at every level.',"y");
+    else if(inside) say('This '+p.nm+' is <b class="y">inside the Car</b>, and it is still <b class="a">its own object</b>, with its own facts. The Car does not become an engine; it holds one.',"y");
     else say('This '+p.nm+' is a complete object on its own. It does not need a Car to exist. A Car needs it, though: put the parts in.',"");
   }
   function reset(){ inside=false; sel=-1; render();
-    say('An Engine and four Wheels, each a complete object with its own facts. The Car is also an object, with facts of its own. Right now none of them has anything to do with the others.'); }
+    say('An Engine, and a list of Wheels, each a complete object with its own facts. The Car is also an object, with facts of its own. Right now none of them has anything to do with the others.'); }
   btn.addEventListener("click",toggle);
   out.addEventListener("click",pick); inn.addEventListener("click",pick);
   $("#bReset").addEventListener("click",reset);
