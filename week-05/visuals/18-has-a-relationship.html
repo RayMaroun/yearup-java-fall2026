@@ -58,9 +58,16 @@
   .box.lit{border-color:var(--accent)}
   .who{font-family:var(--disp);font-weight:700;font-size:1.2rem;margin:0 0 8px;color:var(--ink)}
   .who small{font-family:var(--mono);font-weight:400;font-size:.68rem;color:var(--muted);margin-left:8px}
-  .pile{position:relative;height:96px;width:70px;margin:6px 0 10px}
+  .slot{border:1px dashed rgba(110,160,255,.5);background:rgba(110,160,255,.05);border-radius:12px;padding:10px 12px 12px;margin:4px 0 10px;transition:border-color .3s,box-shadow .3s}
+  .slot.lit{border-style:solid;border-color:var(--accent);box-shadow:0 0 24px -10px rgba(110,160,255,.9)}
+  .slot .fl{font-family:var(--mono);font-size:.7rem;color:var(--accent);margin:0 0 8px}
+  .slot .fl i{font-style:normal;color:var(--muted)}
+  .knows{font-family:var(--mono);font-size:.68rem;color:var(--muted);line-height:1.5;margin-top:6px}
+  .knows b{color:#c9d4ea;font-weight:500}
+  .knows .no{color:var(--warn)}
+  .pile{position:relative;height:96px;width:70px;margin:2px 0 4px}
   .pile .c{position:absolute;left:0;top:0}
-  .cards{display:flex;flex-wrap:wrap;gap:8px;min-height:96px;align-content:flex-start}
+  .cards{display:flex;flex-wrap:wrap;gap:8px;min-height:92px;align-content:flex-start}
   .c{width:64px;height:90px;border-radius:8px;border:1px solid rgba(255,255,255,.25);display:flex;flex-direction:column;align-items:center;justify-content:center;
     font-family:var(--disp);font-weight:700;font-size:1.1rem;transition:transform .35s,background .35s,color .35s;animation:pop .3s}
   .c.down{background:repeating-linear-gradient(45deg,#1b2a52 0 6px,#223466 6px 12px);color:rgba(255,255,255,.55);font-family:var(--mono);font-weight:400}
@@ -117,16 +124,20 @@
 
     <div class="board">
       <div class="box" id="bDeck">
-        <p class="who">the deck<small id="deckCount">52 cards</small></p>
-        <div class="pile" id="pile"></div>
+        <p class="who">a Deck object</p>
+        <div class="slot" id="sDeck"><p class="fl">field: cards <i>a list of Card objects, <span id="deckCount">52</span></i></p>
+          <div class="pile" id="pile"></div></div>
+        <p class="knows">the deck knows: <b>its cards</b> and nothing else<br><span class="no">it does not know any Hand</span></p>
         <div class="ctl">
           <button id="bShuffle">shuffle<small>the deck reorders its own cards</small></button>
           <button id="bDeal">deal a card<small>top card leaves the deck</small></button>
         </div>
       </div>
       <div class="box" id="bHand">
-        <p class="who">the hand<small id="handCount">0 cards</small></p>
-        <div class="cards" id="hand"></div>
+        <p class="who">a Hand object</p>
+        <div class="slot" id="sHand"><p class="fl">field: cards <i>a list of Card objects, <span id="handCount">0</span></i></p>
+          <div class="cards" id="hand"></div></div>
+        <p class="knows">the hand knows: <b>its cards</b> and nothing else<br><span class="no">it does not know any Deck</span> &middot; a Card knows: <b>suit, value, face up or not</b><br><span class="no">a Card does not know who holds it</span></p>
         <div class="sum" id="sum">value: <b>?</b></div>
         <div class="ctl">
           <button id="bValue" disabled>value of the hand<small>the hand asks each card</small></button>
@@ -134,14 +145,14 @@
       </div>
     </div>
     <div class="caption" id="caption">
-      <div class="t" id="status">The deck built its 52 cards itself. The hand is empty. Neither one knows the other exists. Press <b class="a">deal a card</b>.</div>
+      <div class="t" id="status">Has-a is a <b class="a">field</b>: each object keeps a list of Card objects inside it. The deck filled its own list with 52; the hand's list is empty. Press <b class="a">deal a card</b>.</div>
       <button class="reset" id="bReset">Reset</button>
     </div>
   </div>
 
   <div class="take">
     <p class="tk">The one idea</p>
-    <p><b>Has-a means one class keeps another inside it: a Hand has Cards, a Deck has Cards.</b> That is what lets them talk:
+    <p><b>Has-a means one class keeps another as a field: a Hand has a list of Cards, a Deck has a list of Cards.</b> Holding the object is what lets them talk:
     the Hand can ask each of its Cards for its points. The Card knows nothing about the Hand, and the Deck and the Hand never talk to each other.
     A card only moves because <i>your main</i> takes it from the deck and hands it to the hand.</p>
   </div>
@@ -160,7 +171,7 @@
   function pts(v){ return v==="A"?11:(v==="K"||v==="Q"||v==="J")?10:+v; }
   function build(){ deck=[]; SUITS.forEach(function(s){ VALUES.forEach(function(v){ deck.push({suit:s[0],sym:s[1],red:s[2],value:v}); }); }); }
   function say(html,tone){ caption.className="caption"+(tone?" "+tone:""); status.innerHTML=html; }
-  function lit(ids){ ["tDeck","tCard","tHand","bDeck","bHand"].forEach(function(i){ $("#"+i).classList.toggle("lit",ids.indexOf(i)>=0); }); }
+  function lit(ids){ ["tDeck","tCard","tHand","bDeck","bHand","sDeck","sHand"].forEach(function(i){ $("#"+i).classList.toggle("lit",ids.indexOf(i)>=0); }); }
   function cardEl(c,up){
     var d=document.createElement("div"); d.className="c "+(up?"up"+(c.red?" red":""):"down");
     d.innerHTML=up?'<span>'+c.value+'</span><span class="s">'+c.sym+'</span>':'#';
@@ -171,25 +182,25 @@
     var show=Math.min(deck.length,4);
     for(var i=0;i<show;i++){ var d=cardEl({},false); d.style.left=(i*3)+"px"; d.style.top=(-i*2)+"px"; d.style.animation="none"; pile.appendChild(d); }
     if(deck.length===0){ var e=document.createElement("div"); e.className="empty"; e.style.width="70px"; e.style.padding="30px 0"; e.textContent="empty"; pile.appendChild(e); }
-    $("#deckCount").textContent=deck.length+" card"+(deck.length===1?"":"s");
+    $("#deckCount").textContent=deck.length;
     handEl.innerHTML="";
     if(hand.length===0){ var h=document.createElement("div"); h.className="empty"; h.textContent="no cards yet"; handEl.appendChild(h); }
     hand.forEach(function(c,i){ var d=cardEl(c,false); d.setAttribute("data-i",i); handEl.appendChild(d); });
-    $("#handCount").textContent=hand.length+" card"+(hand.length===1?"":"s");
+    $("#handCount").textContent=hand.length;
     $("#bDeal").disabled=deck.length===0||hand.length>=6||busy; $("#bValue").disabled=hand.length===0||busy; $("#bShuffle").disabled=busy;
   }
   function shuffle(){
     for(var i=deck.length-1;i>0;i--){ var j=Math.floor(Math.random()*(i+1)); var t=deck[i]; deck[i]=deck[j]; deck[j]=t; }
-    render(); lit(["tDeck","bDeck"]);
+    render(); lit(["tDeck","sDeck"]);
     say('The deck shuffled <b class="a">its own list</b> of cards. Nobody else was involved: the hand did not notice, and no card knows it moved.',"");
   }
   function deal(){
     if(deck.length===0||hand.length>=6) return;
-    var c=deck.shift(); hand.push(c); render(); sum.innerHTML='value: <b>?</b>'; lit(["tDeck","tCard","tHand","bHand"]);
-    say('The deck handed over its top card and forgot it: <b class="a">'+(deck.length)+' left</b>. The hand stored it, face down: <b class="y">'+hand.length+' card'+(hand.length===1?"":"s")+'</b>. The deck did not give it to the hand; <b class="a">main</b> took it from one and passed it to the other.',"y");
+    var c=deck.shift(); hand.push(c); render(); sum.innerHTML='value: <b>?</b>'; lit(["tDeck","tCard","tHand","sDeck","sHand"]);
+    say('One Card object left the deck\'s <b class="a">cards</b> list ('+deck.length+' left) and went into the hand\'s <b class="y">cards</b> list ('+hand.length+'). Same object, new owner. The deck did not hand it over; <b class="a">main</b> took it from one field and put it in the other.',"y");
   }
   function value(){
-    if(hand.length===0||busy) return; busy=true; render(); lit(["tHand","tCard","bHand"]);
+    if(hand.length===0||busy) return; busy=true; render(); lit(["tHand","tCard","sHand"]);
     var total=0, i=0, els=handEl.querySelectorAll(".c");
     sum.innerHTML='value: <b>0</b> <span class="ask">asking each card...</span>';
     say('The hand goes through <b class="y">its own cards</b>. For each one: flip it up, ask it for its points, flip it back. The card answers; it does not know who asked.',"y");
@@ -204,7 +215,7 @@
     step();
   }
   function reset(){ busy=false; build(); hand=[]; render(); lit([]); sum.innerHTML='value: <b>?</b>';
-    say('The deck built its 52 cards itself. The hand is empty. Neither one knows the other exists. Press <b class="a">deal a card</b>.'); }
+    say('Has-a is a <b class="a">field</b>: each object keeps a list of Card objects inside it. The deck filled its own list with 52; the hand\'s list is empty. Press <b class="a">deal a card</b>.'); }
   $("#bShuffle").addEventListener("click",shuffle);
   $("#bDeal").addEventListener("click",deal);
   $("#bValue").addEventListener("click",value);
