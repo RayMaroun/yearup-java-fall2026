@@ -37,54 +37,49 @@
     border:1px solid var(--line);border-radius:24px;padding:22px;
     box-shadow:0 1px 0 rgba(255,255,255,.06) inset,0 30px 80px -30px rgba(0,0,0,.8)}
   .hd{font-family:var(--mono);font-size:.62rem;letter-spacing:.16em;text-transform:uppercase;color:var(--muted);margin:0 0 8px}
-
-  /* the map: three classes and who knows whom */
-  .map{display:grid;grid-template-columns:1fr auto 1fr auto 1fr;align-items:center;gap:8px;margin-bottom:18px}
-  .tile{border:1px solid var(--line);background:rgba(0,0,0,.25);border-radius:14px;padding:10px 14px;text-align:center;transition:.3s}
-  .tile .nm{font-family:var(--disp);font-weight:700;font-size:1.05rem;color:var(--ink)}
-  .tile .has{font-family:var(--mono);font-size:.62rem;color:var(--muted);margin-top:3px}
-  .tile.card{border-color:rgba(255,200,98,.5);background:rgba(255,200,98,.08)}
-  .tile.lit{border-color:var(--accent);box-shadow:0 0 24px -8px rgba(110,160,255,.9)}
-  .arrow{font-family:var(--mono);font-size:.68rem;color:var(--accent);text-align:center;line-height:1.3;white-space:nowrap}
-  .arrow b{display:block;font-size:1.3rem;line-height:1}
-  .nolink{grid-column:1/6;text-align:center;font-family:var(--mono);font-size:.66rem;color:var(--muted);margin-top:-6px}
-  .nolink s{color:var(--warn)}
-  @media (max-width:640px){.map{grid-template-columns:1fr}.arrow b{transform:rotate(90deg)}.nolink{grid-column:1}}
-
-  /* the objects */
-  .board{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1.4fr);gap:18px;align-items:stretch}
+  .board{display:grid;grid-template-columns:minmax(0,1.3fr) auto minmax(0,1fr);gap:18px;align-items:stretch}
   @media (max-width:820px){.board{grid-template-columns:1fr}}
-  .box{border:1px solid var(--line);background:rgba(255,255,255,.035);border-radius:16px;padding:14px 16px;display:flex;flex-direction:column;min-height:230px}
-  .box.lit{border-color:var(--accent)}
-  .who{font-family:var(--disp);font-weight:700;font-size:1.2rem;margin:0 0 8px;color:var(--ink)}
-  .who small{font-family:var(--mono);font-weight:400;font-size:.68rem;color:var(--muted);margin-left:8px}
-  .slot{border:1px dashed rgba(110,160,255,.5);background:rgba(110,160,255,.05);border-radius:12px;padding:10px 12px 12px;margin:4px 0 10px;transition:border-color .3s,box-shadow .3s}
-  .slot.lit{border-style:solid;border-color:var(--accent);box-shadow:0 0 24px -10px rgba(110,160,255,.9)}
-  .slot .fl{font-family:var(--mono);font-size:.7rem;color:var(--accent);margin:0 0 8px}
-  .slot .fl i{font-style:normal;color:var(--muted)}
-  .knows{font-family:var(--mono);font-size:.68rem;color:var(--muted);line-height:1.5;margin-top:6px}
-  .knows b{color:#c9d4ea;font-weight:500}
-  .knows .no{color:var(--warn)}
-  .pile{position:relative;height:96px;width:70px;margin:2px 0 4px}
-  .pile .c{position:absolute;left:0;top:0}
-  .cards{display:flex;flex-wrap:wrap;gap:8px;min-height:92px;align-content:flex-start}
-  .c{width:64px;height:90px;border-radius:8px;border:1px solid rgba(255,255,255,.25);display:flex;flex-direction:column;align-items:center;justify-content:center;
-    font-family:var(--disp);font-weight:700;font-size:1.1rem;transition:transform .35s,background .35s,color .35s;animation:pop .3s}
+  .box{border:1px solid var(--line);background:rgba(255,255,255,.035);border-radius:16px;padding:14px 16px;display:flex;flex-direction:column;min-height:300px}
+  .who{font-family:var(--disp);font-weight:700;font-size:1.2rem;margin:0 0 10px;color:var(--ink)}
+  .who small{display:block;font-family:var(--mono);font-weight:400;font-size:.66rem;color:var(--muted);margin-top:3px}
+
+  /* the hand: a holder */
+  .hold{border:2px dashed rgba(110,160,255,.5);background:rgba(110,160,255,.05);border-radius:14px;padding:12px;min-height:118px;display:flex;flex-wrap:wrap;gap:8px;align-content:flex-start;transition:.3s}
+  .hold.has{border-style:solid;border-color:var(--accent)}
+  .hold .emptyt{width:100%;font-family:var(--mono);font-size:.74rem;color:var(--muted);text-align:center;padding:36px 0}
+  .c{width:60px;height:84px;border-radius:8px;border:1px solid rgba(255,255,255,.25);display:flex;flex-direction:column;align-items:center;justify-content:center;
+    font-family:var(--disp);font-weight:700;font-size:1.05rem;transition:transform .35s,background .35s,color .35s;animation:pop .3s}
   .c.down{background:repeating-linear-gradient(45deg,#1b2a52 0 6px,#223466 6px 12px);color:rgba(255,255,255,.55);font-family:var(--mono);font-weight:400}
   .c.up{background:#f3f5fb;color:#0b1020} .c.up.red{color:#c0392b}
-  .c.up .s{font-size:1.3rem;line-height:1}
-  .c.peek{transform:translateY(-8px) scale(1.06);box-shadow:0 0 0 2px var(--accent)}
-  .c .pts{font-family:var(--mono);font-size:.58rem;color:var(--muted);margin-top:4px}
-  .empty{font-family:var(--mono);font-size:.76rem;color:var(--muted);padding:34px 0;text-align:center;border:1px dashed rgba(132,150,182,.3);border-radius:12px;width:100%}
-  .sum{margin-top:auto;padding-top:10px;font-family:var(--mono);font-size:.84rem;color:var(--muted)}
-  .sum b{color:var(--ink);font-size:1.3rem}
-  .sum .ask{color:var(--accent)}
-  .ctl{display:flex;gap:10px;margin-top:14px;flex-wrap:wrap}
+  .c.up .s{font-size:1.25rem;line-height:1}
+  .abil{margin-top:12px}
+  .abil .hd{margin-bottom:6px}
+  .ab{display:flex;align-items:center;gap:10px;font-family:var(--body);font-size:.92rem;padding:8px 10px;border-radius:10px;border:1px solid var(--line);margin-bottom:6px;
+    color:var(--muted);background:rgba(0,0,0,.2);transition:.3s}
+  .ab .dot{width:10px;height:10px;border-radius:50%;background:rgba(132,150,182,.4);flex-shrink:0;transition:.3s}
+  .ab.on{color:var(--ink);border-color:rgba(70,217,138,.5);background:rgba(70,217,138,.08)}
+  .ab.on .dot{background:var(--good);box-shadow:0 0 10px var(--good)}
+  .ab b{margin-left:auto;font-family:var(--mono);font-weight:400;font-size:.72rem;color:var(--muted)}
+  .ab.on b{color:var(--good)}
+  .ctl{display:flex;gap:10px;margin-top:auto;padding-top:12px;flex-wrap:wrap}
   .ctl button{font-family:var(--body);font-weight:500;font-size:.9rem;padding:10px 16px;border-radius:12px;cursor:pointer;
     border:1px solid rgba(255,200,98,.5);background:rgba(255,200,98,.1);color:var(--gold);transition:.15s}
   .ctl button:hover{background:rgba(255,200,98,.2);border-color:var(--gold)}
   .ctl button:disabled{opacity:.35;cursor:not-allowed}
-  .ctl button small{display:block;font-family:var(--mono);font-size:.58rem;letter-spacing:.08em;text-transform:uppercase;color:var(--muted);margin-top:3px}
+
+  /* the arrows between */
+  .rel{display:flex;flex-direction:column;justify-content:center;align-items:center;gap:18px;font-family:var(--mono);font-size:.68rem;color:var(--muted);text-align:center;min-width:150px}
+  .rel .a{color:var(--accent)} .rel .a b{display:block;font-size:1.6rem;line-height:1}
+  .rel .x{color:var(--warn)} .rel .x b{display:block;font-size:1.6rem;line-height:1;text-decoration:line-through}
+  .rel .deck{border-top:1px solid var(--line);padding-top:12px;line-height:1.5}
+  @media (max-width:820px){.rel{flex-direction:row;min-width:0}.rel .a b,.rel .x b{transform:rotate(90deg)}.rel .deck{border-top:0;border-left:1px solid var(--line);padding:0 0 0 12px}}
+
+  /* the lone card */
+  .lone{display:flex;flex-direction:column;align-items:center;gap:10px;padding:10px 0}
+  .lone .c{width:84px;height:118px;font-size:1.5rem;animation:none}
+  .lone .c.up .s{font-size:1.8rem}
+  .know{font-family:var(--mono);font-size:.7rem;color:var(--muted);line-height:1.6;text-align:center}
+  .know b{color:#c9d4ea;font-weight:500} .know .no{color:var(--warn)}
 
   /* the one sentence */
   .caption{display:flex;gap:14px;align-items:flex-start;margin:18px 2px 0;padding-top:16px;border-top:1px solid var(--line)}
@@ -109,52 +104,47 @@
 <div class="wrap">
   <p class="tag">Workbook 4a &middot; Section 5-1 &middot; Class relationships</p>
   <h1>Has-A and Class Communication</h1>
-  <p class="lede"><b>The card game from the workbook. Deal a few cards, then ask the hand what it is worth.</b></p>
+  <p class="lede"><b>A hand needs cards. A card needs nothing. Put cards in, take them out, and watch what the hand can do.</b></p>
 
   <div class="stage">
-    <p class="hd">who knows whom</p>
-    <div class="map">
-      <div class="tile" id="tDeck"><div class="nm">Deck</div><div class="has">has 52 Cards</div></div>
-      <div class="arrow">has-a<b>&rarr;</b></div>
-      <div class="tile card" id="tCard"><div class="nm">Card</div><div class="has">knows nothing about the others</div></div>
-      <div class="arrow">has-a<b>&larr;</b></div>
-      <div class="tile" id="tHand"><div class="nm">Hand</div><div class="has">has the Cards it was dealt</div></div>
-      <div class="nolink"><s>Deck &harr; Hand</s> &nbsp; no line: the deck does not know the hand, the hand does not know the deck</div>
-    </div>
-
     <div class="board">
-      <div class="box" id="bDeck">
-        <p class="who">a Deck object</p>
-        <div class="slot" id="sDeck"><p class="fl">field: cards <i>a list of Card objects, <span id="deckCount">52</span></i></p>
-          <div class="pile" id="pile"></div></div>
-        <p class="knows">the deck knows: <b>its cards</b> and nothing else<br><span class="no">it does not know any Hand</span></p>
+      <div class="box">
+        <p class="who">a Hand<small>the holder</small></p>
+        <div class="hold" id="hold"><span class="emptyt">empty: a hand with no cards</span></div>
+        <div class="abil">
+          <p class="hd">what the hand can do</p>
+          <div class="ab" id="abCount"><span class="dot"></span>count its cards<b id="bc">nothing to count</b></div>
+          <div class="ab" id="abSum"><span class="dot"></span>add up its points, by asking each card<b id="bs">nothing to ask</b></div>
+        </div>
         <div class="ctl">
-          <button id="bShuffle">shuffle<small>the deck reorders its own cards</small></button>
-          <button id="bDeal">deal a card<small>top card leaves the deck</small></button>
+          <button id="bIn">put a card in</button>
+          <button id="bOut" disabled>take a card out</button>
         </div>
       </div>
-      <div class="box" id="bHand">
-        <p class="who">a Hand object</p>
-        <div class="slot" id="sHand"><p class="fl">field: cards <i>a list of Card objects, <span id="handCount">0</span></i></p>
-          <div class="cards" id="hand"></div></div>
-        <p class="knows">the hand knows: <b>its cards</b> and nothing else<br><span class="no">it does not know any Deck</span> &middot; a Card knows: <b>suit, value, face up or not</b><br><span class="no">a Card does not know who holds it</span></p>
-        <div class="sum" id="sum">value: <b>?</b></div>
-        <div class="ctl">
-          <button id="bValue" disabled>value of the hand<small>the hand asks each card</small></button>
+      <div class="rel">
+        <div class="a">Hand &rarr; Card<b>&rarr;</b>has, so depends on</div>
+        <div class="x">Card &rarr; Hand<b>&rarr;</b>does not know it exists</div>
+        <div class="deck">a Deck is just another<br>holder of Cards:<br>Deck &rarr; Card, same arrow.<br>Deck and Hand:<br>no arrow at all</div>
+      </div>
+      <div class="box">
+        <p class="who">a Card on its own<small>the held thing, outside any hand</small></p>
+        <div class="lone">
+          <div class="c down" id="lone">#</div>
+          <div class="ctl" style="margin-top:0;padding-top:0"><button id="bFlip">flip it</button></div>
+          <p class="know">it knows: <b>its suit, its value, face up or not</b><br>it can flip and tell its points<br><span class="no">nothing here needs a hand</span></p>
         </div>
       </div>
     </div>
     <div class="caption" id="caption">
-      <div class="t" id="status">Has-a is a <b class="a">field</b>: each object keeps a list of Card objects inside it. The deck filled its own list with 52; the hand's list is empty. Press <b class="a">deal a card</b>.</div>
+      <div class="t" id="status">The hand is empty and <b class="w">can do nothing</b>: both abilities are off. Put a card in.</div>
       <button class="reset" id="bReset">Reset</button>
     </div>
   </div>
 
   <div class="take">
     <p class="tk">The one idea</p>
-    <p><b>Has-a means one class keeps another as a field: a Hand has a list of Cards, a Deck has a list of Cards.</b> Holding the object is what lets them talk:
-    the Hand can ask each of its Cards for its points. The Card knows nothing about the Hand, and the Deck and the Hand never talk to each other.
-    A card only moves because <i>your main</i> takes it from the deck and hands it to the hand.</p>
+    <p><b>Has-a means one object holds another. The holder can use what it holds, and cannot do its job without it. The held object does not know who holds it.</b>
+    A Hand has Cards, so a Hand depends on Card. A Card depends on nothing. A Deck holds Cards too, and Deck and Hand never meet.</p>
   </div>
   <div id="rail"></div>
 </div>
@@ -162,65 +152,38 @@
 (function(){
   "use strict";
   var $=function(s){return document.querySelector(s);};
-  var reduce=matchMedia("(prefers-reduced-motion: reduce)").matches;
-  var SUITS=[["Hearts","♥",1],["Spades","♠",0],["Diamonds","♦",1],["Clubs","♣",0]];
-  var VALUES=["2","3","4","5","6","7","8","9","10","J","Q","K","A"];
-  var deck=[], hand=[], busy=false;
-  var pile=$("#pile"),handEl=$("#hand"),sum=$("#sum"),status=$("#status"),caption=$("#caption");
+  var CARDS=[{v:"A",s:"♠",r:0,p:11},{v:"7",s:"♥",r:1,p:7},{v:"K",s:"♦",r:1,p:10},{v:"4",s:"♣",r:0,p:4}];
+  var MAX=4, n=0, loneUp=false;
+  var hold=$("#hold"),status=$("#status"),caption=$("#caption");
 
-  function pts(v){ return v==="A"?11:(v==="K"||v==="Q"||v==="J")?10:+v; }
-  function build(){ deck=[]; SUITS.forEach(function(s){ VALUES.forEach(function(v){ deck.push({suit:s[0],sym:s[1],red:s[2],value:v}); }); }); }
   function say(html,tone){ caption.className="caption"+(tone?" "+tone:""); status.innerHTML=html; }
-  function lit(ids){ ["tDeck","tCard","tHand","bDeck","bHand","sDeck","sHand"].forEach(function(i){ $("#"+i).classList.toggle("lit",ids.indexOf(i)>=0); }); }
-  function cardEl(c,up){
-    var d=document.createElement("div"); d.className="c "+(up?"up"+(c.red?" red":""):"down");
-    d.innerHTML=up?'<span>'+c.value+'</span><span class="s">'+c.sym+'</span>':'#';
-    return d;
-  }
+  function cardEl(c,up){ var d=document.createElement("div"); d.className="c "+(up?"up"+(c.r?" red":""):"down");
+    d.innerHTML=up?'<span>'+c.v+'</span><span class="s">'+c.s+'</span>':'#'; return d; }
   function render(){
-    pile.innerHTML="";
-    var show=Math.min(deck.length,4);
-    for(var i=0;i<show;i++){ var d=cardEl({},false); d.style.left=(i*3)+"px"; d.style.top=(-i*2)+"px"; d.style.animation="none"; pile.appendChild(d); }
-    if(deck.length===0){ var e=document.createElement("div"); e.className="empty"; e.style.width="70px"; e.style.padding="30px 0"; e.textContent="empty"; pile.appendChild(e); }
-    $("#deckCount").textContent=deck.length;
-    handEl.innerHTML="";
-    if(hand.length===0){ var h=document.createElement("div"); h.className="empty"; h.textContent="no cards yet"; handEl.appendChild(h); }
-    hand.forEach(function(c,i){ var d=cardEl(c,false); d.setAttribute("data-i",i); handEl.appendChild(d); });
-    $("#handCount").textContent=hand.length;
-    $("#bDeal").disabled=deck.length===0||hand.length>=6||busy; $("#bValue").disabled=hand.length===0||busy; $("#bShuffle").disabled=busy;
+    hold.innerHTML=""; hold.classList.toggle("has",n>0);
+    if(n===0){ var e=document.createElement("span"); e.className="emptyt"; e.textContent="empty: a hand with no cards"; hold.appendChild(e); }
+    var sum=0; for(var i=0;i<n;i++){ hold.appendChild(cardEl(CARDS[i],true)); sum+=CARDS[i].p; }
+    $("#abCount").classList.toggle("on",n>0); $("#abSum").classList.toggle("on",n>0);
+    $("#bc").textContent=n>0?n+" card"+(n===1?"":"s"):"nothing to count";
+    $("#bs").textContent=n>0?sum+" points":"nothing to ask";
+    $("#bIn").disabled=n>=MAX; $("#bOut").disabled=n===0;
   }
-  function shuffle(){
-    for(var i=deck.length-1;i>0;i--){ var j=Math.floor(Math.random()*(i+1)); var t=deck[i]; deck[i]=deck[j]; deck[j]=t; }
-    render(); lit(["tDeck","sDeck"]);
-    say('The deck shuffled <b class="a">its own list</b> of cards. Nobody else was involved: the hand did not notice, and no card knows it moved.',"");
-  }
-  function deal(){
-    if(deck.length===0||hand.length>=6) return;
-    var c=deck.shift(); hand.push(c); render(); sum.innerHTML='value: <b>?</b>'; lit(["tDeck","tCard","tHand","sDeck","sHand"]);
-    say('One Card object left the deck\'s <b class="a">cards</b> list ('+deck.length+' left) and went into the hand\'s <b class="y">cards</b> list ('+hand.length+'). Same object, new owner. The deck did not hand it over; <b class="a">main</b> took it from one field and put it in the other.',"y");
-  }
-  function value(){
-    if(hand.length===0||busy) return; busy=true; render(); lit(["tHand","tCard","sHand"]);
-    var total=0, i=0, els=handEl.querySelectorAll(".c");
-    sum.innerHTML='value: <b>0</b> <span class="ask">asking each card...</span>';
-    say('The hand goes through <b class="y">its own cards</b>. For each one: flip it up, ask it for its points, flip it back. The card answers; it does not know who asked.',"y");
-    function step(){
-      if(i>0){ var p=els[i-1]; p.className="c down"; p.innerHTML="#"; }
-      if(i>=hand.length){ busy=false; render(); sum.innerHTML='value: <b>'+total+'</b>';
-        say('Every card answered and the hand added them up: <b class="g">'+total+'</b>. The hand never did card arithmetic itself; it asked. That is class communication through a has-a relationship.',"g"); return; }
-      var c=hand[i], e=els[i]; e.className="c up"+(c.red?" red":"")+" peek"; e.innerHTML='<span>'+c.value+'</span><span class="s">'+c.sym+'</span><span class="pts">'+pts(c.value)+' pts</span>';
-      total+=pts(c.value); sum.innerHTML='value: <b>'+total+'</b> <span class="ask">asking each card...</span>'; i++;
-      setTimeout(step,reduce?0:650);
-    }
-    step();
-  }
-  function reset(){ busy=false; build(); hand=[]; render(); lit([]); sum.innerHTML='value: <b>?</b>';
-    say('Has-a is a <b class="a">field</b>: each object keeps a list of Card objects inside it. The deck filled its own list with 52; the hand\'s list is empty. Press <b class="a">deal a card</b>.'); }
-  $("#bShuffle").addEventListener("click",shuffle);
-  $("#bDeal").addEventListener("click",deal);
-  $("#bValue").addEventListener("click",value);
+  function put(){ if(n>=MAX) return; n++; render();
+    if(n===1) say('One card inside and the hand <b class="g">comes alive</b>: it can count, and it can ask that card for its points. The hand did not change. What it <b class="a">has</b> did.',"g");
+    else say('Another card inside. The hand still does the same two things; it just has <b class="a">more to ask</b>.',"g"); }
+  function take(){ if(n===0) return; n--; render();
+    if(n===0) say('Last card gone and the hand is <b class="w">helpless again</b>. It cannot count or add up without cards. That is a dependency: Hand needs Card.',"w");
+    else say('One card out. The hand keeps working with what it still <b class="a">has</b>.',""); }
+  function flip(){ loneUp=!loneUp; var l=$("#lone"); var c=CARDS[2];
+    l.className="c "+(loneUp?"up red":"down"); l.innerHTML=loneUp?'<span>'+c.v+'</span><span class="s">'+c.s+'</span>':'#';
+    say('The card on its own flipped and '+(loneUp?'shows <b class="y">'+c.v+' of Diamonds, '+c.p+' points</b>':'hid itself again')+'. No hand anywhere, and it works. <b class="a">Card does not depend on Hand</b>.',"y"); }
+  function reset(){ n=0; loneUp=false; render(); var l=$("#lone"); l.className="c down"; l.innerHTML="#";
+    say('The hand is empty and <b class="w">can do nothing</b>: both abilities are off. Put a card in.'); }
+  $("#bIn").addEventListener("click",put);
+  $("#bOut").addEventListener("click",take);
+  $("#bFlip").addEventListener("click",flip);
   $("#bReset").addEventListener("click",reset);
-  build(); render();
+  render();
 
   /* ambient canvas */
   var reduce=matchMedia("(prefers-reduced-motion: reduce)").matches;
