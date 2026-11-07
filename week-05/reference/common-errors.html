@@ -135,7 +135,7 @@
         </article>
 
         <article class="card" data-cat="compile">
-          <div class="ch"><span class="cat">Compile</span><h2>A field used from static main</h2><a class="see" href="../visuals/15-instance-vs-static.html">See it</a></div>
+          <div class="ch"><span class="cat">Compile</span><h2>A field used from static main</h2><a class="see" href="../visuals/16-instance-vs-static.html">See it</a></div>
           <pre class="msg">java: non-static variable lastName cannot be referenced from a static context</pre>
           <p class="means"><code>main</code> is <code>static</code>: it runs with no object. A field without <code>static</code> lives inside an object, so there is no <code>lastName</code> for <code>main</code> to read.</p>
           <p class="fix"><b>Fix</b>Make the field <code>static</code> if it belongs to the class, or create an object and read it from there.</p>
@@ -151,7 +151,7 @@ public static void main(String[] args) {
         </article>
 
         <article class="card" data-cat="compile">
-          <div class="ch"><span class="cat">Compile</span><h2>A method called from static main</h2><a class="see" href="../visuals/15-instance-vs-static.html">See it</a></div>
+          <div class="ch"><span class="cat">Compile</span><h2>A method called from static main</h2><a class="see" href="../visuals/16-instance-vs-static.html">See it</a></div>
           <pre class="msg">java: non-static method greetEveryone() cannot be referenced from a static context</pre>
           <p class="means">Same rule for methods: <code>greetEveryone</code> has no <code>static</code>, so it needs an object, and <code>main</code> has none.</p>
           <p class="fix"><b>Fix</b>Add <code>static</code> to a helper that uses no fields of an object.</p>
@@ -163,7 +163,7 @@ public static void main(String[] args) {
         </article>
 
         <article class="card" data-cat="compile">
-          <div class="ch"><span class="cat">Compile</span><h2>An instance method on the class name</h2><a class="see" href="../visuals/15-instance-vs-static.html">See it</a></div>
+          <div class="ch"><span class="cat">Compile</span><h2>An instance method on the class name</h2><a class="see" href="../visuals/16-instance-vs-static.html">See it</a></div>
           <pre class="msg">java: non-static method printDetails() cannot be referenced from a static context</pre>
           <p class="means"><code>printDetails</code> prints one learner's name and grade. <code>Learner.printDetails()</code> does not say which learner, so Java refuses it.</p>
           <p class="fix"><b>Fix</b>Call it on an object. The class name goes in front of <code>static</code> methods only, like <code>Learner.changeSchool("Lakeside Academy")</code>.</p>

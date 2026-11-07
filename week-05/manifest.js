@@ -19,9 +19,10 @@ window.HUB_MANIFEST = {
     { file: "12-arrange-act-assert.html", title: "Arrange, Act, Assert", group: "Workbook 4a · Section 3-2" },
     { file: "13-why-doubles-drift.html", title: "Why Doubles Drift", group: "Workbook 4a · Section 4-1" },
     { file: "14-bigdecimal-operations.html", title: "BigDecimal Operations", group: "Workbook 4a · Section 4-1" },
-    { file: "15-instance-vs-static.html", title: "Instance vs Static", group: "Workbook 4a · Section 4-2" },
-    { file: "16-utility-classes.html", title: "Utility Classes", group: "Workbook 4a · Section 4-2" },
-    { file: "17-has-a-relationship.html", title: "Has-A and Class Communication", group: "Workbook 4a · Section 5-1" }
+    { file: "15-what-static-means.html", title: "What Static Means", group: "Workbook 4a · Section 4-2" },
+    { file: "16-instance-vs-static.html", title: "Instance vs Static", group: "Workbook 4a · Section 4-2" },
+    { file: "17-utility-classes.html", title: "Utility Classes", group: "Workbook 4a · Section 4-2" },
+    { file: "18-has-a-relationship.html", title: "Has-A and Class Communication", group: "Workbook 4a · Section 5-1" }
   ],
   reference: [
     { file: "cheat-sheet.html", title: "Week 5 Cheat Sheet", group: "Reference", desc: "The syntax of the week on one page: a class, constructors, getters and setters, overloading, a JUnit test, BigDecimal, static." },
