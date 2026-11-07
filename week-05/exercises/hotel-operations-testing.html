@@ -105,7 +105,7 @@
       <div>
         <p class="lab">What you are building</p>
         <div class="box brief">
-          <p>A <b>new project</b> with your Hotel Operations 3 code, plus JUnit and two test classes. <b>RoomTest</b> checks what <code>checkIn</code>, <code>checkOut</code> and <code>cleanRoom</code> do to a room. <b>EmployeeTest</b> checks that <code>punchIn</code> and <code>punchOut</code> with an int time add up the hours correctly.</p>
+          <p>A <b>new project</b> with your Hotel Operations 3 code, plus JUnit and two test classes. <b>RoomTest</b> checks what <code>checkIn</code>, <code>checkOut</code> and <code>cleanRoom</code> do to a room. <b>EmployeeTest</b> checks that <code>punchIn</code> and <code>punchOut</code> with a double time add up the hours correctly.</p>
           <p class="no">Your classes do not change and main is not involved. The punch methods that read the clock (LocalDateTime) are not tested: their result changes every run.</p>
         </div>
 
@@ -132,7 +132,7 @@
             <li><b>@Test and Assertions stay red.</b> The pom changed but Maven was not reloaded. Press the Maven reload icon.</li>
             <li><b>The test cannot see Room.</b> The test class sits outside <code>src/test/java/com/pluralsight</code>, so its package does not match.</li>
             <li><b>"No tests found".</b> A test method is missing its <code>@Test</code> line.</li>
-            <li><b>A test passes one run and fails the next.</b> It uses a clock-based punch method. Test the int versions only.</li>
+            <li><b>A test passes one run and fails the next.</b> It uses a clock-based punch method. Test the versions that take a time only.</li>
           </ul>
         </div>
         <div>
@@ -176,7 +176,7 @@
      d:"In the Project view, src/test/java is the test root and shows <b>green</b>. If com.pluralsight is missing under it, right-click java > New > Package. Shortcut: click in Room, <b>Navigate > Test > Create New Test</b> puts the class there for you.",
      ok:"src/test/java/com/pluralsight exists and is green"},
     {t:"Create <code>RoomTest</code> and test <code>checkIn()</code>: the room should be occupied and dirty.",
-     d:"Arrange a Room, act by calling checkIn, assert on its occupied and dirty getters. One method per behavior, each with <b>@Test</b>.",
+     d:"Arrange a Room, act by calling checkIn, assert on its occupied and dirty getters. One method per behavior, each with <b>@Test</b>, named MethodName_StateUnderTest_ExpectedBehavior: checkIn_NewRoom_OccupiedAndDirty.",
      ok:"the checkIn test runs green"},
     {t:"Add tests for <code>checkOut()</code> and <code>cleanRoom()</code>.",
      d:"Answer the workbook's questions with tests: can an occupied room be checked into? A dirty one? Can housekeeping clean an occupied room? Each answer your Room gives is one more test.",
