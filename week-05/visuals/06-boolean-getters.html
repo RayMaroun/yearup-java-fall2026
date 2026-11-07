@@ -123,14 +123,14 @@
     <div class="board">
       <div class="card obj">
         <p class="hd">object &middot; Person</p>
-        <p class="who">alana</p>
+        <p class="who">nadia</p>
         <div class="row"><span class="f"><i>String</i>firstName</span><span class="val s">"Nadia"</span></div>
         <div class="row" id="ageRow"><span class="f"><i>int</i>age</span>
           <span class="step"><button id="bDown" aria-label="age minus one">&minus;</button><span class="val" id="ageVal">17</span><button id="bUp" aria-label="age plus one">+</button></span></div>
         <p class="sect">getters</p>
         <div class="row mrow"><span><i>int</i>getAge()</span><em>get: hands back a value</em></div>
         <div class="row mrow"><span><i>boolean</i>isAdult()</span><em>is: answers yes or no</em></div>
-        <button class="ask" id="bAsk">alana.isAdult()<small>is, not get: it returns a boolean</small></button>
+        <button class="ask" id="bAsk">nadia.isAdult()<small>is, not get: it returns a boolean</small></button>
       </div>
       <div class="card rule">
         <p class="hd">inside isAdult() &middot; the rule</p>
@@ -194,7 +194,7 @@
     restart(ageRow,"chg"); setTimeout(function(){ ageRow.classList.remove("chg"); },reduce?0:700);
     mark(null);
     say('setAge('+age+'): age is now <b class="y">'+age+'</b>. The answer is not stored anywhere, so press <b class="a">isAdult()</b> to ask again.',
-      "y","alana.setAge("+age+");");
+      "y","nadia.setAge("+age+");");
   }
   function ask(){
     var ans=age>=18, flip=last!==null&&last!==ans;
@@ -208,7 +208,7 @@
     else if(age===18) tail=". 18 itself counts: the rule is >=, not >.";
     else if(age===17) tail=". One more year and the answer changes. Press + and ask again.";
     else tail=ans?", so isAdult() returns true.":", so isAdult() returns false. Step age up past 17 and ask again.";
-    say(head+tail, ans?"g":"w", "boolean adult = alana.isAdult(); // "+ans);
+    say(head+tail, ans?"g":"w", "boolean adult = nadia.isAdult(); // "+ans);
     last=ans;
   }
   function reset(){
