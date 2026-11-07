@@ -133,7 +133,7 @@ Leo wins with 20!</div>
           <p class="lab">Where people get stuck</p>
           <ul class="stuck">
             <li><b>Every card prints as # of #.</b> Cards start face down. flip() them before you read them.</li>
-            <li><b>Every hand is worth 0.</b> getPointValue still has its @todo, or the card is face down.</li>
+            <li><b>Every hand is worth 0.</b> The cards are face down: a Hand flips each card, reads it, and flips it back. Ask the Hand, not the Card.</li>
             <li><b>"10" scores 1.</b> Look at the whole value String, not its first character.</li>
             <li><b>A 22 wins.</b> A hand over 21 cannot win, however high it is.</li>
           </ul>
@@ -172,12 +172,9 @@ Leo wins with 20!</div>
     {t:"Create a new project named <code>blackjack</code>, with Git.",
      d:"New Project, Maven, JDK 17, GroupId <b>com.pluralsight</b>, <b>Create Git repository</b> ticked, location <b>Desktop/pluralsight/java-development/workbook-4</b>. Then Share Project on GitHub.",
      ok:"blackjack has its own repository on github.com"},
-    {t:"Add the <code>Card</code>, <code>Hand</code> and <code>Deck</code> classes from the section.",
-     d:"One file each in com.pluralsight, as the section pages show them: Card with faceUp and <b>flip()</b>, Hand with <b>deal</b> and <b>getValue</b>, Deck with <b>shuffle</b> and <b>deal</b>.",
+    {t:"Paste the <code>Card</code>, <code>Deck</code> and <code>Hand</code> classes from the Teams message.",
+     d:"One file each in com.pluralsight. Read them before you use them: a Card is face down until you <b>flip()</b> it, a Deck builds and <b>shuffle</b>s itself and <b>deal</b>s the top card, a Hand stores what it is dealt and <b>getValue</b> adds up the points. The scoring is already written.",
      ok:"the project compiles with all three classes"},
-    {t:"Finish <code>getPointValue()</code> in Card.",
-     d:"Replace the @todo: A is 11, K, Q and J are 10, every number card is its own number.",
-     ok:"a face-up 10 gives 10, a K gives 10, an A gives 11"},
     {t:"Give each hand a player name.",
      d:"The section's classes have no names. Add what you need: a name on Hand, or a Player class that has a Hand. Your choice.",
      ok:"you can ask a hand whose it is"},
