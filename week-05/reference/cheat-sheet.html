@@ -216,13 +216,13 @@ import static org.junit.jupiter.api.Assertions.*;</code></div>
     @Test
     public void accelerate_NormalSpeedChange_SpeedIncreased() {
         <span class="c">// Arrange</span>
-        Car remoCar = new Car("Bugatti", "Chevron");
+        Car bugatti = new Car("Bugatti", "Chevron");
         int speedChange = 15;
         int expectedSpeed = 15;
         <span class="c">// Act</span>
-        remoCar.accelerate(speedChange);
+        bugatti.accelerate(speedChange);
         <span class="c">// Assert</span>
-        int actualSpeed = remoCar.getSpeed();
+        int actualSpeed = bugatti.getSpeed();
         assertEquals(expectedSpeed, actualSpeed);
     }
 }</code></div>
@@ -240,15 +240,15 @@ import static org.junit.jupiter.api.Assertions.*;</code></div>
         <section class="card" data-t="junit">
           <h2>Assertions <span class="wb">4a &middot; 3-2</span></h2>
           <div class="row"><span class="k">assertEquals</span><code>assertEquals(expectedSpeed, actualSpeed);  <span class="c">// expected first</span></code></div>
-          <div class="row"><span class="k">assertNotEquals</span><code>assertNotEquals(0, remoCar.getSpeed());  <span class="c">// fails if they are equal</span></code></div>
+          <div class="row"><span class="k">assertNotEquals</span><code>assertNotEquals(0, bugatti.getSpeed());  <span class="c">// fails if they are equal</span></code></div>
           <div class="row"><span class="k">assertTrue</span><code>Person person1 = new Person("Raymond", "Maroun", 55);
 assertTrue(person1.isAdult());</code></div>
           <div class="row"><span class="k">assertFalse</span><code>Person person4 = new Person("Adam", "Lee", 16);
 assertFalse(person4.isAdult());</code></div>
           <div class="row"><span class="k">assertNull</span><code>Car emptyCar = new Car();
 assertNull(emptyCar.getMake());  <span class="c">// make never set</span></code></div>
-          <div class="row"><span class="k">assertNotNull</span><code>Car adamCar = new Car("Toyota", "Prius");
-assertNotNull(adamCar.getMake());</code></div>
+          <div class="row"><span class="k">assertNotNull</span><code>Car prius = new Car("Toyota", "Prius");
+assertNotNull(prius.getMake());</code></div>
           <div class="row"><span class="k">arrays</span><code>assertArrayEquals(expectedArray, actualArray);</code></div>
           <div class="row"><span class="k">swapped</span><code><span class="w">assertEquals(actualSpeed, expectedSpeed);</span>  <span class="c">// runs, but the failure message lies</span></code></div>
           <p class="see">See it:

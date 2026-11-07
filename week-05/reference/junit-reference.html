@@ -147,11 +147,11 @@ import static org.junit.jupiter.api.Assertions.*;</code></div>
         <div class="row"><span class="k">name</span><code>public void accelerate_NormalSpeedChange_SpeedIncreased() {
 <span class="c">// MethodName_StateUnderTest_ExpectedBehavior, the course convention;</span>
 <span class="c">// the workbook writes the same test as accelerate_should_increaseCarSpeed</span></code></div>
-        <div class="row"><span class="k">Arrange</span><code>    Car remoCar = new Car("Bugatti", "Chevron");
+        <div class="row"><span class="k">Arrange</span><code>    Car bugatti = new Car("Bugatti", "Chevron");
     int speedChange = 15;
     int expectedSpeed = 15;  <span class="c">// named variables, no magic numbers</span></code></div>
-        <div class="row"><span class="k">Act</span><code>    remoCar.accelerate(speedChange);  <span class="c">// the ONE method this test is about</span></code></div>
-        <div class="row"><span class="k">Assert</span><code>    int actualSpeed = remoCar.getSpeed();
+        <div class="row"><span class="k">Act</span><code>    bugatti.accelerate(speedChange);  <span class="c">// the ONE method this test is about</span></code></div>
+        <div class="row"><span class="k">Assert</span><code>    int actualSpeed = bugatti.getSpeed();
     assertEquals(expectedSpeed, actualSpeed);  <span class="c">// </span><span class="g">15 == 15, passes</span>
 }</code></div>
         <div class="row"><span class="k">one scenario each</span><code><span class="c">// a second scenario is a second @Test, never more asserts in this one:</span>
