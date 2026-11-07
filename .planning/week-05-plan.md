@@ -20,7 +20,7 @@ Source: fall Workbook 4a v7.2Y (M1 Thinking in Objects, M2 Classes / Methods / O
 | 13 | Why doubles drift: 0.1 ten times vs BigDecimal, one press per addition | none | NEW | demo-03: cents added one per press; double shows 0.30000000000000004, BigDecimal shows 0.30 |
 | 14 | BigDecimal operations return a new object: assign it, round with setScale | none | NEW | demo-03: cart total add, subtract, multiply by 1.075, then setScale(2, HALF_UP); the unassigned add shows total unchanged |
 | 15 | Instance vs static members: one counter shared by every object | 11-instance-vs-static | REBUILD | demo-04: Learner objects with their own names, one static schoolName shared by all, Learner.changeSchool changes it for every object |
-| 16 | Utility classes: only static methods, no object needed | 12-static-classes | REBUILD | demo-04 and Math: Math.pow(5,2) without new; new Math() blocked |
+| 16 | Utility classes: a private constructor and only static members, Math opened up | 12-static-classes | REBUILT 2026-11-07 (Ray: the anatomy, not the toolbox) | Math.round(12.8) lights the static method; new Math() hits the private constructor; NameFormatter skeleton shown as the same shape |
 | 17 | Has-a and class communication: one object holds another and calls its method | 13-has-a-relationship + 14-class-communication | REBUILD (merged) | invented: a Team has Players, team.printRoster() calls each player's getName |
 DROPPED: 08-junit-setup (a setup checklist, belongs in the JUnit reference page); 10-junit-assertions picker (becomes the game Pick the Assertion); 14 merged into 17 (one has-a picture carries both the holding and the call).
 

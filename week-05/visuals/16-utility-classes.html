@@ -36,66 +36,40 @@
   .stage{position:relative;background:linear-gradient(180deg,rgba(255,255,255,.03),rgba(255,255,255,.01));
     border:1px solid var(--line);border-radius:24px;padding:22px;
     box-shadow:0 1px 0 rgba(255,255,255,.06) inset,0 30px 80px -30px rgba(0,0,0,.8)}
-  .board{display:grid;grid-template-columns:minmax(0,1.25fr) 90px minmax(0,1fr);gap:16px;align-items:start;min-height:360px}
-  @media (max-width:820px){.board{grid-template-columns:1fr}.lane{min-height:60px!important;flex-direction:row!important}.lane b{transform:rotate(90deg)}}
-
+  .board{display:grid;grid-template-columns:minmax(0,1.5fr) minmax(0,1fr);gap:22px;align-items:stretch;min-height:340px}
+  @media (max-width:820px){.board{grid-template-columns:1fr}}
   .card{position:relative;border-radius:16px;padding:16px 18px 14px}
   .hd{font-family:var(--mono);font-size:.62rem;letter-spacing:.16em;text-transform:uppercase;color:var(--muted);margin:0 0 4px}
   .who{font-family:var(--disp);font-weight:700;font-size:1.35rem;margin:0 0 12px;color:var(--ink);letter-spacing:-.01em}
-  .row{display:flex;align-items:center;justify-content:space-between;gap:10px;font-family:var(--mono);font-size:.82rem;
-    padding:8px 10px;border-radius:9px;margin-bottom:5px;border:1px solid transparent;transition:background .3s,border-color .3s}
-  .row .f{color:#c9d4ea;white-space:nowrap} .row .f i{font-style:normal;color:#82aaff;margin-right:6px}
-  .sect{font-family:var(--mono);font-size:.58rem;letter-spacing:.14em;text-transform:uppercase;color:rgba(132,150,182,.7);margin:12px 0 6px 2px}
+  .cls{border:1px solid rgba(255,255,255,.18);background:rgba(255,255,255,.045)}
+  .ln{display:flex;align-items:center;gap:10px;font-family:var(--mono);font-size:.84rem;padding:8px 10px;border-radius:9px;margin-bottom:4px;
+    border:1px solid transparent;color:#c9d4ea;transition:background .3s,border-color .3s}
+  .ln.ind{margin-left:22px}
+  .ln .kw{color:#c792ea} .ln .ty{color:#82aaff} .ln .nm{color:var(--ink)} .ln .cm{color:var(--muted);font-size:.72rem;margin-left:auto;white-space:nowrap}
+  .ln .badge{font-size:.58rem;letter-spacing:.12em;text-transform:uppercase;padding:2px 7px;border-radius:6px;border:1px solid;margin-left:auto}
+  .ln .badge.st{color:var(--good);border-color:rgba(70,217,138,.5);background:rgba(70,217,138,.1)}
+  .ln .badge.pr{color:var(--warn);border-color:rgba(255,106,106,.5);background:rgba(255,106,106,.1)}
+  .ln.hit{background:rgba(70,217,138,.14);border-color:var(--good)}
+  .ln.block{background:rgba(255,106,106,.14);border-color:var(--warn);animation:shake .4s}
+  .ln.dim{opacity:.4}
+  @keyframes shake{0%,100%{transform:translateX(0)}25%{transform:translateX(-4px)}75%{transform:translateX(4px)}}
 
-  /* the toolbox */
-  .box{margin-top:16px;border:2px solid rgba(110,160,255,.55);background:rgba(110,160,255,.06);border-radius:8px 8px 16px 16px;transition:box-shadow .3s}
-  .box::before{content:"";position:absolute;left:50%;top:-16px;width:96px;height:18px;margin-left:-48px;
-    border:2px solid rgba(110,160,255,.55);border-bottom:none;border-radius:14px 14px 0 0}
-  .box .who{color:#bcd0ff}
-  .box.flash{box-shadow:0 0 0 3px rgba(255,200,98,.14),0 0 30px -8px rgba(255,200,98,.6)}
-  .tool{display:grid;grid-template-columns:96px minmax(0,1fr) 74px;align-items:center;gap:10px;padding:7px 8px;border-radius:11px;
-    margin-bottom:6px;border:1px solid var(--line);background:rgba(0,0,0,.22);transition:border-color .3s,background .3s}
-  .tool.on{border-color:rgba(255,200,98,.6);background:rgba(255,200,98,.08)}
-  .tool button{font-family:var(--mono);font-size:.86rem;padding:9px 6px;border-radius:9px;cursor:pointer;
-    border:1px solid var(--line);background:rgba(0,0,0,.3);color:#ffcb6b;transition:.15s}
-  .tool button:hover{border-color:var(--gold);background:rgba(255,200,98,.1)}
-  .args{font-family:var(--mono);font-size:.84rem;color:var(--muted);display:flex;align-items:center;gap:4px;min-width:0}
-  .args input{width:58px;min-width:0;font-family:var(--mono);font-size:.84rem;padding:6px 7px;border-radius:8px;border:1px solid var(--line);
-    background:rgba(0,0,0,.35);color:var(--ink);outline:none;text-align:center;transition:border-color .15s}
-  .args input:focus{border-color:var(--accent)}
-  .ret{font-family:var(--mono);font-size:.66rem;color:rgba(132,150,182,.75);text-align:right;white-space:nowrap}
-  .lock{display:flex;align-items:center;gap:10px;font-family:var(--mono);font-size:.8rem;color:var(--muted);padding:8px 10px;
-    border-radius:9px;border:1px dashed rgba(132,150,182,.35);margin-top:12px;transition:border-color .3s,color .3s,background .3s}
-  .pad{position:relative;width:14px;height:11px;border-radius:2px;background:currentColor;margin-top:5px;flex-shrink:0}
-  .pad::before{content:"";position:absolute;left:2px;top:-7px;width:6px;height:7px;border:2px solid currentColor;border-bottom:none;border-radius:5px 5px 0 0}
-  .lock.bad{border-color:var(--warn);border-style:solid;color:var(--warn);background:rgba(255,106,106,.07);animation:shake .4s}
-  .new{width:100%;margin-top:10px;font-family:var(--mono);font-weight:500;font-size:.95rem;padding:11px;border-radius:12px;cursor:pointer;
-    border:1px solid rgba(110,160,255,.55);background:rgba(110,160,255,.14);color:#dbe6ff;transition:.15s}
-  .new:hover{background:rgba(110,160,255,.26);border-color:var(--accent)}
-  .new b{font-weight:500;color:var(--gold)}
-  .hand{display:flex;flex-direction:column;align-items:center;margin-top:8px;max-height:0;opacity:0;overflow:hidden;transition:opacity .3s,max-height .35s}
-  .hand.show{opacity:1;max-height:80px}
-  .hand .tri{width:0;height:0;border-left:9px solid transparent;border-right:9px solid transparent;border-bottom:13px solid var(--warn)}
-  .hand .stop{width:30px;height:3px;background:var(--warn);border-radius:2px;margin-top:2px}
-  .hand .msg{margin-top:6px;font-family:var(--mono);font-size:.74rem;color:var(--warn);text-align:center}
-
-  /* the lane */
-  .lane{display:flex;flex-direction:column;align-items:center;justify-content:center;gap:6px;min-height:300px;
-    font-family:var(--mono);font-size:.66rem;color:rgba(132,150,182,.55);text-align:center;transition:color .3s}
-  .lane b{font-weight:500;font-size:1.8rem;line-height:1;color:rgba(132,150,182,.45);transition:color .3s}
-  .lane.on b{color:var(--gold)}
-
-  /* main */
-  .main{border:1px solid rgba(255,255,255,.18);background:rgba(255,255,255,.045);margin-top:16px}
-  .main .row{background:rgba(0,0,0,.18)}
-  .val{color:#f78c6c;font-variant-numeric:tabular-nums;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
-  .val.e{width:58px;height:20px;border-radius:6px;border:1px dashed rgba(132,150,182,.45)}
-  .row.chg{background:rgba(255,200,98,.12);border-color:rgba(255,200,98,.55)}
-  .row.chg .val{color:var(--gold);animation:pop .45s}
-  .none{font-family:var(--mono);font-size:.74rem;color:rgba(132,150,182,.6);padding:10px;border:1px dashed rgba(255,255,255,.1);border-radius:10px;text-align:center}
-  .fly{position:absolute;z-index:3;font-family:var(--mono);font-size:.9rem;font-weight:500;color:#1a1300;background:var(--gold);
-    padding:4px 10px;border-radius:8px;pointer-events:none;box-shadow:0 6px 20px -6px rgba(255,200,98,.8);
-    transition:transform .65s cubic-bezier(.3,.8,.3,1),opacity .2s}
+  .use{border:2px dashed rgba(110,160,255,.45);background:rgba(110,160,255,.04);display:flex;flex-direction:column}
+  .try{display:flex;flex-direction:column;gap:10px;margin:4px 0 14px}
+  .try button{text-align:left;font-family:var(--mono);font-size:1rem;padding:12px 14px;border-radius:12px;cursor:pointer;
+    border:1px solid var(--line);background:rgba(0,0,0,.25);color:#c9d4ea;transition:.15s}
+  .try button:hover{border-color:var(--gold);background:rgba(255,200,98,.08)}
+  .try button.on{border-color:var(--gold);background:rgba(255,200,98,.16);color:var(--ink)}
+  .try button small{display:block;font-size:.6rem;letter-spacing:.1em;text-transform:uppercase;color:var(--muted);margin-top:4px}
+  .try .kw{color:#c792ea}
+  .res{font-family:var(--mono);font-size:1.4rem;text-align:center;padding:14px;border-radius:12px;border:1px dashed rgba(132,150,182,.45);
+    color:rgba(132,150,182,.6);transition:.3s;min-height:62px;display:flex;align-items:center;justify-content:center}
+  .res.g{border:1px solid var(--good);color:var(--good);background:rgba(70,217,138,.1);box-shadow:0 0 28px -8px rgba(70,217,138,.8);animation:pop .4s}
+  .res.w{border:1px solid var(--warn);color:var(--warn);background:rgba(255,106,106,.1);font-size:.78rem;text-align:left;animation:pop .4s}
+  .same{margin-top:auto;padding-top:14px;border-top:1px solid var(--line)}
+  .same .hd{margin-bottom:6px}
+  .same .ln{padding:5px 8px;font-size:.74rem;margin-bottom:2px}
+  @keyframes pop{from{transform:scale(.6);opacity:0}to{transform:scale(1);opacity:1}}
 
   /* the one sentence */
   .caption{display:flex;gap:14px;align-items:flex-start;margin:18px 2px 0;padding-top:16px;border-top:1px solid var(--line)}
@@ -119,67 +93,54 @@
   @media (max-width:480px){.tool{grid-template-columns:80px minmax(0,1fr)}.ret{display:none}.args input{width:50px}}
   @media (prefers-reduced-motion:reduce){*{animation-duration:.01ms!important;transition-duration:.01ms!important}#amb{display:none}}
 </style>
-</head>
 <body>
 <a class="back" href="../index.html#16-utility-classes">&#8592; Week 5 index</a>
 <canvas id="amb"></canvas>
 <div class="wrap">
   <p class="tag">Workbook 4a &middot; Section 4-2 &middot; Static classes</p>
   <h1>Utility Classes</h1>
-  <p class="lede"><b>Math is a toolbox. Pick a tool, change a number, and see where the answer lands.</b></p>
+  <p class="lede"><b>Open the Math class you have used since week 1. Try to use it two ways.</b></p>
 
   <div class="stage" id="stage">
     <div class="board">
-      <div class="card box" id="box">
-        <p class="hd">utility class &middot; only static</p>
-        <p class="who">Math</p>
-        <div class="tool" data-t="pow">
-          <button data-t="pow">pow</button>
-          <span class="args">(<input id="pA" value="5" aria-label="pow base">,<input id="pB" value="2" aria-label="pow exponent">)</span>
-          <span class="ret">double</span>
-        </div>
-        <div class="tool" data-t="sqrt">
-          <button data-t="sqrt">sqrt</button>
-          <span class="args">(<input id="sA" value="25" aria-label="sqrt value">)</span>
-          <span class="ret">double</span>
-        </div>
-        <div class="tool" data-t="floor">
-          <button data-t="floor">floor</button>
-          <span class="args">(<input id="fA" value="12.8" aria-label="floor value">)</span>
-          <span class="ret">double</span>
-        </div>
-        <div class="tool" data-t="round">
-          <button data-t="round">round</button>
-          <span class="args">(<input id="rA" value="12.8" aria-label="round value">)</span>
-          <span class="ret">long</span>
-        </div>
-        <div class="lock" id="lock"><span class="pad"></span>private Math() { }</div>
-        <button class="new" id="bNew"><b>new</b> Math()</button>
-        <div class="hand" id="hand"><span class="tri"></span><span class="stop"></span>
-          <span class="msg">error: Math() has private access in Math</span></div>
+      <div class="card cls" id="cls">
+        <p class="hd">inside the JDK &middot; what a utility class looks like</p>
+        <p class="who">class Math</p>
+        <div class="ln"><span class="kw">public final class</span><span class="nm">Math {</span></div>
+        <div class="ln ind" id="lCtor"><span class="kw">private</span><span class="nm">Math() { }</span><span class="badge pr">private constructor</span></div>
+        <div class="ln ind" id="lPI"><span class="kw">public static final</span><span class="ty">double</span><span class="nm">PI = 3.14159...</span><span class="badge st">static</span></div>
+        <div class="ln ind" id="lRound"><span class="kw">public static</span><span class="ty">long</span><span class="nm">round(double a)</span><span class="badge st">static</span></div>
+        <div class="ln ind" id="lPow"><span class="kw">public static</span><span class="ty">double</span><span class="nm">pow(double a, double b)</span><span class="badge st">static</span></div>
+        <div class="ln ind" id="lSqrt"><span class="kw">public static</span><span class="ty">double</span><span class="nm">sqrt(double a)</span><span class="badge st">static</span></div>
+        <div class="ln ind"><span class="cm" style="margin-left:0">// ... more static methods, no instance fields at all</span></div>
+        <div class="ln"><span class="nm">}</span></div>
       </div>
-      <div class="lane" id="lane"><b>&rarr;</b><span>Math.<br>the class name</span></div>
-      <div class="card main" id="main">
-        <p class="hd">class Main &middot; main(String[] args)</p>
-        <p class="who">main</p>
-        <div class="row" id="v-pow"><span class="f"><i>double</i>num1</span><span class="val e"></span></div>
-        <div class="row" id="v-sqrt"><span class="f"><i>double</i>num2</span><span class="val e"></span></div>
-        <div class="row" id="v-floor"><span class="f"><i>double</i>num3</span><span class="val e"></span></div>
-        <div class="row" id="v-round"><span class="f"><i>long</i>num4</span><span class="val e"></span></div>
-        <p class="sect">Math objects built</p>
-        <div class="none">none</div>
+      <div class="card use">
+        <p class="hd">class Main &middot; two ways to use it</p>
+        <div class="try">
+          <button id="bCall"><span class="nm">Math.round(12.8)</span><small>call it on the class name</small></button>
+          <button id="bNew"><span class="kw">new</span> Math()<small>try to build an object</small></button>
+        </div>
+        <div class="res" id="res">?</div>
+        <div class="same">
+          <p class="hd">your exercise &middot; same shape</p>
+          <div class="ln"><span class="kw">public class</span><span class="nm">NameFormatter {</span></div>
+          <div class="ln ind"><span class="kw">private</span><span class="nm">NameFormatter() { }</span><span class="badge pr">private</span></div>
+          <div class="ln ind"><span class="kw">public static</span><span class="ty">String</span><span class="nm">format(...)</span><span class="badge st">static</span></div>
+          <div class="ln"><span class="nm">}</span></div>
+        </div>
       </div>
     </div>
     <div class="caption" id="caption">
-      <div class="t" id="status">Math holds <b class="a">only static tools</b>. Press one: you call it on the class name, no object needed.</div>
+      <div class="t" id="status">Two things make a utility class: a <b class="w">private constructor</b> and <b class="g">only static members</b>. Press a button to see why.</div>
       <button class="reset" id="bReset">Reset</button>
     </div>
   </div>
 
   <div class="take">
     <p class="tk">The one idea</p>
-    <p><b>A utility class is a toolbox of static methods.</b> You call each tool on the class name, <code>Math.sqrt(25)</code>,
-    and the answer comes straight back. Its constructor is private, so nobody builds a Math object: there is nothing to build.</p>
+    <p><b>A utility class is never instantiated: its constructor is private, and everything in it is static, so you call it on the class name.</b>
+    <code>Math.round(12.8)</code> works, <code>new Math()</code> does not compile. Your <code>NameFormatter</code> is built the same way.</p>
   </div>
   <div id="rail"></div>
 </div>
@@ -188,90 +149,30 @@
   "use strict";
   var $=function(s){return document.querySelector(s);};
   var reduce=matchMedia("(prefers-reduced-motion: reduce)").matches;
-  var stage=$("#stage"),status=$("#status"),caption=$("#caption"),lane=$("#lane"),box=$("#box"),lock=$("#lock"),hand=$("#hand");
-  var VAR={pow:"num1",sqrt:"num2",floor:"num3",round:"num4"};
-  var DEF={pA:"5",pB:"2",sA:"25",fA:"12.8",rA:"12.8"};
+  var res=$("#res"),status=$("#status"),caption=$("#caption");
+  var lines=document.querySelectorAll("#cls .ln");
 
-  function say(html,tone,line){
-    caption.className="caption"+(tone?" "+tone:"");
-    status.innerHTML=html+(line?'<span class="line">'+line+'</span>':"");
-  }
-  /* a double as Java prints it: 25.0, 12.0, 1.0E7, NaN, Infinity */
-  function jDouble(x){
-    if(isNaN(x)) return "NaN";
-    if(!isFinite(x)) return x>0?"Infinity":"-Infinity";
-    if(x===0) return (1/x<0)?"-0.0":"0.0";
-    var a=Math.abs(x);
-    if(a>=1e-3&&a<1e7){ var s=String(x); return s.indexOf(".")<0?s+".0":s; }
-    var e=x.toExponential(), p=e.split("e"), m=p[0];
-    if(m.indexOf(".")<0) m+=".0";
-    return m+"E"+(p[1].charAt(0)==="+"?p[1].slice(1):p[1]);
-  }
-  /* a literal as typed in Java source: 25 stays 25, 12.8 stays 12.8 */
-  function num(id){
-    var t=$("#"+id).value.trim();
-    if(!/^-?(\d+\.?\d*|\.\d+)$/.test(t)) return null;
-    var v=Number(t); if(Math.abs(v)>1e12) return null;
-    return {v:v,src:t};
-  }
-  function bad(){ say('Type a plain number in the box, like <b class="a">25</b> or <b class="a">12.8</b>.',"w"); }
-
-  function use(t){
-    var r,call;
-    if(t==="pow"){
-      var a=num("pA"),b=num("pB"); if(!a||!b) return bad();
-      r=jDouble(Math.pow(a.v,b.v)); call="Math.pow("+a.src+", "+b.src+")";
-    } else {
-      var x=num({sqrt:"sA",floor:"fA",round:"rA"}[t]); if(!x) return bad();
-      if(t==="sqrt") r=jDouble(Math.sqrt(x.v));
-      else if(t==="floor") r=jDouble(Math.floor(x.v));
-      else { var k=Math.round(x.v); r=String(k===0?0:k); }
-      call="Math."+t+"("+x.src+")";
-    }
-    hand.classList.remove("show"); lock.classList.remove("bad");
-    document.querySelectorAll(".tool").forEach(function(e){ e.classList.toggle("on",e.getAttribute("data-t")===t); });
-    box.classList.add("flash"); lane.classList.add("on");
-    var row=$("#v-"+t);
-    fly(document.querySelector('.tool[data-t="'+t+'"] button'),row.querySelector(".val"),r,function(){
-      var v=row.querySelector(".val"); v.className="val"; v.textContent=r;
-      row.classList.remove("chg"); void row.offsetWidth; row.classList.add("chg");
-      box.classList.remove("flash"); lane.classList.remove("on");
-    });
-    var type=t==="round"?"long":"double";
-    var extra=t==="round"?' round returns a <b class="y">long</b>, so no .0.':"";
-    say('<b class="y">'+call+'</b> ran on the class itself: <b class="y">'+r+'</b> went straight to main. No object, no <b class="a">new</b>.'+extra,
-      "y",type+" "+VAR[t]+" = "+call+";");
-  }
-  function fly(from,to,text,done){
-    if(reduce){ done(); return; }
-    var s=stage.getBoundingClientRect(),f=from.getBoundingClientRect(),d=to.getBoundingClientRect();
-    var el=document.createElement("div"); el.className="fly"; el.textContent=text;
-    el.style.left=(f.right-s.left-10)+"px"; el.style.top=(f.top-s.top+f.height/2-14)+"px";
-    stage.appendChild(el);
-    var dx=d.left-f.right+10, dy=d.top-f.top+d.height/2-f.height/2;
-    requestAnimationFrame(function(){ requestAnimationFrame(function(){ el.style.transform="translate("+dx+"px,"+dy+"px)"; }); });
-    setTimeout(function(){ el.style.opacity="0"; done(); },680);
-    setTimeout(function(){ el.remove(); },900);
+  function say(html,tone){ caption.className="caption"+(tone?" "+tone:""); status.innerHTML=html; }
+  function clear(){ lines.forEach(function(l){ l.classList.remove("hit","block","dim"); }); $("#bCall").classList.remove("on"); $("#bNew").classList.remove("on"); }
+  function call(){
+    clear(); $("#bCall").classList.add("on");
+    lines.forEach(function(l){ if(l.id!=="lRound") l.classList.add("dim"); });
+    $("#lRound").classList.add("hit");
+    res.className="res"; void res.offsetWidth; res.className="res g"; res.textContent="13";
+    say('<b class="y">Math.round(12.8)</b> went from the class name straight to the <b class="g">static</b> method. No object was created, none was needed: static members belong to the class, not to an object.',"g");
   }
   function tryNew(){
-    document.querySelectorAll(".tool").forEach(function(e){ e.classList.remove("on"); });
-    lock.classList.remove("bad"); void lock.offsetWidth; lock.classList.add("bad");
-    hand.classList.add("show");
-    say('Blocked at the lock: the constructor is <b class="w">private</b>, so a utility class is <b class="w">never instantiated</b>. Use its tools on the class name.',
-      "w","Math potato = new Math();");
+    clear(); $("#bNew").classList.add("on");
+    lines.forEach(function(l){ if(l.id!=="lCtor") l.classList.add("dim"); });
+    $("#lCtor").classList.remove("block"); void $("#lCtor").offsetWidth; $("#lCtor").classList.add("block");
+    res.className="res"; void res.offsetWidth; res.className="res w"; res.textContent="error: Math() has private access in Math";
+    say('<b class="w">new Math()</b> needs the constructor, and it is <b class="w">private</b>: only code inside Math can call it, and nothing does. That is on purpose. There is no Math object to make, every member is already reachable through the class name.',"w");
   }
   function reset(){
-    Object.keys(DEF).forEach(function(id){ $("#"+id).value=DEF[id]; });
-    Object.keys(VAR).forEach(function(t){ var row=$("#v-"+t); row.classList.remove("chg"); row.querySelector(".val").className="val e"; row.querySelector(".val").textContent=""; });
-    document.querySelectorAll(".tool").forEach(function(e){ e.classList.remove("on"); });
-    hand.classList.remove("show"); lock.classList.remove("bad");
-    say('Math holds <b class="a">only static tools</b>. Press one: you call it on the class name, no object needed.');
+    clear(); res.className="res"; res.textContent="?";
+    say('Two things make a utility class: a <b class="w">private constructor</b> and <b class="g">only static members</b>. Press a button to see why.');
   }
-  box.addEventListener("click",function(e){ var b=e.target.closest(".tool button"); if(b) use(b.getAttribute("data-t")); });
-  box.addEventListener("keydown",function(e){
-    if(e.key!=="Enter"||e.target.tagName!=="INPUT") return;
-    var t=e.target.closest(".tool"); if(t) use(t.getAttribute("data-t"));
-  });
+  $("#bCall").addEventListener("click",call);
   $("#bNew").addEventListener("click",tryNew);
   $("#bReset").addEventListener("click",reset);
 
