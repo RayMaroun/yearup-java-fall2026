@@ -260,12 +260,12 @@
         ['if (paid == price) {','== asks if they are the same object: two new objects, false, Still owing'],
         ['if (paid.compareTo(price)) {','does not compile: compareTo returns an int, and if needs a boolean']]},
     {f:"CarTest.java (src/test/java)",b:3,w:'JUnit 5 does not run a private @Test method: it is skipped in silence, so the test can never fail. Make it public or leave the access word off',l:[
-      'class CarTest {','    @Test','    private void accelerate_should_increaseCarSpeed() {','        Car car = new Car("Ford", "Mustang");','        car.accelerate(15);','        assertEquals(15, car.getSpeed());','    }','}'],
-     x:[['    public void accelerate_should_increaseCarSpeed() {','a public void instance method: JUnit finds it and runs it'],
-        ['    public static void accelerate_should_increaseCarSpeed() {','JUnit 5 skips static @Test methods too: still never runs'],
-        ['    private void accelerate_should_increaseCarSpeed() throws Exception {','still private, still skipped']]},
+      'class CarTest {','    @Test','    private void accelerate_NormalSpeedChange_SpeedIncreased() {','        Car car = new Car("Ford", "Mustang");','        car.accelerate(15);','        assertEquals(15, car.getSpeed());','    }','}'],
+     x:[['    public void accelerate_NormalSpeedChange_SpeedIncreased() {','a public void instance method: JUnit finds it and runs it'],
+        ['    public static void accelerate_NormalSpeedChange_SpeedIncreased() {','JUnit 5 skips static @Test methods too: still never runs'],
+        ['    private void accelerate_NormalSpeedChange_SpeedIncreased() throws Exception {','still private, still skipped']]},
     {f:"CarTest.java",b:8,w:'it passes today, but the order is backwards: assertEquals reads (expected, actual). When it fails, the report says expected: <the real speed> but was: <5>, which points you at the wrong number. Expected goes first',l:[
-      '@Test','public void brake_should_decreaseCarSpeed() {','    Car car = new Car("Toyota", "Prius");','    int expectedSpeed = 5;','    car.accelerate(15);','    car.brake(10);','    int actualSpeed = car.getSpeed();','    assertEquals(actualSpeed, expectedSpeed);','}'],
+      '@Test','public void brake_NormalSpeedChange_SpeedDecreased() {','    Car car = new Car("Toyota", "Prius");','    int expectedSpeed = 5;','    car.accelerate(15);','    car.brake(10);','    int actualSpeed = car.getSpeed();','    assertEquals(actualSpeed, expectedSpeed);','}'],
      x:[['    assertEquals(expectedSpeed, actualSpeed);','expected first, actual second: a failure now reads expected: <5> but was: <the real speed>'],
         ['    assertEquals(actualSpeed, actualSpeed);','compares the speed with itself: always passes, tests nothing'],
         ['    assertTrue(expectedSpeed, actualSpeed);','does not compile: assertTrue wants a boolean, not two ints']]},

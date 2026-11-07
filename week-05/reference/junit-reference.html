@@ -145,8 +145,8 @@ import static org.junit.jupiter.api.Assertions.*;</code></div>
         <div class="row"><span class="k">test class</span><code>class CarTest {  <span class="c">// in src/test/java/com/pluralsight</span></code></div>
         <div class="row"><span class="k">@Test</span><code>@Test  <span class="c">// tells the JUnit runner: run this method</span></code></div>
         <div class="row"><span class="k">name</span><code>public void accelerate_NormalSpeedChange_SpeedIncreased() {
-<span class="c">// reads like a sentence; the workbook style is methodName_should_expectedBehavior:</span>
-<span class="c">// accelerate_should_increaseCarSpeed</span></code></div>
+<span class="c">// MethodName_StateUnderTest_ExpectedBehavior, the course convention;</span>
+<span class="c">// the workbook writes the same test as accelerate_should_increaseCarSpeed</span></code></div>
         <div class="row"><span class="k">Arrange</span><code>    Car remoCar = new Car("Bugatti", "Chevron");
     int speedChange = 15;
     int expectedSpeed = 15;  <span class="c">// named variables, no magic numbers</span></code></div>

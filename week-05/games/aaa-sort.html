@@ -196,13 +196,13 @@
      A rule [x, y, why] means line x must come before line y inside the same section (y uses x).
      The rules are complete: lines with no rule between them may swap. Section order fixes everything across sections. */
   var TESTS=[
-    { name:"accelerate_should_increaseCarSpeed", cls:"Car", method:"accelerate",
+    { name:"accelerate_NormalSpeedChange_SpeedIncreased", cls:"Car", method:"accelerate",
       lines:{a:["Car car = new Car(\"Bugatti\", \"Chevron\");","arrange","Creating the object under test is setup: Arrange."],
              b:["car.accelerate(15);","act","accelerate is the method under test: Act."],
              c:["assertEquals(15, car.getSpeed());","assert","Checking the speed after the call: Assert."]},
       rules:[] },
 
-    { name:"accelerate_should_increaseCarSpeed", cls:"Car", method:"accelerate",
+    { name:"accelerate_NormalSpeedChange_SpeedIncreased", cls:"Car", method:"accelerate",
       lines:{a:["Car car = new Car(\"Ford\", \"Mustang\");","arrange","Creating the object under test is setup: Arrange."],
              b:["int speedChange = 15;","arrange","The input is a variable declared in Arrange, not a magic number."],
              c:["car.accelerate(speedChange);","act","accelerate is the method under test: Act."],
@@ -210,7 +210,7 @@
              e:["assertEquals(15, actualSpeed);","assert","The assertion itself: Assert."]},
       rules:[["d","e","actualSpeed is used before it is declared."]] },
 
-    { name:"brake_should_decreaseCarSpeed", cls:"Car", method:"brake",
+    { name:"brake_NormalSpeedChange_SpeedDecreased", cls:"Car", method:"brake",
       lines:{a:["Car car = new Car(\"Toyota\", \"Prius\");","arrange","Creating the object under test is setup: Arrange."],
              b:["car.accelerate(15);","arrange","This test is about brake. accelerate only gets the car moving first: a setup call, Arrange."],
              c:["car.brake(10);","act","brake is the method under test: Act."],
@@ -219,7 +219,7 @@
       rules:[["a","b","accelerate is called on car before car exists."],
              ["d","e","actualSpeed is used before it is declared."]] },
 
-    { name:"brake_should_stopCar_whenChangeIsGreater", cls:"Car", method:"brake",
+    { name:"brake_SpeedChangeGreaterThanActualSpeed_SpeedIsZero", cls:"Car", method:"brake",
       lines:{a:["Car car = new Car(\"Toyota\", \"Rav4\");","arrange","Creating the object under test is setup: Arrange."],
              b:["int expectedSpeed = 0;","arrange","The expected result is declared up front, in Arrange."],
              c:["car.accelerate(15);","arrange","This test is about brake. accelerate only gets the car moving first: a setup call, Arrange."],
@@ -227,20 +227,20 @@
              e:["assertEquals(expectedSpeed, car.getSpeed());","assert","The assertion itself: Assert."]},
       rules:[["a","c","accelerate is called on car before car exists."]] },
 
-    { name:"increment_should_addOne", cls:"Counter", method:"increment",
+    { name:"increment_CountIsZero_CountIsOne", cls:"Counter", method:"increment",
       lines:{a:["Counter counter = new Counter();","arrange","Creating the object under test is setup: Arrange."],
              b:["counter.increment();","act","increment is the method under test: Act."],
              c:["assertEquals(1, counter.getCount());","assert","Checking the count after the call: Assert."]},
       rules:[] },
 
-    { name:"reset_should_setCountToZero", cls:"Counter", method:"reset",
+    { name:"reset_CountIsSeven_CountIsZero", cls:"Counter", method:"reset",
       lines:{a:["Counter counter = new Counter();","arrange","Creating the object under test is setup: Arrange."],
              b:["counter.incrementBy(7);","arrange","This test is about reset. incrementBy only puts a count in first: a setup call, Arrange."],
              c:["counter.reset();","act","reset is the method under test: Act."],
              d:["assertEquals(0, counter.getCount());","assert","Checking the count after the call: Assert."]},
       rules:[["a","b","incrementBy is called on counter before counter exists."]] },
 
-    { name:"raise_should_increaseTarget", cls:"Thermostat", method:"raise",
+    { name:"raise_TargetIsTwenty_TargetIsTwentyThree", cls:"Thermostat", method:"raise",
       lines:{a:["Thermostat thermostat = new Thermostat(20);","arrange","Creating the object under test is setup: Arrange."],
              b:["int expectedTarget = 23;","arrange","The expected result is declared up front, in Arrange."],
              c:["thermostat.raise(3);","act","raise is the method under test: Act."],
@@ -248,21 +248,21 @@
              e:["assertEquals(expectedTarget, actualTarget);","assert","The assertion itself: Assert."]},
       rules:[["d","e","actualTarget is used before it is declared."]] },
 
-    { name:"isHeating_should_returnTrue_whenColderThanTarget", cls:"Thermostat", method:"isHeating",
+    { name:"isHeating_ColderThanTarget_True", cls:"Thermostat", method:"isHeating",
       lines:{a:["Thermostat thermostat = new Thermostat(21);","arrange","Creating the object under test is setup: Arrange."],
              b:["int currentTemp = 18;","arrange","The input is a variable declared in Arrange."],
              c:["boolean heating = thermostat.isHeating(currentTemp);","act","isHeating is the method under test. Calling it and keeping what it returns is Act."],
              d:["assertTrue(heating);","assert","The assertion itself: Assert."]},
       rules:[] },
 
-    { name:"addSong_should_increaseSongCount", cls:"Playlist", method:"addSong",
+    { name:"addSong_EmptyPlaylist_SongCountIsOne", cls:"Playlist", method:"addSong",
       lines:{a:["Playlist playlist = new Playlist(\"Morning Run\");","arrange","Creating the object under test is setup: Arrange."],
              b:["playlist.addSong(\"Sunrise\");","act","addSong is the method under test: Act."],
              c:["assertEquals(1, playlist.getSongCount());","assert","Checking the count after the call: Assert."],
              d:["assertFalse(playlist.isEmpty());","assert","A second check on the same result: still Assert."]},
       rules:[] },
 
-    { name:"removeSong_should_decreaseSongCount", cls:"Playlist", method:"removeSong",
+    { name:"removeSong_TwoSongs_SongCountIsOne", cls:"Playlist", method:"removeSong",
       lines:{a:["Playlist playlist = new Playlist(\"Morning Run\");","arrange","Creating the object under test is setup: Arrange."],
              b:["playlist.addSong(\"Sunrise\");","arrange","This test is about removeSong. addSong only fills the playlist first: a setup call, Arrange."],
              c:["playlist.addSong(\"Tempo\");","arrange","This test is about removeSong. addSong only fills the playlist first: a setup call, Arrange."],
