@@ -36,41 +36,39 @@
   .stage{position:relative;background:linear-gradient(180deg,rgba(255,255,255,.03),rgba(255,255,255,.01));
     border:1px solid var(--line);border-radius:24px;padding:22px;
     box-shadow:0 1px 0 rgba(255,255,255,.06) inset,0 30px 80px -30px rgba(0,0,0,.8)}
-  .scene{position:relative;display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1.5fr);gap:22px;min-height:330px;align-items:stretch}
-  @media (max-width:820px){.scene{grid-template-columns:1fr}}
-  .hd{font-family:var(--mono);font-size:.62rem;letter-spacing:.16em;text-transform:uppercase;color:var(--muted);margin:0 0 8px}
+  .scene{position:relative;display:grid;grid-template-columns:1fr 1fr 1fr;gap:70px;align-items:start;min-height:280px}
+  @media (max-width:820px){.scene{grid-template-columns:1fr;gap:26px}}
+  svg.wires{position:absolute;inset:0;width:100%;height:100%;pointer-events:none;overflow:visible}
+  .wire{fill:none;stroke:var(--accent);stroke-width:2.5;stroke-dasharray:6 5;opacity:0;transition:opacity .4s}
+  .wire.on{opacity:1}
+  .wire.bad{stroke:var(--warn)}
 
-  .outside{border:1px dashed rgba(132,150,182,.35);border-radius:16px;padding:14px;display:flex;flex-direction:column}
-  .parts{display:flex;flex-wrap:wrap;gap:10px;align-content:flex-start;min-height:120px}
-  .gone{font-family:var(--mono);font-size:.74rem;color:var(--muted);padding:40px 0;text-align:center;width:100%}
+  .cls{position:relative;z-index:1;border:1px solid rgba(255,255,255,.2);background:rgba(255,255,255,.045);border-radius:16px;padding:12px 14px 14px;transition:.3s}
+  .cls .nm{font-family:var(--disp);font-weight:700;font-size:1.25rem;color:var(--ink);margin:0 0 2px}
+  .cls .sub{font-family:var(--mono);font-size:.62rem;letter-spacing:.14em;text-transform:uppercase;color:var(--muted);margin:0 0 10px}
+  .cls.card{border-color:rgba(255,200,98,.55);background:rgba(255,200,98,.07)}
+  .cls.gone{opacity:.28;filter:grayscale(1)}
+  .cls.gone .nm::after{content:"  (removed)";font-family:var(--mono);font-weight:400;font-size:.7rem;color:var(--warn)}
+  .cols{display:grid;grid-template-columns:1fr auto;gap:4px 14px;font-family:var(--mono);font-size:.8rem}
+  .cols .h{font-size:.58rem;letter-spacing:.12em;text-transform:uppercase;color:rgba(132,150,182,.7);padding-bottom:2px;border-bottom:1px solid var(--line)}
+  .cols .a{color:#c9d4ea;padding:5px 0}
+  .cols .t{color:var(--muted);padding:5px 0;text-align:right}
+  .cols .a.new,.cols .t.new{animation:pop .35s}
+  .cols .t.cl{color:var(--accent);font-weight:500;padding:3px 8px;border-radius:7px;border:1px solid rgba(110,160,255,.5);background:rgba(110,160,255,.12)}
+  .cols .t.cl.bad{color:var(--warn);border-color:rgba(255,106,106,.6);background:rgba(255,106,106,.12);text-decoration:line-through}
+  .cols .a.bad{color:var(--warn)}
+  .cls .none{grid-column:1/-1;font-family:var(--mono);font-size:.7rem;color:var(--muted);font-style:italic;padding:6px 0 0}
 
-  .car{border:2px solid rgba(110,160,255,.55);background:rgba(110,160,255,.05);border-radius:20px;padding:14px;display:flex;flex-direction:column;transition:.3s}
-  .car.full{box-shadow:0 0 40px -14px rgba(110,160,255,.9)}
-  .car .who{font-family:var(--disp);font-weight:700;font-size:1.4rem;margin:0 0 2px;color:var(--ink)}
-  .car .own{font-family:var(--mono);font-size:.72rem;color:#c9d4ea;margin:0 0 12px}
-  .car .own i{font-style:normal;color:var(--muted)}
-  .slots{display:flex;flex-wrap:wrap;gap:10px;min-height:120px;align-content:flex-start}
-  .empty{font-family:var(--mono);font-size:.74rem;color:var(--muted);padding:40px 0;text-align:center;width:100%;border:1px dashed rgba(132,150,182,.3);border-radius:12px}
-  .has{margin-top:auto;padding-top:12px;font-family:var(--mono);font-size:.8rem;color:var(--muted);line-height:1.7}
-  .has b{color:var(--accent);font-weight:500}
-
-  .part{border:1px solid rgba(255,255,255,.22);background:rgba(255,255,255,.05);border-radius:12px;padding:10px 12px;min-width:112px;cursor:pointer;
-    font-family:var(--mono);font-size:.74rem;color:#c9d4ea;transition:border-color .2s,background .2s,transform .2s;animation:pop .3s}
-  .part .nm{font-family:var(--disp);font-weight:700;font-size:1rem;color:var(--ink);margin-bottom:4px}
-  .part .f{color:var(--muted)} .part .f b{color:#f78c6c;font-weight:400}
-  .part:hover{border-color:var(--gold)}
-  .part.on{border-color:var(--gold);background:rgba(255,200,98,.14);transform:translateY(-3px)}
-  .part.engine .nm::before{content:"\25A3  ";color:var(--accent)}
-  .part.list{min-width:200px}
-  .part.list .nm::before{content:"\2630  ";color:var(--accent)}
-  .chips{display:flex;gap:6px;flex-wrap:wrap;margin-top:6px}
-  .chip{font-family:var(--mono);font-size:.68rem;padding:4px 8px;border-radius:8px;border:1px solid rgba(255,255,255,.18);background:rgba(0,0,0,.25);color:#c9d4ea}
-  .chip::before{content:"\25CE ";color:var(--accent)}
-
-  .ctl{display:flex;gap:10px;margin-top:16px;flex-wrap:wrap}
-  .ctl button{font-family:var(--body);font-weight:500;font-size:.95rem;padding:11px 18px;border-radius:12px;cursor:pointer;
+  .ctl{display:flex;gap:10px;margin-top:18px;flex-wrap:wrap;align-items:center}
+  .ctl .lbl{font-family:var(--mono);font-size:.62rem;letter-spacing:.14em;text-transform:uppercase;color:var(--muted);margin-right:4px}
+  .ctl button{font-family:var(--body);font-weight:500;font-size:.9rem;padding:10px 16px;border-radius:12px;cursor:pointer;
     border:1px solid rgba(255,200,98,.5);background:rgba(255,200,98,.1);color:var(--gold);transition:.15s}
   .ctl button:hover{background:rgba(255,200,98,.2);border-color:var(--gold)}
+  .ctl button.done{border-color:rgba(70,217,138,.5);color:var(--good);background:rgba(70,217,138,.08);cursor:default}
+  .ctl button.probe{border-color:rgba(255,106,106,.45);color:#ff9a9a;background:rgba(255,106,106,.06)}
+  .ctl button.probe:hover{background:rgba(255,106,106,.14)}
+  .ctl button.probe.on{background:rgba(255,106,106,.22);color:var(--ink)}
+  .ctl button:disabled{opacity:.35;cursor:not-allowed}
 
   /* the one sentence */
   .caption{display:flex;gap:14px;align-items:flex-start;margin:18px 2px 0;padding-top:16px;border-top:1px solid var(--line)}
@@ -95,34 +93,56 @@
 <div class="wrap">
   <p class="tag">Workbook 4a &middot; Section 5-1 &middot; Class relationships</p>
   <h1>Has-A</h1>
-  <p class="lede"><b>Objects can be made of other objects. Put the parts in, take them out, click a part.</b></p>
+  <p class="lede"><b>Three classes and their attributes. Give one class an attribute whose type is another class, and watch what changes.</b></p>
 
   <div class="stage">
-    <div class="scene">
-      <div class="outside">
-        <p class="hd">on their own &middot; each one is a complete object</p>
-        <div class="parts" id="outside"></div>
+    <div class="scene" id="scene">
+      <svg class="wires" id="wires" aria-hidden="true">
+        <defs><marker id="arr" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto"><path d="M0,0 L10,5 L0,10 z" fill="currentColor"/></marker></defs>
+        <path class="wire" id="wDeck" marker-end="url(#arr)" style="color:var(--accent)"/>
+        <path class="wire" id="wHand" marker-end="url(#arr)" style="color:var(--accent)"/>
+      </svg>
+      <div class="cls" id="cDeck">
+        <p class="nm">Deck</p><p class="sub">class</p>
+        <div class="cols"><span class="h">attribute</span><span class="h">type</span>
+          <span class="a">size</span><span class="t">number</span>
+          <span class="none" id="nDeck">nothing else yet</span>
+        </div>
       </div>
-      <div class="car" id="car">
-        <p class="who">a Car</p>
-        <p class="own">its own facts: <i>color</i> blue, <i>year</i> 2024</p>
-        <div class="slots" id="inside"></div>
-        <p class="has" id="has">a Car has: <b>nothing yet</b></p>
+      <div class="cls card" id="cCard">
+        <p class="nm">Card</p><p class="sub">class</p>
+        <div class="cols"><span class="h">attribute</span><span class="h">type</span>
+          <span class="a">suit</span><span class="t">text</span>
+          <span class="a">value</span><span class="t">text</span>
+          <span class="a">face up</span><span class="t">yes or no</span>
+        </div>
+      </div>
+      <div class="cls" id="cHand">
+        <p class="nm">Hand</p><p class="sub">class</p>
+        <div class="cols"><span class="h">attribute</span><span class="h">type</span>
+          <span class="a">size</span><span class="t">number</span>
+          <span class="none" id="nHand">nothing else yet</span>
+        </div>
       </div>
     </div>
     <div class="ctl">
-      <button id="bToggle">put the parts in</button>
+      <span class="lbl">add</span>
+      <button id="bDeck">a Deck has cards</button>
+      <button id="bHand">a Hand has cards</button>
+      <span class="lbl" style="margin-left:12px">probe</span>
+      <button class="probe" id="pCard" disabled>take Card away</button>
+      <button class="probe" id="pDeck" disabled>take Deck away</button>
       <button class="reset" id="bReset">Reset</button>
     </div>
     <div class="caption" id="caption">
-      <div class="t" id="status">An Engine, and a list of Wheels, each a complete object with its own facts. The Car is also an object, with facts of its own. Right now none of them has anything to do with the others.</div>
+      <div class="t" id="status">Every attribute here has a built-in type: <b class="y">number</b>, <b class="y">text</b>, <b class="y">yes or no</b>. That is all you have used so far. Press <b class="a">a Deck has cards</b>.</div>
     </div>
   </div>
 
   <div class="take">
     <p class="tk">The one idea</p>
-    <p><b>Has-a: an object keeps other objects inside it, as its parts.</b> A Car has an Engine, and has a list of Wheels.
-    The parts stay what they are, each with its own facts; the Car is the thing that is made of them.</p>
+    <p><b>A has-a relationship is an attribute whose type is another class.</b> A Deck has cards, so Deck holds Card and depends on it.
+    A Hand has cards, the same way. Card gains nothing and knows nothing: the dependency runs one way, from the holder to the held.</p>
   </div>
   <div id="rail"></div>
 </div>
@@ -130,41 +150,56 @@
 (function(){
   "use strict";
   var $=function(s){return document.querySelector(s);};
-  var PARTS=[{k:"engine",nm:"Engine",f:"horsepower <b>150</b>"},
-             {k:"list",nm:"Wheels",f:"a list holding <b>4</b> Wheel objects",chips:["front left","front right","rear left","rear right"]}];
-  var inside=false, sel=-1;
-  var out=$("#outside"),inn=$("#inside"),car=$("#car"),has=$("#has"),status=$("#status"),caption=$("#caption"),btn=$("#bToggle");
+  var hasDeck=false, hasHand=false, probe=null;
+  var status=$("#status"),caption=$("#caption"),scene=$("#scene");
 
   function say(html,tone){ caption.className="caption"+(tone?" "+tone:""); status.innerHTML=html; }
-  function partEl(p,i){ var d=document.createElement("div"); d.className="part "+p.k+(sel===i?" on":""); d.setAttribute("data-i",i);
-    d.innerHTML='<div class="nm">'+p.nm+'</div><div class="f">'+p.f+'</div>'+(p.chips?'<div class="chips">'+p.chips.map(function(c){return '<span class="chip">'+c+'</span>';}).join('')+'</div>':''); return d; }
+  function addLine(id,noneId){
+    var none=$("#"+noneId); if(!none) return;
+    var a=document.createElement("span"); a.className="a new"; a.id="a"+id; a.textContent="cards";
+    var t=document.createElement("span"); t.className="t cl new"; t.id="t"+id; t.textContent="Card, one or more";
+    none.parentNode.insertBefore(a,none); none.parentNode.insertBefore(t,none); none.remove();
+  }
+  function wire(id,pillEl,boxEl,toEl,on,bad){
+    var p=$("#w"+id); if(!on){ p.className.baseVal="wire"; return; }
+    var s=scene.getBoundingClientRect(),b=boxEl.getBoundingClientRect(),f=(pillEl||boxEl).getBoundingClientRect(),t=toEl.getBoundingClientRect();
+    var vertical=Math.abs(t.top-b.top)>Math.abs(t.left-b.left);
+    var x1,y1,x2,y2;
+    if(vertical){ x1=b.left+b.width/2-s.left; y1=(b.top<t.top?b.bottom:b.top)-s.top; x2=t.left+t.width/2-s.left; y2=(b.top<t.top?t.top:t.bottom)-s.top; }
+    else { var left=b.left<t.left; x1=(left?b.right:b.left)-s.left; y1=f.top+f.height/2-s.top; x2=(left?t.left:t.right)-s.left; y2=t.top+t.height/2-s.top; }
+    var mx=(x1+x2)/2, my=(y1+y2)/2;
+    p.setAttribute("d",vertical?"M"+x1+","+y1+" C"+x1+","+my+" "+x2+","+my+" "+x2+","+y2:"M"+x1+","+y1+" C"+mx+","+y1+" "+mx+","+y2+" "+x2+","+y2);
+    p.className.baseVal="wire on"+(bad?" bad":""); p.style.color=bad?"var(--warn)":"var(--accent)";
+  }
   function render(){
-    out.innerHTML=""; inn.innerHTML="";
-    if(inside){ var g=document.createElement("div"); g.className="gone"; g.textContent="nothing out here: the parts are inside the car"; out.appendChild(g); }
-    else { var e=document.createElement("div"); e.className="empty"; e.textContent="empty: a car with no parts"; inn.appendChild(e); }
-    PARTS.forEach(function(p,i){ (inside?inn:out).appendChild(partEl(p,i)); });
-    car.classList.toggle("full",inside);
-    has.innerHTML=inside?'a Car has: <b>an Engine</b> &middot; a Car has: <b>a list of Wheels</b>':'a Car has: <b>nothing yet</b>';
-    btn.textContent=inside?"take the parts out":"put the parts in";
+    var cardGone=probe==="card", deckGone=probe==="deck";
+    $("#cCard").classList.toggle("gone",cardGone); $("#cDeck").classList.toggle("gone",deckGone);
+    ["Deck","Hand"].forEach(function(id){
+      var t=$("#t"+id),a=$("#a"+id); if(t){ t.classList.toggle("bad",cardGone); a.classList.toggle("bad",cardGone); }
+    });
+    wire("Deck",$("#tDeck"),$("#cDeck"),$("#cCard"),hasDeck&&!deckGone,cardGone);
+    wire("Hand",$("#tHand"),$("#cHand"),$("#cCard"),hasHand,cardGone);
+    $("#bDeck").classList.toggle("done",hasDeck); $("#bHand").classList.toggle("done",hasHand);
+    $("#pCard").disabled=!(hasDeck||hasHand); $("#pDeck").disabled=!(hasDeck||hasHand);
+    $("#pCard").classList.toggle("on",cardGone); $("#pDeck").classList.toggle("on",deckGone);
   }
-  function toggle(){
-    inside=!inside; sel=-1; render();
-    if(inside) say('Now the Car <b class="a">has</b> an Engine and <b class="a">has</b> a list of Wheels. They are inside it: part of what the Car is. That is a has-a relationship. One part, or a whole list of parts: both are has-a.',"g");
-    else say('The parts are out again, and they are <b class="y">unchanged</b>: the same Engine, the same list of Wheels. Being inside the Car never made them less of an object.',"y");
-  }
-  function pick(e){
-    var el=e.target.closest(".part"); if(!el) return;
-    sel=+el.getAttribute("data-i"); render();
-    var p=PARTS[sel];
-    if(p.k==="list") say((inside?'Inside the Car, ':'')+'the <b class="y">Wheels</b> part is a <b class="a">list</b>: one holder with four Wheel objects in it. The Car holds the list, the list holds the wheels. Has-a works at every level.',"y");
-    else if(inside) say('This '+p.nm+' is <b class="y">inside the Car</b>, and it is still <b class="a">its own object</b>, with its own facts. The Car does not become an engine; it holds one.',"y");
-    else say('This '+p.nm+' is a complete object on its own. It does not need a Car to exist. A Car needs it, though: put the parts in.',"");
-  }
-  function reset(){ inside=false; sel=-1; render();
-    say('An Engine, and a list of Wheels, each a complete object with its own facts. The Car is also an object, with facts of its own. Right now none of them has anything to do with the others.'); }
-  btn.addEventListener("click",toggle);
-  out.addEventListener("click",pick); inn.addEventListener("click",pick);
+  function giveDeck(){ if(hasDeck) return; hasDeck=true; probe=null; addLine("Deck","nDeck"); render();
+    say('Deck got a new attribute, <b class="y">cards</b>, and look at its type: <b class="a">Card</b>. Not number, not text: a class you wrote. That is a has-a relationship. Deck now holds Card, and depends on it. Card did not change.',"g"); }
+  function giveHand(){ if(hasHand) return; hasHand=true; probe=null; addLine("Hand","nHand"); render();
+    say('Hand did the same: an attribute of type <b class="a">Card</b>, one or more. Two classes hold Card now. Card still has its three attributes and nothing else: it does not know who holds it.',"g"); }
+  function probeCard(){ probe=probe==="card"?null:"card"; render();
+    if(probe) say('Card is gone, and both <b class="w">cards</b> attributes are broken: their type no longer exists. Deck and Hand <b class="w">cannot be written without Card</b>. That is what "depends on" means.',"w");
+    else say('Card is back, and Deck and Hand are whole again.',"g"); }
+  function probeDeck(){ probe=probe==="deck"?null:"deck"; render();
+    if(probe) say('Deck is gone. Card <b class="g">did not notice</b>: its attributes are the same, nothing in it pointed at Deck. The dependency runs one way: from the holder to the held, never back.',"g");
+    else say('Deck is back. Nothing in Card changed either way.',""); }
+  function reset(){ location.reload(); }
+  $("#bDeck").addEventListener("click",giveDeck);
+  $("#bHand").addEventListener("click",giveHand);
+  $("#pCard").addEventListener("click",probeCard);
+  $("#pDeck").addEventListener("click",probeDeck);
   $("#bReset").addEventListener("click",reset);
+  addEventListener("resize",render);
   render();
 
   /* ambient canvas */
