@@ -196,7 +196,7 @@
     say('<b class="g">new</b> built <b class="g">'+o.id+'</b>: its own name, age and energy. The blueprint on the left is <b class="a">still empty</b>.',
       "g",'Person '+o.id+' = new Person("'+esc(o.name)+'", '+o.age+');');
     if(objs.length>=MAX){ $("#bNew").disabled=true; }
-    $("#inName").value=["Raymond","Alana","Tony"][objs.length]||""; $("#inAge").value=[35,22,27][objs.length]||"";
+    $("#inName").value=["Raymond","Nadia","Leo"][objs.length]||""; $("#inAge").value=[35,22,27][objs.length]||"";
   }
   function lit(k){ objs.forEach(function(o,i){ var e=$("#o"+i); if(e) e.classList.toggle("act",i===k); }); }
   function work(k){

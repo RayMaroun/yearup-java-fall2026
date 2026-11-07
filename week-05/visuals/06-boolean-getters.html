@@ -124,7 +124,7 @@
       <div class="card obj">
         <p class="hd">object &middot; Person</p>
         <p class="who">alana</p>
-        <div class="row"><span class="f"><i>String</i>firstName</span><span class="val s">"Alana"</span></div>
+        <div class="row"><span class="f"><i>String</i>firstName</span><span class="val s">"Nadia"</span></div>
         <div class="row" id="ageRow"><span class="f"><i>int</i>age</span>
           <span class="step"><button id="bDown" aria-label="age minus one">&minus;</button><span class="val" id="ageVal">17</span><button id="bUp" aria-label="age plus one">+</button></span></div>
         <p class="sect">getters</p>
@@ -145,7 +145,7 @@
       </div>
     </div>
     <div class="caption" id="caption">
-      <div class="t" id="status">Alana is <b class="y">17</b>. There is no adult field on the card: <b class="a">isAdult()</b> works the answer out from age.</div>
+      <div class="t" id="status">Nadia is <b class="y">17</b>. There is no adult field on the card: <b class="a">isAdult()</b> works the answer out from age.</div>
       <button class="reset" id="bReset">Reset</button>
     </div>
   </div>
@@ -214,7 +214,7 @@
   function reset(){
     age=START; last=null; tAge.textContent="age"; tAge.classList.remove("on");
     res.className="res"; res.textContent="?"; mark(null);
-    say('Alana is <b class="y">17</b>. There is no adult field on the card: <b class="a">isAdult()</b> works the answer out from age.');
+    say('Nadia is <b class="y">17</b>. There is no adult field on the card: <b class="a">isAdult()</b> works the answer out from age.');
   }
   $("#bDown").addEventListener("click",function(){ setAge(-1); });
   $("#bUp").addEventListener("click",function(){ setAge(1); });

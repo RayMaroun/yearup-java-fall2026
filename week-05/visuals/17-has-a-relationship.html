@@ -144,7 +144,7 @@
         </div>
       </div>
       <div class="foot">
-        <input id="inName" value="Alana" maxlength="12" aria-label="player name" placeholder="name">
+        <input id="inName" value="Nadia" maxlength="12" aria-label="player name" placeholder="name">
         <button class="new" id="bNew"><b>new</b> Player(name)</button>
         <button class="call" id="bRoster">printRoster()</button>
       </div>
@@ -168,7 +168,7 @@
   "use strict";
   var $=function(s){return document.querySelector(s);};
   var reduce=matchMedia("(prefers-reduced-motion: reduce)").matches;
-  var MAX=4, NEXT=["Alana","Tony","Maya","Omar",""];
+  var MAX=4, NEXT=["Nadia","Leo","Maya","Omar",""];
   var players=[], pass=-1, done=false;
   var slotsEl=$("#slots"),lanesEl=$("#lanes"),sayEl=$("#say"),status=$("#status"),caption=$("#caption"),team=$("#team");
 
@@ -246,7 +246,7 @@
 
   function reset(){
     players=[]; build(); restartWalk();
-    $("#size").textContent="0"; $("#bNew").disabled=false; $("#inName").disabled=false; $("#inName").value="Alana";
+    $("#size").textContent="0"; $("#bNew").disabled=false; $("#inName").disabled=false; $("#inName").value="Nadia";
     say('The Team has a <b class="a">players</b> list, and it is empty. Type a name and press <b class="a">new</b>.');
   }
 

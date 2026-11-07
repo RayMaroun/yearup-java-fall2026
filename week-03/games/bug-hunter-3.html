@@ -240,7 +240,7 @@
         ['    if (key = seat) {','does not compile: incompatible types: String cannot be converted to boolean'],
         ['    if (key == seat.trim()) {','still ==, still two different objects, still false']]},
     {f:MAIN,b:5,w:'"Omar" is not a key, so get returns null and .length() throws NullPointerException: Cannot invoke "String.length()" because the return value of "java.util.HashMap.get(Object)" is null',l:[
-      'HashMap<String, String> nicknames = new HashMap<>();','nicknames.put("Lina", "Li");','nicknames.put("Daniel", "Dan");','String name = "Omar";','int letters = nicknames.get(name).length();','System.out.println(name + ": " + letters + " letters");'],
+      'HashMap<String, String> nicknames = new HashMap<>();','nicknames.put("Lina", "Li");','nicknames.put("Felix", "Fe");','String name = "Omar";','int letters = nicknames.get(name).length();','System.out.println(name + ": " + letters + " letters");'],
      x:[['check nicknames.get(name) != null before calling .length()','a missing key gives null, so test for it first and skip or use 0'],
         ['int letters = nicknames.get("name").length();','looks up the word "name", which is not a key either: still null, still a crash'],
         ['int letters = nicknames.get(name).size();','does not compile: a String has length(), not size()']]},
