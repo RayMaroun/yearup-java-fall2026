@@ -36,60 +36,43 @@
   .stage{position:relative;background:linear-gradient(180deg,rgba(255,255,255,.03),rgba(255,255,255,.01));
     border:1px solid var(--line);border-radius:24px;padding:22px;
     box-shadow:0 1px 0 rgba(255,255,255,.06) inset,0 30px 80px -30px rgba(0,0,0,.8)}
-  .board{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1.5fr);gap:22px;align-items:stretch;min-height:340px}
+  .board{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1.45fr);gap:22px;align-items:stretch;min-height:340px}
   @media (max-width:820px){.board{grid-template-columns:1fr}}
-
   .card{position:relative;border-radius:16px;padding:16px 18px 14px}
   .hd{font-family:var(--mono);font-size:.62rem;letter-spacing:.16em;text-transform:uppercase;color:var(--muted);margin:0 0 4px}
   .who{font-family:var(--disp);font-weight:700;font-size:1.35rem;margin:0 0 12px;color:var(--ink);letter-spacing:-.01em}
-  .row{display:flex;align-items:center;justify-content:space-between;gap:10px;font-family:var(--mono);font-size:.82rem;
-    padding:8px 10px;border-radius:9px;margin-bottom:5px;border:1px solid transparent;transition:background .3s,border-color .3s}
-  .row .f{color:#c9d4ea;white-space:nowrap} .row .f i{font-style:normal;color:#82aaff;margin-right:6px}
-  .sect{font-family:var(--mono);font-size:.58rem;letter-spacing:.14em;text-transform:uppercase;color:rgba(132,150,182,.7);margin:12px 0 6px 2px}
-  .row.chg{background:rgba(255,200,98,.12);border-color:rgba(255,200,98,.55)}
-
-  /* the object */
   .obj{border:1px solid rgba(255,255,255,.18);background:rgba(255,255,255,.045)}
-  .val{color:#f78c6c;font-variant-numeric:tabular-nums} .val.s{color:#c3e88d}
-  .step{display:flex;align-items:center;gap:6px}
-  .step button{width:30px;height:28px;font-family:var(--mono);font-size:.95rem;border-radius:8px;cursor:pointer;
-    border:1px solid var(--line);background:rgba(0,0,0,.25);color:#ffcb6b;transition:.15s}
-  .step button:hover{border-color:var(--gold);background:rgba(255,200,98,.1)}
-  .step button:disabled{opacity:.3;cursor:not-allowed}
-  .step .val{min-width:2.2ch;text-align:center;font-size:1rem}
-  .mrow{color:#c9d4ea;padding:5px 10px}
-  .mrow i{font-style:normal;color:#82aaff;margin-right:6px}
-  .mrow em{font-style:normal;font-size:.62rem;letter-spacing:.06em;color:var(--muted)}
-  .ask{width:100%;margin-top:12px;font-family:var(--mono);font-weight:500;font-size:1rem;padding:12px;border-radius:12px;cursor:pointer;
-    border:1px solid rgba(255,200,98,.5);background:rgba(255,200,98,.1);color:var(--gold);transition:.15s}
-  .ask:hover{background:rgba(255,200,98,.2);border-color:var(--gold)}
-  .ask small{display:block;font-size:.6rem;letter-spacing:.1em;text-transform:uppercase;color:var(--muted);margin-top:3px}
+  .hint{font-family:var(--mono);font-size:.62rem;letter-spacing:.08em;color:var(--muted);margin:0 0 8px 2px}
+  .fld{display:flex;align-items:center;justify-content:space-between;gap:10px;width:100%;text-align:left;font-family:var(--mono);font-size:.86rem;
+    padding:10px 12px;border-radius:10px;margin-bottom:6px;cursor:pointer;color:#c9d4ea;
+    border:1px solid var(--line);background:rgba(0,0,0,.22);transition:border-color .2s,background .2s,transform .2s}
+  .fld i{font-style:normal;color:#82aaff;margin-right:8px} .fld.bool i{color:#c3e88d}
+  .fld em{font-style:normal;font-size:.58rem;letter-spacing:.1em;text-transform:uppercase;color:var(--muted)}
+  .fld:hover{border-color:rgba(255,200,98,.6);background:rgba(255,200,98,.08)}
+  .fld.on{border-color:var(--gold);background:rgba(255,200,98,.16);color:var(--ink);transform:translateX(4px)}
+  .fld.on em{color:var(--gold)}
 
-  /* the rule */
-  .rule{border:2px dashed rgba(110,160,255,.45);background:rgba(110,160,255,.04);display:flex;flex-direction:column}
-  .expr{display:flex;align-items:center;justify-content:center;gap:12px;flex-wrap:wrap;margin:10px 0 6px;font-family:var(--mono)}
-  .tok{min-width:62px;text-align:center;font-size:1.5rem;padding:10px 14px;border-radius:12px;border:1px solid var(--line);
-    background:rgba(0,0,0,.28);color:#c9d4ea;transition:border-color .3s,color .3s,background .3s}
-  .tok.op{min-width:0;border-color:transparent;background:none;color:#89ddff}
-  .tok.age{color:#f78c6c} .tok.age.on{border-color:rgba(255,200,98,.7);color:var(--gold);animation:pop .4s}
-  .eq{font-size:1.5rem;color:var(--muted)}
-  .res{min-width:96px;text-align:center;font-family:var(--mono);font-size:1.5rem;padding:10px 14px;border-radius:12px;
-    border:1px dashed rgba(132,150,182,.45);color:rgba(132,150,182,.6);transition:border-color .3s,color .3s,background .3s,box-shadow .3s}
-  .res.t{border:1px solid var(--good);color:var(--good);background:rgba(70,217,138,.1);box-shadow:0 0 28px -8px rgba(70,217,138,.8);animation:pop .4s}
-  .res.f{border:1px solid var(--warn);color:var(--warn);background:rgba(255,106,106,.1);box-shadow:0 0 28px -8px rgba(255,106,106,.8);animation:pop .4s}
-  .res.old{opacity:.35;box-shadow:none}
-  .track{margin-top:auto;padding-top:18px}
-  .cells{display:grid;grid-template-columns:repeat(16,minmax(0,1fr));gap:3px;position:relative}
-  .cell{height:34px;border-radius:6px;display:flex;align-items:center;justify-content:center;font-family:var(--mono);font-size:.66rem;
-    color:rgba(132,150,182,.75);border:1px solid rgba(255,106,106,.22);background:rgba(255,106,106,.04);transition:.25s}
-  .cell.yes{border-color:rgba(70,217,138,.25);background:rgba(70,217,138,.05)}
-  .cell.gate{box-shadow:-3px 0 0 0 var(--ink)}
-  .cell.here{color:var(--ink);font-weight:500;border-color:var(--gold);background:rgba(255,200,98,.16);transform:translateY(-3px)}
-  .cell.here.lt{border-color:var(--warn);background:rgba(255,106,106,.2)}
-  .cell.here.lg{border-color:var(--good);background:rgba(70,217,138,.22)}
-  .legend{display:flex;justify-content:space-between;margin-top:7px;font-family:var(--mono);font-size:.6rem;letter-spacing:.08em;color:var(--muted)}
-  .legend .lf{color:rgba(255,106,106,.8)} .legend .lt{color:rgba(70,217,138,.85)}
-  @media (max-width:520px){.cell{font-size:.5rem;height:28px}.tok,.res,.eq{font-size:1.15rem}.tok{min-width:46px;padding:8px 10px}}
+  /* the generator */
+  .gen{border:2px dashed rgba(110,160,255,.45);background:rgba(110,160,255,.04);display:flex;flex-direction:column}
+  .menu{font-family:var(--mono);font-size:.72rem;color:var(--muted);margin:2px 0 14px;display:flex;gap:6px;flex-wrap:wrap;align-items:center}
+  .menu span{padding:4px 8px;border-radius:6px;border:1px solid var(--line);background:rgba(0,0,0,.25);color:#c9d4ea}
+  .menu .sep{border:0;background:none;padding:0;color:var(--muted)}
+  .out{display:flex;flex-direction:column;gap:10px;margin:4px 0 6px}
+  .sig{display:flex;align-items:center;gap:0;flex-wrap:wrap;font-family:var(--mono);font-size:1.25rem;padding:12px 14px;border-radius:12px;
+    border:1px solid var(--line);background:rgba(0,0,0,.28);color:#c9d4ea;transition:border-color .3s,background .3s}
+  .sig.wait{color:rgba(132,150,182,.55);border-style:dashed}
+  .sig .ty{color:#82aaff;margin-right:10px;font-size:.95rem} .sig .ty.b{color:#c3e88d}
+  .sig .pre{padding:2px 7px;border-radius:7px;margin-right:1px;transition:.3s}
+  .sig .pre.get{background:rgba(110,160,255,.18);color:var(--accent)}
+  .sig .pre.is{background:rgba(70,217,138,.2);color:var(--good)}
+  .sig .pre.set{background:rgba(255,200,98,.18);color:var(--gold)}
+  .sig .nm{color:var(--ink)} .sig .par{color:var(--muted);font-size:1rem;margin-left:1px}
+  .sig .lbl{width:100%;font-size:.58rem;letter-spacing:.14em;text-transform:uppercase;color:var(--muted);margin-bottom:6px}
+  .sig.pop{animation:pop .35s}
+  .why{margin-top:auto;padding-top:14px;font-family:var(--mono);font-size:.74rem;line-height:1.6;color:var(--muted)}
+  .why b{color:var(--ink);font-weight:500}
+  .why .get{color:var(--accent)} .why .is{color:var(--good)} .why .set{color:var(--gold)}
+  @media (max-width:520px){.sig{font-size:1rem}}
 
   /* the one sentence */
   .caption{display:flex;gap:14px;align-items:flex-start;margin:18px 2px 0;padding-top:16px;border-top:1px solid var(--line)}
@@ -110,50 +93,47 @@
   .take b{color:#fff}
   @media (prefers-reduced-motion:reduce){*{animation-duration:.01ms!important;transition-duration:.01ms!important}#amb{display:none}}
 </style>
-</head>
 <body>
 <a class="back" href="../index.html#06-boolean-getters">&#8592; Week 5 index</a>
 <canvas id="amb"></canvas>
 <div class="wrap">
   <p class="tag">Workbook 4a &middot; Section 2-1</p>
   <h1>Boolean Getters</h1>
-  <p class="lede"><b>Step the age across 18 and ask the object if it is an adult.</b></p>
+  <p class="lede"><b>Pick a field and watch IntelliJ name its getter and setter.</b></p>
 
   <div class="stage">
     <div class="board">
       <div class="card obj">
-        <p class="hd">object &middot; Person</p>
-        <p class="who">nadia</p>
-        <div class="row"><span class="f"><i>String</i>firstName</span><span class="val s">"Nadia"</span></div>
-        <div class="row" id="ageRow"><span class="f"><i>int</i>age</span>
-          <span class="step"><button id="bDown" aria-label="age minus one">&minus;</button><span class="val" id="ageVal">17</span><button id="bUp" aria-label="age plus one">+</button></span></div>
-        <p class="sect">getters</p>
-        <div class="row mrow"><span><i>int</i>getAge()</span><em>get: hands back a value</em></div>
-        <div class="row mrow"><span><i>boolean</i>isAdult()</span><em>is: answers yes or no</em></div>
-        <button class="ask" id="bAsk">nadia.isAdult()<small>is, not get: it returns a boolean</small></button>
+        <p class="hd">class &middot; Person</p>
+        <p class="who">fields</p>
+        <p class="hint">click one, then read the right side</p>
+        <button class="fld" data-t="String" data-n="firstName"><span><i>String</i>firstName</span><em>get</em></button>
+        <button class="fld" data-t="int" data-n="age"><span><i>int</i>age</span><em>get</em></button>
+        <button class="fld" data-t="double" data-n="price"><span><i>double</i>price</span><em>get</em></button>
+        <button class="fld bool" data-t="boolean" data-n="learner"><span><i>boolean</i>learner</span><em>is</em></button>
+        <button class="fld bool" data-t="boolean" data-n="occupied"><span><i>boolean</i>occupied</span><em>is</em></button>
+        <button class="fld bool" data-t="boolean" data-n="isDirty" data-trap="1"><span><i>boolean</i>isDirty</span><em>is, already</em></button>
       </div>
-      <div class="card rule">
-        <p class="hd">inside isAdult() &middot; the rule</p>
-        <div class="expr" aria-live="polite">
-          <span class="tok age" id="tAge">age</span><span class="tok op">&gt;=</span><span class="tok">18</span>
-          <span class="eq">&rarr;</span><span class="res" id="res">?</span>
+      <div class="card gen">
+        <p class="hd">IntelliJ &middot; what it generates</p>
+        <div class="menu"><span>Alt + Insert</span><span class="sep">or</span><span>Cmd + N</span><span class="sep">&rarr;</span><span>Getter and Setter</span></div>
+        <div class="out" aria-live="polite">
+          <div class="sig wait" id="sGet"><span class="lbl">getter</span>pick a field</div>
+          <div class="sig wait" id="sSet"><span class="lbl">setter</span>pick a field</div>
         </div>
-        <div class="track">
-          <div class="cells" id="cells"></div>
-          <div class="legend"><span class="lf">10 to 17: false</span><span class="lt">18 and up: true</span></div>
-        </div>
+        <p class="why" id="why"><b>The rule IntelliJ follows:</b> a <span class="get">get</span>ter for every type, except a boolean, which gets an <span class="is">is</span>ter. The <span class="set">set</span>ter is always set. You never type these names; you only name the field.</p>
       </div>
     </div>
     <div class="caption" id="caption">
-      <div class="t" id="status">Nadia is <b class="y">17</b>. There is no adult field on the card: <b class="a">isAdult()</b> works the answer out from age.</div>
+      <div class="t" id="status">Click a field on the left. The names come from the field name and its type, nothing else.</div>
       <button class="reset" id="bReset">Reset</button>
     </div>
   </div>
 
   <div class="take">
     <p class="tk">The one idea</p>
-    <p><b>A getter that returns a boolean starts with is, not get, because it answers a yes or no question.</b>
-    It can return a boolean field, or, like <code>isAdult()</code>, check a rule on other fields, fresh on every call.</p>
+    <p><b>A boolean field gets an <code>is</code> getter, every other field gets a <code>get</code> getter, and the setter is always <code>set</code>.</b>
+    Name the field without <code>is</code> (<code>learner</code>, not <code>isLearner</code>) and let IntelliJ generate the rest.</p>
   </div>
   <div id="rail"></div>
 </div>
@@ -162,65 +142,41 @@
   "use strict";
   var $=function(s){return document.querySelector(s);};
   var reduce=matchMedia("(prefers-reduced-motion: reduce)").matches;
-  var MIN=10, MAX=25, START=17;
-  var age=START, last=null;
-  var status=$("#status"),caption=$("#caption"),tAge=$("#tAge"),res=$("#res"),cells=$("#cells"),ageRow=$("#ageRow");
+  var sGet=$("#sGet"),sSet=$("#sSet"),status=$("#status"),caption=$("#caption");
+  var flds=document.querySelectorAll(".fld");
 
-  for(var a=MIN;a<=MAX;a++){
-    var c=document.createElement("div");
-    c.className="cell"+(a>=18?" yes":"")+(a===18?" gate":"");
-    c.textContent=a; c.setAttribute("data-a",a); cells.appendChild(c);
+  function cap(n){ return n.charAt(0).toUpperCase()+n.slice(1); }
+  function say(html,tone){ caption.className="caption"+(tone?" "+tone:""); status.innerHTML=html; }
+  function sig(el,label,type,isBool,pre,name,params){
+    el.className="sig"; void el.offsetWidth; el.className="sig pop";
+    el.innerHTML='<span class="lbl">'+label+'</span><span class="ty'+(isBool?" b":"")+'">'+type+'</span>'
+      +'<span class="pre '+pre+'">'+pre+'</span><span class="nm">'+name+'</span><span class="par">('+params+')</span>';
   }
-  function say(html,tone,line){
-    caption.className="caption"+(tone?" "+tone:"");
-    status.innerHTML=html+(line?'<span class="line">'+line+'</span>':"");
-  }
-  function mark(asked){
-    cells.querySelectorAll(".cell").forEach(function(c){
-      var on=+c.getAttribute("data-a")===age;
-      c.classList.toggle("here",on);
-      c.classList.toggle("lt",on&&asked===false);
-      c.classList.toggle("lg",on&&asked===true);
-    });
-    $("#bDown").disabled=age<=MIN; $("#bUp").disabled=age>=MAX;
-    $("#ageVal").textContent=age;
-  }
-  function restart(el,cls){ el.classList.remove(cls); void el.offsetWidth; el.classList.add(cls); }
-
-  function setAge(d){
-    var n=age+d; if(n<MIN||n>MAX) return;
-    age=n; tAge.textContent="age"; tAge.classList.remove("on");
-    if(res.classList.contains("t")||res.classList.contains("f")) res.classList.add("old");
-    restart(ageRow,"chg"); setTimeout(function(){ ageRow.classList.remove("chg"); },reduce?0:700);
-    mark(null);
-    say('setAge('+age+'): age is now <b class="y">'+age+'</b>. The answer is not stored anywhere, so press <b class="a">isAdult()</b> to ask again.',
-      "y","nadia.setAge("+age+");");
-  }
-  function ask(){
-    var ans=age>=18, flip=last!==null&&last!==ans;
-    tAge.textContent=age; restart(tAge,"on");
-    res.className="res"; void res.offsetWidth; res.className="res "+(ans?"t":"f"); res.textContent=ans?"true":"false";
-    mark(ans);
-    var head='<b class="'+(ans?"g":"w")+'">'+age+' >= 18</b> is <b class="'+(ans?"g":"w")+'">'+ans+'</b>';
-    var tail;
-    if(age===18&&flip) tail=". One year flipped the answer, and 18 itself counts because the rule is >=, not >.";
-    else if(age===17&&flip) tail=". One year back and the same question gets the other answer.";
-    else if(age===18) tail=". 18 itself counts: the rule is >=, not >.";
-    else if(age===17) tail=". One more year and the answer changes. Press + and ask again.";
-    else tail=ans?", so isAdult() returns true.":", so isAdult() returns false. Step age up past 17 and ask again.";
-    say(head+tail, ans?"g":"w", "boolean adult = nadia.isAdult(); // "+ans);
-    last=ans;
+  function pick(btn){
+    flds.forEach(function(b){ b.classList.toggle("on",b===btn); });
+    var t=btn.getAttribute("data-t"), n=btn.getAttribute("data-n"), trap=btn.getAttribute("data-trap");
+    var isBool=t==="boolean";
+    var stem=n;
+    if(trap){ stem=n.slice(2); stem=stem.charAt(0).toLowerCase()+stem.slice(1); }   // isDirty -> dirty
+    var Stem=cap(stem);
+    sig(sGet,"getter",t,isBool,isBool?"is":"get",Stem,"");
+    sig(sSet,"setter","void",false,"set",Stem,t+" "+stem);
+    if(trap){
+      say('The field is already called <b class="y">isDirty</b>. IntelliJ drops the <b class="g">is</b> and still makes <b class="g">isDirty()</b> and <b class="y">setDirty(boolean dirty)</b>. It works, but the field name now lies: name it <b class="a">dirty</b> and let the getter carry the <b class="g">is</b>.',"y");
+    } else if(isBool){
+      say('<b class="y">boolean '+n+'</b> is a yes or no question, so the getter is <b class="g">is'+Stem+'()</b>, not get'+Stem+'(). The setter stays <b class="y">set'+Stem+'(boolean '+n+')</b>.',"g");
+    } else {
+      say('<b class="y">'+t+' '+n+'</b> is a value, so the getter is <b class="a">get'+Stem+'()</b> and the setter is <b class="y">set'+Stem+'('+t+' '+n+')</b>. Now click a boolean field.',"");
+    }
   }
   function reset(){
-    age=START; last=null; tAge.textContent="age"; tAge.classList.remove("on");
-    res.className="res"; res.textContent="?"; mark(null);
-    say('Nadia is <b class="y">17</b>. There is no adult field on the card: <b class="a">isAdult()</b> works the answer out from age.');
+    flds.forEach(function(b){ b.classList.remove("on"); });
+    sGet.className="sig wait"; sGet.innerHTML='<span class="lbl">getter</span>pick a field';
+    sSet.className="sig wait"; sSet.innerHTML='<span class="lbl">setter</span>pick a field';
+    say('Click a field on the left. The names come from the field name and its type, nothing else.');
   }
-  $("#bDown").addEventListener("click",function(){ setAge(-1); });
-  $("#bUp").addEventListener("click",function(){ setAge(1); });
-  $("#bAsk").addEventListener("click",ask);
+  flds.forEach(function(b){ b.addEventListener("click",function(){ pick(b); }); });
   $("#bReset").addEventListener("click",reset);
-  mark(null);
 
   /* ambient canvas */
   var cv=$("#amb"),ctx=cv.getContext&&cv.getContext("2d"),parts=[];

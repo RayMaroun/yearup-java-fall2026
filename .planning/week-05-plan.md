@@ -10,7 +10,7 @@ Source: fall Workbook 4a v7.2Y (M1 Thinking in Objects, M2 Classes / Methods / O
 | 03 | Encapsulation: private fields behind a locked box, getters and setters are the door | none | NEW | demo-01: Person firstName, lastName, age; a direct access press is blocked with the compiler error, a getter press answers |
 | 04 | The constructor: new runs it, parameters fill the fields, this.x = x | none | NEW | demo-01: new Person("Ray", "Maroun", 35) fills three slots one per press |
 | 05 | Derived getters: computed from fields, no backing variable | 03-derived-getters | REBUILD | demo-01: getFullName from firstName and lastName; change a field, the derived value follows |
-| 06 | Boolean getters: isX returns true or false from a rule | 04-boolean-getters | REBUILD | demo-01 or workbook: isAdult = age >= 18; slide the age across 18 |
+| 06 | Boolean getters: the naming, is for a boolean getter, get otherwise, set always; IntelliJ generates them | 04-boolean-getters | REBUILT 2026-11-07 (Ray: the idea is the name, not a rule) | pick a field, read the generated getter and setter; isDirty trap |
 | 07 | Default access: package-private, who can see what | 05-default-access | REBUILD | demo-01: Person in com.pluralsight, a class in another package knocks |
 | 08 | Methods change the object's own state: a press calls work(), energy drops | none | NEW | demo-01: Person energy 100, work(hours) subtracts, eat() restores |
 | 09 | Method overloading: same name, different parameter lists; the arguments pick the version | none (missing in spring) | NEW | demo-01: Person(firstName, lastName) vs Person(firstName, lastName, age): drag arguments in, the matching constructor lights |
