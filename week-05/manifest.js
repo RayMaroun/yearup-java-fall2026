@@ -3,7 +3,7 @@
 window.HUB_MANIFEST = {
   week: 5,
   title: "Introduction to OOP",
-  live: false,            // flip to true on Ray's go, then rebuild the search index
+  live: true,            // flip to true on Ray's go, then rebuild the search index
   visuals: [
     { file: "01-thinking-in-objects.html", title: "Thinking in Objects", group: "Workbook 4a · Section 1-1" },
     { file: "02-one-object-one-job.html", title: "One Object, One Job", group: "Workbook 4a · Section 1-2" },

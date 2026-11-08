@@ -857,7 +857,7 @@
     "desc": "New project again: a five-argument constructor, a third phone, and the optional dial overload.",
     "group": "Workbook 2a · Section 2-3",
     "url": "week-02/exercises/cellphone-service-3.html",
-    "text": "← Week 2 index Workbook 2a · Section 2-3 · Exercise 3 Cell Phone Service, One-Line Phone A second constructor that takes all five values at once, and a third phone built with it in one line. What you are building Your exercise 2 program in a new project , with a second constructor in CellPhone that takes five parameters, one per field. main builds a third phone with it, displays it and dials it. Optional: a second dial that takes a whole CellPhone instead of a number. The no-argument constructor stays; phones 1 and 2 still use it. The lesson is overloading: same name, different parameter lists, and Java picks the one that matches what you pass. Do these in order 0 of 8 done Clear ticks What a finished run looks like run (phones 1 and 2, as in exercise 2) Owner: Marcus Lee Model: Galaxy S24 Number: 877-555-9876 Sandra's phone is calling 877-555-9876 Your third phone's values and your layout will differ. Check that every value shows up. Where people get stuck \"constructor CellPhone cannot be applied\". The values do not match the parameter list: count, order or type. Phones 1 and 2 broke. The no-argument constructor was replaced instead of kept. A class can have both. The third phone shows 0 and blanks. The constructor received the values but never stored them: a parameter with the field's name needs this. \"String cannot be converted to int\". The serial number went in quotes. Numbers go in without them. Pages that help Constructor overloading Method overloading What new does Wha"
+    "text": "← Week 2 index Workbook 2a · Section 2-3 · Exercise 3 Cell Phone Service, One-Line Phone A second constructor that takes all five values at once, and a third phone built with it in one line. What you are building Your exercise 2 program in a new project , with a second constructor in CellPhone that takes five parameters, one per field. main builds a third phone with it, displays it and dials it. Optional: a second dial that takes a whole CellPhone instead of a number. The no-argument constructor stays; phones 1 and 2 still use it. The lesson is overloading: same name, different parameter lists, and Java picks the one that matches what you pass. Do these in order 0 of 8 done Clear ticks What a finished run looks like run (phones 1 and 2, as in exercise 2) Owner: Victor Lee Model: Galaxy S24 Number: 877-555-9876 Sandra's phone is calling 877-555-9876 Your third phone's values and your layout will differ. Check that every value shows up. Where people get stuck \"constructor CellPhone cannot be applied\". The values do not match the parameter list: count, order or type. Phones 1 and 2 broke. The no-argument constructor was replaced instead of kept. A class can have both. The third phone shows 0 and blanks. The constructor received the values but never stored them: a parameter with the field's name needs this. \"String cannot be converted to int\". The serial number went in quotes. Numbers go in without them. Pages that help Constructor overloading Method overloading What new does Wha"
   },
   {
     "week": 2,
@@ -1488,5 +1488,435 @@
     "group": "Capstone guide",
     "url": "week-04/reference/demo-day.html",
     "text": "← Week 4 index Week 4 · Reference · Capstone guide Demo Day Ten minutes, six parts, one scenario you have typed before. Read the guide, then tick the list before you start. Each learner gets 10 minutes on demo day, Friday, November 6 . Run through the screens, show one piece of code you are proud of, take questions. The ten minutes 1 min 1 min 2 min 2 min 3 min 1 min 0:00 5:00 10:00 Introduction Introduce yourself. Provide a brief overview of the project. 1 min Challenges & Solutions Discuss a significant challenge you faced during the project. Explain how you overcame it and any lessons learned. 1 min GitHub Repository Review Navigate to the repository. Show and discuss the commit history, emphasizing major milestones or changes. Open and discuss the README file, highlighting its contents and structure. Review the GitHub project board, explaining its layout, tasks, and progression. 2 min Code Deep Dive Start with a high-level explanation of the code structure. Delve into specific sections of the code, highlighting main features and functions. 2 min Live Demo Run the program. Conduct a brief demonstration of the main features, ensuring to engage the audience. 3 min Q&A Session Open the floor to questions from the audience. Address each question confidently and clearly. 1 min From Raymond: This is to help you during the presentation. Feel free to change the order of the steps however you like. The minutes are a budget, not a rule. The live demo is the part people remember, so "
+  },
+  {
+    "week": 5,
+    "weekLabel": "Week 5",
+    "section": "Visuals",
+    "title": "Thinking in Objects",
+    "desc": "",
+    "group": "Workbook 4a · Section 1-1",
+    "url": "week-05/visuals/01-thinking-in-objects.html",
+    "text": "← Week 5 index Workbook 4a · Section 1-1 Thinking in Objects A bike shop has three things in it. Tap each one and see it as an object. The Bike Shop Bike tap object · Bike bike knows frameSize 54 cm price $650.00 does shiftGear() changes gear Mechanic tap object · Mechanic mechanic knows name \"Dana\" yearsOfExperience 6 does repair(bike) fixes a bike Customer tap object · Customer customer knows name \"Sam\" budget $800.00 does pay(amount) pays for a bike Three things in the shop. Each one knows something and does something. Tap one. Reset The one idea Look at the world as things that know and do. What a thing knows becomes its fields, what it does becomes its methods. Object Oriented Programming models software on the world around it, one object per thing."
+  },
+  {
+    "week": 5,
+    "weekLabel": "Week 5",
+    "section": "Visuals",
+    "title": "One Object, One Job",
+    "desc": "",
+    "group": "Workbook 4a · Section 1-2",
+    "url": "week-05/visuals/02-one-object-one-job.html",
+    "text": "← Week 5 index Workbook 4a · Section 1-2 · Specialization and Responsibilities One Object, One Job A bike shop has three specialists. Give each job to the one who owns it. responsibilities · drag one onto an object, or tap it then tap the object object · the thing sold Bike knows does object · the repair specialist Mechanic knows does object · the money specialist Register knows does Six responsibilities, three objects. Each one is something an object knows or something it does . Reset The one idea Each object owns its own responsibilities. A responsibility is something the object knows (data) or does (an action), and it lives with the specialist it belongs to, so there is one place to look for it. The Register asks the Bike for its price; it does not keep its own copy."
+  },
+  {
+    "week": 5,
+    "weekLabel": "Week 5",
+    "section": "Visuals",
+    "title": "Encapsulation",
+    "desc": "",
+    "group": "Workbook 4a · Section 2-1",
+    "url": "week-05/visuals/03-encapsulation.html",
+    "text": "← Week 5 index Workbook 4a · Section 2-1 Encapsulation The fields are locked inside. Try to reach in, then use the door. outside the class main p1.firstName reach in and read the field directly what main is holding value outside · inside private public · the door getFirstName() getAge() setAge(int) object p1 · Person p1 private fields private String firstName \"Raymond\" private String lastName \"Maroun\" private int age 35 p1.firstName p1 is a Person. Its three fields are private : main stands outside the box and can only use the door. Reset The one idea Private fields, public door. Mark the fields private so no code outside the class can touch them, then give the class public getters to read them and setters to change them. The compiler holds the lock: p1.firstName in main does not compile, p1.getFirstName() does."
+  },
+  {
+    "week": 5,
+    "weekLabel": "Week 5",
+    "section": "Visuals",
+    "title": "The Constructor",
+    "desc": "",
+    "group": "Workbook 4a · Section 2-1",
+    "url": "week-05/visuals/04-the-constructor.html",
+    "text": "← Week 5 index Workbook 4a · Section 2-1 · Instantiating an Object The Constructor Type three arguments, press new, and watch the constructor fill the object. class · the blueprint Person String firstName String lastName int age int energy the constructor call new Person( , , ) new Person(...) → new No objects yet. Press new on the blueprint. The blueprint holds no values . The three boxes are the arguments the constructor will receive. Reset The one idea new makes the object, the constructor fills it. The arguments arrive as parameters, and this.age = age copies each one into the field of the object being built. A field with no parameter, like energy, gets the value the constructor gives it."
+  },
+  {
+    "week": 5,
+    "weekLabel": "Week 5",
+    "section": "Visuals",
+    "title": "Derived Getters",
+    "desc": "",
+    "group": "Workbook 4a · Section 2-1",
+    "url": "week-05/visuals/05-derived-getters.html",
+    "text": "← Week 5 index Workbook 4a · Section 2-1 Derived Getters Press getFullName(), change a name, press it again. object · Person person1 String firstName String lastName String fullName no such field getters .getFirstName() .getFullName() → return returned value Nothing returned yet. person1 stores two names. There is no fullName on the card. Reset The one idea A derived getter computes its value from fields each time you call it. getFullName() joins firstName and lastName , so it can never be out of date, and a fullName field would only store the same thing twice."
+  },
+  {
+    "week": 5,
+    "weekLabel": "Week 5",
+    "section": "Visuals",
+    "title": "Boolean Getters",
+    "desc": "",
+    "group": "Workbook 4a · Section 2-1",
+    "url": "week-05/visuals/06-boolean-getters.html",
+    "text": "← Week 5 index Workbook 4a · Section 2-1 Boolean Getters Pick a field and watch IntelliJ name its getter and setter. class · Person fields click one, then read the right side String firstName get int age get double price get boolean learner is boolean occupied is boolean isDirty is, already IntelliJ · what it generates Alt + Insert or Cmd + N → Getter and Setter getter pick a field setter pick a field The rule IntelliJ follows: the getter starts with get for every type except boolean, where it starts with is . The setter always starts with set . You never type these names; you only name the field. Click a field on the left. The names come from the field name and its type, nothing else. Reset The one idea A boolean field gets an is getter, every other field gets a get getter, and the setter is always set . Name the field without is ( learner , not isLearner ) and let IntelliJ generate the rest."
+  },
+  {
+    "week": 5,
+    "weekLabel": "Week 5",
+    "section": "Visuals",
+    "title": "Default Access",
+    "desc": "",
+    "group": "Workbook 4a · Section 2-1",
+    "url": "week-05/visuals/07-default-access.html",
+    "text": "← Week 5 index Workbook 4a · Section 2-1 · Default access modifier Default Access Change the modifier on one method, then try to call it from two classes. package com.pluralsight public class Person no modifier String getFirstName() class · same package Main person1.getFirstName() package com.other class · other package Report import com.pluralsight.Person; person1.getFirstName() No modifier means package-private : every class in com.pluralsight can call it, nothing outside. String getFirstName() { return firstName; } Reset The one idea No modifier is not public. Java gives the member package-private access: classes in the same package can use it, classes in any other package cannot. In this course every field and method gets an explicit modifier, so nobody has to guess."
+  },
+  {
+    "week": 5,
+    "weekLabel": "Week 5",
+    "section": "Visuals",
+    "title": "Methods Change State",
+    "desc": "",
+    "group": "Workbook 4a · Section 2-2",
+    "url": "week-05/visuals/08-methods-change-state.html",
+    "text": "← Week 5 index Workbook 4a · Section 2-2 Methods Change State One Person, two methods. Press them and watch its own energy move. object · Person person2 firstName \"Potato\" lastName \"Sensei\" age 33 energy 100 .work() .eat() 100 energy -100 0 100 200 The constructor set person2’s energy to 100 . Press a method on the card. Reset The one idea A method works on the object's own fields. work() and eat() change this.energy , so the change stays in the object. Neither method checks the value: a floor or a cap would be an if you add inside it."
+  },
+  {
+    "week": 5,
+    "weekLabel": "Week 5",
+    "section": "Visuals",
+    "title": "Method Overloading",
+    "desc": "",
+    "group": "Workbook 4a · Section 2-3",
+    "url": "week-05/visuals/09-method-overloading.html",
+    "text": "← Week 5 index Workbook 4a · Section 2-3 Method Overloading One name, five doors. Drop arguments into the call and see which door opens. class · five constructors, one name Person the call No object yet. Press the green door. Reset The one idea Overloading means one name with different parameter lists. The signature is the name plus the type of each parameter, in order, so Person(int, String) and Person(String, int) are different. The compiler looks at the arguments you pass and picks the one version that matches. If none matches, the code does not compile."
+  },
+  {
+    "week": 5,
+    "weekLabel": "Week 5",
+    "section": "Visuals",
+    "title": "Cohesion",
+    "desc": "",
+    "group": "Workbook 4a · Section 2-2",
+    "url": "week-05/visuals/10-cohesion.html",
+    "text": "← Week 5 index Workbook 4a · Section 2-2 · Encapsulation and Cohesion Cohesion One class does everything. Move each method to the class it belongs in. one class · low cohesion OfficeMachine 6 methods, 3 unrelated jobs show before and after → class Printer class MailClient class CoffeeMaker Six methods, three jobs, one class. Tap a method , then tap the class it belongs in, or drag it there. Reset The one idea A class should hold only what belongs together. When every method in a class works on the same job, the class has high cohesion and changes for one reason. A class that does everything has low cohesion: a change to one job means opening the class that also runs the other two."
+  },
+  {
+    "week": 5,
+    "weekLabel": "Week 5",
+    "section": "Visuals",
+    "title": "The Testing Pyramid",
+    "desc": "",
+    "group": "Workbook 4a · Section 3-1",
+    "url": "week-05/visuals/11-testing-pyramid.html",
+    "text": "← Week 5 index Workbook 4a · Section 3-1 · Types of Software Testing The Testing Pyramid Tap a level of the pyramid, then change one line of code. End-to-End 5 tests screen Ride Scooter database a rider taps Unlock , rides, sees the fare Integration 40 tests screen Ride Scooter database the Ride asks the Scooter getBattery() Unit 200 tests screen Ride Scooter database one Scooter, alone: unlock() , is it unlocked? Scooter.java line 12 change one line of code one test at this level tap a band how many you write few many how fast one runs slow fast how costly to set up cheap costly An app that rents scooters , and its automated tests. Each dot is one test, stacked by level. Reset The one idea Many unit tests at the bottom, fewer integration tests, few end-to-end tests on top. The bottom is fast and cheap, the top is slow and needs setup. Every change re-runs every test, so the shape keeps the wait short. By hand, a tester would repeat every check after every change."
+  },
+  {
+    "week": 5,
+    "weekLabel": "Week 5",
+    "section": "Visuals",
+    "title": "Arrange, Act, Assert",
+    "desc": "",
+    "group": "Workbook 4a · Section 3-2",
+    "url": "week-05/visuals/12-arrange-act-assert.html",
+    "text": "← Week 5 index Workbook 4a · Section 3-2 · Parts of a unit test Arrange, Act, Assert One test, three steps. Run them in order, then change what you expect. @Test accelerate_NormalSpeedChange_SpeedIncreased() not run Arrange Set up the object under test. new Car() Act Call the one method being tested. .accelerate(10) Assert Check the result: expected first, actual second. assertEquals expected ? actual - No car yet. Press new Car() in Arrange. One test with three stages . Nothing is set up yet, so there is no car to test. Reset The one idea Arrange sets up, Act calls the one method under test, Assert compares expected with actual. When they match the test passes. When they do not, JUnit fails it and tells you both values, so a wrong expectation or a wrong method is caught at once."
+  },
+  {
+    "week": 5,
+    "weekLabel": "Week 5",
+    "section": "Visuals",
+    "title": "Why Doubles Drift",
+    "desc": "",
+    "group": "Workbook 4a · Section 4-1",
+    "url": "week-05/visuals/13-why-doubles-drift.html",
+    "text": "← Week 5 index Workbook 4a · Section 4-1 Why Doubles Drift One coin, two tills. Drop ten cents at a time and watch which total stays exact. 10&cent; add ten cents till 1 · stored in binary double total prints 0.0 till 2 · exact decimal BigDecimal total prints 0 Two tills, both at zero. Each press drops ten cents into both at once. Reset built from a double new BigDecimal(0.1) prints built from a String new BigDecimal(\"0.1\") prints Two ways to build one tenth. Press each and compare what prints. The one idea A double is stored in binary, so 0.1 is only an approximation and the error grows as you add. A BigDecimal built from a String holds the decimal exactly, so money adds up to the cent. Never build one from a double: it copies the approximation."
+  },
+  {
+    "week": 5,
+    "weekLabel": "Week 5",
+    "section": "Visuals",
+    "title": "BigDecimal Operations",
+    "desc": "",
+    "group": "Workbook 4a · Section 4-1",
+    "url": "week-05/visuals/14-bigdecimal-operations.html",
+    "text": "← Week 5 index Workbook 4a · Section 4-1 · BigDecimal BigDecimal Operations Press a button on the cart total and watch where each answer goes. BigDecimal cartTotal · the variable 0 scale 0 .add(keyboard) 49.99 .add(mouse) 19.99 .add(cable) 7.50 .subtract(coupon) 5.00 .multiply(1.075) 7.5% tax .setScale(2, HALF_UP) round to cents .add(keyboard) without assigning no cartTotal = ← cartTotal = new objects · what each call returns Nothing returned yet. Every call builds a new BigDecimal here. cartTotal holds 0 , BigDecimal.ZERO. Each button asks it for a result. Reset The one idea A BigDecimal never changes: add, subtract, multiply and setScale each return a new one, so write cartTotal = cartTotal.add(price); Multiply grows the scale, setScale(2, RoundingMode.HALF_UP) brings it back to cents. Compare with compareTo , never == or equals , and give divide a scale and a rounding mode too."
+  },
+  {
+    "week": 5,
+    "weekLabel": "Week 5",
+    "section": "Visuals",
+    "title": "What Static Means",
+    "desc": "",
+    "group": "Workbook 4a · Section 4-2",
+    "url": "week-05/visuals/15-what-static-means.html",
+    "text": "← Week 5 index Workbook 4a · Section 4-2 · Introduction to Static What Static Means Some things belong to each player. Some belong to the team. Add players and look at both. look at jersey number team name the team · there is one, and it was there first Team Falcons team name add a player remove a player The team exists before anyone joins. A jersey number cannot: nobody is wearing one yet. Add a player. Reset The one idea A jersey number belongs to one player: every player has their own, and with no players there are none. The team name belongs to the team: there is exactly one, it exists before any player joins, and every player shares it. In Java, a thing that belongs to the whole class instead of to each object is called static . One copy, shared, there from the start."
+  },
+  {
+    "week": 5,
+    "weekLabel": "Week 5",
+    "section": "Visuals",
+    "title": "Instance vs Static",
+    "desc": "",
+    "group": "Workbook 4a · Section 4-2",
+    "url": "week-05/visuals/16-instance-vs-static.html",
+    "text": "← Week 5 index Workbook 4a · Section 4-2 Instance vs Static Each object keeps its own name. The school lives once, on the class. Change both. class · the blueprint Learner instance: one per object String name int grade new Learner(\"Carol\", 11) static: one copy, on the class Learner.changeSchool(...) the only copy static String schoolName \"Greenwood High\" Reset The one idea An instance field lives in every object; a static field lives once, on the class. Changing one object's name touches that object only. Changing the static school through Learner.changeSchool(...) needs no object, and every Learner, old or new, sees the same single value."
+  },
+  {
+    "week": 5,
+    "weekLabel": "Week 5",
+    "section": "Visuals",
+    "title": "Utility Classes",
+    "desc": "",
+    "group": "Workbook 4a · Section 4-2",
+    "url": "week-05/visuals/17-utility-classes.html",
+    "text": "← Week 5 index Workbook 4a · Section 4-2 · Static classes Utility Classes Open the Math class you have used since week 1. Try to use it two ways. inside the JDK · what a utility class looks like class Math public final class Math { private Math() { } private constructor public static final double PI = 3.14159... static public static long round(double a) static public static double pow(double a, double b) static public static double sqrt(double a) static // ... more static methods, no instance fields at all } class Main · two ways to use it Math.round(12.8) call it on the class name new Math() try to build an object ? your exercise · same shape public class NameFormatter { private NameFormatter() { } private public static String format(...) static } Two things make a utility class: a private constructor and only static members . Press a button to see why. Reset The one idea A utility class is never instantiated: its constructor is private, and everything in it is static, so you call it on the class name. Math.round(12.8) works, new Math() does not compile. Your NameFormatter is built the same way."
+  },
+  {
+    "week": 5,
+    "weekLabel": "Week 5",
+    "section": "Visuals",
+    "title": "Has-A",
+    "desc": "",
+    "group": "Workbook 4a · Section 5-1",
+    "url": "week-05/visuals/18-has-a-relationship.html",
+    "text": "← Week 5 index Workbook 4a · Section 5-1 · Class relationships Has-A Three classes and their attributes. Give one class an attribute whose type is another class, and watch what changes. Deck class attribute type size number nothing else yet Card class attribute type suit text value text face up yes or no Hand class attribute type size number nothing else yet add a Deck has cards a Hand has cards probe take Card away take Deck away Reset Every attribute here has a built-in type: number , text , yes or no . That is all you have used so far. Press a Deck has cards . The one idea A has-a relationship is an attribute whose type is another class. A Deck has cards, so Deck holds Card and depends on it. A Hand has cards, the same way. Card gains nothing and knows nothing: the dependency runs one way, from the holder to the held."
+  },
+  {
+    "week": 5,
+    "weekLabel": "Week 5",
+    "section": "Reference",
+    "title": "Week 5 Cheat Sheet",
+    "desc": "The syntax of the week on one page: a class, constructors, getters and setters, overloading, a JUnit test, BigDecimal, static.",
+    "group": "Reference",
+    "url": "week-05/reference/cheat-sheet.html",
+    "text": "← Week 5 index Week 5 · Reference Week 5 Cheat Sheet The syntax of the week, one line per idea. Pick a topic to see only that card; every card links to the page that shows it moving. Topic All Classes Methods Overloading JUnit BigDecimal Static Class anatomy 4a · 2-1 file Person.java // one public class, same name as the file fields, private private String firstName; private String lastName; private int age; private int energy; private boolean learner; constructor public Person(String firstName, String lastName, int age) { this.firstName = firstName; // field = parameter this.lastName = lastName; this.age = age; this.energy = 100; // a start value, not a parameter } no return type public Person(...) // same name as the class, not even void getter public String getFirstName() { return firstName; } setter public void setFirstName(String firstName) { this.firstName = firstName; } create Person person1 = new Person(\"Raymond\", \"Maroun\", 55); read through a getter person1.getLastName() // \"Maroun\" not from outside person1.lastName // error: lastName has private access in Person get and set only a get or set method reads or stores data, nothing else See it: Encapsulation The Constructor Derived and boolean getters, default access 4a · 2-1 derived getter public String getFullName() { return firstName + \" \" + lastName; // no fullName field } uses another getter public String getFullInfo() { return \"FullName: \" + getFullName() + \" Age: \" + age; } no extra field private String fullName;"
+  },
+  {
+    "week": 5,
+    "weekLabel": "Week 5",
+    "section": "Reference",
+    "title": "Glossary",
+    "desc": "The words of the week, each in one sentence, with the page that shows it.",
+    "group": "Reference",
+    "url": "week-05/reference/glossary.html",
+    "text": "← Week 5 index Week 5 · Reference Glossary The words of the week, one sentence each. Type a word and the list narrows as you go. Filter / Classes and objects Object One thing in your program that knows some data and can do some work with it. Person person1 = new Person(\"Raymond\", \"Maroun\", 55); See it: Thinking in Objects Class The blueprint that says which fields an object holds and which methods it has; it lives in a .java file of the same name. public class Person { ... } See it: Thinking in Objects Instance One object built from a class with new; creating it is called instantiating. Car car1 = new Car(\"Toyota\", \"Prius\"); See it: Thinking in Objects Field A variable declared in the class, outside every method, that each object keeps its own value of. private String firstName; See it: Thinking in Objects Constructor The code that new runs once to set up an object; it has the class name and no return type. public Person(String firstName, String lastName, int age) { ... } See it: The Constructor this Means \"this object\", so this.age is the field while age alone is the parameter with the same name. this.age = age; See it: The Constructor Encapsulation and access Encapsulation Keeping an object's fields private and letting the outside world in only through the methods you choose. person1.age // error: age has private access in Person See it: Encapsulation Getter A public method that hands back the value of a private field and does nothing else. public int getAge() { return age;"
+  },
+  {
+    "week": 5,
+    "weekLabel": "Week 5",
+    "section": "Reference",
+    "title": "Common Errors",
+    "desc": "Private access, no matching constructor, non-static from a static context, setScale without a rounding mode, @Test not found: what it says, what to do.",
+    "group": "Reference",
+    "url": "week-05/reference/common-errors.html",
+    "text": "← Week 5 index Week 5 · Reference Common Errors The messages you will meet this week, word for word, and the quiet bugs that print no message at all. Read the first line of the message: it usually names the fix. Show All Compile Runtime Testing Compile Reaching a private field from outside See it java: age has private access in Person The field is private , so only code inside Person can touch it. Main is outside the class. Fix Read it through the getter. If outside code must change it, add a setter or a method that does the change. Before System.out.println(instructor.age); After System.out.println(instructor.getAge()); Compile No constructor matches the new See it java: constructor Learner in class Learner cannot be applied to given types; required: String,int found: String reason: actual and formal argument lists differ in length The only constructor needs a name and a grade, and the call passes a name only. With several constructors the message reads no suitable constructor found for Learner(String) and lists each one it tried. Fix Pass what required lists, in that order, or add an overload that takes what you have. Before Learner alice = new Learner(\"Alice\"); After Learner alice = new Learner(\"Alice\", 10); Compile A field used from static main See it java: non-static variable lastName cannot be referenced from a static context main is static : it runs with no object. A field without static lives inside an object, so there is no lastName for main to read. Fix Make the fie"
+  },
+  {
+    "week": 5,
+    "weekLabel": "Week 5",
+    "section": "Reference",
+    "title": "JUnit Reference",
+    "desc": "The dependency, where tests live, how IntelliJ runs them, test naming, and every assertion you need this week.",
+    "group": "Reference",
+    "url": "week-05/reference/junit-reference.html",
+    "text": "← Week 5 index Week 5 · Reference JUnit Reference Set up once, then look things up. The checklist gets a project ready for tests, one test shows the parts, and the table lists the assertions. Type in the box to filter every row on the page, for example assertTrue, null or pom. Filter Setup checklist 4a · 3-2 1 · dependency <!-- pom.xml, inside <project> --> <dependencies> <dependency> <groupId>org.junit.jupiter</groupId> <artifactId>junit-jupiter</artifactId> <version>5.10.2</version> <scope>test</scope> </dependency> </dependencies> 2 · reload Maven // click the small Maven icon that appears over pom.xml, or // Maven tool window, Reload All Maven Projects. Until then, @Test stays red. 3 · test folder src/test/java/com/pluralsight // same package as src/main/java/com/pluralsight 4 · test class // open Car.java, right-click, Generate..., Test..., JUnit5, OK // \"JUnit5 library not found\"? click Fix: it adds the dependency for you src/test/java/com/pluralsight/CarTest.java // one test class per class 5 · green arrow // click the green arrow in the gutter next to the class or one @Test // green check = passed, red mark = failed, with expected and actual See it: The Testing Pyramid Common Errors Anatomy of one test 4a · 3-2 imports import org.junit.jupiter.api.Test; import static org.junit.jupiter.api.Assertions.*; test class class CarTest { // in src/test/java/com/pluralsight @Test @Test // tells the JUnit runner: run this method name public void accelerate_NormalSpeedChange_Spee"
+  },
+  {
+    "week": 5,
+    "weekLabel": "Week 5",
+    "section": "Exercises",
+    "title": "Reading This Week's Exercises",
+    "desc": "Tap any sentence of a workbook-style exercise and see what it asks you to write. Invented exercises, this week's words.",
+    "group": "Before you start",
+    "url": "week-05/exercises/reading-the-exercises.html",
+    "text": "← Week 5 index Before you start · Week 5 Reading This Week’s Exercises Tap any sentence of an exercise and see what it is really asking you to write. Three made-up exercises in the workbook’s own words, so you learn the words, not the answers. Pick an exercise tap a sentence Every sentence on the paper is a job. Tap one. The sentence lights up here, and this box says what it asks you to do in code terms: which file, which member, which kind of method. ← previous sentence next sentence → The words the workbook uses this week, and what they mean for your code (tap one) The one idea An exercise is a list of jobs hidden in sentences. Read it once for the story, then once more sentence by sentence, and write down the job each one gives you before you type anything."
+  },
+  {
+    "week": 5,
+    "weekLabel": "Week 5",
+    "section": "Exercises",
+    "title": "Objects at a Hotel",
+    "desc": "On paper: list the objects a hotel needs and what each one knows.",
+    "group": "Workbook 4a · Section 1-1",
+    "url": "week-05/exercises/hotel-objects.html",
+    "text": "← Week 5 index Workbook 4a · Section 1-1 · Exercise 1 Objects at a Hotel On paper, as a group: the list of objects a hotel needs to run, and what each one knows. What you are building A list of objects for a hotel: people, job titles, departments, physical things and even ideas or processes. Next to each, the data it knows. No project, no code, nothing to run. This is thinking on paper; the next exercise adds what each object does. Do these in order 0 of 6 done Clear ticks What a finished answer looks like a gym, not a hotel (partial) Member name, member number, plan, expiry date Trainer name, specialty, weekly schedule Locker number, taken or free Front desk who is on shift, open hours Class booking class, time, member ... and more A different place on purpose. Your hotel list will differ, and that is fine: one object per line, what it knows next to it. Where people get stuck Only people. A room key, a receipt and a room service order are objects too. Actions in the list. \"Checks in\" is something done, not known. Keep it for the next exercise. Too vague. \"Info\" is not an attribute. Name it: room number, nightly rate. Stuck on how a hotel works. Look it up: how check-in, room service and housekeeping work at a real hotel. Pages that help Thinking in objects Know vs Do Sorter Glossary The one idea The nouns become your classes, the details become their fields. Get the list right here and the Hotel Operations code later has a plan."
+  },
+  {
+    "week": 5,
+    "weekLabel": "Week 5",
+    "section": "Exercises",
+    "title": "Responsibilities at a Hotel",
+    "desc": "On paper: give each hotel object its responsibilities, then check who does what.",
+    "group": "Workbook 4a · Section 1-2",
+    "url": "week-05/exercises/hotel-responsibilities.html",
+    "text": "← Week 5 index Workbook 4a · Section 1-2 · Exercise 2 Responsibilities at a Hotel On paper, with your group: give every hotel object the things it knows and the things it does. What you are building A table that starts from your Objects at a Hotel list. Next to each object you write what it needs to KNOW and what it needs to DO , so the seven workbook scenarios can run. No project, no code. Each responsibility belongs to one object only. Adding or dropping objects is allowed. Do these in order 0 of 6 done Clear ticks What a finished answer looks like example: a gym, not a hotel Member KNOW name, membership type DO book a class FrontDesk KNOW who is inside today DO scan a member card Trainer KNOW the classes they teach DO run a class ...one row per object A different place on purpose. Yours is a hotel with more objects, and it will differ from other groups. Where people get stuck Two owners. A responsibility on two objects means none owns it. Pick one; the other asks it. Only KNOW. Every scenario has a verb. Someone has to DO it. One object does everything. Spread the work. A specialist does one job well. Empty objects. An object with nothing to know or do can go. Pages that help One object, one job Thinking in objects Glossary The one idea KNOW becomes a field and DO becomes a method. The table you write today is the plan for the Room and Employee classes you write next."
+  },
+  {
+    "week": 5,
+    "weekLabel": "Week 5",
+    "section": "Exercises",
+    "title": "Hotel Operations",
+    "desc": "Room, Reservation and Employee classes with private fields, constructors, getters and derived getters, used from main.",
+    "group": "Workbook 4a · Section 2-1",
+    "url": "week-05/exercises/hotel-operations.html",
+    "text": "← Week 5 index Workbook 4a · Section 2-1 · Exercise 1 Hotel Operations Three classes that know things about a hotel, and a main that creates one of each to check them. What you are building One project, hotel-operations , with three classes: Room , Reservation and Employee . Each has private fields, a constructor that sets them, and getters. Some getters read a field; the derived ones calculate their answer from other fields. No menu, no user input, no methods that change a room or an employee yet: that is the next exercise. Main only creates objects and prints what their getters return. Do these in order 0 of 9 done Clear ticks What a finished run looks like run Room: 2 beds, $124.00, available: true Reservation: king, 3 nights, weekend: true Price per night: $152.90 Total: $458.70 Employee: Jordan, 45.0 hours Regular: 40.0 Overtime: 5.0 Pay: $950.00 Yours will differ: your values, your layout. Check the derived numbers by hand once. Where people get stuck A field for isAvailable or getTotalPay. Derived getters have no field; they calculate from the others. \"has private access\". Main reaches a field directly. Go through its getter. Weekend price wrong. The 10% goes on the price per night, before the nights are multiplied. Overtime negative. Under 40 hours there is no overtime: it is 0, not a negative number. Pages that help Encapsulation The constructor Derived getters Boolean getters What the red text means The one idea An object knows its own facts. Store what you are told"
+  },
+  {
+    "week": 5,
+    "weekLabel": "Week 5",
+    "section": "Exercises",
+    "title": "Hotel Operations 2",
+    "desc": "New project, copy the first one in: checkIn, checkOut, cleanRoom on Room; punchIn and punchOut on Employee.",
+    "group": "Workbook 4a · Section 2-2",
+    "url": "week-05/exercises/hotel-operations-2.html",
+    "text": "← Week 5 index Workbook 4a · Section 2-2 Methods · Exercise 2 Hotel Operations 2 Your Room and Employee classes learn to do things, not only know things. What you are building Your hotel-operations code in a new project . A Room is checked in, checked out and cleaned; it is available again only after cleaning. An Employee punches in and out at whole hours in 24-hour time, and each shift adds to hours worked. No minutes and no Hotel class yet. The workbook says continue in hotel-operations; here it gets its own project and repository. Do these in order 0 of 8 done Clear ticks What a finished run looks like run Available: true After checkIn: occupied true, dirty true, available false After checkOut: occupied false, dirty true, available false After cleanRoom: occupied false, dirty false, available true Punched in at 9, out at 17 Hours worked: 8.0 Yours will differ. The room is available only after cleanRoom. Where people get stuck Available right after checkOut. The room stays dirty until cleanRoom. Hours worked never grows. punchOut replaced the total instead of adding to it. Nowhere to keep the start time. Employee needs a new private field for it. Red after copying. A package line or class name does not match. Pages that help Methods change state Boolean getters Cohesion What the red text means The one idea A method changes the object's own fields. Main asks the room to check in; the room decides what that means for occupied and dirty."
+  },
+  {
+    "week": 5,
+    "weekLabel": "Week 5",
+    "section": "Exercises",
+    "title": "Hotel Operations 3",
+    "desc": "New project, copy the second one in: punchIn and punchOut overloads with no parameters, a Hotel class with two constructors, bookRoom and derived availability getters.",
+    "group": "Workbook 4a · Section 2-3",
+    "url": "week-05/exercises/hotel-operations-3.html",
+    "text": "← Week 5 index Workbook 4a · Section 2-3 · Exercise 3 Hotel Operations 3 Same method name, different parameters: Employee punches the clock two ways, and a new Hotel books rooms. What you are building Your hotel-operations-2 code in a new project , grown two ways. Employee gets punchIn() and punchOut() with no parameters , next to the int versions: they read the current time themselves. A new Hotel class tracks suites and basic rooms, books them, and works out what is still free. No setters on Hotel, today only, no menu or user input. The workbook says continue in hotel-operations; here every exercise gets its own project and repository. Do these in order 0 of 8 done Clear ticks What a finished run looks like run Grand Plaza: 10 suites, 40 basic rooms Book 3 suites: true Available suites: 7 Book 50 basic rooms: false Available rooms: 40 Punched in at 9:15 Punched out at 17:45 Yours will differ: your hotel, your numbers, your clock. Where people get stuck \"method is already defined\". Two methods with the same name need different parameter lists, not just different bodies. \"cannot find symbol LocalDateTime\". It lives in java.time : add the import. Available goes negative. bookRoom updated the count before checking there were enough rooms. Available never changes. It was stored in a field. Work it out from the totals and the booked counts. Pages that help Method overloading The constructor Derived getters Encapsulation Common errors The one idea One method name, several paramete"
+  },
+  {
+    "week": 5,
+    "weekLabel": "Week 5",
+    "section": "Exercises",
+    "title": "Hotel Operations Tests",
+    "desc": "New project, copy in: JUnit dependency, RoomTest and EmployeeTest with Arrange, Act, Assert.",
+    "group": "Workbook 4a · Section 3-2",
+    "url": "week-05/exercises/hotel-operations-testing.html",
+    "text": "← Week 5 index Workbook 4a · Section 3-2 · Exercise Hotel Operations Tests Your hotel classes, checked by code instead of by eye: JUnit tests for Room and Employee. What you are building A new project with your Hotel Operations 3 code, plus JUnit and two test classes. RoomTest checks what checkIn , checkOut and cleanRoom do to a room. EmployeeTest checks that punchIn and punchOut with a double time add up the hours correctly. Your classes do not change and main is not involved. The punch methods that read the clock (LocalDateTime) are not tested: their result changes every run. Do these in order 0 of 8 done Clear ticks What a finished run looks like Run tool window ✓ Tests passed: 6 of 6 tests ✓ RoomTest ✓ checkIn_... ✓ checkOut_... ✓ cleanRoom_... ✓ EmployeeTest ✓ punchOut_... Yours will differ: your test names, your count. What matters is every line green. Where people get stuck @Test and Assertions stay red. The pom changed but Maven was not reloaded. Press the Maven reload icon. The test cannot see Room. The test class sits outside src/test/java/com/pluralsight , so its package does not match. \"No tests found\". A test method is missing its @Test line. A test passes one run and fails the next. It uses a clock-based punch method. Test the versions that take a time only. Pages that help Arrange, Act, Assert The testing pyramid Methods change state JUnit reference What the red text means The one idea A test sets up an object, calls one method, and asserts what changed. Green "
+  },
+  {
+    "week": 5,
+    "weekLabel": "Week 5",
+    "section": "Exercises",
+    "title": "Money Math",
+    "desc": "A float, a double and a BigDecimal grow by ten cents, then by 19.99 a thousand times: compare what prints.",
+    "group": "Workbook 4a · Section 4-1",
+    "url": "week-05/exercises/money-math.html",
+    "text": "← Week 5 index Workbook 4a · Section 4-1 · Exercise 3 Money Math Three number types, the same additions, and three different answers. What you are building One main that grows a float , a double and a BigDecimal side by side: ten cents at a time for 10 passes, then 19.99 at a time for 1000 passes. You print them, compare them and answer three questions. No classes of your own, no input, no Scanner. The program exists to show you where float and double drift and BigDecimal does not. Do these in order 0 of 8 done Clear ticks What a finished run looks like run (first loop, the first three lines) 0.1 0.1 0.10 0.2 0.2 0.20 0.3 0.30000000000000004 0.30 ... (after the second loop) 19990.184 19990.000000000135 19990.00 Yours will match if your steps are the same (ten cents as 0.10 , each value printed in that order). Spacing and labels will differ. Where people get stuck \"cannot find symbol: BigDecimal\". The import java.math.BigDecimal is missing at the top of the file. \"possible lossy conversion from double to float\". 0.10 is a double; a float literal needs an f on the end. BigDecimal shows a long tail of digits. It was built from a double. Build it from a String, as the workbook shows. Step 5, double against BigDecimal. == will not compile across those types and equals is always false. Compare BigDecimal.valueOf(theDouble) with compareTo . Pages that help Why doubles drift BigDecimal operations Cheat sheet What the red text means The one idea float and double store an approximation"
+  },
+  {
+    "week": 5,
+    "weekLabel": "Week 5",
+    "section": "Exercises",
+    "title": "Static Classes",
+    "desc": "A NameFormatter utility class with static format methods, checked with unit tests, never instantiated.",
+    "group": "Workbook 4a · Section 4-2",
+    "url": "week-05/exercises/static-classes.html",
+    "text": "← Week 5 index Workbook 4a · Section 4-2 · Exercise Static Classes A NameFormatter you never create with new: call its methods on the class itself. What you are building A utility class called NameFormatter : a private constructor and three static format methods that turn name parts into one standard pattern, LastName, Prefix FirstName MiddleName, Suffix . First and last name are required; prefix (Mr., Mrs., Ms., Dr.), middle name and suffix (PhD, Jr, III) are optional. No objects, no fields, no user input. You check it with unit tests, not by typing names into a console. Do these in order 0 of 8 done Clear ticks What a finished run looks like what the methods return first, last Johnson, Mel prefix, first, middle, last, suffix Johnson, Dr. Mel B, PhD \"Mel B Johnson, PhD\" Johnson, Mel B, PhD test run Tests passed: 6 of 6 Your tests and their count will differ. Every format result must match the pattern exactly, commas and spaces included. Where people get stuck An extra space or comma. A missing part takes its space or comma with it: no suffix means no trailing comma. \"non-static method cannot be referenced from a static context\". A format method is missing static . \"NameFormatter() has private access\". Correct: call NameFormatter.format(...) , never new . The fullName version breaks on \"Mel Johnson\". Count the words before the comma; the prefix and middle name may not be there. Pages that help What static means Instance vs static Utility classes Method overloading Arrange, Ac"
+  },
+  {
+    "week": 5,
+    "weekLabel": "Week 5",
+    "section": "Exercises",
+    "title": "Blackjack",
+    "desc": "Card, Hand and Deck working together: deal two cards each, print the hands and their values.",
+    "group": "Workbook 4a · Section 5-1",
+    "url": "week-05/exercises/blackjack.html",
+    "text": "← Week 5 index Workbook 4a · Section 5-1 · Exercise 1 Blackjack Card, Hand and Deck working together: two cards each, and the hand closest to 21 wins. What you are building A card game built on the three classes from the section: a Deck makes and shuffles 52 cards, each player's Hand gets two, and every Card knows its points. main asks for the player names, deals, prints each hand with its value and names the winner. main does no card math: the Hand adds up its own cards. Hit or Stay, any number of players and the soft Ace are bonus. Do these in order 0 of 12 done Clear ticks What a finished run looks like run Player 1 name: Maya Player 2 name: Leo Maya: K of Hearts, 7 of Clubs Value: 17 Leo: A of Spades, 9 of Diamonds Value: 20 Leo wins with 20! Yours will differ: the deck is shuffled every run. Where people get stuck Every card prints as # of #. Cards start face down. flip() them before you read them. Every hand is worth 0. The cards are face down: a Hand flips each card, reads it, and flips it back. Ask the Hand, not the Card. \"10\" scores 1. Look at the whole value String, not its first character. A 22 wins. A hand over 21 cannot win, however high it is. Pages that help Has-A Methods change state Derived getters Week 5 cheat sheet What the red text means The one idea Each class does its own job. The Deck deals, the Hand counts, the Card knows its points, and main only runs the game."
+  },
+  {
+    "week": 5,
+    "weekLabel": "Week 5",
+    "section": "Exercises",
+    "title": "Car Dealership",
+    "desc": "Workshop: Vehicle, Dealership, DealershipFileManager and UserInterface; search, add, remove, save to inventory.csv.",
+    "group": "Workshop 4w",
+    "url": "week-05/exercises/car-dealership.html",
+    "text": "← Week 5 index Workshop 4w · Car Dealership Car Dealership A sales manager's desk app: search the lot, add a car, sell one, and the file keeps up. What you are building Your own project in your own repository. The program reads inventory.csv into a Dealership that holds a list of Vehicle objects. A menu lets the manager find vehicles by price, make and model, year, color, mileage or type, list them all, add one and remove one. Five classes, each with one job. No sales, no customers, one dealership only. Every add or remove rewrites inventory.csv, so the next run starts where this one ended. Do these in order 0 of 14 done Clear ticks What a finished run looks like run D & B Used Cars 1 - Find vehicles within a price range 2 - Find vehicles by make / model ... 7 - List ALL vehicles 8 - Add a vehicle 9 - Remove a vehicle 99 - Quit Command: 2 Make: Ford Model: Ranger 37846 2001 Ford Ranger truck Yellow 172544 1995.00 Command: 9 VIN to remove: 37846 Vehicle removed. Inventory saved. Command: 99 The data comes from the workshop file; your wording, layout and prompts will differ. Where people get stuck The dealership became a vehicle. The first line has three parts, not eight. Read it once before the loop and build the Dealership from it. FileNotFoundException: inventory.csv. The file sits at the project root, next to pom.xml, not inside src. NullPointerException on a search. That search still returns null from Phase 1. Make it return a list, even an empty one. The file lost its fir"
+  },
+  {
+    "week": 5,
+    "weekLabel": "Week 5",
+    "section": "Games",
+    "title": "Know vs Do Sorter",
+    "desc": "A sentence about an object: is it something it knows (a field) or something it does (a method)?",
+    "group": "Workbook 4a · Module 1",
+    "url": "week-05/games/know-vs-do-sorter.html",
+    "text": "← Week 5 index Workbook 4a · Module 1 · Game Know vs Do Sorter An object has two kinds of responsibility: what it knows and what it does. Sort sixteen of them. Game know or do? score 0 time 0.0s Know vs Do Sorter Each card is one responsibility of an object. Press K if the object has to remember it (a field), D if the object has to carry it out (a method). Start Round over Play again round 0 / 16 Press Start . Keys K and D answer. KNOW = a piece of data the object stores, the brains · DO = an action the object performs, the muscle · most objects do both The one idea Something an object knows becomes a field; something it does becomes a method. Ask \"is this a value I remember, or a job I carry out?\" and the class almost writes itself: the nouns and numbers go at the top, the verbs go below them."
+  },
+  {
+    "week": 5,
+    "weekLabel": "Week 5",
+    "section": "Games",
+    "title": "Derived or Stored?",
+    "desc": "A getter name and a class: does it read a field or compute a value?",
+    "group": "Workbook 4a · Section 2-1",
+    "url": "week-05/games/derived-or-stored.html",
+    "text": "← Week 5 index Workbook 4a · Section 2-1 · Game Derived or Stored? A class, its fields, and one getter. Does the getter hand back a field, or compute a value from the fields? Fifteen rounds. Game stored or derived? score 0 time 0.0s Derived or Stored? Read the fields on the card, then the getter name. Press S if it returns one field as is, D if it computes a value from the fields. Start Round over Play again round 0 / 15 Press Start . Keys S and D answer. stored = there is a field with that name, the getter returns it · derived = no such field, the value is calculated from other fields The one idea A getter does not need a field of its own. If a value can be worked out from fields the object already has, like a full name from a first and last name, compute it in the getter instead of storing it twice. The caller cannot tell the difference."
+  },
+  {
+    "week": 5,
+    "weekLabel": "Week 5",
+    "section": "Games",
+    "title": "Overload Matcher",
+    "desc": "Three versions of one method and a call: pick the one Java runs, or say it does not compile.",
+    "group": "Workbook 4a · Section 2-3",
+    "url": "week-05/games/overload-matcher.html",
+    "text": "← Week 5 index Workbook 4a · Section 2-3 · Game Overload Matcher Three versions of one method and one call. Pick the version Java runs, or say it does not compile. Fifteen rounds. Game which one runs? score 0 time 0.0s does not compile 4 Overload Matcher Read the call, then the three versions. Press the version that runs (keys 1, 2, 3), or does not compile (key 4) when none fits or two fit equally well. Start Round over Play again round 0 / 15 Press Start or Enter. Keys 1 to 4 answer. Java matches the argument types in order · an exact match wins · an int can widen to a double, a double never becomes an int · a String never converts · two equal fits = ambiguous The one idea Java picks an overload by the types of the arguments, in order, before the program runs. An exact match wins; an int may widen to a double when nothing matches exactly; a String never turns into a number. No fit, or two equally good fits, and the call does not compile."
+  },
+  {
+    "week": 5,
+    "weekLabel": "Week 5",
+    "section": "Games",
+    "title": "Pyramid Climber",
+    "desc": "A test described in one line: unit, integration or end to end?",
+    "group": "Workbook 4a · Section 3-1",
+    "url": "week-05/games/pyramid-climber.html",
+    "text": "← Week 5 index Workbook 4a · Section 3-1 · Game Pyramid Climber Every automated test sits on one level of the testing pyramid. Name the level of fifteen tests and climb. Game unit, integration or end-to-end? level 0 / 15 time 0.0s This test Pyramid Climber Each card describes one automated test. Press U for Unit, I for Integration, E for End-to-End. Every right answer climbs one level. Start Climb over Play again round 0 / 15 Press Start . Keys U, I and E answer. UNIT = the methods of one object · INTEGRATION = objects or sub-systems working together · END-TO-END = the full experience of a user The one idea Ask how much of the system the test touches. One object's methods is a Unit test: fast, and most of your tests. Objects or sub-systems talking to each other, such as a real database or file, is an Integration test: slower, fewer. A user's whole path through the app is an End-to-End test: the most setup, the fewest tests, at the top."
+  },
+  {
+    "week": 5,
+    "weekLabel": "Week 5",
+    "section": "Games",
+    "title": "AAA Sort",
+    "desc": "Scrambled lines of a test: put them under Arrange, Act, Assert in order.",
+    "group": "Workbook 4a · Section 3-2",
+    "url": "week-05/games/aaa-sort.html",
+    "text": "← Week 5 index Workbook 4a · Section 3-2 · Game AAA Sort The lines of a JUnit test are shuffled. Put each one under Arrange, Act or Assert, in order. Game sort the test score 0 unsorted lines Show the sorted test Check AAA Sort Each round is one test method with its lines shuffled. Press Arrange, Act or Assert next to a line to add it to the end of that section. Click a placed line to send it back. When every line is placed, press Check. Ten tests. Start Tests sorted Play again round 0 / 10 Press Start . Ten small JUnit tests to sort. Restart press a section next to a line to place it · click a placed line to send it back · Enter checks, then goes to the next test The one idea Arrange sets up, Act calls the one method under test, Assert checks the result. A call that only prepares the object, like accelerate before testing brake , belongs in Arrange; reading a value to compare it belongs in Assert."
+  },
+  {
+    "week": 5,
+    "weekLabel": "Week 5",
+    "section": "Games",
+    "title": "Pick the Assertion",
+    "desc": "What the test wants to check: pick the assertion that says it.",
+    "group": "Workbook 4a · Section 3-2",
+    "url": "week-05/games/pick-the-assertion.html",
+    "text": "← Week 5 index Workbook 4a · Section 3-2 · Game Pick the Assertion A test wants to check one thing. Pick the assertion that says exactly that. Fifteen rounds. Game which line asserts it? score 0 time 0.0s Pick the Assertion Read what the test wants to check and the variables in play. Four assertion lines, one is right. Click it, or press 1 to 4. Start Round over Play again round 0 / 15 Press Start . Keys 1 to 4 answer. assertEquals(expected, actual) · assertNotEquals(unexpected, actual) · assertArrayEquals(expectedArray, actualArray) · assertTrue / assertFalse(boolean) · assertNull / assertNotNull(object) · assertThrows(X.class, () -> call) The one idea The assertion is the sentence your test says out loud. Pick the one that matches the check: equal values with expected first, a true or false condition, null or not null, or an exception thrown by a call wrapped in a lambda. The right one fails for the right reason and prints a message you can read."
+  },
+  {
+    "week": 5,
+    "weekLabel": "Week 5",
+    "section": "Games",
+    "title": "Exact or Drift?",
+    "desc": "A money calculation in double or BigDecimal: type what prints.",
+    "group": "Workbook 4a · Section 4-1",
+    "url": "week-05/games/exact-or-drift.html",
+    "text": "← Week 5 index Workbook 4a · Section 4-1 · Game Exact or Drift? A money calculation in double or in BigDecimal. Say exactly what prints. Twelve rounds. Game what prints? score 0 time 0.0s Exact or Drift? Read the lines, then type what the println shows and press Enter. Every decimal place counts. When the output is long, pick it from four with keys 1 to 4. Start Round over Play again round 0 / 12 Press Start . Enter submits a typed answer, keys 1 to 4 pick one. double = binary, most decimals are close, not exact · BigDecimal from a String = exact, keeps its decimal places · every BigDecimal method returns a new object The one idea A double stores the nearest binary value, so cents drift; a BigDecimal built from a String stores the decimal exactly. Build it from a String, assign every result ( total = total.add(price); ), round with setScale(2, RoundingMode.HALF_UP) , and compare with compareTo , never equals ."
+  },
+  {
+    "week": 5,
+    "weekLabel": "Week 5",
+    "section": "Games",
+    "title": "Static or Instance?",
+    "desc": "A member described in one line: static or instance, and can you call it without an object?",
+    "group": "Workbook 4a · Section 4-2",
+    "url": "week-05/games/static-or-instance.html",
+    "text": "← Week 5 index Workbook 4a · Section 4-2 · Game Static or Instance? A static member belongs to the class; an instance member belongs to one object. Sort fifteen of them. Game static or instance? score 0 time 0.0s Static or Instance? Each round is a member described in one line, or a one-line call. Press S if it belongs to the class (no object needed), I if it belongs to one object (you need an object to reach it). Start Round over Play again round 0 / 15 Press Start . Keys S and I answer. STATIC = one copy for the whole class, called on the class name · INSTANCE = one copy per object, called on a variable · ask: does it need one object's data? The one idea Ask whether the member needs one particular object's data. If it does (this learner's name, this account's balance), it is an instance member and you reach it through an object: alice.printDetails() . If it does not (a value everyone shares, a calculation that only needs its inputs), it is static and you reach it through the class: Learner.changeSchool(\"Lakeside Academy\") , Math.sqrt(25) ."
+  },
+  {
+    "week": 5,
+    "weekLabel": "Week 5",
+    "section": "Games",
+    "title": "Has-A Hunter",
+    "desc": "Pairs of classes: which one has the other, and what field carries it?",
+    "group": "Workbook 4a · Section 5-1",
+    "url": "week-05/games/has-a-hunter.html",
+    "text": "← Week 5 index Workbook 4a · Section 5-1 · Game Has-A Hunter Two classes and one sentence. Which one has the other, one of it or a list? Fifteen rounds. Game who has whom? score 0 time 0.0s has-a ? Has-A Hunter Read the sentence. Pick which class holds the other as a field, and whether it holds one object or an ArrayList of them. Keys 1 to 4 answer. Start Round over Play again round 0 / 15 Press Start . Keys 1 to 4 answer. has one = a field of that type · has many = an ArrayList of that type · the other class has no field for its owner The one idea A has-a relationship is a field. The class that needs the other one holds it: one object when there is exactly one, an ArrayList when there can be many. The relationship goes one way: the owned class does not need to know who holds it."
+  },
+  {
+    "week": 5,
+    "weekLabel": "Week 5",
+    "section": "Games",
+    "title": "Bug Hunter 5",
+    "desc": "Fifteen snippets, one week 5 bug each: classes, constructors, tests, BigDecimal, static.",
+    "group": "Week 5",
+    "url": "week-05/games/bug-hunter-5.html",
+    "text": "← Week 5 index Workbook 4a · all sections · Game Bug Hunter 5 Fifteen snippets, one week 5 bug each: classes, constructors, tests, BigDecimal, static. Click the line you would change, then pick the fix. One point for the line, one for the fix. Game which line? score 0 / 30 Pick the fix Bug Hunter 5 A short piece of Java appears. One line is wrong: it does not compile, crashes, does the wrong thing, or hides a test. Then pick the fix that repairs it. Start Round over Play again round 0 / 15 Press Start . Keys 1 to 9 pick a line, A B C pick a fix, Enter moves on. Next Restart look for: a private field read from outside · a parameter assigned to itself · a getter returning the wrong field · a setter with no parameter · two overloads with one parameter list · an instance method on the class name · an instance field in a static method · new BigDecimal(0.1) · setScale with no RoundingMode · add not reassigned · equals on BigDecimal · a private @Test · assertEquals backwards · a test in src/main · a counter in the wrong place The one idea Week 5 bugs hide in who owns what. A field is private to its class and set with this. , a method that needs an object is called on an object, a BigDecimal is built from a String, rounded with a RoundingMode , reassigned after every operation and compared with compareTo . A test is public or package-private, lives in src/test/java , and names the expected value first."
   }
 ]
