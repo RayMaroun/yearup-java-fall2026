@@ -1573,21 +1573,21 @@
     "week": 5,
     "weekLabel": "Week 5",
     "section": "Visuals",
-    "title": "Method Overloading",
+    "title": "Cohesion",
     "desc": "",
-    "group": "Workbook 4a · Section 2-3",
-    "url": "week-05/visuals/09-method-overloading.html",
-    "text": "← Week 5 index Workbook 4a · Section 2-3 Method Overloading One name, five doors. Drop arguments into the call and see which door opens. class · five constructors, one name Person the call No object yet. Press the green door. Reset The one idea Overloading means one name with different parameter lists. The signature is the name plus the type of each parameter, in order, so Person(int, String) and Person(String, int) are different. The compiler looks at the arguments you pass and picks the one version that matches. If none matches, the code does not compile."
+    "group": "Workbook 4a · Section 2-2",
+    "url": "week-05/visuals/09-cohesion.html",
+    "text": "← Week 5 index Workbook 4a · Section 2-2 · Encapsulation and Cohesion Cohesion One class does everything. Move each method to the class it belongs in. one class · low cohesion OfficeMachine 6 methods, 3 unrelated jobs show before and after → class Printer class MailClient class CoffeeMaker Six methods, three jobs, one class. Tap a method , then tap the class it belongs in, or drag it there. Reset The one idea A class should hold only what belongs together. When every method in a class works on the same job, the class has high cohesion and changes for one reason. A class that does everything has low cohesion: a change to one job means opening the class that also runs the other two."
   },
   {
     "week": 5,
     "weekLabel": "Week 5",
     "section": "Visuals",
-    "title": "Cohesion",
+    "title": "Method Overloading",
     "desc": "",
-    "group": "Workbook 4a · Section 2-2",
-    "url": "week-05/visuals/10-cohesion.html",
-    "text": "← Week 5 index Workbook 4a · Section 2-2 · Encapsulation and Cohesion Cohesion One class does everything. Move each method to the class it belongs in. one class · low cohesion OfficeMachine 6 methods, 3 unrelated jobs show before and after → class Printer class MailClient class CoffeeMaker Six methods, three jobs, one class. Tap a method , then tap the class it belongs in, or drag it there. Reset The one idea A class should hold only what belongs together. When every method in a class works on the same job, the class has high cohesion and changes for one reason. A class that does everything has low cohesion: a change to one job means opening the class that also runs the other two."
+    "group": "Workbook 4a · Section 2-3",
+    "url": "week-05/visuals/10-method-overloading.html",
+    "text": "← Week 5 index Workbook 4a · Section 2-3 Method Overloading One name, five doors. Drop arguments into the call and see which door opens. class · five constructors, one name Person the call No object yet. Press the green door. Reset The one idea Overloading means one name with different parameter lists. The signature is the name plus the type of each parameter, in order, so Person(int, String) and Person(String, int) are different. The compiler looks at the arguments you pass and picks the one version that matches. If none matches, the code does not compile."
   },
   {
     "week": 5,

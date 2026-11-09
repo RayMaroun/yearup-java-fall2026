@@ -13,8 +13,8 @@ Source: fall Workbook 4a v7.2Y (M1 Thinking in Objects, M2 Classes / Methods / O
 | 06 | Boolean getters: the naming, is for a boolean getter, get otherwise, set always; IntelliJ generates them | 04-boolean-getters | REBUILT 2026-11-07 (Ray: the idea is the name, not a rule) | pick a field, read the generated getter and setter; isDirty trap |
 | 07 | Default access: package-private, who can see what | 05-default-access | REBUILD | demo-01: Person in com.pluralsight, a class in another package knocks |
 | 08 | Methods change the object's own state: a press calls work(), energy drops | none | NEW | demo-01: Person energy 100, work(hours) subtracts, eat() restores |
-| 09 | Method overloading: same name, different parameter lists; the arguments pick the version | none (missing in spring) | NEW | demo-01: Person(firstName, lastName) vs Person(firstName, lastName, age): drag arguments in, the matching constructor lights |
-| 10 | Cohesion: a class that does one job vs one that does everything | 06-cohesion-coupling | REBUILD | invented: a Printer that also sends email; split it |
+| 10 | Method overloading: same name, different parameter lists; the arguments pick the version | none (missing in spring) | NEW | demo-01: Person(firstName, lastName) vs Person(firstName, lastName, age): drag arguments in, the matching constructor lights |
+| 09 | Cohesion: a class that does one job vs one that does everything | 06-cohesion-coupling | REBUILD | invented: a Printer that also sends email; split it |
 | 11 | The testing pyramid: many unit tests, fewer integration, few end to end | 07-testing-pyramid | REBUILD | invented |
 | 12 | Arrange, Act, Assert: one test, three steps, pass or fail | 09-aaa-anatomy | REBUILD | demo-02: Car speed 0, accelerate(10), assertEquals(10, speed); change the expected value and watch it fail |
 | 13 | Why doubles drift: 0.1 ten times vs BigDecimal, one press per addition | none | NEW | demo-03: cents added one per press; double shows 0.30000000000000004, BigDecimal shows 0.30 |
