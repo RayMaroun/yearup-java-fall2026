@@ -6,7 +6,8 @@ window.SUBMIT = {
   repo:     "online-store",                 /* example shown in the link box */
   opens:    "2026-10-29T13:00:00-04:00",   /* given Thu Oct 29 */
   deadline: "2026-11-11T08:30:00-05:00",   /* Wed Nov 11, before class starts; capstone week in between */
-  note:     "Your own repository, public. Project in pluralsight/workshops. README.md at the root of the repository.",
+  note:     "Your own repository, public. Project in pluralsight/workshops. README.md at the root of the repository. If you submitted before Tuesday Nov 10, submit again: earlier submissions were not recorded.",
+  lock:     "2026-11-10",                  /* receipts stored before this tag are ignored (the Google Form was closed until Tue Nov 10, so earlier submissions were lost) */
   /* Google Form behind the page: "Workshop Submission - YearUp Fall 2026", published 2026-10-27, responses in the Sheet tab "Submissions". */
   form: {
     action: "https://docs.google.com/forms/d/e/1FAIpQLSd7-DuBhPXJg8p_GymnEAawJPZtRxu6J9rAmfGeyRkd5g-mgw/formResponse",

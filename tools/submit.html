@@ -136,7 +136,7 @@
 </div>
 
 <script src="roster.js?v=2026-10-27c"></script>
-<script src="submit-config.js?v=2026-10-30"></script>
+<script src="submit-config.js?v=2026-11-10"></script>
 <script>
 (function(){
   var C = window.SUBMIT || {};
@@ -156,7 +156,7 @@
   roster.forEach(function(n){ var o=document.createElement('option'); o.value=n; o.textContent=n; $('who').appendChild(o); });
   try { var saved = localStorage.getItem('hub-submit-me'); if(saved && roster.indexOf(saved)>=0) $('who').value=saved; } catch(e){}
   /* one submission per browser per workshop: a stored receipt keeps the form hidden */
-  var rkey = 'hub-submit-done-' + (C.workshop||'');
+  var rkey = 'hub-submit-done-' + (C.workshop||'') + (C.lock ? '-' + C.lock : '');   /* C.lock: change it in submit-config.js to release every stored receipt */
   try { var r = JSON.parse(localStorage.getItem(rkey)||'null'); if (r && r.who && r.link){ $('doneWho').textContent = r.who+', '+C.workshop; $('doneLink').textContent = r.link; $('doneWhen').textContent = r.when; $('done').classList.remove('hidden'); } } catch(e){}
 
   function state(){
