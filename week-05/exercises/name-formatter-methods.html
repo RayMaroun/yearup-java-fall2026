@@ -1,0 +1,474 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>NameFormatter, Line by Line | Week 5 Visual Hub</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Sora:wght@500;700&family=Inter:wght@400;500&family=JetBrains+Mono:wght@400;500&display=swap">
+<style>
+  :root{
+    --bg:#080c17; --bg2:#0c1428; --surface:rgba(255,255,255,.045); --line:rgba(255,255,255,.09);
+    --ink:#eef2fb; --muted:#8496b6; --accent:#6ea0ff; --accent2:#8b7bff; --good:#46d98a; --warn:#ff6a6a;
+    --gold:#ffc862; --disp:'Sora',system-ui,sans-serif; --body:'Inter',system-ui,sans-serif;
+    --mono:'JetBrains Mono',ui-monospace,monospace;
+  }
+  *{box-sizing:border-box}
+  body{margin:0;min-height:100vh;color:var(--ink);font-family:var(--body);
+    background:radial-gradient(1200px 700px at 70% -10%,#141d38 0%,transparent 55%),
+               radial-gradient(900px 600px at 10% 110%,#161233 0%,transparent 50%),#080c17;
+    overflow-x:hidden}
+  #amb{position:fixed;inset:0;z-index:0;pointer-events:none;opacity:.6}
+  .back{position:relative;z-index:2;display:block;max-width:1280px;margin:0 auto;padding:26px 24px 0;
+    width:100%;font-family:var(--mono);font-size:.8rem;letter-spacing:.04em;color:var(--muted);
+    text-decoration:none;transition:color .15s}
+  .back:hover{color:var(--accent)}
+  .wrap{position:relative;z-index:1;max-width:1280px;margin:0 auto;padding:22px 24px 70px}
+  .tag{font-family:var(--mono);font-size:.72rem;letter-spacing:.22em;text-transform:uppercase;color:var(--accent);margin:0 0 14px}
+  h1{font-family:var(--disp);font-weight:700;font-size:clamp(2.1rem,5vw,3.2rem);line-height:1;margin:0 0 12px;
+    letter-spacing:-.03em;background:linear-gradient(180deg,#fff,#b9c6e6);-webkit-background-clip:text;
+    background-clip:text;color:transparent}
+  .lede{color:var(--muted);max-width:64ch;font-size:1.05rem;margin:0 0 22px;line-height:1.5}
+  .lede b{color:var(--ink)}
+  code{font-family:var(--mono);font-size:.92em;color:#bcd0ff}
+
+  .stage{position:relative;background:linear-gradient(180deg,rgba(255,255,255,.03),rgba(255,255,255,.01));
+    border:1px solid var(--line);border-radius:24px;padding:18px;
+    box-shadow:0 1px 0 rgba(255,255,255,.06) inset,0 30px 80px -30px rgba(0,0,0,.8)}
+  .lab{font-family:var(--mono);font-size:.64rem;letter-spacing:.16em;text-transform:uppercase;color:var(--muted);margin:0 0 8px}
+
+  /* which method, and with what values */
+  .pick{border:2px dashed rgba(110,160,255,.45);background:rgba(110,160,255,.04);border-radius:16px;padding:14px 16px;margin-bottom:12px}
+  .doors{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:10px;margin-bottom:12px}
+  @media (max-width:900px){.doors{grid-template-columns:1fr}}
+  .door{text-align:left;font-family:var(--mono);font-size:.8rem;line-height:1.45;padding:10px 13px;border-radius:12px;cursor:pointer;
+    border:1px solid var(--line);background:rgba(0,0,0,.25);color:#c9d4ea;transition:.15s;overflow-wrap:anywhere}
+  .door:hover{border-color:var(--gold);background:rgba(255,200,98,.08)}
+  .door.on{border-color:var(--gold);background:rgba(255,200,98,.16);color:var(--ink)}
+  .fill{display:flex;flex-wrap:wrap;gap:10px;align-items:flex-end}
+  .f{display:flex;flex-direction:column;gap:5px;min-width:0}
+  .f label{font-family:var(--mono);font-size:.62rem;letter-spacing:.08em;color:var(--muted)}
+  .f input{font-family:var(--mono);font-size:.92rem;width:120px;max-width:100%;padding:8px 10px;border-radius:10px;
+    border:1px solid var(--line);background:rgba(0,0,0,.3);color:var(--ink);transition:border-color .15s}
+  .f.wide{flex:1 1 280px} .f.wide input{width:100%}
+  .f input:focus{outline:none;border-color:var(--accent);box-shadow:0 0 0 3px rgba(110,160,255,.2)}
+  .quick{display:flex;flex-wrap:wrap;gap:8px}
+  .quick button{font-family:var(--mono);font-size:.74rem;padding:7px 11px;border-radius:999px;cursor:pointer;
+    border:1px solid var(--line);background:transparent;color:var(--muted);transition:.15s}
+  .quick button:hover{border-color:var(--accent);color:var(--accent)}
+
+  /* code on the left, the state of the program on the right */
+  .grid{display:grid;grid-template-columns:minmax(0,1.25fr) minmax(0,1fr);gap:12px;align-items:start}
+  @media (max-width:980px){.grid{grid-template-columns:1fr}}
+  .codebox{border-radius:16px;border:1px solid rgba(255,255,255,.14);background:rgba(6,10,20,.6);padding:12px 0 12px;overflow:hidden}
+  .codebox .lab{padding:0 16px}
+  .crumbs{display:flex;flex-wrap:wrap;gap:6px;align-items:center;padding:0 16px 10px;border-bottom:1px solid var(--line);margin-bottom:8px;
+    font-family:var(--mono);font-size:.7rem;color:var(--muted)}
+  .crumbs span{padding:3px 9px;border-radius:999px;border:1px solid var(--line)}
+  .crumbs span.here{border-color:var(--gold);color:var(--gold);background:rgba(255,200,98,.1)}
+  .crumbs i{font-style:normal;opacity:.6}
+  .code{font-family:var(--mono);font-size:.9rem;line-height:1.7}
+  .cl{display:flex;align-items:flex-start;flex-wrap:wrap;gap:0;padding:0 14px 0 0;border-left:3px solid transparent;min-height:1.7em}
+  .cl .no{width:42px;flex-shrink:0;text-align:right;padding-right:12px;color:rgba(132,150,182,.45);font-size:.72rem;user-select:none}
+  .cl .tx{color:#c9d4ea;flex:1;min-width:0;white-space:pre-wrap;text-indent:-4ch}
+  .cl .kw{color:#c792ea} .cl .ty{color:#82aaff} .cl .st{color:#c3e88d}
+  .cl.cur{background:rgba(255,200,98,.14);border-left-color:var(--gold)}
+  .cl.cur .no{color:var(--gold)}
+  .cl.seen .tx{opacity:.55}
+  .cl .tg{margin:2px 0 4px 56px;text-indent:0;font-size:.68rem;padding:2px 9px;border-radius:999px;border:1px solid;white-space:nowrap;animation:pop .3s}
+  .tg.t{color:var(--good);border-color:rgba(70,217,138,.6);background:rgba(70,217,138,.1)}
+  .tg.f{color:var(--warn);border-color:rgba(255,106,106,.6);background:rgba(255,106,106,.1)}
+  .tg.c{color:var(--accent);border-color:rgba(110,160,255,.6);background:rgba(110,160,255,.1)}
+  .tg.r{color:var(--gold);border-color:rgba(255,200,98,.6);background:rgba(255,200,98,.1)}
+
+  .side{display:flex;flex-direction:column;gap:12px;position:sticky;top:14px}
+  @media (max-width:980px){.side{position:static}}
+  .panel{border-radius:16px;border:1px solid rgba(255,255,255,.14);background:rgba(255,255,255,.04);padding:14px 16px}
+  .ctrl{display:flex;gap:8px;align-items:center;flex-wrap:wrap}
+  .next{font-family:var(--mono);font-size:1rem;padding:11px 20px;border-radius:11px;cursor:pointer;
+    border:1px solid rgba(255,200,98,.55);background:rgba(255,200,98,.14);color:var(--gold);transition:.15s}
+  .next:hover{background:rgba(255,200,98,.24)}
+  .ghost{font-family:var(--body);font-weight:500;font-size:.84rem;padding:11px 14px;border-radius:11px;cursor:pointer;
+    border:1px solid var(--line);background:transparent;color:var(--muted);transition:.15s}
+  .ghost:hover{border-color:var(--accent);color:var(--accent)}
+  .next:disabled,.ghost:disabled{opacity:.35;cursor:default}
+  .count{font-family:var(--mono);font-size:.72rem;color:var(--muted);margin-left:auto}
+  .say{font-size:1.02rem;line-height:1.55;color:var(--ink);padding-left:14px;border-left:3px solid var(--accent);min-height:4.6em}
+  .say.y{border-left-color:var(--gold)} .say.g{border-left-color:var(--good)} .say.w{border-left-color:var(--warn)}
+  .say b{color:#fff} .say b.y{color:var(--gold)} .say b.g{color:var(--good)} .say b.w{color:var(--warn)}
+
+  .vars{display:flex;flex-direction:column;gap:6px;min-height:120px}
+  .v{display:flex;gap:10px;align-items:flex-start;font-family:var(--mono);font-size:.86rem;padding:7px 10px;border-radius:10px;
+    border:1px solid transparent;background:rgba(0,0,0,.22);transition:border-color .3s,background .3s}
+  .v .n{color:#82aaff;flex-shrink:0;min-width:92px}
+  .v .val{min-width:0;overflow-wrap:anywhere}
+  .v.ch{border-color:var(--gold);background:rgba(255,200,98,.1);animation:pop .3s}
+  .s{color:#c3e88d;white-space:pre-wrap}
+  .s .sp{background:rgba(255,255,255,.16);border-radius:3px}
+  .em{color:var(--muted);font-size:.68rem;margin-left:8px}
+  .arr{display:flex;flex-wrap:wrap;gap:6px}
+  .cell{display:flex;flex-direction:column;gap:2px;padding:4px 8px;border-radius:8px;border:1px solid var(--line);background:rgba(0,0,0,.25)}
+  .cell small{font-size:.6rem;color:var(--muted)}
+  .none{font-family:var(--mono);font-size:.78rem;color:var(--muted);padding:6px 2px}
+  .wait{font-family:var(--mono);font-size:.68rem;color:var(--muted);margin:8px 0 0}
+  .ret{font-family:var(--mono);font-size:1.1rem;padding:12px;border-radius:12px;text-align:center;border:1px dashed rgba(132,150,182,.45);
+    color:rgba(132,150,182,.6);overflow-wrap:anywhere;transition:.3s}
+  .ret.g{border:1px solid var(--good);background:rgba(70,217,138,.08);box-shadow:0 0 28px -10px rgba(70,217,138,.8);animation:pop .4s}
+  button:focus-visible,input:focus-visible{outline:2px solid var(--accent);outline-offset:2px}
+
+  @keyframes pop{from{transform:scale(.85);opacity:0}to{transform:scale(1);opacity:1}}
+  .take{margin-top:22px;background:linear-gradient(180deg,rgba(110,160,255,.08),rgba(139,123,255,.04));
+    border:1px solid var(--line);border-left:3px solid var(--accent);border-radius:12px;padding:16px 18px}
+  .take .tk{font-family:var(--mono);font-size:.66rem;letter-spacing:.14em;text-transform:uppercase;color:var(--accent);margin:0 0 8px}
+  .take p{margin:0;font-size:.95rem;color:var(--ink);line-height:1.55}
+  .take b{color:#fff}
+  @media (max-width:480px){.stage{padding:12px}.code{font-size:.74rem}.cl .no{width:30px}}
+  @media (prefers-reduced-motion:reduce){*{animation-duration:.01ms!important;transition-duration:.01ms!important}#amb{display:none}}
+</style>
+<body>
+<a class="back" href="../index.html#name-formatter-methods">&#8592; Week 5 index</a>
+<canvas id="amb"></canvas>
+<div class="wrap">
+  <p class="tag">Workbook 4a &middot; Section 4-2 &middot; Exercise solution</p>
+  <h1>NameFormatter, Line by Line</h1>
+  <p class="lede"><b>Run the solution one line per press and watch the variables change.</b></p>
+
+  <div class="stage" id="stage">
+    <div class="pick">
+      <p class="lab">The call in main &middot; pick a method and the values to pass</p>
+      <div class="doors" id="doors">
+        <button class="door" data-d="two">format(firstName, lastName)</button>
+        <button class="door" data-d="five">format(prefix, firstName, middleName, lastName, suffix)</button>
+        <button class="door" data-d="full">format(fullName)</button>
+      </div>
+      <div class="fill" id="fill"></div>
+    </div>
+
+    <div class="grid">
+      <div class="codebox">
+        <div class="crumbs" id="crumbs"></div>
+        <div class="code" id="code"></div>
+      </div>
+
+      <div class="side">
+        <div class="panel">
+          <div class="ctrl">
+            <button class="ghost" id="bBack">Back</button>
+            <button class="next" id="bNext">Next line</button>
+            <button class="ghost" id="bRestart">Restart</button>
+            <span class="count" id="count"></span>
+          </div>
+          <p class="wait">Keys: right arrow or space = next line, left arrow = back.</p>
+          <div hidden>
+          </div>
+        </div>
+        <div class="panel">
+          <p class="lab">What this line does</p>
+          <div class="say" id="say"></div>
+        </div>
+        <div class="panel">
+          <p class="lab" id="varLab">Variables</p>
+          <div class="vars" id="vars"></div>
+          <p class="wait" id="wait"></p>
+        </div>
+        <div class="panel">
+          <p class="lab">What main gets back</p>
+          <div class="ret" id="ret">?</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="take">
+    <p class="tk">The one idea</p>
+    <p><b>Only the five-parameter format builds the result. The other two turn what they received into five parts and call it.</b>
+    All three are static, so main calls them on the class: <code>NameFormatter.format(...)</code>. A part that is empty is skipped by its <code>if</code>, together with its space or comma.</p>
+  </div>
+  <div id="rail"></div>
+</div>
+<script>
+(function(){
+  "use strict";
+  var $=function(s){return document.querySelector(s);};
+  var reduce=matchMedia("(prefers-reduced-motion: reduce)").matches;
+
+  /* ---------- the solution, as it is in NameFormatter.java ---------- */
+  var CODE={
+    two:[
+      'public static String format(String firstName, String lastName) {',
+      '    return format("", firstName, "", lastName, "");',
+      '}'
+    ],
+    five:[
+      'public static String format(String prefix, String firstName, String middleName, String lastName, String suffix) {',
+      '    StringBuilder sb = new StringBuilder();',
+      '',
+      '    sb.append(lastName).append(", ");',
+      '',
+      '    if (!prefix.isEmpty()) {',
+      '        sb.append(prefix).append(" ");',
+      '    }',
+      '',
+      '    sb.append(firstName);',
+      '',
+      '    if (!middleName.isEmpty()) {',
+      '        sb.append(" ").append(middleName);',
+      '    }',
+      '    if (!suffix.isEmpty()) {',
+      '        sb.append(", ").append(suffix);',
+      '    }',
+      '    return sb.toString();',
+      '}'
+    ],
+    full:[
+      'public static String format(String fullName) {',
+      '    String[] parts = fullName.split(", ");',
+      '    String mainPart = parts[0];',
+      '    String suffix = parts.length > 1 ? parts[1] : "";',
+      '',
+      '    String[] nameParts = mainPart.split(" ");',
+      '',
+      '    String prefix = "", firstName = "", middleName = "", lastName = "";',
+      '',
+      '    switch (nameParts.length) {',
+      '        case 4:',
+      '            prefix = nameParts[0];',
+      '            firstName = nameParts[1];',
+      '            middleName = nameParts[2];',
+      '            lastName = nameParts[3];',
+      '            break;',
+      '        case 3:',
+      '            firstName = nameParts[0];',
+      '            middleName = nameParts[1];',
+      '            lastName = nameParts[2];',
+      '            break;',
+      '        case 2:',
+      '            firstName = nameParts[0];',
+      '            lastName = nameParts[1];',
+      '            break;',
+      '    }',
+      '',
+      '    return format(prefix, firstName, middleName, lastName, suffix);',
+      '}'
+    ]
+  };
+  var LABEL={two:"format(firstName, lastName)",five:"format(prefix, firstName, middleName, lastName, suffix)",full:"format(fullName)"};
+  var FORMS={
+    two:[["first","firstName","Mel"],["last","lastName","Johnson"]],
+    five:[["prefix","prefix","Dr."],["first","firstName","Mel"],["middle","middleName","B"],["last","lastName","Johnson"],["suffix","suffix","PhD"]],
+    full:[["full","fullName","Dr. Mel B Johnson, PhD"]]
+  };
+  var SAMPLES=["Mel Johnson","Mel B Johnson, PhD","Dr. Mel B Johnson, PhD"];
+
+  function esc(s){return String(s).replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/>/g,"&gt;").replace(/"/g,"&quot;");}
+  function q(s){return '"'+s+'"';}
+  /* a String value with its quotes, every space made visible */
+  function str(v){
+    var body=esc(v).replace(/ /g,'<span class="sp"> </span>');
+    return '<span class="s">"'+body+'"</span>'+(v===""?'<span class="em">empty</span>':"");
+  }
+  function c(v){ return '<code>'+esc(q(v))+'</code>'; }
+  /* String.split as Java does it: trailing empty pieces are dropped */
+  function jsplit(s,sep){ var a=s.split(sep); while(a.length>1&&a[a.length-1]==="") a.pop(); return a; }
+
+  /* light syntax coloring, one line at a time */
+  function paint(line){
+    var re=/("(?:[^"\\]|\\.)*")|\b(public|static|return|if|switch|case|break|new)\b|\b(String|StringBuilder)\b/g, out="", last=0, m;
+    while((m=re.exec(line))){
+      out+=esc(line.slice(last,m.index));
+      out+='<span class="'+(m[1]?"st":m[2]?"kw":"ty")+'">'+esc(m[0])+'</span>';
+      last=m.index+m[0].length;
+    }
+    return out+esc(line.slice(last));
+  }
+
+  /* ---------- run the solution and record one step per executed line ---------- */
+  var steps=[], at=0, door="two";
+
+  function Frame(m){ this.m=m; this.names=[]; this.vals={}; }
+  Frame.prototype.set=function(n,v){ if(this.names.indexOf(n)<0) this.names.push(n); this.vals[n]=v; };
+  Frame.prototype.snap=function(changed){
+    var self=this; return this.names.map(function(n){ return {n:n,v:self.vals[n],ch:changed.indexOf(n)>=0}; });
+  };
+  function rec(fr,stack,line,changed,note,opt){
+    opt=opt||{};
+    steps.push({m:fr.m,line:line,vars:fr.snap(changed||[]),note:note,tone:opt.tone||"",tag:opt.tag||"",tagK:opt.tagK||"",
+      stack:stack.slice(),result:opt.result});
+  }
+
+  /* the five-parameter method: lines are 1-based positions in CODE.five */
+  function runFive(a,stack){
+    var fr=new Frame("five"); stack=stack.concat(["five"]);
+    fr.set("prefix",a.prefix); fr.set("firstName",a.firstName); fr.set("middleName",a.middleName); fr.set("lastName",a.lastName); fr.set("suffix",a.suffix);
+    rec(fr,stack,1,["prefix","firstName","middleName","lastName","suffix"],'The method starts. Its five parameters now hold the five values that were passed in.');
+    var sb="";
+    fr.set("sb",{sb:sb});
+    rec(fr,stack,2,["sb"],'A new, <b>empty</b> StringBuilder. The result is built in it one piece at a time.');
+    sb+=a.lastName+", "; fr.set("sb",{sb:sb});
+    rec(fr,stack,4,["sb"],'<b class="y">lastName</b> goes in first, then a comma and a space. This line always runs: every name has a last name.',{tone:"y"});
+    function opt(name,val,ifLine,addLine,before,after,what){
+      if(val!==""){
+        rec(fr,stack,ifLine,[],name+' is '+c(val)+', so <code>isEmpty()</code> is false. The <b>!</b> flips it to <b class="g">true</b>, and the line inside the if runs.',{tag:"true",tagK:"t"});
+        sb+=before+val+after; fr.set("sb",{sb:sb});
+        rec(fr,stack,addLine,["sb"],what,{tone:"y"});
+      } else {
+        rec(fr,stack,ifLine,[],name+' is <code>""</code>, so <code>isEmpty()</code> is true. The <b>!</b> flips it to <b class="w">false</b>, and the line inside the if is <b>skipped</b>: nothing is added, not even the separator.',{tag:"false, skip",tagK:"f"});
+      }
+    }
+    opt("prefix",a.prefix,6,7,""," ",'The prefix goes in, with a space <b>after</b> it.');
+    sb+=a.firstName; fr.set("sb",{sb:sb});
+    rec(fr,stack,10,["sb"],'<b class="y">firstName</b> goes in. No if here: the first name is required.',{tone:"y"});
+    opt("middleName",a.middleName,12,13," ","",'A space goes in first, then the middle name. The space comes <b>before</b>, so nothing is left hanging when there is no middle name.');
+    opt("suffix",a.suffix,15,16,", ","",'A comma and a space go in first, then the suffix.');
+    rec(fr,stack,18,[],'<code>toString()</code> turns the builder into one String, and <b class="g">return</b> sends it back to the line that called this method.',{tone:"g",tag:"returns "+q(sb),tagK:"r"});
+    return sb;
+  }
+
+  function build(){
+    steps=[]; var call, out;
+    if(door==="two"){
+      var f1=val("first"), l1=val("last"); call="NameFormatter.format("+q(f1)+", "+q(l1)+")";
+      var fr=new Frame("two"), st=["two"];
+      steps.push({m:"two",line:0,vars:[],note:'main calls <code>'+esc(call)+'</code>. Two Strings are passed, so Java runs the format that has <b>two</b> parameters. Press Next line to go inside.',tone:"",stack:[]});
+      fr.set("firstName",f1); fr.set("lastName",l1);
+      rec(fr,st,1,["firstName","lastName"],'The method starts. Its two parameters hold the two values from the call.');
+      rec(fr,st,2,[],'This method formats nothing itself. It calls the <b class="y">five-parameter</b> format, with <code>""</code> for prefix, middleName and suffix. Java has to finish that call before this line can return.',{tone:"y",tag:"calls format with 5 values",tagK:"c"});
+      out=runFive({prefix:"",firstName:f1,middleName:"",lastName:l1,suffix:""},st);
+      rec(fr,st,2,[],'Back in the two-parameter method. The call gave back '+c(out)+', and this line returns the same String to main.',{tone:"g",tag:"returns "+q(out),tagK:"r",result:out});
+    } else if(door==="five"){
+      var a={prefix:val("prefix"),firstName:val("first"),middleName:val("middle"),lastName:val("last"),suffix:val("suffix")};
+      call="NameFormatter.format("+[a.prefix,a.firstName,a.middleName,a.lastName,a.suffix].map(q).join(", ")+")";
+      steps.push({m:"five",line:0,vars:[],note:'main calls <code>'+esc(call)+'</code>. Five Strings are passed, so Java runs the format that has <b>five</b> parameters. Press Next line to go inside.',tone:"",stack:[]});
+      out=runFive(a,[]);
+      steps[steps.length-1].result=out;
+    } else {
+      var full=val("full"); call="NameFormatter.format("+q(full)+")";
+      var fr2=new Frame("full"), st2=["full"];
+      steps.push({m:"full",line:0,vars:[],note:'main calls <code>'+esc(call)+'</code>. One String is passed, so Java runs the format that has <b>one</b> parameter. Press Next line to go inside.',tone:"",stack:[]});
+      fr2.set("fullName",full);
+      rec(fr2,st2,1,["fullName"],'The method starts. The whole name is in one String, in the order Prefix FirstName MiddleName LastName, Suffix.');
+      var parts=jsplit(full,", "); fr2.set("parts",parts);
+      rec(fr2,st2,2,["parts"],'<code>split(", ")</code> cuts the String at every comma followed by a space and puts the pieces in an array. Here that gives <b class="y">'+parts.length+(parts.length===1?" piece":" pieces")+'</b>.',{tone:"y"});
+      var main=parts[0]; fr2.set("mainPart",main);
+      rec(fr2,st2,3,["mainPart"],'The first piece, <code>parts[0]</code>, is everything before the comma: the names without the suffix.',{tone:"y"});
+      var suffix=parts.length>1?parts[1]:""; fr2.set("suffix",suffix);
+      rec(fr2,st2,4,["suffix"],parts.length>1
+        ?'<code>parts.length</code> is '+parts.length+'. Is it greater than 1? <b class="g">Yes</b>, so there was a comma, and suffix gets the second piece, <code>parts[1]</code>.'
+        :'<code>parts.length</code> is 1. Is it greater than 1? <b class="w">No</b>, so there was no comma, and suffix gets <code>""</code>. Reading parts[1] here would crash.',
+        {tone:"y",tag:parts.length>1?"true, takes parts[1]":'false, takes ""',tagK:parts.length>1?"t":"f"});
+      var np=jsplit(main," "); fr2.set("nameParts",np);
+      rec(fr2,st2,6,["nameParts"],'<code>split(" ")</code> cuts the main part at every space. That gives <b class="y">'+np.length+(np.length===1?" word":" words")+'</b> in an array.',{tone:"y"});
+      var p={prefix:"",firstName:"",middleName:"",lastName:""};
+      fr2.set("prefix","");fr2.set("firstName","");fr2.set("middleName","");fr2.set("lastName","");
+      rec(fr2,st2,8,["prefix","firstName","middleName","lastName"],'Four variables, all <b>empty</b> for now. The switch fills only the ones this name has, and the others stay empty.');
+      var n=np.length, map=n===4?[["prefix",12],["firstName",13],["middleName",14],["lastName",15]]
+                         :n===3?[["firstName",18],["middleName",19],["lastName",20]]
+                         :n===2?[["firstName",23],["lastName",24]]:null;
+      if(map){
+        var meaning=n===4?"prefix, first, middle, last":n===3?"first, middle, last":"first, last";
+        rec(fr2,st2,10,[],'<code>nameParts.length</code> is <b class="y">'+n+'</b>, so Java jumps straight to <b>case '+n+'</b>. '+n+' words can only mean: '+meaning+'.',{tone:"y",tag:"length is "+n+", go to case "+n,tagK:"c"});
+        map.forEach(function(x,i){
+          p[x[0]]=np[i]; fr2.set(x[0],np[i]);
+          rec(fr2,st2,x[1],[x[0]],'Word number '+i+' of the array, '+c(np[i])+', is the <b class="y">'+x[0]+'</b>.',{tone:"y"});
+        });
+        rec(fr2,st2,map[map.length-1][1]+1,[],'<code>break</code> leaves the switch. Without it, Java would keep going into the next case.');
+      } else {
+        rec(fr2,st2,10,[],'<code>nameParts.length</code> is <b class="w">'+n+'</b>. There is a case for 4, 3 and 2 only, so <b>no case matches</b> and the whole switch is skipped. The four names stay empty.',{tone:"w",tag:"length is "+n+", no case",tagK:"f"});
+      }
+      rec(fr2,st2,28,[],'Now there are five separate parts, so this method does not format anything itself. It calls the <b class="y">five-parameter</b> format and waits for the answer.',{tone:"y",tag:"calls format with 5 values",tagK:"c"});
+      out=runFive({prefix:p.prefix,firstName:p.firstName,middleName:p.middleName,lastName:p.lastName,suffix:suffix},st2);
+      rec(fr2,st2,28,[],'Back in the one-parameter method. The call gave back '+c(out)+', and this line returns the same String to main.',{tone:"g",tag:"returns "+q(out),tagK:"r",result:out});
+    }
+    at=0;
+  }
+
+  /* ---------- drawing ---------- */
+  var shown="";
+  function drawCode(m){
+    if(shown===m) return; shown=m;
+    $("#code").innerHTML=CODE[m].map(function(l,i){
+      var ind=l.length-l.replace(/^ +/,"").length;
+      return '<div class="cl" data-l="'+(i+1)+'"><span class="no">'+(i+1)+'</span><span class="tx" style="padding-left:'+(ind+4)+'ch">'+paint(l.slice(ind))+'</span></div>';
+    }).join("");
+  }
+  function value(v){
+    if(Array.isArray(v)) return '<span class="arr">'+v.map(function(x,i){return '<span class="cell"><small>['+i+']</small>'+str(x)+'</span>';}).join("")+'</span><span class="em">length '+v.length+'</span>';
+    if(v&&typeof v==="object") return str(v.sb);
+    return str(v);
+  }
+  function draw(){
+    var s=steps[at];
+    drawCode(s.m);
+    /* which lines of this method have already run in this visit, and which one is running now */
+    var seen={}; for(var i=0;i<at;i++){ if(steps[i].m===s.m&&steps[i].stack.length===s.stack.length) seen[steps[i].line]=true; }
+    Array.prototype.forEach.call(document.querySelectorAll("#code .cl"),function(el){
+      var l=+el.getAttribute("data-l"), old=el.querySelector(".tg"); if(old) old.remove();
+      el.className="cl"+(l===s.line?" cur":seen[l]?" seen":"");
+      if(l===s.line&&s.tag) el.insertAdjacentHTML("beforeend",'<span class="tg '+s.tagK+'">'+esc(s.tag)+'</span>');
+    });
+
+    var crumbs='<span'+(s.stack.length?'':' class="here"')+'>main</span>';
+    s.stack.forEach(function(m,i){ crumbs+='<i>calls</i><span'+(i===s.stack.length-1?' class="here"':'')+'>'+LABEL[m]+'</span>'; });
+    $("#crumbs").innerHTML=crumbs;
+
+    $("#varLab").textContent=s.stack.length?"Variables in "+LABEL[s.m]:"Variables";
+    $("#vars").innerHTML=s.vars.length?s.vars.map(function(v){
+      return '<div class="v'+(v.ch?" ch":"")+'"><span class="n">'+v.n+'</span><span class="val">'+value(v.v)+'</span></div>';
+    }).join(""):'<div class="none">No method is running yet.</div>';
+    $("#wait").textContent=s.stack.length>1?LABEL[s.stack[0]]+" is waiting for this call to return.":"";
+
+    var say=$("#say"); say.className="say"+(s.tone?" "+s.tone:""); say.innerHTML=s.note;
+    var ret=$("#ret");
+    if(s.result!==undefined){ ret.className="ret"; void ret.offsetWidth; ret.className="ret g"; ret.innerHTML=str(s.result); }
+    else { ret.className="ret"; ret.textContent="?"; }
+
+    $("#count").textContent=at===0?"not started":"line "+at+" of "+(steps.length-1);
+    $("#bBack").disabled=at===0; $("#bNext").disabled=at===steps.length-1;
+    $("#bNext").textContent=at===0?"Next line":at===steps.length-1?"Done":"Next line";
+  }
+
+  /* ---------- controls ---------- */
+  function val(id){ var el=$("#i_"+id); return el?el.value.trim():""; }
+  function restart(){ build(); draw(); }
+  function openDoor(d){
+    door=d;
+    Array.prototype.forEach.call(document.querySelectorAll(".door"),function(b){ b.classList.toggle("on",b.getAttribute("data-d")===d); });
+    $("#fill").innerHTML=FORMS[d].map(function(f){
+      return '<div class="f'+(f[0]==="full"?" wide":"")+'"><label for="i_'+f[0]+'">'+f[1]+'</label>'+
+        '<input id="i_'+f[0]+'" value="'+esc(f[2])+'" autocomplete="off" spellcheck="false"></div>';
+    }).join("")+(d==="full"?'<div class="quick">'+SAMPLES.map(function(s){return '<button data-s="'+esc(s)+'">'+esc(s)+'</button>';}).join("")+'</div>':"");
+    restart();
+  }
+  $("#doors").addEventListener("click",function(e){ var b=e.target.closest(".door"); if(b) openDoor(b.getAttribute("data-d")); });
+  $("#fill").addEventListener("input",restart);
+  $("#fill").addEventListener("keydown",function(e){ if(e.key==="Enter"&&e.target.tagName==="INPUT"&&at<steps.length-1){ at++; draw(); } });
+  $("#fill").addEventListener("click",function(e){ var b=e.target.closest(".quick button"); if(!b) return; $("#i_full").value=b.getAttribute("data-s"); restart(); });
+  $("#bNext").addEventListener("click",function(){ if(at<steps.length-1){ at++; draw(); } });
+  $("#bBack").addEventListener("click",function(){ if(at>0){ at--; draw(); } });
+  $("#bRestart").addEventListener("click",restart);
+  /* on this page the arrow keys step through the code; they do not change page */
+  document.addEventListener("keydown",function(e){
+    if(e.target&&/INPUT|TEXTAREA|SELECT/.test(e.target.tagName)) return;
+    if(e.key==="ArrowRight"||e.key===" "){ e.preventDefault(); e.stopImmediatePropagation(); if(at<steps.length-1){ at++; draw(); } }
+    else if(e.key==="ArrowLeft"){ e.preventDefault(); e.stopImmediatePropagation(); if(at>0){ at--; draw(); } }
+  },true);
+  openDoor("two");
+
+  /* ambient canvas */
+  var cv=$("#amb"),ctx=cv.getContext&&cv.getContext("2d"),parts=[];
+  function sizeC(){if(!ctx)return;cv.width=innerWidth;cv.height=innerHeight;}
+  function initParts(){parts=[];for(var i=0;i<46;i++)parts.push({x:Math.random(),y:Math.random(),
+    r:Math.random()*1.6+.3,s:Math.random()*.02+.004,o:Math.random()*.4+.1});}
+  function drawC(){if(!ctx)return;ctx.clearRect(0,0,cv.width,cv.height);
+    parts.forEach(function(p){p.y-=p.s/60;if(p.y<-.02)p.y=1.02;
+      ctx.beginPath();ctx.arc(p.x*cv.width,p.y*cv.height,p.r,0,7);
+      ctx.fillStyle="rgba(140,170,255,"+p.o+")";ctx.fill();});
+    requestAnimationFrame(drawC);}
+  if(ctx&&!reduce){sizeC();initParts();drawC();addEventListener("resize",sizeC);}
+})();
+</script>
+<script src="../manifest.js"></script>
+<script src="../../assets/rail.js"></script>
+<script>Rail.render(document.getElementById("rail"),{week:5,kind:"exercises",current:"name-formatter-methods"});</script>
+</body>
+</html>

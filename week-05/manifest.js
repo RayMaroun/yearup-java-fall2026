@@ -40,6 +40,7 @@ window.HUB_MANIFEST = {
     { file: "hotel-operations-testing.html", title: "Hotel Operations Tests", group: "Workbook 4a · Section 3-2", desc: "New project, copy in: JUnit dependency, RoomTest and EmployeeTest with Arrange, Act, Assert." },
     { file: "money-math.html", title: "Money Math", group: "Workbook 4a · Section 4-1", desc: "A float, a double and a BigDecimal grow by ten cents, then by 19.99 a thousand times: compare what prints." },
     { file: "static-classes.html", title: "Static Classes", group: "Workbook 4a · Section 4-2", desc: "A NameFormatter utility class with static format methods, checked with unit tests, never instantiated." },
+    { file: "name-formatter-methods.html", title: "NameFormatter, Line by Line", group: "Workbook 4a · Section 4-2", desc: "The solution of Static Classes run one line per press, with the variables changing. For after you have tried the exercise." },
     { file: "blackjack.html", title: "Blackjack", group: "Workbook 4a · Section 5-1", desc: "Card, Hand and Deck working together: deal two cards each, print the hands and their values." },
     { file: "car-dealership.html", title: "Car Dealership", group: "Workshop 4w", desc: "Workshop: Vehicle, Dealership, DealershipFileManager and UserInterface; search, add, remove, save to inventory.csv." }
   ],
