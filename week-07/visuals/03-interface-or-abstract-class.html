@@ -147,14 +147,14 @@
       </div>
       <div class="card iface">
         <p class="hd">interface</p>
-        <p class="who">IPlayable</p>
+        <p class="who">Playable</p>
         <div class="slot" id="sI"></div>
       </div>
     </div>
     <div class="card con tablet" id="tablet">
       <p class="hd">a class we are writing</p>
       <p class="who">Tablet</p>
-      <p class="about">Tablet is a new class. It already has <b>one parent class: Asset</b>, and it uses the interface IPlayable.</p>
+      <p class="about">Tablet is a new class. It already has <b>one parent class: Asset</b>, and it uses the interface Playable.</p>
       <div class="seats">
         <div>
           <p class="sect">parent class &middot; one slot only</p>
@@ -166,7 +166,7 @@
         </div>
         <div>
           <p class="sect">interfaces &middot; as many as it needs</p>
-          <div class="chips" id="ifs"><span class="tok if">IPlayable</span><span class="tok if" id="if1" hidden>IChargeable</span><span class="tok if" id="if2" hidden>ICallable</span><button class="mini" id="bIf"></button><span class="more">room for more ...</span></div>
+          <div class="chips" id="ifs"><span class="tok if">Playable</span><span class="tok if" id="if1" hidden>Chargeable</span><span class="tok if" id="if2" hidden>Caller</span><button class="mini" id="bIf"></button><span class="more">room for more ...</span></div>
         </div>
       </div>
     </div>
@@ -198,11 +198,11 @@
   var ORDER=["field","ctor","done","abs"];
   var KIND={
     field:{a:["f","<i>String</i>description","ok","allowed"], i:["f","<i>String</i>description","no","not allowed"]},
-    ctor:{a:["f","Asset(...)","ok","allowed"], i:["f","IPlayable(...)","no","not allowed"]},
+    ctor:{a:["f","Asset(...)","ok","allowed"], i:["f","Playable(...)","no","not allowed"]},
     done:{a:["m","void printMessage()","ok","has a body"], i:["m","default void print()","def","only with default"]},
     abs:{a:["m","abstract String getCategory()","ok","no body"], i:["m","void play(String song)","ok","no body"]}
   };
-  var NAMES=["IPlayable","IChargeable","ICallable"];
+  var NAMES=["Playable","Chargeable","Caller"];
   var tried={}, hot=null, nIf=1;
   var tablet=$("#tablet"),mach=$("#mach"),bIf=$("#bIf");
 
@@ -226,13 +226,13 @@
     calm(); tried[k]=true; hot=k; paint();
     if(k==="field")
       say('An abstract class is a real class, so it holds <b class="g">instance fields</b>. An interface <b class="w">has none</b>: a variable written there is a constant and must be given its value.',"w",
-        "String description;  // inside IPlayable, error: = expected");
+        "String description;  // inside Playable, error: = expected");
     else if(k==="ctor")
       say('An abstract class has <b class="g">constructors</b>, which its children call with super(...). An interface has no fields to fill, so it has <b class="w">no constructor</b>.',"w",
-        "IPlayable() { }  // inside IPlayable, error: <identifier> expected");
+        "Playable() { }  // inside Playable, error: <identifier> expected");
     else if(k==="done")
       say('Both can hold a <b class="g">finished method</b>. In an interface it must be marked <b class="y">default</b> (or static), or the compiler refuses the body.',"y",
-        "void print() { }  // inside IPlayable, without default, error: interface abstract methods cannot have body");
+        "void print() { }  // inside Playable, without default, error: interface abstract methods cannot have body");
     else
       say('Both can hold an <b class="g">abstract method</b>: a name with no body, left for another class to write. In an interface the word abstract is not even needed.',"g",
         "void play(String song);");

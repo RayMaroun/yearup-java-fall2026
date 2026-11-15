@@ -130,13 +130,13 @@
 <div class="wrap">
   <p class="tag">Workbook 6a &middot; Section 2-1</p>
   <h1>An Interface as a Type</h1>
-  <p class="lede"><b>One IPlayable variable. Put three objects in it and try both calls on each.</b></p>
+  <p class="lede"><b>One Playable variable. Put three objects in it and try both calls on each.</b></p>
 
   <div class="stage">
     <div class="board" id="board">
       <div class="card var" id="vcard">
-        <p class="hd">variable &middot; its type is the interface IPlayable</p>
-        <p class="who">IPlayable player</p>
+        <p class="hd">variable &middot; its type is the interface Playable</p>
+        <p class="who">Playable player</p>
         <p class="sect">call a method through player</p>
         <div class="acts">
           <button class="call" id="bStop" data-a="stop">player.stop()</button>
@@ -155,7 +155,7 @@
         <div class="ghost" id="ghost" hidden>
           <p class="hd">turned away by the compiler</p>
           <p class="who">SmartWatch</p>
-          <span class="rel">implements ICallable, IChargeable</span>
+          <span class="rel">implements Caller, Chargeable</span>
         </div>
         <div class="card obj" id="ocard">
           <p class="hd">object &middot; its real class</p>
@@ -175,7 +175,7 @@
 
   <div class="take">
     <p class="tk">The one idea</p>
-    <p><b>An interface is a type too.</b> An <code>IPlayable</code> variable can refer to any object whose class implements IPlayable, and to no other. The variable's type decides what you may call: only what <code>IPlayable</code> declares. The object decides what runs.</p>
+    <p><b>An interface is a type too.</b> A <code>Playable</code> variable can refer to any object whose class implements Playable, and to no other. The variable's type decides what you may call: only what <code>Playable</code> declares. The object decides what runs.</p>
   </div>
   <div id="rail"></div>
 </div>
@@ -192,7 +192,7 @@
     status.innerHTML=html;
     if(line){ var sp=document.createElement("span"); sp.className="line"; sp.textContent=line; status.appendChild(sp); }
   }
-  var REL={Phone:"implements IPlayable, IChargeable",Speaker:"implements IPlayable"};
+  var REL={Phone:"implements Playable, Chargeable",Speaker:"implements Playable"};
   var SAID={Phone:"The phone stopped the music.",Speaker:"The speaker stopped."};
   var NEW={Phone:'new Phone("Pocket")',Speaker:'new Speaker("Boom")'};
   var obj="Phone", timer=null, pending=null;
@@ -218,47 +218,47 @@
   function put(o){
     clear();
     if(o==="SmartWatch"){
-      /* not an IPlayable: the statement does not compile and player keeps the object it had */
+      /* not a Playable: the statement does not compile and player keeps the object it had */
       ghost.hidden=false; vcard.classList.add("wall");
       document.querySelector('.new[data-o="SmartWatch"]').classList.add("bad");
-      say('SmartWatch implements ICallable and IChargeable, <b class="w">not IPlayable</b>. The compiler refuses, and player keeps the '+obj+' it had.',"w",
-        "player = new SmartWatch();  // error: incompatible types: SmartWatch cannot be converted to IPlayable");
+      say('SmartWatch implements Caller and Chargeable, <b class="w">not Playable</b>. The compiler refuses, and player keeps the '+obj+' it had.',"w",
+        "player = new SmartWatch();  // error: incompatible types: SmartWatch cannot be converted to Playable");
       return;
     }
     obj=o; paint();
     if(!reduce){ ocard.classList.add("swap"); void ocard.offsetWidth; ocard.classList.remove("swap"); }
-    if(o==="Speaker") say('player now refers to a <b class="g">Speaker</b> object. Allowed, because Speaker implements IPlayable. Same variable, a different class of object.',"g","player = "+NEW[o]+";");
-    else say('player now refers to a <b class="g">Phone</b> object. Allowed, because Phone implements IPlayable.',"g","player = "+NEW[o]+";");
+    if(o==="Speaker") say('player now refers to a <b class="g">Speaker</b> object. Allowed, because Speaker implements Playable. Same variable, a different class of object.',"g","player = "+NEW[o]+";");
+    else say('player now refers to a <b class="g">Phone</b> object. Allowed, because Phone implements Playable.',"g","player = "+NEW[o]+";");
   }
   function callStop(){
     clear();
     bStop.classList.add("ok");
-    chk.className="chk g"; chk.innerHTML="<small>compiler checks the variable</small>IPlayable declares stop(): allowed";
+    chk.className="chk g"; chk.innerHTML="<small>compiler checks the variable</small>Playable declares stop(): allowed";
     function land(){
       pending=null;
       arrow.className="arrow on"; alab.textContent="runs on the object";
       rstop.classList.add("run");
     }
     if(reduce){ land(); } else { pending=land; timer=setTimeout(land,500); }
-    say('IPlayable declares stop(), so the call compiles. At run time the object is a <b class="y">'+obj+'</b>, so the '+obj+' version runs.',"y",
+    say('Playable declares stop(), so the call compiles. At run time the object is a <b class="y">'+obj+'</b>, so the '+obj+' version runs.',"y",
       "player.stop();  // "+SAID[obj]);
   }
   function callCharge(){
     clear();
     bCharge.classList.add("bad"); vcard.classList.add("wall");
-    chk.className="chk w"; chk.innerHTML="<small>compiler checks the variable</small>IPlayable has no charge(): refused";
+    chk.className="chk w"; chk.innerHTML="<small>compiler checks the variable</small>Playable has no charge(): refused";
     arrow.className="arrow no"; alab.textContent="call never leaves player";
-    var line="player.charge();  // error: cannot find symbol, method charge(), variable player of type IPlayable";
+    var line="player.charge();  // error: cannot find symbol, method charge(), variable player of type Playable";
     if(obj==="Phone"){
       rcharge.classList.add("far");
-      say('The object can charge, but the compiler only looks at the variable: <b class="w">IPlayable has no charge()</b>. This does not compile.',"w",line);
+      say('The object can charge, but the compiler only looks at the variable: <b class="w">Playable has no charge()</b>. This does not compile.',"w",line);
     } else {
-      say('<b class="w">IPlayable has no charge()</b>, and the compiler checks the type of the variable. This does not compile.',"w",line);
+      say('<b class="w">Playable has no charge()</b>, and the compiler checks the type of the variable. This does not compile.',"w",line);
     }
   }
   function reset(){
     clear(); obj="Phone"; paint();
-    say('player is an IPlayable variable holding a <b class="a">Phone</b> object. That is allowed: Phone implements IPlayable.',"",'IPlayable player = new Phone("Pocket");');
+    say('player is a Playable variable holding a <b class="a">Phone</b> object. That is allowed: Phone implements Playable.',"",'Playable player = new Phone("Pocket");');
   }
   $("#board").addEventListener("click",function(e){
     var c=e.target.closest(".call"); if(c){ if(c.getAttribute("data-a")==="stop") callStop(); else callCharge(); return; }

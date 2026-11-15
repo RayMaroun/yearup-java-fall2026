@@ -119,17 +119,17 @@
   <div class="stage">
     <div class="board" id="board">
       <div>
-        <div class="card iface ic" id="cIPlayable">
-          <div class="top"><div><p class="hd">interface</p><p class="who">IPlayable</p></div><button class="tg" data-i="IPlayable"></button></div>
+        <div class="card iface ic" id="cPlayable">
+          <div class="top"><div><p class="hd">interface</p><p class="who">Playable</p></div><button class="tg" data-i="Playable"></button></div>
           <div class="row"><span class="m">void play(String song)</span></div>
           <div class="row"><span class="m">void stop()</span></div>
         </div>
-        <div class="card iface ic" id="cIChargeable">
-          <div class="top"><div><p class="hd">interface</p><p class="who">IChargeable</p></div><button class="tg" data-i="IChargeable"></button></div>
+        <div class="card iface ic" id="cChargeable">
+          <div class="top"><div><p class="hd">interface</p><p class="who">Chargeable</p></div><button class="tg" data-i="Chargeable"></button></div>
           <div class="row"><span class="m">void charge()</span></div>
         </div>
-        <div class="card iface ic" id="cICallable">
-          <div class="top"><div><p class="hd">interface</p><p class="who">ICallable</p></div><button class="tg" data-i="ICallable"></button></div>
+        <div class="card iface ic" id="cCaller">
+          <div class="top"><div><p class="hd">interface</p><p class="who">Caller</p></div><button class="tg" data-i="Caller"></button></div>
           <div class="row"><span class="m">void call(String number)</span></div>
         </div>
       </div>
@@ -152,7 +152,7 @@
 
   <div class="take">
     <p class="tk">The one idea</p>
-    <p><b>A class can implement as many interfaces as it needs.</b> Each interface in the list adds its own methods to what the class must have: <code>IPlayable</code> asks for two, <code>IChargeable</code> for one more. The class compiles only when every method of every interface on its list is written.</p>
+    <p><b>A class can implement as many interfaces as it needs.</b> Each interface in the list adds its own methods to what the class must have: <code>Playable</code> asks for two, <code>Chargeable</code> for one more. The class compiles only when every method of every interface on its list is written.</p>
   </div>
   <div id="rail"></div>
 </div>
@@ -169,14 +169,14 @@
     status.innerHTML=html;
     if(line){ var sp=document.createElement("span"); sp.className="line"; sp.textContent=line; status.appendChild(sp); }
   }
-  var IF=[{n:"IPlayable",m:["play","stop"]},{n:"IChargeable",m:["charge"]},{n:"ICallable",m:["call"]}];
+  var IF=[{n:"Playable",m:["play","stop"]},{n:"Chargeable",m:["charge"]},{n:"Caller",m:["call"]}];
   var LABEL={play:"void play(String song)",stop:"void stop()",charge:"void charge()",call:"void call(String number)"};
-  var ERR="error: Phone is not abstract and does not override abstract method call(String) in ICallable";
+  var ERR="error: Phone is not abstract and does not override abstract method call(String) in Caller";
   var on,written,fresh=null;
   var ph=$("#ph"),stamp=$("#stamp"),arrow=$("#arrow"),alab=$("#alab");
 
   function listed(){ return IF.filter(function(i){ return on[i.n]; }).map(function(i){ return i.n; }); }
-  function bad(){ return on.ICallable && !written.call; }   /* call() is the only method that can be missing */
+  function bad(){ return on.Caller && !written.call; }   /* call() is the only method that can be missing */
   function header(){ var l=listed(); return "public class Phone"+(l.length?" implements "+l.join(", "):"")+" {"; }
   function names(i){ return i.m.map(function(m){ return m+"()"; }).join(" and "); }
   function paint(){
@@ -202,12 +202,12 @@
   function toggle(n){
     var i=IF.filter(function(x){ return x.n===n; })[0], l;
     on[n]=!on[n]; fresh=null; paint(); l=listed();
-    if(on[n] && bad() && n==="ICallable")
-      say('ICallable adds one more promise, <b class="w">call()</b>, and Phone has not written it. The class no longer compiles.',"w",ERR);
+    if(on[n] && bad() && n==="Caller")
+      say('Caller adds one more promise, <b class="w">call()</b>, and Phone has not written it. The class no longer compiles.',"w",ERR);
     else if(on[n])
       say(n+' is on the list, and Phone already has <b class="g">'+names(i)+'</b>: the promise is kept at once.'+(bad()?' It still lacks call().':''),bad()?"w":"g",bad()?ERR:header());
-    else if(n==="ICallable" && !written.call)
-      say('ICallable is off the list and its promise goes with it. Phone <b class="g">compiles again</b> without a call().',"g",header());
+    else if(n==="Caller" && !written.call)
+      say('Caller is off the list and its promise goes with it. Phone <b class="g">compiles again</b> without a call().',"g",header());
     else if(!l.length)
       say('Phone implements <b class="y">nothing</b> now. It promises no method, and the ones it has are simply its own.',"y",header());
     else
@@ -218,7 +218,7 @@
     say('call() is written. <b class="g">Every promise is kept</b>: Phone compiles with '+listed().length+(listed().length===1?' interface.':' interfaces.'),"g",header());
   }
   function reset(){
-    on={IPlayable:true,IChargeable:true,ICallable:false}; written={play:true,stop:true,charge:true,call:false}; fresh=null; paint();
+    on={Playable:true,Chargeable:true,Caller:false}; written={play:true,stop:true,charge:true,call:false}; fresh=null; paint();
     say('Phone implements <b class="a">2 interfaces</b>, so it must have their 3 methods. It has all three, so it compiles.',"",header());
   }
   $("#board").addEventListener("click",function(e){

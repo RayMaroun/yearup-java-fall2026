@@ -112,7 +112,7 @@
     <div class="board" id="board">
       <div class="card iface">
         <p class="hd">interface &middot; the promise</p>
-        <p class="who">IPlayable</p>
+        <p class="who">Playable</p>
         <p class="sect">a class that implements it must have</p>
         <div class="row" id="iPlay"><span class="m">void play(String song)</span><span class="note" id="tPlay"></span></div>
         <div class="row" id="iStop"><span class="m">void stop()</span><span class="note" id="tStop"></span></div>
@@ -120,7 +120,7 @@
       <div class="arrow" id="arrow"><b>&larr;</b><span id="alab">implements</span></div>
       <div class="card con" id="speaker">
         <span class="stamp" id="stamp"></span>
-        <p class="hd">class &middot; implements IPlayable</p>
+        <p class="hd">class &middot; implements Playable</p>
         <p class="who">Speaker</p>
         <p class="sect">its own fields</p>
         <div class="row"><span class="f"><i>String</i>name</span></div>
@@ -138,7 +138,7 @@
 
   <div class="take">
     <p class="tk">The one idea</p>
-    <p><b><code>implements</code> is a promise, and the compiler checks it.</b> A class that implements <code>IPlayable</code> must have every method the interface lists, with the same name and parameters, and <code>public</code>. Leave one out and the class does not compile. What each method does inside is up to the class.</p>
+    <p><b><code>implements</code> is a promise, and the compiler checks it.</b> A class that implements <code>Playable</code> must have every method the interface lists, with the same name and parameters, and <code>public</code>. Leave one out and the class does not compile. What each method does inside is up to the class.</p>
   </div>
   <div id="rail"></div>
 </div>
@@ -163,9 +163,9 @@
   /* the errors javac 17 reports, in the order it reports them */
   function errors(){
     var e=[], miss=st.stop==="gone"?"stop":(st.play==="gone"?"play":null);
-    if(miss) e.push({k:miss,type:"miss",text:"error: Speaker is not abstract and does not override abstract method "+SIG[miss]+" in IPlayable"});
+    if(miss) e.push({k:miss,type:"miss",text:"error: Speaker is not abstract and does not override abstract method "+SIG[miss]+" in Playable"});
     ["stop","play"].forEach(function(k){
-      if(st[k]==="nopub") e.push({k:k,type:"weak",text:"error: "+SIG[k]+" in Speaker cannot implement "+SIG[k]+" in IPlayable\n  attempting to assign weaker access privileges; was public"});
+      if(st[k]==="nopub") e.push({k:k,type:"weak",text:"error: "+SIG[k]+" in Speaker cannot implement "+SIG[k]+" in Playable\n  attempting to assign weaker access privileges; was public"});
     });
     return e;
   }
@@ -188,11 +188,11 @@
   function verdict(first){
     var e=errors(), more=e.length>1?" This is the first of "+e.length+" errors.":"";
     if(!e.length){
-      say(first ? 'IPlayable lists two methods. Speaker <b class="a">implements</b> it and has both, public, so it compiles.'
-                : 'Speaker has both methods IPlayable lists, and both are public. <b class="g">The promise is kept</b>, so it compiles.',
-          first?"":"g","public class Speaker implements IPlayable {");
+      say(first ? 'Playable lists two methods. Speaker <b class="a">implements</b> it and has both, public, so it compiles.'
+                : 'Speaker has both methods Playable lists, and both are public. <b class="g">The promise is kept</b>, so it compiles.',
+          first?"":"g","public class Speaker implements Playable {");
     } else if(e[0].type==="miss"){
-      say('Speaker says it implements IPlayable, but it has <b class="w">no '+SHORT[e[0].k]+'</b>. The compiler checks the promise and refuses the class.'+more,"w",e[0].text);
+      say('Speaker says it implements Playable, but it has <b class="w">no '+SHORT[e[0].k]+'</b>. The compiler checks the promise and refuses the class.'+more,"w",e[0].text);
     } else {
       say(SHORT[e[0].k]+' is there, but it is <b class="w">not public</b>. A method listed in an interface is always public, so Speaker must say public too.'+more,"w",e[0].text);
     }

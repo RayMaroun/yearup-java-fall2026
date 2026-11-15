@@ -122,12 +122,12 @@
     <div class="pg one">
       <div class="card iface">
         <p class="hd">interface</p>
-        <p class="who">IPlayable</p>
+        <p class="who">Playable</p>
         <div class="mrow" id="aDef"><span class="sig">default print()</span><span class="out">"I can play music!"</span></div>
       </div>
       <div class="card" id="aCard">
         <p class="hd">class</p>
-        <p class="who">Speaker<small>implements IPlayable</small></p>
+        <p class="who">Speaker<small>implements Playable</small></p>
         <div class="mrow none" id="aOwn"><span class="sig" id="aSig"></span><span class="out" id="aOut"></span></div>
         <div class="acts">
           <button class="new" id="aToggle"></button>
@@ -141,23 +141,23 @@
     <div class="pg two">
       <div class="card iface">
         <p class="hd">interface</p>
-        <p class="who">IPlayable</p>
+        <p class="who">Playable</p>
         <div class="mrow" id="bPlay"><span class="sig">default print()</span><span class="out">"I can play music!"</span></div>
       </div>
       <div class="card" id="bCard">
         <p class="hd">class</p>
-        <p class="who">Phone<small>implements IPlayable, IChargeable</small></p>
+        <p class="who">Phone<small>implements Playable, Chargeable</small></p>
         <p class="sect">print() written in Phone</p>
         <div class="pick" id="bPick">
           <button class="new" data-p="none">no print() at all</button>
-          <button class="new" data-p="IPlayable">print() calls IPlayable.super.print()</button>
-          <button class="new" data-p="IChargeable">print() calls IChargeable.super.print()</button>
+          <button class="new" data-p="Playable">print() calls Playable.super.print()</button>
+          <button class="new" data-p="Chargeable">print() calls Chargeable.super.print()</button>
         </div>
         <div class="say" id="bSay"></div>
       </div>
       <div class="card iface">
         <p class="hd">interface</p>
-        <p class="who">IChargeable</p>
+        <p class="who">Chargeable</p>
         <div class="mrow" id="bChg"><span class="sig">default print()</span><span class="out">"I can charge!"</span></div>
       </div>
     </div>
@@ -171,7 +171,7 @@
     <p class="tk">The one idea</p>
     <p><b>A default method is a finished method inside an interface.</b> A class that implements the interface gets it for free and may
     override it. When two interfaces bring the same default, the class must override it, and can run the one it wants with
-    <code>IPlayable.super.print()</code>.</p>
+    <code>Playable.super.print()</code>.</p>
   </div>
   <div id="rail"></div>
 </div>
@@ -187,8 +187,8 @@
     status.innerHTML=html;
     if(line){ var sp=document.createElement("span"); sp.className="line"; sp.textContent=line; status.appendChild(sp); }
   }
-  var own=false, pick="IPlayable";
-  var OUT={IPlayable:"I can play music!",IChargeable:"I can charge!"}, MINE="I am a speaker!";
+  var own=false, pick="Playable";
+  var OUT={Playable:"I can play music!",Chargeable:"I can charge!"}, MINE="I am a speaker!";
   var aDef=$("#aDef"),aOwn=$("#aOwn"),aSay=$("#aSay"),bPlay=$("#bPlay"),bChg=$("#bChg"),bSay=$("#bSay"),bCard=$("#bCard");
 
   function clear(){
@@ -206,16 +206,16 @@
   function toggle(){
     clear(); own=!own; paint();
     if(own) say('Speaker now has its own print(). That is an <b class="g">override</b> of the default. Call it to see which one runs.',"g");
-    else say('Speaker has no print() again. It still compiles: the default in IPlayable is there for it.',"");
+    else say('Speaker has no print() again. It still compiles: the default in Playable is there for it.',"");
   }
   function callA(){
     clear();
     if(own){
       aOwn.classList.add("run"); printed(aSay,MINE);
-      say('Speaker wrote its own print(), so <b class="y">its version runs</b>. The default stays in IPlayable, unused by this class.',"y","speaker.print();  // "+MINE);
+      say('Speaker wrote its own print(), so <b class="y">its version runs</b>. The default stays in Playable, unused by this class.',"y","speaker.print();  // "+MINE);
     } else {
-      aDef.classList.add("run"); printed(aSay,OUT.IPlayable);
-      say('Speaker has no print() of its own, so it <b class="y">inherits the default</b> from IPlayable.',"y","speaker.print();  // "+OUT.IPlayable);
+      aDef.classList.add("run"); printed(aSay,OUT.Playable);
+      say('Speaker has no print() of its own, so it <b class="y">inherits the default</b> from Playable.',"y","speaker.print();  // "+OUT.Playable);
     }
   }
   function choose(p){
@@ -224,16 +224,16 @@
       bCard.classList.add("wall"); bPlay.classList.add("far"); bChg.classList.add("far");
       bSay.innerHTML="<small>compiler</small>Phone does not compile"; bSay.className="say show err";
       say('Both interfaces hand Phone a print(), and Java will not guess which one you meant: <b class="w">this does not compile</b>.',"w",
-        "error: types IPlayable and IChargeable are incompatible; class Phone inherits unrelated defaults for print() from types IPlayable and IChargeable");
+        "error: types Playable and Chargeable are incompatible; class Phone inherits unrelated defaults for print() from types Playable and Chargeable");
       return;
     }
-    (p==="IPlayable"?bPlay:bChg).classList.add("run"); printed(bSay,OUT[p]);
+    (p==="Playable"?bPlay:bChg).classList.add("run"); printed(bSay,OUT[p]);
     say('Phone overrides print(), so it compiles. Inside, <b class="g">'+p+'.super.print()</b> runs the default it picked.',"g",
       p+".super.print();  // "+OUT[p]);
   }
   function reset(){
-    clear(); own=false; pick="IPlayable"; paint();
-    say('IPlayable has a finished method, print(). Speaker did not write one. Phone takes print() from two interfaces.',"",
+    clear(); own=false; pick="Playable"; paint();
+    say('Playable has a finished method, print(). Speaker did not write one. Phone takes print() from two interfaces.',"",
       'default void print() { System.out.println("I can play music!"); }');
   }
   $("#aToggle").addEventListener("click",toggle);

@@ -125,7 +125,7 @@
     <div class="card var ask">
       <div>
         <p class="hd">the question, asked of one object at a time</p>
-        <p class="who">thing instanceof IChargeable</p>
+        <p class="who">thing instanceof Chargeable</p>
       </div>
       <button class="pb" id="bNext">Ask the next object</button>
     </div>
@@ -139,8 +139,8 @@
 
   <div class="take">
     <p class="tk">The one idea</p>
-    <p><b>instanceof works with interfaces too.</b> <code>thing instanceof IChargeable</code> is true for any object whose class implements
-    IChargeable, whatever that class is. Ask first, then cast to the interface and call its methods.</p>
+    <p><b>instanceof works with interfaces too.</b> <code>thing instanceof Chargeable</code> is true for any object whose class implements
+    Chargeable, whatever that class is. Ask first, then cast to the interface and call its methods.</p>
   </div>
   <div id="rail"></div>
 </div>
@@ -158,13 +158,13 @@
   }
   /* the three objects, in list order; i = the interfaces the class implements */
   var T=[
-    {c:"Radio",n:"Retro",i:["IPlayable"],out:""},
-    {c:"Phone",n:"Pocket",i:["IPlayable","IChargeable"],out:"The phone is charging."},
-    {c:"SmartWatch",n:"",i:["ICallable","IChargeable"],out:"The smart watch is charging."}
+    {c:"Radio",n:"Retro",i:["Playable"],out:""},
+    {c:"Phone",n:"Pocket",i:["Playable","Chargeable"],out:"The phone is charging."},
+    {c:"SmartWatch",n:"",i:["Caller","Chargeable"],out:"The smart watch is charging."}
   ];
   var pos=-1, row=$("#row"), bNext=$("#bNext");
 
-  function charges(t){ return t.i.indexOf("IChargeable")>=0; }
+  function charges(t){ return t.i.indexOf("Chargeable")>=0; }
   function paint(){
     row.innerHTML="";
     T.forEach(function(t,k){
@@ -173,7 +173,7 @@
       d.className="card thing"+(k===pos?" cur":"")+(asked?" asked":"")+(asked&&yes?" yes":"");
       var h='<p class="hd">index '+k+'</p><p class="who">'+t.c+(t.n?'<small>name: '+t.n+'</small>':'<small>no name</small>')+'</p>'
         +'<p class="sect">its class implements</p><div class="chips">';
-      t.i.forEach(function(n){ h+='<span class="chip'+(asked&&n==="IChargeable"?" hit":"")+'">'+n+'</span>'; });
+      t.i.forEach(function(n){ h+='<span class="chip'+(asked&&n==="Chargeable"?" hit":"")+'">'+n+'</span>'; });
       h+='</div><div class="ans">';
       if(asked){
         h+='<p class="v'+(yes?" t":"")+'">'+(yes?"true":"false")+'</p>';
@@ -189,12 +189,12 @@
     if(pos>=T.length-1) return;
     pos++; paint();
     var t=T[pos];
-    if(pos===0) say('Radio implements only IPlayable, so the answer is <b class="a">false</b>. Nothing breaks: the loop skips it and moves on.',"",
-      "thing instanceof IChargeable  // false");
-    else if(pos===1) say('Phone implements IChargeable, so the answer is <b class="g">true</b>. Now it is safe to cast it to IChargeable and call charge().',"g",
-      "((IChargeable) thing).charge();  // "+t.out);
-    else say('SmartWatch is a very different class, but it also implements IChargeable: <b class="g">true</b>. The question is about the interface, not the class.',"g",
-      "((IChargeable) thing).charge();  // "+t.out);
+    if(pos===0) say('Radio implements only Playable, so the answer is <b class="a">false</b>. Nothing breaks: the loop skips it and moves on.',"",
+      "thing instanceof Chargeable  // false");
+    else if(pos===1) say('Phone implements Chargeable, so the answer is <b class="g">true</b>. Now it is safe to cast it to Chargeable and call charge().',"g",
+      "((Chargeable) thing).charge();  // "+t.out);
+    else say('SmartWatch is a very different class, but it also implements Chargeable: <b class="g">true</b>. The question is about the interface, not the class.',"g",
+      "((Chargeable) thing).charge();  // "+t.out);
   }
   function reset(){
     pos=-1; paint();

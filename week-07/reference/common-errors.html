@@ -118,12 +118,12 @@
 
         <article class="card" data-cat="compile">
           <div class="ch"><span class="cat">Compile</span><h2>A class does not write an interface method</h2><a class="see" href="../visuals/04-implementing-an-interface.html">See it</a></div>
-          <pre class="msg">java: Speaker is not abstract and does not override abstract method play(String) in IPlayable</pre>
-          <p class="means">Speaker says <code>implements IPlayable</code> but never writes <code>play(String)</code>. Every abstract method of the interface must be written in the class. The same message appears when the name or the parameters differ, because then it is a different method.</p>
+          <pre class="msg">java: Speaker is not abstract and does not override abstract method play(String) in Playable</pre>
+          <p class="means">Speaker says <code>implements Playable</code> but never writes <code>play(String)</code>. Every abstract method of the interface must be written in the class. The same message appears when the name or the parameters differ, because then it is a different method.</p>
           <p class="fix"><b>Fix</b>Write the method with the exact name, parameters and return type from the interface, and put <code>@Override</code> above it so a typo is caught too.</p>
-          <div class="ba"><div class="bad"><span>Before</span><pre>public class Speaker implements IPlayable {
+          <div class="ba"><div class="bad"><span>Before</span><pre>public class Speaker implements Playable {
     public void stop() { ... }
-}</pre></div><div class="good"><span>After</span><pre>public class Speaker implements IPlayable {
+}</pre></div><div class="good"><span>After</span><pre>public class Speaker implements Playable {
     @Override
     public void play(String song) { ... }
     @Override
@@ -133,51 +133,51 @@
 
         <article class="card" data-cat="compile">
           <div class="ch"><span class="cat">Compile</span><h2>The method is not public</h2><a class="see" href="../visuals/04-implementing-an-interface.html">See it</a></div>
-          <pre class="msg">java: charge() in Radio cannot implement charge() in IChargeable
+          <pre class="msg">java: charge() in Radio cannot implement charge() in Chargeable
   attempting to assign weaker access privileges; was public</pre>
           <p class="means">Methods of an interface are public without saying so. A method that implements one cannot be less open, so the missing <code>public</code> in the class is the error.</p>
           <p class="fix"><b>Fix</b>Add <code>public</code> to the method in the class.</p>
-          <div class="ba"><div class="bad"><span>Before</span><pre>class Radio implements IChargeable {
+          <div class="ba"><div class="bad"><span>Before</span><pre>class Radio implements Chargeable {
     void charge() { ... }
-}</pre></div><div class="good"><span>After</span><pre>class Radio implements IChargeable {
+}</pre></div><div class="good"><span>After</span><pre>class Radio implements Chargeable {
     public void charge() { ... }
 }</pre></div></div>
         </article>
 
         <article class="card" data-cat="compile">
           <div class="ch"><span class="cat">Compile</span><h2>Two interfaces with the same default method</h2><a class="see" href="../visuals/08-default-methods.html">See it</a></div>
-          <pre class="msg">java: types IPlayable and IChargeable are incompatible;
-  class Phone inherits unrelated defaults for print() from types IPlayable and IChargeable</pre>
+          <pre class="msg">java: types Playable and Chargeable are incompatible;
+  class Phone inherits unrelated defaults for print() from types Playable and Chargeable</pre>
           <p class="means">Both interfaces have a default <code>print()</code> and Phone implements both. Java cannot choose, so it makes you choose. The error points at the class line, not at a method.</p>
           <p class="fix"><b>Fix</b>Override <code>print()</code> in the class. Inside it, call one default with <code>InterfaceName.super.print()</code>, call both, or write your own text.</p>
-          <div class="ba"><div class="bad"><span>Before</span><pre>public class Phone implements IPlayable, IChargeable {
+          <div class="ba"><div class="bad"><span>Before</span><pre>public class Phone implements Playable, Chargeable {
     // no print() here
-}</pre></div><div class="good"><span>After</span><pre>public class Phone implements IPlayable, IChargeable {
+}</pre></div><div class="good"><span>After</span><pre>public class Phone implements Playable, Chargeable {
     @Override
     public void print() {
-        IPlayable.super.print();
+        Playable.super.print();
     }
 }</pre></div></div>
         </article>
 
         <article class="card" data-cat="compile">
           <div class="ch"><span class="cat">Compile</span><h2>An interface cannot be built with new</h2><a class="see" href="../visuals/01-what-an-interface-is.html">See it</a></div>
-          <pre class="msg">java: IPlayable is abstract; cannot be instantiated</pre>
+          <pre class="msg">java: Playable is abstract; cannot be instantiated</pre>
           <p class="means">An interface only lists features, so there is no object to create from it. You build an object of a class that implements it.</p>
           <p class="fix"><b>Fix</b>Use <code>new</code> with a class, and keep the interface as the type of the variable.</p>
-          <div class="ba"><div class="bad"><span>Before</span><pre>IPlayable player = new IPlayable();</pre></div><div class="good"><span>After</span><pre>IPlayable player = new Speaker("Boom");</pre></div></div>
+          <div class="ba"><div class="bad"><span>Before</span><pre>Playable player = new Playable();</pre></div><div class="good"><span>After</span><pre>Playable player = new Speaker("Boom");</pre></div></div>
         </article>
 
         <article class="card" data-cat="compile">
           <div class="ch"><span class="cat">Compile</span><h2>The variable's type does not have that method</h2><a class="see" href="../visuals/06-an-interface-as-a-type.html">See it</a></div>
           <pre class="msg">java: cannot find symbol
   symbol:   method charge()
-  location: variable p of type IPlayable</pre>
-          <p class="means">The variable is an <code>IPlayable</code>, so it only sees the methods IPlayable declares, even though the object is a Phone that can charge.</p>
-          <p class="fix"><b>Fix</b>Ask with <code>instanceof IChargeable</code> and cast to the interface that has the method, or keep a variable of the type that declares it.</p>
-          <div class="ba"><div class="bad"><span>Before</span><pre>IPlayable p = new Phone("Pocket");
-p.charge();</pre></div><div class="good"><span>After</span><pre>if (p instanceof IChargeable) {
-    ((IChargeable) p).charge();
+  location: variable p of type Playable</pre>
+          <p class="means">The variable is a <code>Playable</code>, so it only sees the methods Playable declares, even though the object is a Phone that can charge.</p>
+          <p class="fix"><b>Fix</b>Ask with <code>instanceof Chargeable</code> and cast to the interface that has the method, or keep a variable of the type that declares it.</p>
+          <div class="ba"><div class="bad"><span>Before</span><pre>Playable p = new Phone("Pocket");
+p.charge();</pre></div><div class="good"><span>After</span><pre>if (p instanceof Chargeable) {
+    ((Chargeable) p).charge();
 }</pre></div></div>
         </article>
 
@@ -322,12 +322,12 @@ words.stream().filter(...).forEach(System.out::println);</pre></div></div>
 
         <article class="card" data-cat="runtime">
           <div class="ch"><span class="cat">Runtime</span><h2>A cast to an interface the object does not implement</h2><a class="see" href="../visuals/07-instanceof-with-interfaces.html">See it</a></div>
-          <pre class="msg">Exception in thread "main" java.lang.ClassCastException: class Speaker cannot be cast to class IChargeable (Speaker and IChargeable are in unnamed module of loader 'app')
+          <pre class="msg">Exception in thread "main" java.lang.ClassCastException: class Speaker cannot be cast to class Chargeable (Speaker and Chargeable are in unnamed module of loader 'app')
 	at Main.main(Main.java:13)</pre>
-          <p class="means">The code compiled, because a cast to an interface is allowed. At run time the object is a Speaker, and Speaker does not implement IChargeable.</p>
+          <p class="means">The code compiled, because a cast to an interface is allowed. At run time the object is a Speaker, and Speaker does not implement Chargeable.</p>
           <p class="fix"><b>Fix</b>Ask first with <code>instanceof</code>, and cast only when it is true.</p>
-          <div class="ba"><div class="bad"><span>Before</span><pre>IChargeable c = (IChargeable) thing;</pre></div><div class="good"><span>After</span><pre>if (thing instanceof IChargeable) {
-    IChargeable c = (IChargeable) thing;
+          <div class="ba"><div class="bad"><span>Before</span><pre>Chargeable c = (Chargeable) thing;</pre></div><div class="good"><span>After</span><pre>if (thing instanceof Chargeable) {
+    Chargeable c = (Chargeable) thing;
 }</pre></div></div>
         </article>
 
