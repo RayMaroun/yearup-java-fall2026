@@ -36,3 +36,8 @@ diagrams (1-1, groups, on paper or diagrams.net, no project), vehicle-inheritanc
 
 ## Games (8)
 is-a-or-has-a, who-owns-it (NEW), constructor-chain-tracer, override-detector, polymorphism-predictor, instanceof-sleuth, abstract-or-concrete, bug-hunter-6. Dropped from spring: flashcard-quiz-5 (flat quiz), studio-build, heterogeneous-hunt (covered by polymorphism-predictor).
+
+## Class diagram pages across weeks (Ray, 2026-11-15)
+- Week 6 `reference/class-diagram-reference.html`: the basics (one box, the signs, the inheritance arrow, abstract in italics, what goes in a diagram, first steps in diagrams.net).
+- Week 7 gets its own, more advanced class diagram reference page: interfaces and the dashed realization arrow, has-a lines (association, aggregation), multiplicity, static and abstract markers, several classes on one page.
+- Week 8 (Capstone 2) gets a standalone page with everything needed to create and understand a class diagram for the capstone: the notation in full, the tools (diagrams.net step by step, export, saving the picture in the repository and showing it in the README), a checklist before asking for approval. Never gives away a capstone design.
