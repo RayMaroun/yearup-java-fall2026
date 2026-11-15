@@ -206,19 +206,33 @@
 
       <section class="card">
         <h2>Drawing it in diagrams.net <span class="wb">5a &middot; 1-1</span></h2>
-        <div class="row"><span class="k">1 &amp;middot; open</span><span class="t">Go to <b>app.diagrams.net</b> and choose where to save the file. Pick <b>Create New Diagram</b>, then <b>Blank Diagram</b>.</span></div>
-        <div class="row"><span class="k">2 &amp;middot; a class box</span><span class="t">In the shapes panel on the left, type <b>class</b> in the search box. Drag the <b>Class</b> shape onto the page; it comes with three bands.</span></div>
-        <div class="row"><span class="k">3 &amp;middot; the name</span><span class="t">Double-click the top band and type the class name.</span></div>
-        <div class="row"><span class="k">4 &amp;middot; attributes</span><span class="t">Double-click the middle band and type one attribute per line, such as <code>- name: String</code>.</span></div>
-        <div class="row"><span class="k">5 &amp;middot; methods</span><span class="t">Double-click the bottom band and type one method per line, such as <code>+ getName(): String</code>.</span></div>
-        <div class="row"><span class="k">6 &amp;middot; a second box</span><span class="t">Drag in a second Class shape and fill it in the same way, for the child, placed below the parent.</span></div>
-        <div class="row"><span class="k">7 &amp;middot; the arrow</span><span class="t">Hover over the child box and drag one of its blue arrows to the parent box. In the Format panel on the right, open the <b>Arrow</b> tab and set the end of the line at the parent to the hollow triangle.</span></div>
-        <div class="row"><span class="k">8 &amp;middot; italics</span><span class="t">For an abstract class or method, select the text and press <b>Cmd+I</b> (Mac) or <b>Ctrl+I</b> (Windows), or use the <b>I</b> button on the Text tab.</span></div>
-        <div class="row"><span class="k">9 &amp;middot; save</span><span class="t">Choose <b>File</b>, then <b>Save</b>, or <b>File</b>, <b>Export as</b>, <b>PNG</b> to share a picture.</span></div>
+        <div class="row"><span class="k">1 &middot; open</span><span class="t">Go to <b>app.diagrams.net</b> and choose where to save the file. Pick <b>Create New Diagram</b>, then <b>Blank Diagram</b>.</span></div>
+        <div class="row"><span class="k">2 &middot; a class box</span><span class="t">In the shapes panel on the left, type <b>class</b> in the search box. Drag the <b>Class</b> shape onto the page; it comes with three bands.</span></div>
+        <div class="row"><span class="k">3 &middot; the name</span><span class="t">Double-click the top band and type the class name.</span></div>
+        <div class="row"><span class="k">4 &middot; attributes</span><span class="t">Double-click the middle band and type one attribute per line, such as <code>- name: String</code>.</span></div>
+        <div class="row"><span class="k">5 &middot; methods</span><span class="t">Double-click the bottom band and type one method per line, such as <code>+ getName(): String</code>.</span></div>
+        <div class="row"><span class="k">6 &middot; a second box</span><span class="t">Drag in a second Class shape and fill it in the same way, for the child, placed below the parent.</span></div>
+        <div class="row"><span class="k">7 &middot; the arrow</span><span class="t">Hover over the child box and drag one of its blue arrows to the parent box. Click the line, and in the Format panel on the right, on the <b>Style</b> tab, change the line end at the parent to the hollow triangle (the block arrow that is not filled).</span></div>
+        <div class="row"><span class="k">8 &middot; italics</span><span class="t">For an abstract class or method, select the text and press <b>Cmd+I</b> (Mac) or <b>Ctrl+I</b> (Windows), or use the <b>I</b> button on the Text tab.</span></div>
+        <div class="row"><span class="k">9 &middot; save</span><span class="t">Choose <b>File</b>, then <b>Save</b>, or <b>File</b>, <b>Export as</b>, <b>PNG</b> to share a picture.</span></div>
         <p class="see">See it:
           <a href="../visuals/03-reading-a-class-diagram.html">Reading a Class Diagram</a>
           <a href="../exercises/diagrams.html">Diagrams exercise</a>
         </p>
+      </section>
+
+      <section class="card">
+        <h2>What goes in a class diagram <span class="wb">5a &middot; 1-1</span></h2>
+        <table class="tbl">
+          <thead><tr><th>Part</th><th>Show it?</th></tr></thead>
+          <tbody>
+            <tr><td class="x">Attributes</td><td class="x2">Always, with the sign and the type.</td></tr>
+            <tr><td class="x">Methods that do something</td><td class="x2">Always. They are what the class can do.</td></tr>
+            <tr><td class="x">Constructors</td><td class="x2">Yes, when the class has one that takes values. It tells the reader what is needed to build the object.</td></tr>
+            <tr><td class="x">Plain getters and setters</td><td class="x2">No. The attributes already imply them, and they bury the methods that matter.</td></tr>
+            <tr><td class="x">A getter that calculates</td><td class="x2">Yes. It is behavior, and there is no attribute behind it.</td></tr>
+          </tbody>
+        </table>
       </section>
 
       <section class="card">
