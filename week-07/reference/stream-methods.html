@@ -152,7 +152,7 @@
         <div class="row"><span class="k">intermediate</span><span class="t">Returns a stream. Nothing runs yet; you can chain another step.</span></div>
         <div class="row"><span class="k">terminal</span><span class="t">Ends the pipeline and runs it. A stream can be ended once.</span></div>
         <p class="see">See it:
-          <a href="../visuals/16-the-stream-pipeline.html">The Stream Pipeline</a>
+          <a href="../visuals/17-the-stream-pipeline.html">The Stream Pipeline</a>
           <a href="cheat-sheet.html">Week 7 Cheat Sheet</a>
         </p>
       </section>
@@ -166,7 +166,7 @@
         <div class="row"><span class="k">result</span><code class="res">a stream of 3, 2, 2, 3, 7, 3, 5; numbers is not changed</code></div>
         <div class="row"><span class="k">note</span><span class="t">It starts every pipeline. Each call to stream() gives a fresh stream, so you can start again from the same list.</span></div>
         <p class="see">See it:
-          <a href="../visuals/16-the-stream-pipeline.html">The Stream Pipeline</a> <a href="../visuals/14-loop-or-stream.html">Loop or Stream</a>
+          <a href="../visuals/17-the-stream-pipeline.html">The Stream Pipeline</a> <a href="../visuals/15-loop-or-stream.html">Loop or Stream</a>
         </p>
       </section>
 
@@ -182,7 +182,7 @@
         <div class="row"><span class="k">the input</span><code>[Halloween, Ghost, Halloween 2, Friday the 13th, Twister, Halloween 3]</code></div>
         <div class="row"><span class="k">note</span><span class="t">The elements keep their type and their order; there are just fewer of them.</span></div>
         <p class="see">See it:
-          <a href="../visuals/16-the-stream-pipeline.html">The Stream Pipeline</a> <a href="../games/stream-predictor.html">Stream Predictor game</a>
+          <a href="../visuals/17-the-stream-pipeline.html">The Stream Pipeline</a> <a href="../games/stream-predictor.html">Stream Predictor game</a>
         </p>
       </section>
 
@@ -199,7 +199,7 @@
         <div class="row"><span class="k">type changes</span><span class="t">titles.stream().map(t -&gt; t.length()) turns a stream of String into a stream of Integer: [9, 5, 11, 15, 7, 11]</span></div>
         <div class="row"><span class="k">upper case</span><span class="t">names.stream().map(n -&gt; n.toUpperCase()) turns [alice, bob, charlie, dana] into [ALICE, BOB, CHARLIE, DANA]</span></div>
         <p class="see">See it:
-          <a href="../visuals/16-the-stream-pipeline.html">The Stream Pipeline</a> <a href="../visuals/15-anatomy-of-a-lambda.html">Anatomy of a Lambda</a>
+          <a href="../visuals/17-the-stream-pipeline.html">The Stream Pipeline</a> <a href="../visuals/16-anatomy-of-a-lambda.html">Anatomy of a Lambda</a>
         </p>
       </section>
 
@@ -216,7 +216,7 @@
         <div class="row"><span class="k">reverse</span><span class="t">sorted(Comparator.reverseOrder()) on [Halloween 3, Halloween, Halloween 2] gives [Halloween 3, Halloween 2, Halloween]</span></div>
         <div class="row"><span class="k">needs</span><span class="t">Comparable. A class without compareTo makes sorted() throw ClassCastException when the stream runs.</span></div>
         <p class="see">See it:
-          <a href="../visuals/09-comparable.html">Comparable</a> <a href="../games/comparable-sorter.html">Comparable Sorter game</a> <a href="common-errors.html">Common Errors</a>
+          <a href="../visuals/10-comparable.html">Comparable</a> <a href="../games/comparable-sorter.html">Comparable Sorter game</a> <a href="common-errors.html">Common Errors</a>
         </p>
       </section>
 
@@ -232,7 +232,7 @@
         <div class="row"><span class="k">the input</span><code>[3, 2, 2, 3, 7, 3, 5]</code></div>
         <div class="row"><span class="k">with map</span><span class="t">numbers.stream().map(n -&gt; n * n).distinct() gives [9, 4, 49, 25]: square first, then drop the repeats</span></div>
         <p class="see">See it:
-          <a href="../visuals/16-the-stream-pipeline.html">The Stream Pipeline</a>
+          <a href="../visuals/17-the-stream-pipeline.html">The Stream Pipeline</a>
         </p>
       </section>
 
@@ -251,7 +251,7 @@ Halloween 3</code></div>
         <div class="row"><span class="k">shorter</span><span class="t">A collection has forEach too: titles.forEach(System.out::println) skips stream().</span></div>
         <div class="row"><span class="k">note</span><span class="t">Use it to do something, such as print. To keep the elements, collect them instead.</span></div>
         <p class="see">See it:
-          <a href="../visuals/16-the-stream-pipeline.html">The Stream Pipeline</a> <a href="../visuals/15-anatomy-of-a-lambda.html">Anatomy of a Lambda</a>
+          <a href="../visuals/17-the-stream-pipeline.html">The Stream Pipeline</a> <a href="../visuals/16-anatomy-of-a-lambda.html">Anatomy of a Lambda</a>
         </p>
       </section>
 
@@ -266,7 +266,7 @@ Halloween 3</code></div>
         <div class="row"><span class="k">result</span><code class="res">3</code></div>
         <div class="row"><span class="k">type</span><span class="t">The result is a long, so store it in a long: long howMany = ...count();</span></div>
         <p class="see">See it:
-          <a href="../visuals/16-the-stream-pipeline.html">The Stream Pipeline</a> <a href="common-errors.html">Common Errors</a>
+          <a href="../visuals/17-the-stream-pipeline.html">The Stream Pipeline</a> <a href="common-errors.html">Common Errors</a>
         </p>
       </section>
 
@@ -282,7 +282,7 @@ Halloween 3</code></div>
         <div class="row"><span class="k">a product</span><span class="t">Arrays.asList(1, 2, 3, 4, 5).stream().reduce(1, (total, n) -&gt; total * n) gives 120; a product starts at 1, not 0</span></div>
         <div class="row"><span class="k">words</span><span class="t">words.stream().reduce("", (acc, w) -&gt; acc + w + " ") on [Potatoes, are, awesome] gives "Potatoes are awesome " with a space at the end, so trim() it</span></div>
         <p class="see">See it:
-          <a href="../visuals/17-reduce.html">reduce</a> <a href="../games/stream-predictor.html">Stream Predictor game</a>
+          <a href="../visuals/18-reduce.html">reduce</a> <a href="../games/stream-predictor.html">Stream Predictor game</a>
         </p>
       </section>
 
@@ -298,7 +298,7 @@ Halloween 3</code></div>
         <div class="row"><span class="k">into an ArrayList</span><span class="t">collect(Collectors.toCollection(ArrayList::new)) when you need an ArrayList</span></div>
         <div class="row"><span class="k">note</span><span class="t">This is the destination of the pipeline: the data is at rest again.</span></div>
         <p class="see">See it:
-          <a href="../visuals/16-the-stream-pipeline.html">The Stream Pipeline</a> <a href="../visuals/14-loop-or-stream.html">Loop or Stream</a>
+          <a href="../visuals/17-the-stream-pipeline.html">The Stream Pipeline</a> <a href="../visuals/15-loop-or-stream.html">Loop or Stream</a>
         </p>
       </section>
 
@@ -314,7 +314,7 @@ Halloween 3</code></div>
         <div class="row"><span class="k">workbook</span><span class="t">The workbook teaches collect(Collectors.toList()); the demos use the shorter toList(). Both give this list.</span></div>
         <div class="row"><span class="k">read-only</span><span class="t">Calling add on the result throws UnsupportedOperationException.</span></div>
         <p class="see">See it:
-          <a href="../visuals/16-the-stream-pipeline.html">The Stream Pipeline</a> <a href="common-errors.html">Common Errors</a>
+          <a href="../visuals/17-the-stream-pipeline.html">The Stream Pipeline</a> <a href="common-errors.html">Common Errors</a>
         </p>
       </section>
 
@@ -333,7 +333,7 @@ map n * n     [9, 9, 49, 9, 25]
 distinct      [9, 49, 25]
 sorted        [9, 25, 49]</code></div>
         <p class="see">See it:
-          <a href="../visuals/16-the-stream-pipeline.html">The Stream Pipeline</a>
+          <a href="../visuals/17-the-stream-pipeline.html">The Stream Pipeline</a>
           <a href="../games/stream-predictor.html">Stream Predictor game</a>
         </p>
       </section>

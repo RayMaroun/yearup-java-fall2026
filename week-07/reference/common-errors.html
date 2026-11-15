@@ -117,7 +117,7 @@
       <div class="cards" id="cards">
 
         <article class="card" data-cat="compile">
-          <div class="ch"><span class="cat">Compile</span><h2>A class does not write an interface method</h2><a class="see" href="../visuals/03-implementing-an-interface.html">See it</a></div>
+          <div class="ch"><span class="cat">Compile</span><h2>A class does not write an interface method</h2><a class="see" href="../visuals/04-implementing-an-interface.html">See it</a></div>
           <pre class="msg">java: Speaker is not abstract and does not override abstract method play(String) in IPlayable</pre>
           <p class="means">Speaker says <code>implements IPlayable</code> but never writes <code>play(String)</code>. Every abstract method of the interface must be written in the class. The same message appears when the name or the parameters differ, because then it is a different method.</p>
           <p class="fix"><b>Fix</b>Write the method with the exact name, parameters and return type from the interface, and put <code>@Override</code> above it so a typo is caught too.</p>
@@ -132,7 +132,7 @@
         </article>
 
         <article class="card" data-cat="compile">
-          <div class="ch"><span class="cat">Compile</span><h2>The method is not public</h2><a class="see" href="../visuals/03-implementing-an-interface.html">See it</a></div>
+          <div class="ch"><span class="cat">Compile</span><h2>The method is not public</h2><a class="see" href="../visuals/04-implementing-an-interface.html">See it</a></div>
           <pre class="msg">java: charge() in Radio cannot implement charge() in IChargeable
   attempting to assign weaker access privileges; was public</pre>
           <p class="means">Methods of an interface are public without saying so. A method that implements one cannot be less open, so the missing <code>public</code> in the class is the error.</p>
@@ -145,7 +145,7 @@
         </article>
 
         <article class="card" data-cat="compile">
-          <div class="ch"><span class="cat">Compile</span><h2>Two interfaces with the same default method</h2><a class="see" href="../visuals/07-default-methods.html">See it</a></div>
+          <div class="ch"><span class="cat">Compile</span><h2>Two interfaces with the same default method</h2><a class="see" href="../visuals/08-default-methods.html">See it</a></div>
           <pre class="msg">java: types IPlayable and IChargeable are incompatible;
   class Phone inherits unrelated defaults for print() from types IPlayable and IChargeable</pre>
           <p class="means">Both interfaces have a default <code>print()</code> and Phone implements both. Java cannot choose, so it makes you choose. The error points at the class line, not at a method.</p>
@@ -169,7 +169,7 @@
         </article>
 
         <article class="card" data-cat="compile">
-          <div class="ch"><span class="cat">Compile</span><h2>The variable's type does not have that method</h2><a class="see" href="../visuals/05-an-interface-as-a-type.html">See it</a></div>
+          <div class="ch"><span class="cat">Compile</span><h2>The variable's type does not have that method</h2><a class="see" href="../visuals/06-an-interface-as-a-type.html">See it</a></div>
           <pre class="msg">java: cannot find symbol
   symbol:   method charge()
   location: variable p of type IPlayable</pre>
@@ -182,7 +182,7 @@ p.charge();</pre></div><div class="good"><span>After</span><pre>if (p instanceof
         </article>
 
         <article class="card" data-cat="compile">
-          <div class="ch"><span class="cat">Compile</span><h2>A LinkedList in an ArrayList variable</h2><a class="see" href="../visuals/08-code-to-the-interface.html">See it</a></div>
+          <div class="ch"><span class="cat">Compile</span><h2>A LinkedList in an ArrayList variable</h2><a class="see" href="../visuals/09-code-to-the-interface.html">See it</a></div>
           <pre class="msg">java: incompatible types: cannot infer type arguments for LinkedList&lt;&gt;
     reason: no instance(s) of type variable(s) E exist so that LinkedList&lt;E&gt; conforms to ArrayList&lt;String&gt;
   where E is a type-variable:
@@ -195,7 +195,7 @@ names = new LinkedList&lt;&gt;();</pre></div></div>
         </article>
 
         <article class="card" data-cat="compile">
-          <div class="ch"><span class="cat">Compile</span><h2>A type argument outside the bound</h2><a class="see" href="../visuals/13-bounded-types.html">See it</a></div>
+          <div class="ch"><span class="cat">Compile</span><h2>A type argument outside the bound</h2><a class="see" href="../visuals/14-bounded-types.html">See it</a></div>
           <pre class="msg">java: type argument Integer is not within bounds of type-variable T
   where T is a type-variable:
     T extends Musician declared in class Duet
@@ -210,7 +210,7 @@ java: cannot infer type arguments for Duet&lt;&gt;
         </article>
 
         <article class="card" data-cat="compile">
-          <div class="ch"><span class="cat">Compile</span><h2>A primitive as a type argument</h2><a class="see" href="../visuals/10-the-need-for-generics.html">See it</a></div>
+          <div class="ch"><span class="cat">Compile</span><h2>A primitive as a type argument</h2><a class="see" href="../visuals/11-the-need-for-generics.html">See it</a></div>
           <pre class="msg">java: unexpected type
   required: reference
   found:    int</pre>
@@ -220,7 +220,7 @@ java: cannot infer type arguments for Duet&lt;&gt;
         </article>
 
         <article class="card" data-cat="compile">
-          <div class="ch"><span class="cat">Compile</span><h2>An unbounded T calling a method</h2><a class="see" href="../visuals/13-bounded-types.html">See it</a></div>
+          <div class="ch"><span class="cat">Compile</span><h2>An unbounded T calling a method</h2><a class="see" href="../visuals/14-bounded-types.html">See it</a></div>
           <pre class="msg">java: cannot find symbol
   symbol:   method perform()
   location: variable left of type T
@@ -236,7 +236,7 @@ java: cannot infer type arguments for Duet&lt;&gt;
         </article>
 
         <article class="card" data-cat="compile">
-          <div class="ch"><span class="cat">Compile</span><h2>Two different types in one Pair</h2><a class="see" href="../visuals/11-a-generic-class.html">See it</a></div>
+          <div class="ch"><span class="cat">Compile</span><h2>Two different types in one Pair</h2><a class="see" href="../visuals/12-a-generic-class.html">See it</a></div>
           <pre class="msg">java: incompatible types: cannot infer type arguments for Pair&lt;&gt;
     reason: inference variable T has incompatible bounds
       equality constraints: Integer
@@ -249,7 +249,7 @@ java: cannot infer type arguments for Duet&lt;&gt;
         </article>
 
         <article class="card" data-cat="compile">
-          <div class="ch"><span class="cat">Compile</span><h2>Sorting a class that is not Comparable</h2><a class="see" href="../visuals/09-comparable.html">See it</a></div>
+          <div class="ch"><span class="cat">Compile</span><h2>Sorting a class that is not Comparable</h2><a class="see" href="../visuals/10-comparable.html">See it</a></div>
           <pre class="msg">java: no suitable method found for sort(List&lt;Song&gt;)
     method Collections.&lt;T#1&gt;sort(List&lt;T#1&gt;) is not applicable
       (inference variable T#1 has incompatible bounds
@@ -268,7 +268,7 @@ Collections.sort(songs);</pre></div><div class="good"><span>After</span><pre>pub
         </article>
 
         <article class="card" data-cat="compile">
-          <div class="ch"><span class="cat">Compile</span><h2>A lambda changes a local variable</h2><a class="see" href="../visuals/15-anatomy-of-a-lambda.html">See it</a></div>
+          <div class="ch"><span class="cat">Compile</span><h2>A lambda changes a local variable</h2><a class="see" href="../visuals/16-anatomy-of-a-lambda.html">See it</a></div>
           <pre class="msg">java: local variables referenced from a lambda expression must be final or effectively final</pre>
           <p class="means">The lambda runs later, possibly somewhere else, so it may read a local variable only if that variable never changes. <code>total += n</code> changes it.</p>
           <p class="fix"><b>Fix</b>Do not change a local variable inside a lambda. Compute the total with <code>reduce</code>, or loop with a normal for loop.</p>
@@ -278,7 +278,7 @@ numbers.forEach(n -&gt; total += n);</pre></div><div class="good"><span>After</s
         </article>
 
         <article class="card" data-cat="compile">
-          <div class="ch"><span class="cat">Compile</span><h2>A block lambda with an expression and no return</h2><a class="see" href="../visuals/15-anatomy-of-a-lambda.html">See it</a></div>
+          <div class="ch"><span class="cat">Compile</span><h2>A block lambda with an expression and no return</h2><a class="see" href="../visuals/16-anatomy-of-a-lambda.html">See it</a></div>
           <pre class="msg">java: not a statement</pre>
           <p class="means">With braces, the body is a list of statements, and <code>n &gt; 2;</code> is not a statement. In a block, a lambda that must give a value needs <code>return</code>.</p>
           <p class="fix"><b>Fix</b>Drop the braces for one expression, or keep them and write <code>return</code>.</p>
@@ -288,7 +288,7 @@ nums.stream().filter(n -&gt; { return n &gt; 2; })</pre></div></div>
         </article>
 
         <article class="card" data-cat="compile">
-          <div class="ch"><span class="cat">Compile</span><h2>count() stored in an int</h2><a class="see" href="../visuals/16-the-stream-pipeline.html">See it</a></div>
+          <div class="ch"><span class="cat">Compile</span><h2>count() stored in an int</h2><a class="see" href="../visuals/17-the-stream-pipeline.html">See it</a></div>
           <pre class="msg">java: incompatible types: possible lossy conversion from long to int</pre>
           <p class="means"><code>count()</code> returns a <code>long</code>, which is bigger than an <code>int</code>.</p>
           <p class="fix"><b>Fix</b>Store it in a <code>long</code>.</p>
@@ -298,7 +298,7 @@ nums.stream().filter(n -&gt; { return n &gt; 2; })</pre></div></div>
         </article>
 
         <article class="card" data-cat="compile">
-          <div class="ch"><span class="cat">Compile</span><h2>reduce result in the wrong type</h2><a class="see" href="../visuals/17-reduce.html">See it</a></div>
+          <div class="ch"><span class="cat">Compile</span><h2>reduce result in the wrong type</h2><a class="see" href="../visuals/18-reduce.html">See it</a></div>
           <pre class="msg">java: incompatible types: Integer cannot be converted to String</pre>
           <p class="means"><code>reduce</code> gives back the same type as the elements. A stream of Integer reduces to an Integer, not a String.</p>
           <p class="fix"><b>Fix</b>Store the result in the element type, then convert it if you need text.</p>
@@ -307,7 +307,7 @@ String s = String.valueOf(sum);</pre></div></div>
         </article>
 
         <article class="card" data-cat="runtime">
-          <div class="ch"><span class="cat">Runtime</span><h2>A stream used twice</h2><a class="see" href="../visuals/16-the-stream-pipeline.html">See it</a></div>
+          <div class="ch"><span class="cat">Runtime</span><h2>A stream used twice</h2><a class="see" href="../visuals/17-the-stream-pipeline.html">See it</a></div>
           <pre class="msg">Exception in thread "main" java.lang.IllegalStateException: stream has already been operated upon or closed
 	at java.base/java.util.stream.AbstractPipeline.evaluate(AbstractPipeline.java:229)
 	at java.base/java.util.stream.ReferencePipeline.forEach(ReferencePipeline.java:596)
@@ -321,7 +321,7 @@ words.stream().filter(...).forEach(System.out::println);</pre></div></div>
         </article>
 
         <article class="card" data-cat="runtime">
-          <div class="ch"><span class="cat">Runtime</span><h2>A cast to an interface the object does not implement</h2><a class="see" href="../visuals/06-instanceof-with-interfaces.html">See it</a></div>
+          <div class="ch"><span class="cat">Runtime</span><h2>A cast to an interface the object does not implement</h2><a class="see" href="../visuals/07-instanceof-with-interfaces.html">See it</a></div>
           <pre class="msg">Exception in thread "main" java.lang.ClassCastException: class Speaker cannot be cast to class IChargeable (Speaker and IChargeable are in unnamed module of loader 'app')
 	at Main.main(Main.java:13)</pre>
           <p class="means">The code compiled, because a cast to an interface is allowed. At run time the object is a Speaker, and Speaker does not implement IChargeable.</p>
@@ -332,7 +332,7 @@ words.stream().filter(...).forEach(System.out::println);</pre></div></div>
         </article>
 
         <article class="card" data-cat="runtime">
-          <div class="ch"><span class="cat">Runtime</span><h2>sorted() on a class that is not Comparable</h2><a class="see" href="../visuals/09-comparable.html">See it</a></div>
+          <div class="ch"><span class="cat">Runtime</span><h2>sorted() on a class that is not Comparable</h2><a class="see" href="../visuals/10-comparable.html">See it</a></div>
           <pre class="msg">Exception in thread "main" java.lang.ClassCastException: class Song cannot be cast to class java.lang.Comparable (Song is in unnamed module of loader 'app'; java.lang.Comparable is in module java.base of loader 'bootstrap')
 	at java.base/java.util.Comparators$NaturalOrderComparator.compare(Comparators.java:47)
 	...
@@ -343,7 +343,7 @@ words.stream().filter(...).forEach(System.out::println);</pre></div></div>
         </article>
 
         <article class="card" data-cat="runtime">
-          <div class="ch"><span class="cat">Runtime</span><h2>Adding to the list that toList() gave back</h2><a class="see" href="../visuals/16-the-stream-pipeline.html">See it</a></div>
+          <div class="ch"><span class="cat">Runtime</span><h2>Adding to the list that toList() gave back</h2><a class="see" href="../visuals/17-the-stream-pipeline.html">See it</a></div>
           <pre class="msg">Exception in thread "main" java.lang.UnsupportedOperationException
 	at java.base/java.util.ImmutableCollections.uoe(ImmutableCollections.java:142)
 	at java.base/java.util.ImmutableCollections$AbstractImmutableCollection.add(ImmutableCollections.java:147)
@@ -357,7 +357,7 @@ list.add("Twister");</pre></div></div>
         </article>
 
         <article class="card" data-cat="quiet">
-          <div class="ch"><span class="cat">Quiet bug</span><h2>A pipeline with no terminal operation</h2><a class="see" href="../visuals/16-the-stream-pipeline.html">See it</a></div>
+          <div class="ch"><span class="cat">Quiet bug</span><h2>A pipeline with no terminal operation</h2><a class="see" href="../visuals/17-the-stream-pipeline.html">See it</a></div>
           <pre class="msg out">(no message) the program prints:
 done</pre>
           <p class="means"><code>filter</code> and <code>map</code> only describe the steps. Nothing runs, not even the println inside the lambda, until a terminal operation such as <code>forEach</code>, <code>count</code> or <code>collect</code> ends the stream.</p>
@@ -367,7 +367,7 @@ System.out.println("done");</pre></div><div class="good"><span>After</span><pre>
         </article>
 
         <article class="card" data-cat="quiet">
-          <div class="ch"><span class="cat">Quiet bug</span><h2>map thrown away, the list unchanged</h2><a class="see" href="../visuals/16-the-stream-pipeline.html">See it</a></div>
+          <div class="ch"><span class="cat">Quiet bug</span><h2>map thrown away, the list unchanged</h2><a class="see" href="../visuals/17-the-stream-pipeline.html">See it</a></div>
           <pre class="msg out">(no message) the program prints:
 [alice, bob]</pre>
           <p class="means">A stream never changes its source. The mapped values went nowhere because nothing collected them, and <code>names</code> is exactly as it was.</p>

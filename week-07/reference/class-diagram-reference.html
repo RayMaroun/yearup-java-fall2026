@@ -146,7 +146,7 @@
         <div class="row"><span class="k">signs</span><span class="t">Every method is <code>+</code>, public, without you writing it in the Java.</span></div>
         <p class="see">See it:
           <a href="../visuals/01-what-an-interface-is.html">What an Interface Is</a>
-          <a href="../visuals/07-default-methods.html">Default Methods</a>
+          <a href="../visuals/08-default-methods.html">Default Methods</a>
         </p>
       </section>
 
@@ -158,9 +158,9 @@
         <div class="row"><span class="k">direction</span><span class="t">Both arrows start at the class and end with the triangle at the parent or the interface.</span></div>
         <div class="row"><span class="k">several interfaces</span><span class="t">One dashed arrow for each interface the class implements.</span></div>
         <p class="see">See it:
-          <a href="../visuals/03-implementing-an-interface.html">Implementing an Interface</a>
-          <a href="../visuals/04-one-class-several-interfaces.html">One Class, Several Interfaces</a>
-          <a href="../visuals/02-interface-or-abstract-class.html">Interface or Abstract Class</a>
+          <a href="../visuals/04-implementing-an-interface.html">Implementing an Interface</a>
+          <a href="../visuals/05-one-class-several-interfaces.html">One Class, Several Interfaces</a>
+          <a href="../visuals/03-interface-or-abstract-class.html">Interface or Abstract Class</a>
         </p>
       </section>
 
@@ -172,8 +172,8 @@
         <div class="row"><span class="k">in Java</span><span class="t">Both are a field in the class: <code>private ChargingStation station;</code> or <code>private List&lt;Device&gt; devices;</code>. The diamond is on the class that has the field.</span></div>
         <div class="row"><span class="k">is-a or has-a</span><span class="t">Triangle: is a, one class is a kind of the other. Line or diamond: has a, one class holds the other.</span></div>
         <p class="see">See it:
-          <a href="../visuals/02-interface-or-abstract-class.html">Interface or Abstract Class</a>
-          <a href="../visuals/08-code-to-the-interface.html">Code to the Interface</a>
+          <a href="../visuals/03-interface-or-abstract-class.html">Interface or Abstract Class</a>
+          <a href="../visuals/09-code-to-the-interface.html">Code to the Interface</a>
         </p>
       </section>
 
@@ -191,7 +191,7 @@
         <div class="row"><span class="k">where</span><span class="t">Write the number at the end of the line, next to the class it counts. <code>1</code> at the Backpack and <code>*</code> at the Device reads: one Backpack holds many Devices.</span></div>
         <div class="row"><span class="k">in Java</span><span class="t"><code>0..1</code> is a field that may be <code>null</code>. <code>*</code> is a list or an array.</span></div>
         <p class="see">See it:
-          <a href="../visuals/08-code-to-the-interface.html">Code to the Interface</a>
+          <a href="../visuals/09-code-to-the-interface.html">Code to the Interface</a>
         </p>
       </section>
 
@@ -202,7 +202,7 @@
         <div class="row"><span class="k">abstract</span><span class="t">Italics for an abstract class name and for an abstract method, as on Week 6. In an interface, the abstract methods are italic by the same rule.</span></div>
         <div class="row"><span class="k">on paper</span><span class="t">Draw a line under static members by hand and slant the abstract ones.</span></div>
         <p class="see">See it:
-          <a href="../visuals/02-interface-or-abstract-class.html">Interface or Abstract Class</a>
+          <a href="../visuals/03-interface-or-abstract-class.html">Interface or Abstract Class</a>
         </p>
       </section>
 
@@ -222,9 +222,9 @@ public class Phone extends Device implements IChargeable { ... }
 public class Backpack { private List&lt;Device&gt; devices; private static int count; ... }</code></div>
         <div class="row"><span class="k">note</span><span class="t">Phone gets one default <code>print()</code> through Device and another from IChargeable, so it overrides <code>print()</code>, and the method is listed in its box.</span></div>
         <p class="see">See it:
-          <a href="../visuals/04-one-class-several-interfaces.html">One Class, Several Interfaces</a>
-          <a href="../visuals/07-default-methods.html">Default Methods</a>
-          <a href="../visuals/08-code-to-the-interface.html">Code to the Interface</a>
+          <a href="../visuals/05-one-class-several-interfaces.html">One Class, Several Interfaces</a>
+          <a href="../visuals/08-default-methods.html">Default Methods</a>
+          <a href="../visuals/09-code-to-the-interface.html">Code to the Interface</a>
         </p>
       </section>
 
@@ -262,7 +262,7 @@ public class Backpack { private List&lt;Device&gt; devices; private static int c
           </tbody>
         </table>
         <p class="see">See it:
-          <a href="../visuals/03-implementing-an-interface.html">Implementing an Interface</a>
+          <a href="../visuals/04-implementing-an-interface.html">Implementing an Interface</a>
           <a href="common-errors.html">Common Errors</a>
         </p>
       </section>

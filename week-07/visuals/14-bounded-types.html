@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>The Need for Generics | Week 7 Visual Hub</title>
+<title>Bounded Types | Week 7 Visual Hub</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Sora:wght@500;700&family=Inter:wght@400;500&family=JetBrains+Mono:wght@400;500&display=swap">
 <style>
@@ -110,55 +110,47 @@
   .take b{color:#fff}
 
   /* ---------- this page ---------- */
-  .board{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr);gap:16px;align-items:stretch;min-height:380px}
-  @media (max-width:820px){.board{grid-template-columns:1fr}}
-  .method{display:flex;flex-direction:column}
-  .method.typed{border-color:rgba(70,217,138,.5);background:rgba(70,217,138,.05)}
-  .fld{font-family:var(--mono);font-size:.82rem;color:#82aaff;margin:6px 0 0}
-  .slot .in{font-family:var(--mono);font-weight:500}
-  .slot.no .in{color:#ffb0b0}
-  .slot.no .in small{color:#ffb0b0}
-  .btns{display:flex;flex-wrap:wrap;gap:8px;margin-top:12px}
+  .board{display:grid;grid-template-columns:minmax(0,1fr) 84px minmax(0,1.15fr);gap:16px;align-items:center;min-height:380px}
+  @media (max-width:820px){.board{grid-template-columns:1fr}.arrow{min-height:0!important;flex-direction:row!important;padding:4px 0}}
   .pb:disabled{opacity:.35;cursor:default}
+  .sig{line-height:2}
+  .bound{font-family:var(--mono);font-size:.92rem;padding:3px 9px;border-radius:8px;cursor:pointer;transition:.15s;
+    border:1px solid var(--good);background:rgba(70,217,138,.12);color:#9fe3b6}
+  .bound:hover{background:rgba(70,217,138,.22)}
+  .bound.gone{border:1px dashed var(--warn);background:rgba(255,106,106,.08);color:#ffb0b0;text-decoration:line-through}
+  .slot .in{font-size:1.2rem}
+  .slot.no .in{color:#ffb0b0;text-decoration:line-through;text-decoration-color:var(--warn)}
+  .slot.no .in small{color:#ffb0b0;text-decoration:none;display:block}
+  .perf{display:flex;align-items:center;gap:12px;flex-wrap:wrap}
+  .perf span{font-family:var(--mono);font-size:.76rem;color:var(--muted)}
+  .perf.bad span{color:#ffb0b0;text-decoration:line-through}
   .say{white-space:pre-wrap;min-height:74px}
   @media (prefers-reduced-motion:reduce){*{animation-duration:.01ms!important;transition-duration:.01ms!important}#amb{display:none}}
 </style>
 </head>
 <body>
-<a class="back" href="../index.html#10-the-need-for-generics">&#8592; Week 7 index</a>
+<a class="back" href="../index.html#14-bounded-types">&#8592; Week 7 index</a>
 <canvas id="amb"></canvas>
 <div class="wrap">
-  <p class="tag">Workbook 6a &middot; Section 3-1</p>
-  <h1>The Need for Generics</h1>
-  <p class="lede"><b>Two boxes. Put a number or a word in each, then read it back as an Integer.</b></p>
+  <p class="tag">Workbook 6a &middot; Section 3-3</p>
+  <h1>Bounded Types</h1>
+  <p class="lede"><b>A Duet only takes musicians. Try each type as T, then take the limit away.</b></p>
 
   <div class="stage">
     <div class="board" id="board">
-      <div class="method" id="cA">
-        <p class="hd">before generics</p>
-        <p class="who">A box of Object</p>
-        <p class="fld">Object thing</p>
-        <p class="sect">inside the box</p>
-        <div class="slot" id="slA"><p class="lab">thing<span id="fitA"></span></p><p class="in" id="inA"></p></div>
-        <div class="btns">
-          <button class="pb" data-b="A" data-a="num">put(63)</button>
-          <button class="pb" data-b="A" data-a="str">put("Me")</button>
-          <button class="pb" data-b="A" data-a="get" id="gA">(Integer) get()</button>
+      <div class="objs" id="types"></div>
+      <div class="arrow" id="arrow"><b class="go">&rarr;</b><b class="x">&#10005;</b><span id="alab">use as T</span></div>
+      <div class="method" id="method">
+        <p class="hd">class &middot; written once</p>
+        <p class="sig">Duet&lt;T <button class="bound" id="bBound">extends Musician</button>&gt;</p>
+        <p class="sect">T right now</p>
+        <div class="slot" id="slot">
+          <p class="lab">T<span id="fit"></span></p>
+          <p class="in" id="in"></p>
         </div>
-        <div class="say" id="sA"></div>
-      </div>
-      <div class="method typed" id="cB">
-        <p class="hd">with generics</p>
-        <p class="who">A box of Integer</p>
-        <p class="fld">Box&lt;Integer&gt;</p>
-        <p class="sect">inside the box</p>
-        <div class="slot" id="slB"><p class="lab">thing<span id="fitB"></span></p><p class="in" id="inB"></p></div>
-        <div class="btns">
-          <button class="pb" data-b="B" data-a="num">put(63)</button>
-          <button class="pb" data-b="B" data-a="str">put("Me")</button>
-          <button class="pb" data-b="B" data-a="get" id="gB">get()</button>
-        </div>
-        <div class="say" id="sB"></div>
+        <p class="sect">a method inside Duet</p>
+        <div class="perf" id="perf"><button class="pb" id="bPerf">perform()</button><span>left.perform(); right.perform();</span></div>
+        <div class="say" id="s"></div>
       </div>
     </div>
     <div class="caption" id="caption">
@@ -169,7 +161,7 @@
 
   <div class="take">
     <p class="tk">The one idea</p>
-    <p><b>A box of Object accepts anything</b>, so reading needs a cast, and a wrong cast still compiles and crashes while the program runs. <b>A generic box names its type</b>, so the compiler refuses the wrong thing before the program starts, and reading needs no cast.</p>
+    <p><b>T extends Musician puts a limit on the blank.</b> It works in two directions: Duet may call <code>perform()</code> on its T, because every allowed T is a Musician, and the compiler refuses any type that is not one. Without the limit, T could be anything and Duet could call nothing on it.</p>
   </div>
   <div id="rail"></div>
 </div>
@@ -189,74 +181,103 @@
     el.innerHTML="<small>"+label+"</small>"; el.appendChild(document.createTextNode(text));
     el.className="say show"+(err?" err":"");
   }
-  var VAL={num:{show:"63",kind:"an Integer"},str:{show:'"Me"',kind:"a String"}};
-  var VAR={A:"box",B:"numbers"};
-  var CCE='Exception in thread "main" java.lang.ClassCastException: class java.lang.String cannot be cast to class java.lang.Integer (java.lang.String and java.lang.Integer are in module java.base of loader \'bootstrap\')';
-  var ERR="incompatible types: String cannot be converted to Integer";
-  var held={A:null,B:null};
+  var O=[
+    {cls:"Musician",rel:"has perform()",ok:true,pair:["Cellist","Violinist"],v:"new Duet<>(cellist, violinist)"},
+    {cls:"Cellist",rel:"extends Musician",ok:true,kid:true,pair:["Cellist","Cellist"],v:"new Duet<>(cellist, cellist2)"},
+    {cls:"Violinist",rel:"extends Musician",ok:true,kid:true,pair:["Violinist","Violinist"],v:"new Duet<>(violinist, violinist2)"},
+    {cls:"Integer",rel:"a number, no perform()",ok:false}
+  ];
+  var ERR="type argument Integer is not within bounds of type-variable T";
+  var ERR2="error: cannot find symbol\n  symbol:   method perform()\n  location: variable left of type T";
+  var types=$("#types"),arrow=$("#arrow"),alab=$("#alab"),method=$("#method"),slot=$("#slot"),fit=$("#fit"),
+      inn=$("#in"),s=$("#s"),bBound=$("#bBound"),bPerf=$("#bPerf"),perf=$("#perf");
+  var bound=true,cur=-1;
 
-  function draw(b){
-    var v=held[b],slot=$("#sl"+b),inn=$("#in"+b),fit=$("#fit"+b);
-    slot.className="slot"+(v?" full":"");
-    fit.textContent=v?(b==="A"?"seen as Object":"known Integer"):"empty";
-    if(v) inn.innerHTML=""; else inn.innerHTML="nothing yet<small>"+(b==="A"?"takes any object at all":"takes an Integer, nothing else")+"</small>";
-    if(v){
-      inn.appendChild(document.createTextNode(VAL[v].show));
-      var sm=document.createElement("small");
-      sm.textContent=VAL[v].kind+(b==="A"?", stored as Object":", checked by the compiler");
-      inn.appendChild(sm);
-    }
-    $("#g"+b).disabled=!v;
-  }
-  function clear(){
-    ["A","B"].forEach(function(b){
-      $("#s"+b).className="say"; $("#s"+b).textContent="";
-      $("#c"+b).classList.remove("wall");
-      $("#in"+b).classList.remove("pop","shake");
-      draw(b);
+  function build(){
+    O.forEach(function(o,k){
+      var d=document.createElement("div"); d.className="obj"+(o.kid?" kid":"")+(o.ok?"":" other"); d.id="o"+k;
+      var left=document.createElement("div");
+      var hd=document.createElement("p"); hd.className="hd"; hd.textContent="type";
+      var who=document.createElement("p"); who.className="who"; who.textContent=o.cls;
+      var rel=document.createElement("span"); rel.className="rel"; rel.textContent=o.rel;
+      left.appendChild(hd); left.appendChild(who); left.appendChild(rel);
+      var b=document.createElement("button"); b.className="pb"; b.setAttribute("data-k",k); b.textContent="use as T";
+      d.appendChild(left); d.appendChild(b); types.appendChild(d);
     });
   }
-  function press(b,a){
-    var name=VAR[b],inn=$("#in"+b);
-    clear();
-    if(a==="get"){
-      if(b==="A"){
-        var line="Integer n = (Integer) box.get();";
-        if(held.A==="num"){
-          box($("#sA"),"result","n = 63");
-          say('get() hands back an <b class="a">Object</b>, so you must add the cast yourself. This time the box really held an Integer.',"y",line);
-        } else {
-          $("#slA").className="slot no"; $("#fitA").textContent="run time";
-          $("#cA").classList.add("wall"); again(inn,"shake");
-          box($("#sA"),"while running",CCE,true);
-          say('The same line compiles. Then the program runs, finds a String in the box and <b class="w">crashes</b>.',"w",line+"  // ClassCastException");
-        }
-      } else {
-        box($("#sB"),"result","n = 63");
-        say('<b class="g">No cast.</b> The compiler already knows that whatever comes out of this box is an Integer.',"g","Integer n = numbers.get();");
-      }
-      return;
+  function setIn(big,small){
+    inn.textContent=big;
+    var sm=document.createElement("small"); sm.textContent=small; inn.appendChild(sm);
+  }
+  function clear(){
+    cur=-1;
+    O.forEach(function(o,k){
+      $("#o"+k).classList.remove("sent","back2");
+      $("#o"+k).querySelector(".pb").disabled=!bound;
+    });
+    arrow.className="arrow"; alab.textContent="use as T";
+    method.classList.remove("wall");
+    slot.className="slot"; fit.textContent=bound?"empty":"no limit";
+    inn.classList.remove("pop","shake");
+    if(bound) setIn("nothing yet","takes Musician or a child of Musician");
+    else setIn("anything","with no limit, T could be any class");
+    bBound.className="bound"+(bound?"":" gone");
+    perf.className="perf"+(bound?"":" bad");
+    bPerf.disabled=true;
+    s.className="say"; s.textContent="";
+  }
+  function pick(k){
+    if(!bound) return;
+    var o=O[k]; clear();
+    if(o.ok){
+      cur=k;
+      $("#o"+k).classList.add("sent");
+      arrow.className="arrow on"; alab.textContent="is a Musician";
+      slot.className="slot full"; fit.textContent="within bounds";
+      setIn(o.cls,"left: a "+o.pair[0]+" · right: a "+o.pair[1]);
+      again(inn,"pop");
+      bPerf.disabled=false;
+      say((o.kid?'A '+o.cls+' is a Musician, so it is <b class="g">within the bound</b>. This Duet holds two '+o.cls+'s.'
+                :'Musician itself is <b class="g">within the bound</b>. This Duet holds any two musicians, here a Cellist and a Violinist.')
+          +' Now press perform().',"g","Duet<"+o.cls+"> duets = "+o.v+";");
+    } else {
+      $("#o"+k).classList.add("back2");
+      arrow.className="arrow no"; alab.textContent="not a Musician";
+      method.classList.add("wall");
+      slot.className="slot no"; fit.textContent="refused";
+      setIn(o.cls,"stays outside, the code does not compile");
+      again(inn,"shake");
+      box(s,"compiler","error: "+ERR,true);
+      say('An Integer is <b class="w">not a Musician</b>, so the compiler refuses it as T before anything runs.',"w","Duet<Integer> twoNumbers = new Duet<>(15, 32);  // error: "+ERR);
     }
-    var call=name+".put("+VAL[a].show+");";
-    if(b==="B"&&a==="str"){
-      $("#cB").classList.add("wall"); again($("#cB"),"shake");
-      box($("#sB"),"compiler","error: "+ERR,true);
-      say('The compiler <b class="w">refuses the String</b> before the program ever runs. The box is unchanged.',"w",call+"  // error: "+ERR);
-      return;
+  }
+  function perform(){
+    if(cur<0||!bound) return;
+    var o=O[cur];
+    box(s,"prints","I am a "+o.pair[0]+" and I am performing!\nI am a "+o.pair[1]+" and I am performing!");
+    say('Every allowed T is a Musician, so Duet <b class="y">may call perform()</b> on both. Each object runs its own version.',"y","duets.perform();");
+  }
+  function toggle(){
+    bound=!bound; clear();
+    if(!bound){
+      method.classList.add("wall");
+      box(s,"compiler",ERR2,true);
+      say('With the limit gone, T could be anything, even an Integer. The compiler cannot promise perform() exists, so <b class="w">Duet itself stops compiling</b>. Press the limit again to put it back.',"w","left.perform();  // error: cannot find symbol");
+    } else {
+      say('The limit is back: T must be <b class="g">Musician or a child of it</b>, so perform() is guaranteed again.',"g");
     }
-    held[b]=a; draw(b); again(inn,"pop");
-    if(b==="A") say('Accepted. The field is <b class="a">Object</b>, so this box takes '+VAL[a].kind+', or anything else. Nothing is checked.',"g",call);
-    else say('Accepted. This box was declared for <b class="g">Integer</b>, and 63 is one.',"g",call);
   }
   function reset(){
-    held={A:null,B:null}; clear();
-    say('Both boxes are empty. The left one holds an <b class="a">Object</b>, the right one was declared for <b class="g">Integer</b> only.');
+    bound=true; clear();
+    say('Duet has a blank T with a limit on it: <b class="g">extends Musician</b>. Four types are waiting, and the limit itself can be pressed.');
   }
-  $("#board").addEventListener("click",function(e){
-    var b=e.target.closest(".pb"); if(b&&!b.disabled) press(b.getAttribute("data-b"),b.getAttribute("data-a"));
+  types.addEventListener("click",function(e){
+    var b=e.target.closest(".pb"); if(b&&!b.disabled) pick(+b.getAttribute("data-k"));
   });
+  bPerf.addEventListener("click",perform);
+  bBound.addEventListener("click",toggle);
   $("#bReset").addEventListener("click",reset);
-  reset();
+  build(); reset();
 
   /* ambient canvas */
   var cv=$("#amb"),ctx=cv.getContext&&cv.getContext("2d"),parts=[];
@@ -273,6 +294,6 @@
 </script>
 <script src="../manifest.js"></script>
 <script src="../../assets/rail.js"></script>
-<script>Rail.render(document.getElementById("rail"),{week:7,kind:"visuals",current:"10-the-need-for-generics"});</script>
+<script>Rail.render(document.getElementById("rail"),{week:7,kind:"visuals",current:"14-bounded-types"});</script>
 </body>
 </html>

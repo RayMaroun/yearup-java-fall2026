@@ -124,8 +124,8 @@
 an interface: any number with <span class="g">implements</span>, shares only what a class can do</code></div>
           <p class="see">See it:
             <a href="../visuals/01-what-an-interface-is.html">What an Interface Is</a>
-            <a href="../visuals/02-interface-or-abstract-class.html">Interface or Abstract Class</a>
-            <a href="../visuals/03-implementing-an-interface.html">Implementing an Interface</a>
+            <a href="../visuals/03-interface-or-abstract-class.html">Interface or Abstract Class</a>
+            <a href="../visuals/04-implementing-an-interface.html">Implementing an Interface</a>
             <a href="../games/interface-implementer.html">Interface Implementer game</a>
           </p>
         </section>
@@ -147,8 +147,8 @@ public void print() {
     IPlayable.super.print();  <span class="c">// pick one, or write your own</span>
 }</code></div>
           <p class="see">See it:
-            <a href="../visuals/04-one-class-several-interfaces.html">One Class, Several Interfaces</a>
-            <a href="../visuals/07-default-methods.html">Default Methods</a>
+            <a href="../visuals/05-one-class-several-interfaces.html">One Class, Several Interfaces</a>
+            <a href="../visuals/08-default-methods.html">Default Methods</a>
             <a href="../games/default-or-override.html">Default or Override game</a>
             <a href="common-errors.html">Common Errors</a>
           </p>
@@ -169,9 +169,9 @@ player = new Speaker("Boom");  <span class="c">// any class that implements IPla
 names = new LinkedList&lt;&gt;();     <span class="c">// fine: both implement List</span>
 <span class="w">ArrayList&lt;String&gt; a = new ArrayList&lt;&gt;(); a = new LinkedList&lt;&gt;();</span>  <span class="c">// error: incompatible types</span></code></div>
           <p class="see">See it:
-            <a href="../visuals/05-an-interface-as-a-type.html">An Interface as a Type</a>
-            <a href="../visuals/06-instanceof-with-interfaces.html">instanceof With Interfaces</a>
-            <a href="../visuals/08-code-to-the-interface.html">Code to the Interface</a>
+            <a href="../visuals/06-an-interface-as-a-type.html">An Interface as a Type</a>
+            <a href="../visuals/07-instanceof-with-interfaces.html">instanceof With Interfaces</a>
+            <a href="../visuals/09-code-to-the-interface.html">Code to the Interface</a>
             <a href="../games/which-calls-compile.html">Which Calls Compile game</a>
           </p>
         </section>
@@ -192,7 +192,7 @@ positive: this comes after</code></div>
           <div class="row"><span class="k">sort a list</span><code>Collections.sort(parcels);  <span class="c">// [Parcel 9, Parcel 2, Parcel 5] becomes [Parcel 2, Parcel 5, Parcel 9]</span></code></div>
           <div class="row"><span class="k">a stream</span><code>parcels.stream().sorted()  <span class="c">// same rule: the type must be Comparable</span></code></div>
           <p class="see">See it:
-            <a href="../visuals/09-comparable.html">Comparable</a>
+            <a href="../visuals/10-comparable.html">Comparable</a>
             <a href="../games/comparable-sorter.html">Comparable Sorter game</a>
             <a href="common-errors.html">Common Errors</a>
           </p>
@@ -215,8 +215,8 @@ MixedPair&lt;Integer, Double&gt; mixed = new MixedPair&lt;&gt;(63, 45.5);</code>
 List&lt;Integer&gt;   <span class="c">// use the wrapper: Integer, Double, Boolean, Character</span></code></div>
           <div class="row"><span class="k">the diamond</span><code>new Pair&lt;&gt;(63, 65)  <span class="c">// the compiler fills in the type from the left side</span></code></div>
           <p class="see">See it:
-            <a href="../visuals/10-the-need-for-generics.html">The Need for Generics</a>
-            <a href="../visuals/11-a-generic-class.html">A Generic Class</a>
+            <a href="../visuals/11-the-need-for-generics.html">The Need for Generics</a>
+            <a href="../visuals/12-a-generic-class.html">A Generic Class</a>
             <a href="../games/generics-validator.html">Generics Validator game</a>
           </p>
         </section>
@@ -241,8 +241,8 @@ displayWithLabel("Name", "Raymond"); <span class="c">// Name: Raymond</span></co
 <span class="c">// error: type argument Integer is not within bounds of type-variable T</span></code></div>
           <div class="row"><span class="k">no bound</span><code>an unbounded T could be anything, so <span class="w">left.perform()</span> is: cannot find symbol</code></div>
           <p class="see">See it:
-            <a href="../visuals/12-a-generic-method.html">A Generic Method</a>
-            <a href="../visuals/13-bounded-types.html">Bounded Types</a>
+            <a href="../visuals/13-a-generic-method.html">A Generic Method</a>
+            <a href="../visuals/14-bounded-types.html">Bounded Types</a>
             <a href="../games/generics-validator.html">Generics Validator game</a>
             <a href="common-errors.html">Common Errors</a>
           </p>
@@ -265,7 +265,7 @@ displayWithLabel("Name", "Raymond"); <span class="c">// Name: Raymond</span></co
           <div class="row"><span class="k">local variables</span><code>a lambda may read a local variable only if it never changes (effectively final)
 <span class="w">numbers.forEach(n -> total += n);</span>  <span class="c">// error</span></code></div>
           <p class="see">See it:
-            <a href="../visuals/15-anatomy-of-a-lambda.html">Anatomy of a Lambda</a>
+            <a href="../visuals/16-anatomy-of-a-lambda.html">Anatomy of a Lambda</a>
             <a href="../games/lambda-lab.html">Lambda Lab game</a>
             <a href="common-errors.html">Common Errors</a>
           </p>
@@ -283,8 +283,8 @@ displayWithLabel("Name", "Raymond"); <span class="c">// Name: Raymond</span></co
           <div class="row"><span class="k">the source is not changed</span><code>titles stays as it was; the pipeline builds a new list</code></div>
           <div class="row"><span class="k">once only</span><code>a stream can be used one time: a second terminal call throws IllegalStateException</code></div>
           <p class="see">See it:
-            <a href="../visuals/14-loop-or-stream.html">Loop or Stream</a>
-            <a href="../visuals/16-the-stream-pipeline.html">The Stream Pipeline</a>
+            <a href="../visuals/15-loop-or-stream.html">Loop or Stream</a>
+            <a href="../visuals/17-the-stream-pipeline.html">The Stream Pipeline</a>
             <a href="../games/stream-predictor.html">Stream Predictor game</a>
           </p>
         </section>
@@ -306,7 +306,7 @@ displayWithLabel("Name", "Raymond"); <span class="c">// Name: Raymond</span></co
           </table>
           <p class="see">See it:
             <a href="stream-methods.html">Stream Methods</a>
-            <a href="../visuals/17-reduce.html">reduce</a>
+            <a href="../visuals/18-reduce.html">reduce</a>
           </p>
         </section>
 

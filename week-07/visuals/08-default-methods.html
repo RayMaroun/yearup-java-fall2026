@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>instanceof With Interfaces | Week 7 Visual Hub</title>
+<title>Default Methods | Week 7 Visual Hub</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Sora:wght@500;700&family=Inter:wght@400;500&family=JetBrains+Mono:wght@400;500&display=swap">
 <style>
@@ -96,41 +96,71 @@
   .take b{color:#fff}
   @media (prefers-reduced-motion:reduce){*{animation-duration:.01ms!important;transition-duration:.01ms!important}#amb{display:none}}
 
-  .ask{display:flex;align-items:center;justify-content:space-between;gap:16px;flex-wrap:wrap}
-  .ask .who{margin:0;font-family:var(--mono);font-weight:500;font-size:1.25rem}
-  .row{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:14px}
-  @media (max-width:760px){.row{grid-template-columns:1fr}}
-  .thing{min-height:250px;opacity:.75}
-  .thing .who small{display:block;margin-top:3px;font-family:var(--mono);font-weight:400;font-size:.68rem;color:var(--muted);letter-spacing:0}
-  .thing .chips{display:flex;flex-wrap:wrap;gap:6px}
-  .thing.cur{opacity:1;border-color:var(--accent);box-shadow:0 0 0 3px rgba(110,160,255,.14),0 0 30px -10px rgba(110,160,255,.8)}
-  .thing.asked{opacity:1}
-  .thing.yes{border-color:rgba(70,217,138,.7)}
-  .ans{margin-top:14px;min-height:74px}
-  .ans .v{font-family:var(--disp);font-weight:700;font-size:1.5rem;margin:0;color:rgba(132,150,182,.8)}
-  .ans .v.t{color:var(--good)}
-  .ans .o{margin:6px 0 0;font-family:var(--mono);font-size:.72rem;line-height:1.45;color:#9fe3b6}
-  .ans .o small{display:block;font-size:.54rem;letter-spacing:.12em;text-transform:uppercase;color:rgba(132,150,182,.7)}
+  .pgt{font-family:var(--mono);font-size:.66rem;letter-spacing:.14em;text-transform:uppercase;color:var(--accent);margin:0 0 10px 2px}
+  .pg+.pgt{margin-top:22px;padding-top:18px;border-top:1px solid var(--line)}
+  .pg{display:grid;gap:16px;align-items:start}
+  .pg.one{grid-template-columns:minmax(0,1fr) minmax(0,1.3fr)}
+  .pg.two{grid-template-columns:minmax(0,1fr) minmax(0,1.5fr) minmax(0,1fr)}
+  @media (max-width:820px){.pg.one,.pg.two{grid-template-columns:1fr}}
+  .who small{display:block;margin-top:3px;font-family:var(--mono);font-weight:400;font-size:.68rem;color:var(--muted);letter-spacing:0}
+  .acts{display:grid;grid-template-columns:1fr 1fr;gap:8px}
+  .pick{display:grid;gap:8px}
+  .pick .new{text-align:left;padding:10px 12px}
+  @media (max-width:520px){.acts{grid-template-columns:1fr}}
 </style>
 </head>
 <body>
-<a class="back" href="../index.html#06-instanceof-with-interfaces">&#8592; Week 7 index</a>
+<a class="back" href="../index.html#08-default-methods">&#8592; Week 7 index</a>
 <canvas id="amb"></canvas>
 <div class="wrap">
   <p class="tag">Workbook 6a &middot; Section 2-2</p>
-  <h1>instanceof With Interfaces</h1>
-  <p class="lede"><b>One list, three different objects. Ask each one: can you charge?</b></p>
+  <h1>Default Methods</h1>
+  <p class="lede"><b>An interface method that comes with a body. Call it, then change the classes.</b></p>
 
-  <div class="stage">
-    <div class="card var ask">
-      <div>
-        <p class="hd">the question, asked of one object at a time</p>
-        <p class="who">thing instanceof IChargeable</p>
+  <div class="stage" id="stage">
+    <p class="pgt">One interface: keep the default or override it</p>
+    <div class="pg one">
+      <div class="card iface">
+        <p class="hd">interface</p>
+        <p class="who">IPlayable</p>
+        <div class="mrow" id="aDef"><span class="sig">default print()</span><span class="out">"I can play music!"</span></div>
       </div>
-      <button class="pb" id="bNext">Ask the next object</button>
+      <div class="card" id="aCard">
+        <p class="hd">class</p>
+        <p class="who">Speaker<small>implements IPlayable</small></p>
+        <div class="mrow none" id="aOwn"><span class="sig" id="aSig"></span><span class="out" id="aOut"></span></div>
+        <div class="acts">
+          <button class="new" id="aToggle"></button>
+          <button class="call" id="aCall">speaker.print()</button>
+        </div>
+        <div class="say" id="aSay"></div>
+      </div>
     </div>
-    <p class="sect">things &middot; a List&lt;Object&gt;, it can hold any object</p>
-    <div class="row" id="row"></div>
+
+    <p class="pgt">Two interfaces, the same default: the class must choose</p>
+    <div class="pg two">
+      <div class="card iface">
+        <p class="hd">interface</p>
+        <p class="who">IPlayable</p>
+        <div class="mrow" id="bPlay"><span class="sig">default print()</span><span class="out">"I can play music!"</span></div>
+      </div>
+      <div class="card" id="bCard">
+        <p class="hd">class</p>
+        <p class="who">Phone<small>implements IPlayable, IChargeable</small></p>
+        <p class="sect">print() written in Phone</p>
+        <div class="pick" id="bPick">
+          <button class="new" data-p="none">no print() at all</button>
+          <button class="new" data-p="IPlayable">print() calls IPlayable.super.print()</button>
+          <button class="new" data-p="IChargeable">print() calls IChargeable.super.print()</button>
+        </div>
+        <div class="say" id="bSay"></div>
+      </div>
+      <div class="card iface">
+        <p class="hd">interface</p>
+        <p class="who">IChargeable</p>
+        <div class="mrow" id="bChg"><span class="sig">default print()</span><span class="out">"I can charge!"</span></div>
+      </div>
+    </div>
     <div class="caption" id="caption">
       <div class="t" id="status"></div>
       <button class="reset" id="bReset">Reset</button>
@@ -139,8 +169,9 @@
 
   <div class="take">
     <p class="tk">The one idea</p>
-    <p><b>instanceof works with interfaces too.</b> <code>thing instanceof IChargeable</code> is true for any object whose class implements
-    IChargeable, whatever that class is. Ask first, then cast to the interface and call its methods.</p>
+    <p><b>A default method is a finished method inside an interface.</b> A class that implements the interface gets it for free and may
+    override it. When two interfaces bring the same default, the class must override it, and can run the one it wants with
+    <code>IPlayable.super.print()</code>.</p>
   </div>
   <div id="rail"></div>
 </div>
@@ -156,51 +187,58 @@
     status.innerHTML=html;
     if(line){ var sp=document.createElement("span"); sp.className="line"; sp.textContent=line; status.appendChild(sp); }
   }
-  /* the three objects, in list order; i = the interfaces the class implements */
-  var T=[
-    {c:"Radio",n:"Retro",i:["IPlayable"],out:""},
-    {c:"Phone",n:"Pocket",i:["IPlayable","IChargeable"],out:"The phone is charging."},
-    {c:"SmartWatch",n:"",i:["ICallable","IChargeable"],out:"The smart watch is charging."}
-  ];
-  var pos=-1, row=$("#row"), bNext=$("#bNext");
+  var own=false, pick="IPlayable";
+  var OUT={IPlayable:"I can play music!",IChargeable:"I can charge!"}, MINE="I am a speaker!";
+  var aDef=$("#aDef"),aOwn=$("#aOwn"),aSay=$("#aSay"),bPlay=$("#bPlay"),bChg=$("#bChg"),bSay=$("#bSay"),bCard=$("#bCard");
 
-  function charges(t){ return t.i.indexOf("IChargeable")>=0; }
-  function paint(){
-    row.innerHTML="";
-    T.forEach(function(t,k){
-      var asked=k<=pos, yes=charges(t);
-      var d=document.createElement("div");
-      d.className="card thing"+(k===pos?" cur":"")+(asked?" asked":"")+(asked&&yes?" yes":"");
-      var h='<p class="hd">index '+k+'</p><p class="who">'+t.c+(t.n?'<small>name: '+t.n+'</small>':'<small>no name</small>')+'</p>'
-        +'<p class="sect">its class implements</p><div class="chips">';
-      t.i.forEach(function(n){ h+='<span class="chip'+(asked&&n==="IChargeable"?" hit":"")+'">'+n+'</span>'; });
-      h+='</div><div class="ans">';
-      if(asked){
-        h+='<p class="v'+(yes?" t":"")+'">'+(yes?"true":"false")+'</p>';
-        if(yes) h+='<p class="o"><small>charge() prints</small>'+t.out+'</p>';
-      }
-      h+='</div>';
-      d.innerHTML=h; row.appendChild(d);
-    });
-    bNext.disabled=pos>=T.length-1;
-    bNext.textContent=pos>=T.length-1?"End of the list":(pos<0?"Ask the first object":"Ask the next object");
+  function clear(){
+    aDef.classList.remove("run"); aOwn.classList.remove("run"); aSay.className="say"; aSay.textContent="";
+    bPlay.classList.remove("run","far"); bChg.classList.remove("run","far"); bCard.classList.remove("wall"); bSay.className="say"; bSay.textContent="";
   }
-  function next(){
-    if(pos>=T.length-1) return;
-    pos++; paint();
-    var t=T[pos];
-    if(pos===0) say('Radio implements only IPlayable, so the answer is <b class="a">false</b>. Nothing breaks: the loop skips it and moves on.',"",
-      "thing instanceof IChargeable  // false");
-    else if(pos===1) say('Phone implements IChargeable, so the answer is <b class="g">true</b>. Now it is safe to cast it to IChargeable and call charge().',"g",
-      "((IChargeable) thing).charge();  // "+t.out);
-    else say('SmartWatch is a very different class, but it also implements IChargeable: <b class="g">true</b>. The question is about the interface, not the class.',"g",
-      "((IChargeable) thing).charge();  // "+t.out);
+  function paint(){
+    aOwn.classList.toggle("none",!own);
+    $("#aSig").textContent=own?"@Override print()":"no print() written here";
+    $("#aOut").textContent=own?'"'+MINE+'"':"";
+    $("#aToggle").textContent=own?"Remove print() from Speaker":"Write print() in Speaker";
+    [].forEach.call(document.querySelectorAll("[data-p]"),function(b){ b.classList.toggle("cur",b.getAttribute("data-p")===pick); });
+  }
+  function printed(box,text){ box.innerHTML="<small>prints</small>"; box.appendChild(document.createTextNode(text)); box.className="say show"; }
+  function toggle(){
+    clear(); own=!own; paint();
+    if(own) say('Speaker now has its own print(). That is an <b class="g">override</b> of the default. Call it to see which one runs.',"g");
+    else say('Speaker has no print() again. It still compiles: the default in IPlayable is there for it.',"");
+  }
+  function callA(){
+    clear();
+    if(own){
+      aOwn.classList.add("run"); printed(aSay,MINE);
+      say('Speaker wrote its own print(), so <b class="y">its version runs</b>. The default stays in IPlayable, unused by this class.',"y","speaker.print();  // "+MINE);
+    } else {
+      aDef.classList.add("run"); printed(aSay,OUT.IPlayable);
+      say('Speaker has no print() of its own, so it <b class="y">inherits the default</b> from IPlayable.',"y","speaker.print();  // "+OUT.IPlayable);
+    }
+  }
+  function choose(p){
+    clear(); pick=p; paint();
+    if(p==="none"){
+      bCard.classList.add("wall"); bPlay.classList.add("far"); bChg.classList.add("far");
+      bSay.innerHTML="<small>compiler</small>Phone does not compile"; bSay.className="say show err";
+      say('Both interfaces hand Phone a print(), and Java will not guess which one you meant: <b class="w">this does not compile</b>.',"w",
+        "error: types IPlayable and IChargeable are incompatible; class Phone inherits unrelated defaults for print() from types IPlayable and IChargeable");
+      return;
+    }
+    (p==="IPlayable"?bPlay:bChg).classList.add("run"); printed(bSay,OUT[p]);
+    say('Phone overrides print(), so it compiles. Inside, <b class="g">'+p+'.super.print()</b> runs the default it picked.',"g",
+      p+".super.print();  // "+OUT[p]);
   }
   function reset(){
-    pos=-1; paint();
-    say('The list holds three objects of three different classes. No object has been asked yet.',"","List<Object> things = new ArrayList<>();");
+    clear(); own=false; pick="IPlayable"; paint();
+    say('IPlayable has a finished method, print(). Speaker did not write one. Phone takes print() from two interfaces.',"",
+      'default void print() { System.out.println("I can play music!"); }');
   }
-  bNext.addEventListener("click",next);
+  $("#aToggle").addEventListener("click",toggle);
+  $("#aCall").addEventListener("click",callA);
+  $("#bPick").addEventListener("click",function(e){ var b=e.target.closest("[data-p]"); if(b) choose(b.getAttribute("data-p")); });
   $("#bReset").addEventListener("click",reset);
   reset();
 
@@ -219,6 +257,6 @@
 </script>
 <script src="../manifest.js"></script>
 <script src="../../assets/rail.js"></script>
-<script>Rail.render(document.getElementById("rail"),{week:7,kind:"visuals",current:"06-instanceof-with-interfaces"});</script>
+<script>Rail.render(document.getElementById("rail"),{week:7,kind:"visuals",current:"08-default-methods"});</script>
 </body>
 </html>

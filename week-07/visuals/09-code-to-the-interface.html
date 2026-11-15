@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Default Methods | Week 7 Visual Hub</title>
+<title>Code to the Interface | Week 7 Visual Hub</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Sora:wght@500;700&family=Inter:wght@400;500&family=JetBrains+Mono:wght@400;500&display=swap">
 <style>
@@ -96,69 +96,62 @@
   .take b{color:#fff}
   @media (prefers-reduced-motion:reduce){*{animation-duration:.01ms!important;transition-duration:.01ms!important}#amb{display:none}}
 
-  .pgt{font-family:var(--mono);font-size:.66rem;letter-spacing:.14em;text-transform:uppercase;color:var(--accent);margin:0 0 10px 2px}
-  .pg+.pgt{margin-top:22px;padding-top:18px;border-top:1px solid var(--line)}
-  .pg{display:grid;gap:16px;align-items:start}
-  .pg.one{grid-template-columns:minmax(0,1fr) minmax(0,1.3fr)}
-  .pg.two{grid-template-columns:minmax(0,1fr) minmax(0,1.5fr) minmax(0,1fr)}
-  @media (max-width:820px){.pg.one,.pg.two{grid-template-columns:1fr}}
-  .who small{display:block;margin-top:3px;font-family:var(--mono);font-weight:400;font-size:.68rem;color:var(--muted);letter-spacing:0}
-  .acts{display:grid;grid-template-columns:1fr 1fr;gap:8px}
-  .pick{display:grid;gap:8px}
-  .pick .new{text-align:left;padding:10px 12px}
-  @media (max-width:520px){.acts{grid-template-columns:1fr}}
+  .board{display:grid;grid-template-columns:minmax(0,1.2fr) 96px minmax(0,1fr);gap:16px;align-items:start;min-height:380px}
+  @media (max-width:820px){.board{grid-template-columns:1fr}.arrow{min-height:0!important;flex-direction:row!important;padding:4px 0}}
+  .var .who{font-family:var(--mono);font-weight:500;font-size:1.2rem}
+  .two{display:grid;grid-template-columns:1fr 1fr;gap:8px}
+  @media (max-width:520px){.two{grid-template-columns:1fr}}
+  .rest{display:flex;flex-wrap:wrap;gap:6px}
+  .obj{transition:opacity .4s,transform .5s cubic-bezier(.2,.9,.3,1),border-color .3s}
+  .obj.swap{opacity:0;transform:translateX(40px) scale(.94);transition:none}
+  .obj.linked{border-color:rgba(139,123,255,.6);background:rgba(139,123,255,.06)}
+  .shape{display:flex;align-items:center;min-height:64px;margin:4px 0 8px;font-family:var(--mono);color:var(--muted)}
+  .shape i{display:block;width:46px;height:46px;border:1px solid rgba(110,160,255,.6);background:rgba(110,160,255,.1)}
+  .shape.arr i+i{border-left:0}
+  .shape.arr i:first-child{border-radius:9px 0 0 9px} .shape.arr i:last-child{border-radius:0 9px 9px 0}
+  .shape.lnk i{border-radius:50%;border-color:rgba(139,123,255,.75);background:rgba(139,123,255,.12)}
+  .shape.lnk span{padding:0 7px;font-size:1.1rem;color:rgba(139,123,255,.9)}
+  .how{font-family:var(--mono);font-size:.7rem;line-height:1.5;color:var(--muted);margin:0 0 4px}
+  .refused{margin-top:12px;border:1px dashed var(--warn);border-radius:12px;padding:9px 11px;font-family:var(--mono);font-size:.74rem;line-height:1.5;color:#ffb0b0}
+  .refused small{display:block;font-size:.54rem;letter-spacing:.12em;text-transform:uppercase;color:rgba(255,176,176,.8)}
 </style>
 </head>
 <body>
-<a class="back" href="../index.html#07-default-methods">&#8592; Week 7 index</a>
+<a class="back" href="../index.html#09-code-to-the-interface">&#8592; Week 7 index</a>
 <canvas id="amb"></canvas>
 <div class="wrap">
   <p class="tag">Workbook 6a &middot; Section 2-2</p>
-  <h1>Default Methods</h1>
-  <p class="lede"><b>An interface method that comes with a body. Call it, then change the classes.</b></p>
+  <h1>Code to the Interface</h1>
+  <p class="lede"><b>Change the type of the variable, then try to swap the list inside it.</b></p>
 
-  <div class="stage" id="stage">
-    <p class="pgt">One interface: keep the default or override it</p>
-    <div class="pg one">
-      <div class="card iface">
-        <p class="hd">interface</p>
-        <p class="who">IPlayable</p>
-        <div class="mrow" id="aDef"><span class="sig">default print()</span><span class="out">"I can play music!"</span></div>
-      </div>
-      <div class="card" id="aCard">
-        <p class="hd">class</p>
-        <p class="who">Speaker<small>implements IPlayable</small></p>
-        <div class="mrow none" id="aOwn"><span class="sig" id="aSig"></span><span class="out" id="aOut"></span></div>
-        <div class="acts">
-          <button class="new" id="aToggle"></button>
-          <button class="call" id="aCall">speaker.print()</button>
+  <div class="stage">
+    <div class="board" id="board">
+      <div class="card var" id="vcard">
+        <p class="hd">variable &middot; its declared type</p>
+        <p class="who" id="vname"></p>
+        <p class="sect">declare names as</p>
+        <div class="two">
+          <button class="new" id="dArrayList" data-d="ArrayList">an ArrayList</button>
+          <button class="new" id="dList" data-d="List">a List</button>
         </div>
-        <div class="say" id="aSay"></div>
-      </div>
-    </div>
-
-    <p class="pgt">Two interfaces, the same default: the class must choose</p>
-    <div class="pg two">
-      <div class="card iface">
-        <p class="hd">interface</p>
-        <p class="who">IPlayable</p>
-        <div class="mrow" id="bPlay"><span class="sig">default print()</span><span class="out">"I can play music!"</span></div>
-      </div>
-      <div class="card" id="bCard">
-        <p class="hd">class</p>
-        <p class="who">Phone<small>implements IPlayable, IChargeable</small></p>
-        <p class="sect">print() written in Phone</p>
-        <div class="pick" id="bPick">
-          <button class="new" data-p="none">no print() at all</button>
-          <button class="new" data-p="IPlayable">print() calls IPlayable.super.print()</button>
-          <button class="new" data-p="IChargeable">print() calls IChargeable.super.print()</button>
+        <p class="sect">put a new list in names</p>
+        <div class="two">
+          <button class="new" data-o="ArrayList">names = <b>new</b> ArrayList&lt;&gt;()</button>
+          <button class="new" data-o="LinkedList">names = <b>new</b> LinkedList&lt;&gt;()</button>
         </div>
-        <div class="say" id="bSay"></div>
+        <p class="sect">the lines that use names</p>
+        <div class="rest" id="rest">
+          <span class="chip">names.add("Potato")</span><span class="chip">names.get(0)</span><span class="chip">names.size()</span>
+        </div>
       </div>
-      <div class="card iface">
-        <p class="hd">interface</p>
-        <p class="who">IChargeable</p>
-        <div class="mrow" id="bChg"><span class="sig">default print()</span><span class="out">"I can charge!"</span></div>
+      <div class="arrow" id="arrow"><b class="go">&rarr;</b><b class="x">&#10005;</b><span id="alab">refers to</span></div>
+      <div class="card obj" id="ocard">
+        <p class="hd">object &middot; the real list</p>
+        <p class="who" id="oname"></p>
+        <div class="shape" id="shape"></div>
+        <p class="how" id="how"></p>
+        <span class="chip">implements List</span>
+        <div class="refused" id="refused" hidden><small>refused by the compiler</small>a LinkedList object</div>
       </div>
     </div>
     <div class="caption" id="caption">
@@ -169,9 +162,8 @@
 
   <div class="take">
     <p class="tk">The one idea</p>
-    <p><b>A default method is a finished method inside an interface.</b> A class that implements the interface gets it for free and may
-    override it. When two interfaces bring the same default, the class must override it, and can run the one it wants with
-    <code>IPlayable.super.print()</code>.</p>
+    <p><b>Declare the variable as the interface, create the object as the class.</b> With <code>List&lt;String&gt; names = new ArrayList&lt;&gt;();</code>
+    you can switch to another kind of list later by changing one word, and every line that uses names keeps working.</p>
   </div>
   <div id="rail"></div>
 </div>
@@ -187,58 +179,59 @@
     status.innerHTML=html;
     if(line){ var sp=document.createElement("span"); sp.className="line"; sp.textContent=line; status.appendChild(sp); }
   }
-  var own=false, pick="IPlayable";
-  var OUT={IPlayable:"I can play music!",IChargeable:"I can charge!"}, MINE="I am a speaker!";
-  var aDef=$("#aDef"),aOwn=$("#aOwn"),aSay=$("#aSay"),bPlay=$("#bPlay"),bChg=$("#bChg"),bSay=$("#bSay"),bCard=$("#bCard");
+  var decl="ArrayList", obj="ArrayList";
+  var vcard=$("#vcard"),ocard=$("#ocard"),arrow=$("#arrow"),alab=$("#alab"),rest=$("#rest"),refused=$("#refused");
 
   function clear(){
-    aDef.classList.remove("run"); aOwn.classList.remove("run"); aSay.className="say"; aSay.textContent="";
-    bPlay.classList.remove("run","far"); bChg.classList.remove("run","far"); bCard.classList.remove("wall"); bSay.className="say"; bSay.textContent="";
+    vcard.classList.remove("wall"); arrow.className="arrow"; alab.textContent="refers to"; refused.hidden=true;
+    [].forEach.call(rest.children,function(c){ c.classList.remove("hit"); });
   }
   function paint(){
-    aOwn.classList.toggle("none",!own);
-    $("#aSig").textContent=own?"@Override print()":"no print() written here";
-    $("#aOut").textContent=own?'"'+MINE+'"':"";
-    $("#aToggle").textContent=own?"Remove print() from Speaker":"Write print() in Speaker";
-    [].forEach.call(document.querySelectorAll("[data-p]"),function(b){ b.classList.toggle("cur",b.getAttribute("data-p")===pick); });
+    var linked=obj==="LinkedList";
+    $("#vname").textContent=decl+"<String> names";
+    $("#oname").textContent=obj;
+    $("#shape").className="shape "+(linked?"lnk":"arr");
+    $("#shape").innerHTML=linked?"<i></i><span>→</span><i></i><span>→</span><i></i>":"<i></i><i></i><i></i>";
+    $("#how").textContent=linked?"stores its items as separate nodes, each one linked to the next":"stores its items side by side in one array";
+    ocard.classList.toggle("linked",linked);
+    $("#dArrayList").classList.toggle("cur",decl==="ArrayList"); $("#dList").classList.toggle("cur",decl==="List");
+    [].forEach.call(document.querySelectorAll("[data-o]"),function(b){ b.classList.toggle("cur",b.getAttribute("data-o")===obj); });
   }
-  function printed(box,text){ box.innerHTML="<small>prints</small>"; box.appendChild(document.createTextNode(text)); box.className="say show"; }
-  function toggle(){
-    clear(); own=!own; paint();
-    if(own) say('Speaker now has its own print(). That is an <b class="g">override</b> of the default. Call it to see which one runs.',"g");
-    else say('Speaker has no print() again. It still compiles: the default in IPlayable is there for it.',"");
+  function slide(){ if(!reduce){ ocard.classList.add("swap"); void ocard.offsetWidth; ocard.classList.remove("swap"); } }
+  /* a declaration starts over: the variable is declared with a new ArrayList in it, as in the example */
+  function declare(d){
+    clear(); decl=d; obj="ArrayList"; paint();
+    if(d==="List") say('names is now declared as a <b class="a">List</b>, the interface. Any object whose class implements List fits in it.',"",
+      "List<String> names = new ArrayList<>();");
+    else say('names is now declared as an <b class="a">ArrayList</b>, one exact class. Only an ArrayList fits in it.',"",
+      "ArrayList<String> names = new ArrayList<>();");
   }
-  function callA(){
+  function put(o){
     clear();
-    if(own){
-      aOwn.classList.add("run"); printed(aSay,MINE);
-      say('Speaker wrote its own print(), so <b class="y">its version runs</b>. The default stays in IPlayable, unused by this class.',"y","speaker.print();  // "+MINE);
-    } else {
-      aDef.classList.add("run"); printed(aSay,OUT.IPlayable);
-      say('Speaker has no print() of its own, so it <b class="y">inherits the default</b> from IPlayable.',"y","speaker.print();  // "+OUT.IPlayable);
-    }
-  }
-  function choose(p){
-    clear(); pick=p; paint();
-    if(p==="none"){
-      bCard.classList.add("wall"); bPlay.classList.add("far"); bChg.classList.add("far");
-      bSay.innerHTML="<small>compiler</small>Phone does not compile"; bSay.className="say show err";
-      say('Both interfaces hand Phone a print(), and Java will not guess which one you meant: <b class="w">this does not compile</b>.',"w",
-        "error: types IPlayable and IChargeable are incompatible; class Phone inherits unrelated defaults for print() from types IPlayable and IChargeable");
+    if(o==="LinkedList"&&decl==="ArrayList"){
+      vcard.classList.add("wall"); arrow.className="arrow no"; alab.textContent="does not compile"; refused.hidden=false;
+      say('A LinkedList is not an ArrayList, so <b class="w">the compiler refuses</b>. The type of the variable was too specific.',"w",
+        "names = new LinkedList<>();  // error: incompatible types: cannot infer type arguments for LinkedList<>");
       return;
     }
-    (p==="IPlayable"?bPlay:bChg).classList.add("run"); printed(bSay,OUT[p]);
-    say('Phone overrides print(), so it compiles. Inside, <b class="g">'+p+'.super.print()</b> runs the default it picked.',"g",
-      p+".super.print();  // "+OUT[p]);
+    obj=o; paint(); slide(); arrow.className="arrow on";
+    if(decl==="List"){
+      [].forEach.call(rest.children,function(c){ c.classList.add("hit"); });
+      say('A'+(o==="ArrayList"?'n ArrayList':' LinkedList')+' implements List, so it fits. <b class="g">The lines that use names did not change</b>: they only need a List.',"g",
+        "names = new "+o+"<>();");
+    } else {
+      say('An ArrayList fits an ArrayList variable. That is the only kind of list this variable will ever accept.',"g","names = new ArrayList<>();");
+    }
   }
   function reset(){
-    clear(); own=false; pick="IPlayable"; paint();
-    say('IPlayable has a finished method, print(). Speaker did not write one. Phone takes print() from two interfaces.',"",
-      'default void print() { System.out.println("I can play music!"); }');
+    clear(); decl="ArrayList"; obj="ArrayList"; paint();
+    say('names is declared as an <b class="a">ArrayList</b> and holds an ArrayList. Try to put a LinkedList in it.',"",
+      "ArrayList<String> names = new ArrayList<>();");
   }
-  $("#aToggle").addEventListener("click",toggle);
-  $("#aCall").addEventListener("click",callA);
-  $("#bPick").addEventListener("click",function(e){ var b=e.target.closest("[data-p]"); if(b) choose(b.getAttribute("data-p")); });
+  $("#board").addEventListener("click",function(e){
+    var b=e.target.closest("button"); if(!b) return;
+    if(b.hasAttribute("data-d")) declare(b.getAttribute("data-d")); else if(b.hasAttribute("data-o")) put(b.getAttribute("data-o"));
+  });
   $("#bReset").addEventListener("click",reset);
   reset();
 
@@ -257,6 +250,6 @@
 </script>
 <script src="../manifest.js"></script>
 <script src="../../assets/rail.js"></script>
-<script>Rail.render(document.getElementById("rail"),{week:7,kind:"visuals",current:"07-default-methods"});</script>
+<script>Rail.render(document.getElementById("rail"),{week:7,kind:"visuals",current:"09-code-to-the-interface"});</script>
 </body>
 </html>

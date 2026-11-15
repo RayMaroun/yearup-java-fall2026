@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Comparable | Week 7 Visual Hub</title>
+<title>instanceof With Interfaces | Week 7 Visual Hub</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Sora:wght@500;700&family=Inter:wght@400;500&family=JetBrains+Mono:wght@400;500&display=swap">
 <style>
@@ -96,65 +96,41 @@
   .take b{color:#fff}
   @media (prefers-reduced-motion:reduce){*{animation-duration:.01ms!important;transition-duration:.01ms!important}#amb{display:none}}
 
-  .top{display:flex;align-items:center;justify-content:space-between;gap:12px;flex-wrap:wrap;margin-bottom:10px}
-  .top .sect{margin:0 0 0 2px}
-  .songs{display:grid;grid-template-columns:repeat(5,minmax(0,1fr));gap:12px}
-  @media (max-width:820px){.songs{grid-template-columns:1fr 1fr}}
-  @media (max-width:460px){.songs{grid-template-columns:1fr}}
-  .song{position:relative;text-align:left;font-family:var(--body);color:var(--ink);cursor:pointer;border-radius:16px;padding:14px 14px 12px;min-height:118px;
-    border:1px solid rgba(255,255,255,.2);background:rgba(255,255,255,.045);transition:border-color .3s,box-shadow .3s,background .3s}
-  .song:hover{border-color:var(--accent)}
-  .song .ttl{display:block;font-family:var(--disp);font-weight:700;font-size:1rem;letter-spacing:-.01em}
-  .song .sec{display:block;margin-top:8px;font-family:var(--mono);font-size:1.25rem;color:#bcd0ff}
-  .song .sec small{font-size:.66rem;color:var(--muted)}
-  .song .role{position:absolute;right:10px;top:10px;font-family:var(--mono);font-size:.78rem;width:24px;height:24px;line-height:22px;text-align:center;border-radius:50%;
-    border:1px solid transparent;color:transparent}
-  .song.isA{border-color:var(--accent);background:rgba(110,160,255,.12)} .song.isA .role{border-color:var(--accent);color:var(--accent)}
-  .song.isB{border-color:var(--accent2);background:rgba(139,123,255,.12)} .song.isB .role{border-color:var(--accent2);color:#c0b6ff}
-  .cmp{margin-top:16px;display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1.5fr);gap:16px;align-items:stretch}
-  @media (max-width:820px){.cmp{grid-template-columns:1fr}}
-  .calc .who{font-family:var(--mono);font-weight:500;font-size:1.1rem;margin:0}
-  .calc .rule{font-family:var(--mono);font-size:.76rem;color:var(--muted);margin:6px 0 0}
-  .calc .math{font-family:var(--mono);font-size:.95rem;color:#bcd0ff;margin:16px 0 0;min-height:1.4em}
-  .calc .num{font-family:var(--disp);font-weight:700;font-size:2.6rem;line-height:1.1;margin:2px 0 0;color:rgba(132,150,182,.5);font-variant-numeric:tabular-nums}
-  .calc .num.neg{color:var(--accent)} .calc .num.zero{color:var(--gold)} .calc .num.pos{color:#c0b6ff}
-  .zones{display:grid;grid-template-columns:1fr .7fr 1fr;gap:8px;align-content:center}
-  @media (max-width:520px){.zones{grid-template-columns:1fr}}
-  .zone{border:1px solid var(--line);border-radius:14px;padding:14px 12px;background:rgba(0,0,0,.22);text-align:center;opacity:.55;
-    transition:opacity .3s,border-color .3s,background .3s,box-shadow .3s}
-  .zone .k{display:block;font-family:var(--mono);font-size:.74rem;color:var(--muted)}
-  .zone .m{display:block;margin-top:6px;font-family:var(--disp);font-weight:700;font-size:1rem}
-  .zone.lit{opacity:1;border-color:var(--gold);background:rgba(255,200,98,.1);box-shadow:0 0 26px -8px rgba(255,200,98,.8)}
+  .ask{display:flex;align-items:center;justify-content:space-between;gap:16px;flex-wrap:wrap}
+  .ask .who{margin:0;font-family:var(--mono);font-weight:500;font-size:1.25rem}
+  .row{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:14px}
+  @media (max-width:760px){.row{grid-template-columns:1fr}}
+  .thing{min-height:250px;opacity:.75}
+  .thing .who small{display:block;margin-top:3px;font-family:var(--mono);font-weight:400;font-size:.68rem;color:var(--muted);letter-spacing:0}
+  .thing .chips{display:flex;flex-wrap:wrap;gap:6px}
+  .thing.cur{opacity:1;border-color:var(--accent);box-shadow:0 0 0 3px rgba(110,160,255,.14),0 0 30px -10px rgba(110,160,255,.8)}
+  .thing.asked{opacity:1}
+  .thing.yes{border-color:rgba(70,217,138,.7)}
+  .ans{margin-top:14px;min-height:74px}
+  .ans .v{font-family:var(--disp);font-weight:700;font-size:1.5rem;margin:0;color:rgba(132,150,182,.8)}
+  .ans .v.t{color:var(--good)}
+  .ans .o{margin:6px 0 0;font-family:var(--mono);font-size:.72rem;line-height:1.45;color:#9fe3b6}
+  .ans .o small{display:block;font-size:.54rem;letter-spacing:.12em;text-transform:uppercase;color:rgba(132,150,182,.7)}
 </style>
 </head>
 <body>
-<a class="back" href="../index.html#09-comparable">&#8592; Week 7 index</a>
+<a class="back" href="../index.html#07-instanceof-with-interfaces">&#8592; Week 7 index</a>
 <canvas id="amb"></canvas>
 <div class="wrap">
   <p class="tag">Workbook 6a &middot; Section 2-2</p>
-  <h1>Comparable</h1>
-  <p class="lede"><b>Tap two songs to compare them, then let sort() do the same thing.</b></p>
+  <h1>instanceof With Interfaces</h1>
+  <p class="lede"><b>One list, three different objects. Ask each one: can you charge?</b></p>
 
   <div class="stage">
-    <div class="top">
-      <p class="sect">songs &middot; a List&lt;Song&gt;, in list order</p>
-      <button class="pb" id="bSort">Collections.sort(songs)</button>
-    </div>
-    <div class="songs" id="songs"></div>
-    <div class="cmp">
-      <div class="card var calc">
-        <p class="hd">the question</p>
-        <p class="who">a.compareTo(b)</p>
-        <p class="rule">Song answers with: this.seconds - other.seconds</p>
-        <p class="math" id="math"></p>
-        <p class="num" id="num">?</p>
+    <div class="card var ask">
+      <div>
+        <p class="hd">the question, asked of one object at a time</p>
+        <p class="who">thing instanceof IChargeable</p>
       </div>
-      <div class="zones">
-        <div class="zone" id="zNeg"><span class="k">a negative number</span><span class="m">a goes before b</span></div>
-        <div class="zone" id="zZero"><span class="k">zero</span><span class="m">same place</span></div>
-        <div class="zone" id="zPos"><span class="k">a positive number</span><span class="m">a goes after b</span></div>
-      </div>
+      <button class="pb" id="bNext">Ask the next object</button>
     </div>
+    <p class="sect">things &middot; a List&lt;Object&gt;, it can hold any object</p>
+    <div class="row" id="row"></div>
     <div class="caption" id="caption">
       <div class="t" id="status"></div>
       <button class="reset" id="bReset">Reset</button>
@@ -163,9 +139,8 @@
 
   <div class="take">
     <p class="tk">The one idea</p>
-    <p><b>Comparable is one promise: compareTo.</b> It answers with a negative number, zero or a positive number, meaning before, same
-    place or after. Once Song implements <code>Comparable&lt;Song&gt;</code>, <code>Collections.sort()</code> can put any list of songs in
-    order, because that answer is all it ever asks for.</p>
+    <p><b>instanceof works with interfaces too.</b> <code>thing instanceof IChargeable</code> is true for any object whose class implements
+    IChargeable, whatever that class is. Ask first, then cast to the interface and call its methods.</p>
   </div>
   <div id="rail"></div>
 </div>
@@ -181,76 +156,51 @@
     status.innerHTML=html;
     if(line){ var sp=document.createElement("span"); sp.className="line"; sp.textContent=line; status.appendChild(sp); }
   }
-  var START=[{t:"Night Drive",s:245},{t:"Paper Boats",s:187},{t:"Low Tide",s:312},{t:"Kite",s:187},{t:"Static",s:96}];
-  var list, a=null, b=null, box=$("#songs"), els={};
-  var num=$("#num"), math=$("#math"), Z={neg:$("#zNeg"),zero:$("#zZero"),pos:$("#zPos")};
+  /* the three objects, in list order; i = the interfaces the class implements */
+  var T=[
+    {c:"Radio",n:"Retro",i:["IPlayable"],out:""},
+    {c:"Phone",n:"Pocket",i:["IPlayable","IChargeable"],out:"The phone is charging."},
+    {c:"SmartWatch",n:"",i:["ICallable","IChargeable"],out:"The smart watch is charging."}
+  ];
+  var pos=-1, row=$("#row"), bNext=$("#bNext");
 
-  /* one button per song, made once; the list order decides where each one sits */
-  START.forEach(function(sg){
-    var e=document.createElement("button"); e.className="song";
-    e.innerHTML='<span class="role"></span><span class="ttl">'+sg.t+'</span><span class="sec">'+sg.s+' <small>seconds</small></span>';
-    e.addEventListener("click",function(){ tap(sg); });
-    els[sg.t]=e;
-  });
-  function place(animate){
-    var before={};
-    if(animate) list.forEach(function(sg){ before[sg.t]=els[sg.t].getBoundingClientRect(); });
-    list.forEach(function(sg){ box.appendChild(els[sg.t]); });
-    if(!animate) return;
-    list.forEach(function(sg){
-      var e=els[sg.t], now=e.getBoundingClientRect(), dx=before[sg.t].left-now.left, dy=before[sg.t].top-now.top;
-      if(!dx&&!dy) return;
-      e.style.transition="none"; e.style.transform="translate("+dx+"px,"+dy+"px)";
-      void e.offsetWidth;
-      e.style.transition="transform .6s cubic-bezier(.2,.9,.3,1)"; e.style.transform="";
-      setTimeout(function(){ e.style.transition=""; },650);
+  function charges(t){ return t.i.indexOf("IChargeable")>=0; }
+  function paint(){
+    row.innerHTML="";
+    T.forEach(function(t,k){
+      var asked=k<=pos, yes=charges(t);
+      var d=document.createElement("div");
+      d.className="card thing"+(k===pos?" cur":"")+(asked?" asked":"")+(asked&&yes?" yes":"");
+      var h='<p class="hd">index '+k+'</p><p class="who">'+t.c+(t.n?'<small>name: '+t.n+'</small>':'<small>no name</small>')+'</p>'
+        +'<p class="sect">its class implements</p><div class="chips">';
+      t.i.forEach(function(n){ h+='<span class="chip'+(asked&&n==="IChargeable"?" hit":"")+'">'+n+'</span>'; });
+      h+='</div><div class="ans">';
+      if(asked){
+        h+='<p class="v'+(yes?" t":"")+'">'+(yes?"true":"false")+'</p>';
+        if(yes) h+='<p class="o"><small>charge() prints</small>'+t.out+'</p>';
+      }
+      h+='</div>';
+      d.innerHTML=h; row.appendChild(d);
     });
+    bNext.disabled=pos>=T.length-1;
+    bNext.textContent=pos>=T.length-1?"End of the list":(pos<0?"Ask the first object":"Ask the next object");
   }
-  function marks(){
-    list.forEach(function(sg){
-      var e=els[sg.t];
-      e.classList.toggle("isA",sg===a); e.classList.toggle("isB",sg===b);
-      e.firstChild.textContent=sg===a?"a":(sg===b?"b":"");
-    });
+  function next(){
+    if(pos>=T.length-1) return;
+    pos++; paint();
+    var t=T[pos];
+    if(pos===0) say('Radio implements only IPlayable, so the answer is <b class="a">false</b>. Nothing breaks: the loop skips it and moves on.',"",
+      "thing instanceof IChargeable  // false");
+    else if(pos===1) say('Phone implements IChargeable, so the answer is <b class="g">true</b>. Now it is safe to cast it to IChargeable and call charge().',"g",
+      "((IChargeable) thing).charge();  // "+t.out);
+    else say('SmartWatch is a very different class, but it also implements IChargeable: <b class="g">true</b>. The question is about the interface, not the class.',"g",
+      "((IChargeable) thing).charge();  // "+t.out);
   }
-  function blank(){
-    num.className="num"; num.textContent="?"; math.textContent="";
-    Z.neg.classList.remove("lit"); Z.zero.classList.remove("lit"); Z.pos.classList.remove("lit");
+  function reset(){
+    pos=-1; paint();
+    say('The list holds three objects of three different classes. No object has been asked yet.',"","List<Object> things = new ArrayList<>();");
   }
-  function tap(sg){
-    if(a&&!b&&sg===a){ a=null; blank(); marks(); intro(); return; }
-    if(!a||b){ a=sg; b=null; blank(); marks();
-      say('<b class="a">'+sg.t+'</b> is a. Tap another song to be b.',"");
-      return;
-    }
-    b=sg; marks();
-    var r=a.s-b.s, kind=r<0?"neg":(r>0?"pos":"zero");
-    math.textContent=a.s+" - "+b.s+" =";
-    num.textContent=String(r); num.className="num "+kind; Z[kind].classList.add("lit");
-    var line="a.compareTo(b)  // "+a.s+" - "+b.s+" = "+r;
-    if(kind==="neg") say('The answer is <b class="y">negative</b>, so '+a.t+' goes before '+b.t+'. Only the sign counts, not how big the number is.',"y",line);
-    else if(kind==="pos") say('The answer is <b class="y">positive</b>, so '+a.t+' goes after '+b.t+'. Only the sign counts, not how big the number is.',"y",line);
-    else say('The answer is <b class="y">zero</b>: the two songs are the same length, so neither one has to move in front of the other.',"y",line);
-  }
-  function sorted(){ for(var i=1;i<list.length;i++){ if(list[i-1].s-list[i].s>0) return false; } return true; }
-  function sort(){
-    a=null; b=null; blank(); marks();
-    if(sorted()){
-      say('Already in order: ask any song about the one after it and the answer is negative or zero.',"g","Collections.sort(songs);");
-      return;
-    }
-    /* Array.prototype.sort is stable, like Collections.sort: songs that answer zero keep their order */
-    list=list.slice().sort(function(x,y){ return x.s-y.s; });
-    place(!reduce);
-    say('sort() never looked at the seconds itself. It asked compareTo about pairs of songs and moved them until <b class="g">no answer was positive</b>.',"g",
-      "Collections.sort(songs);");
-  }
-  function intro(){
-    say('Five songs, each with a length in seconds. Tap one song, then another, to ask how they compare.',"",
-      "public int compareTo(Song other) { return this.seconds - other.seconds; }");
-  }
-  function reset(){ list=START.slice(); a=null; b=null; place(false); blank(); marks(); intro(); }
-  $("#bSort").addEventListener("click",sort);
+  bNext.addEventListener("click",next);
   $("#bReset").addEventListener("click",reset);
   reset();
 
@@ -269,6 +219,6 @@
 </script>
 <script src="../manifest.js"></script>
 <script src="../../assets/rail.js"></script>
-<script>Rail.render(document.getElementById("rail"),{week:7,kind:"visuals",current:"09-comparable"});</script>
+<script>Rail.render(document.getElementById("rail"),{week:7,kind:"visuals",current:"07-instanceof-with-interfaces"});</script>
 </body>
 </html>
