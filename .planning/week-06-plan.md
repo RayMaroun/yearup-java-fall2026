@@ -10,7 +10,7 @@ Examples come from the instructor demos in `../../04.Weeks/Week 06/demos/` (rebu
 NEVER the exercises, in any page except their own companion: the vehicle classes (Vehicle, Moped, Car, SemiTruck, Hovercraft), the assets exercise rules (House value by condition 180/130/90/80 per square foot, Vehicle depreciation 3/6/8 percent, Cash), the Car Dealership. The Asset and House of demo-03 are allowed only with the demo's own simple formula. Invented domains are welcome (shapes, instruments, phones, pets, employees).
 No learner first names in examples (roster in ../../docs/PEOPLE.md). Money is BigDecimal wherever a page shows Java.
 
-## Visuals (15; 11 A Parent-Type Parameter added 2026-11-15 on Ray's review, the four after it moved down by one)
+## Visuals (16; added 2026-11-15 on Ray's review: 10 Variable, Type, Object and 12 A Parent-Type Parameter; later pages renumbered)
 | # | Idea | Spring page | Verdict | Example |
 |---|---|---|---|---|
 | 01 | The duplication problem: two classes repeat the same fields and methods; pulling the shared part up into a parent leaves each child with only what is its own | 01-duplication-problem + 03-generalization | REBUILD, merged | invented: Cat and Dog cards with repeated name, age, eat(); tap a repeated member and it rises into Animal, once |
@@ -22,12 +22,13 @@ No learner first names in examples (roster in ../../docs/PEOPLE.md). Money is Bi
 | 07 | super with arguments: which arguments travel up to the parent and which stay in the child; super(...) must be the first statement | 07-super-with-args | REBUILD | demo-01: new Dog("Lucky", 15, "Doberman"): name and age go up, breed stays |
 | 08 | Method overriding: same call, the object's own class decides which version runs | 08-method-overriding | REBUILD | demo-02: eat() on a Human, a Caveman, a ModernPerson |
 | 09 | The @Override annotation: a misspelled method silently becomes a new method; with @Override the compiler stops it | 09-override-annotation | REBUILD | demo-02: eat vs eet, toggle the annotation |
-| 10 | Base class references: a Human variable can hold a Caveman; the variable type decides what you may call, the object decides what runs | 10-base-class-references | REBUILD | demo-02: Human h = new Caveman(); h.eat() runs Caveman's, h.run() does not compile |
-| 11 | A parent-type parameter: a method written once with a Human parameter accepts a Human, a Caveman or a ModernPerson, and each runs its own eat(); something that is not a Human is refused by the compiler | none | NEW (Ray 2026-11-15) | demo-02: feed(String label, Human human) |
-| 12 | One list, many types: a List<Human> holds all three kinds; one press per element, each answers eat() its own way | 11-heterogeneous-collections | REBUILD | demo-02 |
-| 13 | instanceof and downcasting: test first, then cast to reach the child's own method; a wrong cast throws ClassCastException | 12-instanceof-downcasting | REBUILD | demo-02: Caveman run(); the bad cast drawn in --warn |
-| 14 | Abstract classes: an idea too general to build; new on it is refused, new on a concrete child works | 13-abstract-class | REBUILD | demo-03: Asset and House; invented second child allowed |
-| 15 | Abstract methods: a blank the child must fill; leave it empty and the child does not compile | 14-abstract-methods | REBUILD | demo-03: getValue() |
+| 10 | Variable, type, object: one statement `Human h = new Caveman();` as three things: the variable type (the label, fixed, what the compiler looks at), the variable (the box, holds a reference), the object (outside the box, knows its real class). Swap either side: a Caveman variable cannot hold a Human object. No method calls here | none | NEW (Ray 2026-11-15) | demo-02 classes |
+| 11 | Base class references: a Human variable can hold a Caveman; the variable type decides what you may call, the object decides what runs | 10-base-class-references | REBUILD | demo-02: Human h = new Caveman(); h.eat() runs Caveman's, h.run() does not compile |
+| 12 | A parent-type parameter: a method written once with a Human parameter accepts a Human, a Caveman or a ModernPerson, and each runs its own eat(); something that is not a Human is refused by the compiler | none | NEW (Ray 2026-11-15) | demo-02: feed(String label, Human human) |
+| 13 | One list, many types: a List<Human> holds all three kinds; one press per element, each answers eat() its own way | 11-heterogeneous-collections | REBUILD | demo-02 |
+| 14 | instanceof and downcasting: test first, then cast to reach the child's own method; a wrong cast throws ClassCastException | 12-instanceof-downcasting | REBUILD | demo-02: Caveman run(); the bad cast drawn in --warn |
+| 15 | Abstract classes: an idea too general to build; new on it is refused, new on a concrete child works | 13-abstract-class | REBUILD | demo-03: Asset and House; invented second child allowed |
+| 16 | Abstract methods: a blank the child must fill; leave it empty and the child does not compile | 14-abstract-methods | REBUILD | demo-03: getValue() |
 
 ## Reference (4)
 cheat-sheet, glossary, common-errors (constructor Animal in class Animal cannot be applied / no default constructor in the parent; call to super must be first statement; name has private access in Animal; method does not override or implement a method from a supertype; ClassCastException; Asset is abstract; cannot be instantiated; Dog is not abstract and does not override abstract method), class-diagram-reference (NEW in place of spring uml-reference: reading and drawing a class box, the signs, the inheritance arrow, abstract in italics, how to do it in draw.io / diagrams.net in a few steps).

@@ -14,12 +14,13 @@ window.HUB_MANIFEST = {
     { file: "07-super-with-arguments.html", title: "super With Arguments", group: "Workbook 5a · Section 1-3" },
     { file: "08-method-overriding.html", title: "Method Overriding", group: "Workbook 5a · Section 2-1" },
     { file: "09-the-override-annotation.html", title: "The @Override Annotation", group: "Workbook 5a · Section 2-1" },
-    { file: "10-base-class-references.html", title: "Base Class References", group: "Workbook 5a · Section 2-1" },
-    { file: "11-a-parent-type-parameter.html", title: "A Parent-Type Parameter", group: "Workbook 5a · Section 2-1" },
-    { file: "12-heterogeneous-collections.html", title: "One List, Many Types", group: "Workbook 5a · Section 2-1" },
-    { file: "13-instanceof-and-downcasting.html", title: "instanceof and Downcasting", group: "Workbook 5a · Section 2-1" },
-    { file: "14-abstract-classes.html", title: "Abstract Classes", group: "Workbook 5a · Section 2-2" },
-    { file: "15-abstract-methods.html", title: "Abstract Methods", group: "Workbook 5a · Section 2-2" }
+    { file: "10-variable-type-object.html", title: "Variable, Type, Object", group: "Workbook 5a · Section 2-1" },
+    { file: "11-base-class-references.html", title: "Base Class References", group: "Workbook 5a · Section 2-1" },
+    { file: "12-a-parent-type-parameter.html", title: "A Parent-Type Parameter", group: "Workbook 5a · Section 2-1" },
+    { file: "13-heterogeneous-collections.html", title: "One List, Many Types", group: "Workbook 5a · Section 2-1" },
+    { file: "14-instanceof-and-downcasting.html", title: "instanceof and Downcasting", group: "Workbook 5a · Section 2-1" },
+    { file: "15-abstract-classes.html", title: "Abstract Classes", group: "Workbook 5a · Section 2-2" },
+    { file: "16-abstract-methods.html", title: "Abstract Methods", group: "Workbook 5a · Section 2-2" }
   ],
   reference: [
     { file: "cheat-sheet.html", title: "Week 6 Cheat Sheet", group: "Reference", desc: "The syntax of the week on one page: extends, super, protected, overriding, a base class reference, instanceof, an abstract class." },
