@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>instanceof and Downcasting | Week 6 Visual Hub</title>
+<title>Abstract Methods | Week 6 Visual Hub</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Sora:wght@500;700&family=Inter:wght@400;500&family=JetBrains+Mono:wght@400;500&display=swap">
 <style>
@@ -66,26 +66,33 @@
   .flash{animation:warnflash .55s ease-out 2}
   @keyframes warnflash{0%{box-shadow:0 0 0 3px rgba(255,106,106,.2),0 0 34px -6px rgba(255,106,106,.75)}100%{box-shadow:none}}
   @keyframes pop{from{transform:scale(.6);opacity:0}to{transform:scale(1);opacity:1}}
-  .trio{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:14px;align-items:start;min-height:360px}
-  .obj{padding:14px 14px 12px}
-  .seen{display:inline-block;font-family:var(--mono);font-size:.66rem;letter-spacing:.06em;color:var(--muted);margin:0 0 10px;
-    padding:4px 9px;border-radius:999px;border:1px solid var(--line);transition:color .3s,border-color .3s,background .3s}
-  .seen b{font-weight:500;color:#bcd0ff}
-  .obj.up .seen{border-color:rgba(70,217,138,.6);background:rgba(70,217,138,.08);color:#bfeed3}
-  .obj.up .seen b{color:var(--good)}
-  .obj.up{border-color:rgba(70,217,138,.55);box-shadow:0 0 26px -10px rgba(70,217,138,.8)}
-  .obj.bad{border-color:var(--warn);box-shadow:0 0 26px -8px rgba(255,106,106,.8)}
-  .row.lock{border:1px dashed rgba(132,150,182,.3)}
-  .row.lock .m{color:rgba(132,150,182,.6)}
-  .row.open{border:1px solid rgba(70,217,138,.5);background:rgba(70,217,138,.07)}
-  .mini{font-family:var(--mono);font-size:.72rem;padding:5px 9px;border-radius:8px;cursor:pointer;transition:.15s;
-    border:1px solid rgba(255,200,98,.5);background:rgba(255,200,98,.1);color:var(--gold)}
-  .mini:hover{background:rgba(255,200,98,.22);border-color:var(--gold)}
-  .acts{display:grid;gap:6px;margin-top:10px;padding-top:10px;border-top:1px solid var(--line)}
-  .acts .pb{font-size:.76rem;padding:9px 8px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
-  .say.t{color:var(--good)} .say.f{color:#c9d4ea} .say.x{color:var(--warn);border-color:rgba(255,106,106,.5)}
-  .say b{font-weight:500;font-size:.95rem}
-  @media (max-width:820px){.trio{grid-template-columns:1fr}}
+  .board{display:grid;grid-template-columns:minmax(0,1fr) 64px minmax(0,1.25fr);gap:14px;align-items:start;min-height:360px}
+  .arrow{display:flex;flex-direction:column;align-items:center;justify-content:center;gap:6px;min-height:220px;
+    font-family:var(--mono);font-size:.7rem;color:rgba(132,150,182,.8)}
+  .arrow b{font-weight:500;font-size:1.8rem;line-height:1;color:#cfc8ff}
+  .blank{flex:0 1 auto;min-width:74px;font-family:var(--mono);font-size:.7rem;text-align:center;padding:5px 9px;border-radius:7px;
+    border:1px dashed rgba(132,150,182,.55);color:rgba(132,150,182,.8);transition:border-color .3s,color .3s,background .3s}
+  .row.gv{flex-wrap:wrap;border:1px solid rgba(139,123,255,.35);background:rgba(139,123,255,.06)}
+  .con.bad{border-color:var(--warn);box-shadow:0 0 26px -10px rgba(255,106,106,.8)}
+  .con.ok{border-color:rgba(70,217,138,.6)}
+  .con.bad .row.gv{border-color:rgba(255,106,106,.6);background:rgba(255,106,106,.06)}
+  .con.bad .blank{border-color:var(--warn);color:var(--warn)}
+  .con.ok .row.gv{border-color:rgba(70,217,138,.5);background:rgba(70,217,138,.06)}
+  .con.ok .blank{border:1px solid rgba(255,200,98,.6);background:rgba(255,200,98,.1);color:var(--gold);animation:pop .4s}
+  .stamp{position:absolute;top:16px;right:16px;font-family:var(--mono);font-size:.62rem;letter-spacing:.12em;text-transform:uppercase;
+    padding:4px 9px;border-radius:999px;border:1px solid var(--warn);color:var(--warn);transition:color .3s,border-color .3s}
+  .con.ok .stamp{border-color:var(--good);color:var(--good)}
+  .row input{width:92px;font-family:var(--mono);font-size:.84rem;padding:6px 9px;border-radius:9px;border:1px solid var(--line);
+    background:rgba(0,0,0,.3);color:var(--ink);outline:none;text-align:right;transition:border-color .15s}
+  .row input:focus{border-color:var(--accent)}
+  .acts{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-top:12px;padding-top:12px;border-top:1px solid var(--line)}
+  .acts .pb{white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+  .big{margin-top:12px;text-align:right;min-height:70px;visibility:hidden}
+  .big.show{visibility:visible}
+  .big .k{font-family:var(--mono);font-size:.62rem;letter-spacing:.16em;text-transform:uppercase;color:var(--muted)}
+  .big .n{font-family:var(--disp);font-weight:700;font-size:2.4rem;line-height:1.15;color:var(--gold);font-variant-numeric:tabular-nums;word-break:break-all}
+  .big.show .n{animation:pop .4s}
+  @media (max-width:820px){.board{grid-template-columns:1fr}.arrow{min-height:0;flex-direction:row}.acts{grid-template-columns:1fr}}
   /* the one sentence */
   .caption{display:flex;gap:14px;align-items:flex-start;margin:18px 2px 0;padding-top:16px;border-top:1px solid var(--line)}
   .caption .t{flex:1;min-width:0;font-size:1.05rem;line-height:1.55;color:var(--ink);padding-left:16px;border-left:3px solid var(--accent);transition:border-color .3s}
@@ -107,15 +114,41 @@
 </style>
 </head>
 <body>
-<a class="back" href="../index.html#12-instanceof-and-downcasting">&#8592; Week 6 index</a>
+<a class="back" href="../index.html#15-abstract-methods">&#8592; Week 6 index</a>
 <canvas id="amb"></canvas>
 <div class="wrap">
-  <p class="tag">Workbook 5a &middot; Section 2-1 &middot; Polymorphism</p>
-  <h1>instanceof and Downcasting</h1>
-  <p class="lede"><b>Ask each object if it is a Caveman. Then cast it and see what Java does.</b></p>
+  <p class="tag">Workbook 5a &middot; Section 2-2 &middot; Abstraction</p>
+  <h1>Abstract Methods</h1>
+  <p class="lede"><b>Asset leaves a blank. Fill it in House, call it, then take it out again.</b></p>
 
   <div class="stage">
-    <div class="trio" id="trio"></div>
+    <div class="board">
+      <div class="card abs">
+        <p class="hd">abstract class</p>
+        <p class="who">Asset</p>
+        <p class="sect">finished methods</p>
+        <div class="row"><span class="m">getDescription()</span><span class="note">has a body</span></div>
+        <div class="row"><span class="m">getYearAcquired()</span><span class="note">has a body</span></div>
+        <p class="sect">abstract method</p>
+        <div class="row gv"><span class="m">BigDecimal getValue()</span><span class="blank">no body</span></div>
+      </div>
+      <div class="arrow"><b>&larr;</b>extends</div>
+      <div class="card con bad" id="house">
+        <span class="stamp" id="stamp">does not compile</span>
+        <p class="hd">class &middot; extends Asset</p>
+        <p class="who">House</p>
+        <p class="sect">a house to try</p>
+        <div class="row"><span class="f"><i>int</i>squareFeet</span><input id="inSq" value="5000" inputmode="numeric" maxlength="6" aria-label="squareFeet"></div>
+        <div class="row"><span class="f"><i>int</i>lotSize</span><input id="inLot" value="5" inputmode="numeric" maxlength="6" aria-label="lotSize"></div>
+        <p class="sect">the blank from Asset</p>
+        <div class="row gv"><span class="m">BigDecimal getValue()</span><span class="blank" id="blank">missing</span></div>
+        <div class="acts">
+          <button class="pb nw" id="bFill">write getValue()</button>
+          <button class="pb" id="bCall" disabled>house.getValue()</button>
+        </div>
+        <div class="big" id="big"><div class="k">getValue() returns</div><div class="n" id="bigN"></div></div>
+      </div>
+    </div>
     <div class="caption" id="caption">
       <div class="t" id="status"></div>
       <button class="reset" id="bReset">Reset</button>
@@ -124,7 +157,7 @@
 
   <div class="take">
     <p class="tk">The one idea</p>
-    <p><b>Test first, then cast.</b> A <code>Human</code> variable only reaches what Human has. <code>instanceof</code> asks the object what it really is, and a downcast such as <code>(Caveman) person</code> gives you a Caveman variable for the same object, so <code>run()</code> opens up. Cast an object that is not a Caveman and the program stops with <code>ClassCastException</code>.</p>
+    <p><b>An abstract method is a blank the parent leaves for its children.</b> <code>Asset</code> writes the signature of <code>getValue()</code> and no body. Every concrete child must override it, or that child does not compile. In return, any Asset you ever hold is sure to have a <code>getValue()</code> you can call.</p>
   </div>
   <div id="rail"></div>
 </div>
@@ -140,71 +173,54 @@
   }
   function flash(el){ el.classList.remove("flash"); void el.offsetWidth; el.classList.add("flash"); }
 
-  var P=[
-    {cls:"Human",art:"a plain Human",name:"Leo",extra:null},
-    {cls:"Caveman",art:"a Caveman",name:"Rocko",extra:"run()",only:"Caveman only"},
-    {cls:"ModernPerson",art:"a ModernPerson",name:"Hank",extra:"drive()",only:"ModernPerson only"}
-  ];
-  var INTRO='Three objects, each held in a <b class="a">Human</b> variable named person. Through it only eat() is reachable; run() belongs to Caveman.';
-  var trio=$("#trio"),cast=[false,false,false];
+  var ERR="error: House is not abstract and does not override abstract method getValue() in Asset";
+  var INTRO='Asset declares <b class="a">getValue()</b> with no body: a blank. House has not filled it yet, so House <b class="w">does not compile</b>.';
+  var house=$("#house"),stamp=$("#stamp"),blank=$("#blank"),bFill=$("#bFill"),bCall=$("#bCall"),big=$("#big"),bigN=$("#bigN");
+  var filled=false;
 
-  function build(){
-    var h="";
-    P.forEach(function(p,k){
-      h+='<div class="card obj" id="c'+k+'"><p class="hd">object · '+p.cls+'</p><p class="who">'+p.name+'</p>'
-        +'<p class="seen" id="v'+k+'">variable type: <b>Human</b></p>'
-        +'<div class="row"><span class="m">eat()</span><span class="note">reachable</span></div>'
-        +(p.extra?'<div class="row lock" id="x'+k+'"><span class="m">'+p.extra+'</span><span class="note">'+p.only+'</span></div>':'')
-        +'<div class="acts"><button class="pb nw" data-k="'+k+'" data-a="test">person instanceof Caveman</button>'
-        +'<button class="pb" data-k="'+k+'" data-a="cast">(Caveman) person</button></div>'
-        +'<div class="say" id="r'+k+'"></div></div>';
-    });
-    trio.innerHTML=h;
+  function draw(){
+    house.classList.toggle("ok",filled); house.classList.toggle("bad",!filled);
+    stamp.textContent=filled?"compiles":"does not compile";
+    blank.textContent=filled?"180 × squareFeet + 0.25 × lotSize":"missing";
+    bFill.textContent=filled?"remove getValue()":"write getValue()";
+    bCall.disabled=!filled;
+    big.className="big";
   }
-  function clearBad(){ P.forEach(function(p,k){ $("#c"+k).classList.remove("bad","flash"); }); }
-  function result(k,kind,small,big){
-    var r=$("#r"+k); r.className="say show "+kind;
-    r.innerHTML="<small>"+small+"</small>"+big;
-  }
-  function test(k){
-    var p=P[k]; clearBad();
-    if(p.cls==="Caveman"){
-      result(k,"t","person instanceof Caveman","<b>true</b>");
-      say('<b class="g">true</b>: '+p.name+' really is a Caveman, so casting this one is safe.',"g","person instanceof Caveman");
+  function toggle(){
+    filled=!filled; draw();
+    if(filled){
+      say('House wrote its own <b class="g">getValue()</b>. The blank is filled, so House compiles. Now call it.',"g","@Override public BigDecimal getValue()");
     } else {
-      result(k,"f","person instanceof Caveman","<b>false</b>");
-      say('<b class="a">false</b>: '+p.name+' is '+p.art+(p.cls==="Human"?'. Every Caveman is a Human, not the other way around.':', a Human but not a Caveman.')+' Do not cast this one.',
-        "","person instanceof Caveman");
+      if(!reduce) flash(house);
+      say('The blank is empty again. A class that is not abstract must fill <b class="w">every</b> abstract method it inherits.',"w",ERR);
     }
   }
-  function doCast(k){
-    var p=P[k], c=$("#c"+k); clearBad();
-    if(p.cls==="Caveman"){
-      cast[k]=true; c.classList.add("up");
-      $("#v"+k).innerHTML="variable type: <b>Caveman</b>";
-      var x=$("#x"+k); x.className="row open";
-      x.innerHTML='<span class="m">run()</span><button class="mini" data-k="'+k+'" data-a="run">caveman.run()</button>';
-      $("#r"+k).className="say";
-      say('Same object, now held in a <b class="g">Caveman</b> variable: run() is reachable. Press it.',"g","Caveman caveman = (Caveman) person;");
-    } else {
-      c.classList.add("bad"); flash(c);
-      result(k,"x","at run time","<b>ClassCastException</b>");
-      say('This compiles, because a Human variable could hold a Caveman. At run time the object is <b class="w">'+p.art+'</b>, so Java stops.',
-        "w","java.lang.ClassCastException: class com.pluralsight."+p.cls+" cannot be cast to class com.pluralsight.Caveman");
-    }
+  function readInt(el){
+    var s=el.value.trim();
+    if(!/^\d{1,6}$/.test(s)) return null;
+    return parseInt(s,10);
   }
-  function run(k){
-    clearBad();
-    result(k,"","prints","Me running away from dinosaur!");
-    say('run() is written in <b class="y">Caveman</b> only. The cast is what made it callable.',"y","caveman.run();");
+  /* 180 x squareFeet + 0.25 x lotSize, done in whole cents so the result is exact, as BigDecimal is */
+  function call(){
+    if(!filled){ say('There is nothing to call yet: House has no <b class="w">getValue()</b>. Write it first.',"w",ERR); return; }
+    var sq=readInt($("#inSq")), lot=readInt($("#inLot"));
+    if(sq===null||lot===null){ big.className="big"; say('Type a <b class="w">whole number</b>, 0 or more, for squareFeet and lotSize.',"w"); return; }
+    var cents=18000*sq+25*lot, whole=Math.floor(cents/100), frac=cents%100;
+    var txt=whole+"."+(frac<10?"0":"")+frac;
+    bigN.textContent=txt; big.className="big"; void big.offsetWidth; big.className="big show";
+    say('180 × '+sq+' + 0.25 × '+lot+' = <b class="y">'+txt+'</b>. Asset promised the method, House did the math.',"y","house.getValue();");
   }
-  function reset(){ cast=[false,false,false]; build(); say(INTRO); }
-  trio.addEventListener("click",function(e){
-    var b=e.target.closest("button[data-a]"); if(!b) return;
-    var k=+b.getAttribute("data-k"), a=b.getAttribute("data-a");
-    if(a==="test") test(k); else if(a==="cast") doCast(k); else run(k);
-  });
+  function reset(){
+    filled=false; $("#inSq").value="5000"; $("#inLot").value="5"; house.classList.remove("flash");
+    draw(); say(INTRO,"w",ERR);
+  }
+  bFill.addEventListener("click",toggle);
+  bCall.addEventListener("click",call);
   $("#bReset").addEventListener("click",reset);
+  ["#inSq","#inLot"].forEach(function(id){
+    $(id).addEventListener("keydown",function(e){ if(e.key==="Enter") call(); });
+    $(id).addEventListener("input",function(){ big.className="big"; });
+  });
   reset();
 
   /* ambient canvas */
@@ -222,6 +238,6 @@
 </script>
 <script src="../manifest.js"></script>
 <script src="../../assets/rail.js"></script>
-<script>Rail.render(document.getElementById("rail"),{week:6,kind:"visuals",current:"12-instanceof-and-downcasting"});</script>
+<script>Rail.render(document.getElementById("rail"),{week:6,kind:"visuals",current:"15-abstract-methods"});</script>
 </body>
 </html>

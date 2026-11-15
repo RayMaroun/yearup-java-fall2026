@@ -216,7 +216,7 @@ if (h instanceof Caveman) {
         </article>
 
         <article class="card" data-cat="compile">
-          <div class="ch"><span class="cat">Compile</span><h2>A cast or instanceof between classes with no family link</h2><a class="see" href="../visuals/12-instanceof-and-downcasting.html">See it</a></div>
+          <div class="ch"><span class="cat">Compile</span><h2>A cast or instanceof between classes with no family link</h2><a class="see" href="../visuals/13-instanceof-and-downcasting.html">See it</a></div>
           <pre class="msg">java: incompatible types: Caveman cannot be converted to ModernPerson</pre>
           <p class="means"><code>Caveman</code> and <code>ModernPerson</code> are siblings: both extend <code>Human</code>, neither extends the other. The same error appears for <code>s instanceof Human</code> when <code>s</code> is a <code>String</code> (String cannot be converted to Human).</p>
           <p class="fix"><b>Fix</b>Cast only along the line of parents and children. Test or cast through the parent variable, not a sibling.</p>
@@ -239,7 +239,7 @@ c.eat(5);</pre></div></div>
         </article>
 
         <article class="card" data-cat="compile">
-          <div class="ch"><span class="cat">Compile</span><h2>new on an abstract class</h2><a class="see" href="../visuals/13-abstract-classes.html">See it</a></div>
+          <div class="ch"><span class="cat">Compile</span><h2>new on an abstract class</h2><a class="see" href="../visuals/14-abstract-classes.html">See it</a></div>
           <pre class="msg">java: Asset is abstract; cannot be instantiated</pre>
           <p class="means">An abstract class is an idea too general to build. It exists to be extended, never to be created with <code>new</code>.</p>
           <p class="fix"><b>Fix</b>Create a concrete child, such as <code>House</code>. The variable can still be typed <code>Asset</code>.</p>
@@ -247,7 +247,7 @@ c.eat(5);</pre></div></div>
         </article>
 
         <article class="card" data-cat="compile">
-          <div class="ch"><span class="cat">Compile</span><h2>A child leaves the abstract method empty</h2><a class="see" href="../visuals/14-abstract-methods.html">See it</a></div>
+          <div class="ch"><span class="cat">Compile</span><h2>A child leaves the abstract method empty</h2><a class="see" href="../visuals/15-abstract-methods.html">See it</a></div>
           <pre class="msg">java: House is not abstract and does not override abstract method getValue() in Asset</pre>
           <p class="means"><code>getValue()</code> is a blank the parent left on purpose. A child that is not abstract itself must fill it. The same message appears for a method marked <code>abstract</code> inside a class that is not.</p>
           <p class="fix"><b>Fix</b>Override the method in the child, or mark the child <code>abstract</code> too if it is still too general.</p>
@@ -260,7 +260,7 @@ c.eat(5);</pre></div></div>
         </article>
 
         <article class="card" data-cat="compile">
-          <div class="ch"><span class="cat">Compile</span><h2>An abstract method with a body</h2><a class="see" href="../visuals/14-abstract-methods.html">See it</a></div>
+          <div class="ch"><span class="cat">Compile</span><h2>An abstract method with a body</h2><a class="see" href="../visuals/15-abstract-methods.html">See it</a></div>
           <pre class="msg">java: abstract methods cannot have a body</pre>
           <p class="means">An abstract method is only a signature. If you write curly braces, it is no longer abstract.</p>
           <p class="fix"><b>Fix</b>End the line with a semicolon, or drop <code>abstract</code> and keep the body.</p>
@@ -268,7 +268,7 @@ c.eat(5);</pre></div></div>
         </article>
 
         <article class="card" data-cat="runtime">
-          <div class="ch"><span class="cat">Runtime</span><h2>ClassCastException</h2><a class="see" href="../visuals/12-instanceof-and-downcasting.html">See it</a></div>
+          <div class="ch"><span class="cat">Runtime</span><h2>ClassCastException</h2><a class="see" href="../visuals/13-instanceof-and-downcasting.html">See it</a></div>
           <pre class="msg">Exception in thread "main" java.lang.ClassCastException: class com.pluralsight.Human cannot be cast to class com.pluralsight.Caveman (com.pluralsight.Human and com.pluralsight.Caveman are in unnamed module of loader 'app')
 	at com.pluralsight.Main.main(Main.java:5)</pre>
           <p class="means">The cast compiled because <code>Caveman</code> is a child of <code>Human</code>, but at run time the object is a plain <code>Human</code>. A cast promises; it does not change the object. The two class names in the first line say which object and which cast.</p>
@@ -291,7 +291,7 @@ public void eat() { ... }</pre></div></div>
         </article>
 
         <article class="card" data-cat="quiet">
-          <div class="ch"><span class="cat">Quiet bug</span><h2>Human tested first in an instanceof chain</h2><a class="see" href="../visuals/12-instanceof-and-downcasting.html">See it</a></div>
+          <div class="ch"><span class="cat">Quiet bug</span><h2>Human tested first in an instanceof chain</h2><a class="see" href="../visuals/13-instanceof-and-downcasting.html">See it</a></div>
           <pre class="msgout">(no message) every object prints:
 This is a Human</pre>
           <p class="means">A <code>Caveman</code> is also a <code>Human</code>, so <code>instanceof Human</code> is true for all of them and the chain stops at the first branch.</p>

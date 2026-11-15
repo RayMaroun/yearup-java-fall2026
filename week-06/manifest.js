@@ -15,10 +15,11 @@ window.HUB_MANIFEST = {
     { file: "08-method-overriding.html", title: "Method Overriding", group: "Workbook 5a · Section 2-1" },
     { file: "09-the-override-annotation.html", title: "The @Override Annotation", group: "Workbook 5a · Section 2-1" },
     { file: "10-base-class-references.html", title: "Base Class References", group: "Workbook 5a · Section 2-1" },
-    { file: "11-heterogeneous-collections.html", title: "One List, Many Types", group: "Workbook 5a · Section 2-1" },
-    { file: "12-instanceof-and-downcasting.html", title: "instanceof and Downcasting", group: "Workbook 5a · Section 2-1" },
-    { file: "13-abstract-classes.html", title: "Abstract Classes", group: "Workbook 5a · Section 2-2" },
-    { file: "14-abstract-methods.html", title: "Abstract Methods", group: "Workbook 5a · Section 2-2" }
+    { file: "11-a-parent-type-parameter.html", title: "A Parent-Type Parameter", group: "Workbook 5a · Section 2-1" },
+    { file: "12-heterogeneous-collections.html", title: "One List, Many Types", group: "Workbook 5a · Section 2-1" },
+    { file: "13-instanceof-and-downcasting.html", title: "instanceof and Downcasting", group: "Workbook 5a · Section 2-1" },
+    { file: "14-abstract-classes.html", title: "Abstract Classes", group: "Workbook 5a · Section 2-2" },
+    { file: "15-abstract-methods.html", title: "Abstract Methods", group: "Workbook 5a · Section 2-2" }
   ],
   reference: [
     { file: "cheat-sheet.html", title: "Week 6 Cheat Sheet", group: "Reference", desc: "The syntax of the week on one page: extends, super, protected, overriding, a base class reference, instanceof, an abstract class." },

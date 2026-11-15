@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Abstract Classes | Week 6 Visual Hub</title>
+<title>instanceof and Downcasting | Week 6 Visual Hub</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Sora:wght@500;700&family=Inter:wght@400;500&family=JetBrains+Mono:wght@400;500&display=swap">
 <style>
@@ -66,30 +66,26 @@
   .flash{animation:warnflash .55s ease-out 2}
   @keyframes warnflash{0%{box-shadow:0 0 0 3px rgba(255,106,106,.2),0 0 34px -6px rgba(255,106,106,.75)}100%{box-shadow:none}}
   @keyframes pop{from{transform:scale(.6);opacity:0}to{transform:scale(1);opacity:1}}
-  .board{display:grid;grid-template-columns:minmax(0,1fr) 56px minmax(0,1.15fr);gap:14px 14px;align-items:stretch}
-  .ext{grid-column:1;font-family:var(--mono);font-size:.7rem;color:rgba(132,150,182,.8);text-align:center;margin:-6px 0}
-  .ext b{display:block;font-weight:500;font-size:1.2rem;line-height:1;color:#cfc8ff}
-  .gap{grid-column:2 / 4}
-  .mk{margin-top:12px;padding-top:12px;border-top:1px solid var(--line)}
-  .mk .pb{width:100%;font-size:.95rem;padding:11px}
-  .arrow{display:flex;flex-direction:column;align-items:center;justify-content:center;gap:6px;
-    font-family:var(--mono);font-size:.7rem;color:rgba(132,150,182,.45);transition:color .3s}
-  .arrow b{font-weight:500;font-size:1.8rem;line-height:1;transition:transform .5s cubic-bezier(.2,.9,.3,1)}
-  .arrow.on{color:var(--gold)} .arrow.on b{transform:translateX(8px)}
-  .arrow.no{color:var(--warn)}
-  .abs.bad{border-color:var(--warn)}
-  .out{display:flex;align-items:stretch;min-width:0}
-  .empty{width:100%;min-height:120px;display:flex;align-items:center;justify-content:center;text-align:center;
-    font-family:var(--mono);font-size:.8rem;line-height:1.7;color:var(--muted);border:1px dashed rgba(255,255,255,.1);border-radius:16px;padding:14px;
-    transition:border-color .3s,color .3s,background .3s}
-  .empty.no{border:2px dashed var(--warn);background:rgba(255,106,106,.06);color:#ffb0b0}
-  .empty.no b{display:block;font-family:var(--disp);font-weight:700;font-size:1.5rem;color:var(--warn);animation:pop .4s}
-  .out .obj{width:100%;padding:14px 16px 12px;opacity:0;transform:translateX(-50px) scale(.9);
-    transition:opacity .45s,transform .55s cubic-bezier(.2,.9,.3,1),border-color .3s}
-  .out .obj.show{opacity:1;transform:none}
-  .out .obj .row{padding:5px 10px}
-  .row.inh{background:rgba(139,123,255,.08)}
-  @media (max-width:820px){.board{grid-template-columns:1fr}.arrow{display:none}.ext,.gap{grid-column:1}.gap{display:none}}
+  .trio{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:14px;align-items:start;min-height:360px}
+  .obj{padding:14px 14px 12px}
+  .seen{display:inline-block;font-family:var(--mono);font-size:.66rem;letter-spacing:.06em;color:var(--muted);margin:0 0 10px;
+    padding:4px 9px;border-radius:999px;border:1px solid var(--line);transition:color .3s,border-color .3s,background .3s}
+  .seen b{font-weight:500;color:#bcd0ff}
+  .obj.up .seen{border-color:rgba(70,217,138,.6);background:rgba(70,217,138,.08);color:#bfeed3}
+  .obj.up .seen b{color:var(--good)}
+  .obj.up{border-color:rgba(70,217,138,.55);box-shadow:0 0 26px -10px rgba(70,217,138,.8)}
+  .obj.bad{border-color:var(--warn);box-shadow:0 0 26px -8px rgba(255,106,106,.8)}
+  .row.lock{border:1px dashed rgba(132,150,182,.3)}
+  .row.lock .m{color:rgba(132,150,182,.6)}
+  .row.open{border:1px solid rgba(70,217,138,.5);background:rgba(70,217,138,.07)}
+  .mini{font-family:var(--mono);font-size:.72rem;padding:5px 9px;border-radius:8px;cursor:pointer;transition:.15s;
+    border:1px solid rgba(255,200,98,.5);background:rgba(255,200,98,.1);color:var(--gold)}
+  .mini:hover{background:rgba(255,200,98,.22);border-color:var(--gold)}
+  .acts{display:grid;gap:6px;margin-top:10px;padding-top:10px;border-top:1px solid var(--line)}
+  .acts .pb{font-size:.76rem;padding:9px 8px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+  .say.t{color:var(--good)} .say.f{color:#c9d4ea} .say.x{color:var(--warn);border-color:rgba(255,106,106,.5)}
+  .say b{font-weight:500;font-size:.95rem}
+  @media (max-width:820px){.trio{grid-template-columns:1fr}}
   /* the one sentence */
   .caption{display:flex;gap:14px;align-items:flex-start;margin:18px 2px 0;padding-top:16px;border-top:1px solid var(--line)}
   .caption .t{flex:1;min-width:0;font-size:1.05rem;line-height:1.55;color:var(--ink);padding-left:16px;border-left:3px solid var(--accent);transition:border-color .3s}
@@ -111,45 +107,15 @@
 </style>
 </head>
 <body>
-<a class="back" href="../index.html#13-abstract-classes">&#8592; Week 6 index</a>
+<a class="back" href="../index.html#13-instanceof-and-downcasting">&#8592; Week 6 index</a>
 <canvas id="amb"></canvas>
 <div class="wrap">
-  <p class="tag">Workbook 5a &middot; Section 2-2 &middot; Abstraction</p>
-  <h1>Abstract Classes</h1>
-  <p class="lede"><b>Try to build an Asset. Then build a House and look at what it carries.</b></p>
+  <p class="tag">Workbook 5a &middot; Section 2-1 &middot; Polymorphism</p>
+  <h1>instanceof and Downcasting</h1>
+  <p class="lede"><b>Ask each object if it is a Caveman. Then cast it and see what Java does.</b></p>
 
   <div class="stage">
-    <div class="board">
-      <div class="card abs" id="asset">
-        <p class="hd">abstract class</p>
-        <p class="who">Asset</p>
-        <p class="sect">fields</p>
-        <div class="row"><span class="f"><i>String</i>description</span></div>
-        <div class="row"><span class="f"><i>int</i>yearAcquired</span></div>
-        <div class="row"><span class="f"><i>BigDecimal</i>originalCost</span></div>
-        <p class="sect">constructor</p>
-        <div class="row"><span class="f">Asset(...)</span><span class="note">fills the three fields</span></div>
-        <p class="sect">finished method</p>
-        <div class="row"><span class="m">printMessage()</span></div>
-        <div class="mk"><button class="pb nw" id="bAsset"><b>new</b> Asset(...)</button></div>
-      </div>
-      <div class="arrow" id="a1"><b>&rarr;</b>new</div>
-      <div class="out" id="o1"><div class="empty" id="e1">No Asset object.</div></div>
-
-      <div class="ext"><b>&uarr;</b>extends</div><div class="gap"></div>
-
-      <div class="card con" id="house">
-        <p class="hd">class &middot; extends Asset</p>
-        <p class="who">House</p>
-        <p class="sect">its own fields</p>
-        <div class="row"><span class="f"><i>String</i>address</span></div>
-        <div class="row"><span class="f"><i>int</i>squareFeet</span></div>
-        <div class="row"><span class="f"><i>int</i>lotSize</span></div>
-        <div class="mk"><button class="pb nw" id="bHouse"><b>new</b> House(...)</button></div>
-      </div>
-      <div class="arrow" id="a2"><b>&rarr;</b>new</div>
-      <div class="out" id="o2"><div class="empty" id="e2">No House object yet.</div></div>
-    </div>
+    <div class="trio" id="trio"></div>
     <div class="caption" id="caption">
       <div class="t" id="status"></div>
       <button class="reset" id="bReset">Reset</button>
@@ -158,7 +124,7 @@
 
   <div class="take">
     <p class="tk">The one idea</p>
-    <p><b>An abstract class is a parent too general to build.</b> It is a real class: it holds fields, constructors and finished methods for its children to inherit. But <code>new Asset(...)</code> does not compile, because nobody owns just "an asset". You build a concrete child such as <code>House</code>, and every House is still an Asset.</p>
+    <p><b>Test first, then cast.</b> A <code>Human</code> variable only reaches what Human has. <code>instanceof</code> asks the object what it really is, and a downcast such as <code>(Caveman) person</code> gives you a Caveman variable for the same object, so <code>run()</code> opens up. Cast an object that is not a Caveman and the program stops with <code>ClassCastException</code>.</p>
   </div>
   <div id="rail"></div>
 </div>
@@ -174,54 +140,70 @@
   }
   function flash(el){ el.classList.remove("flash"); void el.offsetWidth; el.classList.add("flash"); }
 
-  var INTRO='<b class="a">Asset</b> is abstract, yet it has fields, a constructor and a finished method. <b class="a">House</b> is one kind of Asset.';
-  var asset=$("#asset"),e1=$("#e1"),o2=$("#o2"),a1=$("#a1"),a2=$("#a2"),built=false;
-  var EMPTY2='<div class="empty" id="e2">No House object yet.</div>';
+  var P=[
+    {cls:"Human",art:"a plain Human",name:"Leo",extra:null},
+    {cls:"Caveman",art:"a Caveman",name:"Rocko",extra:"run()",only:"Caveman only"},
+    {cls:"ModernPerson",art:"a ModernPerson",name:"Hank",extra:"drive()",only:"ModernPerson only"}
+  ];
+  var INTRO='Three objects, each held in a <b class="a">Human</b> variable named person. Through it only eat() is reachable; run() belongs to Caveman.';
+  var trio=$("#trio"),cast=[false,false,false];
 
-  function newAsset(){
-    asset.classList.add("bad"); flash(asset);
-    a1.className="arrow no";
-    e1.className="empty no";
-    e1.innerHTML="<span><b>refused</b>Asset is abstract.<br>No object is built.</span>";
-    say('The compiler refuses this line before the program ever runs. "An asset" is too general to build: <b class="w">which kind?</b>',
-      "w","error: Asset is abstract; cannot be instantiated");
+  function build(){
+    var h="";
+    P.forEach(function(p,k){
+      h+='<div class="card obj" id="c'+k+'"><p class="hd">object · '+p.cls+'</p><p class="who">'+p.name+'</p>'
+        +'<p class="seen" id="v'+k+'">variable type: <b>Human</b></p>'
+        +'<div class="row"><span class="m">eat()</span><span class="note">reachable</span></div>'
+        +(p.extra?'<div class="row lock" id="x'+k+'"><span class="m">'+p.extra+'</span><span class="note">'+p.only+'</span></div>':'')
+        +'<div class="acts"><button class="pb nw" data-k="'+k+'" data-a="test">person instanceof Caveman</button>'
+        +'<button class="pb" data-k="'+k+'" data-a="cast">(Caveman) person</button></div>'
+        +'<div class="say" id="r'+k+'"></div></div>';
+    });
+    trio.innerHTML=h;
   }
-  function newHouse(){
-    if(built) return;
-    built=true; $("#bHouse").disabled=true;
-    asset.classList.remove("bad","flash");
-    o2.innerHTML='<div class="card obj" id="obj"><p class="hd">object · House</p><p class="who">house</p>'
-      +'<p class="sect">inherited from Asset</p>'
-      +'<div class="row inh"><span class="f">description</span><span class="val s">"5 bedroom"</span></div>'
-      +'<div class="row inh"><span class="f">yearAcquired</span><span class="val">2023</span></div>'
-      +'<div class="row inh"><span class="f">originalCost</span><span class="val">400000.00</span></div>'
-      +'<p class="sect">its own</p>'
-      +'<div class="row"><span class="f">address</span><span class="val s">"123 El Street"</span></div>'
-      +'<div class="row"><span class="f">squareFeet</span><span class="val">5000</span></div>'
-      +'<div class="row"><span class="f">lotSize</span><span class="val">5</span></div>'
-      +'<div class="mk"><button class="pb" id="bMsg">house.printMessage()</button></div>'
-      +'<div class="say" id="msg"></div></div>';
-    var el=$("#obj");
-    a2.classList.add("on");
-    setTimeout(function(){ el.classList.add("show"); },reduce?0:30);
-    setTimeout(function(){ a2.classList.remove("on"); },900);
-    say('<b class="g">House</b> is concrete, so new works. Asset\'s constructor still ran, through super(...), and filled the three inherited fields.',
-      "g",'House house = new House("5 bedroom", 2023, new BigDecimal("400000.00"), "123 El Street", 5000, 5);');
+  function clearBad(){ P.forEach(function(p,k){ $("#c"+k).classList.remove("bad","flash"); }); }
+  function result(k,kind,small,big){
+    var r=$("#r"+k); r.className="say show "+kind;
+    r.innerHTML="<small>"+small+"</small>"+big;
   }
-  function printMessage(){
-    var m=$("#msg"); m.innerHTML="<small>prints</small>Potato"; m.classList.add("show");
-    say('printMessage() is finished code written once in <b class="y">Asset</b>. The House object inherited it.',"y","house.printMessage();");
+  function test(k){
+    var p=P[k]; clearBad();
+    if(p.cls==="Caveman"){
+      result(k,"t","person instanceof Caveman","<b>true</b>");
+      say('<b class="g">true</b>: '+p.name+' really is a Caveman, so casting this one is safe.',"g","person instanceof Caveman");
+    } else {
+      result(k,"f","person instanceof Caveman","<b>false</b>");
+      say('<b class="a">false</b>: '+p.name+' is '+p.art+(p.cls==="Human"?'. Every Caveman is a Human, not the other way around.':', a Human but not a Caveman.')+' Do not cast this one.',
+        "","person instanceof Caveman");
+    }
   }
-  function reset(){
-    built=false; $("#bHouse").disabled=false;
-    asset.classList.remove("bad","flash"); a1.className="arrow"; a2.className="arrow";
-    e1.className="empty"; e1.textContent="No Asset object.";
-    o2.innerHTML=EMPTY2;
-    say(INTRO);
+  function doCast(k){
+    var p=P[k], c=$("#c"+k); clearBad();
+    if(p.cls==="Caveman"){
+      cast[k]=true; c.classList.add("up");
+      $("#v"+k).innerHTML="variable type: <b>Caveman</b>";
+      var x=$("#x"+k); x.className="row open";
+      x.innerHTML='<span class="m">run()</span><button class="mini" data-k="'+k+'" data-a="run">caveman.run()</button>';
+      $("#r"+k).className="say";
+      say('Same object, now held in a <b class="g">Caveman</b> variable: run() is reachable. Press it.',"g","Caveman caveman = (Caveman) person;");
+    } else {
+      c.classList.add("bad"); flash(c);
+      result(k,"x","at run time","<b>ClassCastException</b>");
+      say('This compiles, because a Human variable could hold a Caveman. At run time the object is <b class="w">'+p.art+'</b>, so Java stops.',
+        "w","java.lang.ClassCastException: class com.pluralsight."+p.cls+" cannot be cast to class com.pluralsight.Caveman");
+    }
   }
-  $("#bAsset").addEventListener("click",newAsset);
-  $("#bHouse").addEventListener("click",newHouse);
-  o2.addEventListener("click",function(e){ if(e.target.closest("#bMsg")) printMessage(); });
+  function run(k){
+    clearBad();
+    result(k,"","prints","Me running away from dinosaur!");
+    say('run() is written in <b class="y">Caveman</b> only. The cast is what made it callable.',"y","caveman.run();");
+  }
+  function reset(){ cast=[false,false,false]; build(); say(INTRO); }
+  trio.addEventListener("click",function(e){
+    var b=e.target.closest("button[data-a]"); if(!b) return;
+    var k=+b.getAttribute("data-k"), a=b.getAttribute("data-a");
+    if(a==="test") test(k); else if(a==="cast") doCast(k); else run(k);
+  });
   $("#bReset").addEventListener("click",reset);
   reset();
 
@@ -240,6 +222,6 @@
 </script>
 <script src="../manifest.js"></script>
 <script src="../../assets/rail.js"></script>
-<script>Rail.render(document.getElementById("rail"),{week:6,kind:"visuals",current:"13-abstract-classes"});</script>
+<script>Rail.render(document.getElementById("rail"),{week:6,kind:"visuals",current:"13-instanceof-and-downcasting"});</script>
 </body>
 </html>
