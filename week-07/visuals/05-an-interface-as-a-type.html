@@ -130,40 +130,40 @@
 <div class="wrap">
   <p class="tag">Workbook 6a &middot; Section 2-1</p>
   <h1>An Interface as a Type</h1>
-  <p class="lede"><b>One IMovable variable. Put three objects in it and try both calls on each.</b></p>
+  <p class="lede"><b>One IPlayable variable. Put three objects in it and try both calls on each.</b></p>
 
   <div class="stage">
     <div class="board" id="board">
       <div class="card var" id="vcard">
-        <p class="hd">variable &middot; its type is the interface IMovable</p>
-        <p class="who">IMovable m</p>
-        <p class="sect">call a method through m</p>
+        <p class="hd">variable &middot; its type is the interface IPlayable</p>
+        <p class="who">IPlayable player</p>
+        <p class="sect">call a method through player</p>
         <div class="acts">
-          <button class="call" id="bHome" data-a="home">m.goHome()</button>
-          <button class="call" id="bClean" data-a="clean">m.clean()</button>
+          <button class="call" id="bStop" data-a="stop">player.stop()</button>
+          <button class="call" id="bCharge" data-a="charge">player.charge()</button>
         </div>
         <p class="chk" id="chk"></p>
-        <p class="sect">put an object in m</p>
+        <p class="sect">put an object in player</p>
         <div class="put">
-          <button class="new" data-o="RobotVacuum">m = <b>new</b> RobotVacuum("Bolts")</button>
-          <button class="new" data-o="Turtle">m = <b>new</b> Turtle("Slow")</button>
-          <button class="new" data-o="EtchASketch">m = <b>new</b> EtchASketch()</button>
+          <button class="new" data-o="Phone">player = <b>new</b> Phone("Pocket")</button>
+          <button class="new" data-o="Speaker">player = <b>new</b> Speaker("Boom")</button>
+          <button class="new" data-o="SmartWatch">player = <b>new</b> SmartWatch()</button>
         </div>
       </div>
       <div class="arrow" id="arrow"><b class="go">&rarr;</b><b class="x">&#10005;</b><span id="alab">refers to</span></div>
       <div>
         <div class="ghost" id="ghost" hidden>
           <p class="hd">turned away by the compiler</p>
-          <p class="who">EtchASketch</p>
-          <span class="rel">implements IDrawable, ICleaner</span>
+          <p class="who">SmartWatch</p>
+          <span class="rel">implements ICallable, IChargeable</span>
         </div>
         <div class="card obj" id="ocard">
           <p class="hd">object &middot; its real class</p>
           <p class="who" id="oname"></p>
           <span class="rel" id="orel"></span>
-          <div class="mrow" id="rmove"><span class="sg">move(int xUnits, int yUnits)</span></div>
-          <div class="mrow" id="rhome"><span class="sg">goHome()</span><span class="out" id="ohome"></span></div>
-          <div class="mrow" id="rclean"><span class="sg">clean()</span><span class="out">prints "The robot vacuum is cleaning."</span></div>
+          <div class="mrow" id="rplay"><span class="sg">play(String song)</span></div>
+          <div class="mrow" id="rstop"><span class="sg">stop()</span><span class="out" id="ostop"></span></div>
+          <div class="mrow" id="rcharge"><span class="sg">charge()</span><span class="out">prints "The phone is charging."</span></div>
         </div>
       </div>
     </div>
@@ -175,7 +175,7 @@
 
   <div class="take">
     <p class="tk">The one idea</p>
-    <p><b>An interface is a type too.</b> An <code>IMovable</code> variable can refer to any object whose class implements IMovable, and to no other. The variable's type decides what you may call: only what <code>IMovable</code> declares. The object decides what runs.</p>
+    <p><b>An interface is a type too.</b> An <code>IPlayable</code> variable can refer to any object whose class implements IPlayable, and to no other. The variable's type decides what you may call: only what <code>IPlayable</code> declares. The object decides what runs.</p>
   </div>
   <div id="rail"></div>
 </div>
@@ -192,78 +192,76 @@
     status.innerHTML=html;
     if(line){ var sp=document.createElement("span"); sp.className="line"; sp.textContent=line; status.appendChild(sp); }
   }
-  var REL={RobotVacuum:"implements IMovable, ICleaner",Turtle:"implements IMovable"};
-  var HOME={RobotVacuum:'back to (0, 0), prints "The robot vacuum is returning home."',Turtle:"back to (25, 25), prints nothing"};
-  var NEW={RobotVacuum:'new RobotVacuum("Bolts")',Turtle:'new Turtle("Slow")'};
-  var obj="RobotVacuum", timer=null, pending=null;
+  var REL={Phone:"implements IPlayable, IChargeable",Speaker:"implements IPlayable"};
+  var SAID={Phone:"The phone stopped the music.",Speaker:"The speaker stopped."};
+  var NEW={Phone:'new Phone("Pocket")',Speaker:'new Speaker("Boom")'};
+  var obj="Phone", timer=null, pending=null;
   var vcard=$("#vcard"),ocard=$("#ocard"),arrow=$("#arrow"),alab=$("#alab"),chk=$("#chk"),
-      bHome=$("#bHome"),bClean=$("#bClean"),rhome=$("#rhome"),rclean=$("#rclean"),ghost=$("#ghost");
+      bStop=$("#bStop"),bCharge=$("#bCharge"),rstop=$("#rstop"),rcharge=$("#rcharge"),ghost=$("#ghost");
 
   function clear(){
     clearTimeout(timer);
     if(pending){ var p=pending; pending=null; p(); }
-    vcard.classList.remove("wall"); bHome.classList.remove("ok"); bClean.classList.remove("bad");
+    vcard.classList.remove("wall"); bStop.classList.remove("ok"); bCharge.classList.remove("bad");
     arrow.className="arrow"; alab.textContent="refers to";
     chk.className="chk"; chk.textContent="";
-    rhome.classList.remove("run"); rclean.classList.remove("far");
+    rstop.classList.remove("run"); rcharge.classList.remove("far");
     ghost.hidden=true;
     all(".new").forEach(function(b){ b.classList.remove("bad"); });
   }
   function paint(){
     $("#oname").textContent=obj; $("#orel").textContent=REL[obj];
-    $("#ohome").textContent=HOME[obj];
-    rclean.hidden=obj!=="RobotVacuum";
+    $("#ostop").textContent='prints "'+SAID[obj]+'"';
+    rcharge.hidden=obj!=="Phone";
     all(".new").forEach(function(b){ b.classList.toggle("cur",b.getAttribute("data-o")===obj); });
   }
   function put(o){
     clear();
-    if(o==="EtchASketch"){
-      /* not an IMovable: the statement does not compile and m keeps the object it had */
+    if(o==="SmartWatch"){
+      /* not an IPlayable: the statement does not compile and player keeps the object it had */
       ghost.hidden=false; vcard.classList.add("wall");
-      document.querySelector('.new[data-o="EtchASketch"]').classList.add("bad");
-      say('EtchASketch implements IDrawable and ICleaner, <b class="w">not IMovable</b>. The compiler refuses, and m keeps the '+obj+' it had.',"w",
-        "m = new EtchASketch();  // error: incompatible types: EtchASketch cannot be converted to IMovable");
+      document.querySelector('.new[data-o="SmartWatch"]').classList.add("bad");
+      say('SmartWatch implements ICallable and IChargeable, <b class="w">not IPlayable</b>. The compiler refuses, and player keeps the '+obj+' it had.',"w",
+        "player = new SmartWatch();  // error: incompatible types: SmartWatch cannot be converted to IPlayable");
       return;
     }
     obj=o; paint();
     if(!reduce){ ocard.classList.add("swap"); void ocard.offsetWidth; ocard.classList.remove("swap"); }
-    if(o==="Turtle") say('m now refers to a <b class="g">Turtle</b> object. Allowed, because Turtle implements IMovable. Same variable, a different class of object.',"g","m = "+NEW[o]+";");
-    else say('m now refers to a <b class="g">RobotVacuum</b> object. Allowed, because RobotVacuum implements IMovable.',"g","m = "+NEW[o]+";");
+    if(o==="Speaker") say('player now refers to a <b class="g">Speaker</b> object. Allowed, because Speaker implements IPlayable. Same variable, a different class of object.',"g","player = "+NEW[o]+";");
+    else say('player now refers to a <b class="g">Phone</b> object. Allowed, because Phone implements IPlayable.',"g","player = "+NEW[o]+";");
   }
-  function home(){
+  function callStop(){
     clear();
-    bHome.classList.add("ok");
-    chk.className="chk g"; chk.innerHTML="<small>compiler checks the variable</small>IMovable declares goHome(): allowed";
+    bStop.classList.add("ok");
+    chk.className="chk g"; chk.innerHTML="<small>compiler checks the variable</small>IPlayable declares stop(): allowed";
     function land(){
       pending=null;
       arrow.className="arrow on"; alab.textContent="runs on the object";
-      rhome.classList.add("run");
+      rstop.classList.add("run");
     }
     if(reduce){ land(); } else { pending=land; timer=setTimeout(land,500); }
-    if(obj==="RobotVacuum") say('IMovable declares goHome(), so the call compiles. At run time the object is a <b class="y">RobotVacuum</b>, so the RobotVacuum version runs.',"y",
-      "m.goHome();  // The robot vacuum is returning home.");
-    else say('IMovable declares goHome(), so the call compiles. The object is a <b class="y">Turtle</b>, so the Turtle version runs: back to (25, 25), nothing printed.',"y",
-      "m.goHome();");
+    say('IPlayable declares stop(), so the call compiles. At run time the object is a <b class="y">'+obj+'</b>, so the '+obj+' version runs.',"y",
+      "player.stop();  // "+SAID[obj]);
   }
-  function clean(){
+  function callCharge(){
     clear();
-    bClean.classList.add("bad"); vcard.classList.add("wall");
-    chk.className="chk w"; chk.innerHTML="<small>compiler checks the variable</small>IMovable has no clean(): refused";
-    arrow.className="arrow no"; alab.textContent="call never leaves m";
-    var line="m.clean();  // error: cannot find symbol, method clean(), variable m of type IMovable";
-    if(obj==="RobotVacuum"){
-      rclean.classList.add("far");
-      say('The object can clean, but the compiler only looks at the variable: <b class="w">IMovable has no clean()</b>. This does not compile.',"w",line);
+    bCharge.classList.add("bad"); vcard.classList.add("wall");
+    chk.className="chk w"; chk.innerHTML="<small>compiler checks the variable</small>IPlayable has no charge(): refused";
+    arrow.className="arrow no"; alab.textContent="call never leaves player";
+    var line="player.charge();  // error: cannot find symbol, method charge(), variable player of type IPlayable";
+    if(obj==="Phone"){
+      rcharge.classList.add("far");
+      say('The object can charge, but the compiler only looks at the variable: <b class="w">IPlayable has no charge()</b>. This does not compile.',"w",line);
     } else {
-      say('<b class="w">IMovable has no clean()</b>, and the compiler checks the type of the variable. This does not compile.',"w",line);
+      say('<b class="w">IPlayable has no charge()</b>, and the compiler checks the type of the variable. This does not compile.',"w",line);
     }
   }
   function reset(){
-    clear(); obj="RobotVacuum"; paint();
-    say('m is an IMovable variable holding a <b class="a">RobotVacuum</b> object. That is allowed: RobotVacuum implements IMovable.',"",'IMovable m = new RobotVacuum("Bolts");');
+    clear(); obj="Phone"; paint();
+    say('player is an IPlayable variable holding a <b class="a">Phone</b> object. That is allowed: Phone implements IPlayable.',"",'IPlayable player = new Phone("Pocket");');
   }
   $("#board").addEventListener("click",function(e){
-    var c=e.target.closest(".call"); if(c){ if(c.getAttribute("data-a")==="home") home(); else clean(); return; }
+    var c=e.target.closest(".call"); if(c){ if(c.getAttribute("data-a")==="stop") callStop(); else callCharge(); return; }
     var n=e.target.closest(".new"); if(n) put(n.getAttribute("data-o"));
   });
   $("#bReset").addEventListener("click",reset);

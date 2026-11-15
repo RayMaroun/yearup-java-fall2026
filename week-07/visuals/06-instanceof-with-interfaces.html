@@ -119,13 +119,13 @@
 <div class="wrap">
   <p class="tag">Workbook 6a &middot; Section 2-2</p>
   <h1>instanceof With Interfaces</h1>
-  <p class="lede"><b>One list, three different objects. Ask each one: can you clean?</b></p>
+  <p class="lede"><b>One list, three different objects. Ask each one: can you charge?</b></p>
 
   <div class="stage">
     <div class="card var ask">
       <div>
         <p class="hd">the question, asked of one object at a time</p>
-        <p class="who">thing instanceof ICleaner</p>
+        <p class="who">thing instanceof IChargeable</p>
       </div>
       <button class="pb" id="bNext">Ask the next object</button>
     </div>
@@ -139,8 +139,8 @@
 
   <div class="take">
     <p class="tk">The one idea</p>
-    <p><b>instanceof works with interfaces too.</b> <code>thing instanceof ICleaner</code> is true for any object whose class implements
-    ICleaner, whatever that class is. Ask first, then cast to the interface and call its methods.</p>
+    <p><b>instanceof works with interfaces too.</b> <code>thing instanceof IChargeable</code> is true for any object whose class implements
+    IChargeable, whatever that class is. Ask first, then cast to the interface and call its methods.</p>
   </div>
   <div id="rail"></div>
 </div>
@@ -158,26 +158,26 @@
   }
   /* the three objects, in list order; i = the interfaces the class implements */
   var T=[
-    {c:"Robot",n:"Bolts",i:["IMovable"],out:""},
-    {c:"RobotVacuum",n:"NotASweeper",i:["IMovable","ICleaner"],out:"The robot vacuum is cleaning."},
-    {c:"EtchASketch",n:"",i:["IDrawable","ICleaner"],out:"The Etch A Sketch has been cleaned."}
+    {c:"Radio",n:"Retro",i:["IPlayable"],out:""},
+    {c:"Phone",n:"Pocket",i:["IPlayable","IChargeable"],out:"The phone is charging."},
+    {c:"SmartWatch",n:"",i:["ICallable","IChargeable"],out:"The smart watch is charging."}
   ];
   var pos=-1, row=$("#row"), bNext=$("#bNext");
 
-  function cleans(t){ return t.i.indexOf("ICleaner")>=0; }
+  function charges(t){ return t.i.indexOf("IChargeable")>=0; }
   function paint(){
     row.innerHTML="";
     T.forEach(function(t,k){
-      var asked=k<=pos, yes=cleans(t);
+      var asked=k<=pos, yes=charges(t);
       var d=document.createElement("div");
       d.className="card thing"+(k===pos?" cur":"")+(asked?" asked":"")+(asked&&yes?" yes":"");
       var h='<p class="hd">index '+k+'</p><p class="who">'+t.c+(t.n?'<small>name: '+t.n+'</small>':'<small>no name</small>')+'</p>'
         +'<p class="sect">its class implements</p><div class="chips">';
-      t.i.forEach(function(n){ h+='<span class="chip'+(asked&&n==="ICleaner"?" hit":"")+'">'+n+'</span>'; });
+      t.i.forEach(function(n){ h+='<span class="chip'+(asked&&n==="IChargeable"?" hit":"")+'">'+n+'</span>'; });
       h+='</div><div class="ans">';
       if(asked){
         h+='<p class="v'+(yes?" t":"")+'">'+(yes?"true":"false")+'</p>';
-        if(yes) h+='<p class="o"><small>clean() prints</small>'+t.out+'</p>';
+        if(yes) h+='<p class="o"><small>charge() prints</small>'+t.out+'</p>';
       }
       h+='</div>';
       d.innerHTML=h; row.appendChild(d);
@@ -189,12 +189,12 @@
     if(pos>=T.length-1) return;
     pos++; paint();
     var t=T[pos];
-    if(pos===0) say('Robot implements only IMovable, so the answer is <b class="a">false</b>. Nothing breaks: the loop skips it and moves on.',"",
-      "thing instanceof ICleaner  // false");
-    else if(pos===1) say('RobotVacuum implements ICleaner, so the answer is <b class="g">true</b>. Now it is safe to cast it to ICleaner and call clean().',"g",
-      "((ICleaner) thing).clean();  // "+t.out);
-    else say('EtchASketch is a very different class, but it also implements ICleaner: <b class="g">true</b>. The question is about the interface, not the class.',"g",
-      "((ICleaner) thing).clean();  // "+t.out);
+    if(pos===0) say('Radio implements only IPlayable, so the answer is <b class="a">false</b>. Nothing breaks: the loop skips it and moves on.',"",
+      "thing instanceof IChargeable  // false");
+    else if(pos===1) say('Phone implements IChargeable, so the answer is <b class="g">true</b>. Now it is safe to cast it to IChargeable and call charge().',"g",
+      "((IChargeable) thing).charge();  // "+t.out);
+    else say('SmartWatch is a very different class, but it also implements IChargeable: <b class="g">true</b>. The question is about the interface, not the class.',"g",
+      "((IChargeable) thing).charge();  // "+t.out);
   }
   function reset(){
     pos=-1; paint();

@@ -100,8 +100,8 @@
   .row.hot.ok{background:rgba(70,217,138,.1);box-shadow:0 0 24px -8px rgba(70,217,138,.8)}
   .row.hot.def{background:rgba(255,200,98,.1);box-shadow:0 0 24px -8px rgba(255,200,98,.8)}
   .row.hot.no{box-shadow:0 0 24px -8px rgba(255,106,106,.8)}
-  .drone{margin-top:16px}
-  .drone.bad{border-color:var(--warn)}
+  .tablet{margin-top:16px}
+  .tablet.bad{border-color:var(--warn)}
   .seats{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1.4fr);gap:8px 22px}
   .seats .sect{margin-top:0}
   .chips{display:flex;flex-wrap:wrap;gap:8px;align-items:center;min-height:36px}
@@ -117,7 +117,7 @@
 <div class="wrap">
   <p class="tag">Workbook 6a &middot; Section 1-2</p>
   <h1>Interface or Abstract Class</h1>
-  <p class="lede"><b>Tap a kind of member and see which side takes it. Then give Drone more parents.</b></p>
+  <p class="lede"><b>Tap a kind of member and see which side takes it. Then give Tablet more parents.</b></p>
 
   <div class="stage">
     <p class="sect" style="margin-top:0">try to put this inside each one</p>
@@ -135,21 +135,21 @@
       </div>
       <div class="card iface">
         <p class="hd">interface</p>
-        <p class="who">IMovable</p>
+        <p class="who">IPlayable</p>
         <div class="slot" id="sI"></div>
       </div>
     </div>
-    <div class="card con drone" id="drone">
+    <div class="card con tablet" id="tablet">
       <p class="hd">class &middot; how many of each may it take?</p>
-      <p class="who">Drone</p>
+      <p class="who">Tablet</p>
       <div class="seats">
         <div>
           <p class="sect">extends &middot; a parent class</p>
-          <div class="chips"><span class="tok">Asset</span><span class="tok no" id="mach" hidden>Machine</span><button class="mini" id="bPar">+ extends Machine</button></div>
+          <div class="chips"><span class="tok">Asset</span><span class="tok no" id="mach" hidden>Device</span><button class="mini" id="bPar">+ extends Device</button></div>
         </div>
         <div>
           <p class="sect">implements &middot; interfaces</p>
-          <div class="chips" id="ifs"><span class="tok if">IMovable</span><span class="tok if" id="if1" hidden>ICleaner</span><span class="tok if" id="if2" hidden>IDrawable</span><button class="mini" id="bIf"></button></div>
+          <div class="chips" id="ifs"><span class="tok if">IPlayable</span><span class="tok if" id="if1" hidden>IChargeable</span><span class="tok if" id="if2" hidden>ICallable</span><button class="mini" id="bIf"></button></div>
         </div>
       </div>
     </div>
@@ -181,13 +181,13 @@
   var ORDER=["field","ctor","done","abs"];
   var KIND={
     field:{a:["f","<i>String</i>description","ok","allowed"], i:["f","<i>String</i>description","no","not allowed"]},
-    ctor:{a:["f","Asset(...)","ok","allowed"], i:["f","IMovable(...)","no","not allowed"]},
+    ctor:{a:["f","Asset(...)","ok","allowed"], i:["f","IPlayable(...)","no","not allowed"]},
     done:{a:["m","void printMessage()","ok","has a body"], i:["m","default void print()","def","only with default"]},
-    abs:{a:["m","abstract BigDecimal getValue()","ok","no body"], i:["m","Point move(int xUnits, int yUnits)","ok","no body"]}
+    abs:{a:["m","abstract String getCategory()","ok","no body"], i:["m","void play(String song)","ok","no body"]}
   };
-  var NAMES=["IMovable","ICleaner","IDrawable"];
+  var NAMES=["IPlayable","IChargeable","ICallable"];
   var tried={}, hot=null, nIf=1;
-  var drone=$("#drone"),mach=$("#mach"),bIf=$("#bIf");
+  var tablet=$("#tablet"),mach=$("#mach"),bIf=$("#bIf");
 
   function rowHtml(d,isHot){
     var tone=d[2]==="ok"?"g":(d[2]==="no"?"w":"y");
@@ -202,33 +202,33 @@
     $("#if1").hidden=nIf<2; $("#if2").hidden=nIf<3;
     bIf.hidden=nIf>=3; bIf.textContent="+ implements "+(NAMES[nIf]||"");
   }
-  function header(){ return "public class Drone extends Asset implements "+NAMES.slice(0,nIf).join(", ")+" {"; }
-  function calm(){ mach.hidden=true; drone.classList.remove("bad"); all(".tok.fresh").forEach(function(t){ t.classList.remove("fresh"); }); }
+  function header(){ return "public class Tablet extends Asset implements "+NAMES.slice(0,nIf).join(", ")+" {"; }
+  function calm(){ mach.hidden=true; tablet.classList.remove("bad"); all(".tok.fresh").forEach(function(t){ t.classList.remove("fresh"); }); }
   function tryKind(k){
     calm(); tried[k]=true; hot=k; paint();
     if(k==="field")
       say('An abstract class is a real class, so it holds <b class="g">instance fields</b>. An interface <b class="w">has none</b>: a variable written there is a constant and must be given its value.',"w",
-        "String description;  // inside IMovable, error: = expected");
+        "String description;  // inside IPlayable, error: = expected");
     else if(k==="ctor")
       say('An abstract class has <b class="g">constructors</b>, which its children call with super(...). An interface has no fields to fill, so it has <b class="w">no constructor</b>.',"w",
-        "IMovable() { }  // inside IMovable, error: <identifier> expected");
+        "IPlayable() { }  // inside IPlayable, error: <identifier> expected");
     else if(k==="done")
       say('Both can hold a <b class="g">finished method</b>. In an interface it must be marked <b class="y">default</b> (or static), or the compiler refuses the body.',"y",
-        "void print() { }  // inside IMovable, without default, error: interface abstract methods cannot have body");
+        "void print() { }  // inside IPlayable, without default, error: interface abstract methods cannot have body");
     else
       say('Both can hold an <b class="g">abstract method</b>: a name with no body, left for another class to write. In an interface the word abstract is not even needed.',"g",
-        "Point move(int xUnits, int yUnits);");
+        "void play(String song);");
   }
   function addParent(){
     calm(); hot=null; paint();
-    mach.hidden=false; drone.classList.add("bad");
+    mach.hidden=false; tablet.classList.add("bad");
     say('A class has <b class="w">one parent class</b>, never two. After Asset the compiler expects the class body, so the second parent is refused.',"w",
-      "public class Drone extends Asset, Machine {  // error: '{' expected");
+      "public class Tablet extends Asset, Device {  // error: '{' expected");
   }
   function addIface(){
     calm(); hot=null; nIf++; paint();
     $("#if"+(nIf-1)).classList.add("fresh");
-    say('Drone now implements <b class="g">'+nIf+' interfaces</b>. There is no limit: each one only adds methods that Drone must write.',"g",header());
+    say('Tablet now implements <b class="g">'+nIf+' interfaces</b>. There is no limit: each one only adds methods that Tablet must write.',"g",header());
   }
   function reset(){
     tried={}; hot=null; nIf=1; calm(); paint();

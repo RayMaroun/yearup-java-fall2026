@@ -108,18 +108,18 @@
 
         <section class="card" data-t="interface">
           <h2>An interface and implements <span class="wb">6a &middot; 1-1, 2-1</span></h2>
-          <div class="row"><span class="k">declare it</span><code>public interface IMovable {
-    void move(int x, int y);   <span class="c">// abstract: no body, public without saying so</span>
-    void goHome();
+          <div class="row"><span class="k">declare it</span><code>public interface IPlayable {
+    void play(String song);   <span class="c">// abstract: no body, public without saying so</span>
+    void stop();
 }</code></div>
-          <div class="row"><span class="k">implement it</span><code>public class Turtle implements IMovable {
+          <div class="row"><span class="k">implement it</span><code>public class Speaker implements IPlayable {
     @Override
-    public void move(int x, int y) { ... }
+    public void play(String song) { ... }
     @Override
-    public void goHome() { ... }
+    public void stop() { ... }
 }</code></div>
           <div class="row"><span class="k">the promise</span><code>every abstract method must be written, with <span class="g">public</span>, or the class itself is declared abstract</code></div>
-          <div class="row"><span class="k">no new</span><code><span class="w">new IMovable()</span>  <span class="c">// error: IMovable is abstract; cannot be instantiated</span></code></div>
+          <div class="row"><span class="k">no new</span><code><span class="w">new IPlayable()</span>  <span class="c">// error: IPlayable is abstract; cannot be instantiated</span></code></div>
           <div class="row"><span class="k">class or interface</span><code>a class: one parent with <span class="g">extends</span>, shares code and fields
 an interface: any number with <span class="g">implements</span>, shares only what a class can do</code></div>
           <p class="see">See it:
@@ -132,19 +132,19 @@ an interface: any number with <span class="g">implements</span>, shares only wha
 
         <section class="card" data-t="interface">
           <h2>Several interfaces and default methods <span class="wb">6a &middot; 2-1, 2-2</span></h2>
-          <div class="row"><span class="k">several</span><code>public class RobotVacuum implements IMovable, ICleaner { ... }</code></div>
-          <div class="row"><span class="k">default method</span><code>public interface IMovable {
+          <div class="row"><span class="k">several</span><code>public class Phone implements IPlayable, IChargeable { ... }</code></div>
+          <div class="row"><span class="k">default method</span><code>public interface IPlayable {
     default void print() {
-        System.out.println("I can move!");
+        System.out.println("I can play music!");
     }
 }</code></div>
           <div class="row"><span class="k">inherited</span><code>a class that does not write print() gets this one</code></div>
           <div class="row"><span class="k">override</span><code>@Override
 public void print() { ... }  <span class="c">// the class may replace it</span></code></div>
-          <div class="row"><span class="k">two defaults clash</span><code>IMovable and ICleaner both have print(): the class must override it
+          <div class="row"><span class="k">two defaults clash</span><code>IPlayable and IChargeable both have print(): the class must override it
 @Override
 public void print() {
-    IMovable.super.print();  <span class="c">// pick one, or write your own</span>
+    IPlayable.super.print();  <span class="c">// pick one, or write your own</span>
 }</code></div>
           <p class="see">See it:
             <a href="../visuals/04-one-class-several-interfaces.html">One Class, Several Interfaces</a>
@@ -156,14 +156,14 @@ public void print() {
 
         <section class="card" data-t="type">
           <h2>An interface as a type <span class="wb">6a &middot; 2-1, 2-2</span></h2>
-          <div class="row"><span class="k">a variable</span><code>IMovable mover = new RobotVacuum("Bolts");
-mover = new Turtle("Slow");  <span class="c">// any class that implements IMovable</span></code></div>
-          <div class="row"><span class="k">what you can call</span><code>mover.move(2, 3);   <span class="c">// declared in IMovable</span>
-<span class="w">mover.clean();</span>     <span class="c">// error: cannot find symbol, the variable only sees IMovable</span></code></div>
-          <div class="row"><span class="k">a parameter</span><code>public static void sendHome(IMovable mover) { mover.goHome(); }</code></div>
-          <div class="row"><span class="k">a list</span><code>List&lt;IMovable&gt; movers = new ArrayList&lt;&gt;();</code></div>
-          <div class="row"><span class="k">instanceof</span><code>if (thing instanceof ICleaner) {
-    ((ICleaner) thing).clean();  <span class="c">// ask first, then cast</span>
+          <div class="row"><span class="k">a variable</span><code>IPlayable player = new Phone("Pocket");
+player = new Speaker("Boom");  <span class="c">// any class that implements IPlayable</span></code></div>
+          <div class="row"><span class="k">what you can call</span><code>player.play("Potato Song");   <span class="c">// declared in IPlayable</span>
+<span class="w">player.charge();</span>            <span class="c">// error: cannot find symbol, the variable only sees IPlayable</span></code></div>
+          <div class="row"><span class="k">a parameter</span><code>public static void startMusic(IPlayable player) { player.play("Potato Song"); }</code></div>
+          <div class="row"><span class="k">a list</span><code>List&lt;IPlayable&gt; players = new ArrayList&lt;&gt;();</code></div>
+          <div class="row"><span class="k">instanceof</span><code>if (thing instanceof IChargeable) {
+    ((IChargeable) thing).charge();  <span class="c">// ask first, then cast</span>
 }</code></div>
           <div class="row"><span class="k">the List interface</span><code>List&lt;String&gt; names = new ArrayList&lt;&gt;();
 names = new LinkedList&lt;&gt;();     <span class="c">// fine: both implement List</span>

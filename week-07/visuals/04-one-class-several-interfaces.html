@@ -114,30 +114,30 @@
 <div class="wrap">
   <p class="tag">Workbook 6a &middot; Section 2-1</p>
   <h1>One Class, Several Interfaces</h1>
-  <p class="lede"><b>RobotVacuum implements two interfaces. Add a third, or take one away.</b></p>
+  <p class="lede"><b>Phone implements two interfaces. Add a third, or take one away.</b></p>
 
   <div class="stage">
     <div class="board" id="board">
       <div>
-        <div class="card iface ic" id="cIMovable">
-          <div class="top"><div><p class="hd">interface</p><p class="who">IMovable</p></div><button class="tg" data-i="IMovable"></button></div>
-          <div class="row"><span class="m">Point move(int xUnits, int yUnits)</span></div>
-          <div class="row"><span class="m">void goHome()</span></div>
+        <div class="card iface ic" id="cIPlayable">
+          <div class="top"><div><p class="hd">interface</p><p class="who">IPlayable</p></div><button class="tg" data-i="IPlayable"></button></div>
+          <div class="row"><span class="m">void play(String song)</span></div>
+          <div class="row"><span class="m">void stop()</span></div>
         </div>
-        <div class="card iface ic" id="cICleaner">
-          <div class="top"><div><p class="hd">interface</p><p class="who">ICleaner</p></div><button class="tg" data-i="ICleaner"></button></div>
-          <div class="row"><span class="m">void clean()</span></div>
+        <div class="card iface ic" id="cIChargeable">
+          <div class="top"><div><p class="hd">interface</p><p class="who">IChargeable</p></div><button class="tg" data-i="IChargeable"></button></div>
+          <div class="row"><span class="m">void charge()</span></div>
         </div>
-        <div class="card iface ic" id="cIDrawable">
-          <div class="top"><div><p class="hd">interface</p><p class="who">IDrawable</p></div><button class="tg" data-i="IDrawable"></button></div>
-          <div class="row"><span class="m">void draw()</span></div>
+        <div class="card iface ic" id="cICallable">
+          <div class="top"><div><p class="hd">interface</p><p class="who">ICallable</p></div><button class="tg" data-i="ICallable"></button></div>
+          <div class="row"><span class="m">void call(String number)</span></div>
         </div>
       </div>
       <div class="arrow" id="arrow"><b>&rarr;</b><span id="alab"></span></div>
-      <div class="card con" id="rv">
+      <div class="card con" id="ph">
         <span class="stamp" id="stamp"></span>
         <p class="hd">class</p>
-        <p class="who">RobotVacuum</p>
+        <p class="who">Phone</p>
         <p class="sect">implements</p>
         <div class="chips" id="impl"></div>
         <p class="sect" id="need"></p>
@@ -152,7 +152,7 @@
 
   <div class="take">
     <p class="tk">The one idea</p>
-    <p><b>A class can implement as many interfaces as it needs.</b> Each interface in the list adds its own methods to what the class must have: <code>IMovable</code> asks for two, <code>ICleaner</code> for one more. The class compiles only when every method of every interface on its list is written.</p>
+    <p><b>A class can implement as many interfaces as it needs.</b> Each interface in the list adds its own methods to what the class must have: <code>IPlayable</code> asks for two, <code>IChargeable</code> for one more. The class compiles only when every method of every interface on its list is written.</p>
   </div>
   <div id="rail"></div>
 </div>
@@ -169,15 +169,15 @@
     status.innerHTML=html;
     if(line){ var sp=document.createElement("span"); sp.className="line"; sp.textContent=line; status.appendChild(sp); }
   }
-  var IF=[{n:"IMovable",m:["move","goHome"]},{n:"ICleaner",m:["clean"]},{n:"IDrawable",m:["draw"]}];
-  var LABEL={move:"Point move(int xUnits, int yUnits)",goHome:"void goHome()",clean:"void clean()",draw:"void draw()"};
-  var ERR="error: RobotVacuum is not abstract and does not override abstract method draw() in IDrawable";
+  var IF=[{n:"IPlayable",m:["play","stop"]},{n:"IChargeable",m:["charge"]},{n:"ICallable",m:["call"]}];
+  var LABEL={play:"void play(String song)",stop:"void stop()",charge:"void charge()",call:"void call(String number)"};
+  var ERR="error: Phone is not abstract and does not override abstract method call(String) in ICallable";
   var on,written,fresh=null;
-  var rv=$("#rv"),stamp=$("#stamp"),arrow=$("#arrow"),alab=$("#alab");
+  var ph=$("#ph"),stamp=$("#stamp"),arrow=$("#arrow"),alab=$("#alab");
 
   function listed(){ return IF.filter(function(i){ return on[i.n]; }).map(function(i){ return i.n; }); }
-  function bad(){ return on.IDrawable && !written.draw; }   /* draw() is the only method that can be missing */
-  function header(){ var l=listed(); return "public class RobotVacuum"+(l.length?" implements "+l.join(", "):"")+" {"; }
+  function bad(){ return on.ICallable && !written.call; }   /* call() is the only method that can be missing */
+  function header(){ var l=listed(); return "public class Phone"+(l.length?" implements "+l.join(", "):"")+" {"; }
   function names(i){ return i.m.map(function(m){ return m+"()"; }).join(" and "); }
   function paint(){
     var l=listed(), need=0, h="";
@@ -194,7 +194,7 @@
     $("#impl").innerHTML=l.length ? l.map(function(n){ return '<span class="tok">'+n+'</span>'; }).join("") : '<span class="tok none">no interface</span>';
     $("#need").textContent="so it must have "+need+(need===1?" method":" methods");
     $("#meths").innerHTML=h;
-    rv.classList.toggle("bad",bad());
+    ph.classList.toggle("bad",bad());
     stamp.textContent=bad()?"does not compile":"compiles";
     arrow.classList.toggle("no",bad());
     alab.textContent=need+(need===1?" promise":" promises");
@@ -202,24 +202,24 @@
   function toggle(n){
     var i=IF.filter(function(x){ return x.n===n; })[0], l;
     on[n]=!on[n]; fresh=null; paint(); l=listed();
-    if(on[n] && bad() && n==="IDrawable")
-      say('IDrawable adds one more promise, <b class="w">draw()</b>, and RobotVacuum has not written it. The class no longer compiles.',"w",ERR);
+    if(on[n] && bad() && n==="ICallable")
+      say('ICallable adds one more promise, <b class="w">call()</b>, and Phone has not written it. The class no longer compiles.',"w",ERR);
     else if(on[n])
-      say(n+' is on the list, and RobotVacuum already has <b class="g">'+names(i)+'</b>: the promise is kept at once.'+(bad()?' It still lacks draw().':''),bad()?"w":"g",bad()?ERR:header());
-    else if(n==="IDrawable" && !written.draw)
-      say('IDrawable is off the list and its promise goes with it. RobotVacuum <b class="g">compiles again</b> without a draw().',"g",header());
+      say(n+' is on the list, and Phone already has <b class="g">'+names(i)+'</b>: the promise is kept at once.'+(bad()?' It still lacks call().':''),bad()?"w":"g",bad()?ERR:header());
+    else if(n==="ICallable" && !written.call)
+      say('ICallable is off the list and its promise goes with it. Phone <b class="g">compiles again</b> without a call().',"g",header());
     else if(!l.length)
-      say('RobotVacuum implements <b class="y">nothing</b> now. It promises no method, and the ones it has are simply its own.',"y",header());
+      say('Phone implements <b class="y">nothing</b> now. It promises no method, and the ones it has are simply its own.',"y",header());
     else
-      say(n+' is off the list. <b class="y">'+names(i)+'</b> can stay as '+(i.m.length>1?'ordinary methods':'an ordinary method')+', but an @Override above '+(i.m.length>1?'them':'it')+' must go.'+(bad()?' The class still lacks draw().':''),bad()?"w":"y",bad()?ERR:header());
+      say(n+' is off the list. <b class="y">'+names(i)+'</b> can stay as '+(i.m.length>1?'ordinary methods':'an ordinary method')+', but an @Override above '+(i.m.length>1?'them':'it')+' must go.'+(bad()?' The class still lacks call().':''),bad()?"w":"y",bad()?ERR:header());
   }
   function write(m){
     written[m]=true; fresh=m; paint();
-    say('draw() is written. <b class="g">Every promise is kept</b>: RobotVacuum compiles with '+listed().length+(listed().length===1?' interface.':' interfaces.'),"g",header());
+    say('call() is written. <b class="g">Every promise is kept</b>: Phone compiles with '+listed().length+(listed().length===1?' interface.':' interfaces.'),"g",header());
   }
   function reset(){
-    on={IMovable:true,ICleaner:true,IDrawable:false}; written={move:true,goHome:true,clean:true,draw:false}; fresh=null; paint();
-    say('RobotVacuum implements <b class="a">2 interfaces</b>, so it must have their 3 methods. It has all three, so it compiles.',"",header());
+    on={IPlayable:true,IChargeable:true,ICallable:false}; written={play:true,stop:true,charge:true,call:false}; fresh=null; paint();
+    say('Phone implements <b class="a">2 interfaces</b>, so it must have their 3 methods. It has all three, so it compiles.',"",header());
   }
   $("#board").addEventListener("click",function(e){
     var t=e.target.closest(".tg"); if(t){ toggle(t.getAttribute("data-i")); return; }

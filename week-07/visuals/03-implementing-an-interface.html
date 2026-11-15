@@ -106,28 +106,28 @@
 <div class="wrap">
   <p class="tag">Workbook 6a &middot; Section 2-1</p>
   <h1>Implementing an Interface</h1>
-  <p class="lede"><b>Turtle promised two methods. Remove one, or tap its public, and watch the compiler.</b></p>
+  <p class="lede"><b>Speaker promised two methods. Remove one, or tap its public, and watch the compiler.</b></p>
 
   <div class="stage">
     <div class="board" id="board">
       <div class="card iface">
         <p class="hd">interface &middot; the promise</p>
-        <p class="who">IMovable</p>
+        <p class="who">IPlayable</p>
         <p class="sect">a class that implements it must have</p>
-        <div class="row" id="iMove"><span class="m">Point move(int xUnits, int yUnits)</span><span class="note" id="tMove"></span></div>
-        <div class="row" id="iHome"><span class="m">void goHome()</span><span class="note" id="tHome"></span></div>
+        <div class="row" id="iPlay"><span class="m">void play(String song)</span><span class="note" id="tPlay"></span></div>
+        <div class="row" id="iStop"><span class="m">void stop()</span><span class="note" id="tStop"></span></div>
       </div>
       <div class="arrow" id="arrow"><b>&larr;</b><span id="alab">implements</span></div>
-      <div class="card con" id="turtle">
+      <div class="card con" id="speaker">
         <span class="stamp" id="stamp"></span>
-        <p class="hd">class &middot; implements IMovable</p>
-        <p class="who">Turtle</p>
+        <p class="hd">class &middot; implements IPlayable</p>
+        <p class="who">Speaker</p>
         <p class="sect">its own fields</p>
         <div class="row"><span class="f"><i>String</i>name</span></div>
-        <div class="row"><span class="f"><i>Point</i>currentLocation</span></div>
+        <div class="row"><span class="f"><i>String</i>currentSong</span></div>
         <p class="sect">the promised methods</p>
-        <div class="row meth" id="rMove"><span class="sig"><button class="pub" data-k="move" data-a="pub">public</button><span class="m">Point move(int xUnits, int yUnits)</span></span><button class="mini" data-k="move" data-a="rm"></button></div>
-        <div class="row meth" id="rHome"><span class="sig"><button class="pub" data-k="goHome" data-a="pub">public</button><span class="m">void goHome()</span></span><button class="mini" data-k="goHome" data-a="rm"></button></div>
+        <div class="row meth" id="rPlay"><span class="sig"><button class="pub" data-k="play" data-a="pub">public</button><span class="m">void play(String song)</span></span><button class="mini" data-k="play" data-a="rm"></button></div>
+        <div class="row meth" id="rStop"><span class="sig"><button class="pub" data-k="stop" data-a="pub">public</button><span class="m">void stop()</span></span><button class="mini" data-k="stop" data-a="rm"></button></div>
       </div>
     </div>
     <div class="caption" id="caption">
@@ -138,7 +138,7 @@
 
   <div class="take">
     <p class="tk">The one idea</p>
-    <p><b><code>implements</code> is a promise, and the compiler checks it.</b> A class that implements <code>IMovable</code> must have every method the interface lists, with the same name and parameters, and <code>public</code>. Leave one out and the class does not compile. What each method does inside is up to the class.</p>
+    <p><b><code>implements</code> is a promise, and the compiler checks it.</b> A class that implements <code>IPlayable</code> must have every method the interface lists, with the same name and parameters, and <code>public</code>. Leave one out and the class does not compile. What each method does inside is up to the class.</p>
   </div>
   <div id="rail"></div>
 </div>
@@ -155,32 +155,32 @@
     status.innerHTML=html;
     if(line){ var sp=document.createElement("span"); sp.className="line"; sp.textContent=line; status.appendChild(sp); }
   }
-  var SIG={move:"move(int,int)",goHome:"goHome()"}, SHORT={move:"move()",goHome:"goHome()"};
-  var ROW={move:"#rMove",goHome:"#rHome"}, IROW={move:"#iMove",goHome:"#iHome"}, TICK={move:"#tMove",goHome:"#tHome"};
-  var st={move:"ok",goHome:"ok"};   /* ok, nopub or gone */
-  var turtle=$("#turtle"),stamp=$("#stamp"),arrow=$("#arrow"),alab=$("#alab");
+  var SIG={play:"play(String)",stop:"stop()"}, SHORT={play:"play()",stop:"stop()"};
+  var ROW={play:"#rPlay",stop:"#rStop"}, IROW={play:"#iPlay",stop:"#iStop"}, TICK={play:"#tPlay",stop:"#tStop"};
+  var st={play:"ok",stop:"ok"};   /* ok, nopub or gone */
+  var speaker=$("#speaker"),stamp=$("#stamp"),arrow=$("#arrow"),alab=$("#alab");
 
   /* the errors javac 17 reports, in the order it reports them */
   function errors(){
-    var e=[], miss=st.goHome==="gone"?"goHome":(st.move==="gone"?"move":null);
-    if(miss) e.push({k:miss,type:"miss",text:"error: Turtle is not abstract and does not override abstract method "+SIG[miss]+" in IMovable"});
-    ["goHome","move"].forEach(function(k){
-      if(st[k]==="nopub") e.push({k:k,type:"weak",text:"error: "+SIG[k]+" in Turtle cannot implement "+SIG[k]+" in IMovable\n  attempting to assign weaker access privileges; was public"});
+    var e=[], miss=st.stop==="gone"?"stop":(st.play==="gone"?"play":null);
+    if(miss) e.push({k:miss,type:"miss",text:"error: Speaker is not abstract and does not override abstract method "+SIG[miss]+" in IPlayable"});
+    ["stop","play"].forEach(function(k){
+      if(st[k]==="nopub") e.push({k:k,type:"weak",text:"error: "+SIG[k]+" in Speaker cannot implement "+SIG[k]+" in IPlayable\n  attempting to assign weaker access privileges; was public"});
     });
     return e;
   }
   function paint(){
     var bad=errors().length>0;
-    ["move","goHome"].forEach(function(k){
+    ["play","stop"].forEach(function(k){
       var r=$(ROW[k]), s=st[k], t=$(TICK[k]);
       r.classList.toggle("gone",s==="gone"); r.classList.toggle("nopub",s==="nopub");
       r.querySelector(".pub").classList.toggle("off",s==="nopub");
       r.querySelector(".mini").textContent=s==="gone"?"write it back":"remove";
       $(IROW[k]).classList.toggle("kept",s==="ok"); $(IROW[k]).classList.toggle("broken",s!=="ok");
       t.className="note "+(s==="ok"?"g":"w");
-      t.textContent=s==="ok"?"kept":(s==="gone"?"missing in Turtle":"not public in Turtle");
+      t.textContent=s==="ok"?"kept":(s==="gone"?"missing in Speaker":"not public in Speaker");
     });
-    turtle.classList.toggle("bad",bad);
+    speaker.classList.toggle("bad",bad);
     stamp.textContent=bad?"does not compile":"compiles";
     arrow.classList.toggle("no",bad);
     alab.textContent=bad?"promise broken":"implements";
@@ -188,13 +188,13 @@
   function verdict(first){
     var e=errors(), more=e.length>1?" This is the first of "+e.length+" errors.":"";
     if(!e.length){
-      say(first ? 'IMovable lists two methods. Turtle <b class="a">implements</b> it and has both, public, so it compiles.'
-                : 'Turtle has both methods IMovable lists, and both are public. <b class="g">The promise is kept</b>, so it compiles.',
-          first?"":"g","public class Turtle implements IMovable {");
+      say(first ? 'IPlayable lists two methods. Speaker <b class="a">implements</b> it and has both, public, so it compiles.'
+                : 'Speaker has both methods IPlayable lists, and both are public. <b class="g">The promise is kept</b>, so it compiles.',
+          first?"":"g","public class Speaker implements IPlayable {");
     } else if(e[0].type==="miss"){
-      say('Turtle says it implements IMovable, but it has <b class="w">no '+SHORT[e[0].k]+'</b>. The compiler checks the promise and refuses the class.'+more,"w",e[0].text);
+      say('Speaker says it implements IPlayable, but it has <b class="w">no '+SHORT[e[0].k]+'</b>. The compiler checks the promise and refuses the class.'+more,"w",e[0].text);
     } else {
-      say(SHORT[e[0].k]+' is there, but it is <b class="w">not public</b>. A method listed in an interface is always public, so Turtle must say public too.'+more,"w",e[0].text);
+      say(SHORT[e[0].k]+' is there, but it is <b class="w">not public</b>. A method listed in an interface is always public, so Speaker must say public too.'+more,"w",e[0].text);
     }
   }
   function act(k,a){
@@ -202,8 +202,8 @@
     else if(st[k]!=="gone") st[k]=st[k]==="nopub"?"ok":"nopub";
     paint(); verdict(false);
   }
-  function reset(){ st={move:"ok",goHome:"ok"}; paint(); verdict(true); }
-  $("#turtle").addEventListener("click",function(e){
+  function reset(){ st={play:"ok",stop:"ok"}; paint(); verdict(true); }
+  $("#speaker").addEventListener("click",function(e){
     var b=e.target.closest("button[data-a]"); if(b) act(b.getAttribute("data-k"),b.getAttribute("data-a"));
   });
   $("#bReset").addEventListener("click",reset);
