@@ -174,7 +174,7 @@ House value: 250000</div>
  },
  {
   "t": "Create the abstract parent <code>FixedAsset</code> with its properties, a constructor and <code>getValue()</code>.",
-  "d": "A name and a value, as in your diagram. FixedAsset is a class and implements <b>Valuable</b>. The value is a BigDecimal.",
+  "d": "FixedAsset is an abstract class and implements <b>Valuable</b>. It keeps the <b>name</b>. The workbook diagram also stores a market value in it, but nothing ever sets or uses that field: each child works its value out in getValue(), so you can leave it out. getValue() returns a BigDecimal.",
   "ok": "FixedAsset compiles and implements Valuable"
  },
  {
