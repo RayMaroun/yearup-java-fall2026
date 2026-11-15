@@ -104,6 +104,7 @@
   .take p{margin:0;font-size:.95rem;color:var(--ink);line-height:1.55}
   .take b{color:#fff}
   @media (prefers-reduced-motion:reduce){*{animation-duration:.01ms!important;transition-duration:.01ms!important}#amb{display:none}}
+  .mrow.gone .sig,.mrow.gone .out{opacity:.35;text-decoration:line-through}
 </style>
 </head>
 <body>
@@ -120,7 +121,7 @@
         <p class="hd">class &middot; the parent</p>
         <p class="who">Human</p>
         <div class="mrow" id="m0">
-          <div class="top"><span class="sig">eat()</span></div>
+          <div class="top"><span class="sig">eat()</span><button class="tog" id="bGone">remove it</button></div>
           <span class="out">"I am a Human and I am Hungry!"</span>
         </div>
       </div>
@@ -153,8 +154,8 @@
 
   <div class="take">
     <p class="tk">The one idea</p>
-    <p><b>@Override asks the compiler to check your override.</b> Without it, a misspelled name quietly becomes a new method
-    and the parent's version keeps running. With it, the same mistake is a compile error you see at once. Write it on every override.</p>
+    <p><b>@Override asks the compiler to check your override.</b> Without it, a misspelled name quietly becomes a new method,
+    and a method removed or renamed in the parent leaves yours overriding nothing. With it, both mistakes are a compile error you see at once. Write it on every override.</p>
   </div>
   <div id="rail"></div>
 </div>
@@ -163,9 +164,9 @@
   "use strict";
   var $=function(s){return document.querySelector(s);};
   var reduce=matchMedia("(prefers-reduced-motion: reduce)").matches;
-  var ann=false, typo=false;
+  var ann=false, typo=false, gone=false;
   var status=$("#status"),caption=$("#caption"),m0=$("#m0"),inh=$("#inh"),mine=$("#mine"),c1=$("#c1"),o1=$("#o1"),
-      bAnn=$("#bAnn"),bTypo=$("#bTypo"),nm=$("#nm"),note=$("#note"),s1=$("#s1");
+      bAnn=$("#bAnn"),bTypo=$("#bTypo"),bGone=$("#bGone"),nm=$("#nm"),note=$("#note"),s1=$("#s1");
   var ERR="error: method does not override or implement a method from a supertype";
 
   function say(html,tone,line){
@@ -177,19 +178,28 @@
     s1.className="say"; s1.textContent="";
   }
   function paint(){
-    var bad=ann&&typo;
+    var bad=ann&&(typo||gone);
     nm.textContent=typo?"eet()":"eat()";
     bTypo.textContent=typo?"fix the spelling":"misspell it";
+    bGone.textContent=gone?"put it back":"remove it";
+    m0.classList.toggle("gone",gone);
     bAnn.classList.toggle("off",!ann); bAnn.setAttribute("aria-pressed",ann?"true":"false");
     bAnn.textContent=ann?"@Override":"+ @Override";
-    inh.hidden=!typo;
+    inh.hidden=!(typo&&!gone);
     mine.classList.toggle("bad",bad); c1.classList.toggle("wall",bad);
-    note.textContent=bad?"compile error: Human has no eet() to override"
+    var name=typo?"eet()":"eat()";
+    note.textContent=bad?("compile error: Human has no "+name+" to override")
+      :(gone?"a method of its own: there is nothing in Human to override"
       :(typo?"a brand new method, not an override"
-      :(ann?"overrides Human's eat(), checked by the compiler":"overrides Human's eat(), nobody checked"));
+      :(ann?"overrides Human's eat(), checked by the compiler":"overrides Human's eat(), nobody checked")));
   }
   function describe(){
-    if(ann&&typo) say('With <b class="w">@Override</b> the compiler looks for eet() in Human, finds none, and stops the build.',"w",ERR);
+    if(ann&&gone) say('Human no longer has '+(typo?"eet()":"eat()")+'. With <b class="w">@Override</b> the compiler sees that Caveman overrides nothing, and stops the build.',"w",ERR);
+    else if(gone&&typo) say('No error. Human has no eat() and Caveman only has <b class="y">eet()</b>, a method of its own. Call eat() and see.',"y",
+      "public void eet()  // compiles: a new method");
+    else if(gone) say('No error. Caveman\'s eat() still compiles, but it is <b class="y">no longer an override</b>: just a method of its own, and nobody told you.',"y",
+      "public void eat()  // compiles: overrides nothing");
+    else if(ann&&typo) say('With <b class="w">@Override</b> the compiler looks for eet() in Human, finds none, and stops the build.',"w",ERR);
     else if(typo) say('No error. <b class="y">eet()</b> is simply a new method, and Caveman is back to the eat() it inherits. Call it and see.',"y",
       "public void eet()  // compiles: a new method");
     else if(ann) say('<b class="g">@Override</b> is a promise the compiler checks: Human really has eat(), so this compiles.',"g",
@@ -198,15 +208,24 @@
   }
   function change(what){
     clear();
-    if(what==="ann") ann=!ann; else typo=!typo;
+    if(what==="ann") ann=!ann; else if(what==="gone") gone=!gone; else typo=!typo;
     paint(); describe();
   }
   function call(){
     clear();
     o1.classList.add("act");
-    if(ann&&typo){
+    if(ann&&(typo||gone)){
       s1.innerHTML="<small>build failed</small>nothing runs"; s1.className="say show w";
-      say('<b class="w">Nothing runs.</b> Caveman does not compile until the name is fixed. The annotation caught the typo before the program started.',"w",ERR);
+      say('<b class="w">Nothing runs.</b> Caveman does not compile until its method matches one in Human. The annotation caught the problem before the program started.',"w",ERR);
+    } else if(typo&&gone){
+      s1.innerHTML="<small>build failed</small>nothing runs"; s1.className="say show w";
+      say('<b class="w">Nothing runs.</b> Nobody has eat() any more: Human lost it and Caveman only has eet(). This call does not compile.',"w",
+        "error: cannot find symbol: method eat()");
+    } else if(gone){
+      mine.classList.add("run");
+      s1.innerHTML="<small>prints</small>Me Hunt Lion and Eat!"; s1.className="say show";
+      say('Caveman\'s eat() runs, but it overrides nothing now. A <b class="y">Human</b> variable could no longer call eat() at all, and without the annotation nothing warned you.',"y",
+        "caveman.eat();  // Me Hunt Lion and Eat!");
     } else if(typo){
       m0.classList.add("run"); inh.classList.add("via");
       s1.innerHTML="<small>prints</small>I am a Human and I am Hungry!"; s1.className="say show";
@@ -218,9 +237,10 @@
       say('The override is in place, so <b class="g">Caveman\'s own eat()</b> runs.',"g","caveman.eat();  // Me Hunt Lion and Eat!");
     }
   }
-  function reset(){ clear(); ann=false; typo=false; paint(); describe(); }
+  function reset(){ clear(); ann=false; typo=false; gone=false; paint(); describe(); }
   bAnn.addEventListener("click",function(){ change("ann"); });
   bTypo.addEventListener("click",function(){ change("typo"); });
+  bGone.addEventListener("click",function(){ change("gone"); });
   $("#bCall").addEventListener("click",call);
   $("#bReset").addEventListener("click",reset);
   reset();
