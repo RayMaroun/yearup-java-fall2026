@@ -1,0 +1,189 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Reading This Week&rsquo;s Exercises | Week 7 Visual Hub</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Sora:wght@500;700&family=Inter:wght@400;500&family=JetBrains+Mono:wght@400;500&display=swap">
+<style>
+  :root{
+    --bg:#080c17; --bg2:#0c1428; --surface:rgba(255,255,255,.045); --line:rgba(255,255,255,.09);
+    --ink:#eef2fb; --muted:#8496b6; --accent:#6ea0ff; --accent2:#8b7bff; --good:#46d98a; --warn:#ff6a6a;
+    --gold:#ffc862; --disp:'Sora',system-ui,sans-serif; --body:'Inter',system-ui,sans-serif;
+    --mono:'JetBrains Mono',ui-monospace,monospace;
+  }
+  *{box-sizing:border-box}
+  body{margin:0;min-height:100vh;color:var(--ink);font-family:var(--body);
+    background:radial-gradient(1200px 700px at 70% -10%,#141d38 0%,transparent 55%),
+               radial-gradient(900px 600px at 10% 110%,#161233 0%,transparent 50%),#080c17;
+    overflow-x:hidden}
+  #amb{position:fixed;inset:0;z-index:0;pointer-events:none;opacity:.6}
+  .back{position:relative;z-index:2;display:block;max-width:1120px;margin:0 auto;padding:26px 24px 0;
+    width:100%;font-family:var(--mono);font-size:.8rem;letter-spacing:.04em;color:var(--muted);
+    text-decoration:none;transition:color .15s}
+  .back:hover{color:var(--accent)}
+  .wrap{position:relative;z-index:1;max-width:1120px;margin:0 auto;padding:22px 24px 70px}
+  .tag{font-family:var(--mono);font-size:.72rem;letter-spacing:.22em;text-transform:uppercase;color:var(--accent);margin:0 0 14px}
+  h1{font-family:var(--disp);font-weight:700;font-size:clamp(2.3rem,6vw,3.6rem);line-height:1;margin:0 0 12px;
+    letter-spacing:-.03em;background:linear-gradient(180deg,#fff,#b9c6e6);-webkit-background-clip:text;
+    background-clip:text;color:transparent}
+  .lede{color:var(--muted);max-width:64ch;font-size:1.05rem;margin:0 0 26px;line-height:1.5}
+  .lede b{color:var(--ink)}
+  .lede code,.take code,.caption code{font-family:var(--mono);font-size:.92em;color:#bcd0ff}
+
+  /* ---------- reading page: tap a sentence, see what it asks for ---------- */
+  .stage{position:relative;background:linear-gradient(180deg,rgba(255,255,255,.03),rgba(255,255,255,.01));
+    border:1px solid var(--line);border-radius:24px;padding:18px;
+    box-shadow:0 1px 0 rgba(255,255,255,.06) inset,0 30px 80px -30px rgba(0,0,0,.8)}
+  .lab{font-family:var(--mono);font-size:.7rem;letter-spacing:.12em;text-transform:uppercase;color:var(--muted);margin:0 0 10px}
+  .picker{display:flex;flex-wrap:wrap;gap:6px;margin:0 0 14px}
+  .picker button{font-family:var(--body);font-weight:500;font-size:.86rem;padding:8px 14px;border-radius:999px;border:1px solid var(--line);
+    background:var(--surface);color:var(--muted);cursor:pointer;transition:.15s}
+  .picker button:hover{color:var(--accent);border-color:var(--accent)}
+  .picker button.on{background:rgba(110,160,255,.16);color:var(--ink);border-color:rgba(110,160,255,.45)}
+  .cols{display:grid;grid-template-columns:minmax(0,1.25fr) minmax(0,1fr);gap:16px;align-items:start}
+  @media (max-width:860px){.cols{grid-template-columns:1fr}}
+  .paper{background:#f4f1e8;color:#1b1f2a;border-radius:16px;padding:22px 24px 18px;font-family:Georgia,'Times New Roman',serif;
+    box-shadow:0 20px 50px -20px rgba(0,0,0,.9);position:relative}
+  .paper .ph{font-family:var(--body);font-weight:500;font-size:.72rem;letter-spacing:.12em;text-transform:uppercase;color:#6b7280;margin:0 0 6px}
+  .paper h2{font-family:var(--body);font-size:1.15rem;margin:0 0 14px;color:#111827}
+  .paper p{margin:0 0 10px;line-height:1.7;font-size:1rem}
+  .paper .mono{font-family:var(--mono);font-size:.9em;background:#e9e5d8;padding:1px 5px;border-radius:5px}
+  .paper .sample{font-family:var(--mono);font-size:.82rem;background:#1b1f2a;color:#d7e0ff;border-radius:10px;padding:10px 12px;white-space:pre;margin:8px 0 12px;line-height:1.55}
+  .s{cursor:pointer;border-radius:5px;padding:1px 3px;margin:0 -3px;transition:background .15s,box-shadow .15s;border-bottom:1px dashed rgba(17,24,39,.35)}
+  .s:hover{background:rgba(110,160,255,.18)}
+  .s.on{background:#ffe9a8;box-shadow:0 0 0 2px #ffc862;border-bottom-color:transparent}
+  .paper .hint{font-family:var(--body);font-size:.78rem;color:#6b7280;margin:12px 0 0;border-top:1px solid #d9d4c4;padding-top:10px}
+  .answer{background:rgba(6,10,20,.5);border:1px solid var(--line);border-radius:18px;padding:16px 18px;position:sticky;top:16px}
+  .answer .quote{font-family:Georgia,serif;font-style:italic;color:var(--muted);font-size:.95rem;line-height:1.55;margin:0 0 12px;padding-left:12px;border-left:3px solid var(--gold);min-height:2.4em}
+  .answer .asks{font-size:1.02rem;line-height:1.6;color:var(--ink);margin:0 0 10px}
+  .answer .asks b{color:#fff}
+  .answer .line{font-family:var(--mono);font-size:.84rem;color:#bcd0ff;background:#05070e;border:1px solid var(--line);border-radius:10px;padding:9px 12px;margin:0 0 10px;white-space:pre-wrap}
+  .answer .why{font-size:.86rem;color:var(--muted);line-height:1.5;margin:0}
+  .answer .why b{color:var(--gold);font-weight:500}
+  .answer .kw{display:inline-block;font-family:var(--mono);font-size:.64rem;letter-spacing:.1em;text-transform:uppercase;color:var(--accent);
+    border:1px solid rgba(110,160,255,.4);border-radius:999px;padding:3px 9px;margin:0 0 10px}
+  .answer .nav{display:flex;gap:8px;margin-top:12px}
+  .answer .nav button{font-family:var(--mono);font-size:.68rem;letter-spacing:.08em;text-transform:uppercase;color:var(--muted);background:transparent;
+    border:1px solid var(--line);border-radius:999px;padding:5px 11px;cursor:pointer}
+  .answer .nav button:hover{color:var(--accent);border-color:var(--accent)}
+  .words{margin-top:16px}
+  .words .grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(300px,1fr));gap:8px}
+  .word{border:1px solid var(--line);border-radius:12px;background:rgba(255,255,255,.025);padding:10px 13px;cursor:pointer;transition:.15s}
+  .word:hover{border-color:var(--accent)}
+  .word .w{font-family:Georgia,serif;font-style:italic;color:var(--ink);font-size:.95rem}
+  .word .m{display:none;font-size:.85rem;color:var(--muted);line-height:1.5;margin-top:6px}
+  .word .m code{font-family:var(--mono);font-size:.9em;color:#bcd0ff}
+  .word.open .m{display:block}
+  .word.open{border-color:rgba(255,200,98,.5);background:rgba(255,200,98,.05)}
+  .take{margin-top:22px;background:linear-gradient(180deg,rgba(110,160,255,.08),rgba(139,123,255,.04));
+    border:1px solid var(--line);border-left:3px solid var(--accent);border-radius:12px;padding:16px 18px}
+  .take .tk{font-family:var(--mono);font-size:.66rem;letter-spacing:.14em;text-transform:uppercase;color:var(--accent);margin:0 0 8px}
+  .take p{margin:0;font-size:.95rem;color:var(--ink);line-height:1.55}
+  .take b{color:#fff}
+  @media (prefers-reduced-motion:reduce){*{animation-duration:.01ms!important;transition-duration:.01ms!important}#amb{display:none}}
+</style>
+</head>
+<body>
+
+<a class="back" href="../index.html#reading-the-exercises">&#8592; Week 7 index</a>
+
+<canvas id="amb"></canvas>
+<div class="wrap">
+  <p class="tag">Before you start &middot; Week 7</p>
+  <h1>Reading This Week&rsquo;s Exercises</h1>
+  <p class="lede"><b>Tap any sentence of an exercise and see what it is really asking you to write.</b> Three made-up exercises in the workbook&rsquo;s own words, so you learn this week&rsquo;s words (interface, implements, default, Comparable, generic, type parameter, stream, lambda, filter, map), not the answers.</p>
+
+  <div class="stage">
+    <p class="lab">Pick an exercise</p>
+    <div class="picker" id="picker"></div>
+    <div class="cols">
+      <div class="paper" id="paper"></div>
+      <div class="answer" id="answer">
+        <span class="kw" id="aKw">tap a sentence</span>
+        <p class="quote" id="aQuote">Every sentence on the paper is a job. Tap one.</p>
+        <p class="asks" id="aAsks">The sentence lights up here, and this box says what it asks you to do in code terms: which file, which member, which kind of method.</p>
+        <div class="line" id="aLine" style="display:none"></div>
+        <p class="why" id="aWhy"></p>
+        <div class="nav"><button id="bPrev">&larr; previous sentence</button><button id="bNext">next sentence &rarr;</button></div>
+      </div>
+    </div>
+    <div class="words">
+      <p class="lab">The words the workbook uses this week, and what they mean for your code (tap one)</p>
+      <div class="grid" id="words"></div>
+    </div>
+  </div>
+
+  <div class="take">
+    <p class="tk">The one idea</p>
+    <p><b>An exercise is a list of jobs hidden in sentences.</b> Read it once for the story, then once more sentence by sentence, and write down the job each one gives you before you type anything.</p>
+  </div>
+
+  <div id="rail"></div>
+</div>
+
+<script>
+(function(){
+  "use strict";
+  var $=function(s){return document.querySelector(s);};
+  var reduce=matchMedia("(prefers-reduced-motion: reduce)").matches;
+  var EX=[{"id":"tickets","name":"Ticket Booth","tag":"Interfaces (like 6a Sections 2-1 and 2-2)","title":"Exercise: Ticket Booth","intro":"A booth sells many kinds of tickets. Every kind can say what it costs, but a ticket for a movie and a ticket for a concert are different things. In this exercise you will describe what all tickets can do once, and let each kind do it its own way.","parts":[["In IntelliJ create a new Java application named ticket-booth.","project","New Maven project in IntelliJ: JDK 17, GroupId com.pluralsight, the name exactly as written, in your workbook-6 folder, Create Git repository ticked, then Share Project on GitHub. No code yet.","Project · ticket-booth · workbook-6","The name in the exercise is the project name, the folder name and the GitHub repository name. One exercise, one project."],["Create an interface named Priced in the com.pluralsight.tickets package. It defines the method getPrice(), which returns a BigDecimal.","interface","A new file Priced.java made with New > Java Class > Interface, in the package com.pluralsight.tickets. One method signature with no body, ending in a semicolon.","Priced.java · interface Priced · BigDecimal getPrice();","An interface is a list of methods a class promises to have. It says what, never how."],["Create the classes MovieTicket and ConcertTicket. Each one should implement Priced.","implements","Two new files. In each class header, after the name, the word implements and Priced. Each class then has to write its own getPrice().","MovieTicket.java, ConcertTicket.java · class MovieTicket implements Priced","\"Implement\" is the interface's word for \"extend\": the class signs the promise. If a promised method is missing, the class does not compile."],["MovieTicket has its own private variable seat. ConcertTicket has its own private variable row. Add a getter for each.","own fields","One private field and its getter in each class, nothing in Priced.","MovieTicket.java, ConcertTicket.java · 1 private field each","An interface has no instance variables. Anything a ticket stores belongs to the class."],["Add a default method named describe() to Priced. It returns the text of the price.","default","In Priced.java, a method with the word default in front and a body between braces. Classes that implement Priced get it without writing it.","Priced.java · default String describe() { ... }","\"Default\" means a ready-made method inside an interface. A class may keep it or override it."],["In main(), declare a variable of type Priced and give it a new ConcertTicket. Try to call getRow() on the variable. What happens?","variable type","In Main.java: a variable whose type is Priced, set with new. One line that calls the ConcertTicket-only getter on it. Read the red message, write it down, then take the line out.","Main.java · Priced ticket = new ConcertTicket(...) · red text","\"What happens?\" means try it and read the message. The type of the variable decides what you may call, whatever object is behind it."],["Create an ArrayList of Priced and load it with at least two movie tickets and two concert tickets.","list of interface type","One list whose element type is Priced, filled with both kinds, added with new.","Main.java · ArrayList<Priced> · both kinds","\"ArrayList of Priced\" means the list type is the interface. Any class that implements it fits."],["Loop through the list and display the description of each ticket.","one call, many answers","One loop over the list that calls describe() on every element.","Main.java · loop · describe()","Each object answers with its own getPrice(), through the same call."],["Ensure all your changes are committed and pushed to GitHub.","git","Commit panel in IntelliJ, a message, Commit and Push. Then check the repository page on GitHub shows your files.","IntelliJ · Commit and Push","The last line of every exercise. There is no step to send a link: Raymond follows your GitHub profile."]]},{"id":"songs","name":"Song Library","tag":"Comparable and generics (like 6a Sections 2-2 and 3-2)","title":"Exercise: Song Library","intro":"A music app keeps songs and needs to put them in order. It also needs a small box that holds one item of any type. In this exercise you will teach a class to compare itself and write a box that is not tied to one type.","parts":[["In IntelliJ create a new Java application named song-library.","project","New Maven project in IntelliJ: JDK 17, GroupId com.pluralsight, the name exactly as written, in your workbook-6 folder, Create Git repository ticked, then Share Project on GitHub. No code yet.","Project · song-library · workbook-6","The name in the exercise is the project name, the folder name and the GitHub repository name. One exercise, one project."],["Create a class named Song with the private variables title and seconds. Add a constructor and a getter for each.","class","Song.java with two private fields (text and a whole number), a constructor that sets both, and two getters.","Song.java · 2 private fields · constructor, 2 getters","The class comes first; the rule for ordering is added to it afterwards."],["In main(), create a List of Song objects with at least five songs. Sort it with Collections.sort. Did it work?","sort fails","In Main.java: a list with five new Song objects, then the sort call, then a print. Read the red message instead of guessing.","Main.java · List<Song> · Collections.sort(...) · red text","Java cannot guess how to order your own class. It has to be told."],["Make Song implement Comparable. Write the compareTo method so that shorter songs come first.","Comparable","The class header gets implements Comparable with Song between the angle brackets, and a compareTo method that takes one other Song and returns an int. It returns a negative number, zero or a positive number.","Song.java · implements Comparable<Song> · int compareTo(Song other)","Implementing Comparable is how a class says \"I know how to compare myself\". The type between the angle brackets is the type of the parameter."],["Sort and display the list again.","sort works","The same sort call as before, with nothing changed in main.","Main.java · Collections.sort(...) · print","Collections.sort uses nothing but your compareTo."],["Create a generic class named Crate with the type parameter T. It holds one item of type T, with a getter and a setter.","type parameter","A new file Crate.java. After the class name, T between angle brackets. One private variable of type T, getItem() and setItem(...).","Crate.java · class Crate<T> · private T item","A type parameter is a blank. It is filled in when the class is used, so the same class works for any type."],["In main(), create a Crate of String and a Crate of Integer. Put an item in each and display it.","use the class","Two objects made with new, the type written between angle brackets on both sides of the line.","Main.java · Crate<String> · Crate<Integer>","The type you write when you create the object replaces T for that object."],["Try to put a String into the Crate of Integer. What happens?","type checked","One line in main that sets the wrong type. Read the red message, then take the line out.","Main.java · setItem(\"text\") on a Crate<Integer> · red text","Generics let the compiler check types before the program runs."],["Ensure all your changes are committed and pushed to GitHub.","git","Commit panel in IntelliJ, a message, Commit and Push. Then check the repository page on GitHub shows your files.","IntelliJ · Commit and Push","The last line of every exercise. There is no step to send a link: Raymond follows your GitHub profile."]]},{"id":"parcels","name":"Parcel Tracker","tag":"Streams and lambdas (like 6a Sections 4-2 and 4-3)","title":"Exercise: Parcel Tracker","intro":"A depot keeps a list of parcels and needs quick answers about them. In this exercise you will answer the same questions with a stream instead of a loop.","parts":[["In IntelliJ create a new Java application named parcel-tracker.","project","New Maven project in IntelliJ: JDK 17, GroupId com.pluralsight, the name exactly as written, in your workbook-6 folder, Create Git repository ticked, then Share Project on GitHub. No code yet.","Project · parcel-tracker · workbook-6","The name in the exercise is the project name, the folder name and the GitHub repository name. One exercise, one project."],["Create a class named Parcel with the private variables id, city and weight. Add a constructor and a getter for each.","class","Parcel.java with three private fields (a whole number, text and a whole number), a constructor, and three getters.","Parcel.java · 3 private fields · constructor, 3 getters","The list holds objects of this class. The questions below are asked of the list."],["In main(), create a List of Parcel objects with at least eight parcels.","list","A list built in main with eight new Parcel objects, in at least three different cities.","Main.java · List<Parcel> · 8 parcels","A stream always starts from a collection like this one."],["Using a stream and a filter, build a new list of the parcels whose weight is over 10, and display them.","filter","The list's stream() method, then filter with a lambda that is true for the parcels to keep. The result is collected into a new list.","Main.java · list.stream() · filter(...) · new List","filter keeps the elements for which the lambda says true. Everything else drops out of the stream."],["Write the filter condition as a lambda expression.","lambda","The part inside the parentheses of filter: a parameter name, an arrow, and a test on that parameter.","Main.java · parcel -> test","A lambda is a method without a name that is handed to another method. Parameter, arrow, body."],["Using map, build a list of just the cities of the heavy parcels.","map","In the same pipeline, after the filter, a map with a lambda that returns the city. The result is a list of text.","Main.java · filter(...) · map(...) · List<String>","map changes the shape of the data: a Parcel goes in, a String comes out."],["Using only stream methods, display how many parcels are over 10 and the total weight of all parcels.","terminal","A counting method on one stream, and map then reduce on another. Each pipeline is new.","Main.java · count() · map(...) · reduce(...)","Nothing happens until the last step of the pipeline. A stream can be used only once."],["Ensure all your changes are committed and pushed to GitHub.","git","Commit panel in IntelliJ, a message, Commit and Push. Then check the repository page on GitHub shows your files.","IntelliJ · Commit and Push","The last line of every exercise. There is no step to send a link: Raymond follows your GitHub profile."]]}];
+  var WORDS=[["Create a new Java application named x","A new IntelliJ Maven project called exactly x, in your workbook-6 folder, with Create Git repository ticked, then Share Project on GitHub. Every exercise starts here."],["interface","A list of methods a class promises to have. It has no variables of its own and cannot be built with `new`."],["implements","The keyword in a class header: `class A implements B`. The class must write every method B lists."],["default method","A method with a body inside an interface, marked `default`. A class that implements the interface gets it for free."],["a variable of type Priced","The variable's type is the interface. Any object whose class implements it fits, and only the interface's methods can be called."],["Comparable","An interface from Java with one method, `compareTo`. A class that implements it can be sorted."],["compareTo","Returns a negative number, zero or a positive number: this one comes first, they are equal, or this one comes after."],["generic class / type parameter","A class written with a blank, `class Box<T>`. T is the type parameter and is filled in when you use the class."],["Box of Integer","`Box<Integer>`: T is Integer for this object, and the compiler refuses anything else."],["stream","A pipeline over a collection: it starts at the collection, changes the data step by step and ends in a result."],["lambda expression","`parameter -> body`: a method without a name, handed to another method."],["filter","Keeps the elements for which the lambda returns true."],["map","Changes each element into something else, for example a Parcel into its city."],["reduce","Combines all the elements into one value, for example a total."],["Try ... What happens?","Try it and read the red message. Write down what it says, then remove the line."],["Ensure all your changes are committed and pushed","Commit and Push in IntelliJ. There is no step to send a link; Raymond follows your GitHub profile."]];
+  var cur=0, sel=-1;
+  var escBox=document.createElement("div");
+  function esc(t){escBox.textContent=String(t);return escBox.innerHTML;}
+  var picker=$("#picker"), paper=$("#paper");
+  picker.innerHTML=EX.map(function(e,i){return '<button data-i="'+i+'"'+(i===0?' class="on"':'')+'>'+esc(e.name)+'</button>';}).join("");
+  picker.addEventListener("click",function(ev){var b=ev.target.closest("button"); if(!b) return; cur=+b.getAttribute("data-i"); sel=-1; draw(); resetAnswer();});
+  function draw(){
+    var e=EX[cur];
+    Array.prototype.forEach.call(picker.querySelectorAll("button"),function(b,i){b.classList.toggle("on",i===cur);});
+    var h='<p class="ph">'+esc(e.tag)+'</p><h2>'+esc(e.title)+'</h2><p>'+esc(e.intro)+'</p>';
+    e.parts.forEach(function(p,i){
+      var txt=esc(p[0]).replace(/(ticket-booth|song-library|parcel-tracker|main\(\)|getPrice\(\)|describe\(\)|getRow\(\)|compareTo|\bMain\b|\bPriced\b|\bMovieTicket\b|\bConcertTicket\b|\bSong\b|\bCrate\b|\bParcel\b|\bArrayList\b|\bimplements\b|\bComparable\b|\bdefault\b|\bfilter\b|\bmap\b|\breduce\b|\bstream\b|\bseat\b|\brow\b|\btitle\b|\bseconds\b|\bweight\b|\bcity\b|\bid\b)/g,'<span class="mono">$1</span>');
+      h+='<p><span class="s'+(i===sel?' on':'')+'" data-i="'+i+'">'+txt+'</span></p>';
+    });
+    h+='<p class="hint">Made up for this page. It is not one of this week\'s exercises, but it is written the way they are.</p>';
+    paper.innerHTML=h;
+  }
+  function resetAnswer(){
+    $("#aKw").textContent="tap a sentence"; $("#aQuote").textContent="Every sentence on the paper is a job. Tap one.";
+    $("#aAsks").innerHTML="The sentence lights up here, and this box says what it asks you to do in code terms: which file, which member, which kind of method.";
+    $("#aLine").style.display="none"; $("#aWhy").textContent="";
+  }
+  function show(i){
+    var e=EX[cur]; if(i<0||i>=e.parts.length) return; sel=i; var p=e.parts[i];
+    Array.prototype.forEach.call(paper.querySelectorAll(".s"),function(s,k){s.classList.toggle("on",k===i);});
+    $("#aKw").textContent=p[1]; $("#aQuote").textContent=p[0]; $("#aAsks").textContent=p[2];
+    var ln=$("#aLine"); ln.textContent=p[3]; ln.style.display="block"; $("#aWhy").innerHTML=esc(p[4]).replace(/^(\"[^\"]+\"|[A-Z][^.]*?\b(?:means|is|are|tells you|always means|sets|gives you)\b)/,function(m){return m;});
+    var box=$("#answer"); if(!reduce){box.style.transition="none";box.style.boxShadow="0 0 0 2px rgba(255,200,98,.55)";setTimeout(function(){box.style.transition="box-shadow .5s";box.style.boxShadow="none";},40);}
+  }
+  paper.addEventListener("click",function(ev){var s=ev.target.closest(".s"); if(!s) return; show(+s.getAttribute("data-i"));});
+  $("#bNext").addEventListener("click",function(){show(sel<0?0:Math.min(sel+1,EX[cur].parts.length-1));});
+  $("#bPrev").addEventListener("click",function(){show(sel<=0?0:sel-1);});
+  document.addEventListener("keydown",function(ev){
+    if(/INPUT|TEXTAREA|BUTTON/.test(ev.target.tagName)) return;
+    if(ev.key==="ArrowDown"||ev.key==="j"){ev.preventDefault();$("#bNext").click();}
+    if(ev.key==="ArrowUp"||ev.key==="k"){ev.preventDefault();$("#bPrev").click();}
+  });
+  var words=$("#words");
+  function fmt(t){return t.split("`").map(function(x,i){return i%2?"<code>"+esc(x)+"</code>":esc(x);}).join("");}
+  words.innerHTML=WORDS.map(function(w){return '<div class="word"><div class="w">'+esc(w[0])+'</div><div class="m">'+fmt(w[1])+'</div></div>';}).join("");
+  words.addEventListener("click",function(ev){var c=ev.target.closest(".word"); if(c) c.classList.toggle("open");});
+  draw();
+
+  var cv=$("#amb"),ctx=cv.getContext&&cv.getContext("2d"),parts=[];
+  function sizeC(){if(!ctx)return;cv.width=innerWidth;cv.height=innerHeight;}
+  function initParts(){parts=[];for(var i=0;i<46;i++)parts.push({x:Math.random(),y:Math.random(),r:Math.random()*1.6+.3,s:Math.random()*.02+.004,o:Math.random()*.4+.1});}
+  function drawC(){if(!ctx)return;ctx.clearRect(0,0,cv.width,cv.height);
+    parts.forEach(function(p){p.y-=p.s/60;if(p.y<-.02)p.y=1.02;ctx.beginPath();ctx.arc(p.x*cv.width,p.y*cv.height,p.r,0,7);
+      ctx.fillStyle="rgba(140,170,255,"+p.o+")";ctx.fill();});requestAnimationFrame(drawC);}
+  if(ctx&&!reduce){sizeC();initParts();drawC();addEventListener("resize",sizeC);}
+})();
+</script>
+<script src="../manifest.js"></script>
+<script src="../../assets/rail.js"></script>
+<script>Rail.render(document.getElementById("rail"),{week:7,kind:"exercises",current:"reading-the-exercises"});</script>
+</body>
+</html>

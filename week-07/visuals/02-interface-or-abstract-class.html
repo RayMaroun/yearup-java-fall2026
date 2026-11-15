@@ -1,0 +1,260 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Interface or Abstract Class | Week 7 Visual Hub</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Sora:wght@500;700&family=Inter:wght@400;500&family=JetBrains+Mono:wght@400;500&display=swap">
+<style>
+  :root{
+    --bg:#080c17; --bg2:#0c1428; --surface:rgba(255,255,255,.045); --line:rgba(255,255,255,.09);
+    --ink:#eef2fb; --muted:#8496b6; --accent:#6ea0ff; --accent2:#8b7bff; --good:#46d98a; --warn:#ff6a6a;
+    --gold:#ffc862; --disp:'Sora',system-ui,sans-serif; --body:'Inter',system-ui,sans-serif;
+    --mono:'JetBrains Mono',ui-monospace,monospace;
+  }
+  *{box-sizing:border-box}
+  body{margin:0;min-height:100vh;color:var(--ink);font-family:var(--body);
+    background:radial-gradient(1200px 700px at 70% -10%,#141d38 0%,transparent 55%),
+               radial-gradient(900px 600px at 10% 110%,#161233 0%,transparent 50%),#080c17;
+    overflow-x:hidden}
+  #amb{position:fixed;inset:0;z-index:0;pointer-events:none;opacity:.6}
+  .back{position:relative;z-index:2;display:block;max-width:1120px;margin:0 auto;padding:26px 24px 0;
+    width:100%;font-family:var(--mono);font-size:.8rem;letter-spacing:.04em;color:var(--muted);
+    text-decoration:none;transition:color .15s}
+  .back:hover{color:var(--accent)}
+  .wrap{position:relative;z-index:1;max-width:1120px;margin:0 auto;padding:22px 24px 70px}
+  .tag{font-family:var(--mono);font-size:.72rem;letter-spacing:.22em;text-transform:uppercase;color:var(--accent);margin:0 0 14px}
+  h1{font-family:var(--disp);font-weight:700;font-size:clamp(2.3rem,6vw,3.6rem);line-height:1;margin:0 0 12px;
+    letter-spacing:-.03em;background:linear-gradient(180deg,#fff,#b9c6e6);-webkit-background-clip:text;
+    background-clip:text;color:transparent}
+  .lede{color:var(--muted);max-width:64ch;font-size:1.05rem;margin:0 0 26px;line-height:1.5}
+  .lede b{color:var(--ink)}
+  code{font-family:var(--mono);font-size:.92em;color:#bcd0ff}
+
+  /* ---------- the stage IS the picture ---------- */
+  .stage{position:relative;background:linear-gradient(180deg,rgba(255,255,255,.03),rgba(255,255,255,.01));
+    border:1px solid var(--line);border-radius:24px;padding:22px;
+    box-shadow:0 1px 0 rgba(255,255,255,.06) inset,0 30px 80px -30px rgba(0,0,0,.8)}
+  [hidden]{display:none!important}
+  .card{position:relative;border-radius:16px;padding:16px 18px;transition:border-color .3s,box-shadow .3s,background .3s}
+  .hd{font-family:var(--mono);font-size:.62rem;letter-spacing:.16em;text-transform:uppercase;color:var(--muted);margin:0 0 4px}
+  .who{font-family:var(--disp);font-weight:700;font-size:1.35rem;margin:0 0 12px;color:var(--ink);letter-spacing:-.01em}
+  .sect{font-family:var(--mono);font-size:.58rem;letter-spacing:.14em;text-transform:uppercase;color:rgba(132,150,182,.7);margin:14px 0 7px 2px}
+  .iface{border:2px dashed rgba(139,123,255,.7);background:rgba(139,123,255,.06)}
+  .iface .who{color:#cfc8ff}
+  .con{border:2px solid rgba(110,160,255,.5);background:rgba(110,160,255,.05)}
+  .con .who{color:#bcd0ff}
+  .con.bad{border-color:var(--warn);box-shadow:0 0 0 3px rgba(255,106,106,.14),0 0 30px -8px rgba(255,106,106,.7)}
+  .row{display:flex;align-items:center;justify-content:space-between;gap:8px 10px;flex-wrap:wrap;font-family:var(--mono);font-size:.82rem;
+    padding:9px 11px;border-radius:11px;border:1px solid var(--line);background:rgba(0,0,0,.22);margin-bottom:8px;
+    transition:background .3s,border-color .3s,box-shadow .3s,opacity .3s}
+  .row .m{color:#ffcb6b} .row .f{color:#c9d4ea} .row i{font-style:normal;color:#82aaff;margin-right:6px}
+  .note{font-family:var(--mono);font-size:.62rem;letter-spacing:.08em;text-transform:uppercase;color:rgba(132,150,182,.8)}
+  .note.g{color:#9fe3b6} .note.w{color:#ffb0b0} .note.y{color:var(--gold)}
+  .stamp{position:absolute;top:14px;right:14px;font-family:var(--mono);font-size:.62rem;letter-spacing:.1em;text-transform:uppercase;
+    padding:5px 9px;border-radius:999px;border:1px solid rgba(70,217,138,.6);color:#9fe3b6;background:rgba(70,217,138,.08);transition:.3s}
+  .bad .stamp{border-color:var(--warn);color:#ffb0b0;background:rgba(255,106,106,.1)}
+  .mini{font-family:var(--mono);font-size:.7rem;padding:6px 9px;border-radius:8px;cursor:pointer;border:1px solid rgba(110,160,255,.4);
+    background:transparent;color:#dbe6ff;transition:.15s}
+  .mini:hover{background:rgba(110,160,255,.2);border-color:var(--accent)}
+  .arrow{display:flex;flex-direction:column;align-items:center;justify-content:center;gap:6px;text-align:center;
+    font-family:var(--mono);font-size:.64rem;line-height:1.4;color:rgba(132,150,182,.75);transition:color .3s}
+  .arrow b{font-weight:500;font-size:1.9rem;line-height:1;transition:transform .5s cubic-bezier(.2,.9,.3,1)}
+
+  /* the one sentence */
+  .caption{display:flex;gap:14px;align-items:flex-start;margin:18px 2px 0;padding-top:16px;border-top:1px solid var(--line)}
+  .caption .t{flex:1;min-width:0;font-size:1.05rem;line-height:1.55;color:var(--ink);padding-left:16px;border-left:3px solid var(--accent);transition:border-color .3s}
+  .caption .t .line{display:block;margin-top:6px;font-family:var(--mono);font-size:.8rem;color:#bcd0ff;opacity:.9;word-break:break-word;white-space:pre-wrap}
+  .caption.y .t{border-left-color:var(--gold)} .caption.g .t{border-left-color:var(--good)} .caption.w .t{border-left-color:var(--warn)}
+  .caption.w .t .line{color:#ffb0b0}
+  .caption b.a{color:var(--accent)} .caption b.y{color:var(--gold)} .caption b.g{color:var(--good)} .caption b.w{color:var(--warn)}
+  .caption b.p{color:#b3a8ff}
+  .reset{font-family:var(--body);font-weight:500;font-size:.84rem;padding:8px 14px;border-radius:11px;cursor:pointer;
+    border:1px solid var(--line);background:transparent;color:var(--muted);transition:.15s;flex-shrink:0}
+  .reset:hover{border-color:var(--accent);color:var(--accent)}
+  button:focus-visible,input:focus-visible{outline:2px solid var(--accent);outline-offset:2px}
+
+  .take{margin-top:22px;background:linear-gradient(180deg,rgba(110,160,255,.08),rgba(139,123,255,.04));
+    border:1px solid var(--line);border-left:3px solid var(--accent);border-radius:12px;padding:16px 18px}
+  .take .tk{font-family:var(--mono);font-size:.66rem;letter-spacing:.14em;text-transform:uppercase;color:var(--accent);margin:0 0 8px}
+  .take p{margin:0;font-size:.95rem;color:var(--ink);line-height:1.55}
+  .take b{color:#fff}
+  @media (prefers-reduced-motion:reduce){*{animation-duration:.01ms!important;transition-duration:.01ms!important}#amb{display:none}}
+
+  /* ---------- this page's picture ---------- */
+  .tray{display:flex;flex-wrap:wrap;gap:8px;margin:0 0 16px}
+  .chip{font-family:var(--mono);font-size:.84rem;padding:11px 14px;border-radius:11px;cursor:pointer;
+    border:1px solid rgba(255,200,98,.45);background:rgba(0,0,0,.25);color:#ffcb6b;transition:.15s}
+  .chip:hover,.chip.cur{background:rgba(255,200,98,.14);border-color:var(--gold)}
+  .pair{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr);gap:16px;align-items:start}
+  @media (max-width:820px){.pair,.seats{grid-template-columns:1fr!important}}
+  .abs{border:2px dashed rgba(110,160,255,.65);background:rgba(110,160,255,.05)}
+  .abs .who{font-style:italic;color:#bcd0ff}
+  .slot{min-height:188px}
+  .empty{margin:0;padding:22px 0;text-align:center;font-family:var(--mono);font-size:.74rem;color:rgba(132,150,182,.6)}
+  .row.ok{border-color:rgba(70,217,138,.35)}
+  .row.def{border-color:rgba(255,200,98,.45)}
+  .row.no{border-style:dashed;border-color:rgba(255,106,106,.55);background:rgba(255,106,106,.05)}
+  .row.no .m,.row.no .f{text-decoration:line-through;text-decoration-color:var(--warn);opacity:.7}
+  .row.hot.ok{background:rgba(70,217,138,.1);box-shadow:0 0 24px -8px rgba(70,217,138,.8)}
+  .row.hot.def{background:rgba(255,200,98,.1);box-shadow:0 0 24px -8px rgba(255,200,98,.8)}
+  .row.hot.no{box-shadow:0 0 24px -8px rgba(255,106,106,.8)}
+  .drone{margin-top:16px}
+  .drone.bad{border-color:var(--warn)}
+  .seats{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1.4fr);gap:8px 22px}
+  .seats .sect{margin-top:0}
+  .chips{display:flex;flex-wrap:wrap;gap:8px;align-items:center;min-height:36px}
+  .tok{font-family:var(--mono);font-size:.82rem;padding:7px 11px;border-radius:999px;border:1px solid rgba(110,160,255,.6);color:#bcd0ff;background:rgba(110,160,255,.1)}
+  .tok.if{border:1px dashed rgba(139,123,255,.8);color:#cfc8ff;background:rgba(139,123,255,.1)}
+  .tok.if.fresh{box-shadow:0 0 22px -6px rgba(70,217,138,.9);border-color:var(--good)}
+  .tok.no{border:1px dashed var(--warn);color:#ffb0b0;background:rgba(255,106,106,.08);text-decoration:line-through}
+</style>
+</head>
+<body>
+<a class="back" href="../index.html#02-interface-or-abstract-class">&#8592; Week 7 index</a>
+<canvas id="amb"></canvas>
+<div class="wrap">
+  <p class="tag">Workbook 6a &middot; Section 1-2</p>
+  <h1>Interface or Abstract Class</h1>
+  <p class="lede"><b>Tap a kind of member and see which side takes it. Then give Drone more parents.</b></p>
+
+  <div class="stage">
+    <p class="sect" style="margin-top:0">try to put this inside each one</p>
+    <div class="tray" id="tray">
+      <button class="chip" data-k="field">an instance field</button>
+      <button class="chip" data-k="ctor">a constructor</button>
+      <button class="chip" data-k="done">a finished method</button>
+      <button class="chip" data-k="abs">an abstract method</button>
+    </div>
+    <div class="pair">
+      <div class="card abs">
+        <p class="hd">abstract class</p>
+        <p class="who">Asset</p>
+        <div class="slot" id="sA"></div>
+      </div>
+      <div class="card iface">
+        <p class="hd">interface</p>
+        <p class="who">IMovable</p>
+        <div class="slot" id="sI"></div>
+      </div>
+    </div>
+    <div class="card con drone" id="drone">
+      <p class="hd">class &middot; how many of each may it take?</p>
+      <p class="who">Drone</p>
+      <div class="seats">
+        <div>
+          <p class="sect">extends &middot; a parent class</p>
+          <div class="chips"><span class="tok">Asset</span><span class="tok no" id="mach" hidden>Machine</span><button class="mini" id="bPar">+ extends Machine</button></div>
+        </div>
+        <div>
+          <p class="sect">implements &middot; interfaces</p>
+          <div class="chips" id="ifs"><span class="tok if">IMovable</span><span class="tok if" id="if1" hidden>ICleaner</span><span class="tok if" id="if2" hidden>IDrawable</span><button class="mini" id="bIf"></button></div>
+        </div>
+      </div>
+    </div>
+    <div class="caption" id="caption">
+      <div class="t" id="status"></div>
+      <button class="reset" id="bReset">Reset</button>
+    </div>
+  </div>
+
+  <div class="take">
+    <p class="tk">The one idea</p>
+    <p><b>An abstract class is a half-built class. An interface is only a list of promises.</b> The abstract class can hold fields, constructors and finished methods. The interface holds method names, plus constants and <code>default</code> or <code>static</code> methods. A class extends <b>one</b> class and implements <b>as many interfaces</b> as it needs.</p>
+  </div>
+  <div id="rail"></div>
+</div>
+<script>
+(function(){
+  "use strict";
+  var $=function(s){return document.querySelector(s);};
+  var all=function(s){return [].slice.call(document.querySelectorAll(s));};
+  var reduce=matchMedia("(prefers-reduced-motion: reduce)").matches;
+  var status=$("#status"),caption=$("#caption");
+  /* the one sentence; the mono line is set as plain text */
+  function say(html,tone,line){
+    caption.className="caption"+(tone?" "+tone:"");
+    status.innerHTML=html;
+    if(line){ var sp=document.createElement("span"); sp.className="line"; sp.textContent=line; status.appendChild(sp); }
+  }
+  var ORDER=["field","ctor","done","abs"];
+  var KIND={
+    field:{a:["f","<i>String</i>description","ok","allowed"], i:["f","<i>String</i>description","no","not allowed"]},
+    ctor:{a:["f","Asset(...)","ok","allowed"], i:["f","IMovable(...)","no","not allowed"]},
+    done:{a:["m","void printMessage()","ok","has a body"], i:["m","default void print()","def","only with default"]},
+    abs:{a:["m","abstract BigDecimal getValue()","ok","no body"], i:["m","Point move(int xUnits, int yUnits)","ok","no body"]}
+  };
+  var NAMES=["IMovable","ICleaner","IDrawable"];
+  var tried={}, hot=null, nIf=1;
+  var drone=$("#drone"),mach=$("#mach"),bIf=$("#bIf");
+
+  function rowHtml(d,isHot){
+    var tone=d[2]==="ok"?"g":(d[2]==="no"?"w":"y");
+    return '<div class="row '+d[2]+(isHot?" hot":"")+'"><span class="'+d[0]+'">'+d[1]+'</span><span class="note '+tone+'">'+d[3]+'</span></div>';
+  }
+  function paint(){
+    var a="",i="";
+    ORDER.forEach(function(k){ if(tried[k]){ a+=rowHtml(KIND[k].a,k===hot); i+=rowHtml(KIND[k].i,k===hot); } });
+    var none='<p class="empty">nothing tried yet</p>';
+    $("#sA").innerHTML=a||none; $("#sI").innerHTML=i||none;
+    all(".chip").forEach(function(b){ b.classList.toggle("cur",b.getAttribute("data-k")===hot); });
+    $("#if1").hidden=nIf<2; $("#if2").hidden=nIf<3;
+    bIf.hidden=nIf>=3; bIf.textContent="+ implements "+(NAMES[nIf]||"");
+  }
+  function header(){ return "public class Drone extends Asset implements "+NAMES.slice(0,nIf).join(", ")+" {"; }
+  function calm(){ mach.hidden=true; drone.classList.remove("bad"); all(".tok.fresh").forEach(function(t){ t.classList.remove("fresh"); }); }
+  function tryKind(k){
+    calm(); tried[k]=true; hot=k; paint();
+    if(k==="field")
+      say('An abstract class is a real class, so it holds <b class="g">instance fields</b>. An interface <b class="w">has none</b>: a variable written there is a constant and must be given its value.',"w",
+        "String description;  // inside IMovable, error: = expected");
+    else if(k==="ctor")
+      say('An abstract class has <b class="g">constructors</b>, which its children call with super(...). An interface has no fields to fill, so it has <b class="w">no constructor</b>.',"w",
+        "IMovable() { }  // inside IMovable, error: <identifier> expected");
+    else if(k==="done")
+      say('Both can hold a <b class="g">finished method</b>. In an interface it must be marked <b class="y">default</b> (or static), or the compiler refuses the body.',"y",
+        "void print() { }  // inside IMovable, without default, error: interface abstract methods cannot have body");
+    else
+      say('Both can hold an <b class="g">abstract method</b>: a name with no body, left for another class to write. In an interface the word abstract is not even needed.',"g",
+        "Point move(int xUnits, int yUnits);");
+  }
+  function addParent(){
+    calm(); hot=null; paint();
+    mach.hidden=false; drone.classList.add("bad");
+    say('A class has <b class="w">one parent class</b>, never two. After Asset the compiler expects the class body, so the second parent is refused.',"w",
+      "public class Drone extends Asset, Machine {  // error: '{' expected");
+  }
+  function addIface(){
+    calm(); hot=null; nIf++; paint();
+    $("#if"+(nIf-1)).classList.add("fresh");
+    say('Drone now implements <b class="g">'+nIf+' interfaces</b>. There is no limit: each one only adds methods that Drone must write.',"g",header());
+  }
+  function reset(){
+    tried={}; hot=null; nIf=1; calm(); paint();
+    say('An abstract class and an interface, both empty, and a class that uses one of each. <b class="a">Tap a kind of member</b> to try it on both sides.',"");
+  }
+  $("#tray").addEventListener("click",function(e){ var c=e.target.closest(".chip"); if(c) tryKind(c.getAttribute("data-k")); });
+  $("#bPar").addEventListener("click",addParent);
+  bIf.addEventListener("click",addIface);
+  $("#bReset").addEventListener("click",reset);
+  reset();
+
+  /* ambient canvas */
+  var cv=$("#amb"),ctx=cv.getContext&&cv.getContext("2d"),parts=[];
+  function sizeC(){if(!ctx)return;cv.width=innerWidth;cv.height=innerHeight;}
+  function initParts(){parts=[];for(var i=0;i<46;i++)parts.push({x:Math.random(),y:Math.random(),
+    r:Math.random()*1.6+.3,s:Math.random()*.02+.004,o:Math.random()*.4+.1});}
+  function drawC(){if(!ctx)return;ctx.clearRect(0,0,cv.width,cv.height);
+    parts.forEach(function(p){p.y-=p.s/60;if(p.y<-.02)p.y=1.02;
+      ctx.beginPath();ctx.arc(p.x*cv.width,p.y*cv.height,p.r,0,7);
+      ctx.fillStyle="rgba(140,170,255,"+p.o+")";ctx.fill();});
+    requestAnimationFrame(drawC);}
+  if(ctx&&!reduce){sizeC();initParts();drawC();addEventListener("resize",sizeC);}
+})();
+</script>
+<script src="../manifest.js"></script>
+<script src="../../assets/rail.js"></script>
+<script>Rail.render(document.getElementById("rail"),{week:7,kind:"visuals",current:"02-interface-or-abstract-class"});</script>
+</body>
+</html>

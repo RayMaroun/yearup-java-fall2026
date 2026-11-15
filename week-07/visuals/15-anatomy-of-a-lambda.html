@@ -1,0 +1,233 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Anatomy of a Lambda | Week 7 Visual Hub</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Sora:wght@500;700&family=Inter:wght@400;500&family=JetBrains+Mono:wght@400;500&display=swap">
+<style>
+  :root{
+    --bg:#080c17; --bg2:#0c1428; --surface:rgba(255,255,255,.045); --line:rgba(255,255,255,.09);
+    --ink:#eef2fb; --muted:#8496b6; --accent:#6ea0ff; --accent2:#8b7bff; --good:#46d98a; --warn:#ff6a6a;
+    --gold:#ffc862; --disp:'Sora',system-ui,sans-serif; --body:'Inter',system-ui,sans-serif;
+    --mono:'JetBrains Mono',ui-monospace,monospace;
+  }
+  *{box-sizing:border-box}
+  body{margin:0;min-height:100vh;color:var(--ink);font-family:var(--body);
+    background:radial-gradient(1200px 700px at 70% -10%,#141d38 0%,transparent 55%),
+               radial-gradient(900px 600px at 10% 110%,#161233 0%,transparent 50%),#080c17;
+    overflow-x:hidden}
+  #amb{position:fixed;inset:0;z-index:0;pointer-events:none;opacity:.6}
+  .back{position:relative;z-index:2;display:block;max-width:1120px;margin:0 auto;padding:26px 24px 0;
+    width:100%;font-family:var(--mono);font-size:.8rem;letter-spacing:.04em;color:var(--muted);
+    text-decoration:none;transition:color .15s}
+  .back:hover{color:var(--accent)}
+  .wrap{position:relative;z-index:1;max-width:1120px;margin:0 auto;padding:22px 24px 70px}
+  .tag{font-family:var(--mono);font-size:.72rem;letter-spacing:.22em;text-transform:uppercase;color:var(--accent);margin:0 0 14px}
+  h1{font-family:var(--disp);font-weight:700;font-size:clamp(2.3rem,6vw,3.6rem);line-height:1;margin:0 0 12px;
+    letter-spacing:-.03em;background:linear-gradient(180deg,#fff,#b9c6e6);-webkit-background-clip:text;
+    background-clip:text;color:transparent}
+  .lede{color:var(--muted);max-width:64ch;font-size:1.05rem;margin:0 0 26px;line-height:1.5}
+  .lede b{color:var(--ink)}
+  code{font-family:var(--mono);font-size:.92em;color:#bcd0ff}
+
+  /* ---------- the stage IS the picture ---------- */
+  .stage{position:relative;background:linear-gradient(180deg,rgba(255,255,255,.03),rgba(255,255,255,.01));
+    border:1px solid var(--line);border-radius:24px;padding:22px;
+    box-shadow:0 1px 0 rgba(255,255,255,.06) inset,0 30px 80px -30px rgba(0,0,0,.8)}
+  [hidden]{display:none!important}
+  .hd{display:block;font-family:var(--mono);font-size:.62rem;letter-spacing:.16em;text-transform:uppercase;color:var(--muted);margin:0 0 8px}
+  .step{font-family:var(--mono);font-size:.84rem;padding:11px 12px;border-radius:10px;cursor:pointer;
+    border:1px solid rgba(255,200,98,.45);background:rgba(255,200,98,.06);color:#ffcb6b;transition:.15s}
+  .step:hover{border-color:var(--gold);background:rgba(255,200,98,.14)}
+  .step:disabled{opacity:.35;cursor:default;border-color:var(--line);background:transparent}
+
+  /* the list filter works through */
+  .people{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:8px;margin-bottom:18px}
+  @media (max-width:700px){.people{grid-template-columns:1fr 1fr}}
+  .emp{font-family:var(--mono);font-size:.84rem;padding:10px 12px;border-radius:12px;border:1px solid var(--line);background:rgba(0,0,0,.25);
+    transition:border-color .3s,background .3s,opacity .3s}
+  .emp small{display:block;margin-top:4px;font-size:.68rem;color:rgba(132,150,182,.7);min-height:1.2em}
+  .emp.cur{border-color:var(--gold);background:rgba(255,200,98,.12)}
+  .emp.kept{border-color:rgba(70,217,138,.7)} .emp.kept small{color:#9fe3b6}
+  .emp.out{opacity:.45}
+
+  /* the lambda, drawn big, in three parts */
+  .lam{display:flex;flex-wrap:wrap;align-items:stretch;gap:8px;padding:16px;border-radius:18px;border:1px solid rgba(110,160,255,.4);background:rgba(110,160,255,.05)}
+  .fx{align-self:center;font-family:var(--mono);font-size:1.05rem;color:var(--muted)}
+  .part{display:flex;flex-direction:column;align-items:flex-start;gap:7px;min-width:0;padding:14px 14px 10px;border-radius:14px;cursor:pointer;
+    border:1px solid var(--line);background:rgba(0,0,0,.3);color:var(--ink);text-align:left;font:inherit;transition:border-color .2s,box-shadow .2s,background .2s}
+  .part:hover{border-color:rgba(110,160,255,.7)}
+  .part .code{font-family:var(--mono);font-size:1.08rem;line-height:1.4;overflow-wrap:anywhere}
+  .part[data-p="param"] .code{color:#bcd0ff} .part[data-p="arrow"] .code{color:var(--gold)} .part[data-p="body"] .code{color:#c3e88d}
+  .part .lbl{font-family:var(--mono);font-size:.6rem;letter-spacing:.16em;text-transform:uppercase;color:var(--muted)}
+  .part .val{font-family:var(--mono);font-size:.76rem;min-height:1.3em;color:var(--gold)}
+  .part.sel{border-color:var(--accent);background:rgba(110,160,255,.14);box-shadow:0 0 26px -10px rgba(110,160,255,.9)}
+  .part.live{border-color:rgba(255,200,98,.7)}
+  .part.t .val{color:var(--good)}
+  .tools{display:flex;flex-wrap:wrap;gap:8px;margin-top:12px;align-items:center}
+  .sw{font-family:var(--mono);font-size:.76rem;padding:9px 12px;border-radius:10px;cursor:pointer;border:1px solid rgba(110,160,255,.4);
+    background:transparent;color:#dbe6ff;transition:.15s}
+  .sw:hover,.sw.on{background:rgba(110,160,255,.2);border-color:var(--accent)}
+  .tools .step{margin-left:auto}
+  @media (max-width:700px){.tools .step{margin-left:0;width:100%}}
+
+  /* the one sentence */
+  .caption{display:flex;gap:14px;align-items:flex-start;margin:18px 2px 0;padding-top:16px;border-top:1px solid var(--line)}
+  .caption .t{flex:1;min-width:0;font-size:1.05rem;line-height:1.55;color:var(--ink);padding-left:16px;border-left:3px solid var(--accent);transition:border-color .3s}
+  .caption .t .line{display:block;margin-top:6px;font-family:var(--mono);font-size:.8rem;color:#bcd0ff;opacity:.9;overflow-wrap:anywhere}
+  .caption.y .t{border-left-color:var(--gold)} .caption.g .t{border-left-color:var(--good)} .caption.w .t{border-left-color:var(--warn)}
+  .caption.w .t .line{color:#ffb0b0}
+  .caption b.a{color:var(--accent)} .caption b.y{color:var(--gold)} .caption b.g{color:var(--good)} .caption b.w{color:var(--warn)}
+  .reset{font-family:var(--body);font-weight:500;font-size:.84rem;padding:8px 14px;border-radius:11px;cursor:pointer;
+    border:1px solid var(--line);background:transparent;color:var(--muted);transition:.15s;flex-shrink:0}
+  .reset:hover{border-color:var(--accent);color:var(--accent)}
+  button:focus-visible,input:focus-visible{outline:2px solid var(--accent);outline-offset:2px}
+
+  .take{margin-top:22px;background:linear-gradient(180deg,rgba(110,160,255,.08),rgba(139,123,255,.04));
+    border:1px solid var(--line);border-left:3px solid var(--accent);border-radius:12px;padding:16px 18px}
+  .take .tk{font-family:var(--mono);font-size:.66rem;letter-spacing:.14em;text-transform:uppercase;color:var(--accent);margin:0 0 8px}
+  .take p{margin:0;font-size:.95rem;color:var(--ink);line-height:1.55}
+  .take b{color:#fff}
+  @media (prefers-reduced-motion:reduce){*{animation-duration:.01ms!important;transition-duration:.01ms!important;animation-delay:0s!important;transition-delay:0s!important}#amb{display:none}}
+</style>
+</head>
+<body>
+<a class="back" href="../index.html#15-anatomy-of-a-lambda">&#8592; Week 7 index</a>
+<canvas id="amb"></canvas>
+<div class="wrap">
+  <p class="tag">Workbook 6a &middot; Section 4-2 &middot; Lambda Expressions</p>
+  <h1>Anatomy of a Lambda</h1>
+  <p class="lede"><b>A tiny method with no name. Tap its parts, then let filter call it.</b></p>
+
+  <div class="stage">
+    <div id="board">
+      <p class="hd">employees &middot; the list &middot; name holds "maroun"</p>
+      <div class="people" id="people"></div>
+      <p class="hd">the lambda &middot; handed to filter</p>
+      <div class="lam">
+        <span class="fx">.filter(</span>
+        <button class="part" data-p="param"><span class="code" id="cParam"></span><span class="lbl">parameter</span><span class="val" id="vParam"></span></button>
+        <button class="part" data-p="arrow"><span class="code">-&gt;</span><span class="lbl">arrow</span><span class="val"></span></button>
+        <button class="part" data-p="body"><span class="code" id="cBody"></span><span class="lbl">body</span><span class="val" id="vBody"></span></button>
+        <span class="fx">)</span>
+      </div>
+      <div class="tools">
+        <button class="sw" id="swP">( ) around the parameter</button>
+        <button class="sw" id="swB">{ } around the body</button>
+        <button class="step" id="go">filter calls it</button>
+      </div>
+    </div>
+    <div class="caption" id="caption">
+      <div class="t" id="status"></div>
+      <button class="reset" id="bReset">Reset</button>
+    </div>
+  </div>
+
+  <div class="take">
+    <p class="tk">The one idea</p>
+    <p><b>A lambda is a method without a name: parameter, arrow, body.</b> You do not call it yourself. You hand it to a method such as <code>filter</code> or <code>forEach</code>, and that method calls it once for each element. One parameter needs no parentheses. A body that is one expression needs no braces and no <code>return</code>.</p>
+  </div>
+  <div id="rail"></div>
+</div>
+<script>
+(function(){
+  "use strict";
+  var $=function(s){return document.querySelector(s);};
+  var reduce=matchMedia("(prefers-reduced-motion: reduce)").matches;
+  var status=$("#status"),caption=$("#caption");
+  /* the one sentence: html for the prose, plain text for the Java statement */
+  function say(html,tone,line){
+    caption.className="caption"+(tone?" "+tone:"");
+    status.innerHTML=html;
+    if(line){ var sp=document.createElement("span"); sp.className="line"; sp.textContent=line; status.appendChild(sp); }
+  }
+
+  var EMP=[["Leo","Maroun"],["Potato","Sensei"],["John","Doe"],["Raymond","Maroun"]];
+  var NAME="maroun";
+  var EXPR="employee.getLastName().equalsIgnoreCase(name)";
+  var paren=false, brace=false, calls=0, res=[];
+  var prt=document.querySelectorAll(".part"), go=$("#go");
+
+  /* what equalsIgnoreCase answers for one employee */
+  function test(e){return e[1].toLowerCase()===NAME.toLowerCase();}
+  function lam(){return (paren?"(employee)":"employee")+" -> "+(brace?"{ return "+EXPR+"; }":EXPR);}
+  function select(p){
+    for(var n=0;n<prt.length;n++) prt[n].classList.toggle("sel",prt[n].getAttribute("data-p")===p);
+  }
+  function paint(){
+    $("#cParam").textContent=paren?"(employee)":"employee";
+    $("#cBody").textContent=brace?"{ return "+EXPR+"; }":EXPR;
+    $("#swP").classList.toggle("on",paren); $("#swB").classList.toggle("on",brace);
+    var cur=calls-1;
+    $("#people").innerHTML=EMP.map(function(e,n){
+      var cls="emp", note="";
+      if(n<calls){ cls+=res[n]?" kept":" out"; note=res[n]?"true: kept":"false: dropped"; }
+      if(n===cur) cls+=" cur";
+      return '<div class="'+cls+'">'+e[0]+" "+e[1]+"<small>"+note+"</small></div>";
+    }).join("");
+    var live=cur>=0;
+    prt[0].classList.toggle("live",live); prt[2].classList.toggle("live",live);
+    prt[2].classList.toggle("t",live&&res[cur]);
+    $("#vParam").textContent=live?"is "+EMP[cur][0]+" "+EMP[cur][1]:"";
+    $("#vBody").textContent=live?"returns "+res[cur]:"";
+    go.disabled=calls>=EMP.length;
+    go.textContent=calls>=EMP.length?"called "+EMP.length+" times":"filter calls it";
+  }
+  function call(){
+    if(calls>=EMP.length) return;
+    var e=EMP[calls], r=test(e); res.push(r); calls++;
+    select(null); paint();
+    say('filter calls the lambda and hands it <b class="y">'+e[0]+" "+e[1]+"</b> as employee. The body returns <b"+(r?' class="g"':"")+">"+r+
+      "</b>, so filter "+(r?"keeps":"drops")+" this element."+(calls===EMP.length?" Four elements, four calls.":""),
+      r?"g":"y",'"'+e[1]+'".equalsIgnoreCase("'+NAME+'")  // '+r);
+  }
+  function tap(p){
+    select(p);
+    if(p==="param") say('The <b class="a">parameter</b>: the name the lambda gives to the one element it receives. No type is written, the compiler works out that it is an Employee.',"",lam());
+    else if(p==="arrow") say('The <b class="y">arrow</b> separates the parameter from the body. Read it as "goes to".',"y",lam());
+    else say('The <b class="g">body</b>: what the lambda does with its parameter. It is one expression, so its value, true or false, is what the lambda gives back.',"g",lam());
+  }
+  function swP(){
+    paren=!paren; select("param"); paint();
+    say(paren?"With one parameter the parentheses are optional: both forms mean the same. Two or more parameters always need them."
+             :"One parameter: the parentheses can go.","y",lam());
+  }
+  function swB(){
+    brace=!brace; select("body"); paint();
+    say(brace?'With braces the body is a block of statements, so it needs <b class="y">return</b> and a semicolon. Use this form when the body has more than one statement.'
+             :"One expression: no braces, no return. Its value is what the lambda gives back.","y",lam());
+  }
+  function reset(){
+    paren=false; brace=false; calls=0; res=[]; select(null); paint();
+    say("Four employees, and one lambda handed to filter. Tap a part to see what it is, or let filter call it.","",
+      "employees.stream().filter("+lam()+")");
+  }
+  $("#board").addEventListener("click",function(e){
+    var p=e.target.closest(".part"); if(p){ tap(p.getAttribute("data-p")); return; }
+    if(e.target.closest("#swP")){ swP(); return; }
+    if(e.target.closest("#swB")){ swB(); return; }
+    if(e.target.closest("#go")) call();
+  });
+  $("#bReset").addEventListener("click",reset);
+  reset();
+
+  /* ambient canvas */
+  var cv=$("#amb"),ctx=cv.getContext&&cv.getContext("2d"),parts=[];
+  function sizeC(){if(!ctx)return;cv.width=innerWidth;cv.height=innerHeight;}
+  function initParts(){parts=[];for(var i=0;i<46;i++)parts.push({x:Math.random(),y:Math.random(),
+    r:Math.random()*1.6+.3,s:Math.random()*.02+.004,o:Math.random()*.4+.1});}
+  function drawC(){if(!ctx)return;ctx.clearRect(0,0,cv.width,cv.height);
+    parts.forEach(function(p){p.y-=p.s/60;if(p.y<-.02)p.y=1.02;
+      ctx.beginPath();ctx.arc(p.x*cv.width,p.y*cv.height,p.r,0,7);
+      ctx.fillStyle="rgba(140,170,255,"+p.o+")";ctx.fill();});
+    requestAnimationFrame(drawC);}
+  if(ctx&&!reduce){sizeC();initParts();drawC();addEventListener("resize",sizeC);}
+})();
+</script>
+<script src="../manifest.js"></script>
+<script src="../../assets/rail.js"></script>
+<script>Rail.render(document.getElementById("rail"),{week:7,kind:"visuals",current:"15-anatomy-of-a-lambda"});</script>
+</body>
+</html>

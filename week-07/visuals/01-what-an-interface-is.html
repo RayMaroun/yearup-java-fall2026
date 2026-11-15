@@ -1,0 +1,219 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>What an Interface Is | Week 7 Visual Hub</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Sora:wght@500;700&family=Inter:wght@400;500&family=JetBrains+Mono:wght@400;500&display=swap">
+<style>
+  :root{
+    --bg:#080c17; --bg2:#0c1428; --surface:rgba(255,255,255,.045); --line:rgba(255,255,255,.09);
+    --ink:#eef2fb; --muted:#8496b6; --accent:#6ea0ff; --accent2:#8b7bff; --good:#46d98a; --warn:#ff6a6a;
+    --gold:#ffc862; --disp:'Sora',system-ui,sans-serif; --body:'Inter',system-ui,sans-serif;
+    --mono:'JetBrains Mono',ui-monospace,monospace;
+  }
+  *{box-sizing:border-box}
+  body{margin:0;min-height:100vh;color:var(--ink);font-family:var(--body);
+    background:radial-gradient(1200px 700px at 70% -10%,#141d38 0%,transparent 55%),
+               radial-gradient(900px 600px at 10% 110%,#161233 0%,transparent 50%),#080c17;
+    overflow-x:hidden}
+  #amb{position:fixed;inset:0;z-index:0;pointer-events:none;opacity:.6}
+  .back{position:relative;z-index:2;display:block;max-width:1120px;margin:0 auto;padding:26px 24px 0;
+    width:100%;font-family:var(--mono);font-size:.8rem;letter-spacing:.04em;color:var(--muted);
+    text-decoration:none;transition:color .15s}
+  .back:hover{color:var(--accent)}
+  .wrap{position:relative;z-index:1;max-width:1120px;margin:0 auto;padding:22px 24px 70px}
+  .tag{font-family:var(--mono);font-size:.72rem;letter-spacing:.22em;text-transform:uppercase;color:var(--accent);margin:0 0 14px}
+  h1{font-family:var(--disp);font-weight:700;font-size:clamp(2.3rem,6vw,3.6rem);line-height:1;margin:0 0 12px;
+    letter-spacing:-.03em;background:linear-gradient(180deg,#fff,#b9c6e6);-webkit-background-clip:text;
+    background-clip:text;color:transparent}
+  .lede{color:var(--muted);max-width:64ch;font-size:1.05rem;margin:0 0 26px;line-height:1.5}
+  .lede b{color:var(--ink)}
+  code{font-family:var(--mono);font-size:.92em;color:#bcd0ff}
+
+  /* ---------- the stage IS the picture ---------- */
+  .stage{position:relative;background:linear-gradient(180deg,rgba(255,255,255,.03),rgba(255,255,255,.01));
+    border:1px solid var(--line);border-radius:24px;padding:22px;
+    box-shadow:0 1px 0 rgba(255,255,255,.06) inset,0 30px 80px -30px rgba(0,0,0,.8)}
+  [hidden]{display:none!important}
+  .card{position:relative;border-radius:16px;padding:16px 18px;transition:border-color .3s,box-shadow .3s,background .3s}
+  .hd{font-family:var(--mono);font-size:.62rem;letter-spacing:.16em;text-transform:uppercase;color:var(--muted);margin:0 0 4px}
+  .who{font-family:var(--disp);font-weight:700;font-size:1.35rem;margin:0 0 12px;color:var(--ink);letter-spacing:-.01em}
+  .sect{font-family:var(--mono);font-size:.58rem;letter-spacing:.14em;text-transform:uppercase;color:rgba(132,150,182,.7);margin:14px 0 7px 2px}
+  .iface{border:2px dashed rgba(139,123,255,.7);background:rgba(139,123,255,.06)}
+  .iface .who{color:#cfc8ff}
+  .con{border:2px solid rgba(110,160,255,.5);background:rgba(110,160,255,.05)}
+  .con .who{color:#bcd0ff}
+  .con.bad{border-color:var(--warn);box-shadow:0 0 0 3px rgba(255,106,106,.14),0 0 30px -8px rgba(255,106,106,.7)}
+  .row{display:flex;align-items:center;justify-content:space-between;gap:8px 10px;flex-wrap:wrap;font-family:var(--mono);font-size:.82rem;
+    padding:9px 11px;border-radius:11px;border:1px solid var(--line);background:rgba(0,0,0,.22);margin-bottom:8px;
+    transition:background .3s,border-color .3s,box-shadow .3s,opacity .3s}
+  .row .m{color:#ffcb6b} .row .f{color:#c9d4ea} .row i{font-style:normal;color:#82aaff;margin-right:6px}
+  .note{font-family:var(--mono);font-size:.62rem;letter-spacing:.08em;text-transform:uppercase;color:rgba(132,150,182,.8)}
+  .note.g{color:#9fe3b6} .note.w{color:#ffb0b0} .note.y{color:var(--gold)}
+  .stamp{position:absolute;top:14px;right:14px;font-family:var(--mono);font-size:.62rem;letter-spacing:.1em;text-transform:uppercase;
+    padding:5px 9px;border-radius:999px;border:1px solid rgba(70,217,138,.6);color:#9fe3b6;background:rgba(70,217,138,.08);transition:.3s}
+  .bad .stamp{border-color:var(--warn);color:#ffb0b0;background:rgba(255,106,106,.1)}
+  .mini{font-family:var(--mono);font-size:.7rem;padding:6px 9px;border-radius:8px;cursor:pointer;border:1px solid rgba(110,160,255,.4);
+    background:transparent;color:#dbe6ff;transition:.15s}
+  .mini:hover{background:rgba(110,160,255,.2);border-color:var(--accent)}
+  .arrow{display:flex;flex-direction:column;align-items:center;justify-content:center;gap:6px;text-align:center;
+    font-family:var(--mono);font-size:.64rem;line-height:1.4;color:rgba(132,150,182,.75);transition:color .3s}
+  .arrow b{font-weight:500;font-size:1.9rem;line-height:1;transition:transform .5s cubic-bezier(.2,.9,.3,1)}
+
+  /* the one sentence */
+  .caption{display:flex;gap:14px;align-items:flex-start;margin:18px 2px 0;padding-top:16px;border-top:1px solid var(--line)}
+  .caption .t{flex:1;min-width:0;font-size:1.05rem;line-height:1.55;color:var(--ink);padding-left:16px;border-left:3px solid var(--accent);transition:border-color .3s}
+  .caption .t .line{display:block;margin-top:6px;font-family:var(--mono);font-size:.8rem;color:#bcd0ff;opacity:.9;word-break:break-word;white-space:pre-wrap}
+  .caption.y .t{border-left-color:var(--gold)} .caption.g .t{border-left-color:var(--good)} .caption.w .t{border-left-color:var(--warn)}
+  .caption.w .t .line{color:#ffb0b0}
+  .caption b.a{color:var(--accent)} .caption b.y{color:var(--gold)} .caption b.g{color:var(--good)} .caption b.w{color:var(--warn)}
+  .caption b.p{color:#b3a8ff}
+  .reset{font-family:var(--body);font-weight:500;font-size:.84rem;padding:8px 14px;border-radius:11px;cursor:pointer;
+    border:1px solid var(--line);background:transparent;color:var(--muted);transition:.15s;flex-shrink:0}
+  .reset:hover{border-color:var(--accent);color:var(--accent)}
+  button:focus-visible,input:focus-visible{outline:2px solid var(--accent);outline-offset:2px}
+
+  .take{margin-top:22px;background:linear-gradient(180deg,rgba(110,160,255,.08),rgba(139,123,255,.04));
+    border:1px solid var(--line);border-left:3px solid var(--accent);border-radius:12px;padding:16px 18px}
+  .take .tk{font-family:var(--mono);font-size:.66rem;letter-spacing:.14em;text-transform:uppercase;color:var(--accent);margin:0 0 8px}
+  .take p{margin:0;font-size:.95rem;color:var(--ink);line-height:1.55}
+  .take b{color:#fff}
+  @media (prefers-reduced-motion:reduce){*{animation-duration:.01ms!important;transition-duration:.01ms!important}#amb{display:none}}
+
+  /* ---------- this page's picture ---------- */
+  .board{display:grid;grid-template-columns:minmax(0,300px) 96px minmax(0,1fr);gap:16px;align-items:center}
+  @media (max-width:820px){.board{grid-template-columns:1fr}.arrow{flex-direction:row;padding:4px 0}}
+  .key{display:block;width:100%;margin-top:10px;font-family:var(--mono);font-weight:500;font-size:1.15rem;padding:16px 10px 12px;
+    border-radius:14px;cursor:pointer;border:2px solid rgba(255,200,98,.4);background:rgba(0,0,0,.25);color:#ffcb6b;transition:.15s}
+  .key small{display:block;margin-top:6px;font-size:.58rem;font-weight:400;letter-spacing:.14em;text-transform:uppercase;color:rgba(132,150,182,.8)}
+  .key:hover,.key.lit{border-color:var(--gold);background:rgba(255,200,98,.12)}
+  .key.lit{box-shadow:0 0 28px -8px rgba(255,200,98,.9)}
+  .arrow.on{color:var(--gold)} .arrow.on b{transform:translateX(12px)}
+  .dev{display:grid;grid-template-columns:64px minmax(0,1fr);gap:16px;align-items:center;width:100%;margin-bottom:10px;
+    text-align:left;color:inherit;font:inherit;cursor:pointer}
+  .dev:last-child{margin-bottom:0}
+  .dev .hd,.dev .who,.dev .ans{display:block}
+  .dev .who{margin:0 0 6px}
+  .dev:hover,.dev.pick{border-color:var(--accent);background:rgba(110,160,255,.12)}
+  .dev.pick{box-shadow:0 0 30px -8px rgba(110,160,255,.9)}
+  .ans{font-family:var(--mono);font-size:.76rem;line-height:1.45;color:rgba(132,150,182,.8);min-height:1.45em;transition:color .3s}
+  .dev.on .ans,.dev.off .ans{color:#c3e88d}
+  .glyph{width:64px;height:64px;border-radius:14px;border:1px solid var(--line);background:rgba(0,0,0,.3);display:grid;place-items:center}
+  .glyph i{display:block;transition:background .4s,box-shadow .4s,border-color .4s}
+  .tv i{width:42px;height:28px;border-radius:5px;border:2px solid #5c6c8c}
+  .lamp i{width:28px;height:28px;border-radius:50%;border:2px solid #5c6c8c}
+  .fan i{width:40px;height:40px;border-radius:50%;border:2px solid #5c6c8c;
+    background:conic-gradient(rgba(132,150,182,.85) 0 40deg,transparent 0 120deg,rgba(132,150,182,.85) 0 160deg,transparent 0 240deg,rgba(132,150,182,.85) 0 280deg,transparent 0)}
+  .dev.on .tv i{background:var(--accent);border-color:#bcd0ff;box-shadow:0 0 22px rgba(110,160,255,.9)}
+  .dev.on .lamp i{background:var(--gold);border-color:#ffe3a8;box-shadow:0 0 24px rgba(255,200,98,.95)}
+  .dev.on .fan i{border-color:var(--good);animation:spin .9s linear infinite}
+  @keyframes spin{to{transform:rotate(360deg)}}
+  @media (prefers-reduced-motion:reduce){.dev.on .fan i{animation:none;transform:rotate(30deg)}}
+</style>
+</head>
+<body>
+<a class="back" href="../index.html#01-what-an-interface-is">&#8592; Week 7 index</a>
+<canvas id="amb"></canvas>
+<div class="wrap">
+  <p class="tag">Workbook 6a &middot; Section 1-1</p>
+  <h1>What an Interface Is</h1>
+  <p class="lede"><b>One set of buttons, three machines. Press a button and watch each one answer.</b></p>
+
+  <div class="stage">
+    <div class="board" id="board">
+      <div class="card iface" id="remote">
+        <p class="hd">interface &middot; the buttons</p>
+        <p class="who">ISwitchable</p>
+        <button class="key" data-k="on">turnOn()<small>a name, no body</small></button>
+        <button class="key" data-k="off">turnOff()<small>a name, no body</small></button>
+      </div>
+      <div class="arrow" id="arrow"><b>&rarr;</b><span>same button, every machine</span></div>
+      <div class="devs">
+        <button class="card con dev" data-d="0"><span class="glyph tv"><i></i></span><span><span class="hd">class &middot; implements ISwitchable</span><span class="who">Television</span><span class="ans" id="a0"></span></span></button>
+        <button class="card con dev" data-d="1"><span class="glyph lamp"><i></i></span><span><span class="hd">class &middot; implements ISwitchable</span><span class="who">Lamp</span><span class="ans" id="a1"></span></span></button>
+        <button class="card con dev" data-d="2"><span class="glyph fan"><i></i></span><span><span class="hd">class &middot; implements ISwitchable</span><span class="who">Fan</span><span class="ans" id="a2"></span></span></button>
+      </div>
+    </div>
+    <div class="caption" id="caption">
+      <div class="t" id="status"></div>
+      <button class="reset" id="bReset">Reset</button>
+    </div>
+  </div>
+
+  <div class="take">
+    <p class="tk">The one idea</p>
+    <p><b>An interface is the buttons, not the machine.</b> It lists the methods a class promises to have and gives them no body: <code>void turnOn();</code>. Each class that implements it writes its own body, so the same button does something different on every machine.</p>
+  </div>
+  <div id="rail"></div>
+</div>
+<script>
+(function(){
+  "use strict";
+  var $=function(s){return document.querySelector(s);};
+  var all=function(s){return [].slice.call(document.querySelectorAll(s));};
+  var reduce=matchMedia("(prefers-reduced-motion: reduce)").matches;
+  var status=$("#status"),caption=$("#caption");
+  /* the one sentence; the mono line is set as plain text */
+  function say(html,tone,line){
+    caption.className="caption"+(tone?" "+tone:"");
+    status.innerHTML=html;
+    if(line){ var sp=document.createElement("span"); sp.className="line"; sp.textContent=line; status.appendChild(sp); }
+  }
+  var DEV=[{n:"Television",on:"The screen lights up.",off:"The screen goes black."},
+           {n:"Lamp",on:"The bulb glows.",off:"The bulb goes dark."},
+           {n:"Fan",on:"The blades start spinning.",off:"The blades slow to a stop."}];
+  var arrow=$("#arrow");
+  function unpick(){ all(".dev").forEach(function(d){ d.classList.remove("pick"); }); }
+  /* one button on the interface, three different bodies answer */
+  function press(k){
+    var name=k==="on"?"turnOn()":"turnOff()";
+    unpick();
+    all(".key").forEach(function(b){ b.classList.toggle("lit",b.getAttribute("data-k")===k); });
+    all(".dev").forEach(function(d,i){
+      d.classList.toggle("on",k==="on"); d.classList.toggle("off",k==="off");
+      $("#a"+i).textContent='its '+name+' prints "'+DEV[i][k]+'"';
+    });
+    arrow.classList.remove("on"); void arrow.offsetWidth; arrow.classList.add("on");
+    say('ISwitchable only says that a <b class="y">'+name+'</b> button exists. Each class wrote its own body for it, so three machines answer in three ways.',"y",
+      "device."+name+";  // one call, a different body in each class");
+  }
+  function pick(i){
+    unpick(); all(".dev")[i].classList.add("pick");
+    all(".key").forEach(function(b){ b.classList.remove("lit"); });
+    arrow.classList.remove("on");
+    say('<b class="a">'+DEV[i].n+'</b> implements ISwitchable: it promises to have turnOn() and turnOff(), and it decides what they do.',"",
+      "public class "+DEV[i].n+" implements ISwitchable {");
+  }
+  function reset(){
+    unpick(); arrow.classList.remove("on");
+    all(".key").forEach(function(b){ b.classList.remove("lit"); });
+    all(".dev").forEach(function(d,i){ d.classList.remove("on","off"); $("#a"+i).textContent="waiting for a button"; });
+    say('<b class="p">ISwitchable</b> is an interface: two buttons with nothing behind them. Three classes implement it, each a different machine.',"");
+  }
+  $("#board").addEventListener("click",function(e){
+    var k=e.target.closest(".key"); if(k){ press(k.getAttribute("data-k")); return; }
+    var d=e.target.closest(".dev"); if(d) pick(+d.getAttribute("data-d"));
+  });
+  $("#bReset").addEventListener("click",reset);
+  reset();
+
+  /* ambient canvas */
+  var cv=$("#amb"),ctx=cv.getContext&&cv.getContext("2d"),parts=[];
+  function sizeC(){if(!ctx)return;cv.width=innerWidth;cv.height=innerHeight;}
+  function initParts(){parts=[];for(var i=0;i<46;i++)parts.push({x:Math.random(),y:Math.random(),
+    r:Math.random()*1.6+.3,s:Math.random()*.02+.004,o:Math.random()*.4+.1});}
+  function drawC(){if(!ctx)return;ctx.clearRect(0,0,cv.width,cv.height);
+    parts.forEach(function(p){p.y-=p.s/60;if(p.y<-.02)p.y=1.02;
+      ctx.beginPath();ctx.arc(p.x*cv.width,p.y*cv.height,p.r,0,7);
+      ctx.fillStyle="rgba(140,170,255,"+p.o+")";ctx.fill();});
+    requestAnimationFrame(drawC);}
+  if(ctx&&!reduce){sizeC();initParts();drawC();addEventListener("resize",sizeC);}
+})();
+</script>
+<script src="../manifest.js"></script>
+<script src="../../assets/rail.js"></script>
+<script>Rail.render(document.getElementById("rail"),{week:7,kind:"visuals",current:"01-what-an-interface-is"});</script>
+</body>
+</html>

@@ -1,0 +1,18 @@
+# Agent brief — building one reference page (Week 7)
+
+You build exactly ONE reference page. Read first: `CLAUDE.md`, then the week 2 page with the same file name under `week-02/reference/` (cheat-sheet.html, glossary.html, common-errors.html; for junit-reference.html use `week-03/reference/date-patterns.html` as the base (a lookup table page)) and copy its CSS base, header, ONE control (filter chips or live filter box), card or table layout, cross-link style and rail block exactly. Change the content to week 5.
+Workbook text (fall v7.2Y, source of truth): `.planning/workbook-text/wb6a.txt`. Spring content for ideas only: `/Users/ray/Desktop/Training/Pluralsight/YearUp/yearup-java-spring2026/week-07/reference/` (its design is not reused; check every fact against the fall text: BigDecimal.equals says 5.0 and 5.00 differ while compareTo says equal, setScale needs a RoundingMode, JUnit 5 uses org.junit.jupiter, a static method cannot use this, isAdult is age >= 18 in the fall text).
+Cross-links: where an entry has a visual, link `../visuals/<file>` using the file names in `week-07/manifest.js` (only those). Examples from the instructor demos quoted in your task or invented; never an exercise (hotel objects, hotel operations, Room, Employee, Reservation, Hotel, money-math, NameFormatter, Blackjack, Card, Hand, Deck, car dealership).
+Rules: learners not students; Raymond; US spelling; no emoji; no em dashes; no entities in script; Java 17; package com.pluralsight. `<title>Title | Week 7 Visual Hub</title>`, `.back` href `../index.html#<slug>`, rail `Rail.render(document.getElementById("rail"),{week:7,kind:"reference",current:"<slug>"})`. If you use a `.take`, exactly one.
+
+## Deliver
+Write `week-07/reference/<file>`. `node --check`; divs balanced; one style; title; rail; every href resolves to a file in the manifest. Do not edit other files, do not commit, do not open a browser. Report under 10 lines.
+
+## Week 7 corrections to this brief (binding, they override anything above)
+- The lists of forbidden exercise domains above are from an earlier week. This week's list is in `.planning/week-07-plan.md` (the NEVER paragraph): the fixed assets and portfolio classes, the Person class sorted with Comparable, FixedList, the data-processing people list. The demo examples to use are described in the same file and the real demo code is in `../../04.Weeks/Week 07/demos/` (read it).
+- Calibration pages for the design are the FINISHED WEEK 6 pages of the same kind (`week-06/visuals/10-variable-type-object.html`, `11-base-class-references.html`, `12-a-parent-type-parameter.html` for visuals; `week-06/exercises/`, `week-06/reference/`, `week-06/games/` for the others). Copy their CSS base, header, caption, take and rail block. Spring pages for ideas only: `/Users/ray/Desktop/Training/Pluralsight/YearUp/yearup-java-spring2026/week-07/`.
+- Read the paragraph "What Ray's week 6 review taught us" in the plan and apply it.
+- Every compiler or runtime message shown must be the real javac / JVM text for Java 17: verify by compiling a tiny sample in a folder under /private/tmp/claude-501/-Users-ray-Desktop-Training-Pluralsight-YearUp-YearUp-Fall-2026/f8e4dbeb-2a69-45d5-9469-6c83d7e1d013/scratchpad/hub7/ (never inside the repo).
+- The page has more than one script tag (your inline script, the manifest, the rail): when you run `node --check`, extract only your own inline script.
+- Never write a double-escaped entity such as `&amp;middot;` in the HTML. No HTML entities inside your script.
+- No learner first names in examples (roster first names in `../../docs/PEOPLE.md`); the instructor is Raymond. Money in any Java shown is BigDecimal.

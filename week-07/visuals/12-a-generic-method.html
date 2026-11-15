@@ -1,0 +1,256 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>A Generic Method | Week 7 Visual Hub</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Sora:wght@500;700&family=Inter:wght@400;500&family=JetBrains+Mono:wght@400;500&display=swap">
+<style>
+  :root{
+    --bg:#080c17; --bg2:#0c1428; --surface:rgba(255,255,255,.045); --line:rgba(255,255,255,.09);
+    --ink:#eef2fb; --muted:#8496b6; --accent:#6ea0ff; --accent2:#8b7bff; --good:#46d98a; --warn:#ff6a6a;
+    --gold:#ffc862; --disp:'Sora',system-ui,sans-serif; --body:'Inter',system-ui,sans-serif;
+    --mono:'JetBrains Mono',ui-monospace,monospace;
+  }
+  *{box-sizing:border-box}
+  body{margin:0;min-height:100vh;color:var(--ink);font-family:var(--body);
+    background:radial-gradient(1200px 700px at 70% -10%,#141d38 0%,transparent 55%),
+               radial-gradient(900px 600px at 10% 110%,#161233 0%,transparent 50%),#080c17;
+    overflow-x:hidden}
+  #amb{position:fixed;inset:0;z-index:0;pointer-events:none;opacity:.6}
+  .back{position:relative;z-index:2;display:block;max-width:1120px;margin:0 auto;padding:26px 24px 0;
+    width:100%;font-family:var(--mono);font-size:.8rem;letter-spacing:.04em;color:var(--muted);
+    text-decoration:none;transition:color .15s}
+  .back:hover{color:var(--accent)}
+  .wrap{position:relative;z-index:1;max-width:1120px;margin:0 auto;padding:22px 24px 70px}
+  .tag{font-family:var(--mono);font-size:.72rem;letter-spacing:.22em;text-transform:uppercase;color:var(--accent);margin:0 0 14px}
+  h1{font-family:var(--disp);font-weight:700;font-size:clamp(2.3rem,6vw,3.6rem);line-height:1;margin:0 0 12px;
+    letter-spacing:-.03em;background:linear-gradient(180deg,#fff,#b9c6e6);-webkit-background-clip:text;
+    background-clip:text;color:transparent}
+  .lede{color:var(--muted);max-width:64ch;font-size:1.05rem;margin:0 0 26px;line-height:1.5}
+  .lede b{color:var(--ink)}
+  code{font-family:var(--mono);font-size:.92em;color:#bcd0ff}
+
+  /* ---------- the stage IS the picture ---------- */
+  .stage{position:relative;background:linear-gradient(180deg,rgba(255,255,255,.03),rgba(255,255,255,.01));
+    border:1px solid var(--line);border-radius:24px;padding:22px;
+    box-shadow:0 1px 0 rgba(255,255,255,.06) inset,0 30px 80px -30px rgba(0,0,0,.8)}
+  .hd{font-family:var(--mono);font-size:.62rem;letter-spacing:.16em;text-transform:uppercase;color:var(--muted);margin:0 0 4px}
+  .who{font-family:var(--disp);font-weight:700;font-size:1.2rem;margin:0;color:var(--ink);letter-spacing:-.01em}
+  .sect{font-family:var(--mono);font-size:.58rem;letter-spacing:.14em;text-transform:uppercase;color:rgba(132,150,182,.7);margin:14px 0 7px 2px}
+
+  /* the objects you can pass */
+  .objs{display:grid;gap:10px}
+  .obj{display:flex;align-items:center;justify-content:space-between;gap:12px;border-radius:16px;padding:12px 14px;
+    border:1px solid rgba(255,255,255,.2);background:rgba(255,255,255,.045);transition:border-color .3s,box-shadow .3s,background .3s}
+  .obj.kid{border-color:rgba(139,123,255,.6);background:rgba(139,123,255,.06)}
+  .obj.other{border-style:dashed}
+  .obj .rel{display:block;margin-top:3px;font-family:var(--mono);font-size:.66rem;color:var(--muted)}
+  .obj.sent{border-color:var(--gold);box-shadow:0 0 26px -8px rgba(255,200,98,.8)}
+  .obj.back2{border-color:var(--warn);box-shadow:0 0 0 3px rgba(255,106,106,.14),0 0 30px -8px rgba(255,106,106,.7)}
+  .pb{font-family:var(--mono);font-weight:500;font-size:.8rem;padding:10px 12px;border-radius:11px;cursor:pointer;transition:.15s;
+    border:1px solid rgba(255,200,98,.5);background:rgba(255,200,98,.1);color:var(--gold);flex-shrink:0;white-space:nowrap}
+  .pb:hover{background:rgba(255,200,98,.2);border-color:var(--gold)}
+
+  /* the hand-over */
+  .arrow{display:flex;flex-direction:column;align-items:center;justify-content:center;gap:6px;min-height:200px;text-align:center;
+    font-family:var(--mono);font-size:.64rem;line-height:1.4;color:rgba(132,150,182,.75);transition:color .3s}
+  .arrow b{font-weight:500;font-size:1.9rem;line-height:1;transition:transform .5s cubic-bezier(.2,.9,.3,1)}
+  .arrow .x{display:none}
+  .arrow.on{color:var(--good)} .arrow.on .go{transform:translateX(12px)}
+  .arrow.no{color:var(--warn)} .arrow.no .go{display:none} .arrow.no .x{display:block}
+
+  /* the method */
+  .method{border:2px solid rgba(110,160,255,.5);background:rgba(110,160,255,.06);border-radius:16px;padding:16px 18px;
+    transition:border-color .3s,box-shadow .3s}
+  .method.wall{border-color:var(--warn);box-shadow:0 0 0 3px rgba(255,106,106,.14),0 0 30px -8px rgba(255,106,106,.7)}
+  .sig{font-family:var(--mono);font-size:1rem;color:#ffcb6b;margin:0;word-break:break-word}
+  .sig i{font-style:normal;color:#82aaff}
+  .slot{position:relative;border:2px dashed rgba(132,150,182,.5);border-radius:14px;padding:12px 14px;min-height:92px;
+    background:rgba(0,0,0,.22);transition:border-color .3s,background .3s,box-shadow .3s}
+  .slot .lab{display:flex;justify-content:space-between;gap:10px;font-family:var(--mono);font-size:.74rem;color:#82aaff;margin:0 0 8px}
+  .slot .lab span{font-size:.58rem;letter-spacing:.12em;text-transform:uppercase;color:rgba(132,150,182,.75);align-self:center}
+  .slot .in{font-family:var(--disp);font-weight:700;font-size:1.25rem;color:rgba(132,150,182,.55);margin:0}
+  .slot .in small{display:block;margin-top:3px;font-family:var(--mono);font-weight:400;font-size:.68rem;color:var(--muted)}
+  .slot.full{border:2px solid var(--good);background:rgba(70,217,138,.08);box-shadow:0 0 28px -10px rgba(70,217,138,.8)}
+  .slot.full .in{color:var(--ink)}
+  .slot.full .in small{color:#9fe3b6}
+  .slot.no{border:2px solid var(--warn);background:rgba(255,106,106,.08)}
+  .pop{animation:pop .4s cubic-bezier(.2,.9,.3,1)}
+  @keyframes pop{from{transform:translateX(-34px) scale(.9);opacity:0}to{transform:none;opacity:1}}
+  .shake{animation:shake .4s ease-out}
+  @keyframes shake{0%,100%{transform:none}25%{transform:translateX(-7px)}60%{transform:translateX(5px)}}
+  .mrow{font-family:var(--mono);font-size:.92rem;color:#ffcb6b;padding:10px 11px;border-radius:11px;border:1px solid var(--line);
+    background:rgba(0,0,0,.22);transition:background .3s,border-color .3s,box-shadow .3s,opacity .3s}
+  .mrow.run{border-color:var(--gold);background:rgba(255,200,98,.12);box-shadow:0 0 26px -8px rgba(255,200,98,.8)}
+  .mrow.off{opacity:.4}
+  .say{margin-top:10px;font-family:var(--mono);font-size:.76rem;line-height:1.5;color:#9fe3b6;background:#05070e;
+    border:1px solid var(--line);border-radius:10px;padding:7px 10px;min-height:52px;opacity:0;transition:opacity .35s,border-color .3s;word-break:break-word}
+  .say.show{opacity:1}
+  .say.err{color:#ffb0b0;border-color:rgba(255,106,106,.5)}
+  .say small{display:block;font-size:.54rem;letter-spacing:.12em;text-transform:uppercase;color:rgba(132,150,182,.7)}
+
+  /* the one sentence */
+  .caption{display:flex;gap:14px;align-items:flex-start;margin:18px 2px 0;padding-top:16px;border-top:1px solid var(--line)}
+  .caption .t{flex:1;min-width:0;font-size:1.05rem;line-height:1.55;color:var(--ink);padding-left:16px;border-left:3px solid var(--accent);transition:border-color .3s}
+  .caption .t .line{display:block;margin-top:6px;font-family:var(--mono);font-size:.8rem;color:#bcd0ff;opacity:.9;word-break:break-word}
+  .caption.y .t{border-left-color:var(--gold)} .caption.g .t{border-left-color:var(--good)} .caption.w .t{border-left-color:var(--warn)}
+  .caption.w .t .line{color:#ffb0b0}
+  .caption b.a{color:var(--accent)} .caption b.y{color:var(--gold)} .caption b.g{color:var(--good)} .caption b.w{color:var(--warn)}
+  .reset{font-family:var(--body);font-weight:500;font-size:.84rem;padding:8px 14px;border-radius:11px;cursor:pointer;
+    border:1px solid var(--line);background:transparent;color:var(--muted);transition:.15s;flex-shrink:0}
+  .reset:hover{border-color:var(--accent);color:var(--accent)}
+  button:focus-visible,input:focus-visible{outline:2px solid var(--accent);outline-offset:2px}
+
+  .take{margin-top:22px;background:linear-gradient(180deg,rgba(110,160,255,.08),rgba(139,123,255,.04));
+    border:1px solid var(--line);border-left:3px solid var(--accent);border-radius:12px;padding:16px 18px}
+  .take .tk{font-family:var(--mono);font-size:.66rem;letter-spacing:.14em;text-transform:uppercase;color:var(--accent);margin:0 0 8px}
+  .take p{margin:0;font-size:.95rem;color:var(--ink);line-height:1.55}
+  .take b{color:#fff}
+
+  /* ---------- this page ---------- */
+  .board{display:grid;grid-template-columns:minmax(0,1fr) 84px minmax(0,1.3fr);gap:16px;align-items:center;min-height:380px}
+  @media (max-width:820px){.board{grid-template-columns:1fr}.arrow{min-height:0!important;flex-direction:row!important;padding:4px 0}}
+  .obj .who{font-family:var(--mono);font-weight:500;font-size:1.15rem}
+  .tv{font-style:normal;display:inline-block;min-width:1.3em;text-align:center;padding:0 5px;border-radius:6px;
+    border:1px dashed rgba(110,160,255,.7);color:#82aaff;background:rgba(110,160,255,.08);transition:color .3s,background .3s,border-color .3s}
+  .sig .tv.set,.tv.set{border:1px solid var(--gold);color:var(--gold);background:rgba(255,200,98,.14)}
+  .sig{font-size:.92rem;line-height:1.9}
+  .lab .pn{font-weight:400}
+  .slots2{display:grid;grid-template-columns:1fr 1.25fr;gap:10px}
+  @media (max-width:520px){.slots2{grid-template-columns:1fr}}
+  .slot .in{font-family:var(--mono);font-weight:500;font-size:1.1rem}
+  @media (prefers-reduced-motion:reduce){*{animation-duration:.01ms!important;transition-duration:.01ms!important}#amb{display:none}}
+</style>
+</head>
+<body>
+<a class="back" href="../index.html#12-a-generic-method">&#8592; Week 7 index</a>
+<canvas id="amb"></canvas>
+<div class="wrap">
+  <p class="tag">Workbook 6a &middot; Section 3-2</p>
+  <h1>A Generic Method</h1>
+  <p class="lede"><b>One method, three calls. Make each call and watch what T becomes.</b></p>
+
+  <div class="stage">
+    <div class="board" id="board">
+      <div class="objs" id="calls"></div>
+      <div class="arrow" id="arrow"><b class="go">&rarr;</b><b class="x">&#10005;</b><span id="alab">call it</span></div>
+      <div class="method" id="method">
+        <p class="hd">method &middot; written once</p>
+        <p class="sig">static &lt;<i class="tv">T</i>&gt; void displayWithLabel(String label, <i class="tv">T</i> value)</p>
+        <p class="sect">the parameters, for this call</p>
+        <div class="slots2">
+          <div class="slot" id="sl0"><p class="lab">String label</p><p class="in" id="in0"></p></div>
+          <div class="slot" id="sl1"><p class="lab"><b class="pn"><i class="tv">T</i> value</b><span id="fit"></span></p><p class="in" id="in1"></p></div>
+        </div>
+        <p class="sect">what the method does with them</p>
+        <div class="mrow" id="mrow">System.out.println(label + ": " + value)</div>
+        <div class="say" id="s"></div>
+      </div>
+    </div>
+    <div class="caption" id="caption">
+      <div class="t" id="status"></div>
+      <button class="reset" id="bReset">Reset</button>
+    </div>
+  </div>
+
+  <div class="take">
+    <p class="tk">The one idea</p>
+    <p><b>A generic method has its own blank.</b> The <code>&lt;T&gt;</code> before the return type declares it, and you never fill it in yourself: on each call <b>the compiler works T out from the argument</b>. One method replaces a whole set of overloads, one per type.</p>
+  </div>
+  <div id="rail"></div>
+</div>
+<script>
+(function(){
+  "use strict";
+  var $=function(s){return document.querySelector(s);};
+  var reduce=matchMedia("(prefers-reduced-motion: reduce)").matches;
+  var status=$("#status"),caption=$("#caption");
+  function say(html,tone,line){
+    caption.className="caption"+(tone?" "+tone:"");
+    status.innerHTML=html;
+    if(line){ var sp=document.createElement("span"); sp.className="line"; sp.textContent=line; status.appendChild(sp); }
+  }
+  function again(el,cls){ el.classList.remove(cls); if(reduce) return; void el.offsetWidth; el.classList.add(cls); }
+  function box(el,label,text,err){
+    el.innerHTML="<small>"+label+"</small>"; el.appendChild(document.createTextNode(text));
+    el.className="say show"+(err?" err":"");
+  }
+  var C=[
+    {label:'"Age"',arg:"55",kind:"an int",T:"Integer",out:"Age: 55",
+      why:'You never wrote a type. The compiler sees the argument 55, an int, boxes it and works out <b class="y">T is Integer</b>.'},
+    {label:'"Name"',arg:'"Raymond"',kind:"a String",T:"String",out:"Name: Raymond",
+      why:'Same method, new call. This argument is a String, so for this call <b class="y">T is String</b>.'},
+    {label:'"Height"',arg:"1.82",kind:"a double",T:"Double",out:"Height: 1.82",
+      why:'A double is boxed to its wrapper, so <b class="y">T is Double</b>. Still one method, written once.'}
+  ];
+  var calls=$("#calls"),arrow=$("#arrow"),alab=$("#alab"),mrow=$("#mrow"),s=$("#s"),fit=$("#fit");
+  var tvs=document.querySelectorAll(".tv");
+
+  function fill(text,on){
+    for(var i=0;i<tvs.length;i++){ tvs[i].textContent=text; tvs[i].className="tv"+(on?" set":""); }
+  }
+  function build(){
+    C.forEach(function(c,k){
+      var d=document.createElement("div"); d.className="obj"; d.id="o"+k;
+      var left=document.createElement("div");
+      var hd=document.createElement("p"); hd.className="hd"; hd.textContent="argument · "+c.kind;
+      var who=document.createElement("p"); who.className="who"; who.textContent=c.arg;
+      var rel=document.createElement("span"); rel.className="rel"; rel.textContent="label "+c.label;
+      left.appendChild(hd); left.appendChild(who); left.appendChild(rel);
+      var b=document.createElement("button"); b.className="pb"; b.setAttribute("data-k",k); b.textContent="call it";
+      d.appendChild(left); d.appendChild(b); calls.appendChild(d);
+    });
+  }
+  function clear(){
+    C.forEach(function(c,k){ $("#o"+k).classList.remove("sent"); });
+    arrow.className="arrow"; alab.textContent="call it";
+    fill("T",false);
+    $("#sl0").className="slot"; $("#sl1").className="slot"; fit.textContent="";
+    $("#in0").innerHTML="nothing yet"; $("#in1").innerHTML="nothing yet<small>T is not decided until a call</small>";
+    $("#in0").classList.remove("pop"); $("#in1").classList.remove("pop");
+    mrow.className="mrow"; s.className="say"; s.textContent="";
+  }
+  function call(k){
+    var c=C[k]; clear();
+    $("#o"+k).classList.add("sent");
+    arrow.className="arrow on"; alab.textContent="T is "+c.T;
+    fill(c.T,true);
+    $("#sl0").className="slot full"; $("#sl1").className="slot full"; fit.textContent="worked out";
+    $("#in0").textContent=c.label;
+    $("#in1").textContent=c.arg;
+    var sm=document.createElement("small"); sm.textContent=c.kind+", so T is "+c.T; $("#in1").appendChild(sm);
+    again($("#in1"),"pop");
+    mrow.classList.add("run");
+    box(s,"prints",c.out);
+    say(c.why,"y","displayWithLabel("+c.label+", "+c.arg+");");
+  }
+  function reset(){
+    clear();
+    say('The method takes a label and a value of type <b class="a">T</b>, a blank. Three calls are waiting, each with a different kind of value.');
+  }
+  calls.addEventListener("click",function(e){
+    var b=e.target.closest(".pb"); if(b) call(+b.getAttribute("data-k"));
+  });
+  $("#bReset").addEventListener("click",reset);
+  build(); reset();
+
+  /* ambient canvas */
+  var cv=$("#amb"),ctx=cv.getContext&&cv.getContext("2d"),parts=[];
+  function sizeC(){if(!ctx)return;cv.width=innerWidth;cv.height=innerHeight;}
+  function initParts(){parts=[];for(var i=0;i<46;i++)parts.push({x:Math.random(),y:Math.random(),
+    r:Math.random()*1.6+.3,s:Math.random()*.02+.004,o:Math.random()*.4+.1});}
+  function drawC(){if(!ctx)return;ctx.clearRect(0,0,cv.width,cv.height);
+    parts.forEach(function(p){p.y-=p.s/60;if(p.y<-.02)p.y=1.02;
+      ctx.beginPath();ctx.arc(p.x*cv.width,p.y*cv.height,p.r,0,7);
+      ctx.fillStyle="rgba(140,170,255,"+p.o+")";ctx.fill();});
+    requestAnimationFrame(drawC);}
+  if(ctx&&!reduce){sizeC();initParts();drawC();addEventListener("resize",sizeC);}
+})();
+</script>
+<script src="../manifest.js"></script>
+<script src="../../assets/rail.js"></script>
+<script>Rail.render(document.getElementById("rail"),{week:7,kind:"visuals",current:"12-a-generic-method"});</script>
+</body>
+</html>

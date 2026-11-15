@@ -1,0 +1,217 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>reduce | Week 7 Visual Hub</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Sora:wght@500;700&family=Inter:wght@400;500&family=JetBrains+Mono:wght@400;500&display=swap">
+<style>
+  :root{
+    --bg:#080c17; --bg2:#0c1428; --surface:rgba(255,255,255,.045); --line:rgba(255,255,255,.09);
+    --ink:#eef2fb; --muted:#8496b6; --accent:#6ea0ff; --accent2:#8b7bff; --good:#46d98a; --warn:#ff6a6a;
+    --gold:#ffc862; --disp:'Sora',system-ui,sans-serif; --body:'Inter',system-ui,sans-serif;
+    --mono:'JetBrains Mono',ui-monospace,monospace;
+  }
+  *{box-sizing:border-box}
+  body{margin:0;min-height:100vh;color:var(--ink);font-family:var(--body);
+    background:radial-gradient(1200px 700px at 70% -10%,#141d38 0%,transparent 55%),
+               radial-gradient(900px 600px at 10% 110%,#161233 0%,transparent 50%),#080c17;
+    overflow-x:hidden}
+  #amb{position:fixed;inset:0;z-index:0;pointer-events:none;opacity:.6}
+  .back{position:relative;z-index:2;display:block;max-width:1120px;margin:0 auto;padding:26px 24px 0;
+    width:100%;font-family:var(--mono);font-size:.8rem;letter-spacing:.04em;color:var(--muted);
+    text-decoration:none;transition:color .15s}
+  .back:hover{color:var(--accent)}
+  .wrap{position:relative;z-index:1;max-width:1120px;margin:0 auto;padding:22px 24px 70px}
+  .tag{font-family:var(--mono);font-size:.72rem;letter-spacing:.22em;text-transform:uppercase;color:var(--accent);margin:0 0 14px}
+  h1{font-family:var(--disp);font-weight:700;font-size:clamp(2.3rem,6vw,3.6rem);line-height:1;margin:0 0 12px;
+    letter-spacing:-.03em;background:linear-gradient(180deg,#fff,#b9c6e6);-webkit-background-clip:text;
+    background-clip:text;color:transparent}
+  .lede{color:var(--muted);max-width:64ch;font-size:1.05rem;margin:0 0 26px;line-height:1.5}
+  .lede b{color:var(--ink)}
+  code{font-family:var(--mono);font-size:.92em;color:#bcd0ff}
+
+  /* ---------- the stage IS the picture ---------- */
+  .stage{position:relative;background:linear-gradient(180deg,rgba(255,255,255,.03),rgba(255,255,255,.01));
+    border:1px solid var(--line);border-radius:24px;padding:22px;
+    box-shadow:0 1px 0 rgba(255,255,255,.06) inset,0 30px 80px -30px rgba(0,0,0,.8)}
+  [hidden]{display:none!important}
+  .hd{display:block;font-family:var(--mono);font-size:.62rem;letter-spacing:.16em;text-transform:uppercase;color:var(--muted);margin:0 0 8px}
+  .step{font-family:var(--mono);font-size:.84rem;padding:11px 12px;border-radius:10px;cursor:pointer;
+    border:1px solid rgba(255,200,98,.45);background:rgba(255,200,98,.06);color:#ffcb6b;transition:.15s}
+  .step:hover{border-color:var(--gold);background:rgba(255,200,98,.14)}
+  .step:disabled{opacity:.35;cursor:default;border-color:var(--line);background:transparent}
+
+  /* two playgrounds: a sum and a product */
+  .pg{border:1px solid var(--line);border-radius:18px;padding:14px 16px 16px;background:rgba(6,10,20,.5)}
+  .pg + .pg{margin-top:12px}
+  .ptop{display:flex;flex-wrap:wrap;align-items:baseline;gap:6px 14px;margin:0 0 12px}
+  .pname{font-family:var(--disp);font-weight:700;font-size:1.2rem;margin:0;letter-spacing:-.01em}
+  .sig{font-family:var(--mono);font-size:.8rem;color:#ffcb6b;overflow-wrap:anywhere}
+  .nums{display:flex;flex-wrap:wrap;gap:6px;margin-bottom:12px}
+  .n{font-family:var(--mono);font-size:.95rem;min-width:36px;text-align:center;padding:7px 8px;border-radius:9px;border:1px solid var(--line);
+    background:rgba(0,0,0,.3);transition:opacity .3s,border-color .3s,background .3s}
+  .n.cur{border-color:var(--gold);background:rgba(255,200,98,.14);color:var(--gold)}
+  .n.past{opacity:.35}
+  .calc{display:grid;grid-template-columns:minmax(0,1.2fr) 44px minmax(0,1fr);gap:10px;align-items:stretch}
+  @media (max-width:640px){.calc{grid-template-columns:1fr}.sign{padding:0}}
+  .box{border-radius:14px;padding:12px 14px;border:1px solid var(--line);background:rgba(255,255,255,.03);transition:border-color .3s,box-shadow .3s,background .3s}
+  .box.temp{border:2px solid rgba(110,160,255,.5);background:rgba(110,160,255,.06)}
+  .box.temp.end{border-color:rgba(70,217,138,.8);box-shadow:0 0 26px -10px rgba(70,217,138,.8)}
+  .box.temp.zero{border-color:var(--warn);background:rgba(255,106,106,.07);box-shadow:0 0 26px -10px rgba(255,106,106,.8)}
+  .big{font-family:var(--disp);font-weight:700;font-size:2.2rem;line-height:1.1;margin:0 0 10px;font-variant-numeric:tabular-nums}
+  .big s{font-size:1.2rem;font-weight:500;color:var(--muted);margin-right:10px;text-decoration-color:var(--warn)}
+  .box.num .big{color:var(--gold)}
+  .eq{font-family:var(--mono);font-size:.84rem;color:#9fe3b6;margin:0;min-height:1.4em}
+  .sign{display:flex;align-items:center;justify-content:center;font-family:var(--mono);font-size:1.7rem;color:var(--gold)}
+  .acts{display:flex;flex-wrap:wrap;gap:8px;align-items:center}
+  .sw{font-family:var(--mono);font-size:.76rem;padding:10px 11px;border-radius:10px;cursor:pointer;border:1px solid rgba(110,160,255,.4);
+    background:transparent;color:#dbe6ff;transition:.15s}
+  .sw:hover,.sw.on{background:rgba(110,160,255,.2);border-color:var(--accent)}
+
+  /* the one sentence */
+  .caption{display:flex;gap:14px;align-items:flex-start;margin:18px 2px 0;padding-top:16px;border-top:1px solid var(--line)}
+  .caption .t{flex:1;min-width:0;font-size:1.05rem;line-height:1.55;color:var(--ink);padding-left:16px;border-left:3px solid var(--accent);transition:border-color .3s}
+  .caption .t .line{display:block;margin-top:6px;font-family:var(--mono);font-size:.8rem;color:#bcd0ff;opacity:.9;overflow-wrap:anywhere}
+  .caption.y .t{border-left-color:var(--gold)} .caption.g .t{border-left-color:var(--good)} .caption.w .t{border-left-color:var(--warn)}
+  .caption.w .t .line{color:#ffb0b0}
+  .caption b.a{color:var(--accent)} .caption b.y{color:var(--gold)} .caption b.g{color:var(--good)} .caption b.w{color:var(--warn)}
+  .reset{font-family:var(--body);font-weight:500;font-size:.84rem;padding:8px 14px;border-radius:11px;cursor:pointer;
+    border:1px solid var(--line);background:transparent;color:var(--muted);transition:.15s;flex-shrink:0}
+  .reset:hover{border-color:var(--accent);color:var(--accent)}
+  button:focus-visible,input:focus-visible{outline:2px solid var(--accent);outline-offset:2px}
+
+  .take{margin-top:22px;background:linear-gradient(180deg,rgba(110,160,255,.08),rgba(139,123,255,.04));
+    border:1px solid var(--line);border-left:3px solid var(--accent);border-radius:12px;padding:16px 18px}
+  .take .tk{font-family:var(--mono);font-size:.66rem;letter-spacing:.14em;text-transform:uppercase;color:var(--accent);margin:0 0 8px}
+  .take p{margin:0;font-size:.95rem;color:var(--ink);line-height:1.55}
+  .take b{color:#fff}
+  @media (prefers-reduced-motion:reduce){*{animation-duration:.01ms!important;transition-duration:.01ms!important;animation-delay:0s!important;transition-delay:0s!important}#amb{display:none}}
+</style>
+</head>
+<body>
+<a class="back" href="../index.html#17-reduce">&#8592; Week 7 index</a>
+<canvas id="amb"></canvas>
+<div class="wrap">
+  <p class="tag">Workbook 6a &middot; Section 4-3 &middot; Java Stream Methods</p>
+  <h1>reduce</h1>
+  <p class="lede"><b>One running result meets one number per press. Add them, then multiply.</b></p>
+
+  <div class="stage">
+    <div id="board">
+      <div class="pg" id="pgS" data-k="S">
+        <div class="ptop"><p class="pname">a sum</p><span class="sig"></span></div>
+        <div class="nums"></div>
+        <div class="calc">
+          <div class="box temp"><span class="hd">temp &middot; the running result</span><p class="big"></p>
+            <div class="acts"><button class="step">next number</button></div></div>
+          <div class="sign">+</div>
+          <div class="box num"><span class="hd">num &middot; the next element</span><p class="big"></p><p class="eq"></p></div>
+        </div>
+      </div>
+      <div class="pg" id="pgP" data-k="P">
+        <div class="ptop"><p class="pname">a product</p><span class="sig"></span></div>
+        <div class="nums"></div>
+        <div class="calc">
+          <div class="box temp"><span class="hd">temp &middot; the running result</span><p class="big"></p>
+            <div class="acts"><button class="step">next number</button><button class="sw" data-s="1">start at 1</button><button class="sw" data-s="0">start at 0</button></div></div>
+          <div class="sign">*</div>
+          <div class="box num"><span class="hd">num &middot; the next element</span><p class="big"></p><p class="eq"></p></div>
+        </div>
+      </div>
+    </div>
+    <div class="caption" id="caption">
+      <div class="t" id="status"></div>
+      <button class="reset" id="bReset">Reset</button>
+    </div>
+  </div>
+
+  <div class="take">
+    <p class="tk">The one idea</p>
+    <p><b>reduce turns a whole stream into one value.</b> It takes a start value and a lambda with two parameters: the running result (<code>temp</code>) and the next element (<code>num</code>). What the lambda returns becomes the new temp. A sum starts at 0. A product starts at 1, because anything times 0 is 0.</p>
+  </div>
+  <div id="rail"></div>
+</div>
+<script>
+(function(){
+  "use strict";
+  var $=function(s){return document.querySelector(s);};
+  var reduce=matchMedia("(prefers-reduced-motion: reduce)").matches;
+  var status=$("#status"),caption=$("#caption");
+  /* the one sentence: html for the prose, plain text for the Java statement */
+  function say(html,tone,line){
+    caption.className="caption"+(tone?" "+tone:"");
+    status.innerHTML=html;
+    if(line){ var sp=document.createElement("span"); sp.className="line"; sp.textContent=line; status.appendChild(sp); }
+  }
+
+  /* each playground: a list, a start value and the lambda's operation; every temp is computed */
+  var PG={
+    S:{el:$("#pgS"),nums:[3,2,2,3,7,3,5],start:0,op:"+",name:"sum"},
+    P:{el:$("#pgP"),nums:[1,2,3,4,5],start:1,op:"*",name:"product"}
+  };
+  function apply(p,a,b){return p.op==="+"?a+b:a*b;}
+  function lambda(p){return "(temp, num) -> temp "+p.op+" num";}
+  function whole(p){return "int "+p.name+" = numbers.stream().reduce("+p.start+", "+lambda(p)+");";}
+  function q(p,s){return p.el.querySelector(s);}
+  function begin(p){p.i=0; p.temp=p.start; p.old=null;}
+
+  function paint(p){
+    var cur=p.i-1, done=p.i>=p.nums.length;
+    q(p,".sig").textContent="reduce("+p.start+", "+lambda(p)+")";
+    q(p,".nums").innerHTML=p.nums.map(function(n,x){return '<span class="n'+(x===cur?" cur":(x<cur?" past":""))+'">'+n+"</span>";}).join("");
+    q(p,".temp .big").innerHTML=(p.old===null?"":"<s>"+p.old+"</s>")+p.temp;
+    q(p,".num .big").textContent=cur<0?"?":p.nums[cur];
+    q(p,".eq").textContent=cur<0?"starts at "+p.start:p.old+" "+p.op+" "+p.nums[cur]+" = "+p.temp;
+    q(p,".temp").className="box temp"+(done?(p.op==="*"&&p.start===0?" zero":" end"):"");
+    var b=q(p,".step"); b.disabled=done; b.textContent=done?"no numbers left":"next number";
+    var sw=p.el.querySelectorAll(".sw");
+    for(var x=0;x<sw.length;x++) sw[x].classList.toggle("on",Number(sw[x].getAttribute("data-s"))===p.start);
+  }
+  function step(p){
+    if(p.i>=p.nums.length) return;
+    var num=p.nums[p.i]; p.old=p.temp; p.temp=apply(p,p.old,num); p.i++;
+    paint(p);
+    var calc=p.old+" "+p.op+" "+num, done=p.i>=p.nums.length, wiped=p.op==="*"&&p.start===0;
+    var html="temp was <b>"+p.old+'</b> and meets <b class="y">'+num+"</b>. The lambda returns "+calc+" = <b"+(wiped?"":' class="g"')+">"+p.temp+"</b>, the new temp.";
+    if(!done){ say(html,"y",lambda(p)+"  // "+calc+" is "+p.temp); return; }
+    if(wiped) say(html+' No numbers left, so reduce returns <b class="w">0</b>. Starting at 0 wipes out a product: it must start at 1.',"w",whole(p)+"  // "+p.temp);
+    else say(html+' No numbers left, so reduce returns <b class="g">'+p.temp+"</b>.","g",whole(p)+"  // "+p.temp);
+  }
+  function restart(p,s){
+    p.start=s; begin(p); paint(p);
+    if(s===0) say('The product now starts at <b class="y">0</b>. Step through it and watch temp.',"y",whole(p));
+    else say('The product starts at <b class="g">1</b> again: 1 times a number leaves the number alone.',"g",whole(p));
+  }
+  function reset(){
+    PG.P.start=1; begin(PG.S); begin(PG.P); paint(PG.S); paint(PG.P);
+    say("Two lists, two running results. Each temp holds its start value and has met no number yet. Press next number.","",whole(PG.S));
+  }
+  $("#board").addEventListener("click",function(e){
+    var g=e.target.closest(".pg"); if(!g) return;
+    var p=PG[g.getAttribute("data-k")];
+    if(e.target.closest(".step")){ step(p); return; }
+    var s=e.target.closest(".sw"); if(s) restart(p,Number(s.getAttribute("data-s")));
+  });
+  $("#bReset").addEventListener("click",reset);
+  reset();
+
+  /* ambient canvas */
+  var cv=$("#amb"),ctx=cv.getContext&&cv.getContext("2d"),parts=[];
+  function sizeC(){if(!ctx)return;cv.width=innerWidth;cv.height=innerHeight;}
+  function initParts(){parts=[];for(var i=0;i<46;i++)parts.push({x:Math.random(),y:Math.random(),
+    r:Math.random()*1.6+.3,s:Math.random()*.02+.004,o:Math.random()*.4+.1});}
+  function drawC(){if(!ctx)return;ctx.clearRect(0,0,cv.width,cv.height);
+    parts.forEach(function(p){p.y-=p.s/60;if(p.y<-.02)p.y=1.02;
+      ctx.beginPath();ctx.arc(p.x*cv.width,p.y*cv.height,p.r,0,7);
+      ctx.fillStyle="rgba(140,170,255,"+p.o+")";ctx.fill();});
+    requestAnimationFrame(drawC);}
+  if(ctx&&!reduce){sizeC();initParts();drawC();addEventListener("resize",sizeC);}
+})();
+</script>
+<script src="../manifest.js"></script>
+<script src="../../assets/rail.js"></script>
+<script>Rail.render(document.getElementById("rail"),{week:7,kind:"visuals",current:"17-reduce"});</script>
+</body>
+</html>
