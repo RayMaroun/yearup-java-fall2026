@@ -136,7 +136,7 @@ Year: 2008</div>
             <li><b>Value is the same for every asset.</b> The loop calls getValue() on an Asset, and the object's own class decides which version runs. Did House and Vehicle override it?</li>
             <li><b>double instead of BigDecimal.</b> The cost and every value are BigDecimal, built from text. Use its methods, not the + and * signs.</li>
             <li><b>Cannot call getAddress() on an Asset.</b> The list type only knows Asset's methods. Test with instanceof first, then downcast.</li>
-            <li><b>Vehicle value off.</b> Read the workbook rules again, one line at a time, then try a very old car and a very new one.</li>
+            <li><b>Vehicle value off.</b> The percentage is taken every year from what the car is still worth, so the same step repeats once per year of age. Check a 2 year old car by hand first, then a brand new one and a very old one.</li>
           </ul>
         </div>
         <div>
@@ -197,8 +197,8 @@ Year: 2008</div>
  },
  {
   "t": "Override <code>getValue()</code> in <code>Vehicle</code>.",
-  "d": "The workbook rule: 0-3 years old, 3% reduced value of cost per year; 4-6 years old, 6% reduced value of cost per year; 7-10 years old, 8% reduced value of cost per year; over 10 years old, $1000.00. MINUS reduce the final value by 25% if over 100,000 miles, unless makeModel contains the word Honda or Toyota.",
-  "ok": "a very old car, a new car and a Honda with high mileage each give the value you worked out by hand"
+  "d": "The workbook rule: 0-3 years old, 3% reduced value of cost per year; 4-6 years old, 6% reduced value of cost per year; 7-10 years old, 8% reduced value of cost per year; over 10 years old, $1000.00. MINUS reduce the final value by 25% if over 100,000 miles, unless makeModel contains the word Honda or Toyota. How to read per year in this course: the loss is taken again every year, from the value the car has left, not from the original cost. A car that cost $25,000.00 and is 2 years old loses 3% twice: $24,250.00 after the first year, $23,522.50 after the second. The age decides the percentage, and that same percentage is applied once for every year of age.",
+  "ok": "a 2 year old car that cost $25,000.00 gives $23,522.50, and a very old car, a brand new car and a Honda with high mileage each give the value you worked out by hand"
  },
  {
   "t": "In <code>main</code>, create an ArrayList of <code>Asset</code> and load it.",
