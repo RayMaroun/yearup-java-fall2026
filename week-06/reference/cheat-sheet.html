@@ -1,0 +1,359 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Week 6 Cheat Sheet | Week 6 Visual Hub</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Sora:wght@500;700&family=Inter:wght@400;500&family=JetBrains+Mono:wght@400;500&display=swap">
+<style>
+  :root{
+    --bg:#080c17; --bg2:#0c1428; --surface:rgba(255,255,255,.045); --line:rgba(255,255,255,.09);
+    --ink:#eef2fb; --muted:#8496b6; --accent:#6ea0ff; --accent2:#8b7bff; --good:#46d98a; --warn:#ff6a6a;
+    --gold:#ffc862; --disp:'Sora',system-ui,sans-serif; --body:'Inter',system-ui,sans-serif;
+    --mono:'JetBrains Mono',ui-monospace,monospace;
+  }
+  *{box-sizing:border-box}
+  body{margin:0;min-height:100vh;color:var(--ink);font-family:var(--body);
+    background:radial-gradient(1200px 700px at 70% -10%,#141d38 0%,transparent 55%),
+               radial-gradient(900px 600px at 10% 110%,#161233 0%,transparent 50%),#080c17;
+    overflow-x:hidden}
+  #amb{position:fixed;inset:0;z-index:0;pointer-events:none;opacity:.6}
+  .back{position:relative;z-index:2;display:block;max-width:1120px;margin:0 auto;padding:26px 24px 0;
+    width:100%;font-family:var(--mono);font-size:.8rem;letter-spacing:.04em;color:var(--muted);
+    text-decoration:none;transition:color .15s}
+  .back:hover{color:var(--accent)}
+  .wrap{position:relative;z-index:1;max-width:1120px;margin:0 auto;padding:22px 24px 70px}
+  .tag{font-family:var(--mono);font-size:.72rem;letter-spacing:.22em;text-transform:uppercase;color:var(--accent);margin:0 0 14px}
+  h1{font-family:var(--disp);font-weight:700;font-size:clamp(2.3rem,6vw,3.6rem);line-height:1;margin:0 0 12px;
+    letter-spacing:-.03em;background:linear-gradient(180deg,#fff,#b9c6e6);-webkit-background-clip:text;
+    background-clip:text;color:transparent}
+  .lede{color:var(--muted);max-width:64ch;font-size:1.05rem;margin:0 0 26px;line-height:1.5}
+  .lede b{color:var(--ink)}
+
+  /* ---------- stage ---------- */
+  .stage{position:relative;background:linear-gradient(180deg,rgba(255,255,255,.03),rgba(255,255,255,.01));
+    border:1px solid var(--line);border-radius:24px;padding:18px 18px 14px;
+    box-shadow:0 1px 0 rgba(255,255,255,.06) inset,0 30px 80px -30px rgba(0,0,0,.8)}
+  .topbar{display:flex;align-items:center;gap:10px;margin:0 0 14px;flex-wrap:wrap}
+  .lab{font-family:var(--mono);font-size:.7rem;letter-spacing:.12em;text-transform:uppercase;color:var(--muted);margin:0 4px 0 0}
+  .chips{display:flex;flex-wrap:wrap;gap:7px}
+  .chip{font-family:var(--body);font-weight:500;font-size:.82rem;padding:7px 14px;border-radius:999px;border:1px solid var(--line);
+    background:rgba(0,0,0,.25);color:var(--muted);cursor:pointer;transition:.15s}
+  .chip:hover{border-color:var(--accent);color:var(--accent)}
+  .chip.on{background:rgba(110,160,255,.16);border-color:rgba(110,160,255,.55);color:var(--ink)}
+  .chip:focus-visible{outline:2px solid var(--accent);outline-offset:2px}
+
+  .pic{position:relative;min-height:390px;border:1px solid var(--line);border-radius:18px;background:rgba(6,10,20,.5);padding:14px}
+  .sheet{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:12px;align-items:start}
+  .sheet.one{grid-template-columns:minmax(0,1fr)}
+  .card{border:1px solid var(--line);border-radius:14px;background:rgba(255,255,255,.025);padding:14px 16px 12px;
+    transition:border-color .2s,opacity .2s}
+  .card:hover{border-color:rgba(110,160,255,.35)}
+  .card[hidden]{display:none}
+  .card h2{font-family:var(--disp);font-weight:700;font-size:1.02rem;letter-spacing:-.01em;margin:0 0 10px;color:var(--ink);
+    display:flex;align-items:baseline;gap:10px}
+  .card h2 .wb{font-family:var(--mono);font-weight:400;font-size:.62rem;letter-spacing:.12em;text-transform:uppercase;color:var(--muted)}
+  .row{display:grid;grid-template-columns:132px minmax(0,1fr);gap:12px;padding:5px 0;border-top:1px solid rgba(255,255,255,.04);align-items:baseline}
+  .row:first-of-type{border-top:0}
+  .k{font-size:.78rem;color:var(--muted);line-height:1.35}
+  .row code{font-family:var(--mono);font-size:.8rem;color:#bcd0ff;white-space:pre-wrap;overflow-wrap:anywhere;line-height:1.45}
+  .row code .c{color:#6f7f9e}
+  .row code .w{color:var(--warn)}
+  .row code .g{color:var(--good)}
+  .see{margin:10px 0 0;padding-top:9px;border-top:1px solid var(--line);font-family:var(--mono);font-size:.7rem;color:var(--muted);
+    display:flex;flex-wrap:wrap;gap:6px 12px;align-items:baseline}
+  .see a{color:var(--accent);text-decoration:none;transition:color .15s}
+  .see a:hover{color:#fff;text-decoration:underline}
+  .hint{font-family:var(--mono);font-size:.68rem;color:var(--muted);margin:10px 4px 0;line-height:1.5}
+  .hint b{color:var(--accent);font-weight:500}
+  .tbl{width:100%;border-collapse:collapse;margin:8px 0 2px}
+  .tbl th{font-family:var(--mono);font-weight:400;font-size:.66rem;letter-spacing:.12em;text-transform:uppercase;color:var(--muted);text-align:left;padding:4px 8px 7px 0;border-bottom:1px solid var(--line)}
+  .tbl td{padding:6px 8px 6px 0;border-top:1px solid rgba(255,255,255,.04);font-size:.8rem}
+  .tbl td:first-child{font-family:var(--mono);color:#bcd0ff}
+  .tbl td.y{color:var(--good)} .tbl td.n{color:var(--warn)}
+  @media (max-width:860px){
+    .sheet{grid-template-columns:minmax(0,1fr)}
+    .row{grid-template-columns:minmax(0,1fr);gap:2px}
+  }
+  @media (prefers-reduced-motion:reduce){*{animation-duration:.01ms!important;transition-duration:.01ms!important}#amb{display:none}}
+</style>
+</head>
+<body>
+
+<a class="back" href="../index.html#cheat-sheet">&#8592; Week 6 index</a>
+
+<canvas id="amb"></canvas>
+<div class="wrap">
+  <p class="tag">Week 6 &middot; Reference</p>
+  <h1>Week 6 Cheat Sheet</h1>
+  <p class="lede">The syntax of the week, one line per idea. <b>Pick a topic to see only that card; every card links to the page that shows it moving.</b></p>
+
+  <div class="stage">
+    <div class="topbar">
+      <span class="lab">Topic</span>
+      <div class="chips" id="chips" role="group" aria-label="Filter by topic">
+        <button class="chip on" data-t="all" aria-pressed="true">All</button>
+        <button class="chip" data-t="inherit" aria-pressed="false">Inheritance</button>
+        <button class="chip" data-t="access" aria-pressed="false">Access</button>
+        <button class="chip" data-t="ctor" aria-pressed="false">Constructors</button>
+        <button class="chip" data-t="override" aria-pressed="false">Overriding</button>
+        <button class="chip" data-t="refs" aria-pressed="false">References</button>
+        <button class="chip" data-t="abstract" aria-pressed="false">Abstract</button>
+      </div>
+    </div>
+
+    <div class="pic">
+      <div class="sheet" id="sheet">
+
+        <section class="card" data-t="inherit">
+          <h2>extends and is-a <span class="wb">5a &middot; 1-1, 1-2</span></h2>
+          <div class="row"><span class="k">is-a test</span><code>A Caveman is a Human  <span class="c">// yes: use extends</span>
+A Human is a Caveman  <span class="c">// no: the arrow only goes one way</span></code></div>
+          <div class="row"><span class="k">has-a is not extends</span><code>A House has an address  <span class="c">// a field, not a parent class</span></code></div>
+          <div class="row"><span class="k">extends</span><code>public class Dog extends Animal {
+    private String breed;  <span class="c">// only what is a Dog's own</span>
+}</code></div>
+          <div class="row"><span class="k">parent and child</span><code>Animal: parent class, super class, base class
+Dog: child class, sub class, derived class</code></div>
+          <div class="row"><span class="k">why</span><code>two classes repeat the same fields and methods: pull them up into one parent, once  <span class="c">// generalization</span></code></div>
+          <div class="row"><span class="k">the child gets</span><code>everything public or protected the parent has, plus its own fields and methods</code></div>
+          <p class="see">See it:
+            <a href="../visuals/01-the-duplication-problem.html">The Duplication Problem</a>
+            <a href="../visuals/02-is-a.html">Is-A</a>
+            <a href="../games/is-a-or-has-a.html">Is-A or Has-A game</a>
+          </p>
+        </section>
+
+        <section class="card" data-t="inherit">
+          <h2>What a child inherits <span class="wb">5a &middot; 1-2</span></h2>
+          <div class="row"><span class="k">build one</span><code>Dog dog = new Dog();</code></div>
+          <div class="row"><span class="k">written in Animal</span><code>dog.setName("Potato");  <span class="c">// Dog never declares setName</span>
+System.out.println(dog.getName());  <span class="c">// Potato</span></code></div>
+          <div class="row"><span class="k">written in Dog</span><code>dog.setBreed("Doberman");
+dog.bark();</code></div>
+          <div class="row"><span class="k">private is inherited</span><code>private String name in Animal is part of every Dog, but Dog code cannot touch it: use getName()</code></div>
+          <div class="row"><span class="k">not upward</span><code><span class="w">Animal animal = new Animal();</span>
+<span class="w">animal.bark();</span>  <span class="c">// error: cannot find symbol, the parent knows nothing of its children</span></code></div>
+          <p class="see">See it:
+            <a href="../visuals/04-what-a-child-inherits.html">What a Child Inherits</a>
+            <a href="../games/who-owns-it.html">Who Owns It game</a>
+          </p>
+        </section>
+
+        <section class="card" data-t="access">
+          <h2>private, protected, public <span class="wb">5a &middot; 1-2</span></h2>
+          <div class="row"><span class="k">private</span><code>private String name;  <span class="c">// only Animal itself</span></code></div>
+          <div class="row"><span class="k">child uses the getter</span><code>System.out.println(getName() + " says: Ruff, ruff!");  <span class="c">// inside Dog</span></code></div>
+          <div class="row"><span class="k">protected</span><code>protected String favoriteFood;  <span class="c">// Animal, its children, its package</span></code></div>
+          <div class="row"><span class="k">child uses it directly</span><code>System.out.println(getName() + " eats " + favoriteFood + "!");  <span class="c">// inside Dog</span></code></div>
+          <div class="row"><span class="k">outside the family</span><code><span class="w">x.favoriteFood = "fish";</span>  <span class="c">// error: favoriteFood has protected access in Animal</span></code></div>
+          <div class="row"><span class="k">public</span><code>public String getName()  <span class="c">// everyone</span></code></div>
+          <div class="row"><span class="k">this course</span><code>fields private, methods public; protected is rare because the parent cannot control what a child does to the field</code></div>
+          <table class="tbl">
+            <thead><tr><th>Modifier</th><th>Same class</th><th>Child class</th><th>Same package</th><th>Anywhere else</th></tr></thead>
+            <tbody>
+              <tr><td>private</td><td class="y">yes</td><td class="n">no</td><td class="n">no</td><td class="n">no</td></tr>
+              <tr><td>protected</td><td class="y">yes</td><td class="y">yes</td><td class="y">yes</td><td class="n">no</td></tr>
+              <tr><td>public</td><td class="y">yes</td><td class="y">yes</td><td class="y">yes</td><td class="y">yes</td></tr>
+            </tbody>
+          </table>
+          <p class="see">See it:
+            <a href="../visuals/05-private-protected-public.html">Private, Protected, Public</a>
+            <a href="../games/who-owns-it.html">Who Owns It game</a>
+          </p>
+        </section>
+
+        <section class="card" data-t="ctor">
+          <h2>Constructors and super(...) <span class="wb">5a &middot; 1-3</span></h2>
+          <div class="row"><span class="k">child calls the parent</span><code>public Dog(String name, int age, String breed) {
+    super(name, age);  <span class="c">// first statement: runs Animal(String name, int age)</span>
+    this.breed = breed;  <span class="c">// then the child's own field</span>
+}</code></div>
+          <div class="row"><span class="k">what travels up</span><code>new Dog("Lucky", 15, "Doberman")  <span class="c">// name and age go to Animal, breed stays in Dog</span></code></div>
+          <div class="row"><span class="k">nothing written</span><code>super();  <span class="c">// Java adds this call for you when a constructor has no super(...)</span></code></div>
+          <div class="row"><span class="k">must be first</span><code><span class="w">this.breed = breed;</span>
+<span class="w">super(name);</span>  <span class="c">// error: call to super must be first statement in constructor</span></code></div>
+          <div class="row"><span class="k">parent has no empty one</span><code><span class="w">public class Dog extends Animal { }</span>  <span class="c">// error if Animal only has Animal(String name)</span>
+public Dog(String name) { super(name); }  <span class="c">// fix: pass what Animal asks for</span></code></div>
+          <div class="row"><span class="k">one per constructor</span><code>each Dog constructor picks which Animal constructor runs: super(name) or super(name, age)</code></div>
+          <p class="see">See it:
+            <a href="../visuals/06-constructor-chain.html">The Constructor Chain</a>
+            <a href="../visuals/07-super-with-arguments.html">super With Arguments</a>
+            <a href="../games/constructor-chain-tracer.html">Constructor Chain Tracer game</a>
+          </p>
+        </section>
+
+        <section class="card" data-t="ctor">
+          <h2>The order things run <span class="wb">5a &middot; 1-3</span></h2>
+          <div class="row"><span class="k">the statement</span><code>Dog dog3 = new Dog("Lucky", 15, "Doberman");</code></div>
+          <div class="row"><span class="k">the output</span><code>I am in the Animal Constructor with 2 params
+I am in the Dog Constructor with 3 params</code></div>
+          <div class="row"><span class="k">the rule</span><code>parent constructor first, child constructor second, always</code></div>
+          <div class="row"><span class="k">empty ones too</span><code>new Dog()  <span class="c">// prints the Animal Empty Constructor line, then the Dog Empty Constructor line</span></code></div>
+          <p class="see">See it:
+            <a href="../visuals/06-constructor-chain.html">The Constructor Chain</a>
+            <a href="../games/constructor-chain-tracer.html">Constructor Chain Tracer game</a>
+          </p>
+        </section>
+
+        <section class="card" data-t="override">
+          <h2>Overriding and @Override <span class="wb">5a &middot; 2-1</span></h2>
+          <div class="row"><span class="k">parent version</span><code>public class Human {
+    public void eat() { System.out.println("I am a Human and I am Hungry!"); }
+}</code></div>
+          <div class="row"><span class="k">child version</span><code>public class Caveman extends Human {
+    @Override  <span class="c">// the compiler checks Human really has eat()</span>
+    public void eat() { System.out.println("Me Hunt Lion and Eat!"); }
+}</code></div>
+          <div class="row"><span class="k">same signature</span><code>same name, same parameters: the child version replaces the inherited one</code></div>
+          <div class="row"><span class="k">not an override</span><code>public void eat(int n) { }  <span class="c">// overload: a second method, the parent eat() stays</span></code></div>
+          <div class="row"><span class="k">a typo</span><code><span class="w">@Override public void eet() { }</span>  <span class="c">// error: method does not override or implement a method from a supertype</span></code></div>
+          <div class="row"><span class="k">no annotation</span><code>public void eet() { }  <span class="c">// compiles: quietly a new method, the parent eat() still runs</span></code></div>
+          <div class="row"><span class="k">not weaker</span><code><span class="w">void eat() { }</span>  <span class="c">// error: attempting to assign weaker access privileges; was public</span></code></div>
+          <div class="row"><span class="k">child extras</span><code>public void run() { }  <span class="c">// only in Caveman: not in Human</span></code></div>
+          <p class="see">See it:
+            <a href="../visuals/08-method-overriding.html">Method Overriding</a>
+            <a href="../visuals/09-the-override-annotation.html">The @Override Annotation</a>
+            <a href="../games/override-detector.html">Override Detector game</a>
+          </p>
+        </section>
+
+        <section class="card" data-t="refs">
+          <h2>Base class references <span class="wb">5a &middot; 2-1</span></h2>
+          <div class="row"><span class="k">parent variable, child object</span><code>Human human1 = new Caveman("Rocko", 35, 99, "Cleave");  <span class="c">// a Caveman is-a Human</span></code></div>
+          <div class="row"><span class="k">object decides what runs</span><code>human1.eat();  <span class="c">// Me Hunt Lion and Eat!</span></code></div>
+          <div class="row"><span class="k">variable decides what you may call</span><code><span class="w">human1.run();</span>  <span class="c">// error: cannot find symbol, Human has no run()</span></code></div>
+          <div class="row"><span class="k">parameter</span><code>public static void feed(String label, Human human) {
+    human.eat();  <span class="c">// the real object decides</span>
+}</code></div>
+          <div class="row"><span class="k">not downward</span><code><span class="w">Caveman c = human1;</span>  <span class="c">// error: incompatible types: Human cannot be converted to Caveman</span></code></div>
+          <div class="row"><span class="k">cast</span><code>Caveman c = (Caveman) human1;  <span class="c">// compiles: you promise it is a Caveman</span></code></div>
+          <div class="row"><span class="k">wrong promise</span><code>Human firstHuman = new Human();
+ModernPerson m = (ModernPerson) firstHuman;  <span class="c">// ClassCastException at run time</span></code></div>
+          <p class="see">See it:
+            <a href="../visuals/10-base-class-references.html">Base Class References</a>
+            <a href="../games/polymorphism-predictor.html">Polymorphism Predictor game</a>
+          </p>
+        </section>
+
+        <section class="card" data-t="refs">
+          <h2>One list, instanceof, cast <span class="wb">5a &middot; 2-1</span></h2>
+          <div class="row"><span class="k">one list</span><code>ArrayList&lt;Human&gt; people = new ArrayList&lt;&gt;();
+people.add(human);
+people.add(caveman);
+people.add(modernPerson);</code></div>
+          <div class="row"><span class="k">each answers its own way</span><code>for (Human person : people) {
+    person.eat();  <span class="c">// three different lines</span>
+}</code></div>
+          <div class="row"><span class="k">instanceof</span><code>person instanceof Caveman  <span class="c">// true only if the object is a Caveman</span>
+person instanceof Human  <span class="c">// true for all three</span></code></div>
+          <div class="row"><span class="k">check, then cast</span><code>if (person instanceof Caveman) {
+    Caveman caveman1 = (Caveman) person;  <span class="c">// safe: just checked</span>
+    caveman1.run();
+}</code></div>
+          <div class="row"><span class="k">one line</span><code>((ModernPerson) person).drive();</code></div>
+          <div class="row"><span class="k">order</span><code>most specific first, Human last: every Caveman is also a Human, so Human first would always win</code></div>
+          <p class="see">See it:
+            <a href="../visuals/11-heterogeneous-collections.html">One List, Many Types</a>
+            <a href="../visuals/12-instanceof-and-downcasting.html">instanceof and Downcasting</a>
+            <a href="../games/instanceof-sleuth.html">instanceof Sleuth game</a>
+          </p>
+        </section>
+
+        <section class="card" data-t="refs">
+          <h2>getClass and Object <span class="wb">5a &middot; 2-1</span></h2>
+          <div class="row"><span class="k">real class name</span><code>person.getClass().getSimpleName()  <span class="c">// Caveman</span></code></div>
+          <div class="row"><span class="k">full name</span><code>person.getClass()  <span class="c">// class com.pluralsight.Caveman</span></code></div>
+          <div class="row"><span class="k">Object</span><code>every class extends Object, even when you write no extends</code></div>
+          <div class="row"><span class="k">so it is true</span><code>person instanceof Object  <span class="c">// true for any object</span></code></div>
+          <div class="row"><span class="k">from Object</span><code>getClass()   toString()   equals()  <span class="c">// every class has them</span></code></div>
+          <div class="row"><span class="k">toString</span><code>System.out.println(person);  <span class="c">// calls toString()</span>
+@Override
+public String toString() { ... }  <span class="c">// override it for a readable line</span></code></div>
+          <p class="see">See it:
+            <a href="../visuals/10-base-class-references.html">Base Class References</a>
+            <a href="../visuals/12-instanceof-and-downcasting.html">instanceof and Downcasting</a>
+            <a href="../games/bug-hunter-6.html">Bug Hunter 6 game</a>
+          </p>
+        </section>
+
+        <section class="card" data-t="abstract">
+          <h2>Abstract classes and methods <span class="wb">5a &middot; 2-2</span></h2>
+          <div class="row"><span class="k">abstract class</span><code>public abstract class Asset {  <span class="c">// too general to build</span>
+    private String description;
+}</code></div>
+          <div class="row"><span class="k">abstract method</span><code>public abstract BigDecimal getValue();  <span class="c">// no body, ends with a semicolon</span></code></div>
+          <div class="row"><span class="k">finished method too</span><code>public void printMessage() { System.out.println("Potato"); }  <span class="c">// children inherit it</span></code></div>
+          <div class="row"><span class="k">child must fill it</span><code>public class House extends Asset {
+    @Override
+    public BigDecimal getValue() {
+        return BigDecimal.valueOf(180).multiply(BigDecimal.valueOf(squareFeet))
+            .add(new BigDecimal("0.25").multiply(BigDecimal.valueOf(lotSize)));
+    }
+}</code></div>
+          <div class="row"><span class="k">no new on it</span><code><span class="w">Asset asset = new Asset("Land", 2023, new BigDecimal("1000.00"));</span>  <span class="c">// error: Asset is abstract; cannot be instantiated</span></code></div>
+          <div class="row"><span class="k">a child works</span><code>Asset asset = new House("5 bedroom", 2023, new BigDecimal("400000.00"), "123 El Street", 5000, 5);
+asset.getValue();  <span class="c">// 900001.25, House's version runs</span></code></div>
+          <div class="row"><span class="k">constructor</span><code>an abstract class has constructors: children reach them with super(...)</code></div>
+          <div class="row"><span class="k">left out</span><code><span class="w">public class House extends Asset { }</span>  <span class="c">// error: House is not abstract and does not override abstract method getValue() in Asset</span></code></div>
+          <p class="see">See it:
+            <a href="../visuals/13-abstract-classes.html">Abstract Classes</a>
+            <a href="../visuals/14-abstract-methods.html">Abstract Methods</a>
+            <a href="../games/abstract-or-concrete.html">Abstract or Concrete game</a>
+            <a href="common-errors.html">Common Errors</a>
+          </p>
+        </section>
+
+      </div>
+    </div>
+    <p class="hint" id="hint">Showing <b id="count">10</b> of <b id="total">10</b> cards. Java 17, package <b>com.pluralsight</b>.</p>
+  </div>
+
+  <div id="rail"></div>
+</div>
+
+<script>
+(function(){
+  "use strict";
+  var $=function(s){return document.querySelector(s);};
+  var reduce=matchMedia("(prefers-reduced-motion: reduce)").matches;
+  var cards=Array.prototype.slice.call(document.querySelectorAll("#sheet .card"));
+  var chips=Array.prototype.slice.call(document.querySelectorAll("#chips .chip"));
+
+  function show(t){
+    var n=0;
+    cards.forEach(function(c){
+      var on=(t==="all"||c.getAttribute("data-t")===t);
+      c.hidden=!on; if(on) n++;
+    });
+    chips.forEach(function(b){
+      var on=b.getAttribute("data-t")===t;
+      b.classList.toggle("on",on); b.setAttribute("aria-pressed",on?"true":"false");
+    });
+    $("#sheet").classList.toggle("one",n===1);
+    $("#count").textContent=n;
+  }
+  $("#chips").addEventListener("click",function(e){ var b=e.target.closest(".chip"); if(b) show(b.getAttribute("data-t")); });
+  $("#total").textContent=cards.length;
+
+  /* ---------- ambient canvas ---------- */
+  var cv=$("#amb"),ctx=cv.getContext&&cv.getContext("2d"),parts=[];
+  function sizeC(){if(!ctx)return;cv.width=innerWidth;cv.height=innerHeight;}
+  function initParts(){parts=[];for(var i=0;i<46;i++)parts.push({x:Math.random(),y:Math.random(),
+    r:Math.random()*1.6+.3,s:Math.random()*.02+.004,o:Math.random()*.4+.1});}
+  function drawC(){if(!ctx)return;ctx.clearRect(0,0,cv.width,cv.height);
+    parts.forEach(function(p){p.y-=p.s/60;if(p.y<-.02)p.y=1.02;
+      ctx.beginPath();ctx.arc(p.x*cv.width,p.y*cv.height,p.r,0,7);
+      ctx.fillStyle="rgba(140,170,255,"+p.o+")";ctx.fill();});
+    requestAnimationFrame(drawC);}
+  if(ctx&&!reduce){sizeC();initParts();drawC();addEventListener("resize",sizeC);}
+
+  show("all");
+})();
+</script>
+<script src="../manifest.js"></script>
+<script src="../../assets/rail.js"></script>
+<script>Rail.render(document.getElementById("rail"),{week:6,kind:"reference",current:"cheat-sheet"});</script>
+</body>
+</html>

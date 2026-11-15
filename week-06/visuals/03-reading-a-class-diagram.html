@@ -1,0 +1,225 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Reading a Class Diagram | Week 6 Visual Hub</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Sora:wght@500;700&family=Inter:wght@400;500&family=JetBrains+Mono:wght@400;500&display=swap">
+<style>
+  :root{
+    --bg:#080c17; --bg2:#0c1428; --surface:rgba(255,255,255,.045); --line:rgba(255,255,255,.09);
+    --ink:#eef2fb; --muted:#8496b6; --accent:#6ea0ff; --accent2:#8b7bff; --good:#46d98a; --warn:#ff6a6a;
+    --gold:#ffc862; --disp:'Sora',system-ui,sans-serif; --body:'Inter',system-ui,sans-serif;
+    --mono:'JetBrains Mono',ui-monospace,monospace;
+  }
+  *{box-sizing:border-box}
+  body{margin:0;min-height:100vh;color:var(--ink);font-family:var(--body);
+    background:radial-gradient(1200px 700px at 70% -10%,#141d38 0%,transparent 55%),
+               radial-gradient(900px 600px at 10% 110%,#161233 0%,transparent 50%),#080c17;
+    overflow-x:hidden}
+  #amb{position:fixed;inset:0;z-index:0;pointer-events:none;opacity:.6}
+  .back{position:relative;z-index:2;display:block;max-width:1120px;margin:0 auto;padding:26px 24px 0;
+    width:100%;font-family:var(--mono);font-size:.8rem;letter-spacing:.04em;color:var(--muted);
+    text-decoration:none;transition:color .15s}
+  .back:hover{color:var(--accent)}
+  .wrap{position:relative;z-index:1;max-width:1120px;margin:0 auto;padding:22px 24px 70px}
+  .tag{font-family:var(--mono);font-size:.72rem;letter-spacing:.22em;text-transform:uppercase;color:var(--accent);margin:0 0 14px}
+  h1{font-family:var(--disp);font-weight:700;font-size:clamp(2.3rem,6vw,3.6rem);line-height:1;margin:0 0 12px;
+    letter-spacing:-.03em;background:linear-gradient(180deg,#fff,#b9c6e6);-webkit-background-clip:text;
+    background-clip:text;color:transparent}
+  .lede{color:var(--muted);max-width:64ch;font-size:1.05rem;margin:0 0 26px;line-height:1.5}
+  .lede b{color:var(--ink)}
+
+  /* ---------- the stage IS the picture ---------- */
+  .stage{position:relative;background:linear-gradient(180deg,rgba(255,255,255,.03),rgba(255,255,255,.01));
+    border:1px solid var(--line);border-radius:24px;padding:22px;
+    box-shadow:0 1px 0 rgba(255,255,255,.06) inset,0 30px 80px -30px rgba(0,0,0,.8)}
+  .diagram{display:flex;flex-direction:column;align-items:center;padding:4px 0}
+  .uml{width:100%;max-width:440px;border:2px solid #c9d4ea;border-radius:3px;background:rgba(6,10,20,.6);font-family:var(--mono)}
+  .band{display:block;width:100%;padding:9px 12px;border:0;border-top:2px solid #c9d4ea;cursor:pointer;transition:background .15s;text-align:left}
+  .band:first-child{border-top:0}
+  .band:hover{background:rgba(255,255,255,.04)}
+  .band.sel{background:rgba(255,200,98,.1);box-shadow:0 0 0 2px var(--gold) inset}
+  .band.nameband{text-align:center;font-weight:500;font-size:1.1rem;color:var(--ink);padding:11px 12px}
+  .mrow{display:flex;flex-wrap:wrap;align-items:center;font-size:.9rem;color:#c9d4ea;padding:2px 0;white-space:pre}
+  .tok{font:inherit;color:inherit;background:transparent;border:1px solid transparent;border-radius:6px;padding:2px 5px;cursor:pointer;transition:.15s;white-space:pre}
+  .tok:hover{border-color:rgba(255,200,98,.6)}
+  .tok.sel{border-color:var(--gold);background:rgba(255,200,98,.16);color:var(--gold)}
+  .tok.sign{color:var(--accent);font-weight:500;min-width:1.7em;text-align:center}
+  .tok.type{color:var(--muted)} .tok.sel.sign,.tok.sel.type{color:var(--gold)}
+  .arrow{display:block;background:transparent;border:0;padding:0 26px;cursor:pointer;line-height:0}
+  .arrow svg{width:60px;height:78px;overflow:visible}
+  .arrow .shaft{stroke:#c9d4ea;stroke-width:2;fill:none}
+  .arrow .tri{stroke:#c9d4ea;stroke-width:2;fill:#0b1122;stroke-linejoin:miter}
+  .arrow:hover .shaft,.arrow:hover .tri,.arrow.sel .shaft,.arrow.sel .tri{stroke:var(--gold)}
+  .arrow.sel .tri{fill:rgba(255,200,98,.16)}
+  /* the one sentence */
+  .caption{display:flex;gap:14px;align-items:flex-start;margin:18px 2px 0;padding-top:16px;border-top:1px solid var(--line)}
+  .caption .t{flex:1;font-size:1.05rem;line-height:1.55;color:var(--ink);padding-left:16px;border-left:3px solid var(--accent);transition:border-color .3s}
+  .caption .t .line{display:block;margin-top:6px;font-family:var(--mono);font-size:.8rem;color:#bcd0ff;opacity:.9}
+  .caption .t .line:empty{display:none}
+  .caption.y .t{border-left-color:var(--gold)} .caption.g .t{border-left-color:var(--good)} .caption.w .t{border-left-color:var(--warn)}
+  .caption b.a{color:var(--accent)} .caption b.y{color:var(--gold)} .caption b.g{color:var(--good)} .caption b.w{color:var(--warn)}
+  .reset{font-family:var(--body);font-weight:500;font-size:.84rem;padding:8px 14px;border-radius:11px;cursor:pointer;
+    border:1px solid var(--line);background:transparent;color:var(--muted);transition:.15s;flex-shrink:0}
+  .reset:hover{border-color:var(--accent);color:var(--accent)}
+  button:focus-visible{outline:2px solid var(--accent);outline-offset:2px}
+  .take{margin-top:22px;background:linear-gradient(180deg,rgba(110,160,255,.08),rgba(139,123,255,.04));
+    border:1px solid var(--line);border-left:3px solid var(--accent);border-radius:12px;padding:16px 18px}
+  .take .tk{font-family:var(--mono);font-size:.66rem;letter-spacing:.14em;text-transform:uppercase;color:var(--accent);margin:0 0 8px}
+  .take p{margin:0;font-size:.95rem;color:var(--ink);line-height:1.55}
+  .take b{color:#fff}
+  @media (prefers-reduced-motion:reduce){*{animation-duration:.01ms!important;transition-duration:.01ms!important}#amb{display:none}}
+</style>
+</head>
+<body>
+<a class="back" href="../index.html#03-reading-a-class-diagram">&#8592; Week 6 index</a>
+<canvas id="amb"></canvas>
+<div class="wrap">
+  <p class="tag">Workbook 5a &middot; Section 1-1</p>
+  <h1>Reading a Class Diagram</h1>
+  <p class="lede"><b>Two classes, drawn the way developers sketch them. Tap any part.</b></p>
+
+  <div class="stage">
+    <div class="diagram" id="diagram">
+      <div class="uml" id="uAnimal"></div>
+      <button class="arrow" id="arrow" aria-label="inheritance arrow from Dog to Animal">
+        <svg viewBox="0 0 60 78" aria-hidden="true">
+          <path class="shaft" d="M30,24 L30,78"/>
+          <path class="tri" d="M30,2 L44,24 L16,24 Z"/>
+        </svg>
+      </button>
+      <div class="uml" id="uDog"></div>
+    </div>
+    <div class="caption" id="caption">
+      <div class="t"><span id="msg">This is a class diagram: one box per class, three bands in each box, and one arrow between them. Tap a band, a sign, a name, a type, or the arrow.</span><span class="line" id="line"></span></div>
+      <button class="reset" id="bReset">Reset</button>
+    </div>
+  </div>
+
+  <div class="take">
+    <p class="tk">The one idea</p>
+    <p><b>A class box has three bands: the name, the attributes, the methods.</b> The sign in front says who can reach a member: minus private, plus public, hash protected. The type comes after the colon. The hollow triangle always points at the parent. You will draw these same boxes yourself in diagrams.net.</p>
+  </div>
+  <div id="rail"></div>
+</div>
+<script>
+(function(){
+  "use strict";
+  var $=function(s){return document.querySelector(s);};
+  var reduce=matchMedia("(prefers-reduced-motion: reduce)").matches;
+  /* attributes: [sign, name, type]   methods: [sign, name, parameters as "name: Type" or "", return type] */
+  var CLASSES={
+    Animal:{attrs:[["-","name","String"],["-","age","int"],["#","favoriteFood","String"]],
+            methods:[["+","getName","","String"],["+","setName","name: String","void"]]},
+    Dog:{attrs:[["-","breed","String"]],
+         methods:[["+","getBreed","","String"],["+","setBreed","breed: String","void"],["+","bark","","void"],["+","eat","","void"]]}
+  };
+  var VIS={"-":"private","+":"public","#":"protected"};
+  var caption=$("#caption"),msg=$("#msg"),line=$("#line"),diagram=$("#diagram");
+  function say(html,java){ caption.className="caption y"; msg.innerHTML=html; line.textContent=java||""; }
+  function B(w){ return "<b class=\"y\">"+w+"</b>"; }
+  function aType(t){ return t==="int"?"an int, a whole number":"a "+t; }
+  function el(tag,cls,text){ var e=document.createElement(tag); e.className=cls; if(text!=null) e.textContent=text; return e; }
+  function tok(cls,text,d){ var b=el("button","tok "+cls,text); for(var k in d) b.setAttribute("data-"+k,d[k]); return b; }
+  function plain(text){ return document.createTextNode(text); }
+
+  function build(name){
+    var c=CLASSES[name], box=$("#u"+name);
+    var nb=el("div","band nameband",name); nb.setAttribute("data-band","name");
+    var ab=el("div","band"); ab.setAttribute("data-band","attrs");
+    var mb=el("div","band"); mb.setAttribute("data-band","methods");
+    c.attrs.forEach(function(a,i){
+      var r=el("div","mrow"), d={cls:name,kind:"attr",i:i};
+      d.part="sign"; r.appendChild(tok("sign",a[0],d));
+      d.part="name"; r.appendChild(tok("",a[1],d));
+      d.part="type"; r.appendChild(tok("type",": "+a[2],d));
+      ab.appendChild(r);
+    });
+    c.methods.forEach(function(m,i){
+      var r=el("div","mrow"), d={cls:name,kind:"method",i:i};
+      d.part="sign"; r.appendChild(tok("sign",m[0],d));
+      if(m[2]){
+        d.part="name"; r.appendChild(tok("",m[1]+"(",d));
+        d.part="param"; r.appendChild(tok("type",m[2],d));
+        r.appendChild(plain(")"));
+      } else { d.part="name"; r.appendChild(tok("",m[1]+"()",d)); }
+      d.part="type"; r.appendChild(tok("type",": "+m[3],d));
+      mb.appendChild(r);
+    });
+    [nb,ab,mb].forEach(function(b){ b.setAttribute("data-cls",name); b.setAttribute("tabindex","0"); b.setAttribute("role","button"); box.appendChild(b); });
+  }
+  build("Animal"); build("Dog");
+
+  function javaOf(cls,kind,i){
+    var c=CLASSES[cls];
+    if(kind==="attr"){ var a=c.attrs[i]; return VIS[a[0]]+" "+a[2]+" "+a[1]+";"; }
+    var m=c.methods[i], p="";
+    if(m[2]){ var parts=m[2].split(": "); p=parts[1]+" "+parts[0]; }
+    return VIS[m[0]]+" "+m[3]+" "+m[1]+"("+p+")";
+  }
+  function select(node){
+    Array.prototype.forEach.call(diagram.querySelectorAll(".sel"),function(e){e.classList.remove("sel");});
+    if(node) node.classList.add("sel");
+  }
+  function explainTok(t){
+    var cls=t.getAttribute("data-cls"),kind=t.getAttribute("data-kind"),i=+t.getAttribute("data-i"),part=t.getAttribute("data-part");
+    var c=CLASSES[cls], row=kind==="attr"?c.attrs[i]:c.methods[i], java=javaOf(cls,kind,i);
+    var nm=kind==="attr"?row[1]:row[1]+"()";
+    if(part==="sign"){
+      if(row[0]==="-") say("The minus sign means "+B("private")+": only code inside "+cls+" can touch "+nm+".",java);
+      else if(row[0]==="+") say("The plus sign means "+B("public")+": code in any class can call "+nm+".",java);
+      else say("The hash sign means "+B("protected")+": "+cls+" and its child classes can use "+nm+" directly.",java);
+    } else if(part==="name"&&kind==="attr"){
+      say(B(nm)+" is an attribute: one piece of data that every "+cls+" object holds.",java);
+    } else if(part==="name"){
+      say(B(nm)+" is a method: something "+(cls==="Animal"?"an":"a")+" "+cls+" can do. The parentheses tell you it is a method, not an attribute.",java);
+    } else if(part==="param"){
+      var ps=row[2].split(": ");
+      say("Inside the parentheses is what the method must be given: "+aType(ps[1])+" called "+B(ps[0])+". Name first, type after the colon.",java);
+    } else if(kind==="attr"){
+      say("After the colon comes the type: "+nm+" holds "+B(aType(row[2]))+". In Java the type is written first.",java);
+    } else if(row[3]==="void"){
+      say("After the colon is what the method gives back. "+B("void")+" means "+nm+" gives nothing back.",java);
+    } else {
+      say("After the colon is what the method gives back: "+nm+" returns "+B(aType(row[3]))+".",java);
+    }
+  }
+  function explainBand(b){
+    var cls=b.getAttribute("data-cls"),band=b.getAttribute("data-band");
+    if(band==="name") say("The top band is the "+B("class name")+". This whole box is one class, "+cls+(cls==="Dog"?", and its arrow leads to its parent.":"."),"public class "+cls+(cls==="Dog"?" extends Animal":""));
+    else if(band==="attrs") say("The middle band lists the "+B("attributes")+", the data of "+(cls==="Animal"?"an":"a")+" "+cls+". One line each: sign, name, colon, type.");
+    else say("The bottom band lists the "+B("methods")+", what "+(cls==="Animal"?"an":"a")+" "+cls+" can do. One line each: sign, name with parentheses, colon, what it gives back.");
+  }
+  function onTap(e){
+    var a=e.target.closest(".arrow"), t=e.target.closest(".tok"), b=e.target.closest(".band");
+    if(a){ select(a); say("The line with a "+B("hollow triangle")+" means inheritance. It starts at the child and points at the parent: a Dog is an Animal.","public class Dog extends Animal"); }
+    else if(t){ select(t); explainTok(t); }
+    else if(b){ select(b); explainBand(b); }
+  }
+  diagram.addEventListener("click",onTap);
+  diagram.addEventListener("keydown",function(e){
+    if((e.key==="Enter"||e.key===" ")&&e.target.classList.contains("band")){ e.preventDefault(); onTap(e); }
+  });
+  var first=msg.innerHTML;
+  $("#bReset").addEventListener("click",function(){ select(null); caption.className="caption"; msg.innerHTML=first; line.textContent=""; });
+
+  /* ambient canvas */
+  var cv=$("#amb"),ctx=cv.getContext&&cv.getContext("2d"),parts=[];
+  function sizeC(){if(!ctx)return;cv.width=innerWidth;cv.height=innerHeight;}
+  function initParts(){parts=[];for(var i=0;i<46;i++)parts.push({x:Math.random(),y:Math.random(),
+    r:Math.random()*1.6+.3,s:Math.random()*.02+.004,o:Math.random()*.4+.1});}
+  function drawC(){if(!ctx)return;ctx.clearRect(0,0,cv.width,cv.height);
+    parts.forEach(function(p){p.y-=p.s/60;if(p.y<-.02)p.y=1.02;
+      ctx.beginPath();ctx.arc(p.x*cv.width,p.y*cv.height,p.r,0,7);
+      ctx.fillStyle="rgba(140,170,255,"+p.o+")";ctx.fill();});
+    requestAnimationFrame(drawC);}
+  if(ctx&&!reduce){sizeC();initParts();drawC();addEventListener("resize",sizeC);}
+})();
+</script>
+<script src="../manifest.js"></script>
+<script src="../../assets/rail.js"></script>
+<script>Rail.render(document.getElementById("rail"),{week:6,kind:"visuals",current:"03-reading-a-class-diagram"});</script>
+</body>
+</html>

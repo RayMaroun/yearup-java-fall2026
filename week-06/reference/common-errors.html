@@ -1,0 +1,354 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Common Errors | Week 6 Visual Hub</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Sora:wght@500;700&family=Inter:wght@400;500&family=JetBrains+Mono:wght@400;500&display=swap">
+<style>
+  :root{
+    --bg:#080c17; --bg2:#0c1428; --surface:rgba(255,255,255,.045); --line:rgba(255,255,255,.09);
+    --ink:#eef2fb; --muted:#8496b6; --accent:#6ea0ff; --accent2:#8b7bff; --good:#46d98a; --warn:#ff6a6a;
+    --gold:#ffc862; --disp:'Sora',system-ui,sans-serif; --body:'Inter',system-ui,sans-serif;
+    --mono:'JetBrains Mono',ui-monospace,monospace;
+  }
+  *{box-sizing:border-box}
+  body{margin:0;min-height:100vh;color:var(--ink);font-family:var(--body);
+    background:radial-gradient(1200px 700px at 70% -10%,#141d38 0%,transparent 55%),
+               radial-gradient(900px 600px at 10% 110%,#161233 0%,transparent 50%),#080c17;
+    overflow-x:hidden}
+  #amb{position:fixed;inset:0;z-index:0;pointer-events:none;opacity:.6}
+  .back{position:relative;z-index:2;display:block;max-width:1120px;margin:0 auto;padding:26px 24px 0;
+    width:100%;font-family:var(--mono);font-size:.8rem;letter-spacing:.04em;color:var(--muted);
+    text-decoration:none;transition:color .15s}
+  .back:hover{color:var(--accent)}
+  .wrap{position:relative;z-index:1;max-width:1120px;margin:0 auto;padding:22px 24px 70px}
+  .tag{font-family:var(--mono);font-size:.72rem;letter-spacing:.22em;text-transform:uppercase;color:var(--accent);margin:0 0 14px}
+  h1{font-family:var(--disp);font-weight:700;font-size:clamp(2.3rem,6vw,3.6rem);line-height:1;margin:0 0 12px;
+    letter-spacing:-.03em;background:linear-gradient(180deg,#fff,#b9c6e6);-webkit-background-clip:text;
+    background-clip:text;color:transparent}
+  .lede{color:var(--muted);max-width:64ch;font-size:1.05rem;margin:0 0 26px;line-height:1.5}
+  .lede b{color:var(--ink)}
+
+  /* ---------- stage ---------- */
+  .stage{position:relative;background:linear-gradient(180deg,rgba(255,255,255,.03),rgba(255,255,255,.01));
+    border:1px solid var(--line);border-radius:24px;padding:18px 18px 14px;
+    box-shadow:0 1px 0 rgba(255,255,255,.06) inset,0 30px 80px -30px rgba(0,0,0,.8)}
+  .topbar{display:flex;align-items:center;gap:10px;margin:0 0 14px;flex-wrap:wrap}
+  .topbar .lab{margin:0 4px 0 0}
+  .lab{font-family:var(--mono);font-size:.7rem;letter-spacing:.12em;text-transform:uppercase;color:var(--muted);margin:0 0 10px}
+  .chips{display:flex;flex-wrap:wrap;gap:7px}
+  .chip{font-family:var(--body);font-weight:500;font-size:.84rem;padding:7px 14px;border-radius:999px;border:1px solid var(--line);
+    background:rgba(0,0,0,.25);color:var(--muted);cursor:pointer;transition:.15s;display:inline-flex;align-items:center;gap:7px}
+  .chip:hover{color:var(--accent);border-color:rgba(110,160,255,.4)}
+  .chip.on{background:rgba(110,160,255,.16);border-color:rgba(110,160,255,.55);color:var(--ink)}
+  .chip:focus-visible{outline:2px solid var(--accent);outline-offset:2px}
+  .chip .ct{font-family:var(--mono);font-size:.68rem;color:var(--muted)}
+  .chip .dot{width:7px;height:7px;border-radius:50%}
+  .count{margin-left:auto;font-family:var(--mono);font-size:.72rem;color:var(--muted)}
+  .count b{color:var(--ink);font-weight:500}
+
+  .pic{position:relative;min-height:390px;border:1px solid var(--line);border-radius:18px;background:rgba(6,10,20,.5);padding:14px}
+  .cards{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:12px;align-items:start}
+  @media (max-width:900px){.cards{grid-template-columns:minmax(0,1fr)}}
+  .card{border:1px solid var(--line);border-radius:14px;background:rgba(255,255,255,.02);padding:14px 16px 15px;
+    border-left:3px solid var(--cc);transition:opacity .2s,border-color .2s}
+  .card[hidden]{display:none}
+  .card[data-cat="compile"]{--cc:var(--warn)}
+  .card[data-cat="runtime"]{--cc:var(--gold)}
+  .card[data-cat="ide"]{--cc:var(--accent)}
+  .card[data-cat="test"]{--cc:var(--accent2)}
+  .card[data-cat="quiet"]{--cc:var(--accent2)}
+  .ch{display:flex;align-items:baseline;gap:10px;flex-wrap:wrap;margin:0 0 9px}
+  .ch h2{font-family:var(--disp);font-weight:700;font-size:1.02rem;letter-spacing:-.01em;margin:0;color:var(--ink);flex:1 1 auto;min-width:0}
+  .cat{font-family:var(--mono);font-size:.6rem;letter-spacing:.14em;text-transform:uppercase;color:var(--cc)}
+  .see{font-family:var(--mono);font-size:.7rem;color:var(--accent);text-decoration:none;border-bottom:1px dashed rgba(110,160,255,.4)}
+  .see:hover{color:#fff;border-bottom-color:#fff}
+  pre{margin:0;font-family:var(--mono);font-size:.76rem;line-height:1.55;white-space:pre-wrap;overflow-wrap:anywhere}
+  .msg{background:rgba(0,0,0,.35);border:1px solid var(--line);border-radius:10px;padding:9px 11px;color:#ffb3b3}
+  .card[data-cat="runtime"] .msg{color:#ffe0a3}
+  .card[data-cat="ide"] .msg{color:#cfdcff}
+  .card[data-cat="test"] .msg{color:#d6ceff}
+  .card[data-cat="quiet"] .msg{color:#d6ceff}
+  .msg.out{color:var(--ink)!important}
+  .mk{font-family:var(--mono);font-size:.6rem;letter-spacing:.12em;text-transform:uppercase;color:var(--muted);margin:0 0 5px}
+  .means{margin:10px 0 4px;font-size:.9rem;line-height:1.5;color:var(--muted)}
+  .fix{margin:0 0 10px;font-size:.9rem;line-height:1.5;color:var(--ink)}
+  .fix b{font-family:var(--mono);font-size:.66rem;letter-spacing:.12em;text-transform:uppercase;color:var(--good);margin-right:6px}
+  .means code,.fix code{font-family:var(--mono);font-size:.88em;color:#bcd0ff}
+  .ba{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr);gap:8px}
+  @media (max-width:560px){.ba{grid-template-columns:minmax(0,1fr)}}
+  .ba>div{border-radius:10px;padding:8px 10px;border:1px solid}
+  .ba .bad{background:rgba(255,106,106,.06);border-color:rgba(255,106,106,.25)}
+  .ba .good{background:rgba(70,217,138,.06);border-color:rgba(70,217,138,.25)}
+  .ba span{display:block;font-family:var(--mono);font-size:.58rem;letter-spacing:.14em;text-transform:uppercase;margin:0 0 4px}
+  .ba .bad span{color:var(--warn)} .ba .good span{color:var(--good)}
+  .ba pre{color:#dbe4f7;font-size:.74rem}
+  .hint{font-family:var(--mono);font-size:.68rem;color:var(--muted);margin:10px 4px 0;line-height:1.5}
+  .hint b{color:var(--accent)}
+  @media (max-width:600px){.back{padding:20px 16px 0}.wrap{padding:18px 16px 60px}.stage{padding:12px}.pic{padding:8px}.count{margin-left:0}}
+  @media (prefers-reduced-motion:reduce){*{animation-duration:.01ms!important;transition-duration:.01ms!important}#amb{display:none}}
+</style>
+</head>
+<body>
+
+<a class="back" href="../index.html#common-errors">&#8592; Week 6 index</a>
+
+<canvas id="amb"></canvas>
+<div class="wrap">
+  <p class="tag">Week 6 &middot; Reference</p>
+  <h1>Common Errors</h1>
+  <p class="lede">The messages you will meet this week, word for word, and the quiet bugs that print no message at all. <b>Read the first line of the message: it usually names the fix.</b> In IntelliJ each compile message starts with <b>java:</b>.</p>
+
+  <div class="stage">
+    <div class="topbar">
+      <span class="lab">Show</span>
+      <div class="chips" id="chips" role="group" aria-label="Filter errors by kind">
+        <button class="chip on" data-f="all" aria-pressed="true">All <span class="ct" data-c="all"></span></button>
+        <button class="chip" data-f="compile" aria-pressed="false"><span class="dot" style="background:var(--warn)"></span>Compile <span class="ct" data-c="compile"></span></button>
+        <button class="chip" data-f="runtime" aria-pressed="false"><span class="dot" style="background:var(--gold)"></span>Runtime <span class="ct" data-c="runtime"></span></button>
+        <button class="chip" data-f="quiet" aria-pressed="false"><span class="dot" style="background:var(--accent2)"></span>Quiet bugs <span class="ct" data-c="quiet"></span></button>
+      </div>
+      <span class="count" id="count"></span>
+    </div>
+
+    <div class="pic">
+      <div class="cards" id="cards">
+
+        <article class="card" data-cat="compile">
+          <div class="ch"><span class="cat">Compile</span><h2>The parent has no constructor without parameters</h2><a class="see" href="../visuals/06-constructor-chain.html">See it</a></div>
+          <pre class="msg">java: constructor Animal in class Animal cannot be applied to given types;
+  required: String
+  found:    no arguments
+  reason: actual and formal argument lists differ in length</pre>
+          <p class="means">Every child constructor starts by calling a parent constructor. With no <code>super(...)</code> written, Java calls <code>super()</code>, and <code>Animal</code> only has <code>Animal(String name)</code>. The error points at the child class, or at the child constructor if it has none of its own.</p>
+          <p class="fix"><b>Fix</b>Call the parent constructor that exists, as the first statement, and pass what it asks for.</p>
+          <div class="ba"><div class="bad"><span>Before</span><pre>public class Dog extends Animal {
+    private String breed;
+}</pre></div><div class="good"><span>After</span><pre>public class Dog extends Animal {
+    private String breed;
+
+    public Dog(String name, String breed) {
+        super(name);
+        this.breed = breed;
+    }
+}</pre></div></div>
+        </article>
+
+        <article class="card" data-cat="compile">
+          <div class="ch"><span class="cat">Compile</span><h2>super(...) is not the first statement</h2><a class="see" href="../visuals/07-super-with-arguments.html">See it</a></div>
+          <pre class="msg">java: call to super must be first statement in constructor</pre>
+          <p class="means">The parent has to be built before the child can add anything, so <code>super(...)</code> must come before every other line of the constructor, even a plain assignment.</p>
+          <p class="fix"><b>Fix</b>Move the <code>super(...)</code> line to the top.</p>
+          <div class="ba"><div class="bad"><span>Before</span><pre>public Dog(String name, String breed) {
+    this.breed = breed;
+    super(name);
+}</pre></div><div class="good"><span>After</span><pre>public Dog(String name, String breed) {
+    super(name);
+    this.breed = breed;
+}</pre></div></div>
+        </article>
+
+        <article class="card" data-cat="compile">
+          <div class="ch"><span class="cat">Compile</span><h2>A child uses the parent's private field</h2><a class="see" href="../visuals/05-private-protected-public.html">See it</a></div>
+          <pre class="msg">java: name has private access in Animal</pre>
+          <p class="means">A child inherits a <code>private</code> field, but only <code>Animal</code> itself can name it. The child code has to go through the inherited getter or setter.</p>
+          <p class="fix"><b>Fix</b>Use <code>getName()</code> and <code>setName(...)</code>. Make the field <code>protected</code> only if the parent really wants its children to use it.</p>
+          <div class="ba"><div class="bad"><span>Before</span><pre>public void bark() {
+    System.out.println(name + " says: Ruff, ruff!");
+}</pre></div><div class="good"><span>After</span><pre>public void bark() {
+    System.out.println(getName() + " says: Ruff, ruff!");
+}</pre></div></div>
+        </article>
+
+        <article class="card" data-cat="compile">
+          <div class="ch"><span class="cat">Compile</span><h2>Protected from a class outside the family</h2><a class="see" href="../visuals/05-private-protected-public.html">See it</a></div>
+          <pre class="msg">java: favoriteFood has protected access in Animal</pre>
+          <p class="means"><code>protected</code> opens a member to child classes and to classes in the same package. A class in another package that is not a child is outside.</p>
+          <p class="fix"><b>Fix</b>Go through a public getter or setter, or make the class a child of <code>Animal</code>.</p>
+          <div class="ba"><div class="bad"><span>Before</span><pre>x.favoriteFood = "fish";  // class in another package</pre></div><div class="good"><span>After</span><pre>x.setFavoriteFood("fish");  // a public setter in Animal</pre></div></div>
+        </article>
+
+        <article class="card" data-cat="compile">
+          <div class="ch"><span class="cat">Compile</span><h2>@Override with no matching parent method</h2><a class="see" href="../visuals/09-the-override-annotation.html">See it</a></div>
+          <pre class="msg">java: method does not override or implement a method from a supertype</pre>
+          <p class="means"><code>@Override</code> asks the compiler to check the parent really has this method with this signature. The name or the parameters differ, so it refuses. Without the annotation this would compile and quietly become a new method.</p>
+          <p class="fix"><b>Fix</b>Match the parent's name and parameters exactly, or remove <code>@Override</code> if you meant a brand new method.</p>
+          <div class="ba"><div class="bad"><span>Before</span><pre>@Override
+public void eet() { ... }</pre></div><div class="good"><span>After</span><pre>@Override
+public void eat() { ... }</pre></div></div>
+        </article>
+
+        <article class="card" data-cat="compile">
+          <div class="ch"><span class="cat">Compile</span><h2>An override with weaker access</h2><a class="see" href="../visuals/08-method-overriding.html">See it</a></div>
+          <pre class="msg">java: eat() in Caveman cannot override eat() in Human
+  attempting to assign weaker access privileges; was public</pre>
+          <p class="means">A child may not hide a method more than the parent did. <code>Human.eat()</code> is <code>public</code>, so the override cannot be package-private.</p>
+          <p class="fix"><b>Fix</b>Write <code>public</code> in front of the override.</p>
+          <div class="ba"><div class="bad"><span>Before</span><pre>@Override
+void eat() { ... }</pre></div><div class="good"><span>After</span><pre>@Override
+public void eat() { ... }</pre></div></div>
+        </article>
+
+        <article class="card" data-cat="compile">
+          <div class="ch"><span class="cat">Compile</span><h2>A child method called through a parent variable</h2><a class="see" href="../visuals/10-base-class-references.html">See it</a></div>
+          <pre class="msg">java: cannot find symbol
+  symbol:   method run()
+  location: variable h of type Human</pre>
+          <p class="means">The variable's type decides what you may call, not the object inside. <code>Human</code> has no <code>run()</code>, even though this object is a <code>Caveman</code>.</p>
+          <p class="fix"><b>Fix</b>Check the type with <code>instanceof</code>, cast to <code>Caveman</code>, then call <code>run()</code>.</p>
+          <div class="ba"><div class="bad"><span>Before</span><pre>Human h = new Caveman(...);
+h.run();</pre></div><div class="good"><span>After</span><pre>Human h = new Caveman(...);
+if (h instanceof Caveman) {
+    ((Caveman) h).run();
+}</pre></div></div>
+        </article>
+
+        <article class="card" data-cat="compile">
+          <div class="ch"><span class="cat">Compile</span><h2>A parent object in a child variable</h2><a class="see" href="../visuals/10-base-class-references.html">See it</a></div>
+          <pre class="msg">java: incompatible types: Human cannot be converted to Caveman</pre>
+          <p class="means">The sentence "a Human is a Caveman" is not true, so Java will not copy it across without being told. The arrow of inheritance only goes from child to parent.</p>
+          <p class="fix"><b>Fix</b>If the object really is a <code>Caveman</code>, cast it, ideally after an <code>instanceof</code> check.</p>
+          <div class="ba"><div class="bad"><span>Before</span><pre>Caveman c = h;</pre></div><div class="good"><span>After</span><pre>if (h instanceof Caveman) {
+    Caveman c = (Caveman) h;
+}</pre></div></div>
+        </article>
+
+        <article class="card" data-cat="compile">
+          <div class="ch"><span class="cat">Compile</span><h2>A cast or instanceof between classes with no family link</h2><a class="see" href="../visuals/12-instanceof-and-downcasting.html">See it</a></div>
+          <pre class="msg">java: incompatible types: Caveman cannot be converted to ModernPerson</pre>
+          <p class="means"><code>Caveman</code> and <code>ModernPerson</code> are siblings: both extend <code>Human</code>, neither extends the other. The same error appears for <code>s instanceof Human</code> when <code>s</code> is a <code>String</code> (String cannot be converted to Human).</p>
+          <p class="fix"><b>Fix</b>Cast only along the line of parents and children. Test or cast through the parent variable, not a sibling.</p>
+          <div class="ba"><div class="bad"><span>Before</span><pre>Caveman c = new Caveman(...);
+ModernPerson z = (ModernPerson) c;</pre></div><div class="good"><span>After</span><pre>Human h = new Caveman(...);
+if (h instanceof ModernPerson) { ... }</pre></div></div>
+        </article>
+
+        <article class="card" data-cat="compile">
+          <div class="ch"><span class="cat">Compile</span><h2>An overload called through a parent variable</h2><a class="see" href="../visuals/08-method-overriding.html">See it</a></div>
+          <pre class="msg">java: method eat in class Human cannot be applied to given types;
+  required: no arguments
+  found:    int
+  reason: actual and formal argument lists differ in length</pre>
+          <p class="means"><code>eat(int n)</code> in <code>Caveman</code> is a second method, not an override, so <code>Human</code> never learned about it. Through a <code>Human</code> variable only <code>eat()</code> exists.</p>
+          <p class="fix"><b>Fix</b>Override with the same parameters, or cast to <code>Caveman</code> to reach the new method.</p>
+          <div class="ba"><div class="bad"><span>Before</span><pre>Human h = new Caveman(...);
+h.eat(5);</pre></div><div class="good"><span>After</span><pre>Caveman c = new Caveman(...);
+c.eat(5);</pre></div></div>
+        </article>
+
+        <article class="card" data-cat="compile">
+          <div class="ch"><span class="cat">Compile</span><h2>new on an abstract class</h2><a class="see" href="../visuals/13-abstract-classes.html">See it</a></div>
+          <pre class="msg">java: Asset is abstract; cannot be instantiated</pre>
+          <p class="means">An abstract class is an idea too general to build. It exists to be extended, never to be created with <code>new</code>.</p>
+          <p class="fix"><b>Fix</b>Create a concrete child, such as <code>House</code>. The variable can still be typed <code>Asset</code>.</p>
+          <div class="ba"><div class="bad"><span>Before</span><pre>Asset asset = new Asset("Land", 2023, new BigDecimal("1000.00"));</pre></div><div class="good"><span>After</span><pre>Asset asset = new House("5 bedroom", 2023, new BigDecimal("400000.00"), "123 El Street", 5000, 5);</pre></div></div>
+        </article>
+
+        <article class="card" data-cat="compile">
+          <div class="ch"><span class="cat">Compile</span><h2>A child leaves the abstract method empty</h2><a class="see" href="../visuals/14-abstract-methods.html">See it</a></div>
+          <pre class="msg">java: House is not abstract and does not override abstract method getValue() in Asset</pre>
+          <p class="means"><code>getValue()</code> is a blank the parent left on purpose. A child that is not abstract itself must fill it. The same message appears for a method marked <code>abstract</code> inside a class that is not.</p>
+          <p class="fix"><b>Fix</b>Override the method in the child, or mark the child <code>abstract</code> too if it is still too general.</p>
+          <div class="ba"><div class="bad"><span>Before</span><pre>public class House extends Asset {
+    // no getValue()
+}</pre></div><div class="good"><span>After</span><pre>public class House extends Asset {
+    @Override
+    public BigDecimal getValue() { ... }
+}</pre></div></div>
+        </article>
+
+        <article class="card" data-cat="compile">
+          <div class="ch"><span class="cat">Compile</span><h2>An abstract method with a body</h2><a class="see" href="../visuals/14-abstract-methods.html">See it</a></div>
+          <pre class="msg">java: abstract methods cannot have a body</pre>
+          <p class="means">An abstract method is only a signature. If you write curly braces, it is no longer abstract.</p>
+          <p class="fix"><b>Fix</b>End the line with a semicolon, or drop <code>abstract</code> and keep the body.</p>
+          <div class="ba"><div class="bad"><span>Before</span><pre>public abstract BigDecimal getValue() { return BigDecimal.ZERO; }</pre></div><div class="good"><span>After</span><pre>public abstract BigDecimal getValue();</pre></div></div>
+        </article>
+
+        <article class="card" data-cat="runtime">
+          <div class="ch"><span class="cat">Runtime</span><h2>ClassCastException</h2><a class="see" href="../visuals/12-instanceof-and-downcasting.html">See it</a></div>
+          <pre class="msg">Exception in thread "main" java.lang.ClassCastException: class com.pluralsight.Human cannot be cast to class com.pluralsight.Caveman (com.pluralsight.Human and com.pluralsight.Caveman are in unnamed module of loader 'app')
+	at com.pluralsight.Main.main(Main.java:5)</pre>
+          <p class="means">The cast compiled because <code>Caveman</code> is a child of <code>Human</code>, but at run time the object is a plain <code>Human</code>. A cast promises; it does not change the object. The two class names in the first line say which object and which cast.</p>
+          <p class="fix"><b>Fix</b>Ask first with <code>instanceof</code>, then cast.</p>
+          <div class="ba"><div class="bad"><span>Before</span><pre>Human h = new Human();
+Caveman c = (Caveman) h;</pre></div><div class="good"><span>After</span><pre>Human h = new Human();
+if (h instanceof Caveman) {
+    Caveman c = (Caveman) h;
+}</pre></div></div>
+        </article>
+
+        <article class="card" data-cat="quiet">
+          <div class="ch"><span class="cat">Quiet bug</span><h2>A misspelled override with no @Override</h2><a class="see" href="../visuals/09-the-override-annotation.html">See it</a></div>
+          <pre class="msgout">(no message) the parent's version runs:
+I am a Human and I am Hungry!</pre>
+          <p class="means">Without <code>@Override</code>, <code>eet()</code> is just a new method next to the inherited <code>eat()</code>. Nothing is wrong as far as the compiler knows, so a <code>Caveman</code> still eats like a <code>Human</code>.</p>
+          <p class="fix"><b>Fix</b>Write <code>@Override</code> on every override. The typo then becomes a compile error you can see.</p>
+          <div class="ba"><div class="bad"><span>Before</span><pre>public void eet() { ... }</pre></div><div class="good"><span>After</span><pre>@Override
+public void eat() { ... }</pre></div></div>
+        </article>
+
+        <article class="card" data-cat="quiet">
+          <div class="ch"><span class="cat">Quiet bug</span><h2>Human tested first in an instanceof chain</h2><a class="see" href="../visuals/12-instanceof-and-downcasting.html">See it</a></div>
+          <pre class="msgout">(no message) every object prints:
+This is a Human</pre>
+          <p class="means">A <code>Caveman</code> is also a <code>Human</code>, so <code>instanceof Human</code> is true for all of them and the chain stops at the first branch.</p>
+          <p class="fix"><b>Fix</b>Ask about the most specific types first and <code>Human</code> last.</p>
+          <div class="ba"><div class="bad"><span>Before</span><pre>if (person instanceof Human) { ... }
+else if (person instanceof Caveman) { ... }</pre></div><div class="good"><span>After</span><pre>if (person instanceof Caveman) { ... }
+else if (person instanceof ModernPerson) { ... }
+else if (person instanceof Human) { ... }</pre></div></div>
+        </article>
+
+      </div>
+    </div>
+    <p class="hint">Messages were produced by compiling and running small samples on Java 17, package <b>com.pluralsight</b>. The line numbers in your own message will differ.</p>
+  </div>
+
+  <div id="rail"></div>
+</div>
+
+<script>
+(function(){
+  "use strict";
+  var $=function(s){return document.querySelector(s);};
+  var reduce=matchMedia("(prefers-reduced-motion: reduce)").matches;
+  var cards=Array.prototype.slice.call(document.querySelectorAll("#cards .card"));
+  var chips=Array.prototype.slice.call(document.querySelectorAll("#chips .chip"));
+  var NAMES={all:"errors",compile:"compile errors",runtime:"runtime problems",quiet:"quiet bugs"};
+
+  /* counts per chip */
+  var counts={all:cards.length};
+  cards.forEach(function(c){var k=c.getAttribute("data-cat");counts[k]=(counts[k]||0)+1;});
+  Array.prototype.forEach.call(document.querySelectorAll(".ct"),function(s){s.textContent=counts[s.getAttribute("data-c")]||0;});
+
+  function show(f){
+    var n=0;
+    cards.forEach(function(c){var on=f==="all"||c.getAttribute("data-cat")===f;c.hidden=!on;if(on)n++;});
+    chips.forEach(function(b){var on=b.getAttribute("data-f")===f;b.classList.toggle("on",on);b.setAttribute("aria-pressed",on?"true":"false");});
+    $("#count").innerHTML="<b>"+n+"</b> "+NAMES[f];
+  }
+  $("#chips").addEventListener("click",function(e){var b=e.target.closest(".chip");if(b)show(b.getAttribute("data-f"));});
+
+  /* ---------- ambient canvas ---------- */
+  var cv=$("#amb"),ctx=cv.getContext&&cv.getContext("2d"),parts=[];
+  function sizeC(){if(!ctx)return;cv.width=innerWidth;cv.height=innerHeight;}
+  function initParts(){parts=[];for(var i=0;i<46;i++)parts.push({x:Math.random(),y:Math.random(),
+    r:Math.random()*1.6+.3,s:Math.random()*.02+.004,o:Math.random()*.4+.1});}
+  function drawC(){if(!ctx)return;ctx.clearRect(0,0,cv.width,cv.height);
+    parts.forEach(function(p){p.y-=p.s/60;if(p.y<-.02)p.y=1.02;
+      ctx.beginPath();ctx.arc(p.x*cv.width,p.y*cv.height,p.r,0,7);
+      ctx.fillStyle="rgba(140,170,255,"+p.o+")";ctx.fill();});
+    requestAnimationFrame(drawC);}
+  if(ctx&&!reduce){sizeC();initParts();drawC();addEventListener("resize",sizeC);}
+
+  show("all");
+})();
+</script>
+<script src="../manifest.js"></script>
+<script src="../../assets/rail.js"></script>
+<script>Rail.render(document.getElementById("rail"),{week:6,kind:"reference",current:"common-errors"});</script>
+</body>
+</html>

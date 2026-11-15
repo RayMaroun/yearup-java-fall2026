@@ -1,0 +1,238 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>The Constructor Chain | Week 6 Visual Hub</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Sora:wght@500;700&family=Inter:wght@400;500&family=JetBrains+Mono:wght@400;500&display=swap">
+<style>
+  :root{
+    --bg:#080c17; --bg2:#0c1428; --surface:rgba(255,255,255,.045); --line:rgba(255,255,255,.09);
+    --ink:#eef2fb; --muted:#8496b6; --accent:#6ea0ff; --accent2:#8b7bff; --good:#46d98a; --warn:#ff6a6a;
+    --gold:#ffc862; --disp:'Sora',system-ui,sans-serif; --body:'Inter',system-ui,sans-serif;
+    --mono:'JetBrains Mono',ui-monospace,monospace;
+  }
+  *{box-sizing:border-box}
+  body{margin:0;min-height:100vh;color:var(--ink);font-family:var(--body);
+    background:radial-gradient(1200px 700px at 70% -10%,#141d38 0%,transparent 55%),
+               radial-gradient(900px 600px at 10% 110%,#161233 0%,transparent 50%),#080c17;
+    overflow-x:hidden}
+  #amb{position:fixed;inset:0;z-index:0;pointer-events:none;opacity:.6}
+  .back{position:relative;z-index:2;display:block;max-width:1120px;margin:0 auto;padding:26px 24px 0;
+    width:100%;font-family:var(--mono);font-size:.8rem;letter-spacing:.04em;color:var(--muted);
+    text-decoration:none;transition:color .15s}
+  .back:hover{color:var(--accent)}
+  .wrap{position:relative;z-index:1;max-width:1120px;margin:0 auto;padding:22px 24px 70px}
+  .tag{font-family:var(--mono);font-size:.72rem;letter-spacing:.22em;text-transform:uppercase;color:var(--accent);margin:0 0 14px}
+  h1{font-family:var(--disp);font-weight:700;font-size:clamp(2.3rem,6vw,3.6rem);line-height:1;margin:0 0 12px;
+    letter-spacing:-.03em;background:linear-gradient(180deg,#fff,#b9c6e6);-webkit-background-clip:text;
+    background-clip:text;color:transparent}
+  .lede{color:var(--muted);max-width:64ch;font-size:1.05rem;margin:0 0 26px;line-height:1.5}
+  .lede b{color:var(--ink)}
+  code{font-family:var(--mono);font-size:.92em;color:#bcd0ff}
+
+  /* ---------- the stage IS the picture ---------- */
+  .stage{position:relative;background:linear-gradient(180deg,rgba(255,255,255,.03),rgba(255,255,255,.01));
+    border:1px solid var(--line);border-radius:24px;padding:22px;
+    box-shadow:0 1px 0 rgba(255,255,255,.06) inset,0 30px 80px -30px rgba(0,0,0,.8)}
+  .board{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1.25fr);gap:28px;align-items:center}
+  @media (max-width:820px){.board{grid-template-columns:1fr}}
+
+  /* the statement and what it prints */
+  .side{display:flex;flex-direction:column;gap:16px}
+  .go{font-family:var(--mono);font-weight:500;font-size:1.02rem;padding:16px 14px;border-radius:14px;cursor:pointer;
+    border:1px solid rgba(110,160,255,.55);background:rgba(110,160,255,.14);color:#dbe6ff;transition:.15s}
+  .go:hover{background:rgba(110,160,255,.26);border-color:var(--accent)}
+  .go b{font-weight:500;color:var(--gold)}
+  .go small{display:block;margin-top:6px;font-family:var(--body);font-size:.78rem;color:var(--muted)}
+  .printed{font-family:var(--mono);background:#05070e;border:1px solid var(--line);border-radius:14px;padding:12px 14px 14px}
+  .printed small{display:block;font-size:.58rem;letter-spacing:.14em;text-transform:uppercase;color:rgba(132,150,182,.75);margin-bottom:8px}
+  .pl{display:flex;gap:10px;align-items:center;min-height:38px;padding:7px 10px;border-radius:9px;border:1px dashed rgba(132,150,182,.25);
+    margin-top:6px;font-size:.78rem;color:#9fe3b6;transition:border-color .3s,background .3s}
+  .pl i{font-style:normal;flex:0 0 22px;height:22px;border-radius:50%;display:flex;align-items:center;justify-content:center;
+    font-size:.68rem;color:var(--muted);border:1px solid var(--line)}
+  .pl span{opacity:0;transition:opacity .35s}
+  .pl.in{border:1px solid rgba(70,217,138,.5);background:rgba(70,217,138,.07)}
+  .pl.in span{opacity:1} .pl.in i{color:var(--good);border-color:rgba(70,217,138,.6)}
+  .pl.fresh span{animation:pop .45s}
+
+  /* the two constructors, parent on top */
+  .chain{display:flex;flex-direction:column}
+  .card{position:relative;border-radius:16px;padding:14px 16px 12px;border:2px dashed rgba(110,160,255,.5);background:rgba(110,160,255,.05);
+    transition:box-shadow .3s,border-color .3s,opacity .3s}
+  .card.kid{border-color:rgba(139,123,255,.6);background:rgba(139,123,255,.05)}
+  .hd{font-family:var(--mono);font-size:.62rem;letter-spacing:.16em;text-transform:uppercase;color:var(--muted);margin:0 0 4px}
+  .who{font-family:var(--mono);font-weight:500;font-size:1.15rem;margin:0 0 10px;color:#bcd0ff}
+  .kid .who{color:#cfc7ff}
+  .card.active{border-style:solid;border-color:var(--gold);box-shadow:0 0 0 3px rgba(255,200,98,.14),0 0 30px -8px rgba(255,200,98,.7)}
+  .card.wait{opacity:.62}
+  .here{position:absolute;top:14px;right:14px;font-family:var(--mono);font-size:.66rem;padding:4px 10px;border-radius:999px;
+    border:1px solid var(--line);color:var(--muted);opacity:0;transition:opacity .3s}
+  .here.show{opacity:1}
+  .here.run{color:var(--gold);border-color:rgba(255,200,98,.6);background:rgba(255,200,98,.1)}
+  .here.fin{color:var(--good);border-color:rgba(70,217,138,.6);background:rgba(70,217,138,.1)}
+  .row{display:flex;align-items:center;gap:10px;flex-wrap:wrap;font-family:var(--mono);font-size:.8rem;color:#c9d4ea;
+    padding:8px 10px;border-radius:9px;margin-bottom:5px;border:1px solid var(--line);background:rgba(0,0,0,.22);transition:background .3s,border-color .3s}
+  .row .k{color:#ffcb6b} .row .s{color:#c3e88d}
+  .row .why{font-family:var(--body);font-size:.72rem;color:var(--muted);margin-left:auto}
+  .row.cur{background:rgba(255,200,98,.13);border-color:rgba(255,200,98,.65)}
+  .row.ran{border-color:rgba(70,217,138,.45)}
+  .link{display:flex;align-items:center;justify-content:center;gap:12px;height:56px;font-family:var(--mono);font-size:.74rem;color:var(--muted);transition:color .3s}
+  .link path{stroke:rgba(132,150,182,.6);fill:none;transition:stroke .3s,opacity .3s}
+  .link .dn{opacity:.25}
+  .link.up{color:var(--gold)} .link.up .upa{stroke:var(--gold)}
+  .link.down{color:var(--good)} .link.down .dn{stroke:var(--good);opacity:1} .link.down .upa{opacity:.25}
+
+  /* the one sentence */
+  .caption{display:flex;gap:14px;align-items:flex-start;margin:18px 2px 0;padding-top:16px;border-top:1px solid var(--line)}
+  .caption .t{flex:1;font-size:1.05rem;line-height:1.55;color:var(--ink);padding-left:16px;border-left:3px solid var(--accent);transition:border-color .3s}
+  .caption .t .line{display:block;margin-top:6px;font-family:var(--mono);font-size:.8rem;color:#bcd0ff;opacity:.9}
+  .caption.y .t{border-left-color:var(--gold)} .caption.g .t{border-left-color:var(--good)}
+  .caption b.a{color:var(--accent)} .caption b.y{color:var(--gold)} .caption b.g{color:var(--good)}
+  .reset{font-family:var(--body);font-weight:500;font-size:.84rem;padding:8px 14px;border-radius:11px;cursor:pointer;
+    border:1px solid var(--line);background:transparent;color:var(--muted);transition:.15s;flex-shrink:0}
+  .reset:hover{border-color:var(--accent);color:var(--accent)}
+  button:focus-visible,input:focus-visible{outline:2px solid var(--accent);outline-offset:2px}
+
+  @keyframes pop{from{transform:scale(.6);opacity:0}to{transform:scale(1);opacity:1}}
+  .take{margin-top:22px;background:linear-gradient(180deg,rgba(110,160,255,.08),rgba(139,123,255,.04));
+    border:1px solid var(--line);border-left:3px solid var(--accent);border-radius:12px;padding:16px 18px}
+  .take .tk{font-family:var(--mono);font-size:.66rem;letter-spacing:.14em;text-transform:uppercase;color:var(--accent);margin:0 0 8px}
+  .take p{margin:0;font-size:.95rem;color:var(--ink);line-height:1.55}
+  .take b{color:#fff}
+  @media (prefers-reduced-motion:reduce){*{animation-duration:.01ms!important;transition-duration:.01ms!important}#amb{display:none}}
+</style>
+</head>
+<body>
+<a class="back" href="../index.html#06-constructor-chain">&#8592; Week 6 index</a>
+<canvas id="amb"></canvas>
+<div class="wrap">
+  <p class="tag">Workbook 5a &middot; Section 1-3</p>
+  <h1>The Constructor Chain</h1>
+  <p class="lede"><b>Build one dog, one line per press, and see which constructor prints first.</b></p>
+
+  <div class="stage">
+    <div class="board">
+      <div class="side">
+        <button class="go" id="bGo"><span id="goTxt">Dog dog = <b>new</b> Dog();</span><small id="goSub">press to start building</small></button>
+        <div class="printed">
+          <small>printed, in this order</small>
+          <div class="pl" id="p1"><i>1</i><span></span></div>
+          <div class="pl" id="p2"><i>2</i><span></span></div>
+        </div>
+      </div>
+
+      <div class="chain">
+        <div class="card" id="cA">
+          <p class="hd">constructor &middot; in the parent</p>
+          <p class="who">Animal()</p>
+          <span class="here" id="hA"></span>
+          <div class="row" id="rA"><span class="k">println</span><span class="s">"I am in the Animal Empty Constructor"</span></div>
+        </div>
+        <div class="link" id="link">
+          <svg width="44" height="52" viewBox="0 0 44 52" aria-hidden="true">
+            <path class="upa" d="M12 50V6M5 14L12 5L19 14" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+            <path class="dn" d="M32 2V46M25 38L32 47L39 38" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+          </svg>
+          <span id="linkTxt">Dog extends Animal</span>
+        </div>
+        <div class="card kid" id="cD">
+          <p class="hd">constructor &middot; in the child</p>
+          <p class="who">Dog()</p>
+          <span class="here" id="hD"></span>
+          <div class="row" id="rS"><span class="k">super();</span><span class="why">first line; Java adds it if you leave it out</span></div>
+          <div class="row" id="rD"><span class="k">println</span><span class="s">"I am in the Dog Empty Constructor"</span></div>
+        </div>
+      </div>
+    </div>
+    <div class="caption" id="caption">
+      <div class="t" id="status">Each constructor prints one line. <b class="a">Nothing has run yet</b>: which line do you expect first?</div>
+      <button class="reset" id="bReset">Reset</button>
+    </div>
+  </div>
+
+  <div class="take">
+    <p class="tk">The one idea</p>
+    <p><b>Parent first, child after.</b> <code>new Dog()</code> enters Dog's constructor, but its first line is <code>super()</code>,
+    so Animal's constructor body runs to the end before Dog's own lines do. A dog is an animal first: that part is built first.</p>
+  </div>
+  <div id="rail"></div>
+</div>
+<script>
+(function(){
+  "use strict";
+  var $=function(s){return document.querySelector(s);};
+  var reduce=matchMedia("(prefers-reduced-motion: reduce)").matches;
+  var START='Each constructor prints one line. <b class="a">Nothing has run yet</b>: which line do you expect first?';
+  var LINE_A="I am in the Animal Empty Constructor", LINE_D="I am in the Dog Empty Constructor";
+  var step=0;
+  var status=$("#status"),caption=$("#caption"),cA=$("#cA"),cD=$("#cD"),hA=$("#hA"),hD=$("#hD"),
+      rA=$("#rA"),rS=$("#rS"),rD=$("#rD"),link=$("#link"),linkTxt=$("#linkTxt"),p1=$("#p1"),p2=$("#p2"),
+      goTxt=$("#goTxt"),goSub=$("#goSub");
+
+  function say(html,tone,line){
+    caption.className="caption"+(tone?" "+tone:"");
+    status.innerHTML=html+(line?'<span class="line">'+line+'</span>':"");
+  }
+  function badge(el,text,kind){ el.textContent=text; el.className="here"+(text?" show "+kind:""); }
+  function print(el,text){ el.querySelector("span").textContent=text; el.classList.add("in","fresh"); }
+  function wipe(){
+    [cA,cD].forEach(function(c){ c.classList.remove("active","wait"); });
+    [rA,rS,rD].forEach(function(r){ r.classList.remove("cur","ran"); });
+    [p1,p2].forEach(function(p){ p.classList.remove("in","fresh"); p.querySelector("span").textContent=""; });
+    badge(hA,""); badge(hD,""); link.className="link"; linkTxt.textContent="Dog extends Animal";
+  }
+  function reset(){
+    step=0; wipe();
+    goTxt.innerHTML="Dog dog = <b>new</b> Dog();"; goSub.textContent="press to start building";
+    say(START);
+  }
+  /* one press = one line of the chain: Dog() enters, super() goes up, Animal body, back down, Dog body */
+  function press(){
+    if(step===3){ reset(); }
+    step++;
+    if(step===1){
+      cD.classList.add("active"); rS.classList.add("cur"); badge(hD,"running","run");
+      goSub.textContent="press to run the next line";
+      say('<b class="y">new Dog()</b> enters Dog\'s constructor. Its first line is super(), so Java goes up before Dog prints anything.',
+        "y","super();");
+    } else if(step===2){
+      cD.classList.remove("active"); cD.classList.add("wait"); badge(hD,"waiting","");
+      rS.classList.remove("cur"); rS.classList.add("ran");
+      link.className="link up"; linkTxt.textContent="super() goes up";
+      cA.classList.add("active"); rA.classList.add("cur"); badge(hA,"running","run");
+      print(p1,LINE_A);
+      say('<b class="y">Animal\'s constructor body runs first</b> and prints line 1. Dog is still waiting on its super() line.',
+        "y",'System.out.println("'+LINE_A+'");');
+    } else {
+      cA.classList.remove("active"); rA.classList.remove("cur"); rA.classList.add("ran"); badge(hA,"finished","fin");
+      link.className="link down"; linkTxt.textContent="back to Dog";
+      cD.classList.remove("wait"); cD.classList.add("active"); rD.classList.add("cur"); badge(hD,"running","run");
+      p1.classList.remove("fresh"); print(p2,LINE_D);
+      goSub.textContent="the dog is built; press to build it again";
+      say('Animal is finished, so Java comes <b class="g">back down</b> and runs the rest of Dog\'s constructor. Parent printed first, child second.',
+        "g",'System.out.println("'+LINE_D+'");');
+    }
+  }
+  $("#bGo").addEventListener("click",press);
+  $("#bReset").addEventListener("click",reset);
+
+  /* ambient canvas */
+  var cv=$("#amb"),ctx=cv.getContext&&cv.getContext("2d"),parts=[];
+  function sizeC(){if(!ctx)return;cv.width=innerWidth;cv.height=innerHeight;}
+  function initParts(){parts=[];for(var i=0;i<46;i++)parts.push({x:Math.random(),y:Math.random(),
+    r:Math.random()*1.6+.3,s:Math.random()*.02+.004,o:Math.random()*.4+.1});}
+  function drawC(){if(!ctx)return;ctx.clearRect(0,0,cv.width,cv.height);
+    parts.forEach(function(p){p.y-=p.s/60;if(p.y<-.02)p.y=1.02;
+      ctx.beginPath();ctx.arc(p.x*cv.width,p.y*cv.height,p.r,0,7);
+      ctx.fillStyle="rgba(140,170,255,"+p.o+")";ctx.fill();});
+    requestAnimationFrame(drawC);}
+  if(ctx&&!reduce){sizeC();initParts();drawC();addEventListener("resize",sizeC);}
+})();
+</script>
+<script src="../manifest.js"></script>
+<script src="../../assets/rail.js"></script>
+<script>Rail.render(document.getElementById("rail"),{week:6,kind:"visuals",current:"06-constructor-chain"});</script>
+</body>
+</html>

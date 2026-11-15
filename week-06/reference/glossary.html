@@ -1,0 +1,224 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Glossary | Week 6 Visual Hub</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Sora:wght@500;700&family=Inter:wght@400;500&family=JetBrains+Mono:wght@400;500&display=swap">
+<style>
+  :root{
+    --bg:#080c17; --bg2:#0c1428; --surface:rgba(255,255,255,.045); --line:rgba(255,255,255,.09);
+    --ink:#eef2fb; --muted:#8496b6; --accent:#6ea0ff; --accent2:#8b7bff; --good:#46d98a; --warn:#ff6a6a;
+    --gold:#ffc862; --disp:'Sora',system-ui,sans-serif; --body:'Inter',system-ui,sans-serif;
+    --mono:'JetBrains Mono',ui-monospace,monospace;
+  }
+  *{box-sizing:border-box}
+  body{margin:0;min-height:100vh;color:var(--ink);font-family:var(--body);
+    background:radial-gradient(1200px 700px at 70% -10%,#141d38 0%,transparent 55%),
+               radial-gradient(900px 600px at 10% 110%,#161233 0%,transparent 50%),#080c17;
+    overflow-x:hidden}
+  #amb{position:fixed;inset:0;z-index:0;pointer-events:none;opacity:.6}
+  .back{position:relative;z-index:2;display:block;max-width:1120px;margin:0 auto;padding:26px 24px 0;
+    width:100%;font-family:var(--mono);font-size:.8rem;letter-spacing:.04em;color:var(--muted);
+    text-decoration:none;transition:color .15s}
+  .back:hover{color:var(--accent)}
+  .wrap{position:relative;z-index:1;max-width:1120px;margin:0 auto;padding:22px 24px 70px}
+  .tag{font-family:var(--mono);font-size:.72rem;letter-spacing:.22em;text-transform:uppercase;color:var(--accent);margin:0 0 14px}
+  h1{font-family:var(--disp);font-weight:700;font-size:clamp(2.3rem,6vw,3.6rem);line-height:1;margin:0 0 12px;
+    letter-spacing:-.03em;background:linear-gradient(180deg,#fff,#b9c6e6);-webkit-background-clip:text;
+    background-clip:text;color:transparent}
+  .lede{color:var(--muted);max-width:64ch;font-size:1.05rem;margin:0 0 26px;line-height:1.5}
+  .lede b{color:var(--ink)}
+
+  /* ---------- stage ---------- */
+  .stage{position:relative;background:linear-gradient(180deg,rgba(255,255,255,.03),rgba(255,255,255,.01));
+    border:1px solid var(--line);border-radius:24px;padding:18px 18px 14px;
+    box-shadow:0 1px 0 rgba(255,255,255,.06) inset,0 30px 80px -30px rgba(0,0,0,.8)}
+  .topbar{display:flex;align-items:center;gap:10px;margin:0 0 14px;flex-wrap:wrap}
+  .lab{font-family:var(--mono);font-size:.7rem;letter-spacing:.12em;text-transform:uppercase;color:var(--muted);margin:0 4px 0 0}
+  .find{position:relative;flex:1 1 260px;max-width:420px}
+  .find input{width:100%;font-family:var(--mono);font-size:.9rem;color:var(--ink);background:rgba(0,0,0,.3);
+    border:1px solid var(--line);border-radius:11px;padding:10px 40px 10px 14px;outline:none;transition:border-color .15s,box-shadow .15s}
+  .find input::placeholder{color:var(--muted)}
+  .find input:focus{border-color:var(--accent);box-shadow:0 0 0 3px rgba(110,160,255,.15)}
+  .find kbd{position:absolute;right:10px;top:50%;transform:translateY(-50%);font-family:var(--mono);font-size:.66rem;color:var(--muted);
+    border:1px solid var(--line);border-radius:6px;padding:1px 6px;pointer-events:none}
+  .count{margin-left:auto;font-family:var(--mono);font-size:.72rem;color:var(--muted);letter-spacing:.06em}
+  .count b{color:var(--accent);font-weight:500}
+
+  /* the list: grows with its content, never clipped */
+  .pic{position:relative;min-height:390px;border:1px solid var(--line);border-radius:18px;background:rgba(6,10,20,.5);padding:18px}
+  .grp+.grp{margin-top:22px}
+  .gh{font-family:var(--mono);font-weight:500;font-size:.72rem;letter-spacing:.16em;text-transform:uppercase;color:var(--accent);margin:0 0 10px}
+  .cards{display:grid;grid-template-columns:repeat(auto-fill,minmax(300px,1fr));gap:8px}
+  .term{border:1px solid var(--line);border-radius:14px;background:rgba(255,255,255,.025);padding:12px 14px;
+    display:flex;flex-direction:column;gap:6px;transition:border-color .2s,background .2s}
+  .term:hover{border-color:rgba(110,160,255,.4);background:rgba(110,160,255,.05)}
+  .term h3{font-family:var(--disp);font-weight:700;font-size:1.02rem;margin:0;color:var(--ink);letter-spacing:-.01em}
+  .term p{margin:0;font-size:.9rem;line-height:1.5;color:var(--muted)}
+  .term p b{color:var(--ink);font-weight:500}
+  .term code{display:block;font-family:var(--mono);font-size:.78rem;color:#bcd0ff;background:rgba(0,0,0,.35);
+    border:1px solid var(--line);border-radius:8px;padding:6px 9px;white-space:pre-wrap;word-break:break-word}
+  .see{align-self:flex-start;font-family:var(--mono);font-size:.68rem;letter-spacing:.04em;color:var(--accent);text-decoration:none;
+    border-bottom:1px dashed rgba(110,160,255,.4);padding-bottom:1px;transition:color .15s}
+  .see:hover{color:#fff;border-bottom-color:#fff}
+  .hide{display:none!important}
+  mark{background:rgba(255,200,98,.22);color:var(--ink);border-radius:3px;padding:0 1px}
+  .empty{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;font-family:var(--mono);font-size:.82rem;color:var(--muted)}
+  .hint{font-family:var(--mono);font-size:.68rem;color:var(--muted);margin:10px 4px 0;line-height:1.5}
+  .hint b{color:var(--accent)}
+  @media (max-width:600px){.cards{grid-template-columns:1fr}.count{margin-left:0}}
+  @media (prefers-reduced-motion:reduce){*{animation-duration:.01ms!important;transition-duration:.01ms!important}#amb{display:none}}
+</style>
+</head>
+<body>
+
+<a class="back" href="../index.html#glossary">&#8592; Week 6 index</a>
+
+<canvas id="amb"></canvas>
+<div class="wrap">
+  <p class="tag">Week 6 &middot; Reference</p>
+  <h1>Glossary</h1>
+  <p class="lede">The words of the week, one sentence each. <b>Type a word and the list narrows as you go.</b></p>
+
+  <div class="stage">
+    <div class="topbar">
+      <span class="lab">Filter</span>
+      <label class="find"><input id="q" type="search" placeholder="Try extends, override, abstract..." aria-label="Filter terms" autocomplete="off" spellcheck="false"><kbd>/</kbd></label>
+      <span class="count" id="count"></span>
+    </div>
+
+    <div class="pic" id="list">
+      <section class="grp">
+        <h2 class="gh">Inheritance basics</h2>
+        <div class="cards">
+          <article class="term" data-k="inheritance extends reuse share parent child"><h3>Inheritance</h3><p>A new class built on an existing one, so it gets the existing fields and methods without copying them.</p><code>public class Dog extends Animal { ... }</code><a class="see" href="../visuals/01-the-duplication-problem.html">See it: The Duplication Problem</a></article>
+          <article class="term" data-k="generalization pull up shared duplicate common"><h3>Generalization</h3><p>Moving what two or more classes share up into one parent class, so each child keeps only what is its own.</p><a class="see" href="../visuals/01-the-duplication-problem.html">See it: The Duplication Problem</a></article>
+          <article class="term" data-k="extends keyword child of"><h3>extends</h3><p>The keyword that makes one class the child of another.</p><code>public class Caveman extends Human</code><a class="see" href="../visuals/04-what-a-child-inherits.html">See it: What a Child Inherits</a></article>
+          <article class="term" data-k="is-a relationship sentence test"><h3>Is-a</h3><p>The test for inheritance: if the sentence "a Caveman is a Human" is true, Caveman can extend Human; the arrow points from child to parent.</p><a class="see" href="../visuals/02-is-a.html">See it: Is-A</a></article>
+          <article class="term" data-k="has-a contains field part of not inheritance"><h3>Has-a</h3><p>A class that holds another as a field, such as a House with an address; it is not inheritance.</p><code>private String address;</code><a class="see" href="../games/is-a-or-has-a.html">See it: Is-A or Has-A game</a></article>
+          <article class="term" data-k="parent super class base class superclass"><h3>Parent class</h3><p>The class being extended; also called the super class or base class.</p><code>public class Animal { ... }</code><a class="see" href="../visuals/04-what-a-child-inherits.html">See it: What a Child Inherits</a></article>
+          <article class="term" data-k="child sub class derived class subclass"><h3>Child class</h3><p>The class that extends another; also called the sub class or derived class.</p><code>public class Dog extends Animal { ... }</code><a class="see" href="../visuals/04-what-a-child-inherits.html">See it: What a Child Inherits</a></article>
+          <article class="term" data-k="inherited member field method comes from parent"><h3>Inherited member</h3><p>A field or method written in the parent that a child object has, even though the child never declares it.</p><code>dog.setName("Potato");  // written in Animal</code><a class="see" href="../visuals/04-what-a-child-inherits.html">See it: What a Child Inherits</a></article>
+        </div>
+      </section>
+      <section class="grp">
+        <h2 class="gh">Access</h2>
+        <div class="cards">
+          <article class="term" data-k="private access inherited cannot touch"><h3>private</h3><p>Reachable only inside its own class; a child inherits a private field but cannot touch it directly.</p><code>private String name;</code><a class="see" href="../visuals/05-private-protected-public.html">See it: Private, Protected, Public</a></article>
+          <article class="term" data-k="protected access child package"><h3>protected</h3><p>Reachable inside its own class, in child classes, and in the same package; not from other classes outside the package.</p><code>protected String favoriteFood;</code><a class="see" href="../visuals/05-private-protected-public.html">See it: Private, Protected, Public</a></article>
+          <article class="term" data-k="public access everyone"><h3>public</h3><p>Reachable from any class.</p><code>public String getName()</code><a class="see" href="../visuals/05-private-protected-public.html">See it: Private, Protected, Public</a></article>
+        </div>
+      </section>
+      <section class="grp">
+        <h2 class="gh">Constructors</h2>
+        <div class="cards">
+          <article class="term" data-k="super call parent constructor first statement arguments"><h3>super(...)</h3><p>A call to a parent constructor from inside a child constructor; it has to be the first statement.</p><code>super(name, age);</code><a class="see" href="../visuals/07-super-with-arguments.html">See it: super With Arguments</a></article>
+          <article class="term" data-k="constructor chain order parent first child"><h3>Constructor chain</h3><p>The order constructors run: the parent constructor first, then the child's, all the way up.</p><code>new Dog("Lucky", 15, "Doberman")</code><a class="see" href="../visuals/06-constructor-chain.html">See it: The Constructor Chain</a></article>
+          <article class="term" data-k="default super empty no-argument implicit"><h3>Default super call</h3><p>The super() Java adds for you when a child constructor does not call one; it fails if the parent has no constructor without parameters.</p><code>super();  // added for you</code><a class="see" href="../visuals/06-constructor-chain.html">See it: The Constructor Chain</a></article>
+        </div>
+      </section>
+      <section class="grp">
+        <h2 class="gh">Overriding and polymorphism</h2>
+        <div class="cards">
+          <article class="term" data-k="override replace same signature parent method"><h3>Override</h3><p>A child method with the same name and parameters as a parent method, replacing the inherited version for objects of the child.</p><code>public void eat() { ... }  // in Caveman</code><a class="see" href="../visuals/08-method-overriding.html">See it: Method Overriding</a></article>
+          <article class="term" data-k="override annotation compiler checks typo"><h3>@Override</h3><p>The annotation that asks the compiler to check the parent really has that method, so a typo becomes an error.</p><code>@Override</code><a class="see" href="../visuals/09-the-override-annotation.html">See it: The @Override Annotation</a></article>
+          <article class="term" data-k="overriding overloading difference same name parameters"><h3>Overriding vs overloading</h3><p>Overriding repeats the parent's signature to replace it; overloading uses the same name with different parameters and adds a second method.</p><a class="see" href="../games/override-detector.html">See it: Override Detector game</a></article>
+          <article class="term" data-k="polymorphism many forms same call different result"><h3>Polymorphism</h3><p>One call, many results: the same eat() runs a different version depending on the real object.</p><code>person.eat();</code><a class="see" href="../visuals/08-method-overriding.html">See it: Method Overriding</a></article>
+          <article class="term" data-k="base class reference parent variable child object upcast"><h3>Base class reference</h3><p>A variable of the parent type holding a child object; the variable decides what you may call and the object decides what runs.</p><code>Human human1 = new Caveman(...);</code><a class="see" href="../visuals/10-base-class-references.html">See it: Base Class References</a></article>
+          <article class="term" data-k="heterogeneous collection list different types mixed"><h3>Heterogeneous collection</h3><p>One list typed with the parent class that holds objects of several child types.</p><code>ArrayList&lt;Human&gt; people = new ArrayList&lt;&gt;();</code><a class="see" href="../visuals/11-heterogeneous-collections.html">See it: One List, Many Types</a></article>
+          <article class="term" data-k="instanceof operator test type true false"><h3>instanceof</h3><p>The operator that answers whether an object is of a type; true for that class and for every parent above it.</p><code>person instanceof Caveman</code><a class="see" href="../visuals/12-instanceof-and-downcasting.html">See it: instanceof and Downcasting</a></article>
+          <article class="term" data-k="downcast cast child type parent variable"><h3>Downcast</h3><p>A cast that tells the compiler a parent variable really holds a child object, so you can call the child's own methods.</p><code>Caveman c = (Caveman) person;</code><a class="see" href="../visuals/12-instanceof-and-downcasting.html">See it: instanceof and Downcasting</a></article>
+          <article class="term" data-k="classcastexception wrong cast runtime"><h3>ClassCastException</h3><p>The run time error when a cast promises a type the object is not.</p><code>ModernPerson m = (ModernPerson) firstHuman;</code><a class="see" href="../visuals/12-instanceof-and-downcasting.html">See it: instanceof and Downcasting</a></article>
+          <article class="term" data-k="getclass getsimplename class name real type"><h3>getClass().getSimpleName()</h3><p>Asks an object for its real class and returns the short name as a String.</p><code>person.getClass().getSimpleName()  // "Caveman"</code><a class="see" href="../visuals/12-instanceof-and-downcasting.html">See it: instanceof and Downcasting</a></article>
+          <article class="term" data-k="object root class every class extends equals tostring"><h3>Object</h3><p>The parent of every class, even when you write no extends; it gives all objects getClass(), toString() and equals().</p><code>me instanceof Object  // true</code><a class="see" href="../visuals/10-base-class-references.html">See it: Base Class References</a></article>
+          <article class="term" data-k="tostring print println override object"><h3>toString()</h3><p>The Object method that println calls to turn an object into text; classes override it for a readable line.</p><code>@Override public String toString() { ... }</code></article>
+        </div>
+      </section>
+      <section class="grp">
+        <h2 class="gh">Abstraction</h2>
+        <div class="cards">
+          <article class="term" data-k="abstract class cannot new instantiate too general"><h3>Abstract class</h3><p>A class marked abstract because the idea is too general to build; you can extend it but never use new on it.</p><code>public abstract class Asset { ... }</code><a class="see" href="../visuals/13-abstract-classes.html">See it: Abstract Classes</a></article>
+          <article class="term" data-k="abstract method no body child must override"><h3>Abstract method</h3><p>A method with a signature and no body that every concrete child has to override.</p><code>public abstract BigDecimal getValue();</code><a class="see" href="../visuals/14-abstract-methods.html">See it: Abstract Methods</a></article>
+          <article class="term" data-k="concrete class complete can be built new"><h3>Concrete class</h3><p>A normal class with every method finished, so new works on it.</p><code>public class House extends Asset { ... }</code><a class="see" href="../games/abstract-or-concrete.html">See it: Abstract or Concrete game</a></article>
+          <article class="term" data-k="concrete method finished body inside abstract"><h3>Concrete method</h3><p>A method with a body; an abstract class can hold some and its children inherit them.</p><code>public void printMessage() { ... }</code><a class="see" href="../visuals/14-abstract-methods.html">See it: Abstract Methods</a></article>
+        </div>
+      </section>
+      <section class="grp">
+        <h2 class="gh">Drawing it</h2>
+        <div class="cards">
+          <article class="term" data-k="class diagram box uml name attributes methods"><h3>Class diagram</h3><p>A drawing with one box per class and lines between them, in three bands: name, attributes, methods.</p><a class="see" href="class-diagram-reference.html">See it: Class Diagram Reference</a></article>
+          <article class="term" data-k="inheritance arrow hollow triangle generalization diagram"><h3>Inheritance arrow</h3><p>The line with a hollow triangle at the parent end; it is read as "is a".</p><a class="see" href="../visuals/03-reading-a-class-diagram.html">See it: Reading a Class Diagram</a></article>
+        </div>
+      </section>
+      <p class="empty hide" id="none">No term matches. Try a shorter word.</p>
+    </div>
+    <p class="hint">Press <b>/</b> to jump to the filter, <b>Esc</b> to clear it. Matches names, definitions and code. <b>See it</b> opens the page for that term.</p>
+  </div>
+
+  <div id="rail"></div>
+</div>
+<script>
+(function(){
+  "use strict";
+  var $=function(s){return document.querySelector(s);};
+  var reduce=matchMedia("(prefers-reduced-motion: reduce)").matches;
+  var q=$("#q"), terms=[].slice.call(document.querySelectorAll(".term")), groups=[].slice.call(document.querySelectorAll(".grp"));
+
+  /* keep the original text of each name so highlights can be undone */
+  terms.forEach(function(t){
+    var h=t.querySelector("h3");
+    t._name=h.textContent;
+    var c=t.querySelector("code");
+    t._hay=(t.getAttribute("data-k")+" "+t.querySelector("p").textContent+" "+(c?c.textContent:"")).toLowerCase();
+  });
+
+  function mark(text,word){
+    var h=document.createDocumentFragment(), i=word?text.toLowerCase().indexOf(word):-1;
+    if(i<0){h.appendChild(document.createTextNode(text));return h;}
+    h.appendChild(document.createTextNode(text.slice(0,i)));
+    var m=document.createElement("mark"); m.textContent=text.slice(i,i+word.length); h.appendChild(m);
+    h.appendChild(document.createTextNode(text.slice(i+word.length)));
+    return h;
+  }
+
+  function apply(){
+    var words=q.value.trim().toLowerCase().split(/\s+/).filter(Boolean), shown=0;
+    terms.forEach(function(t){
+      var ok=words.every(function(w){return t._hay.indexOf(w)>=0;});
+      t.classList.toggle("hide",!ok);
+      var h=t.querySelector("h3"); h.textContent=""; h.appendChild(mark(t._name,words[0]||""));
+      if(ok) shown++;
+    });
+    groups.forEach(function(g){ g.classList.toggle("hide",!g.querySelector(".term:not(.hide)")); });
+    $("#none").classList.toggle("hide",shown>0);
+    $("#count").innerHTML="<b>"+shown+"</b> of "+terms.length+" terms";
+  }
+
+  q.addEventListener("input",apply);
+  q.addEventListener("keydown",function(e){ if(e.key==="Escape"){ q.value=""; apply(); q.blur(); } });
+  document.addEventListener("keydown",function(e){
+    if(e.key==="/"&&document.activeElement!==q){ e.preventDefault(); q.focus(); }
+  });
+
+  /* ---------- ambient canvas ---------- */
+  var cv=$("#amb"),ctx=cv.getContext&&cv.getContext("2d"),parts=[];
+  function sizeC(){if(!ctx)return;cv.width=innerWidth;cv.height=innerHeight;}
+  function initParts(){parts=[];for(var i=0;i<46;i++)parts.push({x:Math.random(),y:Math.random(),
+    r:Math.random()*1.6+.3,s:Math.random()*.02+.004,o:Math.random()*.4+.1});}
+  function drawC(){if(!ctx)return;ctx.clearRect(0,0,cv.width,cv.height);
+    parts.forEach(function(p){p.y-=p.s/60;if(p.y<-.02)p.y=1.02;
+      ctx.beginPath();ctx.arc(p.x*cv.width,p.y*cv.height,p.r,0,7);
+      ctx.fillStyle="rgba(140,170,255,"+p.o+")";ctx.fill();});
+    requestAnimationFrame(drawC);}
+  if(ctx&&!reduce){sizeC();initParts();drawC();addEventListener("resize",sizeC);}
+
+  apply();
+})();
+</script>
+<script src="../manifest.js"></script>
+<script src="../../assets/rail.js"></script>
+<script>Rail.render(document.getElementById("rail"),{week:6,kind:"reference",current:"glossary"});</script>
+</body>
+</html>

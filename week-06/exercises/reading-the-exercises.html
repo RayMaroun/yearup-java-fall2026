@@ -1,0 +1,188 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Reading This Week&rsquo;s Exercises | Week 6 Visual Hub</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Sora:wght@500;700&family=Inter:wght@400;500&family=JetBrains+Mono:wght@400;500&display=swap">
+<style>
+  :root{
+    --bg:#080c17; --bg2:#0c1428; --surface:rgba(255,255,255,.045); --line:rgba(255,255,255,.09);
+    --ink:#eef2fb; --muted:#8496b6; --accent:#6ea0ff; --accent2:#8b7bff; --good:#46d98a; --warn:#ff6a6a;
+    --gold:#ffc862; --disp:'Sora',system-ui,sans-serif; --body:'Inter',system-ui,sans-serif;
+    --mono:'JetBrains Mono',ui-monospace,monospace;
+  }
+  *{box-sizing:border-box}
+  body{margin:0;min-height:100vh;color:var(--ink);font-family:var(--body);
+    background:radial-gradient(1200px 700px at 70% -10%,#141d38 0%,transparent 55%),
+               radial-gradient(900px 600px at 10% 110%,#161233 0%,transparent 50%),#080c17;
+    overflow-x:hidden}
+  #amb{position:fixed;inset:0;z-index:0;pointer-events:none;opacity:.6}
+  .back{position:relative;z-index:2;display:block;max-width:1120px;margin:0 auto;padding:26px 24px 0;
+    width:100%;font-family:var(--mono);font-size:.8rem;letter-spacing:.04em;color:var(--muted);
+    text-decoration:none;transition:color .15s}
+  .back:hover{color:var(--accent)}
+  .wrap{position:relative;z-index:1;max-width:1120px;margin:0 auto;padding:22px 24px 70px}
+  .tag{font-family:var(--mono);font-size:.72rem;letter-spacing:.22em;text-transform:uppercase;color:var(--accent);margin:0 0 14px}
+  h1{font-family:var(--disp);font-weight:700;font-size:clamp(2.3rem,6vw,3.6rem);line-height:1;margin:0 0 12px;
+    letter-spacing:-.03em;background:linear-gradient(180deg,#fff,#b9c6e6);-webkit-background-clip:text;
+    background-clip:text;color:transparent}
+  .lede{color:var(--muted);max-width:64ch;font-size:1.05rem;margin:0 0 26px;line-height:1.5}
+  .lede b{color:var(--ink)}
+  .lede code,.take code,.caption code{font-family:var(--mono);font-size:.92em;color:#bcd0ff}
+
+  /* ---------- reading page: tap a sentence, see what it asks for ---------- */
+  .stage{position:relative;background:linear-gradient(180deg,rgba(255,255,255,.03),rgba(255,255,255,.01));
+    border:1px solid var(--line);border-radius:24px;padding:18px;
+    box-shadow:0 1px 0 rgba(255,255,255,.06) inset,0 30px 80px -30px rgba(0,0,0,.8)}
+  .lab{font-family:var(--mono);font-size:.7rem;letter-spacing:.12em;text-transform:uppercase;color:var(--muted);margin:0 0 10px}
+  .picker{display:flex;flex-wrap:wrap;gap:6px;margin:0 0 14px}
+  .picker button{font-family:var(--body);font-weight:500;font-size:.86rem;padding:8px 14px;border-radius:999px;border:1px solid var(--line);
+    background:var(--surface);color:var(--muted);cursor:pointer;transition:.15s}
+  .picker button:hover{color:var(--accent);border-color:var(--accent)}
+  .picker button.on{background:rgba(110,160,255,.16);color:var(--ink);border-color:rgba(110,160,255,.45)}
+  .cols{display:grid;grid-template-columns:minmax(0,1.25fr) minmax(0,1fr);gap:16px;align-items:start}
+  @media (max-width:860px){.cols{grid-template-columns:1fr}}
+  .paper{background:#f4f1e8;color:#1b1f2a;border-radius:16px;padding:22px 24px 18px;font-family:Georgia,'Times New Roman',serif;
+    box-shadow:0 20px 50px -20px rgba(0,0,0,.9);position:relative}
+  .paper .ph{font-family:var(--body);font-weight:500;font-size:.72rem;letter-spacing:.12em;text-transform:uppercase;color:#6b7280;margin:0 0 6px}
+  .paper h2{font-family:var(--body);font-size:1.15rem;margin:0 0 14px;color:#111827}
+  .paper p{margin:0 0 10px;line-height:1.7;font-size:1rem}
+  .paper .mono{font-family:var(--mono);font-size:.9em;background:#e9e5d8;padding:1px 5px;border-radius:5px}
+  .paper .sample{font-family:var(--mono);font-size:.82rem;background:#1b1f2a;color:#d7e0ff;border-radius:10px;padding:10px 12px;white-space:pre;margin:8px 0 12px;line-height:1.55}
+  .s{cursor:pointer;border-radius:5px;padding:1px 3px;margin:0 -3px;transition:background .15s,box-shadow .15s;border-bottom:1px dashed rgba(17,24,39,.35)}
+  .s:hover{background:rgba(110,160,255,.18)}
+  .s.on{background:#ffe9a8;box-shadow:0 0 0 2px #ffc862;border-bottom-color:transparent}
+  .paper .hint{font-family:var(--body);font-size:.78rem;color:#6b7280;margin:12px 0 0;border-top:1px solid #d9d4c4;padding-top:10px}
+  .answer{background:rgba(6,10,20,.5);border:1px solid var(--line);border-radius:18px;padding:16px 18px;position:sticky;top:16px}
+  .answer .quote{font-family:Georgia,serif;font-style:italic;color:var(--muted);font-size:.95rem;line-height:1.55;margin:0 0 12px;padding-left:12px;border-left:3px solid var(--gold);min-height:2.4em}
+  .answer .asks{font-size:1.02rem;line-height:1.6;color:var(--ink);margin:0 0 10px}
+  .answer .asks b{color:#fff}
+  .answer .line{font-family:var(--mono);font-size:.84rem;color:#bcd0ff;background:#05070e;border:1px solid var(--line);border-radius:10px;padding:9px 12px;margin:0 0 10px;white-space:pre-wrap}
+  .answer .why{font-size:.86rem;color:var(--muted);line-height:1.5;margin:0}
+  .answer .why b{color:var(--gold);font-weight:500}
+  .answer .kw{display:inline-block;font-family:var(--mono);font-size:.64rem;letter-spacing:.1em;text-transform:uppercase;color:var(--accent);
+    border:1px solid rgba(110,160,255,.4);border-radius:999px;padding:3px 9px;margin:0 0 10px}
+  .answer .nav{display:flex;gap:8px;margin-top:12px}
+  .answer .nav button{font-family:var(--mono);font-size:.68rem;letter-spacing:.08em;text-transform:uppercase;color:var(--muted);background:transparent;
+    border:1px solid var(--line);border-radius:999px;padding:5px 11px;cursor:pointer}
+  .answer .nav button:hover{color:var(--accent);border-color:var(--accent)}
+  .words{margin-top:16px}
+  .words .grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(300px,1fr));gap:8px}
+  .word{border:1px solid var(--line);border-radius:12px;background:rgba(255,255,255,.025);padding:10px 13px;cursor:pointer;transition:.15s}
+  .word:hover{border-color:var(--accent)}
+  .word .w{font-family:Georgia,serif;font-style:italic;color:var(--ink);font-size:.95rem}
+  .word .m{display:none;font-size:.85rem;color:var(--muted);line-height:1.5;margin-top:6px}
+  .word .m code{font-family:var(--mono);font-size:.9em;color:#bcd0ff}
+  .word.open .m{display:block}
+  .word.open{border-color:rgba(255,200,98,.5);background:rgba(255,200,98,.05)}
+  .take{margin-top:22px;background:linear-gradient(180deg,rgba(110,160,255,.08),rgba(139,123,255,.04));
+    border:1px solid var(--line);border-left:3px solid var(--accent);border-radius:12px;padding:16px 18px}
+  .take .tk{font-family:var(--mono);font-size:.66rem;letter-spacing:.14em;text-transform:uppercase;color:var(--accent);margin:0 0 8px}
+  .take p{margin:0;font-size:.95rem;color:var(--ink);line-height:1.55}
+  .take b{color:#fff}
+  @media (prefers-reduced-motion:reduce){*{animation-duration:.01ms!important;transition-duration:.01ms!important}#amb{display:none}}
+</style>
+</head>
+<body>
+
+<a class="back" href="../index.html#reading-the-exercises">&#8592; Week 6 index</a>
+
+<canvas id="amb"></canvas>
+<div class="wrap">
+  <p class="tag">Before you start &middot; Week 6</p>
+  <h1>Reading This Week&rsquo;s Exercises</h1>
+  <p class="lede"><b>Tap any sentence of an exercise and see what it is really asking you to write.</b> Three made-up exercises in the workbook&rsquo;s own words, so you learn this week&rsquo;s words (extends, parent, child, super, override, abstract), not the answers.</p>
+
+  <div class="stage">
+    <p class="lab">Pick an exercise</p>
+    <div class="picker" id="picker"></div>
+    <div class="cols">
+      <div class="paper" id="paper"></div>
+      <div class="answer" id="answer">
+        <span class="kw" id="aKw">tap a sentence</span>
+        <p class="quote" id="aQuote">Every sentence on the paper is a job. Tap one.</p>
+        <p class="asks" id="aAsks">The sentence lights up here, and this box says what it asks you to do in code terms: which file, which member, which kind of method.</p>
+        <div class="line" id="aLine" style="display:none"></div>
+        <p class="why" id="aWhy"></p>
+        <div class="nav"><button id="bPrev">&larr; previous sentence</button><button id="bNext">next sentence &rarr;</button></div>
+      </div>
+    </div>
+    <div class="words">
+      <p class="lab">The words the workbook uses this week, and what they mean for your code (tap one)</p>
+      <div class="grid" id="words"></div>
+    </div>
+  </div>
+
+  <div class="take">
+    <p class="tk">The one idea</p>
+    <p><b>An exercise is a list of jobs hidden in sentences.</b> Read it once for the story, then once more sentence by sentence, and write down the job each one gives you before you type anything.</p>
+  </div>
+
+  <div id="rail"></div>
+</div>
+
+<script>
+(function(){
+  "use strict";
+  var $=function(s){return document.querySelector(s);};
+  var reduce=matchMedia("(prefers-reduced-motion: reduce)").matches;
+  var EX=[{"id":"music","name":"Music Shop","tag":"Simple inheritance (like 5a Section 1-2)","title":"Exercise: Music Shop","intro":"A music shop sells many kinds of instruments. Every instrument has a brand and a year it was built, but each kind also has something of its own. In this exercise you will write the shared part once and let the kinds inherit it.","parts":[["In IntelliJ create a new Java application named music-shop.","project","New Maven project in IntelliJ: JDK 17, GroupId com.pluralsight, the name exactly as written, in your workbook-5 folder, Create Git repository ticked, then Share Project on GitHub. No code yet.","Project · music-shop · workbook-5","The name in the exercise is the project name, the folder name and the GitHub repository name. One exercise, one project."],["Create a parent class named Instrument with the private variables brand and yearBuilt. Add a getter and a setter for each.","parent","A new file Instrument.java with two private fields (text and a whole number) and four public methods: getBrand(), setBrand(...), getYearBuilt(), setYearBuilt(...).","Instrument.java · 2 private fields · 2 getters, 2 setters","\"Parent\", \"super class\" and \"base class\" all name the class that others inherit from. Whatever you write here, every child gets."],["Create the classes Guitar and Drum. Each one should extend Instrument.","extends","Two new files, Guitar.java and Drum.java. In each class header, after the name, the word extends and Instrument.","Guitar.java · class Guitar extends Instrument","\"Extend\" and \"inherit from\" mean the same thing. The class on the right of extends is the parent; the one on the left is the child."],["Guitar has its own private variable numberOfStrings. Drum has its own private variable numberOfPieces. Add a getter and a setter for each.","child fields","One private field and its getter and setter in each child, nothing in Instrument.","Guitar.java, Drum.java · 1 private field each","\"Its own\" means it belongs to that child only. Anything every instrument has stays in the parent."],["Do not repeat brand or yearBuilt in the child classes.","no copy","Nothing to add. A check on the step before: brand and yearBuilt appear only in Instrument.java.","Guitar.java, Drum.java · no brand, no yearBuilt","Writing it again would hide the inherited one and bring back the duplication that inheritance is there to remove."],["For this exercise none of your classes should have a constructor.","no constructor","Write none. Without one, Java gives each class a default constructor with no parameters, so new Guitar() works.","All classes · no constructor written","\"Should not have a constructor\" is an instruction to leave something out. Delete one if IntelliJ generated it."],["In main(), create one Guitar and one Drum. Using the setters, set some values for each.","objects","In Main.java: two new objects with new, then calls to setBrand and the other setters on each.","Main.java · new Guitar() · new Drum() · setters","\"Using the setters\" means no constructor arguments and no direct field access: call the methods."],["Display the brand of the Guitar. Why can you call getBrand() on a Guitar when you did not write it in Guitar?","question","One print line in main, and a sentence of your own: where does getBrand() live, and why does the Guitar have it?","Main.java · print · plus your answer","A question in an exercise is something to answer, not only to code. The answer uses the word inherit."],["Ensure all your changes are committed and pushed to GitHub.","git","Commit panel in IntelliJ, a message, Commit and Push. Then check the repository page on GitHub shows your files.","IntelliJ · Commit and Push","The last line of every exercise. There is no step to send a link: Raymond follows your GitHub profile."]]},{"id":"staff","name":"Staff Directory","tag":"Constructors and super (like 5a Section 1-3)","title":"Exercise: Staff Directory","intro":"A school keeps a directory of its staff. Every staff member has an id and a name; teachers also have a subject. In this exercise you will give the classes constructors and make the child pass the shared part up to its parent.","parts":[["In IntelliJ create a new Java application named staff-directory.","project","New Maven project in IntelliJ: JDK 17, GroupId com.pluralsight, the name exactly as written, in your workbook-5 folder, Create Git repository ticked, then Share Project on GitHub. No code yet.","Project · staff-directory · workbook-5","The name in the exercise is the project name, the folder name and the GitHub repository name. One exercise, one project."],["Create a class named Staff with the private variables staffId and name. Add a getter for each.","parent","A new file Staff.java with two private fields (a whole number and text) and two getters.","Staff.java · 2 private fields · 2 getters","The parent is written first because the child is built on top of it."],["Create a constructor in the Staff class that takes input parameters for each of the private variables.","constructor","One constructor in Staff.java with two parameters, one per field, each assigned to its field.","Staff.java · constructor · 2 parameters","\"For each of the private variables\" gives the parameter list: one parameter per field, in the order the fields are listed."],["Create a class named Teacher that extends Staff and has its own private variable subject.","extends","Teacher.java, with the word extends and Staff in the header, and one private field.","Teacher.java · class Teacher extends Staff","The child only declares what is new. staffId and name come from the parent."],["Create a constructor in Teacher that takes staffId, name and subject, and calls the super constructor.","super","One constructor in Teacher.java with three parameters. The first statement passes two of them up to Staff; the last one is stored in subject.","Teacher.java · constructor · first statement is super(...)","\"Call the super constructor\" means super followed by parentheses holding the arguments the parent asks for. The parent builds its part; the child builds its own."],["Notice that you CANNOT extend the Staff class unless you explicitly call the super constructor from the child class.","rule","Nothing to add. Once Staff has a constructor with parameters, a child without a super call stays red. Read the message to see it.","Teacher.java · red text · constructor Staff in class Staff cannot be applied","\"Notice\" and \"Note\" lines state a rule you will meet as a compile error. The call to super must also be the first statement."],["In main(), create a Teacher using the new constructor arguments and display its name and subject.","objects","In Main.java: one new Teacher with three arguments, then a print of getName() and of the subject getter.","Main.java · new Teacher(...) · 2 getters","\"Using the new constructor arguments\" means the old no-argument way no longer works. getName() was written in Staff and works on a Teacher."],["Ensure all your changes are committed and pushed to GitHub.","git","Commit panel in IntelliJ, a message, Commit and Push. Then check the repository page on GitHub shows your files.","IntelliJ · Commit and Push","The last line of every exercise. There is no step to send a link: Raymond follows your GitHub profile."]]},{"id":"shapes","name":"Shape Studio","tag":"Overriding, abstract and polymorphism (like 5a Sections 2-1 and 2-2)","title":"Exercise: Shape Studio","intro":"A drawing program keeps many kinds of shapes in one list and needs the area of each. In this exercise you will let every kind work out its own area, and then ask the list for all of them.","parts":[["In IntelliJ create a new Java application named shape-studio.","project","New Maven project in IntelliJ: JDK 17, GroupId com.pluralsight, the name exactly as written, in your workbook-5 folder, Create Git repository ticked, then Share Project on GitHub. No code yet.","Project · shape-studio · workbook-5","The name in the exercise is the project name, the folder name and the GitHub repository name. One exercise, one project."],["Create a class named Shape with the private variable name. Add a getter and a constructor.","base","Shape.java with one private text field, a constructor that sets it, and getName().","Shape.java · 1 private field · constructor, getter","\"Base class\" is the same idea as parent class: the one the others extend."],["Modify the Shape class to be an abstract class. Add the abstract method getArea(), which returns a double.","abstract","The word abstract in the class header, and in the signature of getArea(). An abstract method has no body, just a semicolon.","Shape.java · abstract class · abstract double getArea();","\"Abstract\" means an idea too general to build. An abstract method is a blank that every concrete child has to fill."],["Create the classes Circle and Rectangle. Each one extends Shape and overrides getArea().","override","Two new files. In each, a public getArea() that returns a double, written again with the same signature as the one in Shape, with @Override above it.","Circle.java, Rectangle.java · @Override double getArea()","\"Override\" means the child writes its own version of a method the parent declares. @Override makes the compiler check the spelling."],["Try to create an instance of Shape. What happens?","cannot instantiate","In main, one line that builds a Shape directly. Read the red message, write it down, then take the line out.","Main.java · new Shape(...) · red text","\"What happens?\" means try it and read the message. An abstract class cannot be instantiated."],["In main(), create an ArrayList of Shape objects. Load it with at least two circles and two rectangles.","base class reference","One list whose type is Shape, holding Circle and Rectangle objects added with new.","Main.java · ArrayList<Shape> · circles and rectangles","\"ArrayList of Shape\" means the list type is the parent. Any child fits in it."],["Loop through the list and display the name and the area of each shape.","polymorphism","One loop over the list. Inside it, calls to the methods every Shape has, getName() and getArea().","Main.java · loop · getName() and getArea()","\"Polymorphism\" here is one call, many answers: the object's own class decides which getArea() runs."],["When that works, go back and include in the display the radius of each circle and the width of each rectangle. You will need to use instanceof to detect the type of shape and downcast it.","instanceof","Inside the loop, test which kind it is with instanceof, then cast to Circle or Rectangle to call a method only that child has.","Main.java · instanceof · (Circle) cast","\"Downcast\" means treat a Shape as the child it really is. A wrong cast throws a ClassCastException, which is why you test first."],["Ensure all your changes are committed and pushed to GitHub.","git","Commit panel in IntelliJ, a message, Commit and Push. Then check the repository page on GitHub shows your files.","IntelliJ · Commit and Push","The last line of every exercise. There is no step to send a link: Raymond follows your GitHub profile."]]}];
+  var WORDS=[["Create a new Java application named x","A new IntelliJ Maven project called exactly x, in your workbook-5 folder, with Create Git repository ticked, then Share Project on GitHub. Every exercise starts here."],["parent class / super class / base class","The class others inherit from. Whatever is written there, every child gets, except constructors."],["child class / subclass / derived class","A class that extends a parent. It declares only what is new or different."],["extends / inherits from","The keyword in the child's header: <code>class Child extends Parent</code>."],["none of your classes should have a constructor","Write none. Java gives each class a default constructor with no parameters."],["call the super constructor","<code>super(...)</code> as the first statement of the child's constructor, passing up what the parent's constructor asks for."],["Notice that you CANNOT ...","A rule you will meet as a red compile error. Read the message: it explains the rule."],["Why can you call getX() when you did not write it in the child?","Because the child inherits it from its parent. Answer in a sentence."],["override the method","Write the same method again in the child with the same signature. The child's version runs for child objects."],["@Override","An annotation above an overriding method. If the name or parameters do not match a parent method, it does not compile."],["an ArrayList of Asset / of Shape","A list typed with the parent. Every child object fits in it, and a call on an element runs the object's own version."],["use instanceof ... and downcast","Test with <code>x instanceof Child</code>, then cast <code>(Child) x</code> to call a method only the child has."],["abstract class","A class that cannot be built with <code>new</code>. Children can."],["abstract method","A method with a signature and no body. Every concrete child must write its own."],["Try to create an instance ... What happens?","Try it and read the red message. Write down what it says, then remove the line."],["Ensure all your changes are committed and pushed","Commit and Push in IntelliJ. There is no step to send a link; Raymond follows your GitHub profile."]];
+  var cur=0, sel=-1;
+  var escBox=document.createElement("div");
+  function esc(t){escBox.textContent=String(t);return escBox.innerHTML;}
+  var picker=$("#picker"), paper=$("#paper");
+  picker.innerHTML=EX.map(function(e,i){return '<button data-i="'+i+'"'+(i===0?' class="on"':'')+'>'+esc(e.name)+'</button>';}).join("");
+  picker.addEventListener("click",function(ev){var b=ev.target.closest("button"); if(!b) return; cur=+b.getAttribute("data-i"); sel=-1; draw(); resetAnswer();});
+  function draw(){
+    var e=EX[cur];
+    Array.prototype.forEach.call(picker.querySelectorAll("button"),function(b,i){b.classList.toggle("on",i===cur);});
+    var h='<p class="ph">'+esc(e.tag)+'</p><h2>'+esc(e.title)+'</h2><p>'+esc(e.intro)+'</p>';
+    e.parts.forEach(function(p,i){
+      var txt=esc(p[0]).replace(/(music-shop|staff-directory|shape-studio|main\(\)|getBrand\(\)|getName\(\)|getArea\(\)|getYearBuilt\(\)|\bMain\b|\bInstrument\b|\bGuitar\b|\bDrum\b|\bStaff\b|\bTeacher\b|\bShape\b|\bCircle\b|\bRectangle\b|\bArrayList\b|\binstanceof\b|\bextends\b|\bbrand\b|\byearBuilt\b|\bnumberOfStrings\b|\bnumberOfPieces\b|\bstaffId\b|\bname\b|\bsubject\b|\babstract\b)/g,'<span class="mono">$1</span>');
+      h+='<p><span class="s'+(i===sel?' on':'')+'" data-i="'+i+'">'+txt+'</span></p>';
+    });
+    h+='<p class="hint">Made up for this page. It is not one of this week\'s exercises, but it is written the way they are.</p>';
+    paper.innerHTML=h;
+  }
+  function resetAnswer(){
+    $("#aKw").textContent="tap a sentence"; $("#aQuote").textContent="Every sentence on the paper is a job. Tap one.";
+    $("#aAsks").innerHTML="The sentence lights up here, and this box says what it asks you to do in code terms: which file, which member, which kind of method.";
+    $("#aLine").style.display="none"; $("#aWhy").textContent="";
+  }
+  function show(i){
+    var e=EX[cur]; if(i<0||i>=e.parts.length) return; sel=i; var p=e.parts[i];
+    Array.prototype.forEach.call(paper.querySelectorAll(".s"),function(s,k){s.classList.toggle("on",k===i);});
+    $("#aKw").textContent=p[1]; $("#aQuote").textContent=p[0]; $("#aAsks").textContent=p[2];
+    var ln=$("#aLine"); ln.textContent=p[3]; ln.style.display="block"; $("#aWhy").innerHTML=esc(p[4]).replace(/^(\"[^\"]+\"|[A-Z][^.]*?\b(?:means|is|are|tells you|always means|sets|gives you)\b)/,function(m){return m;});
+    var box=$("#answer"); if(!reduce){box.style.transition="none";box.style.boxShadow="0 0 0 2px rgba(255,200,98,.55)";setTimeout(function(){box.style.transition="box-shadow .5s";box.style.boxShadow="none";},40);}
+  }
+  paper.addEventListener("click",function(ev){var s=ev.target.closest(".s"); if(!s) return; show(+s.getAttribute("data-i"));});
+  $("#bNext").addEventListener("click",function(){show(sel<0?0:Math.min(sel+1,EX[cur].parts.length-1));});
+  $("#bPrev").addEventListener("click",function(){show(sel<=0?0:sel-1);});
+  document.addEventListener("keydown",function(ev){
+    if(/INPUT|TEXTAREA|BUTTON/.test(ev.target.tagName)) return;
+    if(ev.key==="ArrowDown"||ev.key==="j"){ev.preventDefault();$("#bNext").click();}
+    if(ev.key==="ArrowUp"||ev.key==="k"){ev.preventDefault();$("#bPrev").click();}
+  });
+  var words=$("#words");
+  words.innerHTML=WORDS.map(function(w){return '<div class="word"><div class="w">'+esc(w[0])+'</div><div class="m">'+w[1]+'</div></div>';}).join("");
+  words.addEventListener("click",function(ev){var c=ev.target.closest(".word"); if(c) c.classList.toggle("open");});
+  draw();
+
+  var cv=$("#amb"),ctx=cv.getContext&&cv.getContext("2d"),parts=[];
+  function sizeC(){if(!ctx)return;cv.width=innerWidth;cv.height=innerHeight;}
+  function initParts(){parts=[];for(var i=0;i<46;i++)parts.push({x:Math.random(),y:Math.random(),r:Math.random()*1.6+.3,s:Math.random()*.02+.004,o:Math.random()*.4+.1});}
+  function drawC(){if(!ctx)return;ctx.clearRect(0,0,cv.width,cv.height);
+    parts.forEach(function(p){p.y-=p.s/60;if(p.y<-.02)p.y=1.02;ctx.beginPath();ctx.arc(p.x*cv.width,p.y*cv.height,p.r,0,7);
+      ctx.fillStyle="rgba(140,170,255,"+p.o+")";ctx.fill();});requestAnimationFrame(drawC);}
+  if(ctx&&!reduce){sizeC();initParts();drawC();addEventListener("resize",sizeC);}
+})();
+</script>
+<script src="../manifest.js"></script>
+<script src="../../assets/rail.js"></script>
+<script>Rail.render(document.getElementById("rail"),{week:6,kind:"exercises",current:"reading-the-exercises"});</script>
+</body>
+</html>
