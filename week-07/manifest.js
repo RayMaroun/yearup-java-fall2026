@@ -19,12 +19,11 @@ window.HUB_MANIFEST = {
     { file: "12-a-generic-class.html", title: "A Generic Class", group: "Workbook 6a · Section 3-2" },
     { file: "13-a-generic-method.html", title: "A Generic Method", group: "Workbook 6a · Section 3-2" },
     { file: "14-bounded-types.html", title: "Bounded Types", group: "Workbook 6a · Section 3-3" },
-    { file: "15-processing-with-a-loop.html", title: "Processing With a Loop", group: "Workbook 6a · Section 4-1" },
-    { file: "16-source-transformation-destination.html", title: "Source, Transformation, Destination", group: "Workbook 6a · Section 4-1" },
-    { file: "17-anatomy-of-a-lambda.html", title: "Anatomy of a Lambda", group: "Workbook 6a · Section 4-2" },
-    { file: "18-the-stream-pipeline.html", title: "The Stream Pipeline", group: "Workbook 6a · Section 4-3" },
-    { file: "19-reduce.html", title: "reduce", group: "Workbook 6a · Section 4-3" },
-    { file: "20-packages-layer-or-feature.html", title: "Packages: Layer or Feature", group: "Packages" }
+    { file: "15-source-transformation-destination.html", title: "Source, Transformation, Destination", group: "Workbook 6a · Section 4-1" },
+    { file: "16-anatomy-of-a-lambda.html", title: "Anatomy of a Lambda", group: "Workbook 6a · Section 4-2" },
+    { file: "17-the-stream-pipeline.html", title: "The Stream Pipeline", group: "Workbook 6a · Section 4-3" },
+    { file: "18-reduce.html", title: "reduce", group: "Workbook 6a · Section 4-3" },
+    { file: "19-packages-layer-or-feature.html", title: "Packages: Layer or Feature", group: "Packages" }
   ],
   reference: [
     { file: "cheat-sheet.html", title: "Week 7 Cheat Sheet", group: "Reference", desc: "The syntax of the week on one page: an interface, implements, default methods, Comparable, a generic class and method, a lambda, the stream methods." },

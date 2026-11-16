@@ -1,0 +1,243 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Source, Transformation, Destination | Week 7 Visual Hub</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Sora:wght@500;700&family=Inter:wght@400;500&family=JetBrains+Mono:wght@400;500&display=swap">
+<style>
+  :root{
+    --bg:#080c17; --bg2:#0c1428; --surface:rgba(255,255,255,.045); --line:rgba(255,255,255,.09);
+    --ink:#eef2fb; --muted:#8496b6; --accent:#6ea0ff; --accent2:#8b7bff; --good:#46d98a; --warn:#ff6a6a;
+    --gold:#ffc862; --disp:'Sora',system-ui,sans-serif; --body:'Inter',system-ui,sans-serif;
+    --mono:'JetBrains Mono',ui-monospace,monospace;
+  }
+  *{box-sizing:border-box}
+  body{margin:0;min-height:100vh;color:var(--ink);font-family:var(--body);
+    background:radial-gradient(1200px 700px at 70% -10%,#141d38 0%,transparent 55%),
+               radial-gradient(900px 600px at 10% 110%,#161233 0%,transparent 50%),#080c17;
+    overflow-x:hidden}
+  #amb{position:fixed;inset:0;z-index:0;pointer-events:none;opacity:.6}
+  .back{position:relative;z-index:2;display:block;max-width:1120px;margin:0 auto;padding:26px 24px 0;
+    width:100%;font-family:var(--mono);font-size:.8rem;letter-spacing:.04em;color:var(--muted);
+    text-decoration:none;transition:color .15s}
+  .back:hover{color:var(--accent)}
+  .wrap{position:relative;z-index:1;max-width:1120px;margin:0 auto;padding:22px 24px 70px}
+  .tag{font-family:var(--mono);font-size:.72rem;letter-spacing:.22em;text-transform:uppercase;color:var(--accent);margin:0 0 14px}
+  h1{font-family:var(--disp);font-weight:700;font-size:clamp(2.3rem,6vw,3.6rem);line-height:1;margin:0 0 12px;
+    letter-spacing:-.03em;background:linear-gradient(180deg,#fff,#b9c6e6);-webkit-background-clip:text;
+    background-clip:text;color:transparent}
+  .lede{color:var(--muted);max-width:64ch;font-size:1.05rem;margin:0 0 26px;line-height:1.5}
+  .lede b{color:var(--ink)}
+
+  /* ---------- the stage IS the picture ---------- */
+  .stage{position:relative;background:linear-gradient(180deg,rgba(255,255,255,.03),rgba(255,255,255,.01));
+    border:1px solid var(--line);border-radius:24px;padding:22px;
+    box-shadow:0 1px 0 rgba(255,255,255,.06) inset,0 30px 80px -30px rgba(0,0,0,.8)}
+  .hd{font-family:var(--mono);font-size:.62rem;letter-spacing:.16em;text-transform:uppercase;color:var(--muted);margin:0 0 4px}
+  .who{font-family:var(--disp);font-weight:700;font-size:1.25rem;margin:0 0 12px;letter-spacing:-.01em}
+  .pb{font-family:var(--mono);font-weight:500;font-size:.8rem;padding:10px 12px;border-radius:11px;cursor:pointer;transition:.15s;
+    border:1px solid rgba(110,160,255,.5);background:rgba(110,160,255,.1);color:#bcd0ff;flex-shrink:0;white-space:nowrap}
+  .pb:hover{background:rgba(110,160,255,.2);border-color:var(--accent)}
+  .pb:disabled{opacity:.35;cursor:default;background:rgba(110,160,255,.1);border-color:rgba(110,160,255,.5)}
+  .pop{animation:pop .4s cubic-bezier(.2,.9,.3,1)}
+  @keyframes pop{from{transform:translateX(-30px) scale(.9);opacity:0}to{transform:none;opacity:1}}
+
+  /* the one sentence */
+  .caption{display:flex;gap:14px;align-items:flex-start;margin:18px 2px 0;padding-top:16px;border-top:1px solid var(--line)}
+  .caption .t{flex:1;min-width:0;font-size:1.05rem;line-height:1.55;color:var(--ink);padding-left:16px;border-left:3px solid var(--accent);transition:border-color .3s}
+  .caption.y .t{border-left-color:var(--gold)} .caption.g .t{border-left-color:var(--good)} .caption.w .t{border-left-color:var(--warn)}
+  .caption b.a{color:var(--accent)} .caption b.y{color:var(--gold)} .caption b.g{color:var(--good)} .caption b.w{color:var(--warn)}
+  .reset{font-family:var(--body);font-weight:500;font-size:.84rem;padding:8px 14px;border-radius:11px;cursor:pointer;
+    border:1px solid var(--line);background:transparent;color:var(--muted);transition:.15s;flex-shrink:0}
+  .reset:hover{border-color:var(--accent);color:var(--accent)}
+  button:focus-visible{outline:2px solid var(--accent);outline-offset:2px}
+
+  .take{margin-top:22px;background:linear-gradient(180deg,rgba(110,160,255,.08),rgba(139,123,255,.04));
+    border:1px solid var(--line);border-left:3px solid var(--accent);border-radius:12px;padding:16px 18px}
+  .take .tk{font-family:var(--mono);font-size:.66rem;letter-spacing:.14em;text-transform:uppercase;color:var(--accent);margin:0 0 8px}
+  .take p{margin:0;font-size:.95rem;color:var(--ink);line-height:1.55}
+  .take b{color:#fff}
+
+
+  /* ---------- this page ---------- */
+  .flow{display:grid;grid-template-columns:minmax(0,1fr) 26px minmax(0,1fr) 26px minmax(0,1fr);align-items:stretch}
+  .arrow{align-self:center;justify-self:center;width:0;height:0;border-top:9px solid transparent;border-bottom:9px solid transparent;
+    border-left:12px solid rgba(132,150,182,.5)}
+  .zone{border-radius:16px;padding:16px;min-width:0;display:flex;flex-direction:column;gap:8px}
+  .zone .who{margin:0}
+  .zone .rest{margin:0 0 6px;font-family:var(--mono);font-size:.66rem;letter-spacing:.14em;text-transform:uppercase}
+  .src{border:2px solid rgba(110,160,255,.5);background:rgba(110,160,255,.05)}
+  .src .who{color:#bcd0ff} .src .rest{color:var(--accent)}
+  .mid{border:2px solid rgba(255,200,98,.4);background:rgba(255,200,98,.03)}
+  .mid .who{color:var(--gold)} .mid .rest{color:var(--gold)}
+  .dst{border:2px solid rgba(70,217,138,.45);background:rgba(70,217,138,.04)}
+  .dst .who{color:#9fe3b6} .dst .rest{color:var(--good)}
+
+  .items{display:flex;flex-direction:column;gap:7px}
+  .it{display:flex;align-items:center;gap:10px;padding:8px 12px;border-radius:12px;border:1px solid rgba(255,255,255,.14);
+    background:rgba(0,0,0,.22);font-family:var(--disp);font-weight:500;font-size:.95rem;transition:opacity .3s}
+  .it i{flex-shrink:0;width:16px;height:16px;border-radius:50%}
+  .it em{margin-left:auto;font-style:normal;font-family:var(--mono);font-size:.58rem;letter-spacing:.12em;text-transform:uppercase;color:var(--muted)}
+  .src .it.sent{opacity:.45}
+  .send{margin-top:8px}
+
+  .rule{margin:4px 0 0;padding:14px;border-radius:12px;border:1px dashed rgba(255,200,98,.5);background:rgba(0,0,0,.2);
+    font-family:var(--disp);font-weight:700;font-size:1.1rem;text-align:center;color:var(--ink)}
+  .gate{flex:1;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:8px;min-height:110px}
+  .gate .it{width:100%;max-width:240px}
+  .gate .it.left{border-color:var(--warn);text-decoration:line-through;text-decoration-color:var(--warn);opacity:.7}
+  .vd{font-family:var(--mono);font-size:.7rem;letter-spacing:.12em;text-transform:uppercase}
+  .vd.k{color:var(--good)} .vd.d{color:var(--warn)}
+  .group{flex:1;display:flex;flex-direction:column;gap:7px;min-height:120px;padding:10px;border-radius:12px;
+    border:1px dashed rgba(70,217,138,.4);background:rgba(0,0,0,.18)}
+  .empty{margin:auto;font-family:var(--mono);font-size:.72rem;color:var(--muted)}
+
+  @media (max-width:820px){
+    .flow{grid-template-columns:1fr;grid-template-rows:auto 26px auto 26px auto}
+    .arrow{border-left:9px solid transparent;border-right:9px solid transparent;border-top:12px solid rgba(132,150,182,.5);border-bottom:0}
+    .gate{min-height:80px}
+    .group{min-height:70px}
+  }
+  @media (prefers-reduced-motion:reduce){*{animation-duration:.01ms!important;transition-duration:.01ms!important}#amb{display:none}}
+</style>
+</head>
+<body>
+<a class="back" href="../index.html#15-source-transformation-destination">&#8592; Week 7 index</a>
+<canvas id="amb"></canvas>
+<div class="wrap">
+  <p class="tag">Workbook 6a &middot; Section 4-1</p>
+  <h1>Source, Transformation, Destination</h1>
+  <p class="lede"><b>Three words to remember. Send the fruit through one at a time.</b></p>
+
+  <div class="stage">
+    <div class="flow">
+      <div class="zone src">
+        <p class="who">Source</p>
+        <p class="rest">data at rest</p>
+        <div class="items" id="srcList"></div>
+        <button class="pb send" id="bSend">send the next one</button>
+      </div>
+      <span class="arrow" aria-hidden="true"></span>
+      <div class="zone mid">
+        <p class="who">Data transformation</p>
+        <p class="rest">data in transit</p>
+        <p class="rule">keep only the red ones</p>
+        <div class="gate" id="gate"></div>
+      </div>
+      <span class="arrow" aria-hidden="true"></span>
+      <div class="zone dst">
+        <p class="who">Destination</p>
+        <p class="rest">data at rest</p>
+        <div class="group" id="group"></div>
+      </div>
+    </div>
+    <div class="caption" id="caption">
+      <div class="t" id="status"></div>
+      <button class="reset" id="bReset">Reset</button>
+    </div>
+  </div>
+
+  <div class="take">
+    <p class="tk">The one idea</p>
+    <p>Data starts <b>at rest</b> in a source, is <b>in transit</b> while it is transformed, and comes to <b>rest</b> again in a destination. <b>The source is left as it was.</b> Remember these three words: they come back when streams are introduced.</p>
+  </div>
+  <div id="rail"></div>
+</div>
+<script>
+(function(){
+  "use strict";
+  var $=function(s){return document.querySelector(s);};
+  var reduce=matchMedia("(prefers-reduced-motion: reduce)").matches;
+  var status=$("#status"),caption=$("#caption"),srcList=$("#srcList"),gate=$("#gate"),group=$("#group"),bSend=$("#bSend");
+
+  var FRUIT=[
+    {n:"apple",c:"#ff5b5b",red:true},
+    {n:"banana",c:"#ffd84a",red:false},
+    {n:"cherry",c:"#e8344e",red:true},
+    {n:"lime",c:"#7ad957",red:false},
+    {n:"strawberry",c:"#ff4d6d",red:true},
+    {n:"grape",c:"#9b6bff",red:false}
+  ];
+  var sent=0,kept=[],timer=null,pending=null;
+
+  function say(html,tone){ caption.className="caption"+(tone?" "+tone:""); status.innerHTML=html; }
+  function slide(el){
+    if(reduce) return;
+    el.animate([{transform:"translateX(-60px)",opacity:0},{transform:"none",opacity:1}],{duration:450,easing:"cubic-bezier(.2,.9,.3,1)"});
+  }
+  function itemEl(f,cls,tagText){
+    var d=document.createElement("div");
+    d.className="it"+(cls?" "+cls:"");
+    var dot=document.createElement("i"); dot.style.background=f.c; d.appendChild(dot);
+    d.appendChild(document.createTextNode(f.n));
+    if(tagText){ var em=document.createElement("em"); em.textContent=tagText; d.appendChild(em); }
+    return d;
+  }
+  function drawSource(){
+    srcList.innerHTML="";
+    FRUIT.forEach(function(f,i){ srcList.appendChild(itemEl(f,i<sent?"sent":"",i<sent?"sent":"")); });
+    bSend.disabled=sent>=FRUIT.length;
+  }
+  function drawGroup(fresh){
+    group.innerHTML="";
+    if(!kept.length){ group.innerHTML='<p class="empty">a new group, empty for now</p>'; return; }
+    kept.forEach(function(f,i){ var e=itemEl(f); group.appendChild(e); if(fresh&&i===kept.length-1) slide(e); });
+  }
+
+  function send(){
+    if(sent>=FRUIT.length) return;
+    if(timer){ clearTimeout(timer); timer=null; pending(); }
+    var f=FRUIT[sent];
+    sent++;
+    drawSource();
+    gate.innerHTML="";
+    var e=itemEl(f,f.red?"":"left");
+    gate.appendChild(e);
+    var v=document.createElement("span");
+    v.className="vd "+(f.red?"k":"d");
+    v.textContent=f.red?"kept":"left out";
+    gate.appendChild(v);
+    slide(e);
+    var last=sent===FRUIT.length;
+    var words=f.red
+      ? "The "+f.n+" leaves the source, it is red, so it is kept and comes to rest in the new group."
+      : "The "+f.n+" leaves the source, it is not red, so it is left out.";
+    if(last) words+=" All sent: <b class=\"a\">source</b>, <b class=\"y\">transformation</b>, <b class=\"g\">destination</b>, and the source is still as it was.";
+    say(words,last?"g":(f.red?"g":"w"));
+    if(f.red){
+      var arrive=function(){ kept.push(f); gate.innerHTML=""; drawGroup(true); timer=null; pending=null; };
+      if(reduce) arrive(); else { pending=arrive; timer=setTimeout(arrive,750); }
+    }
+  }
+  bSend.addEventListener("click",send);
+
+  function reset(){
+    if(timer){ clearTimeout(timer); timer=null; pending=null; }
+    sent=0; kept=[];
+    gate.innerHTML="";
+    drawSource(); drawGroup(false);
+    say("Six fruits rest in the source. Send them one at a time.","");
+  }
+  $("#bReset").addEventListener("click",reset);
+  reset();
+
+  /* ambient canvas */
+  var cv=$("#amb"),ctx=cv.getContext&&cv.getContext("2d"),parts=[];
+  function sizeC(){if(!ctx)return;cv.width=innerWidth;cv.height=innerHeight;}
+  function initParts(){parts=[];for(var i=0;i<46;i++)parts.push({x:Math.random(),y:Math.random(),
+    r:Math.random()*1.6+.3,s:Math.random()*.02+.004,o:Math.random()*.4+.1});}
+  function drawC(){if(!ctx)return;ctx.clearRect(0,0,cv.width,cv.height);
+    parts.forEach(function(p){p.y-=p.s/60;if(p.y<-.02)p.y=1.02;
+      ctx.beginPath();ctx.arc(p.x*cv.width,p.y*cv.height,p.r,0,7);
+      ctx.fillStyle="rgba(140,170,255,"+p.o+")";ctx.fill();});
+    requestAnimationFrame(drawC);}
+  if(ctx&&!reduce){sizeC();initParts();drawC();addEventListener("resize",sizeC);}
+})();
+</script>
+<script src="../manifest.js"></script>
+<script src="../../assets/rail.js"></script>
+<script>Rail.render(document.getElementById("rail"),{week:7,kind:"visuals",current:"15-source-transformation-destination"});</script>
+</body>
+</html>

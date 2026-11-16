@@ -268,7 +268,7 @@ Collections.sort(songs);</pre></div><div class="good"><span>After</span><pre>pub
         </article>
 
         <article class="card" data-cat="compile">
-          <div class="ch"><span class="cat">Compile</span><h2>A lambda changes a local variable</h2><a class="see" href="../visuals/17-anatomy-of-a-lambda.html">See it</a></div>
+          <div class="ch"><span class="cat">Compile</span><h2>A lambda changes a local variable</h2><a class="see" href="../visuals/16-anatomy-of-a-lambda.html">See it</a></div>
           <pre class="msg">java: local variables referenced from a lambda expression must be final or effectively final</pre>
           <p class="means">The lambda runs later, possibly somewhere else, so it may read a local variable only if that variable never changes. <code>total += n</code> changes it.</p>
           <p class="fix"><b>Fix</b>Do not change a local variable inside a lambda. Compute the total with <code>reduce</code>, or loop with a normal for loop.</p>
@@ -278,7 +278,7 @@ numbers.forEach(n -&gt; total += n);</pre></div><div class="good"><span>After</s
         </article>
 
         <article class="card" data-cat="compile">
-          <div class="ch"><span class="cat">Compile</span><h2>A block lambda with an expression and no return</h2><a class="see" href="../visuals/17-anatomy-of-a-lambda.html">See it</a></div>
+          <div class="ch"><span class="cat">Compile</span><h2>A block lambda with an expression and no return</h2><a class="see" href="../visuals/16-anatomy-of-a-lambda.html">See it</a></div>
           <pre class="msg">java: not a statement</pre>
           <p class="means">With braces, the body is a list of statements, and <code>n &gt; 2;</code> is not a statement. In a block, a lambda that must give a value needs <code>return</code>.</p>
           <p class="fix"><b>Fix</b>Drop the braces for one expression, or keep them and write <code>return</code>.</p>
@@ -288,7 +288,7 @@ nums.stream().filter(n -&gt; { return n &gt; 2; })</pre></div></div>
         </article>
 
         <article class="card" data-cat="compile">
-          <div class="ch"><span class="cat">Compile</span><h2>count() stored in an int</h2><a class="see" href="../visuals/18-the-stream-pipeline.html">See it</a></div>
+          <div class="ch"><span class="cat">Compile</span><h2>count() stored in an int</h2><a class="see" href="../visuals/17-the-stream-pipeline.html">See it</a></div>
           <pre class="msg">java: incompatible types: possible lossy conversion from long to int</pre>
           <p class="means"><code>count()</code> returns a <code>long</code>, which is bigger than an <code>int</code>.</p>
           <p class="fix"><b>Fix</b>Store it in a <code>long</code>.</p>
@@ -298,7 +298,7 @@ nums.stream().filter(n -&gt; { return n &gt; 2; })</pre></div></div>
         </article>
 
         <article class="card" data-cat="compile">
-          <div class="ch"><span class="cat">Compile</span><h2>reduce result in the wrong type</h2><a class="see" href="../visuals/19-reduce.html">See it</a></div>
+          <div class="ch"><span class="cat">Compile</span><h2>reduce result in the wrong type</h2><a class="see" href="../visuals/18-reduce.html">See it</a></div>
           <pre class="msg">java: incompatible types: Integer cannot be converted to String</pre>
           <p class="means"><code>reduce</code> gives back the same type as the elements. A stream of Integer reduces to an Integer, not a String.</p>
           <p class="fix"><b>Fix</b>Store the result in the element type, then convert it if you need text.</p>
@@ -307,7 +307,7 @@ String s = String.valueOf(sum);</pre></div></div>
         </article>
 
         <article class="card" data-cat="runtime">
-          <div class="ch"><span class="cat">Runtime</span><h2>A stream used twice</h2><a class="see" href="../visuals/18-the-stream-pipeline.html">See it</a></div>
+          <div class="ch"><span class="cat">Runtime</span><h2>A stream used twice</h2><a class="see" href="../visuals/17-the-stream-pipeline.html">See it</a></div>
           <pre class="msg">Exception in thread "main" java.lang.IllegalStateException: stream has already been operated upon or closed
 	at java.base/java.util.stream.AbstractPipeline.evaluate(AbstractPipeline.java:229)
 	at java.base/java.util.stream.ReferencePipeline.forEach(ReferencePipeline.java:596)
@@ -343,7 +343,7 @@ words.stream().filter(...).forEach(System.out::println);</pre></div></div>
         </article>
 
         <article class="card" data-cat="runtime">
-          <div class="ch"><span class="cat">Runtime</span><h2>Adding to the list that toList() gave back</h2><a class="see" href="../visuals/18-the-stream-pipeline.html">See it</a></div>
+          <div class="ch"><span class="cat">Runtime</span><h2>Adding to the list that toList() gave back</h2><a class="see" href="../visuals/17-the-stream-pipeline.html">See it</a></div>
           <pre class="msg">Exception in thread "main" java.lang.UnsupportedOperationException
 	at java.base/java.util.ImmutableCollections.uoe(ImmutableCollections.java:142)
 	at java.base/java.util.ImmutableCollections$AbstractImmutableCollection.add(ImmutableCollections.java:147)
@@ -357,7 +357,7 @@ list.add("Twister");</pre></div></div>
         </article>
 
         <article class="card" data-cat="quiet">
-          <div class="ch"><span class="cat">Quiet bug</span><h2>A pipeline with no terminal operation</h2><a class="see" href="../visuals/18-the-stream-pipeline.html">See it</a></div>
+          <div class="ch"><span class="cat">Quiet bug</span><h2>A pipeline with no terminal operation</h2><a class="see" href="../visuals/17-the-stream-pipeline.html">See it</a></div>
           <pre class="msg out">(no message) the program prints:
 done</pre>
           <p class="means"><code>filter</code> and <code>map</code> only describe the steps. Nothing runs, not even the println inside the lambda, until a terminal operation such as <code>forEach</code>, <code>count</code> or <code>collect</code> ends the stream.</p>
@@ -367,7 +367,7 @@ System.out.println("done");</pre></div><div class="good"><span>After</span><pre>
         </article>
 
         <article class="card" data-cat="quiet">
-          <div class="ch"><span class="cat">Quiet bug</span><h2>map thrown away, the list unchanged</h2><a class="see" href="../visuals/18-the-stream-pipeline.html">See it</a></div>
+          <div class="ch"><span class="cat">Quiet bug</span><h2>map thrown away, the list unchanged</h2><a class="see" href="../visuals/17-the-stream-pipeline.html">See it</a></div>
           <pre class="msg out">(no message) the program prints:
 [alice, bob]</pre>
           <p class="means">A stream never changes its source. The mapped values went nowhere because nothing collected them, and <code>names</code> is exactly as it was.</p>
