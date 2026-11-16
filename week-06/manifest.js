@@ -3,7 +3,7 @@
 window.HUB_MANIFEST = {
   week: 6,
   title: "Inheritance",
-  live: false,            // flip to true on Ray's go, then rebuild the search index
+  live: true,             // live 2026-11-16 (Ray's go)
   visuals: [
     { file: "01-the-duplication-problem.html", title: "The Duplication Problem", group: "Workbook 5a · Section 1-1" },
     { file: "02-is-a.html", title: "Is-A", group: "Workbook 5a · Section 1-1" },

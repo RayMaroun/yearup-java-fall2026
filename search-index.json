@@ -1807,7 +1807,7 @@
     "desc": "The solution of Static Classes run one line per press, with the variables changing. For after you have tried the exercise.",
     "group": "Workbook 4a · Section 4-2",
     "url": "week-05/exercises/name-formatter-methods.html",
-    "text": "← Week 5 index Workbook 4a · Section 4-2 · Exercise solution NameFormatter, Line by Line Run the solution one line per press and watch the variables change. The call in main · pick a method and the values to pass format(firstName, lastName) format(prefix, firstName, middleName, lastName, suffix) format(fullName) Back Next line Restart What this line does Variables What main gets back ? The one idea Only the five-parameter format builds the result. The other two turn what they received into five parts and call it. All three are static, so main calls them on the class: NameFormatter.format(...) . A part that is empty is skipped by its if , together with its space or comma."
+    "text": "← Week 5 index Workbook 4a · Section 4-2 · Exercise solution NameFormatter, Line by Line Run the solution one line per press and watch the variables change. The call in main · pick a method and the values to pass format(firstName, lastName) format(prefix, firstName, middleName, lastName, suffix) format(fullName) Back Next line Restart Keys: right arrow or space = next line, left arrow = back. What this line does Variables What main gets back ? The one idea Only the five-parameter format builds the result. The other two turn what they received into five parts and call it. All three are static, so main calls them on the class: NameFormatter.format(...) . A part that is empty is skipped by its if , together with its space or comma."
   },
   {
     "week": 5,
@@ -1928,5 +1928,665 @@
     "group": "Week 5",
     "url": "week-05/games/bug-hunter-5.html",
     "text": "← Week 5 index Workbook 4a · all sections · Game Bug Hunter 5 Fifteen snippets, one week 5 bug each: classes, constructors, tests, BigDecimal, static. Click the line you would change, then pick the fix. One point for the line, one for the fix. Game which line? score 0 / 30 Pick the fix Bug Hunter 5 A short piece of Java appears. One line is wrong: it does not compile, crashes, does the wrong thing, or hides a test. Then pick the fix that repairs it. Start Round over Play again round 0 / 15 Press Start . Keys 1 to 9 pick a line, A B C pick a fix, Enter moves on. Next Restart look for: a private field read from outside · a parameter assigned to itself · a getter returning the wrong field · a setter with no parameter · two overloads with one parameter list · an instance method on the class name · an instance field in a static method · new BigDecimal(0.1) · setScale with no RoundingMode · add not reassigned · equals on BigDecimal · a private @Test · assertEquals backwards · a test in src/main · a counter in the wrong place The one idea Week 5 bugs hide in who owns what. A field is private to its class and set with this. , a method that needs an object is called on an object, a BigDecimal is built from a String, rounded with a RoundingMode , reassigned after every operation and compared with compareTo . A test is public or package-private, lives in src/test/java , and names the expected value first."
+  },
+  {
+    "week": 6,
+    "weekLabel": "Week 6",
+    "section": "Visuals",
+    "title": "The Duplication Problem",
+    "desc": "",
+    "group": "Workbook 5a · Section 1-1",
+    "url": "week-06/visuals/01-the-duplication-problem.html",
+    "text": "← Week 6 index Workbook 5a · Section 1-1 The Duplication Problem Two classes, some lines written twice. Tap what repeats. Animal class nothing written here yet Cat class name age eat() meow() Dog class name age eat() bark() Cat and Dog each have four members, and three of them are the same in both. Tap one that appears twice. Reset The one idea What two classes share is written once, in a parent class. Each child keeps only what makes it different and inherits the rest. Pulling the shared part up is called generalization, and it is how code stays D.R.Y.: one place to change, not two."
+  },
+  {
+    "week": 6,
+    "weekLabel": "Week 6",
+    "section": "Visuals",
+    "title": "Is-A",
+    "desc": "",
+    "group": "Workbook 5a · Section 1-1",
+    "url": "week-06/visuals/02-is-a.html",
+    "text": "← Week 6 index Workbook 5a · Section 1-1 Is-A Say the sentence out loud. Pick a pair, then flip it. flip the pair Reset The one idea Inheritance is an is-a relationship, and it only reads one way. If \"a Dog is an Animal\" sounds true, Dog can extend Animal, and the arrow points from the child to the parent. If the sentence only works with \"has a\", that is an attribute, not inheritance."
+  },
+  {
+    "week": 6,
+    "weekLabel": "Week 6",
+    "section": "Visuals",
+    "title": "Reading a Class Diagram",
+    "desc": "",
+    "group": "Workbook 5a · Section 1-1",
+    "url": "week-06/visuals/03-reading-a-class-diagram.html",
+    "text": "← Week 6 index Workbook 5a · Section 1-1 Reading a Class Diagram Two classes, drawn the way developers sketch them. Tap any part. This is a class diagram: one box per class, three bands in each box, and one arrow between them. Tap a band, a sign, a name, a type, or the arrow. Reset The one idea A class box has three bands: the name, the attributes, the methods. The sign in front says who can reach a member: minus private, plus public, hash protected. The type comes after the colon. The hollow triangle always points at the parent. You will draw these same boxes yourself in diagrams.net."
+  },
+  {
+    "week": 6,
+    "weekLabel": "Week 6",
+    "section": "Visuals",
+    "title": "What a Child Inherits",
+    "desc": "",
+    "group": "Workbook 5a · Section 1-2",
+    "url": "week-06/visuals/04-what-a-child-inherits.html",
+    "text": "← Week 6 index Workbook 5a · Section 1-2 What a Child Inherits Call a method on the dog and watch which class answers. object · built with new Dog() dog comes from Animal name \"Lucky\" age 15 added by Dog breed \"Doberman\" dog.setName(\"Potato\") dog.getAge() dog.getBreed() class · the parent Animal String name int age setName(String name) getAge() Dog extends Animal class · the child Dog String breed getBreed() setBreed(String breed) Dog writes only breed and its two methods. Everything in Animal comes along with extends . Reset The one idea A child class has everything its parent has, without writing it again. When you call a method on a Dog, Java looks in Dog first, then up in Animal. The Dog object carries the Animal fields too, plus the ones Dog adds."
+  },
+  {
+    "week": 6,
+    "weekLabel": "Week 6",
+    "section": "Visuals",
+    "title": "Private, Protected, Public",
+    "desc": "",
+    "group": "Workbook 5a · Section 1-2",
+    "url": "week-06/visuals/05-private-protected-public.html",
+    "text": "← Week 6 index Workbook 5a · Section 1-2 Private, Protected, Public Pick who is knocking, then try each of Animal's three doors. package com.pluralsight public class Animal code inside Animal private String name door protected String favoriteFood door public String getName() door class · same package Dog extends Animal: a child class · same package Main not a child package com.other class · other package Kennel not a child Animal has three members, one per modifier. Four classes would like to use them. Reset The one idea private opens for the class itself only. protected opens for the class, its children, and every class in the same package. public opens for everyone. A child inherits a private field but cannot touch it: it goes through the getter."
+  },
+  {
+    "week": 6,
+    "weekLabel": "Week 6",
+    "section": "Visuals",
+    "title": "The Constructor Chain",
+    "desc": "",
+    "group": "Workbook 5a · Section 1-3",
+    "url": "week-06/visuals/06-constructor-chain.html",
+    "text": "← Week 6 index Workbook 5a · Section 1-3 The Constructor Chain Build one dog, one line per press, and see which constructor prints first. Dog dog = new Dog(); press to start building printed, in this order 1 2 constructor · in the parent Animal() println \"I am in the Animal Empty Constructor\" Dog extends Animal constructor · in the child Dog() super(); first line; Java adds it if you leave it out println \"I am in the Dog Empty Constructor\" Each constructor prints one line. Nothing has run yet : which line do you expect first? Reset The one idea Parent first, child after. new Dog() enters Dog's constructor, but its first line is super() , so Animal's constructor body runs to the end before Dog's own lines do. A dog is an animal first: that part is built first."
+  },
+  {
+    "week": 6,
+    "weekLabel": "Week 6",
+    "section": "Visuals",
+    "title": "super With Arguments",
+    "desc": "",
+    "group": "Workbook 5a · Section 1-3",
+    "url": "week-06/visuals/07-super-with-arguments.html",
+    "text": "← Week 6 index Workbook 5a · Section 1-3 super With Arguments Tap an argument and follow it: up to Animal, or kept by Dog. the statement new Dog( \"Lucky\" , 15 , \"Doberman\" ); object · the dog being built Animal's fields name empty age empty Dog's field breed empty constructor · in the parent Animal( String name , int age ) this.name = name; this.age = age; super(...) carries arguments up constructor · in the child Dog( String name , int age , String breed ) super ( name , age ); first statement this.breed = breed ; move super(...) down one line Three arguments go into new Dog(...) , but Dog has only one field of its own. The other two belong to Animal. Reset The one idea The arguments named in super(...) go up to the parent's constructor; the child stores the rest. Dog cannot store name and age itself, they are private in Animal, so it hands them up. And super(...) is always the first statement: the parent part is built before the child does anything of its own."
+  },
+  {
+    "week": 6,
+    "weekLabel": "Week 6",
+    "section": "Visuals",
+    "title": "Method Overriding",
+    "desc": "",
+    "group": "Workbook 5a · Section 2-1",
+    "url": "week-06/visuals/08-method-overriding.html",
+    "text": "← Week 6 index Workbook 5a · Section 2-1 · Overriding methods Method Overriding Call eat() on each object. Then remove a child's version and call again. class · the parent Human eat() \"I am a Human and I am Hungry!\" new object · Human human human.eat() class · extends Human Caveman eat() remove new object · Caveman caveman caveman.eat() class · extends Human ModernPerson eat() remove new object · ModernPerson modernPerson modernPerson.eat() Reset The one idea Overriding replaces an inherited method with the child's own version. Same name, same parameters, new body. When eat() is called, Java starts at the object's own class and uses the first eat() it finds on the way up to the parent."
+  },
+  {
+    "week": 6,
+    "weekLabel": "Week 6",
+    "section": "Visuals",
+    "title": "The @Override Annotation",
+    "desc": "",
+    "group": "Workbook 5a · Section 2-1",
+    "url": "week-06/visuals/09-the-override-annotation.html",
+    "text": "← Week 6 index Workbook 5a · Section 2-1 · @Override annotation The @Override Annotation Misspell the method, call it, then switch @Override on. class · the parent Human eat() remove it \"I am a Human and I am Hungry!\" class · extends Human Caveman eat() inherited from Human, unchanged + @Override eat() misspell it \"Me Hunt Lion and Eat!\" object · Caveman caveman caveman.eat() Reset The one idea @Override asks the compiler to check your override. Without it, a misspelled name quietly becomes a new method, and a method removed or renamed in the parent leaves yours overriding nothing. With it, both mistakes are a compile error you see at once. Write it on every override."
+  },
+  {
+    "week": 6,
+    "weekLabel": "Week 6",
+    "section": "Visuals",
+    "title": "Variable, Type, Object",
+    "desc": "",
+    "group": "Workbook 5a · Section 2-1",
+    "url": "week-06/visuals/10-variable-type-object.html",
+    "text": "← Week 6 index Workbook 5a · Section 2-1 · Polymorphism Variable, Type, Object One statement, three things. Tap each part, then change either side. variable type variable = object ; variable type · the label Human Caveman ModernPerson variable · the box → ✕ object · its real class create a different object new Human() new Caveman() new ModernPerson() Reset The one idea The variable type is fixed, and it is what the compiler checks. The object keeps its own class. A variable of the parent type can refer to any child object: Human h accepts a Human, a Caveman or a ModernPerson. Never the other way around: a Caveman variable cannot refer to a plain Human."
+  },
+  {
+    "week": 6,
+    "weekLabel": "Week 6",
+    "section": "Visuals",
+    "title": "Base Class References",
+    "desc": "",
+    "group": "Workbook 5a · Section 2-1",
+    "url": "week-06/visuals/11-base-class-references.html",
+    "text": "← Week 6 index Workbook 5a · Section 2-1 · Base class references Base Class References One Human variable, two kinds of object. Try both calls on each. variable · its type is Human Human h call a method through h h.eat() h.run() put an object in h h = new Human() h = new Caveman() → ✕ refers to object · its real class Caveman eat() run() \"Me running away from dinosaur!\" Reset The one idea The variable's type decides what you may call. The object decides what runs. The compiler only sees Human h , so only Human's methods are allowed. At run time Java looks at the real object, and a Caveman answers eat() the Caveman way."
+  },
+  {
+    "week": 6,
+    "weekLabel": "Week 6",
+    "section": "Visuals",
+    "title": "A Parent-Type Parameter",
+    "desc": "",
+    "group": "Workbook 5a · Section 2-1",
+    "url": "week-06/visuals/12-a-parent-type-parameter.html",
+    "text": "← Week 6 index Workbook 5a · Section 2-1 · Polymorphism A Parent-Type Parameter One method, one Human slot. Pass each object in and see what it takes. → ✕ pass it in method · written once feed(String label, Human human ) the parameter Human human what the method does with it human.eat() Reset The one idea A parameter is a variable of the parent type. Anything that is a Human fits in Human human , so one feed method serves every child, even a child written later. The method only says human.eat() , and the object decides which eat() runs ."
+  },
+  {
+    "week": 6,
+    "weekLabel": "Week 6",
+    "section": "Visuals",
+    "title": "One List, Many Types",
+    "desc": "",
+    "group": "Workbook 5a · Section 2-1",
+    "url": "week-06/visuals/13-heterogeneous-collections.html",
+    "text": "← Week 6 index Workbook 5a · Section 2-1 · Polymorphism One List, Many Types One list, three kinds of Human. Ask each one to eat, one press at a time. List<Human> people size 3 people.get(0).eat() Reset The one idea A list typed with the parent class can hold any of its children. A List<Human> takes a Human, a Caveman and a ModernPerson, because each one is a Human. The loop makes the same call on every element, and each object answers with the eat() of its own class ."
+  },
+  {
+    "week": 6,
+    "weekLabel": "Week 6",
+    "section": "Visuals",
+    "title": "instanceof and Downcasting",
+    "desc": "",
+    "group": "Workbook 5a · Section 2-1",
+    "url": "week-06/visuals/14-instanceof-and-downcasting.html",
+    "text": "← Week 6 index Workbook 5a · Section 2-1 · Polymorphism instanceof and Downcasting Ask each object if it is a Caveman. Then cast it and see what Java does. Reset The one idea Test first, then cast. A Human variable only reaches what Human has. instanceof asks the object what it really is, and a downcast such as (Caveman) person gives you a Caveman variable for the same object, so run() opens up. Cast an object that is not a Caveman and the program stops with ClassCastException ."
+  },
+  {
+    "week": 6,
+    "weekLabel": "Week 6",
+    "section": "Visuals",
+    "title": "Abstract Classes",
+    "desc": "",
+    "group": "Workbook 5a · Section 2-2",
+    "url": "week-06/visuals/15-abstract-classes.html",
+    "text": "← Week 6 index Workbook 5a · Section 2-2 · Abstraction Abstract Classes Try to build an Asset. Then build a House and look at what it carries. abstract class Asset fields String description int yearAcquired BigDecimal originalCost constructor Asset(...) fills the three fields finished method printMessage() new Asset(...) → new No Asset object. &uarr; extends class · extends Asset House its own fields String address int squareFeet int lotSize new House(...) → new No House object yet. Reset The one idea An abstract class is a parent too general to build. It is a real class: it holds fields, constructors and finished methods for its children to inherit. But new Asset(...) does not compile, because nobody owns just \"an asset\". You build a concrete child such as House , and every House is still an Asset."
+  },
+  {
+    "week": 6,
+    "weekLabel": "Week 6",
+    "section": "Visuals",
+    "title": "Abstract Methods",
+    "desc": "",
+    "group": "Workbook 5a · Section 2-2",
+    "url": "week-06/visuals/16-abstract-methods.html",
+    "text": "← Week 6 index Workbook 5a · Section 2-2 · Abstraction Abstract Methods Asset leaves a blank. Fill it in House, call it, then take it out again. abstract class Asset finished methods getDescription() has a body getYearAcquired() has a body abstract method BigDecimal getValue() no body ← extends does not compile class · extends Asset House a house to try int squareFeet int lotSize the blank from Asset BigDecimal getValue() missing write getValue() house.getValue() getValue() returns Reset The one idea An abstract method is a blank the parent leaves for its children. Asset writes the signature of getValue() and no body. Every concrete child must override it, or that child does not compile. In return, any Asset you ever hold is sure to have a getValue() you can call."
+  },
+  {
+    "week": 6,
+    "weekLabel": "Week 6",
+    "section": "Reference",
+    "title": "Week 6 Cheat Sheet",
+    "desc": "The syntax of the week on one page: extends, super, protected, overriding, a base class reference, instanceof, an abstract class.",
+    "group": "Reference",
+    "url": "week-06/reference/cheat-sheet.html",
+    "text": "← Week 6 index Week 6 · Reference Week 6 Cheat Sheet The syntax of the week, one line per idea. Pick a topic to see only that card; every card links to the page that shows it moving. Topic All Inheritance Access Constructors Overriding References Abstract extends and is-a 5a · 1-1, 1-2 is-a test A Caveman is a Human // yes: use extends A Human is a Caveman // no: the arrow only goes one way has-a is not extends A House has an address // a field, not a parent class extends public class Dog extends Animal { private String breed; // only what is a Dog's own } parent and child Animal: parent class, super class, base class Dog: child class, sub class, derived class why two classes repeat the same fields and methods: pull them up into one parent, once // generalization the child gets everything public or protected the parent has, plus its own fields and methods See it: The Duplication Problem Is-A Is-A or Has-A game What a child inherits 5a · 1-2 build one Dog dog = new Dog(); written in Animal dog.setName(\"Potato\"); // Dog never declares setName System.out.println(dog.getName()); // Potato written in Dog dog.setBreed(\"Doberman\"); dog.bark(); private is inherited private String name in Animal is part of every Dog, but Dog code cannot touch it: use getName() not upward Animal animal = new Animal(); animal.bark(); // error: cannot find symbol, the parent knows nothing of its children See it: What a Child Inherits Who Owns It game private, protected, public 5a · 1-2 private private St"
+  },
+  {
+    "week": 6,
+    "weekLabel": "Week 6",
+    "section": "Reference",
+    "title": "Glossary",
+    "desc": "The words of the week, each in one sentence, with the page that shows it.",
+    "group": "Reference",
+    "url": "week-06/reference/glossary.html",
+    "text": "← Week 6 index Week 6 · Reference Glossary The words of the week, one sentence each. Type a word and the list narrows as you go. Filter / Inheritance basics Inheritance A new class built on an existing one, so it gets the existing fields and methods without copying them. public class Dog extends Animal { ... } See it: The Duplication Problem Generalization Moving what two or more classes share up into one parent class, so each child keeps only what is its own. See it: The Duplication Problem extends The keyword that makes one class the child of another. public class Caveman extends Human See it: What a Child Inherits Is-a The test for inheritance: if the sentence \"a Caveman is a Human\" is true, Caveman can extend Human; the arrow points from child to parent. See it: Is-A Has-a A class that holds another as a field, such as a House with an address; it is not inheritance. private String address; See it: Is-A or Has-A game Parent class The class being extended; also called the super class or base class. public class Animal { ... } See it: What a Child Inherits Child class The class that extends another; also called the sub class or derived class. public class Dog extends Animal { ... } See it: What a Child Inherits Inherited member A field or method written in the parent that a child object has, even though the child never declares it. dog.setName(\"Potato\"); // written in Animal See it: What a Child Inherits Access private Reachable only inside its own class; a child inherits a "
+  },
+  {
+    "week": 6,
+    "weekLabel": "Week 6",
+    "section": "Reference",
+    "title": "Common Errors",
+    "desc": "No default constructor in the parent, super not first, private access from a child, a missing override, ClassCastException, cannot instantiate an abstract class: what it says, what to do.",
+    "group": "Reference",
+    "url": "week-06/reference/common-errors.html",
+    "text": "← Week 6 index Week 6 · Reference Common Errors The messages you will meet this week, word for word, and the quiet bugs that print no message at all. Read the first line of the message: it usually names the fix. In IntelliJ each compile message starts with java: . Show All Compile Runtime Quiet bugs Compile The parent has no constructor without parameters See it java: constructor Animal in class Animal cannot be applied to given types; required: String found: no arguments reason: actual and formal argument lists differ in length Every child constructor starts by calling a parent constructor. With no super(...) written, Java calls super() , and Animal only has Animal(String name) . The error points at the child class, or at the child constructor if it has none of its own. Fix Call the parent constructor that exists, as the first statement, and pass what it asks for. Before public class Dog extends Animal { private String breed; } After public class Dog extends Animal { private String breed; public Dog(String name, String breed) { super(name); this.breed = breed; } } Compile super(...) is not the first statement See it java: call to super must be first statement in constructor The parent has to be built before the child can add anything, so super(...) must come before every other line of the constructor, even a plain assignment. Fix Move the super(...) line to the top. Before public Dog(String name, String breed) { this.breed = breed; super(name); } After public Dog(String name"
+  },
+  {
+    "week": 6,
+    "weekLabel": "Week 6",
+    "section": "Reference",
+    "title": "Class Diagram Reference",
+    "desc": "How to read and draw a class box: name, attributes, methods, the visibility signs, the inheritance arrow, abstract in italics.",
+    "group": "Reference",
+    "url": "week-06/reference/class-diagram-reference.html",
+    "text": "← Week 6 index Week 6 · Reference Class Diagram Reference How to read and draw a class box. The box shows the name, the attributes and the methods; the arrow shows who extends whom. Type in the box to filter every row on the page, for example arrow, italic or protected. Filter Anatomy of one class box 5a · 1-1 the box Animal - name: String - age: int # favoriteFood: String + getName(): String + setName(name: String): void 1 class name, centered, bold 2 attributes: the fields 3 methods: what it can do 1 name The top band holds the class name, centered and bold. 2 attributes The middle band lists the fields, one per line, written sign name: Type . 3 methods The bottom band lists the methods, one per line, written sign name(parameters): ReturnType . empty band A class with no fields or no methods keeps the band, just empty, so every box has three bands. See it: Reading a Class Diagram Diagrams exercise The signs 5a · 1-2 Sign Means Java In the Animal box + public public String getName() + getName(): String - private private String name; - name: String # protected protected String favoriteFood; # favoriteFood: String See it: Reading a Class Diagram Private, Protected, Public From a box line to Java 5a · 1-2 Box line Java - age: int private int age; - originalCost: BigDecimal private BigDecimal originalCost; + getName(): String public String getName() { ... } + setName(name: String): void public void setName(String name) { ... } + bark(): void public void bark() { ... } + Dog(name"
+  },
+  {
+    "week": 6,
+    "weekLabel": "Week 6",
+    "section": "Exercises",
+    "title": "Reading This Week's Exercises",
+    "desc": "Tap any sentence of a workbook-style exercise and see what it asks you to write. Invented exercises, this week's words.",
+    "group": "Before you start",
+    "url": "week-06/exercises/reading-the-exercises.html",
+    "text": "← Week 6 index Before you start · Week 6 Reading This Week’s Exercises Tap any sentence of an exercise and see what it is really asking you to write. Three made-up exercises in the workbook’s own words, so you learn this week’s words (extends, parent, child, super, override, abstract), not the answers. Pick an exercise tap a sentence Every sentence on the paper is a job. Tap one. The sentence lights up here, and this box says what it asks you to do in code terms: which file, which member, which kind of method. ← previous sentence next sentence → The words the workbook uses this week, and what they mean for your code (tap one) The one idea An exercise is a list of jobs hidden in sentences. Read it once for the story, then once more sentence by sentence, and write down the job each one gives you before you type anything."
+  },
+  {
+    "week": 6,
+    "weekLabel": "Week 6",
+    "section": "Exercises",
+    "title": "Diagrams",
+    "desc": "In groups, no code: draw four vehicle classes, compare them, then pull what they share into a parent class.",
+    "group": "Workbook 5a · Section 1-1",
+    "url": "week-06/exercises/diagrams.html",
+    "text": "← Week 6 index Workbook 5a · Section 1-1 · Exercise 1 Diagrams In a group, on paper or in diagrams.net: draw four classes, compare them, then pull what they share into a parent class. What you are building A game needs ways for its characters to get around. Your group designs a class for each of four modes of transportation: Moped , Car , Semi-Truck and Hovercraft . Then you look for what they have in common and draw a parent class that holds it, with child classes that keep only what makes each one different. No project, no code, nothing to run. Notepad, pencil and paper, diagrams.net or lucidchart.com all work. The next exercise turns your drawing into Java. Do these in order 0 of 7 done Clear ticks What a finished answer looks like a music shop, not vehicles (partial) Step 1, each alone Guitar brand, strings, tune(), play() Piano brand, keys, tune(), play() Drum brand, pieces, tune(), play() Step 3, after pulling up Instrument brand, tune(), play() Guitar strings Piano keys Drum pieces A different topic on purpose. Your drawing will differ, and that is fine: a parent box on top, an arrow from each child, and in each child only what is its own. Where people get stuck Step 1 already shares things. Draft each class as if the others did not exist. The overlap is what Step 2 is for. A parent with everything in it. The parent holds only what ALL of your items have in common. Something only some share can go in a middle class: more than one level is allowed. Copying the parent's "
+  },
+  {
+    "week": 6,
+    "weekLabel": "Week 6",
+    "section": "Exercises",
+    "title": "Vehicle Inheritance",
+    "desc": "A Vehicle parent class and four child classes with no constructors, used from main through inherited getters and setters.",
+    "group": "Workbook 5a · Section 1-2",
+    "url": "week-06/exercises/vehicle-inheritance.html",
+    "text": "← Week 6 index Workbook 5a · Section 1-2 · Exercise 2 Vehicle Inheritance The classes from your Diagrams exercise as real Java: a Vehicle parent, four children, and a main that uses them. What you are building One project, vehicle-inheritance , with a parent class Vehicle and four child classes: Moped , Car , SemiTruck and Hovercraft . Vehicle holds four private properties and a getter and setter for each. Each child extends Vehicle. Main creates one of each and sets values with the setters. No constructors in any class: they come in the next exercise. The structure is the one you designed in Diagrams, so your children may have extra properties of their own. Do these in order 0 of 9 done Clear ticks What a finished run looks like run Moped color: Red Moped fuel capacity: 5 SemiTruck cargo capacity: 40000 Hovercraft passengers: 4 Yours will differ: your values, your wording. Check that every line comes from a getter, including the ones written in Vehicle. Where people get stuck The child has no getColor(). It does not need one. It inherits it from Vehicle. If the child does not say extends Vehicle, it has nothing. Properties copied into the children. The four properties go only in Vehicle. Children keep only what you designed as their own. A constructor appears. Do not write any constructor this time. If IntelliJ generated one, delete it. \"has private access\". Main reaches a field directly. Go through its getter or setter. Pages that help Is-A What a child inherits Private, pr"
+  },
+  {
+    "week": 6,
+    "weekLabel": "Week 6",
+    "section": "Exercises",
+    "title": "Vehicle Inheritance 2",
+    "desc": "New project, copy the first one in: constructors in every class, each child calling super, main rebuilt with the new arguments.",
+    "group": "Workbook 5a · Section 1-3",
+    "url": "week-06/exercises/vehicle-inheritance-2.html",
+    "text": "← Week 6 index Workbook 5a · Section 1-3 · Exercise 3 Vehicle Inheritance 2 Your vehicle classes get constructors, and every child has to call its parent's. What you are building Your vehicle-inheritance code in a new project , vehicle-inheritance-2 . Vehicle gets a constructor that takes a parameter for each of its private variables. Each child class gets a constructor too, and it calls the super constructor. Main then creates every object with the new arguments. The workbook says to continue in vehicle-inheritance; here it gets its own project and repository. No new classes and no new rules. Do these in order 0 of 7 done Clear ticks What a finished run looks like run Moped color: Red Moped passengers: 1 SemiTruck fuel capacity: 150 Hovercraft cargo capacity: 400 Yours will differ. What changes from the last exercise is how the objects are created, not what the getters print. Where people get stuck Every child turns red. That is the point: once Vehicle has a constructor with parameters, a child must call it. Read the message before you fix it. super does not compile. It must be the first statement in the child constructor. Values in the wrong order. The arguments follow the order of the parameters in Vehicle's constructor: the same order as the four properties. Red after copying. A package line or a class name does not match its file. Pages that help The constructor chain super with arguments What the red text means Constructor Chain Tracer The one idea A child builds its pa"
+  },
+  {
+    "week": 6,
+    "weekLabel": "Week 6",
+    "section": "Exercises",
+    "title": "Assets Manager",
+    "desc": "Asset, House and Vehicle with an overridden getValue in BigDecimal, one list of assets, instanceof to show the details.",
+    "group": "Workbook 5a · Section 2-1",
+    "url": "week-06/exercises/assets-manager.html",
+    "text": "← Week 6 index Workbook 5a · Section 2-1 · Exercise 1 Assets Manager An Asset parent, a House and a Vehicle child that each work out their own value, and one list that holds them all. What you are building One project, assets-manager . Asset has a description, a date acquired and an original cost, and a getValue() . House and Vehicle extend it and override getValue() with their own rules. Main puts several of each in one ArrayList of Asset and loops through it. No menu and no user input. The workbook warns that this is a hugely simplified academic example. Money is a BigDecimal , not a double. Do these in order 0 of 10 done Clear ticks What a finished run looks like run Description: lake cabin Date Acquired: 2019-06-01 Original Cost: $150000.00 Value: $131000.00 Address: 12 Pine Road Description: old pickup Date Acquired: 2012-03-15 Original Cost: $9500.00 Value: $750.00 Make/Model: Ford F-150 Year: 2008 Yours will differ: your assets, your layout. Work out one value by hand from the rules and compare. Where people get stuck Value is the same for every asset. The loop calls getValue() on an Asset, and the object's own class decides which version runs. Did House and Vehicle override it? double instead of BigDecimal. The cost and every value are BigDecimal, built from text. Use its methods, not the + and * signs. Cannot call getAddress() on an Asset. The list type only knows Asset's methods. Test with instanceof first, then downcast. Vehicle value off. The percentage is taken e"
+  },
+  {
+    "week": 6,
+    "weekLabel": "Week 6",
+    "section": "Exercises",
+    "title": "Abstract Assets Manager",
+    "desc": "New project, copy Assets Manager in: Asset becomes abstract with an abstract getValue, then a Cash class joins.",
+    "group": "Workbook 5a · Section 2-2",
+    "url": "week-06/exercises/abstract-assets-manager.html",
+    "text": "← Week 6 index Workbook 5a · Section 2-2 · Exercise 2 Abstract Assets Manager Your assets code in a new project: Asset becomes abstract, then a Cash class joins. What you are building A copy of assets-manager in a new project, abstract-assets-manager . In Asset the class becomes abstract and getValue() becomes an abstract method . Then a new class, Cash , extends Asset: the cash you stash away under your mattress. No new rules for houses or vehicles. The workbook asks you questions here: write your answers down as you go, they are part of the exercise. Do these in order 0 of 9 done Clear ticks What a finished run looks like run Description: lake cabin Date Acquired: 2019-06-01 Original Cost: $150000.00 Value: $131000.00 Address: 12 Pine Road Description: emergency cash Date Acquired: 2023-01-10 Original Cost: $500.00 Value: $500.00 Yours will differ. The houses and vehicles print as before; Cash is one more line of the list. Where people get stuck new Asset(...) is red. That is the answer to the workbook question. Read the message, write it down, then take the line out. Cash is red as soon as you write it. Read the message. It names what the class must do and what it must pass up. Write down your options. The vehicles stopped compiling. Check the signature of getValue() in Asset and in each child. They have to match. Copied the folder instead of a new project. The new project needs its own repository. Start with File > New > Project and paste the code in. Pages that help Abst"
+  },
+  {
+    "week": 6,
+    "weekLabel": "Week 6",
+    "section": "Games",
+    "title": "Is-A or Has-A",
+    "desc": "Two things appear: decide whether one IS a kind of the other, HAS the other, or neither.",
+    "group": "Workbook 5a · Section 1-1",
+    "url": "week-06/games/is-a-or-has-a.html",
+    "text": "← Week 6 index Workbook 5a · Section 1-1 · Game Is-A or Has-A? Two things appear. Does the first one IS-A kind of the second, HAS the second inside it, or neither? Fifteen rounds. Game is-a or has-a? score 0 time 0.0s Is-A or Has-A? Each round shows two class names. Say the sentence in your head: \"A is a B\" or \"A has a B\". Press 1 for IS-A, 2 for HAS-A, 3 for neither. Start Round over Play again round 0 / 15 Press Start or Enter. Restart Enter or Space skips the wait after an answer. IS-A = the child extends the parent · HAS-A = one class keeps the other in a field · is-a only works one way · neither = they have nothing to do with each other The one idea Say the sentence out loud. If \"a Dog is an Animal\" is true, Dog extends Animal. If \"a Phone is a Battery\" is false but \"a Phone has a Battery\" is true, Battery is a field inside Phone. The sentence works one way only: every dog is an animal, but not every animal is a dog."
+  },
+  {
+    "week": 6,
+    "weekLabel": "Week 6",
+    "section": "Games",
+    "title": "Who Owns It",
+    "desc": "A member and a class tree: pick the class where the member is written, then say whether a given class can use it.",
+    "group": "Workbook 5a · Section 1-2",
+    "url": "week-06/games/who-owns-it.html",
+    "text": "← Week 6 index Workbook 5a · Section 1-2 · Game Who Owns It? A class tree and one line of code. First pick the class where the member is written, then say whether that line compiles. Twelve rounds. Game who owns it? score 0 time 0.0s Who Owns It? Read the four boxes, then the line in gold. Step one: press the class that writes the member (keys 1 to 4). Step two: press 1 if the line compiles, 2 if it does not. A round counts when both steps are right. Start Round over Play again round 0 / 12 Press Start or Enter. Restart Enter or Space skips the wait after an answer. a child gets the public and protected members of every class above it · private stays inside its own class · protected also opens to the same package · a sibling gets nothing from its sibling The one idea A child inherits what its parents wrote, not what its siblings wrote. Public and protected members come down the tree; a private member stays behind the class door, so the child goes through a getter. Protected also opens to classes in the same package. Dog never gets Cat's purr() ."
+  },
+  {
+    "week": 6,
+    "weekLabel": "Week 6",
+    "section": "Games",
+    "title": "Constructor Chain Tracer",
+    "desc": "A new statement and constructors that print: put the printed lines in the order they appear.",
+    "group": "Workbook 5a · Section 1-3",
+    "url": "week-06/games/constructor-chain-tracer.html",
+    "text": "← Week 6 index Workbook 5a · Section 1-3 · Game Constructor Chain Tracer A new statement and constructors that print. Tap the printed lines in the order they appear. Eleven rounds. Game what prints first? score 0 time 0.0s Constructor Chain Tracer Read the classes and the gold statement, then tap the lines the program prints, first line first. One wrong tap ends the round and shows the right order. Start Round over Play again round 0 / 11 Press Start or Enter. Restart Enter or Space skips the wait after an answer. new Dog() runs Animal's constructor first, then Dog's · no super written = super() added for you, first · super(args) picks the parent constructor by its arguments · each new statement is a fresh chain The one idea The parent is always built first. Every constructor starts by running one in its parent, either the super(...) you wrote or an invisible super() . The chain climbs to the top, then each constructor finishes on the way back down."
+  },
+  {
+    "week": 6,
+    "weekLabel": "Week 6",
+    "section": "Games",
+    "title": "Override Detector",
+    "desc": "A parent method and a child method: override, overload, or a compile error with @Override.",
+    "group": "Workbook 5a · Section 2-1",
+    "url": "week-06/games/override-detector.html",
+    "text": "← Week 6 index Workbook 5a · Section 2-1 · Game Override Detector A parent method and a child method. Is the child's an override, an overload, or does it not compile? Thirteen rounds. Game override or overload? score 0 time 0.0s Override Detector Compare the two method lines: the name, then the parameter types, then the return type. Press 1 for override, 2 for overload, 3 for a compile error. Start Round over Play again round 0 / 13 Press Start or Enter. Restart Enter or Space skips the wait after an answer. override = same name, same parameter types, same return type · overload = same name, different parameters · @Override with no match = compile error · parameter names do not count The one idea Same name and same parameter types is an override; same name with different parameters is an overload. The child's version replaces the parent's only in the first case. @Override is the safety net: if nothing matches, the compiler stops you."
+  },
+  {
+    "week": 6,
+    "weekLabel": "Week 6",
+    "section": "Games",
+    "title": "Polymorphism Predictor",
+    "desc": "A variable of the parent type holding a child object: predict what the call prints.",
+    "group": "Workbook 5a · Section 2-1",
+    "url": "week-06/games/polymorphism-predictor.html",
+    "text": "← Week 6 index Workbook 5a · Section 2-1 · Game Polymorphism Predictor A variable of the parent type holding a child object. Predict what the call prints. Fourteen rounds. Game what prints? score 0 time 0.0s Polymorphism Predictor Read the classes and the gold lines, then pick what the program does. Keys 1 to 4 answer. Some rounds do not compile. Start Round over Play again round 0 / 14 Press Start or Enter. Restart Enter or Space skips the wait after an answer. the variable's type decides what you may call · the object's real class decides which version runs · a child that does not override inherits the parent's version · \" / \" separates printed lines The one idea The variable type decides what you are allowed to call; the object decides which version runs. Human h = new Caveman() may only call what Human has, but h.eat() runs Caveman's own eat(). One parent type, many kinds of object, each answering in its own way."
+  },
+  {
+    "week": 6,
+    "weekLabel": "Week 6",
+    "section": "Games",
+    "title": "instanceof Sleuth",
+    "desc": "An object and a test or a cast: true, false, compiles, or ClassCastException.",
+    "group": "Workbook 5a · Section 2-1",
+    "url": "week-06/games/instanceof-sleuth.html",
+    "text": "← Week 6 index Workbook 5a · Section 2-1 · Game instanceof Sleuth An object and a test or a cast. Does it print true, print false, run fine, throw ClassCastException, or not compile? Fourteen rounds. Game what happens? score 0 time 0.0s instanceof Sleuth Look at what the variable really holds, then at the gold lines. Press 1 true, 2 false, 3 no error, 4 ClassCastException, 5 compile error. Start Round over Play again round 0 / 14 Press Start or Enter. Restart Enter or Space skips the wait after an answer. instanceof asks about the real object · a child is also an instance of its parent · null is never an instance · a cast between siblings is refused by the compiler, a wrong cast within one family fails at run time The one idea instanceof asks what the object really is; a cast only changes what the compiler lets you call. A cast that does not match the real object throws ClassCastException when it runs, so test first: if (h instanceof Caveman) , then cast."
+  },
+  {
+    "week": 6,
+    "weekLabel": "Week 6",
+    "section": "Games",
+    "title": "Abstract or Concrete",
+    "desc": "A class and a statement: does it compile, and if not, which rule about abstract classes stops it.",
+    "group": "Workbook 5a · Section 2-2",
+    "url": "week-06/games/abstract-or-concrete.html",
+    "text": "← Week 6 index Workbook 5a · Section 2-2 · Game Abstract or Concrete? A class and a statement. Does it compile, and if not, which rule about abstract classes stops it? Thirteen rounds. Game does it compile? score 0 time 0.0s Abstract or Concrete? Read the classes, then the gold statement. Step one: compiles or not (keys 1, 2). If not, step two: pick the rule that stops it. A round counts when both steps are right. Start Round over Play again round 0 / 13 Press Start or Enter. Restart Enter or Space skips the wait after an answer. abstract class = no objects of its own · abstract method = a blank with no body · a concrete child must fill in every blank · an abstract class can still have fields, constructors and finished methods The one idea Abstract means too general to build. You cannot write new Shape() , but you can use Shape as a variable type and build a concrete child. An abstract method is a blank with no body; every concrete child must fill it in, and any class with a blank must itself be abstract."
+  },
+  {
+    "week": 6,
+    "weekLabel": "Week 6",
+    "section": "Games",
+    "title": "Bug Hunter 6",
+    "desc": "Short inheritance snippets with one bug each: tap the line that breaks it.",
+    "group": "Workbook 5a",
+    "url": "week-06/games/bug-hunter-6.html",
+    "text": "← Week 6 index Workbook 5a · Game Bug Hunter 6 A short inheritance snippet with one bug. Tap the line that breaks it. Fourteen rounds. Game which line breaks? score 0 time 0.0s Bug Hunter 6 Each snippet has exactly one bug. Read it like the compiler would and tap the line it complains about. Tap a line to answer. Start Round over Play again round 0 / 14 Press Start or Enter. Restart Enter or Space skips the wait after an answer. constructors: super first, parent arguments matched · private stays in its class · variable type decides what compiles · abstract: no new, fill in every blank · cast only after instanceof The one idea Read the line the compiler points at, then name the rule. A missing super call, a private member, a wrong variable type, a new on an abstract class, a cast on the wrong object: each one has a one-line fix, and each one stops the program in the same place every time."
+  },
+  {
+    "week": 7,
+    "weekLabel": "Week 7",
+    "section": "Visuals",
+    "title": "What an Interface Is",
+    "desc": "",
+    "group": "Workbook 6a · Section 1-1",
+    "url": "week-07/visuals/01-what-an-interface-is.html",
+    "text": "← Week 7 index Workbook 6a · Section 1-1 What an Interface Is The controls are yours. Press them, then swap the car behind them. your side · it never changes The controls steering wheel brake accelerator change a tire not one of the controls the other side · swap it gas car electric car diesel truck FRONT what happens inside Reset The one idea An interface is the set of controls you are given, not the machine behind them. In the next sections a Java interface will be exactly this: a named set of things you can ask an object to do. Different classes will each do them in their own way."
+  },
+  {
+    "week": 7,
+    "weekLabel": "Week 7",
+    "section": "Visuals",
+    "title": "Why Not Two Parents",
+    "desc": "",
+    "group": "Workbook 6a · Section 1-2",
+    "url": "week-07/visuals/02-why-not-two-parents.html",
+    "text": "← Week 7 index Workbook 6a · Section 1-2 Why Not Two Parents One class, two parents, one call. Press it and see who answers. Phone and Camera are parent classes Make them interfaces Phone turnOn() this one? Camera turnOn() this one? class CameraPhone turnOn() cameraPhone.turnOn() Reset The one idea Two parent classes can disagree about the same method, so Java allows a class only one. An interface has nothing to disagree with: it only says what must exist. That is why a class can take as many interfaces as it needs."
+  },
+  {
+    "week": 7,
+    "weekLabel": "Week 7",
+    "section": "Visuals",
+    "title": "Interface or Abstract Class",
+    "desc": "",
+    "group": "Workbook 6a · Section 1-2",
+    "url": "week-07/visuals/03-interface-or-abstract-class.html",
+    "text": "← Week 7 index Workbook 6a · Section 1-2 Interface or Abstract Class Tap a kind of member and see which side takes it. Then offer Tablet a second parent. try to put this inside each one an instance field a constructor a finished method an abstract method abstract class Asset interface Playable a class we are writing Tablet Tablet is a new class. It already has one parent class: Asset , and it uses the interface Playable. parent class · one slot only parent · slot filled Asset second parent · refused Device + give Tablet a second parent class: Device interfaces · as many as it needs Playable Chargeable Caller room for more ... Reset The one idea An abstract class is a half-built class. An interface is only a list of promises. The abstract class can hold fields, constructors and finished methods. The interface holds method names, plus constants and default or static methods. A class extends one class and implements as many interfaces as it needs."
+  },
+  {
+    "week": 7,
+    "weekLabel": "Week 7",
+    "section": "Visuals",
+    "title": "Implementing an Interface",
+    "desc": "",
+    "group": "Workbook 6a · Section 2-1",
+    "url": "week-07/visuals/04-implementing-an-interface.html",
+    "text": "← Week 7 index Workbook 6a · Section 2-1 Implementing an Interface Speaker promised two methods. Remove one, or tap its public, and watch the compiler. interface · the promise Playable a class that implements it must have void play(String song) void stop() ← implements class · implements Playable Speaker its own fields String name String currentSong the promised methods public void play(String song) public void stop() Reset The one idea implements is a promise, and the compiler checks it. A class that implements Playable must have every method the interface lists, with the same name and parameters, and public . Leave one out and the class does not compile. What each method does inside is up to the class."
+  },
+  {
+    "week": 7,
+    "weekLabel": "Week 7",
+    "section": "Visuals",
+    "title": "One Class, Several Interfaces",
+    "desc": "",
+    "group": "Workbook 6a · Section 2-1",
+    "url": "week-07/visuals/05-one-class-several-interfaces.html",
+    "text": "← Week 7 index Workbook 6a · Section 2-1 One Class, Several Interfaces Phone implements two interfaces. Add a third, or take one away. interface Playable void play(String song) void stop() interface Chargeable void charge() interface Caller void call(String number) → class Phone implements Reset The one idea A class can implement as many interfaces as it needs. Each interface in the list adds its own methods to what the class must have: Playable asks for two, Chargeable for one more. The class compiles only when every method of every interface on its list is written."
+  },
+  {
+    "week": 7,
+    "weekLabel": "Week 7",
+    "section": "Visuals",
+    "title": "An Interface as a Type",
+    "desc": "",
+    "group": "Workbook 6a · Section 2-1",
+    "url": "week-07/visuals/06-an-interface-as-a-type.html",
+    "text": "← Week 7 index Workbook 6a · Section 2-1 An Interface as a Type One Playable variable. Put three objects in it and try both calls on each. variable · its type is the interface Playable Playable player call a method through player player.stop() player.charge() put an object in player player = new Phone(\"Pocket\") player = new Speaker(\"Boom\") player = new SmartWatch() → ✕ refers to turned away by the compiler SmartWatch implements Caller, Chargeable object · its real class play(String song) stop() charge() prints \"The phone is charging.\" Reset The one idea An interface is a type too. A Playable variable can refer to any object whose class implements Playable, and to no other. The variable's type decides what you may call: only what Playable declares. The object decides what runs."
+  },
+  {
+    "week": 7,
+    "weekLabel": "Week 7",
+    "section": "Visuals",
+    "title": "instanceof With Interfaces",
+    "desc": "",
+    "group": "Workbook 6a · Section 2-2",
+    "url": "week-07/visuals/07-instanceof-with-interfaces.html",
+    "text": "← Week 7 index Workbook 6a · Section 2-2 instanceof With Interfaces One list, three different objects. Ask each one: can you charge? the question, asked of one object at a time thing instanceof Chargeable Ask the next object things · a List<Object>, it can hold any object Reset The one idea instanceof works with interfaces too. thing instanceof Chargeable is true for any object whose class implements Chargeable, whatever that class is. Ask first, then cast to the interface and call its methods."
+  },
+  {
+    "week": 7,
+    "weekLabel": "Week 7",
+    "section": "Visuals",
+    "title": "Default Methods",
+    "desc": "",
+    "group": "Workbook 6a · Section 2-2",
+    "url": "week-07/visuals/08-default-methods.html",
+    "text": "← Week 7 index Workbook 6a · Section 2-2 Default Methods An interface method that comes with a body. Call it, then change the classes. One interface: keep the default or override it interface Playable default print() \"I can play music!\" class Speaker implements Playable speaker.print() Two interfaces, the same default: the class must choose interface Playable default print() \"I can play music!\" class Phone implements Playable, Chargeable print() written in Phone no print() at all print() calls Playable.super.print() print() calls Chargeable.super.print() interface Chargeable default print() \"I can charge!\" Reset The one idea A default method is a finished method inside an interface. A class that implements the interface gets it for free and may override it. When two interfaces bring the same default, the class must override it, and can run the one it wants with Playable.super.print() ."
+  },
+  {
+    "week": 7,
+    "weekLabel": "Week 7",
+    "section": "Visuals",
+    "title": "Code to the Interface",
+    "desc": "",
+    "group": "Workbook 6a · Section 2-2",
+    "url": "week-07/visuals/09-code-to-the-interface.html",
+    "text": "← Week 7 index Workbook 6a · Section 2-2 Code to the Interface Change the type of the variable, then try to swap the list inside it. variable · its declared type declare names as an ArrayList a List put a new list in names names = new ArrayList<>() names = new LinkedList<>() the lines that use names names.add(\"Potato\") names.get(0) names.size() → ✕ refers to object · the real list implements List refused by the compiler a LinkedList object Reset The one idea Declare the variable as the interface, create the object as the class. With List<String> names = new ArrayList<>(); you can switch to another kind of list later by changing one word, and every line that uses names keeps working."
+  },
+  {
+    "week": 7,
+    "weekLabel": "Week 7",
+    "section": "Visuals",
+    "title": "Comparable",
+    "desc": "",
+    "group": "Workbook 6a · Section 2-2",
+    "url": "week-07/visuals/10-comparable.html",
+    "text": "← Week 7 index Workbook 6a · Section 2-2 Comparable Tap two songs to compare them, then let sort() do the same thing. songs · a List<Song>, in list order Collections.sort(songs) the question a.compareTo(b) Song answers with: this.seconds - other.seconds ? a negative number a goes before b zero same place a positive number a goes after b Reset The one idea Comparable is one promise: compareTo. It answers with a negative number, zero or a positive number, meaning before, same place or after. Once Song implements Comparable<Song> , Collections.sort() can put any list of songs in order, because that answer is all it ever asks for."
+  },
+  {
+    "week": 7,
+    "weekLabel": "Week 7",
+    "section": "Visuals",
+    "title": "The Need for Generics",
+    "desc": "",
+    "group": "Workbook 6a · Section 3-1",
+    "url": "week-07/visuals/11-the-need-for-generics.html",
+    "text": "← Week 7 index Workbook 6a · Section 3-1 The Need for Generics One pair class, one type. Ask for other types and count the classes. write it once with a type placeholder fix swap() Reset The one idea Without generics, one class works for one type. Every new type is another copy of the same code, and every change has to be repeated in each copy. With a type placeholder, the class is written once and works for every type."
+  },
+  {
+    "week": 7,
+    "weekLabel": "Week 7",
+    "section": "Visuals",
+    "title": "A Generic Class",
+    "desc": "",
+    "group": "Workbook 6a · Section 3-2",
+    "url": "week-07/visuals/12-a-generic-class.html",
+    "text": "← Week 7 index Workbook 6a · Section 3-2 A Generic Class One class with a blank called T. Fill the blank and see what you get. class · written once Pair< T > fill in T with Integer String int what the class holds and does T leftThing T rightThing T getLeftThing() void swap() → ✕ new object leftThing rightThing swap() Reset The one idea T is a placeholder for a type. The class is written once, and the type goes in between the angle brackets when you use it: a Pair of Integer and a Pair of String are the same class with T filled in. T takes a class, never a primitive, so int becomes Integer ."
+  },
+  {
+    "week": 7,
+    "weekLabel": "Week 7",
+    "section": "Visuals",
+    "title": "A Generic Method",
+    "desc": "",
+    "group": "Workbook 6a · Section 3-2",
+    "url": "week-07/visuals/13-a-generic-method.html",
+    "text": "← Week 7 index Workbook 6a · Section 3-2 A Generic Method One method, three calls. Make each call and watch what T becomes. → ✕ call it method · written once static < T > void displayWithLabel(String label, T value) the parameters, for this call String label T value what the method does with them System.out.println(label + \": \" + value) Reset The one idea A generic method has its own blank. The <T> before the return type declares it, and you never fill it in yourself: on each call the compiler works T out from the argument . One method replaces a whole set of overloads, one per type."
+  },
+  {
+    "week": 7,
+    "weekLabel": "Week 7",
+    "section": "Visuals",
+    "title": "Bounded Types",
+    "desc": "",
+    "group": "Workbook 6a · Section 3-3",
+    "url": "week-07/visuals/14-bounded-types.html",
+    "text": "← Week 7 index Workbook 6a · Section 3-3 Bounded Types A Duet only takes musicians. Try each type as T, then take the limit away. → ✕ use as T class · written once Duet<T extends Musician > T right now T a method inside Duet perform() left.perform(); right.perform(); Reset The one idea T extends Musician puts a limit on the blank. It works in two directions: Duet may call perform() on its T, because every allowed T is a Musician, and the compiler refuses any type that is not one. Without the limit, T could be anything and Duet could call nothing on it."
+  },
+  {
+    "week": 7,
+    "weekLabel": "Week 7",
+    "section": "Visuals",
+    "title": "Source, Transformation, Destination",
+    "desc": "",
+    "group": "Workbook 6a · Section 4-1",
+    "url": "week-07/visuals/15-source-transformation-destination.html",
+    "text": "← Week 7 index Workbook 6a · Section 4-1 Source, Transformation, Destination Three words to remember. Send the fruit through one at a time. Source data at rest send the next one Data transformation data in transit keep only the red ones Destination data at rest Reset The one idea Data starts at rest in a source, is in transit while it is transformed, and comes to rest again in a destination. The source is left as it was. Remember these three words: they come back when streams are introduced."
+  },
+  {
+    "week": 7,
+    "weekLabel": "Week 7",
+    "section": "Reference",
+    "title": "Week 7 Cheat Sheet",
+    "desc": "The syntax of the week on one page: an interface, implements, default methods, Comparable, a generic class and method, a lambda, the stream methods.",
+    "group": "Reference",
+    "url": "week-07/reference/cheat-sheet.html",
+    "text": "← Week 7 index Week 7 · Reference Week 7 Cheat Sheet The syntax of the week, one line per idea. Pick a topic to see only that card; every card links to the page that shows it moving. Topic All Interfaces As a type Comparable Generics Lambdas Streams An interface and implements 6a · 1-1, 2-1 declare it public interface Playable { void play(String song); // abstract: no body, public without saying so void stop(); } implement it public class Speaker implements Playable { @Override public void play(String song) { ... } @Override public void stop() { ... } } the promise every abstract method must be written, with public , or the class itself is declared abstract no new new Playable() // error: Playable is abstract; cannot be instantiated class or interface a class: one parent with extends , shares code and fields an interface: any number with implements , shares only what a class can do See it: What an Interface Is Interface or Abstract Class Implementing an Interface Interface Implementer game Several interfaces and default methods 6a · 2-1, 2-2 several public class Phone implements Playable, Chargeable { ... } default method public interface Playable { default void print() { System.out.println(\"I can play music!\"); } } inherited a class that does not write print() gets this one override @Override public void print() { ... } // the class may replace it two defaults clash Playable and Chargeable both have print(): the class must override it @Override public void print() { Playable"
+  },
+  {
+    "week": 7,
+    "weekLabel": "Week 7",
+    "section": "Reference",
+    "title": "Glossary",
+    "desc": "The words of the week, each in one sentence, with the page that shows it.",
+    "group": "Reference",
+    "url": "week-07/reference/glossary.html",
+    "text": "← Week 7 index Week 7 · Reference Glossary The words of the week, one sentence each. Type a word and the list narrows as you go. Filter / Interfaces Interface A named set of features: it lists what a class can do, and every class that implements it has to provide those methods. public interface Playable { ... } See it: What an Interface Is Abstract method A method in an interface with a name and parameters but no body; it is public without saying so. void stop(); See it: What an Interface Is implements The keyword that makes a class provide every method of an interface. public class Speaker implements Playable See it: Implementing an Interface Implementing class A class that implements an interface; it must write every abstract method with public, or it does not compile. public void stop() { ... } See it: Implementing an Interface Several interfaces A class has at most one parent class but can implement as many interfaces as it needs, separated by commas. class Phone implements Playable, Chargeable See it: One Class, Several Interfaces Interface or abstract class An abstract class shares fields and code with its children, one parent only; an interface shares only a set of features, as many as you like. See it: Interface or Abstract Class Default method An interface method that comes with a body; a class inherits it and may override it, but does not have to. default void print() { ... } See it: Default Methods Unrelated defaults Two interfaces with the same default method: a c"
+  },
+  {
+    "week": 7,
+    "weekLabel": "Week 7",
+    "section": "Reference",
+    "title": "Common Errors",
+    "desc": "A method left unimplemented, two defaults that clash, a type outside the bounds, a stream used twice, a lambda that changes a local variable: what it says, what to do.",
+    "group": "Reference",
+    "url": "week-07/reference/common-errors.html",
+    "text": "← Week 7 index Week 7 · Reference Common Errors The messages you will meet this week, word for word, and the quiet bugs that print no message at all. Read the first line of the message: it usually names the fix. In IntelliJ each compile message starts with java: . Show All Compile Runtime Quiet bugs Compile A class does not write an interface method See it java: Speaker is not abstract and does not override abstract method play(String) in Playable Speaker says implements Playable but never writes play(String) . Every abstract method of the interface must be written in the class. The same message appears when the name or the parameters differ, because then it is a different method. Fix Write the method with the exact name, parameters and return type from the interface, and put @Override above it so a typo is caught too. Before public class Speaker implements Playable { public void stop() { ... } } After public class Speaker implements Playable { @Override public void play(String song) { ... } @Override public void stop() { ... } } Compile The method is not public See it java: charge() in Radio cannot implement charge() in Chargeable attempting to assign weaker access privileges; was public Methods of an interface are public without saying so. A method that implements one cannot be less open, so the missing public in the class is the error. Fix Add public to the method in the class. Before class Radio implements Chargeable { void charge() { ... } } After class Radio implements "
+  },
+  {
+    "week": 7,
+    "weekLabel": "Week 7",
+    "section": "Reference",
+    "title": "Class Diagram Reference 2",
+    "desc": "Beyond one box and one arrow: interfaces and the dashed arrow, has-a lines, how many, static and abstract marks, a whole design on one page.",
+    "group": "Reference",
+    "url": "week-07/reference/class-diagram-reference.html",
+    "text": "← Week 7 index Week 7 · Reference Class Diagram Reference 2 Basics first: the class box, the signs, the inheritance arrow and italics are on the Week 6 reference . This page adds what Week 7 needs: interfaces, the dashed arrow, has-a lines, how many, and a whole design on one page. Type in the box to filter, for example dashed, diamond or static. Filter An interface box 6a · 1-1 the box &laquo;interface&raquo; Playable + play(song: String): void + stop(): void + print(): void 1 the mark &laquo;interface&raquo; above the name 2 italic: abstract, no body 3 upright: default, has a body the mark Write &laquo;interface&raquo; above the name. That is the only thing that tells it apart from a class box. two bands An interface has no attributes, so the box has the name band and the methods band. abstract methods Written in italics : they have no body. Every class that implements the interface has to write them. default methods Written upright, like any method with a body. A class may override them or not. signs Every method is + , public, without you writing it in the Java. See it: What an Interface Is Default Methods Two arrows, two meanings 6a · 2-1 side by side Animal Dog &laquo;interface&raquo; Playable Speaker solid: extends dashed: implements solid, hollow triangle A child class extends a parent class: a Dog is an Animal. One parent only. dashed, hollow triangle A class implements an interface: a Speaker can do what Playable lists. As many as the class needs. direction Both arr"
+  },
+  {
+    "week": 7,
+    "weekLabel": "Week 7",
+    "section": "Exercises",
+    "title": "Reading This Week's Exercises",
+    "desc": "Tap any sentence of a workbook-style exercise and see what it asks you to write. Invented exercises, this week's words.",
+    "group": "Before you start",
+    "url": "week-07/exercises/reading-the-exercises.html",
+    "text": "← Week 7 index Before you start · Week 7 Reading This Week’s Exercises Tap any sentence of an exercise and see what it is really asking you to write. Three made-up exercises in the workbook’s own words, so you learn this week’s words (interface, implements, default, Comparable, generic, type parameter, stream, lambda, filter, map), not the answers. Pick an exercise tap a sentence Every sentence on the paper is a job. Tap one. The sentence lights up here, and this box says what it asks you to do in code terms: which file, which member, which kind of method. ← previous sentence next sentence → The words the workbook uses this week, and what they mean for your code (tap one) The one idea An exercise is a list of jobs hidden in sentences. Read it once for the story, then once more sentence by sentence, and write down the job each one gives you before you type anything."
+  },
+  {
+    "week": 7,
+    "weekLabel": "Week 7",
+    "section": "Exercises",
+    "title": "Fixed Assets",
+    "desc": "In groups, no code: redraw the fixed assets diagram so that the portfolio holds valuables through an interface.",
+    "group": "Workbook 6a · Section 1-2",
+    "url": "week-07/exercises/fixed-assets.html",
+    "text": "← Week 7 index Workbook 6a · Section 1-2 · Module 1 exercise Fixed Assets In a group, no code: redraw the asset portfolio diagram so the portfolio can hold bank accounts and credit cards too. What you are building Your group starts from the workbook's class diagram: a Portfolio made of one or more FixedAssets (jewelry, gold, a house) that can total their value. You redraw it so the portfolio also holds liquid accounts: a BankAccount with withdraw and deposit , and a CreditCard with charge and pay , which is debt. No project, no code, nothing to run. drawio.com, lucidchart.com, visual-paradigm.com or figma.com all work, free. The next exercise turns your drawing into Java. Do these in order 0 of 8 done Clear ticks What a finished answer looks like a music shop, not assets (partial) Before Inventory items: List<Instrument> Instrument (abstract) <- Guitar, Drum After interface Sellable getPrice() Instrument implements Sellable <- Guitar, Drum GiftCard implements Sellable load(), spend() Inventory items: List<Sellable> A different topic on purpose. Your drawing will differ: what matters is a box marked interface, dashed arrows to it, and a list in Portfolio whose type is the interface. Where people get stuck BankAccount extends the asset parent. It is not a fixed asset: its value moves. Only the promise to answer getValue() is shared, and that is what the interface is for. withdraw or charge on a fixed asset. A house has no balance. Keep those methods on the two liquid classes on"
+  },
+  {
+    "week": 7,
+    "weekLabel": "Week 7",
+    "section": "Exercises",
+    "title": "Portfolio Manager",
+    "desc": "A Valuable interface, a FixedAsset parent with three children, a bank account and a credit card, used from main.",
+    "group": "Workbook 6a · Section 2-1",
+    "url": "week-07/exercises/portfolio-manager.html",
+    "text": "← Week 7 index Workbook 6a · Section 2-1 · Exercise 1 Portfolio Manager A Valuable interface, a FixedAsset parent with three children, a bank account and a credit card, used from main. What you are building One project, portfolio-manager . The main code is in com.pluralsight ; every finance class goes in com.pluralsight.finance . You build the classes from your Module 1 diagram: the Valuable interface, a FixedAsset parent with Jewelry , Gold and House , and BankAccount and CreditCard . Money is a BigDecimal , built from text. No Portfolio class yet: that is the next exercise. Main only creates two bank accounts and tries to deposit into both, then you answer four questions. Do these in order 0 of 9 done Clear ticks What a finished run looks like run (one possible) Whatever you print is up to you, for example: Bank account value: 12600 Credit card value: -300 House value: 250000 Yours will differ. The point is the two questions: what compiles for each variable, and why. Where people get stuck Red after creating the packages. A package line does not match the folder, or a finance class is in the wrong package. Check the first line of each file. Constructor arguments in the wrong order. The workbook's snippet and its diagram do not list the bank account's arguments in the same order. Follow the order of the constructor you wrote. Money passed as a plain number. BigDecimal values and amounts are made from text, like new BigDecimal(\"12500\"). A bare 100 does not fit. BankAccount ex"
+  },
+  {
+    "week": 7,
+    "weekLabel": "Week 7",
+    "section": "Exercises",
+    "title": "Portfolio Manager 2",
+    "desc": "New project, copy the first one in: a Portfolio class that holds any Valuable and finds the most and least valuable.",
+    "group": "Workbook 6a · Section 2-2",
+    "url": "week-07/exercises/portfolio-manager-2.html",
+    "text": "← Week 7 index Workbook 6a · Section 2-2 · Exercise 2 Portfolio Manager 2 A Portfolio class that holds any Valuable and finds the most and the least valuable. What you are building Your portfolio-manager code in a new project , portfolio-manager-2 . You add a Portfolio class in the finance package: a name and an owner, a list of Valuable , an add method, getValue() for the net value, getMostValuable() and getLeastValuable() . Money is a BigDecimal . The workbook says to continue in portfolio-manager; here it gets its own project and repository. Nothing in the finance classes changes. The bonus asks main to prompt for new assets. Do these in order 0 of 8 done Clear ticks What a finished run looks like run (one possible) Portfolio: Retirement Owner: Sam Net value: 41200 Most valuable: House Least valuable: Credit card Yours will differ: your items, your layout. Work out the net value by hand and compare. Where people get stuck A bank account will not go into add(). The parameter type is too narrow. It must accept anything that promises getValue(). The credit card raises the total. Its value is debt. Look at what its getValue() returns. Most and least valuable give the same item. Check which way you compare, and that you start from the first item in the list. An empty portfolio breaks it. With no items there is nothing to return. Decide what you want to happen. Pages that help An interface as a type instanceof with interfaces Code to the interface Which Calls Compile Week 7 chea"
+  },
+  {
+    "week": 7,
+    "weekLabel": "Week 7",
+    "section": "Exercises",
+    "title": "Working With Interfaces",
+    "desc": "A Person class that implements Comparable, so a list of people sorts itself by last name.",
+    "group": "Workbook 6a · Section 2-2",
+    "url": "week-07/exercises/working-with-interfaces.html",
+    "text": "← Week 7 index Workbook 6a · Section 2-2 · Exercise 3 Working With Interfaces A Person class that implements Comparable, so a list of people sorts itself by last name. What you are building One project, working-with-interfaces . This time you do not write the interface: Comparable comes with Java and has one method, compareTo . Person has a first name, a last name and an age. Main builds a list of people and sorts it with Collections.sort . First you watch the sort fail, and work out why. Then Person implements Comparable and sorts by last name. The bonus breaks ties. Do these in order 0 of 9 done Clear ticks What a finished run looks like run (one possible) Before the sort (added order) Stone, Pat, 40 Ames, Lee, 22 Moss, Kit, 31 After the sort (last name) Ames, Lee, 22 Moss, Kit, 31 Stone, Pat, 40 Yours will differ: your people, your print format. Check that the order is by last name. Where people get stuck Collections.sort is red. That is the lesson. Read the message: the list element type has to be Comparable. Fix it in Person, not in main. The compareTo parameter type is wrong. The type between the angle brackets in the header is the type of the parameter. The order looks backwards. compareTo returns a negative, zero or a positive number. Which sign means this person comes first? Comparing last names with a minus or less-than sign. Text is not compared like numbers. Look for a compare method that String already has. Pages that help Comparable Comparable Sorter Implementin"
+  },
+  {
+    "week": 7,
+    "weekLabel": "Week 7",
+    "section": "Exercises",
+    "title": "Custom Collections",
+    "desc": "A generic FixedList that refuses to grow past its maximum size, tested with numbers and dates.",
+    "group": "Workbook 6a · Section 3-3",
+    "url": "week-07/exercises/custom-collections.html",
+    "text": "← Week 7 index Workbook 6a · Section 3-3 · Exercise 1 Custom Collections A generic FixedList that refuses to grow past its maximum size, tested with numbers and dates. What you are building One project, custom-collections , with the package com.pluralsight.collection . In it, FixedList<T> : a list of any type of item, but with a maximum number of items. Its constructor takes that maximum, and its add method must not let the list grow past it. A getItems() gives the list back. In main you test it with different types, and check the add logic with the workbook's numbers and dates. Do these in order 0 of 8 done Clear ticks What a finished run looks like run (one possible) Whatever your add does when full is up to you, for example: items stored: 3 List is full, 43 not added Yours will differ. A failing line you keep makes the program stop or complain, so comment that line out once you have seen the message. Where people get stuck The list grows past the maximum. The check goes before the add: compare the current size with maxSize. The dates test will not run. Adding a plain number to a list of dates is refused before the program starts. Read the message, then comment the line out. FixedList<T> shows red in main. The import of the collection package is missing, or the class is in the wrong package. Using int instead of Integer. A type parameter can only be a class. Use the class form, Integer. Pages that help The need for generics A generic class Bounded types Generics Validator W"
+  },
+  {
+    "week": 7,
+    "weekLabel": "Week 7",
+    "section": "Exercises",
+    "title": "Data Processing",
+    "desc": "A list of people searched and summarized with traditional loops: matches by name, average, oldest and youngest age.",
+    "group": "Workbook 6a · Section 4-1",
+    "url": "week-07/exercises/data-processing.html",
+    "text": "← Week 7 index Workbook 6a · Section 4-1 · Exercise 1 Data Processing A list of people searched and summarized with traditional loops: matches by name, average, oldest and youngest age. What you are building One project, data-processing , with the package com.pluralsight.loops . A Person class has firstName , lastName and age . A Program.java with main builds a list of at least 10 people, asks the user for a name, and finds the people whose first or last name matches. Then it works out three numbers from the ages. Everything is done with traditional for loops . No streams yet: the next exercise converts this code. Do these in order 0 of 9 done Clear ticks What a finished run looks like run (one possible) Enter a name to search: Ames People with matching name: Pat Ames Lee Ames Average age: 31.5 Oldest person's age: 52 Youngest person's age: 19 Yours will differ: your people, your name, your layout. Work out the average by hand from your list. Where people get stuck Capital letters stop a match. ames and Ames are different text. Compare in a way that ignores case. The average is a whole number. Dividing two ints gives an int. Make sure one side is a decimal. Oldest is always 0 or always the first. The starting value matters: begin with the first person's age, not a made-up number. No match prints nothing. That is correct for the list, but say so to the user. Pages that help Source, Transformation, Destination Week 7 cheat sheet The one idea Loops say how; streams say what. Wri"
+  },
+  {
+    "week": 7,
+    "weekLabel": "Week 7",
+    "section": "Games",
+    "title": "Interface Implementer",
+    "desc": "An interface and a class: does the class compile, and if not, which method is missing or wrong.",
+    "group": "Workbook 6a · Section 2-1",
+    "url": "week-07/games/interface-implementer.html",
+    "text": "← Week 7 index Workbook 6a · Section 2-1 · Game Interface Implementer An interface and a class that implements it. Does the class compile, and if not, what is wrong? Thirteen rounds. Game does it compile? score 0 time 0.0s Interface Implementer Read the interface, then the class. Press 1 to 4 to pick: it compiles, a method is missing, the return type is wrong, or the method is not public. Start Round over Play again round 0 / 13 Press Start or Enter. Restart Enter or Space skips the wait after an answer. implements = a promise to write every abstract method · same name, same parameter types, same return type · the method must be public · extra methods are fine · a default method need not be written The one idea A class that implements an interface must write every abstract method, exactly as the interface declares it, and public. A different name, different parameters or a missing method is the same complaint: the class is not abstract and does not override the abstract method. A wrong return type or a missing public gets its own message."
+  },
+  {
+    "week": 7,
+    "weekLabel": "Week 7",
+    "section": "Games",
+    "title": "Which Calls Compile",
+    "desc": "A variable of an interface type holding an object: pick the calls the compiler accepts.",
+    "group": "Workbook 6a · Section 2-1",
+    "url": "week-07/games/which-calls-compile.html",
+    "text": "← Week 7 index Workbook 6a · Section 2-1 · Game Which Calls Compile A variable of an interface type holding an object. Tap the one line the compiler refuses. Eleven rounds. Game which line breaks? score 0 time 0.0s Which Calls Compile Read the classes, then the lines in main. Exactly one line does not compile. Tap it. Remember: the type of the variable decides what you may call. Start Round over Play again round 0 / 11 Press Start or Enter. Restart Enter or Space skips the wait after an answer. the variable type decides what you may call · the object decides which version runs · an interface cannot be built with new · a cast turns the variable type into a class type The one idea The type of the variable decides which calls compile, whatever object it holds. A Playable variable can call only what Playable declares, even when it holds a Phone . To reach more, cast it or use a variable of the bigger type."
+  },
+  {
+    "week": 7,
+    "weekLabel": "Week 7",
+    "section": "Games",
+    "title": "Default or Override",
+    "desc": "Interfaces with default methods and a class: predict which version prints, or whether it compiles at all.",
+    "group": "Workbook 6a · Section 2-2",
+    "url": "week-07/games/default-or-override.html",
+    "text": "← Week 7 index Workbook 6a · Section 2-2 · Game Default or Override Interfaces with default methods and a class. Which version prints, or does it not compile? Twelve rounds. Game which print() runs? score 0 time 0.0s Default or Override Read the interfaces and the class, then pick what the main line prints. Some rounds do not compile. A slash in an answer means a second line of output. Start Round over Play again round 0 / 12 Press Start or Enter. Restart Enter or Space skips the wait after an answer. a class may keep a default method or override it · two defaults with the same name force the class to override · Interface.super.method() calls one of them · a class method beats an interface default The one idea A default method is a finished method inside an interface: a class may keep it or override it. When two interfaces bring the same default, the class must override it and may call either one with Playable.super.print() . A method inherited from a parent class wins over any default."
+  },
+  {
+    "week": 7,
+    "weekLabel": "Week 7",
+    "section": "Games",
+    "title": "Comparable Sorter",
+    "desc": "A compareTo rule and a short list: put the items in the order sort() will leave them.",
+    "group": "Workbook 6a · Section 2-2",
+    "url": "week-07/games/comparable-sorter.html",
+    "text": "← Week 7 index Workbook 6a · Section 2-2 · Game Comparable Sorter A compareTo rule and a short list. Tap the items in the order sort() leaves them. Eleven rounds. Game after sort() score 0 time 0.0s Comparable Sorter Read the compareTo rule, then the list. Tap the items in the order they will have after Collections.sort(list). Negative means this one goes first. Start Round over Play again round 0 / 11 Press Start or Enter. Restart Enter or Space skips the wait after an answer. compareTo negative = this item first · zero = a tie, the original order is kept · positive = this item after · sort() uses nothing but the number compareTo returns The one idea sort() uses only the number compareTo returns. A negative number puts this item before the other, a positive number after it, and zero means equal: equal items keep the order they had in the list. Change the rule and the same list sorts differently."
+  },
+  {
+    "week": 7,
+    "weekLabel": "Week 7",
+    "section": "Games",
+    "title": "Generics Validator",
+    "desc": "A generic declaration and a line that uses it: compiles, or the reason it does not.",
+    "group": "Workbook 6a · Section 3-3",
+    "url": "week-07/games/generics-validator.html",
+    "text": "← Week 7 index Workbook 6a · Section 3-3 · Game Generics Validator A generic declaration and a line that uses it. Does it compile, and if not, why? Thirteen rounds. Game does this line compile? score 0 time 0.0s Generics Validator Read the generic class, then the line that uses it. Press 1 to 5: it compiles, the type is wrong, a primitive is used, the bound is not met, or the number of types is wrong. Start Round over Play again round 0 / 13 Press Start or Enter. Restart Enter or Space skips the wait after an answer. T is a blank filled in when the class is used · type arguments are classes, never int or double · extends sets a limit on T · one blank in the class, one type in the <> The one idea A generic class is a blueprint with blanks: the type you put in <> fills every T, and the compiler checks every use. The type must be a class, the right number of them, and inside the bound when the blank says T extends Musician ."
+  },
+  {
+    "week": 7,
+    "weekLabel": "Week 7",
+    "section": "Games",
+    "title": "Bug Hunter 7",
+    "desc": "Short snippets with interfaces, generics and streams, one bug each: tap the line that breaks it.",
+    "group": "Workbook 6a",
+    "url": "week-07/games/bug-hunter-7.html",
+    "text": "← Week 7 index Workbook 6a · Game Bug Hunter 7 A short program with interfaces, generics or streams and one bug. Tap the line that breaks it. Twelve rounds. Game find the bug score 0 time 0.0s Bug Hunter 7 Each snippet has exactly one bug. Read it, then tap the line the compiler or the JVM complains about. Start Round over Play again round 0 / 12 Press Start or Enter. Restart Enter or Space skips the wait after an answer. a class must write every abstract method of its interface · the variable type decides what you may call · T extends sets a limit · a stream must end in collect, count, reduce or forEach · a lambda may use only effectively final locals The one idea Most bugs here are the compiler keeping a promise you made. An interface promises methods, a generic type promises one kind of value, a bound promises a limit, and a lambda promises not to change the locals it reads. Read the error line first and ask which promise it points at."
   }
 ]

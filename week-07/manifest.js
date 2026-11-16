@@ -3,7 +3,7 @@
 window.HUB_MANIFEST = {
   week: 7,
   title: "Advanced OOP",
-  live: false,            // flip to true on Ray's go, then rebuild the search index
+  live: true,             // live 2026-11-16 (Ray's go); eight Monday Nov 23 entries are hidden below
   visuals: [
     { file: "01-what-an-interface-is.html", title: "What an Interface Is", group: "Workbook 6a · Section 1-1" },
     { file: "02-why-not-two-parents.html", title: "Why Not Two Parents", group: "Workbook 6a · Section 1-2" },
@@ -20,16 +20,16 @@ window.HUB_MANIFEST = {
     { file: "13-a-generic-method.html", title: "A Generic Method", group: "Workbook 6a · Section 3-2" },
     { file: "14-bounded-types.html", title: "Bounded Types", group: "Workbook 6a · Section 3-3" },
     { file: "15-source-transformation-destination.html", title: "Source, Transformation, Destination", group: "Workbook 6a · Section 4-1" },
-    { file: "16-anatomy-of-a-lambda.html", title: "Anatomy of a Lambda", group: "Workbook 6a · Section 4-2" },
-    { file: "17-the-stream-pipeline.html", title: "The Stream Pipeline", group: "Workbook 6a · Section 4-3" },
-    { file: "18-reduce.html", title: "reduce", group: "Workbook 6a · Section 4-3" },
-    { file: "19-packages-layer-or-feature.html", title: "Packages: Layer or Feature", group: "Packages" }
+    /* HIDDEN until Ray reviews it (taught Mon Nov 23): remove this comment to show it */ // { file: "16-anatomy-of-a-lambda.html", title: "Anatomy of a Lambda", group: "Workbook 6a · Section 4-2" },
+    /* HIDDEN until Ray reviews it (taught Mon Nov 23): remove this comment to show it */ // { file: "17-the-stream-pipeline.html", title: "The Stream Pipeline", group: "Workbook 6a · Section 4-3" },
+    /* HIDDEN until Ray reviews it (taught Mon Nov 23): remove this comment to show it */ // { file: "18-reduce.html", title: "reduce", group: "Workbook 6a · Section 4-3" },
+    /* HIDDEN until Ray reviews it (taught Mon Nov 23): remove this comment to show it */ // { file: "19-packages-layer-or-feature.html", title: "Packages: Layer or Feature", group: "Packages" }
   ],
   reference: [
     { file: "cheat-sheet.html", title: "Week 7 Cheat Sheet", group: "Reference", desc: "The syntax of the week on one page: an interface, implements, default methods, Comparable, a generic class and method, a lambda, the stream methods." },
     { file: "glossary.html", title: "Glossary", group: "Reference", desc: "The words of the week, each in one sentence, with the page that shows it." },
     { file: "common-errors.html", title: "Common Errors", group: "Reference", desc: "A method left unimplemented, two defaults that clash, a type outside the bounds, a stream used twice, a lambda that changes a local variable: what it says, what to do." },
-    { file: "stream-methods.html", title: "Stream Methods", group: "Reference", desc: "filter, map, sorted, distinct, forEach, count, reduce, collect and toList: what goes in, what comes out, one example each." },
+    /* HIDDEN until Ray reviews it (taught Mon Nov 23): remove this comment to show it */ // { file: "stream-methods.html", title: "Stream Methods", group: "Reference", desc: "filter, map, sorted, distinct, forEach, count, reduce, collect and toList: what goes in, what comes out, one example each." },
     { file: "class-diagram-reference.html", title: "Class Diagram Reference 2", group: "Reference", desc: "Beyond one box and one arrow: interfaces and the dashed arrow, has-a lines, how many, static and abstract marks, a whole design on one page." }
   ],
   exercises: [
@@ -40,7 +40,7 @@ window.HUB_MANIFEST = {
     { file: "working-with-interfaces.html", title: "Working With Interfaces", group: "Workbook 6a · Section 2-2", desc: "A Person class that implements Comparable, so a list of people sorts itself by last name." },
     { file: "custom-collections.html", title: "Custom Collections", group: "Workbook 6a · Section 3-3", desc: "A generic FixedList that refuses to grow past its maximum size, tested with numbers and dates." },
     { file: "data-processing.html", title: "Data Processing", group: "Workbook 6a · Section 4-1", desc: "A list of people searched and summarized with traditional loops: matches by name, average, oldest and youngest age." },
-    { file: "data-processing-2.html", title: "Data Processing 2", group: "Workbook 6a · Section 4-3", desc: "New project, copy the first one in: the same answers again, this time with streams in a new package." }
+    /* HIDDEN until Ray reviews it (taught Mon Nov 23): remove this comment to show it */ // { file: "data-processing-2.html", title: "Data Processing 2", group: "Workbook 6a · Section 4-3", desc: "New project, copy the first one in: the same answers again, this time with streams in a new package." }
   ],
   games: [
     { file: "interface-implementer.html", title: "Interface Implementer", group: "Workbook 6a · Section 2-1", desc: "An interface and a class: does the class compile, and if not, which method is missing or wrong." },
@@ -48,8 +48,8 @@ window.HUB_MANIFEST = {
     { file: "default-or-override.html", title: "Default or Override", group: "Workbook 6a · Section 2-2", desc: "Interfaces with default methods and a class: predict which version prints, or whether it compiles at all." },
     { file: "comparable-sorter.html", title: "Comparable Sorter", group: "Workbook 6a · Section 2-2", desc: "A compareTo rule and a short list: put the items in the order sort() will leave them." },
     { file: "generics-validator.html", title: "Generics Validator", group: "Workbook 6a · Section 3-3", desc: "A generic declaration and a line that uses it: compiles, or the reason it does not." },
-    { file: "lambda-lab.html", title: "Lambda Lab", group: "Workbook 6a · Section 4-2", desc: "A lambda and one input: what does it return, or what does it print." },
-    { file: "stream-predictor.html", title: "Stream Predictor", group: "Workbook 6a · Section 4-3", desc: "A list and a stream pipeline: predict the result." },
+    /* HIDDEN until Ray reviews it (taught Mon Nov 23): remove this comment to show it */ // { file: "lambda-lab.html", title: "Lambda Lab", group: "Workbook 6a · Section 4-2", desc: "A lambda and one input: what does it return, or what does it print." },
+    /* HIDDEN until Ray reviews it (taught Mon Nov 23): remove this comment to show it */ // { file: "stream-predictor.html", title: "Stream Predictor", group: "Workbook 6a · Section 4-3", desc: "A list and a stream pipeline: predict the result." },
     { file: "bug-hunter-7.html", title: "Bug Hunter 7", group: "Workbook 6a", desc: "Short snippets with interfaces, generics and streams, one bug each: tap the line that breaks it." }
   ]
 };
