@@ -244,8 +244,8 @@ java: cannot infer type arguments for Duet&lt;&gt;
   where T is a type-variable:
     T extends Object declared in class Pair</pre>
           <p class="means"><code>Pair&lt;Integer&gt;</code> fixed T to Integer, and "Me" is a String. One type parameter means one type for both values.</p>
-          <p class="fix"><b>Fix</b>Use the same type for both, or use a class with two type parameters, such as <code>MixedPair&lt;T, K&gt;</code>.</p>
-          <div class="ba"><div class="bad"><span>Before</span><pre>Pair&lt;Integer&gt; p = new Pair&lt;&gt;(63, "Me");</pre></div><div class="good"><span>After</span><pre>MixedPair&lt;Integer, String&gt; p = new MixedPair&lt;&gt;(63, "Me");</pre></div></div>
+          <p class="fix"><b>Fix</b>Use the same type for both values.</p>
+          <div class="ba"><div class="bad"><span>Before</span><pre>Pair&lt;Integer&gt; p = new Pair&lt;&gt;(63, "Me");</pre></div><div class="good"><span>After</span><pre>Pair&lt;Integer&gt; p = new Pair&lt;&gt;(63, 65);</pre></div></div>
         </article>
 
         <article class="card" data-cat="compile">
