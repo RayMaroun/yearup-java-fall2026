@@ -76,6 +76,10 @@
   .ph:hover,.ans:hover{border-color:var(--accent);color:var(--accent)}
   .ph:focus-visible,.ans:focus-visible,.ln:focus-visible{outline:2px solid var(--accent);outline-offset:2px}
   .ph.put{display:none}
+  .ph.sel{border-color:var(--gold);color:var(--gold);background:rgba(255,200,98,.12)}
+  .bin{cursor:pointer;transition:border-color .15s}
+  .bin:hover,.bin:focus-visible{border-color:var(--accent);outline:none}
+  .bin.no{border-color:var(--warn)}
   .ans.right{border-color:var(--good);color:var(--good);background:rgba(70,217,138,.1)}
   .ans.wrong{border-color:var(--warn);color:var(--warn);background:rgba(255,106,106,.08)}
 
@@ -173,17 +177,17 @@
       <section class="step" data-s="s2">
         <div class="hd"><span class="num">2</span><h2>Sort the words</h2>
           <label class="tickbox"><input type="checkbox" data-t="s2">done</label></div>
-        <p class="txt">Every word on your list becomes a class, a field, a method, or nothing at all. Try it on a library first.</p>
+        <p class="txt">Every word on your list becomes a class, a field, a method, or nothing at all. You decide, the page answers. Try it on a library first.</p>
         <div class="play">
-          <div class="row"><p class="k" style="margin:0">Press a phrase from a library hand-out</p><button class="ghost" id="sortReset" type="button">Reset</button></div>
+          <div class="row"><p class="k" style="margin:0">Press a phrase, then press the place where it belongs</p><button class="ghost" id="sortReset" type="button">Reset</button></div>
           <div class="row" id="pool" style="margin-top:10px"></div>
           <div class="bins">
-            <div class="bin" data-b="class"><p class="bk">Class</p></div>
-            <div class="bin" data-b="field"><p class="bk">Field</p></div>
-            <div class="bin" data-b="method"><p class="bk">Method</p></div>
-            <div class="bin out" data-b="out"><p class="bk">Stays out</p></div>
+            <div class="bin" data-b="class" role="button" tabindex="0"><p class="bk">Class</p></div>
+            <div class="bin" data-b="field" role="button" tabindex="0"><p class="bk">Field</p></div>
+            <div class="bin" data-b="method" role="button" tabindex="0"><p class="bk">Method</p></div>
+            <div class="bin out" data-b="out" role="button" tabindex="0"><p class="bk">Stays out</p></div>
           </div>
-          <div class="say" id="say2">Ten phrases, four places. Press one and it lands where it belongs.</div>
+          <div class="say" id="say2">Ten phrases from a library hand-out, four places. Press a phrase, then the place you think it belongs.</div>
         </div>
       </section>
 
@@ -353,19 +357,38 @@
     {p:"0.25 for every day late",b:"out",s:"A number used inside the method. The diagram names the method, not how it calculates."}
   ];
   var NAMES={"class":"a class","field":"a field","method":"a method","out":"stays out"};
+  var ASK={"class":"Ask yourself: is this a kind of thing with data of its own?","field":"Ask yourself: is this something the object knows?",
+           "method":"Ask yourself: is this something the object does?","out":"Ask yourself: would the diagram lose anything without it?"};
+  var START="Ten phrases from a library hand-out, four places. Press a phrase, then the place you think it belongs.";
+  var sel=null;
   function buildPool(){
+    sel=null;
     $("#pool").innerHTML=WORDS.map(function(w,i){return '<button type="button" class="ph" data-i="'+i+'">'+w.p+'</button>';}).join("");
     $$(".bin span").forEach(function(s){s.remove();});
-    say("#say2","Ten phrases, four places. Press one and it lands where it belongs.");
+    $$(".bin").forEach(function(b){b.classList.remove("no");});
+    say("#say2",START);
   }
   $("#pool").addEventListener("click",function(e){
-    var b=e.target.closest(".ph"); if(!b) return; var w=WORDS[+b.getAttribute("data-i")];
-    b.classList.add("put");
+    var b=e.target.closest(".ph"); if(!b) return;
+    $$(".ph.sel").forEach(function(x){x.classList.remove("sel");});
+    $$(".bin").forEach(function(x){x.classList.remove("no");});
+    b.classList.add("sel"); sel=b;
+    say("#say2","<b>"+WORDS[+b.getAttribute("data-i")].p+"</b>: where does it go? Press Class, Field, Method or Stays out.");
+  });
+  function drop(bin){
+    if(!sel){ say("#say2","Press a phrase first, then a place."); return; }
+    var w=WORDS[+sel.getAttribute("data-i")];
+    $$(".bin").forEach(function(x){x.classList.remove("no");});
+    if(bin.getAttribute("data-b")!==w.b){ bin.classList.add("no"); say("#say2","Not there. "+ASK[w.b]+" Pick another place.","w"); return; }
+    sel.classList.remove("sel"); sel.classList.add("put"); sel=null;
     $$(".bin span.new").forEach(function(s){s.classList.remove("new");});
-    var sp=document.createElement("span"); sp.className="new"; sp.textContent=w.p;
-    $('.bin[data-b="'+w.b+'"]').appendChild(sp);
-    say("#say2","<b>"+w.p+"</b>: "+NAMES[w.b]+". "+w.s, w.b==="out"?"w":"y");
-    if(!$$(".ph:not(.put)").length) setTimeout(function(){ say("#say2","All sorted. Do the same with your list from Step 1: each word lands in one of the four places.","g"); },reduce?0:900);
+    var sp=document.createElement("span"); sp.className="new"; sp.textContent=w.p; bin.appendChild(sp);
+    say("#say2","Right: <b>"+w.p+"</b> is "+(w.b==="out"?"left out":NAMES[w.b])+". "+w.s,"g");
+    if(!$$(".ph:not(.put)").length) setTimeout(function(){ say("#say2","All sorted. Do the same with your own list from Step 1: each word lands in one of the four places.","g"); },reduce?0:1600);
+  }
+  $$(".bin").forEach(function(bin){
+    bin.addEventListener("click",function(){ drop(bin); });
+    bin.addEventListener("keydown",function(e){ if(e.key==="Enter"||e.key===" "){ e.preventDefault(); drop(bin); } });
   });
   $("#sortReset").addEventListener("click",buildPool);
   buildPool();
