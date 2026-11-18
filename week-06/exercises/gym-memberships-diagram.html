@@ -114,7 +114,7 @@
   .sep{stroke:rgba(255,255,255,.5);stroke-width:1.3}
   .tn{fill:var(--ink);font-family:var(--mono);font-size:14px;font-weight:500;text-anchor:middle}
   .tr{fill:#bcd0ff;font-family:var(--mono);font-size:12px}
-  .wire{stroke:rgba(132,150,182,.6);stroke-width:1.6;stroke-dasharray:5 5;fill:none}
+  .wire{stroke:rgba(132,150,182,.6);stroke-width:1.6;fill:none}
   .wire.right{stroke:var(--good);stroke-dasharray:none} .wire.wrong{stroke:var(--warn);stroke-dasharray:none}
   .head{fill:#0b1020;stroke-width:1.6;display:none}
   .head.right{display:inline;stroke:var(--good)} .head.wrong{display:inline;stroke:var(--warn)}
@@ -172,6 +172,18 @@
   .left2 .yours p{margin:0}
   .left2 .yours code{font-size:1rem;color:var(--ink)}
   @media (max-width:700px){.who{grid-template-columns:repeat(2,minmax(0,1fr))}.left2{grid-template-columns:1fr}}
+
+  /* the worked example at the top */
+  .exscroll{overflow-x:auto;-webkit-overflow-scrolling:touch}
+  .exsvg{display:block;width:100%;min-width:720px;height:auto}
+  .exsvg .tn{font-size:13px} .exsvg .tr{font-size:11px} .exsvg .ti{font-style:italic}
+  .arw{fill:none;stroke:rgba(255,255,255,.6);stroke-width:1.4}
+  .arh{fill:#0b1020;stroke:rgba(255,255,255,.6);stroke-width:1.4}
+  .dot{cursor:pointer} .dot circle{fill:#0b1020;stroke:var(--gold);stroke-width:1.5;transition:fill .15s}
+  .dot text{fill:var(--gold);font-family:var(--mono);font-size:12px;font-weight:500;text-anchor:middle;pointer-events:none}
+  .dot:hover circle,.dot:focus-visible circle{fill:rgba(255,200,98,.25)} .dot:focus-visible{outline:none}
+  .dot.on circle{fill:var(--gold)} .dot.on text{fill:#0b1020}
+  .dot.seen circle{stroke:var(--good)} .dot.seen text{fill:var(--good)} .dot.on.seen circle{fill:var(--gold);stroke:var(--gold)} .dot.on.seen text{fill:#0b1020}
 </style>
 </head>
 <body>
@@ -188,6 +200,64 @@
     <div class="box brief">
       <p>Step 1 of the homework asks for the class diagram of the <b>finished</b> program, the way it looks after Step 12: <code>Membership</code>, <code>BasicMembership</code>, <code>PremiumMembership</code> and <code>FamilyMembership</code>.</p>
       <p>In each step below you answer questions about the gym, with the hand-out in front of you, and the page draws what your answers say. Then a box marked <b class="yt">Your turn</b> tells you what to draw on your own in diagrams.net. The page does two classes with you. The two others are yours: step 5 says exactly what is left.</p>
+    </div>
+
+    <p class="lab" style="margin-top:16px">What a finished diagram looks like</p>
+    <div class="play ex">
+      <p class="k">A different family, the same shape as yours. Press a number.</p>
+      <div class="exscroll">
+        <svg class="exsvg" viewBox="0 0 900 374" role="img" aria-label="A finished class diagram: LibraryItem on top, with Book, Dvd and Magazine under it, each joined to LibraryItem by an arrow">
+            <rect class="bx" data-for="" x="260" y="10" width="380" height="152" rx="4"/>
+            <text class="tn ti" x="450.0" y="29">LibraryItem</text>
+            <line class="sep" x1="260" y1="38" x2="640" y2="38"/>
+            <text class="tr" x="270" y="56">- title: String</text>
+            <text class="tr" x="270" y="74">- daysLate: int</text>
+            <line class="sep" x1="260" y1="82" x2="640" y2="82"/>
+            <text class="tr" x="270" y="100" xml:space="preserve">+ LibraryItem(title: String, daysLate: int)</text>
+            <text class="tr ti" x="270" y="118" xml:space="preserve">+ getLateFee(): BigDecimal</text>
+            <text class="tr" x="270" y="136" xml:space="preserve">+ isLate(): boolean</text>
+            <text class="tr" x="270" y="154" xml:space="preserve">+ toString(): String</text>
+            <rect class="bx" data-for="" x="5" y="230" width="290" height="116" rx="4"/>
+            <text class="tn" x="150.0" y="249">Book</text>
+            <line class="sep" x1="5" y1="258" x2="295" y2="258"/>
+            <text class="tr" x="15" y="276">- pages: int</text>
+            <line class="sep" x1="5" y1="284" x2="295" y2="284"/>
+            <text class="tr" x="15" y="302" xml:space="preserve">+ Book(title: String, daysLate: int,</text>
+            <text class="tr" x="15" y="320" xml:space="preserve">      pages: int)</text>
+            <text class="tr" x="15" y="338" xml:space="preserve">+ getLateFee(): BigDecimal</text>
+            <polyline class="arw" points="150,230 150,204 350,204 350,180"/>
+            <polygon class="arh" points="350,163 341,180 359,180"/>
+            <rect class="bx" data-for="" x="305" y="230" width="290" height="134" rx="4"/>
+            <text class="tn" x="450.0" y="249">Dvd</text>
+            <line class="sep" x1="305" y1="258" x2="595" y2="258"/>
+            <text class="tr" x="315" y="276">- minutes: int</text>
+            <line class="sep" x1="305" y1="284" x2="595" y2="284"/>
+            <text class="tr" x="315" y="302" xml:space="preserve">+ Dvd(title: String, daysLate: int,</text>
+            <text class="tr" x="315" y="320" xml:space="preserve">      minutes: int)</text>
+            <text class="tr" x="315" y="338" xml:space="preserve">+ getLateFee(): BigDecimal</text>
+            <text class="tr" x="315" y="356" xml:space="preserve">+ rewind(): void</text>
+            <polyline class="arw" points="450,230 450,204 450,204 450,180"/>
+            <polygon class="arh" points="450,163 441,180 459,180"/>
+            <rect class="bx" data-for="" x="605" y="230" width="290" height="116" rx="4"/>
+            <text class="tn" x="750.0" y="249">Magazine</text>
+            <line class="sep" x1="605" y1="258" x2="895" y2="258"/>
+            <text class="tr" x="615" y="276">- issue: String</text>
+            <line class="sep" x1="605" y1="284" x2="895" y2="284"/>
+            <text class="tr" x="615" y="302" xml:space="preserve">+ Magazine(title: String, daysLate: int,</text>
+            <text class="tr" x="615" y="320" xml:space="preserve">      issue: String)</text>
+            <text class="tr" x="615" y="338" xml:space="preserve">+ getLateFee(): BigDecimal</text>
+            <polyline class="arw" points="750,230 750,204 550,204 550,180"/>
+            <polygon class="arh" points="550,163 541,180 559,180"/>
+            <g class="dot" data-n="1" role="button" tabindex="0" aria-label="Point 1"><circle cx="640" cy="24" r="11"/><text x="640" y="28">1</text></g>
+            <g class="dot" data-n="2" role="button" tabindex="0" aria-label="Point 2"><circle cx="640" cy="60" r="11"/><text x="640" y="64">2</text></g>
+            <g class="dot" data-n="3" role="button" tabindex="0" aria-label="Point 3"><circle cx="640" cy="96" r="11"/><text x="640" y="100">3</text></g>
+            <g class="dot" data-n="4" role="button" tabindex="0" aria-label="Point 4"><circle cx="470" cy="192" r="11"/><text x="470" y="196">4</text></g>
+            <g class="dot" data-n="5" role="button" tabindex="0" aria-label="Point 5"><circle cx="295" cy="244" r="11"/><text x="295" y="248">5</text></g>
+            <g class="dot" data-n="6" role="button" tabindex="0" aria-label="Point 6"><circle cx="595" cy="350" r="11"/><text x="595" y="354">6</text></g>
+        </svg>
+      </div>
+      <div class="say" id="sayEx">This is a library, not the gym. Six numbers mark what to look at. Press them in any order.</div>
+      <p class="txt" style="margin:10px 0 0">Your gym diagram ends up with this shape: one parent on top, three children under it, three arrows going up. What goes inside the boxes is different, and that is the work of the steps below.</p>
     </div>
 
     <div class="who">
@@ -247,7 +317,7 @@
       <section class="step" data-s="s3">
         <div class="hd"><span class="num">3</span><h2>A child box, and the arrow</h2>
           <label class="tickbox"><input type="checkbox" data-t="s3">done</label></div>
-        <p class="txt">A child box is short. It shows only what the child adds or writes again. Everything it inherits stays in the parent, written once. We do <code>BasicMembership</code> together.</p>
+        <p class="txt">A child box is short, like Book in the example at the top. It shows only what the child adds or writes again. Everything it inherits stays in the parent, written once. We do <code>BasicMembership</code> together.</p>
         <div class="play">
           <div class="row"><p class="k" style="margin:0">Press the answer you think is right. Each right answer adds to the BasicMembership box.</p><button class="ghost" id="q3Reset" type="button">Reset</button></div>
           <div class="pairbox">
@@ -318,7 +388,7 @@
             <label class="chk"><input type="checkbox" data-t="f4"><span>Its arrow to Membership.</span></label>
           </div>
         </div>
-        <p class="txt" style="margin:12px 0 0">When both are drawn, your diagram has four boxes and three arrows, and you are ready for the last check.</p>
+        <p class="txt" style="margin:12px 0 0">When both are drawn, your diagram has four boxes and three arrows, laid out like the example at the top of this page: the parent on top, the three children under it. Then you are ready for the last check.</p>
       </section>
 
       <section class="step" data-s="s6">
@@ -389,6 +459,21 @@
   });
   $("#bClear").addEventListener("click",function(){ ticks=[]; try{localStorage.removeItem(KEY);}catch(e){} paint(); });
   paint();
+
+  /* ---------- the worked example: six numbered points ---------- */
+  var EX={
+    1:"The parent sits on top. Its name is in italics because LibraryItem is abstract: nobody ever creates a plain item.",
+    2:"What every item has is written once, in the parent. No child box repeats title or daysLate.",
+    3:"An abstract method, in italics: the parent only promises it, and every child has to write it. In the three children the same line is upright, because there it is written.",
+    4:"One arrow for each child: a solid line with a hollow triangle that touches the parent. Read it upward: a Dvd is a LibraryItem. There are no arrows between the children.",
+    5:"A child box is short: the field of its own, its constructor, and only the methods it writes itself.",
+    6:"A method only this child has. It is in this box and nowhere else."
+  };
+  function exShow(g){ $$(".dot").forEach(function(d){d.classList.remove("on");}); g.classList.add("on","seen"); say("#sayEx",EX[g.getAttribute("data-n")],"y"); }
+  $$(".dot").forEach(function(g){
+    g.addEventListener("click",function(){ exShow(g); });
+    g.addEventListener("keydown",function(e){ if(e.key==="Enter"||e.key===" "){ e.preventDefault(); exShow(g); } });
+  });
 
   /* ---------- step 1: collect what Membership knows and does ---------- */
   var WORDS=[
