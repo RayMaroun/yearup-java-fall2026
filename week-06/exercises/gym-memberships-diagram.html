@@ -140,6 +140,23 @@
   @media (max-width:560px){.wrap{padding:18px 16px 60px}.back{padding:22px 16px 0}.stage{padding:12px}.step{padding:12px}.play{padding:12px}
     .hd{flex-wrap:wrap}.tickbox{padding-top:0;margin-left:46px}}
   @media (prefers-reduced-motion:reduce){*{animation-duration:.01ms!important;transition-duration:.01ms!important}#amb{display:none}}
+
+  /* your turn boxes, question text, the pair of boxes in step 3 */
+  .yours{margin-top:12px;border:1px dashed rgba(255,200,98,.55);border-radius:14px;background:rgba(255,200,98,.05);padding:12px 14px}
+  .yours .yk,.yt{font-family:var(--mono);font-size:.66rem;letter-spacing:.14em;text-transform:uppercase;color:var(--gold)}
+  .yours .yk{margin:0 0 6px}
+  .yours p{font-size:.95rem;line-height:1.55;color:var(--ink);margin:0 0 10px;max-width:72ch}
+  .yours a,.txt a{color:var(--accent)}
+  .qq{margin:14px 0 8px;color:var(--ink);font-weight:500}
+  .bins.three{grid-template-columns:repeat(3,minmax(0,1fr))}
+  @media (max-width:700px){.bins.three{grid-template-columns:1fr}}
+  .ln.new{color:var(--gold);background:rgba(255,200,98,.12)}
+  .ln.dim{color:var(--muted)}
+  .pairbox{display:flex;flex-direction:column;align-items:center;margin-top:12px}
+  .pairbox .uml{width:100%}
+  .pairbox .uml.small{max-width:300px}
+  .pairbox svg.link{width:60px;height:70px;display:block}
+  .uml .bd:empty{min-height:30px}
 </style>
 </head>
 <body>
@@ -149,150 +166,133 @@
 <div class="wrap">
   <p class="tag">Homework &middot; Gym Memberships &middot; Step 1</p>
   <h1>Drawing the Class Diagram</h1>
-  <p class="lede"><b>Six steps from the hand-out to <code>images/class-diagram.png</code>.</b> You practice here on library items, then you draw the gym on your own.</p>
+  <p class="lede"><b>We start the gym diagram together. You finish it.</b> Keep the hand-out open next to this page.</p>
 
   <div class="stage">
-    <p class="lab">What Step 1 asks</p>
+    <p class="lab">How this page works</p>
     <div class="box brief">
-      <p>A class diagram of the <b>finished</b> program, the way it looks after Step 12. Four classes: <code>Membership</code>, <code>BasicMembership</code>, <code>PremiumMembership</code> and <code>FamilyMembership</code>. Their fields with types and access, their methods, the arrows between them, and what is abstract. Exported as <code>class-diagram.png</code> into a folder <code>images</code> at the root of the project.</p>
-      <p class="no">This page never shows the gym. Every example is a library: <code>LibraryItem</code> and its children <code>Book</code>, <code>Dvd</code> and <code>Magazine</code>. Same moves, different family.</p>
+      <p>Step 1 of the homework asks for the class diagram of the <b>finished</b> program, the way it looks after Step 12: <code>Membership</code>, <code>BasicMembership</code>, <code>PremiumMembership</code> and <code>FamilyMembership</code>.</p>
+      <p>In each step below you answer questions about the gym, with the hand-out in front of you, and the page draws what your answers say. Then a box marked <b class="yt">Your turn</b> tells you what to draw on your own in diagrams.net. The page starts the diagram. The rest is yours.</p>
     </div>
 
-    <div class="prog"><span id="progTxt">0 of 6 done</span><div class="bar"><i id="progBar"></i></div><button id="bClear" type="button">Clear ticks</button></div>
+    <div class="prog"><span id="progTxt">0 of 5 done</span><div class="bar"><i id="progBar"></i></div><button id="bClear" type="button">Clear ticks</button></div>
 
     <div class="steps">
 
       <section class="step" data-s="s1">
-        <div class="hd"><span class="num">1</span><h2>Read the whole hand-out once, with the classes in mind</h2>
+        <div class="hd"><span class="num">1</span><h2>Collect what Membership knows and does</h2>
           <label class="tickbox"><input type="checkbox" data-t="s1">done</label></div>
-        <ul class="txt">
-          <li>Step 1 comes first, but what each class knows and does is spread over <b>Steps 2 to 12</b>. Read them all before you draw.</li>
-          <li>Keep a list per class with two columns: <b>what it knows</b> and <b>what it does</b>.</li>
-          <li>Look for the lines that start with "Create", "One field of its own", "add" and "overrides". Each one adds to your list.</li>
-          <li>Read Steps 11 and 12 twice. They change the program near the end, and your diagram shows that end.</li>
-        </ul>
-        <p class="txt" style="margin:0"><b>Done when:</b> you have a list for each of the four classes.</p>
-      </section>
-
-      <section class="step" data-s="s2">
-        <div class="hd"><span class="num">2</span><h2>Sort the words</h2>
-          <label class="tickbox"><input type="checkbox" data-t="s2">done</label></div>
-        <p class="txt">Every word on your list becomes a class, a field, a method, or nothing at all. You decide, the page answers. Try it on a library first.</p>
+        <p class="txt">The hand-out never lists a class in one place. What <code>Membership</code> knows and does is spread over Steps 2, 6, 7 and 12. Here are ten things the hand-out says. Decide where each one goes in the Membership box.</p>
         <div class="play">
           <div class="row"><p class="k" style="margin:0">Press a phrase, then press the place where it belongs</p><button class="ghost" id="sortReset" type="button">Reset</button></div>
           <div class="row" id="pool" style="margin-top:10px"></div>
-          <div class="bins">
-            <div class="bin" data-b="class" role="button" tabindex="0"><p class="bk">Class</p></div>
-            <div class="bin" data-b="field" role="button" tabindex="0"><p class="bk">Field</p></div>
-            <div class="bin" data-b="method" role="button" tabindex="0"><p class="bk">Method</p></div>
-            <div class="bin out" data-b="out" role="button" tabindex="0"><p class="bk">Stays out</p></div>
+          <div class="bins three">
+            <div class="bin" data-b="field" role="button" tabindex="0"><p class="bk">Field of Membership</p></div>
+            <div class="bin" data-b="method" role="button" tabindex="0"><p class="bk">Method of Membership</p></div>
+            <div class="bin out" data-b="out" role="button" tabindex="0"><p class="bk">Not in the Membership box</p></div>
           </div>
-          <div class="say" id="say2">Ten phrases from a library hand-out, four places. Press a phrase, then the place you think it belongs.</div>
+          <div class="say" id="say1"></div>
+        </div>
+        <div class="yours">
+          <p class="yk">Your turn</p>
+          <p>Make the same list for <code>BasicMembership</code>, <code>PremiumMembership</code> and <code>FamilyMembership</code>: what each one knows and what each one does. Read Steps 3, 4, 5, 6 and 7 for them. Two things to watch for: one child has a method that no other class has, and one child writes again a method that Step 6 puts in the parent.</p>
+          <label class="chk"><input type="checkbox" data-t="y1"><span>I have a list for each of the three child classes.</span></label>
+        </div>
+      </section>
+
+      <section class="step" data-s="s2">
+        <div class="hd"><span class="num">2</span><h2>Fill the Membership box</h2>
+          <label class="tickbox"><input type="checkbox" data-t="s2">done</label></div>
+        <p class="txt">Three bands: the name, the fields, the methods. Every line needs a sign in front and a type after the colon. Answer the questions and the box fills in.</p>
+        <div class="play">
+          <div class="row"><p class="k" style="margin:0">Answer, and the box answers back</p><button class="ghost" id="q2Reset" type="button">Reset</button></div>
+          <div class="uml" id="box2" style="margin-top:12px">
+            <div class="bd"><span class="ln nm static">Membership</span></div>
+            <div class="bd" id="box2f"></div>
+            <div class="bd" id="box2m"></div>
+          </div>
+          <p class="txt qq" id="q2"></p>
+          <div class="row" id="a2"></div>
+          <div class="say" id="say2"></div>
+        </div>
+        <div class="yours">
+          <p class="yk">Your turn</p>
+          <p>Open <a href="https://app.diagrams.net" target="_blank" rel="noopener">app.diagrams.net</a> and draw this Membership box. The <a href="../reference/class-diagram-reference.html">Class Diagram Reference</a> shows the clicks for a class box. Leave the letters upright for now: Step 4 comes back to this box.</p>
+          <label class="chk"><input type="checkbox" data-t="y2"><span>The Membership box is in my diagram, with a sign and a type on every line.</span></label>
         </div>
       </section>
 
       <section class="step" data-s="s3">
-        <div class="hd"><span class="num">3</span><h2>Fill one box</h2>
+        <div class="hd"><span class="num">3</span><h2>A child box, and the arrow</h2>
           <label class="tickbox"><input type="checkbox" data-t="s3">done</label></div>
-        <p class="txt">Three bands: the name, the fields, the methods. Fields with a type and an access sign. Real methods, and constructors that take values. <b>No plain getters and setters.</b></p>
+        <p class="txt">A child box is short. It shows only what the child adds or writes again. Everything it inherits stays in the parent, written once. We do <code>BasicMembership</code> together.</p>
         <div class="play">
-          <div class="row"><p class="k" style="margin:0">Press any line of the box</p><button class="ghost" id="boxReset" type="button">Reset</button></div>
-          <div class="uml" id="box3" style="margin-top:12px">
-            <div class="bd"><button type="button" class="ln nm" data-l="name">LibraryItem</button></div>
-            <div class="bd">
-              <button type="button" class="ln" data-l="title">- title: String</button>
-              <button type="button" class="ln" data-l="days">- daysLate: int</button>
-            </div>
-            <div class="bd">
-              <button type="button" class="ln" data-l="ctor">+ LibraryItem(title: String, daysLate: int)</button>
-              <button type="button" class="ln" data-l="fee">+ getLateFee(): BigDecimal</button>
-              <button type="button" class="ln gone" data-l="getter">+ getTitle(): String</button>
+          <div class="row"><p class="k" style="margin:0">Does it go in the BasicMembership box?</p><button class="ghost" id="q3Reset" type="button">Reset</button></div>
+          <div class="pairbox">
+            <div class="uml small"><div class="bd"><span class="ln nm static" id="p3name">Membership</span></div><div class="bd"><span class="ln static dim">3 fields</span></div><div class="bd"><span class="ln static dim">constructor and 4 methods</span></div></div>
+            <svg class="link" viewBox="0 0 60 70" role="img" aria-label="The line between BasicMembership and Membership">
+              <line class="wire" id="wire" x1="30" y1="70" x2="30" y2="0"/>
+              <polygon class="head" id="headUp" points="30,1 20,20 40,20"/>
+              <polygon class="head" id="headDown" points="30,69 20,50 40,50"/>
+            </svg>
+            <div class="uml" id="box3">
+              <div class="bd"><span class="ln nm static">BasicMembership</span></div>
+              <div class="bd" id="box3f"></div>
+              <div class="bd" id="box3m"></div>
             </div>
           </div>
-          <div class="say" id="say3">The box for the parent of the library family. Press a line to see what it says.</div>
+          <p class="txt qq" id="q3"></p>
+          <div class="row" id="a3"></div>
+          <div class="say" id="say3"></div>
+        </div>
+        <div class="yours">
+          <p class="yk">Your turn</p>
+          <p>Draw the BasicMembership box and its arrow. Then draw <code>PremiumMembership</code> and <code>FamilyMembership</code> the same way, from your lists: the field of its own, its constructor, and only the methods it writes itself. Each one gets its own arrow to Membership. One check: the PremiumMembership box ends up with more method lines than the other two. Steps 4 and 6 tell you which.</p>
+          <label class="chk"><input type="checkbox" data-t="y3"><span>Three child boxes, and three arrows with the hollow triangle at Membership.</span></label>
         </div>
       </section>
 
       <section class="step" data-s="s4">
-        <div class="hd"><span class="num">4</span><h2>Parent and children, and the arrow</h2>
+        <div class="hd"><span class="num">4</span><h2>Mark what is abstract</h2>
           <label class="tickbox"><input type="checkbox" data-t="s4">done</label></div>
-        <p class="txt">What <b>every</b> item has goes once, in the parent. A child box lists only its own field and the methods it writes again. Then one arrow from each child to the parent.</p>
+        <p class="txt">In a class diagram, abstract is written in <b>italics</b>: the name of an abstract class, and the line of an abstract method. The hand-out makes two things abstract near the end, in Steps 11 and 12. Your diagram shows the program after Step 12, so it shows them.</p>
         <div class="play">
-          <p class="k">Which end gets the hollow triangle?</p>
-          <div class="pair">
-            <div>
-              <svg viewBox="0 0 300 290" role="img" aria-label="LibraryItem above Book, joined by a line">
-                <rect class="bx" x="40" y="6" width="220" height="104" rx="4"/>
-                <text class="tn" x="150" y="28">LibraryItem</text>
-                <line class="sep" x1="40" y1="38" x2="260" y2="38"/>
-                <text class="tr" x="50" y="56">- title: String</text>
-                <text class="tr" x="50" y="74">- daysLate: int</text>
-                <line class="sep" x1="40" y1="82" x2="260" y2="82"/>
-                <text class="tr" x="50" y="100">+ getLateFee(): BigDecimal</text>
-                <rect class="bx" x="40" y="184" width="220" height="86" rx="4"/>
-                <text class="tn" x="150" y="206">Book</text>
-                <line class="sep" x1="40" y1="216" x2="260" y2="216"/>
-                <text class="tr" x="50" y="234">- pages: int</text>
-                <line class="sep" x1="40" y1="242" x2="260" y2="242"/>
-                <text class="tr" x="50" y="260">+ getLateFee(): BigDecimal</text>
-                <line class="wire" id="wire" x1="150" y1="184" x2="150" y2="110"/>
-                <polygon class="head" id="headUp" points="150,111 140,130 160,130"/>
-                <polygon class="head" id="headDown" points="150,183 140,164 160,164"/>
-              </svg>
-              <p class="side-note">Constructors left out to keep the picture small.</p>
-            </div>
-            <div>
-              <div class="row">
-                <button type="button" class="ans" data-a="parent">At LibraryItem</button>
-                <button type="button" class="ans" data-a="child">At Book</button>
-                <button class="ghost" id="arrowReset" type="button">Reset</button>
-              </div>
-              <div class="say" id="say4">A Book and a LibraryItem, one line between them. Pick the end that gets the triangle.</div>
-            </div>
+          <div class="row"><p class="k" style="margin:0">Answer, and the box answers back</p><button class="ghost" id="q4Reset" type="button">Reset</button></div>
+          <div class="uml" style="margin-top:12px">
+            <div class="bd"><span class="ln nm static" id="absName">Membership</span></div>
+            <div class="bd"><span class="ln static">- memberName: String</span><span class="ln static">- months: int</span><span class="ln static">- baseRate: BigDecimal</span></div>
+            <div class="bd"><span class="ln static">+ Membership(memberName: String, months: int, baseRate: BigDecimal)</span><span class="ln static" id="absPrice">+ getMonthlyPrice(): BigDecimal</span><span class="ln static">+ getSignUpFee(): BigDecimal</span><span class="ln static">+ getContractTotal(): BigDecimal</span><span class="ln static">+ toString(): String</span></div>
           </div>
+          <p class="txt qq" id="q4"></p>
+          <div class="row" id="a4"></div>
+          <div class="say" id="say4"></div>
+        </div>
+        <div class="yours">
+          <p class="yk">Your turn</p>
+          <p>Put those two things in italics in your own diagram: select the text in diagrams.net and press Cmd+I (Mac) or Ctrl+I (Windows). Then look at your three child boxes and decide, for each <code>getMonthlyPrice()</code> line, whether it is italic or upright.</p>
+          <label class="chk"><input type="checkbox" data-t="y4"><span>What is abstract after Step 12 is in italics in my diagram, and nothing else is.</span></label>
         </div>
       </section>
 
       <section class="step" data-s="s5">
-        <div class="hd"><span class="num">5</span><h2>Mark what is abstract</h2>
+        <div class="hd"><span class="num">5</span><h2>Check your picture, then export it</h2>
           <label class="tickbox"><input type="checkbox" data-t="s5">done</label></div>
-        <p class="txt">The course writes abstract in <b>italics</b>: the class name, and each abstract method line. In diagrams.net, select the text and press Cmd+I (Mac) or Ctrl+I (Windows). Some things in the hand-out become abstract only in Steps 11 and 12. Your diagram shows the end, so draw them the way they are after Step 12.</p>
-        <div class="play">
-          <div class="row"><p class="k" style="margin:0">Answer the question, the box answers back</p><button class="ghost" id="absReset" type="button">Reset</button></div>
-          <div class="uml" style="margin-top:12px">
-            <div class="bd"><span class="ln nm static" id="absName">LibraryItem</span></div>
-            <div class="bd"><span class="ln static">- title: String</span><span class="ln static">- daysLate: int</span></div>
-            <div class="bd"><span class="ln static">+ LibraryItem(title: String, daysLate: int)</span><span class="ln static" id="absFee">+ getLateFee(): BigDecimal</span></div>
-          </div>
-          <p class="txt" id="absQ" style="margin:14px 0 8px"></p>
-          <div class="row" id="absA">
-            <button type="button" class="ans" data-a="yes">Yes</button>
-            <button type="button" class="ans" data-a="no">No</button>
-          </div>
-          <div class="say" id="say5">Two questions, one at a time.</div>
-        </div>
-      </section>
-
-      <section class="step" data-s="s6">
-        <div class="hd"><span class="num">6</span><h2>Draw yours in diagrams.net and export</h2>
-          <label class="tickbox"><input type="checkbox" data-t="s6">done</label></div>
-        <ol class="txt">
-          <li>The project <code>gym-memberships</code> exists and is shared on GitHub (Step 1 of the hand-out).</li>
-          <li>At app.diagrams.net draw your four boxes and the arrows. The <a href="../reference/class-diagram-reference.html" style="color:var(--accent)">reference</a> shows the clicks for a box and a hollow triangle.</li>
-          <li>Keep the diagram file too (<b>File</b>, <b>Save</b>). Step 13 asks you to fix it and export again.</li>
-          <li>In IntelliJ, right-click the project root, <b>New</b>, <b>Directory</b>, name it <code>images</code>. Same level as <code>src</code> and <code>pom.xml</code>.</li>
-          <li>In diagrams.net: <b>File</b>, <b>Export as</b>, <b>PNG</b>, <b>Export</b>. Name it <code>class-diagram.png</code> and save it in that <code>images</code> folder.</li>
-          <li>In IntelliJ's commit panel tick the new file, write a message in your own words, <b>Commit and Push</b>.</li>
-          <li>On GitHub open <code>images</code>, then <code>class-diagram.png</code>. You should see your picture.</li>
-        </ol>
-        <p class="lab" style="margin-top:6px">Check your picture before you tick</p>
+        <p class="lab">Check your picture first</p>
         <div class="checks" id="checks">
-          <label class="chk"><input type="checkbox" data-t="c1"><span>Four boxes, one for each class named in the hand-out.</span></label>
-          <label class="chk"><input type="checkbox" data-t="c2"><span>Every field has an access sign and a type: sign, name, colon, type.</span></label>
-          <label class="chk"><input type="checkbox" data-t="c3"><span>Each child has one arrow, and the hollow triangle touches the parent.</span></label>
-          <label class="chk"><input type="checkbox" data-t="c4"><span>What is abstract after Step 12 is in italics.</span></label>
-          <label class="chk"><input type="checkbox" data-t="c5"><span>No plain getters and setters, and nothing from the parent repeated in a child.</span></label>
+          <label class="chk"><input type="checkbox" data-t="c1"><span>Four boxes, with the four class names of the hand-out. <code>Main</code> is not in the diagram.</span></label>
+          <label class="chk"><input type="checkbox" data-t="c2"><span>Every field has a sign and a type: sign, name, colon, type. Every field is private.</span></label>
+          <label class="chk"><input type="checkbox" data-t="c3"><span>Every method has a sign and a return type. Constructors have no return type.</span></label>
+          <label class="chk"><input type="checkbox" data-t="c4"><span>No plain getters and setters, and nothing from Membership repeated in a child unless the child writes it again.</span></label>
+          <label class="chk"><input type="checkbox" data-t="c5"><span>Three arrows, each with the hollow triangle touching Membership.</span></label>
         </div>
+        <p class="lab" style="margin-top:14px">Then export</p>
+        <ol class="txt">
+          <li>Keep the diagram file (<b>File</b>, <b>Save</b>). Step 13 of the hand-out asks you to fix the diagram and export it again.</li>
+          <li>In IntelliJ, right-click the project root, <b>New</b>, <b>Directory</b>, and name it <code>images</code>. It sits at the same level as <code>src</code> and <code>pom.xml</code>.</li>
+          <li>In diagrams.net: <b>File</b>, <b>Export as</b>, <b>PNG</b>, <b>Export</b>. Name it <code>class-diagram.png</code> and save it in that <code>images</code> folder.</li>
+          <li>Commit and push, with a message in your own words.</li>
+          <li>On GitHub, open <code>images</code>, then <code>class-diagram.png</code>. You should see your picture.</li>
+        </ol>
       </section>
 
     </div>
@@ -307,7 +307,7 @@
 
   <div class="take">
     <p class="tk">The one idea</p>
-    <p><b>Design first, code second.</b> One box per class, shared things once in the parent, an arrow from each child to the parent, and abstract in italics.</p>
+    <p><b>Design first, code second.</b> One box per class, what every kind shares written once in the parent, an arrow from each child to the parent, and abstract in italics.</p>
   </div>
 
   <div id="rail"></div>
@@ -319,7 +319,7 @@
   var $=function(s){return document.querySelector(s);};
   var $$=function(s,r){return Array.prototype.slice.call((r||document).querySelectorAll(s));};
   var reduce=matchMedia("(prefers-reduced-motion: reduce)").matches;
-  var KEY="hub-ex-w6-gym-memberships-diagram";
+  var KEY="hub-ex-w6-gym-memberships-diagram-v2";
   function say(id,html,tone){var el=$(id);el.innerHTML=html;el.className="say"+(tone?" "+tone:"");}
 
   /* ---------- ticks, kept in localStorage ---------- */
@@ -332,7 +332,7 @@
       (cb.closest(".chk")||cb.closest(".step")).classList.toggle("ok",on);
     });
     var n=ticks.filter(function(t){return t.charAt(0)==="s";}).length;
-    $("#progTxt").textContent=n+" of 6 done"; $("#progBar").style.width=(100*n/6)+"%";
+    $("#progTxt").textContent=n+" of 5 done"; $("#progBar").style.width=(100*n/5)+"%";
   }
   document.addEventListener("change",function(e){
     var cb=e.target; if(!cb.matches||!cb.matches("input[data-t]")) return;
@@ -343,48 +343,47 @@
   $("#bClear").addEventListener("click",function(){ ticks=[]; try{localStorage.removeItem(KEY);}catch(e){} paint(); });
   paint();
 
-  /* ---------- step 2: sort the words ---------- */
+  /* ---------- step 1: collect what Membership knows and does ---------- */
   var WORDS=[
-    {p:"Book",b:"class",s:"A kind of library item with data of its own. It gets its own box: <code>Book</code>."},
-    {p:"the title of an item",b:"field",s:"Something every item knows. A field in the parent: <code>- title: String</code>."},
-    {p:"how many days late it is",b:"field",s:"Another thing every item knows. A whole number: <code>- daysLate: int</code>."},
-    {p:"works out the late fee",b:"method",s:"Something an item does. A method that returns money: <code>+ getLateFee(): BigDecimal</code>."},
-    {p:"the number of pages of a book",b:"field",s:"Only a book has pages. A field in the Book box, not in the parent: <code>- pages: int</code>."},
-    {p:"get the title",b:"out",s:"A plain getter. The field already tells the reader it is there, so it stays out."},
-    {p:"Magazine",b:"class",s:"Another kind of item. Its own box, next to Book and Dvd."},
-    {p:"is built from a title and the days late",b:"method",s:"A constructor that takes values. It goes in the methods band: <code>+ LibraryItem(title: String, daysLate: int)</code>."},
-    {p:"change the days late",b:"out",s:"A plain setter. It stays out, like the getter."},
-    {p:"0.25 for every day late",b:"out",s:"A number used inside the method. The diagram names the method, not how it calculates."}
+    {p:"memberName",b:"field",s:"Step 2: something every membership knows."},
+    {p:"getMonthlyPrice()",b:"method",s:"Step 2: something a membership works out."},
+    {p:"a getter and a setter for each field",b:"out",s:"You write them in the code, but plain getters and setters are not drawn. The field line already says the field is there."},
+    {p:"baseRate",b:"field",s:"Step 2: the monthly rate the price starts from."},
+    {p:"a constructor that receives the three values",b:"method",s:"A constructor that takes values goes in the methods band."},
+    {p:"getContractTotal()",b:"method",s:"Step 6 adds it to Membership, and says it is written once, in Membership only."},
+    {p:"49.00",b:"out",s:"A number used inside getSignUpFee(). The diagram names the method, not how it calculates."},
+    {p:"months",b:"field",s:"Step 2: the length of the contract."},
+    {p:"printCosts(Membership membership)",b:"out",s:"Step 8 adds it to Main, not to Membership. And Main is not one of the four classes of the diagram."},
+    {p:"toString()",b:"method",s:"Step 7 overrides it in all four classes, so it is in the Membership box too."}
   ];
-  var NAMES={"class":"a class","field":"a field","method":"a method","out":"stays out"};
-  var ASK={"class":"Ask yourself: is this a kind of thing with data of its own?","field":"Ask yourself: is this something the object knows?",
-           "method":"Ask yourself: is this something the object does?","out":"Ask yourself: would the diagram lose anything without it?"};
-  var START="Ten phrases from a library hand-out, four places. Press a phrase, then the place you think it belongs.";
+  var ASK={"field":"Ask yourself: is this something a membership knows?","method":"Ask yourself: is this something a membership does or works out?",
+           "out":"Ask yourself: is it really a field or a real method of Membership? Read that step of the hand-out again."};
+  var START="Ten things from the hand-out, three places. Press one, then the place you think it belongs.";
   var sel=null;
   function buildPool(){
     sel=null;
     $("#pool").innerHTML=WORDS.map(function(w,i){return '<button type="button" class="ph" data-i="'+i+'">'+w.p+'</button>';}).join("");
     $$(".bin span").forEach(function(s){s.remove();});
     $$(".bin").forEach(function(b){b.classList.remove("no");});
-    say("#say2",START);
+    say("#say1",START);
   }
   $("#pool").addEventListener("click",function(e){
     var b=e.target.closest(".ph"); if(!b) return;
     $$(".ph.sel").forEach(function(x){x.classList.remove("sel");});
     $$(".bin").forEach(function(x){x.classList.remove("no");});
     b.classList.add("sel"); sel=b;
-    say("#say2","<b>"+WORDS[+b.getAttribute("data-i")].p+"</b>: where does it go? Press Class, Field, Method or Stays out.");
+    say("#say1","<b>"+WORDS[+b.getAttribute("data-i")].p+"</b>: where does it go?");
   });
   function drop(bin){
-    if(!sel){ say("#say2","Press a phrase first, then a place."); return; }
+    if(!sel){ say("#say1","Press a phrase first, then a place."); return; }
     var w=WORDS[+sel.getAttribute("data-i")];
     $$(".bin").forEach(function(x){x.classList.remove("no");});
-    if(bin.getAttribute("data-b")!==w.b){ bin.classList.add("no"); say("#say2","Not there. "+ASK[w.b]+" Pick another place.","w"); return; }
+    if(bin.getAttribute("data-b")!==w.b){ bin.classList.add("no"); say("#say1","Not there. "+ASK[w.b],"w"); return; }
     sel.classList.remove("sel"); sel.classList.add("put"); sel=null;
     $$(".bin span.new").forEach(function(s){s.classList.remove("new");});
     var sp=document.createElement("span"); sp.className="new"; sp.textContent=w.p; bin.appendChild(sp);
-    say("#say2","Right: <b>"+w.p+"</b> is "+(w.b==="out"?"left out":NAMES[w.b])+". "+w.s,"g");
-    if(!$$(".ph:not(.put)").length) setTimeout(function(){ say("#say2","All sorted. Do the same with your own list from Step 1: each word lands in one of the four places.","g"); },reduce?0:1600);
+    say("#say1","Right. "+w.s,"g");
+    if(!$$(".ph:not(.put)").length) setTimeout(function(){ say("#say1","That is the whole Membership box: three fields, a constructor and four methods. Step 6 also adds getSignUpFee(), which was not among the ten. Now make the same list for the three children.","g"); },reduce?0:2200);
   }
   $$(".bin").forEach(function(bin){
     bin.addEventListener("click",function(){ drop(bin); });
@@ -393,71 +392,115 @@
   $("#sortReset").addEventListener("click",buildPool);
   buildPool();
 
-  /* ---------- step 3: one box ---------- */
-  var LINES={
-    name:"The name band: the class name, centered. One box for each class.",
-    title:"A field. The <code>-</code> sign means private, and every field in this course is private. Name first, a colon, then the type.",
-    days:"Another field, the same pattern: sign, name, colon, type. No field without a type.",
-    ctor:"A constructor that takes values. <code>+</code> means public. It has no return type, so nothing after the closing bracket. It tells the reader what is needed to build an item.",
-    fee:"A real method: it works something out. The type after the colon is what it returns, here money as BigDecimal.",
-    getter:"Not drawn. A plain getter or setter adds nothing: the field already says it is there. Leave them all out."
-  };
-  $("#box3").addEventListener("click",function(e){
-    var l=e.target.closest(".ln"); if(!l) return; var k=l.getAttribute("data-l");
-    $$("#box3 .ln").forEach(function(x){x.classList.toggle("on",x===l&&k!=="getter");});
-    say("#say3",LINES[k],k==="getter"?"w":"y");
-  });
-  $("#boxReset").addEventListener("click",function(){
-    $$("#box3 .ln").forEach(function(x){x.classList.remove("on");});
-    say("#say3","The box for the parent of the library family. Press a line to see what it says.");
-  });
-
-  /* ---------- step 4: the arrow ---------- */
-  function arrow(pick){
-    var right=pick==="parent";
-    $("#wire").setAttribute("class","wire"+(pick?(right?" right":" wrong"):""));
-    $("#headUp").setAttribute("class","head"+(pick==="parent"?" right":""));
-    $("#headDown").setAttribute("class","head"+(pick==="child"?" wrong":""));
-    $$('[data-s="s4"] .ans').forEach(function(b){
-      b.classList.remove("right","wrong");
-      if(b.getAttribute("data-a")===pick) b.classList.add(right?"right":"wrong");
+  /* ---------- a small question runner used by steps 2, 3 and 4 ---------- */
+  function addLine(sel,text,cls){ var s=document.createElement("span"); s.className="ln static new"+(cls?" "+cls:""); s.textContent=text; $(sel).appendChild(s);
+    setTimeout(function(){s.classList.remove("new");},reduce?0:1400); }
+  function quiz(o){
+    var i=0;
+    function show(){
+      if(i>=o.qs.length){ $(o.q).textContent=o.end; $(o.a).innerHTML=""; return; }
+      var q=o.qs[i];
+      $(o.q).textContent=q.q;
+      $(o.a).innerHTML=q.opts.map(function(t,k){return '<button type="button" class="ans" data-k="'+k+'">'+t+'</button>';}).join("");
+    }
+    $(o.a).addEventListener("click",function(e){
+      var b=e.target.closest(".ans"); if(!b||i>=o.qs.length) return; var q=o.qs[i], k=+b.getAttribute("data-k");
+      if(k===q.ok){ b.classList.add("right"); if(q.fx) q.fx(); say(o.say,q.yes,"g"); i++; setTimeout(show,reduce?0:900); }
+      else { b.classList.add("wrong"); say(o.say,q.no[k]||q.no.any,"w"); }
     });
-    if(!pick) say("#say4","A Book and a LibraryItem, one line between them. Pick the end that gets the triangle.");
-    else if(right) say("#say4","Right. The line starts at the child and the hollow triangle touches the parent. Read it as a sentence: a Book is a LibraryItem. Dvd and Magazine each get their own arrow to the same parent.","g");
-    else say("#say4","Turn it around. A LibraryItem is not always a Book, so the triangle cannot sit on Book. It touches the parent: a Book is a LibraryItem.","w");
+    function reset(){ i=0; if(o.clear) o.clear(); say(o.say,o.start); show(); }
+    $(o.reset).addEventListener("click",reset);
+    reset();
   }
-  $$('[data-s="s4"] .ans').forEach(function(b){ b.addEventListener("click",function(){ arrow(b.getAttribute("data-a")); }); });
-  $("#arrowReset").addEventListener("click",function(){ arrow(null); });
 
-  /* ---------- step 5: abstract ---------- */
-  var Q=[
-    {q:"Could you ever create just a LibraryItem, one that is not a book, a DVD or a magazine?",
-     no:"Right. Nobody borrows a plain item, it is always some kind of item. So LibraryItem is an abstract class: its name goes in italics.",
-     yes:"Which kind would it be? On the shelf every item is a book, a DVD or a magazine. A plain item never exists. Try again.",
-     el:"#absName"},
-    {q:"Can LibraryItem itself work out a late fee that is right for every kind of item?",
-     no:"Right. Each kind works it out its own way, so the parent only promises the method: getLateFee is abstract and its line goes in italics. In Book, Dvd and Magazine it stays upright, because there it is written.",
-     yes:"Each kind charges its own way, so no single answer fits them all. The parent can only promise the method. Try again.",
-     el:"#absFee"}
-  ];
-  var qi=0;
-  function showQ(){
-    if(qi>=Q.length){ $("#absQ").textContent="Now ask the same two questions about each class of the gym, as it is after Step 12."; $("#absA").style.display="none"; return; }
-    $("#absQ").textContent=Q[qi].q; $("#absA").style.display="";
-    $$("#absA .ans").forEach(function(b){b.classList.remove("right","wrong");});
+  /* ---------- step 2: fill the Membership box ---------- */
+  quiz({q:"#q2",a:"#a2",say:"#say2",reset:"#q2Reset",
+    start:"The box has its name. Five questions fill the two other bands.",
+    end:"That is the Membership box. Draw it in your diagram.",
+    clear:function(){ $("#box2f").innerHTML=""; $("#box2m").innerHTML=""; },
+    qs:[
+      {q:"The Rules of the hand-out say something about every field. Which sign goes in front of memberName, months and baseRate?",
+       opts:["+ (public)","- (private)","# (protected)"],ok:1,
+       fx:function(){ addLine("#box2f","- memberName: String"); addLine("#box2f","- months: int"); },
+       yes:"Right. Every field is private, so every field line starts with a minus. Two fields are in. The third one needs its type first.",
+       no:{any:"Read the Rules at the top of the hand-out again. One of them is about every field."}},
+      {q:"baseRate holds money. Which type goes after its colon?",
+       opts:["double","int","BigDecimal"],ok:2,
+       fx:function(){ addLine("#box2f","- baseRate: BigDecimal"); },
+       yes:"Right. The Rules say money is BigDecimal everywhere, and that goes for the diagram too.",
+       no:{any:"Read the Rules again. One of them is about money."}},
+      {q:"The constructor receives the three values. What do you write after its closing bracket?",
+       opts:[": void",": Membership","nothing"],ok:2,
+       fx:function(){ addLine("#box2m","+ Membership(memberName: String, months: int, baseRate: BigDecimal)"); },
+       yes:"Right. A constructor has no return type, so its line stops at the bracket. Inside the brackets: what you need to build a membership, each with its type.",
+       no:{0:"void is a return type, and a constructor has none.",1:"It builds a Membership, but a constructor has no return type at all."}},
+      {q:"getMonthlyPrice(), getSignUpFee() and getContractTotal() each work out an amount of money. What goes after the colon?",
+       opts:["BigDecimal","void","String"],ok:0,
+       fx:function(){ addLine("#box2m","+ getMonthlyPrice(): BigDecimal"); addLine("#box2m","+ getSignUpFee(): BigDecimal"); addLine("#box2m","+ getContractTotal(): BigDecimal"); addLine("#box2m","+ toString(): String"); },
+       yes:"Right. After the colon comes what the method returns. toString() goes in the same way and returns a String.",
+       no:{1:"void means the method returns nothing. These three give an amount back.",2:"They return an amount of money, not text."}},
+      {q:"The code will also have getMemberName(), setMonths() and four more like them. Do they go in the box?",
+       opts:["Yes, all six","No, none of them"],ok:1,
+       yes:"Right. Plain getters and setters are not drawn. You still write them in the code.",
+       no:{any:"They only hand a field out or put a value in. The field line already tells the reader the field is there."}}
+    ]});
+
+  /* ---------- step 3: BasicMembership and the arrow ---------- */
+  function arrow(pick){
+    $("#wire").setAttribute("class","wire"+(pick?" right":""));
+    $("#headUp").setAttribute("class","head"+(pick?" right":""));
   }
-  $("#absA").addEventListener("click",function(e){
-    var b=e.target.closest(".ans"); if(!b||qi>=Q.length) return; var q=Q[qi];
-    if(b.getAttribute("data-a")==="no"){
-      $(q.el).classList.add("it","flash"); say("#say5",q.no,"g"); qi++;
-      setTimeout(showQ,reduce?0:700);
-    } else { b.classList.add("wrong"); say("#say5",q.yes,"w"); }
-  });
-  $("#absReset").addEventListener("click",function(){
-    qi=0; $("#absName").classList.remove("it","flash"); $("#absFee").classList.remove("it","flash");
-    say("#say5","Two questions, one at a time."); showQ();
-  });
-  showQ();
+  quiz({q:"#q3",a:"#a3",say:"#say3",reset:"#q3Reset",
+    start:"Membership is done. Five questions build BasicMembership under it.",
+    end:"That is the BasicMembership box and its arrow. Draw them, then do the two other children yourself.",
+    clear:function(){ $("#box3f").innerHTML=""; $("#box3m").innerHTML=""; arrow(false); },
+    qs:[
+      {q:"A basic membership has a member name. Do you write memberName in the BasicMembership box?",
+       opts:["Yes","No"],ok:1,
+       yes:"Right. It is inherited. Step 3 says it: what every membership has is not written again in this class.",
+       no:{any:"It has one, but it gets it from Membership. Read the sentence right after the bullets in Step 3."}},
+      {q:"Step 3 gives BasicMembership one field of its own. Which line is correct for it?",
+       opts:["+ offPeakOnly: boolean","- offPeakOnly: boolean","- offPeakOnly"],ok:1,
+       fx:function(){ addLine("#box3f","- offPeakOnly: boolean"); },
+       yes:"Right. Private like every field, with its type after the colon.",
+       no:{0:"Every field is private. That is a minus.",2:"No field without a type. What kind of value is a yes or no?"}},
+      {q:"BasicMembership overrides getMonthlyPrice(). Does that line go in its box?",
+       opts:["Yes","No, it is in the parent already"],ok:0,
+       fx:function(){ addLine("#box3m","+ BasicMembership(memberName: String, months: int, baseRate: BigDecimal, offPeakOnly: boolean)"); addLine("#box3m","+ getMonthlyPrice(): BigDecimal"); addLine("#box3m","+ toString(): String"); },
+       yes:"Right. A method the child writes again goes in the child's box. Its own constructor and its own toString() go in for the same reason.",
+       no:{any:"It is in the parent, but BasicMembership writes its own version of it. What the child writes itself goes in its box."}},
+      {q:"And getContractTotal()? A basic membership has a contract total.",
+       opts:["It goes in the box too","It stays out"],ok:1,
+       yes:"Right. Step 6 says it is written once, in Membership only, and in no child class. BasicMembership uses it without writing it.",
+       no:{any:"Read Step 6 again: where is getContractTotal() written?"}},
+      {q:"One line joins the two boxes. Which end gets the hollow triangle?",
+       opts:["The Membership end","The BasicMembership end"],ok:0,
+       fx:function(){ arrow(true); },
+       yes:"Right. The line starts at the child and the triangle touches the parent. Read it as a sentence: a BasicMembership is a Membership.",
+       no:{any:"Turn it around. A Membership is not always a BasicMembership, so the triangle cannot sit on the child."}}
+    ]});
+
+  /* ---------- step 4: abstract ---------- */
+  quiz({q:"#q4",a:"#a4",say:"#say4",reset:"#q4Reset",
+    start:"Three questions about the end of the hand-out.",
+    end:"Now put the same italics in your own diagram.",
+    clear:function(){ $("#absName").classList.remove("it","flash"); $("#absPrice").classList.remove("it","flash"); },
+    qs:[
+      {q:"After Step 11, can the program still create a plain Membership, like Henry Clark's?",
+       opts:["Yes","No"],ok:1,
+       fx:function(){ $("#absName").classList.add("it","flash"); },
+       yes:"Right. Membership becomes an abstract class, so its name goes in italics.",
+       no:{any:"Read Step 11 again: what happens to the line that creates Henry Clark?"}},
+      {q:"Step 12 turns one method of Membership into an abstract method. Which one?",
+       opts:["getSignUpFee()","getMonthlyPrice()","getContractTotal()","toString()"],ok:1,
+       fx:function(){ $("#absPrice").classList.add("it","flash"); },
+       yes:"Right. That one line goes in italics. The three others stay upright: Step 12 says they stay as they are.",
+       no:{any:"Step 12 names the method in its title."}},
+      {q:"In the BasicMembership box, is getMonthlyPrice() in italics too?",
+       opts:["Yes, like in the parent","No, upright"],ok:1,
+       yes:"Right. BasicMembership writes the method, with a body, so there it is an ordinary method.",
+       no:{any:"Italics mean the method has no body in that class. Does BasicMembership write it?"}}
+    ]});
 
   /* ---------- ambient ---------- */
   var cv=$("#amb"),ctx=cv.getContext&&cv.getContext("2d"),parts=[];
