@@ -127,6 +127,14 @@
   .qbody p.t b{color:var(--gold)} .qbody p.n b{color:var(--warn)}
   .tick{display:inline-flex;align-items:center;gap:8px;font-family:var(--mono);font-size:.74rem;color:var(--muted);cursor:pointer;margin-top:2px}
   .tick input{accent-color:var(--good);width:16px;height:16px;margin:0;cursor:pointer}
+  .qbody ul.ways{margin:0 0 10px;padding-left:18px;display:flex;flex-direction:column;gap:7px}
+  .qbody ul.ways li{font-size:.9rem;line-height:1.55;color:#c9d4ea}
+  .qbody ul.ways li b{color:var(--ink);font-weight:500}
+  .qbody p.x{border-left:3px solid var(--line);padding-left:10px;font-style:italic}
+  .qbody p.x b{font-style:normal;color:var(--muted)}
+  .optpick{display:inline-flex;align-items:center;gap:6px;color:var(--gold);border-color:rgba(255,200,98,.35)}
+  .optpick select{font-family:var(--mono);font-size:.68rem;color:var(--ink);background:#0b1020;border:1px solid var(--line);border-radius:6px;padding:2px 4px}
+  .story .w span{pointer-events:none}
   .qs,.walk{display:flex;flex-direction:column;gap:8px;grid-column:1 / -1}
   #grow svg,#lay svg,#anat svg{width:100%;height:auto;display:block}
   .cb{fill:#0b1020;stroke:rgba(255,255,255,.5);stroke-width:1.2} .cb.hot{stroke:var(--gold);fill:rgba(255,200,98,.1)}
@@ -161,8 +169,8 @@
   <div class="before">
     <div class="b"><b>What the diagram is</b>The plan of your classes, before any code: what each one holds, what each one can do, and how they are joined.</div>
     <div class="b"><b>There is no single right answer</b>Two good diagrams for the same shop can look different. A good one covers the whole text and lets you explain every box.</div>
-    <div class="b"><b>The examples are not your capstone</b>The try-it boxes use a cinema on purpose. The thinking is the same; the classes are yours to find.</div>
-    <div class="b"><b>Stuck for 20 minutes?</b>Name the step and the question you cannot answer: "step 7, question 6, my topping cannot know the size". A precise question is half the answer.</div>
+    <div class="b"><b>Two kinds of example</b>Steps 1 and 3 work on your own capstone text. The drawing steps use a cinema on purpose: you see how to draw, and the classes stay yours to find.</div>
+    <div class="b"><b>Stuck for 20 minutes?</b>Name the step and the question you cannot answer: "step 3, decision 5, my topping cannot know the size". A precise question is half the answer.</div>
   </div>
 
   <div class="board">
@@ -175,7 +183,7 @@
     <div class="steps" id="steps">
 
       <section class="step" id="s1">
-        <div class="head"><span class="num">1</span><div><h2>Read the text with two colors</h2><div class="meta"><span class="chip t">nouns and verbs</span></div></div>
+        <div class="head"><span class="num">1</span><div><h2>Read the text with two colors</h2><div class="meta"><span class="chip t">nouns and verbs</span><label class="chip optpick">Your option <select id="optsel"><option value="deli">The Deli</option><option value="pizza">The Pizza</option><option value="taco">The Taco</option><option value="custom">Custom</option></select></label></div></div>
           <label class="done-box"><input type="checkbox" data-s="1">done</label></div>
         <div class="parts">
           <div class="part do"><p class="k">Do</p><ol>
@@ -183,9 +191,9 @@
             <li>Read the price table the same way. Every row and every column is information your design has to hold somewhere.</li>
             <li>Write the words down as a plain list. No boxes yet.</li>
           </ol></div>
-          <div class="play"><p class="k">Try it on another shop first: press the highlighted words</p>
-            <p class="story">Our <button type="button" class="w" data-k="cinema">cinema</button> sells <button type="button" class="w" data-k="ticket">tickets</button>. A ticket is for one <button type="button" class="w" data-k="movie">movie</button> and one <button type="button" class="w" data-k="seat">seat</button>. A seat is <button type="button" class="w" data-k="kinds">standard or recliner</button>, and a recliner <button type="button" class="w" data-k="costs">costs more</button>. The <button type="button" class="w" data-k="customer">customer</button> can add <button type="button" class="w" data-k="snacks">snacks</button> to the <button type="button" class="w" data-k="order">order</button>: <button type="button" class="w" data-k="popcorn">popcorn</button> in three <button type="button" class="w" data-k="sizes">sizes</button>, or a <button type="button" class="w" data-k="drink">drink</button>. At the end the customer sees every item and the <button type="button" class="w" data-k="total">total</button>, and gets a <button type="button" class="w" data-k="slip">printed slip</button>.</p>
-            <div class="say" id="say1"><b>A cinema, not your capstone</b>Each highlighted word is something a designer has to decide about. Press one.</div>
+          <div class="play"><p class="k">Your own text: press the highlighted words</p>
+            <p class="story">The <button type="button" class="w" data-k="item"><span data-w="item"></span></button> is the core of our business. Customers can order <span data-w="items"></span> in <button type="button" class="w" data-k="sizes">3 sizes</button> (<span data-w="sizes"></span>). When they order, they choose the type of <button type="button" class="w" data-k="base"><span data-w="base"></span></button>. The customer can then choose their <button type="button" class="w" data-k="toppings">toppings</button>. Toppings are categorized as <button type="button" class="w" data-k="groups">regular and premium</button>. Meats and cheeses are premium toppings. Customers can request <button type="button" class="w" data-k="extra">extra toppings</button>, but premium toppings come at an <button type="button" class="w" data-k="cost">additional cost</button>. Each <span data-w="item"></span> can <button type="button" class="w" data-k="special"><span data-w="special"></span></button>. A customer can place an <button type="button" class="w" data-k="order">order</button> with <button type="button" class="w" data-k="zero">0 or more</button> <span data-w="items"></span>, and can add <button type="button" class="w" data-k="drink">drinks</button> and <button type="button" class="w" data-k="side"><span data-w="side"></span></button>. At the end the application shows the <button type="button" class="w" data-k="details">order details</button> and the <button type="button" class="w" data-k="total">total cost</button>, and saves a <button type="button" class="w" data-k="receipt">receipt file</button> for every order.</p>
+            <div class="say" id="say1"><b>What a designer sees</b>Each highlighted word is something your design has to decide about. Press one.</div>
           </div>
           <div class="part looks"><p class="k">Done looks like</p><p>A list of 20 to 30 words from your own text, each marked as a thing or an action. Nothing is a class yet.</p></div>
           <div class="part watch"><p class="k">Watch out</p><ul><li>Do not start from the screens. The screens say what the user does, not what the shop is made of.</li><li>Do not skip the small words: "extra", "included", "one at a time".</li></ul></div>
@@ -196,13 +204,13 @@
         <div class="head"><span class="num">2</span><div><h2>Sort your words</h2><div class="meta"><span class="chip t">class, attribute, method or value</span></div></div>
           <label class="done-box"><input type="checkbox" data-s="2">done</label></div>
         <div class="parts">
-          <div class="part do"><p class="k">Four questions for every word on your list</p><ol>
+          <div class="part do"><p class="k">A cinema sells tickets and snacks. Four questions for every word on a list</p><ol>
             <li>Does it have <b>data of its own and things it can answer</b>? It is probably a class.</li>
             <li>Does it only <b>describe one thing</b>? It is an attribute of that thing.</li>
             <li>Is it <b>one choice out of a fixed list</b> (a size, a flavor, a kind)? It is a value of an attribute, not a class per choice.</li>
             <li>Is it <b>something to do or to work out</b>? It is a method. Decide later whose job it is.</li>
           </ol></div>
-          <div class="play"><p class="k">Try it: what is each cinema word?</p>
+          <div class="play"><p class="k">Try it on another shop: what is each cinema word?</p>
             <div class="sort" id="sort"><div class="srow" data-a="c" data-why="It has its own data (which movie, which seat) and its own answers (how much it costs). That is a class."><span class="word">ticket</span><span class="opts"><button type="button" class="opt" data-v="c">Class</button><button type="button" class="opt" data-v="a">Attribute</button><button type="button" class="opt" data-v="m">Method</button><button type="button" class="opt" data-v="v">Just a value</button></span></div><div class="srow" data-a="v" data-why="One of two choices for the seat. A choice from a fixed list is the value of an attribute. It would become its own class only if a recliner behaved differently from a standard seat."><span class="word">recliner</span><span class="opts"><button type="button" class="opt" data-v="c">Class</button><button type="button" class="opt" data-v="a">Attribute</button><button type="button" class="opt" data-v="m">Method</button><button type="button" class="opt" data-v="v">Just a value</button></span></div><div class="srow" data-a="a" data-why="It describes one popcorn. A detail that belongs to one thing is an attribute of that thing."><span class="word">size of the popcorn</span><span class="opts"><button type="button" class="opt" data-v="c">Class</button><button type="button" class="opt" data-v="a">Attribute</button><button type="button" class="opt" data-v="m">Method</button><button type="button" class="opt" data-v="v">Just a value</button></span></div><div class="srow" data-a="m" data-why="It is something to do, and the answer changes when the order changes. That is a method. The next question is which class owns it."><span class="word">work out the total</span><span class="opts"><button type="button" class="opt" data-v="c">Class</button><button type="button" class="opt" data-v="a">Attribute</button><button type="button" class="opt" data-v="m">Method</button><button type="button" class="opt" data-v="v">Just a value</button></span></div><div class="srow" data-a="c" data-why="It holds other things and answers questions about them. A thing that holds things is a class."><span class="word">order</span><span class="opts"><button type="button" class="opt" data-v="c">Class</button><button type="button" class="opt" data-v="a">Attribute</button><button type="button" class="opt" data-v="m">Method</button><button type="button" class="opt" data-v="v">Just a value</button></span></div><div class="srow" data-a="a" data-why="A detail of one drink: an attribute. Its values come from a fixed list."><span class="word">flavor of the drink</span><span class="opts"><button type="button" class="opt" data-v="c">Class</button><button type="button" class="opt" data-v="a">Attribute</button><button type="button" class="opt" data-v="m">Method</button><button type="button" class="opt" data-v="v">Just a value</button></span></div></div>
             <div class="say" id="say2"><b>Your turn</b>Press an answer for each word.</div>
           </div>
@@ -212,8 +220,35 @@
       </section>
 
       <section class="step" id="s3">
-        <div class="head"><span class="num">3</span><div><h2>Draw one box</h2><div class="meta"><a class="chip" href="../../week-06/reference/class-diagram-reference.html">Class Diagram Reference</a></div></div>
+        <div class="head"><span class="num">3</span><div><h2>Make the seven decisions of this capstone</h2><div class="meta"><span class="chip t">before you draw anything</span></div></div>
           <label class="done-box"><input type="checkbox" data-s="3">done</label></div>
+        <div class="parts">
+          <div class="part do"><p class="k">Do</p><p>Every diagram for this capstone answers the same seven questions, one way or another. Open each one, read what the text says, look at the ways to go, and choose. There is more than one good answer: what matters is that you choose on purpose and can say why. The names of your classes are yours.</p></div>
+          <div class="qs" id="qs"><div class="q" data-q="1"><button type="button" class="qhead" aria-expanded="false"><span class="n">1</span><span>What is a thing of its own?</span><span class="more">open</span></button>
+            <div class="qbody"><p class="x"><b>The text says</b>Customers order <span data-w="items"></span>, and can add drinks and <span data-w="side"></span>.</p><p><b>Ways to go, and what each one costs</b></p><ul class="ways"><li><b>Each product is its own kind of thing.</b> Each one holds exactly what it needs: a drink has a flavor, a <span data-w="item"></span> has a <span data-w="base"></span>. More boxes, but every box is easy to read.</li><li><b>One general product with a field that says which kind it is.</b> Fewer boxes. But a drink then carries a <span data-w="base"></span> it never uses, and one price method has to handle every kind.</li></ul><p class="t"><b>Test your choice</b>Read the attributes of each product out loud. Does every attribute make sense for that product?</p>
+            <label class="tick"><input type="checkbox" data-q="1">I decided, and I can say why</label></div></div><div class="q" data-q="2"><button type="button" class="qhead" aria-expanded="false"><span class="n">2</span><span>How does the order hold different products?</span><span class="more">open</span></button>
+            <div class="qbody"><p class="x"><b>The text says</b>A customer can place an order with 0 or more <span data-w="items"></span>, plus drinks and <span data-w="side"></span>.</p><p><b>Ways to go, and what each one costs</b></p><ul class="ways"><li><b>One collection per kind of product.</b> Quick to draw. But every question the order answers (what is in me, how much in total) has to be asked once per collection, and a new product changes the order in several places.</li><li><b>One collection for everything.</b> The order asks every thing the same questions and never changes. For that, the products must have something in common. You decide what they share, and which of the tools from the last two weeks says so.</li></ul><p class="t"><b>Test your choice</b>The shop adds a fourth product next month. Count the places in your order that change.</p>
+            <label class="tick"><input type="checkbox" data-q="2">I decided, and I can say why</label></div></div><div class="q" data-q="3"><button type="button" class="qhead" aria-expanded="false"><span class="n">3</span><span>How does one main item hold its toppings?</span><span class="more">open</span></button>
+            <div class="qbody"><p class="x"><b>The text says</b>The customer can then choose their toppings.</p><p><b>Ways to go, and what each one costs</b></p><ul class="ways"><li><b>A yes or no field for each topping.</b> Easy to start. But a new topping changes the class, and two meats on one <span data-w="item"></span> cannot be said.</li><li><b>A collection of toppings on the item.</b> Any number, in any mix. Each topping is then a thing that goes into a collection. What does one topping have to hold?</li></ul><p class="t"><b>Test your choice</b>Put two meats and a topping the shop invents next month on one <span data-w="item"></span>. Does your design take them without a new field?</p>
+            <label class="tick"><input type="checkbox" data-q="3">I decided, and I can say why</label></div></div><div class="q" data-q="4"><button type="button" class="qhead" aria-expanded="false"><span class="n">4</span><span>How do you tell the groups of toppings apart?</span><span class="more">open</span></button>
+            <div class="qbody"><p class="x"><b>The text says</b>Toppings are categorized as regular and premium. In the price table, meats and cheeses have different prices, and regular toppings and sauces are included.</p><p><b>Ways to go, and what each one costs</b></p><ul class="ways"><li><b>Different kinds of topping.</b> Each kind works out its own price in its own way. More boxes. Ask what the kinds have in common, and where that lives.</li><li><b>One kind of topping that carries a mark for its group.</b> One box. But one price method has to handle every group, and it grows with every rule.</li><li><b>In between: two kinds, with a mark inside one of them.</b> Fewer boxes than the first way, shorter methods than the second. You decide where the line goes.</li></ul><p class="t"><b>Test your choice</b>Pick one meat, one cheese and one regular topping. What is different between them in your diagram? Where do 1.00 and .75 come from?</p>
+            <label class="tick"><input type="checkbox" data-q="4">I decided, and I can say why</label></div></div><div class="q" data-q="5"><button type="button" class="qhead" aria-expanded="false"><span class="n">5</span><span>Where is "extra" remembered, and who knows the size?</span><span class="more">open</span></button>
+            <div class="qbody"><p class="x"><b>The text says</b>Customers can request extra toppings, but premium toppings come at an additional cost. The price table has one column per size.</p><p><b>Ways to go, and what each one costs</b></p><ul class="ways"><li><b>The topping is told the size when it is asked for its price.</b> The item keeps the size, the topping keeps its own facts, and nothing is stored twice.</li><li><b>The item works out the price of its own toppings.</b> The item has the size and the toppings, so it can. Its price method becomes long, and the topping knows nothing about its own price.</li><li><b>Each topping remembers the size itself.</b> It works. But the size now lives in two places, and they can disagree.</li></ul><p class="t"><b>Test your choice</b>Extra cheese on the middle size. Say who knows it is cheese, who knows it is extra, who knows the size, and how the three meet in one method.</p>
+            <label class="tick"><input type="checkbox" data-q="5">I decided, and I can say why</label></div></div><div class="q" data-q="6"><button type="button" class="qhead" aria-expanded="false"><span class="n">6</span><span>Who works out the prices and the total, and who writes the receipt?</span><span class="more">open</span></button>
+            <div class="qbody"><p class="x"><b>The text says</b>The application displays the order details and the total cost, and saves each order to its own receipt file.</p><p><b>Ways to go, and what each one costs</b></p><ul class="ways"><li><b>Each thing answers for its own price, the order adds the answers.</b> Every box does one small job. To change a price you know where to look.</li><li><b>One place works everything out.</b> One long method that has to know every product, every topping and every rule. Each change in the shop is a change there.</li></ul><p class="t"><b>Test your choice</b>Put a finger on the method that prices the main item, then the drink, then the side, then the total. Then on the one place that writes the receipt file. A class or a method are both fine for the receipt, as long as it is one place.</p>
+            <label class="tick"><input type="checkbox" data-q="6">I decided, and I can say why</label></div></div><div class="q" data-q="7"><button type="button" class="qhead" aria-expanded="false"><span class="n">7</span><span>Which small things are easy to lose?</span><span class="more">open</span></button>
+            <div class="qbody"><p class="x"><b>The text says</b>Each <span data-w="item"></span> can <span data-w="special"></span>. Sauces and sides are included. If an order has 0 <span data-w="items"></span>, the customer must purchase <span data-w="side"></span> or a drink.</p>
+            <p><b>Each of these needs a place</b></p><ul class="ways"><li><b>The special option.</b> A yes or no choice for one <span data-w="item"></span>.</li><li><b>Sauces and included sides.</b> They cost nothing, but the receipt has to show them. Are they toppings like the others, or something else?</li><li><b>The rule for an order with no main item.</b> A rule is something to check. Which class is able to check it?</li><li><b>What the customer picks for the side product and the drink.</b> Look at the screens in the text.</li></ul>
+            <p class="t"><b>Test your choice</b>Go down your word list from step 1 and point to a place for every word.</p>
+            <label class="tick"><input type="checkbox" data-q="7">Every word has a place</label></div></div></div>
+          <div class="part looks"><p class="k">Done looks like</p><p>Seven ticks, and for each one a sentence you could say out loud: "I went this way because...".</p></div>
+          <div class="part watch"><p class="k">Watch out</p><ul><li>The shortest way to draw is rarely the shortest way to code. Read what each way costs later.</li><li>If a test makes you change one decision, check the others again: they depend on each other.</li></ul></div>
+        </div>
+      </section>
+
+      <section class="step" id="s4">
+        <div class="head"><span class="num">4</span><div><h2>Draw one box</h2><div class="meta"><a class="chip" href="../../week-06/reference/class-diagram-reference.html">Class Diagram Reference</a></div></div>
+          <label class="done-box"><input type="checkbox" data-s="4">done</label></div>
         <div class="parts">
           <div class="part do"><p class="k">Do</p><ol>
             <li>One box per class, three parts: the name, the attributes, the methods.</li>
@@ -239,9 +274,9 @@
         </div>
       </section>
 
-      <section class="step" id="s4">
-        <div class="head"><span class="num">4</span><div><h2>Connect the boxes</h2><div class="meta"><a class="chip" href="../../week-06/reference/class-diagram-reference.html">Class Diagram Reference</a><a class="chip" href="../../week-07/reference/class-diagram-reference.html">Class Diagram Reference, week 7</a></div></div>
-          <label class="done-box"><input type="checkbox" data-s="4">done</label></div>
+      <section class="step" id="s5">
+        <div class="head"><span class="num">5</span><div><h2>Connect the boxes</h2><div class="meta"><a class="chip" href="../../week-06/reference/class-diagram-reference.html">Class Diagram Reference</a><a class="chip" href="../../week-07/reference/class-diagram-reference.html">Class Diagram Reference, week 7</a></div></div>
+          <label class="done-box"><input type="checkbox" data-s="5">done</label></div>
         <div class="parts">
           <div class="part do"><p class="k">Three sentences, three kinds of line</p><ol>
             <li><b>"A is a kind of B."</b> Inheritance: a solid line with a hollow triangle that touches B, the parent.</li>
@@ -262,9 +297,9 @@
         </div>
       </section>
 
-      <section class="step" id="s5">
-        <div class="head"><span class="num">5</span><div><h2>Build the picture in five passes</h2><div class="meta"><a class="chip" href="../../week-06/reference/class-diagram-reference.html">Drawing it in diagrams.net</a><a class="chip" href="../../week-07/reference/class-diagram-reference.html">A whole design on one page</a></div></div>
-          <label class="done-box"><input type="checkbox" data-s="5">done</label></div>
+      <section class="step" id="s6">
+        <div class="head"><span class="num">6</span><div><h2>Build the picture in five passes</h2><div class="meta"><a class="chip" href="../../week-06/reference/class-diagram-reference.html">Drawing it in diagrams.net</a><a class="chip" href="../../week-07/reference/class-diagram-reference.html">A whole design on one page</a></div></div>
+          <label class="done-box"><input type="checkbox" data-s="6">done</label></div>
         <div class="parts">
           <div class="part do"><p class="k">Do, in diagrams.net</p><ol>
             <li><b>Names.</b> Type <code>class</code> in the shapes search and drag one Class shape per class onto the page. Type only the names. Leave room around every box.</li>
@@ -288,9 +323,9 @@
         </div>
       </section>
 
-      <section class="step" id="s6">
-        <div class="head"><span class="num">6</span><div><h2>Spot the drawing mistakes</h2><div class="meta"><span class="chip t">four pictures, one mistake each</span></div></div>
-          <label class="done-box"><input type="checkbox" data-s="6">done</label></div>
+      <section class="step" id="s7">
+        <div class="head"><span class="num">7</span><div><h2>Spot the drawing mistakes</h2><div class="meta"><span class="chip t">four pictures, one mistake each</span></div></div>
+          <label class="done-box"><input type="checkbox" data-s="7">done</label></div>
         <div class="parts">
           <div class="part do"><p class="k">Do</p><p>Each picture below has one drawing mistake. Find it before you press the button. Then look for the same four mistakes in your own diagram.</p></div>
           <div class="mis" id="mis"></div>
@@ -299,34 +334,7 @@
         </div>
       </section>
 
-      <section class="step" id="s7">
-        <div class="head"><span class="num">7</span><div><h2>Ask your diagram nine questions</h2><div class="meta"><span class="chip t">question your own design</span></div></div>
-          <label class="done-box"><input type="checkbox" data-s="7">done</label></div>
-        <div class="parts">
-          <div class="part do"><p class="k">Do</p><p>Your diagram is drawn. Now question it. Open each question, do the test on your own diagram, and tick it only when you can point to the answer. There is no single right design: two classmates can both tick all nine with different diagrams.</p></div>
-          <div class="qs" id="qs"><div class="q" data-q="1"><button type="button" class="qhead" aria-expanded="false"><span class="n">1</span><span>Is there one box for each thing the shop sells?</span><span class="more">open</span></button>
-            <div class="qbody"><p><b>Why it matters</b>Your main item, the drink and the side product each have data of their own: a size, a flavor, a type, a special option.</p><p class="t"><b>Test it</b>Point to each product in your diagram and read its attributes out loud.</p><p class="n"><b>Not there yet if</b>A product exists only as text or a number inside another class, or only in main.</p>
-            <label class="tick"><input type="checkbox" data-q="1">I can point to it in my diagram</label></div></div><div class="q" data-q="2"><button type="button" class="qhead" aria-expanded="false"><span class="n">2</span><span>Can the order treat everything it sells the same way?</span><span class="more">open</span></button>
-            <div class="qbody"><p><b>Why it matters</b>The order holds things and adds up their prices. It should not have to care which kind of thing each one is.</p><p class="t"><b>Test it</b>The shop adds a fourth product next month. How much of your order class changes?</p><p class="n"><b>Not there yet if</b>The order needs a new list and a new method for every kind of product.</p>
-            <label class="tick"><input type="checkbox" data-q="2">I can point to it in my diagram</label></div></div><div class="q" data-q="3"><button type="button" class="qhead" aria-expanded="false"><span class="n">3</span><span>Where do the toppings of one main item live?</span><span class="more">open</span></button>
-            <div class="qbody"><p><b>Why it matters</b>One item carries many toppings, and the shop will change its list of toppings.</p><p class="t"><b>Test it</b>Can one item hold two meats? Can it hold a topping the shop invents next month, without a new class or a new field?</p><p class="n"><b>Not there yet if</b>Toppings are yes or no fields, or text. Or every single topping has a class of its own.</p>
-            <label class="tick"><input type="checkbox" data-q="3">I can point to it in my diagram</label></div></div><div class="q" data-q="4"><button type="button" class="qhead" aria-expanded="false"><span class="n">4</span><span>Can your design tell a topping that costs extra from a free one?</span><span class="more">open</span></button>
-            <div class="qbody"><p><b>Why it matters</b>Meats and cheeses cost extra and the rest is included. A customer can also ask for "extra" of a topping, and that changes the price too.</p><p class="t"><b>Test it</b>Pick one meat and one regular topping. What in your diagram is different between them? Where is "extra" remembered?</p><p class="n"><b>Not there yet if</b>Nothing in the design separates the two groups, or "extra" has no place.</p>
-            <label class="tick"><input type="checkbox" data-q="4">I can point to it in my diagram</label></div></div><div class="q" data-q="5"><button type="button" class="qhead" aria-expanded="false"><span class="n">5</span><span>Who knows the price of each thing, and who adds up the total?</span><span class="more">open</span></button>
-            <div class="qbody"><p><b>Why it matters</b>Each thing should be able to answer "how much am I?". The order only adds the answers together.</p><p class="t"><b>Test it</b>Put your finger on the method that gives the price of the main item, then the drink, then the side. Then on the one that gives the total.</p><p class="n"><b>Not there yet if</b>Prices are worked out in main or in the class that draws the screens. Or the total is stored where it should be worked out.</p>
-            <label class="tick"><input type="checkbox" data-q="5">I can point to it in my diagram</label></div></div><div class="q" data-q="6"><button type="button" class="qhead" aria-expanded="false"><span class="n">6</span><span>Does every price method have what it needs?</span><span class="more">open</span></button>
-            <div class="qbody"><p><b>Why it matters</b>The price table has one column per size. A method can only use what is in its own class or what it receives as input.</p><p class="t"><b>Test it</b>For each price method, list what it needs to know. For each item on that list: is it an attribute here, or an input?</p><p class="n"><b>Not there yet if</b>A method would have to "just know" something it cannot reach, like the size of the item a topping sits on.</p>
-            <label class="tick"><input type="checkbox" data-q="6">I can point to it in my diagram</label></div></div><div class="q" data-q="7"><button type="button" class="qhead" aria-expanded="false"><span class="n">7</span><span>Does every parent hold something its children share?</span><span class="more">open</span></button>
-            <div class="qbody"><p><b>Why it matters</b>A parent class or an interface is there to hold what is common, once.</p><p class="t"><b>Test it</b>Cover the children with your hand. Is anything left in the parent box?</p><p class="n"><b>Not there yet if</b>The parent box is empty. Or "is a kind of" sounds wrong when you say it.</p>
-            <label class="tick"><input type="checkbox" data-q="7">I can point to it in my diagram</label></div></div><div class="q" data-q="8"><button type="button" class="qhead" aria-expanded="false"><span class="n">8</span><span>Is everything the text asks for somewhere, and only once?</span><span class="more">open</span></button>
-            <div class="qbody"><p><b>Why it matters</b>Small things are easy to lose: the special option, the sauces and included sides, the order details, the receipt file.</p><p class="t"><b>Test it</b>Go down your word list from step 1 and point to each word in the diagram. Then look for anything kept in two places.</p><p class="n"><b>Not there yet if</b>A word from the text has no home. Or the same information sits in two boxes, where it can disagree.</p>
-            <label class="tick"><input type="checkbox" data-q="8">I can point to it in my diagram</label></div></div><div class="q" data-q="9"><button type="button" class="qhead" aria-expanded="false"><span class="n">9</span><span>Does it read as a class diagram?</span><span class="more">open</span></button>
-            <div class="qbody"><p><b>Why it matters</b>A classmate, and you in three days, must be able to read it without asking.</p><p class="t"><b>Test it</b>Give it to a classmate for one minute. Can they tell you what each box holds and how the boxes are joined?</p><p class="n"><b>Not there yet if</b>Missing types or return types, a triangle on the wrong end, a box joined to nothing, an abstract class or interface with no mark.</p>
-            <label class="tick"><input type="checkbox" data-q="9">I can point to it in my diagram</label></div></div></div>
-          <div class="part looks"><p class="k">Done looks like</p><p>Nine ticks, each one backed by a place in your diagram you can put a finger on.</p></div>
-          <div class="part watch"><p class="k">Watch out</p><ul><li>A tick you cannot explain is not a tick.</li><li>If a test makes you change the diagram, run the earlier tests again.</li></ul></div>
-        </div>
-      </section>
+      
 
       <section class="step" id="s8">
         <div class="head"><span class="num">8</span><div><h2>Walk one order through it</h2><div class="meta"><span class="chip t">finger on the diagram</span></div></div>
@@ -382,7 +390,7 @@
 <script>
 (function(){
   "use strict";
-  var KEY="hub-cap2-diagram-guide-2", N=10, NQ=9, NT=7;
+  var KEY="hub-cap2-diagram-guide-3", N=10, NQ=7, NT=7;
   var $=function(id){ return document.getElementById(id); };
   var toc=$("toc"), count=$("count");
   var state={s:{},q:{},t:{}};
@@ -408,7 +416,7 @@
   $("steps").addEventListener("change",function(e){
     var t=e.target;
     if(t.hasAttribute("data-s")) state.s[t.getAttribute("data-s")]=t.checked;
-    if(t.hasAttribute("data-q")){ state.q[t.getAttribute("data-q")]=t.checked; state.s[7]=all(state.q,NQ); }
+    if(t.hasAttribute("data-q")){ state.q[t.getAttribute("data-q")]=t.checked; state.s[3]=all(state.q,NQ); }
     if(t.hasAttribute("data-t")){ state.t[t.getAttribute("data-t")]=t.checked; state.s[8]=all(state.t,NT); }
     save(); paint();
   });
@@ -417,27 +425,42 @@
 
   function say(id,label,text,tone){ var el=$(id); el.className="say"+(tone?" "+tone:""); el.textContent=""; var b=document.createElement("b"); b.textContent=label; el.appendChild(b); el.appendChild(document.createTextNode(text)); }
 
-  /* step 1: the cinema paragraph */
+  /* the words of the learner's option, used in step 1 and step 3 */
+  var OPT={
+    deli:{item:"sandwich",items:"sandwiches",sizes:"4\", 8\" and 12\"",base:"bread",special:"be toasted",side:"chips"},
+    pizza:{item:"pizza",items:"pizzas",sizes:"8\", 12\" and 16\"",base:"crust",special:"have stuffed crust",side:"garlic knots"},
+    taco:{item:"taco",items:"tacos",sizes:"Single Taco, 3-Taco Plate and Burrito",base:"shell",special:"be covered in salsa and queso",side:"chips & salsa"},
+    custom:{item:"item",items:"items",sizes:"Size 1, Size 2 and Size 3",base:"type",special:"have its special option",side:"the main side"}
+  };
+  var opt="deli"; try{ var so=localStorage.getItem(KEY+"-opt"); if(so&&OPT[so]) opt=so; }catch(e){}
+  function fillWords(){ document.querySelectorAll("[data-w]").forEach(function(el){ el.textContent=OPT[opt][el.getAttribute("data-w")]; }); }
+  $("optsel").value=opt;
+  $("optsel").addEventListener("change",function(){ opt=this.value; try{ localStorage.setItem(KEY+"-opt",opt); }catch(e){} fillWords(); });
+  fillWords();
+  function words(t){ return t.replace(/\{(\w+)\}/g,function(m,k){ return OPT[opt][k]||m; }); }
+
+  /* step 1: the capstone paragraph */
   var WORDS={
-    cinema:["The business itself","The whole application is the cinema, so it is rarely a class of its own."],
-    ticket:["A thing","It has its own data (which movie, which seat) and its own answers (how much). A strong candidate for a class."],
-    movie:["A thing, or a detail?","Does the application need more than its title? If yes, it is a class. If the title is enough, it is an attribute of the ticket."],
-    seat:["A detail of a ticket","An attribute here. It would be a class only if a seat needed data and actions of its own."],
-    kinds:["Two values of one detail","A choice from a fixed list is the value of an attribute, not one class per choice. It becomes two classes only if the two behave differently."],
-    costs:["An action hiding in a verb","Something has to answer \"how much\". That is a method. Whose job is it?"],
-    customer:["The person at the keyboard","They type the answers. Usually not a class, unless the application has to remember them."],
-    snacks:["A group word","Popcorn and a drink are both snacks. When several things are \"a kind of\" something, write it down. It matters when you connect the boxes."],
-    order:["A thing that holds things","Something has to keep everything the customer picked, in one place, and answer questions about all of it."],
-    popcorn:["A thing that is sold","Its own data, its own price. A candidate for a class."],
-    sizes:["A detail with a fixed list of values","An attribute. And notice what else the sentence says: the price depends on it."],
-    drink:["A thing that is sold","Another candidate for a class. What does it have in common with popcorn?"],
+    item:["The center of the design","What does one {item} have to remember about itself? Read on: almost every later sentence adds something to it."],
+    sizes:["A detail with three fixed values","It belongs to one {item}. Look at the price table: almost every price depends on it. Whoever works out a price must be able to reach the size."],
+    base:["A detail chosen from a short list","It belongs to one {item}. Is a list of choices a set of classes, or the value of an attribute?"],
+    toppings:["Plural","One {item} carries several, and the number changes from order to order. How does one thing hold several other things? That is decision 3."],
+    groups:["The text sorts them","Regular and premium here, and the price table sorts premium again into meats and cheeses with different prices. Your design has to tell the groups apart. How is decision 4."],
+    extra:["A choice that changes the price","The customer makes it for one topping on one {item}. It has to be remembered somewhere. That is decision 5."],
+    cost:["An action hiding in a noun","Something works out a price. For a topping it depends on the group, on extra, and on the size of the {item} it sits on. Who knows all three?"],
+    special:["A yes or no choice","One per {item}. Small, and easy to forget in the diagram."],
+    order:["The thing that holds everything","Everything the customer picked ends up here. It has to answer for all of it: what is in me, and how much in total?"],
+    zero:["A rule","An order can have no {item} at all, and the text says what must be true then. A rule is something to check: a method. Whose?"],
+    drink:["Sold on its own","A size and a flavor. Its price depends on its own size, not on anything else in the order."],
+    side:["Sold on its own","Look in the text at what the customer can choose for it, and at its price."],
+    details:["Text made from everything in the order","Something has to produce it. Each thing can describe itself, or one place describes everything. Which is easier to change later?"],
     total:["A result, not a thing","It is worked out from what is in the order, every time. The answer of a method, not something to store."],
-    slip:["An output","Something has to produce it. A method. You decide which class has that job."]
+    receipt:["A job","One file per order. Writing a file is something to do, and one place in your design should have that job."]
   };
   document.querySelectorAll(".story .w").forEach(function(b){
     b.addEventListener("click",function(){
       document.querySelectorAll(".story .w").forEach(function(x){ x.classList.remove("on"); });
-      b.classList.add("on"); var w=WORDS[b.getAttribute("data-k")]; say("say1",w[0],w[1]);
+      b.classList.add("on"); var w=WORDS[b.getAttribute("data-k")]; say("say1",w[0],words(w[1]));
     });
   });
 
@@ -595,7 +618,7 @@
     card.appendChild(btn); card.appendChild(out); $("mis").appendChild(card);
   });
 
-  /* step 7: open and close the questions */
+  /* step 3: open and close the decisions */
   $("qs").addEventListener("click",function(e){
     var h=e.target.closest(".qhead"); if(!h) return;
     var q=h.parentNode, open=!q.classList.contains("open");
