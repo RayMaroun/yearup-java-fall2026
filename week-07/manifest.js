@@ -10,7 +10,7 @@ window.HUB_MANIFEST = {
     { file: "03-interface-or-abstract-class.html", title: "Interface or Abstract Class", group: "Workbook 6a · Section 1-2" },
     { file: "04-implementing-an-interface.html", title: "Implementing an Interface", group: "Workbook 6a · Section 2-1" },
     { file: "05-one-class-several-interfaces.html", title: "One Class, Several Interfaces", group: "Workbook 6a · Section 2-1" },
-    { file: "06-an-interface-as-a-type.html", title: "An Interface as a Type", group: "Workbook 6a · Section 2-1" },
+    { file: "06-an-interface-as-a-type.html", title: "An Interface as a Type", group: "Workbook 6a · Section 2-2" },
     { file: "07-instanceof-with-interfaces.html", title: "instanceof With Interfaces", group: "Workbook 6a · Section 2-2" },
     { file: "08-default-methods.html", title: "Default Methods", group: "Workbook 6a · Section 2-2" },
     { file: "09-code-to-the-interface.html", title: "Code to the Interface", group: "Workbook 6a · Section 2-2" },
@@ -44,7 +44,7 @@ window.HUB_MANIFEST = {
   ],
   games: [
     { file: "interface-implementer.html", title: "Interface Implementer", group: "Workbook 6a · Section 2-1", desc: "An interface and a class: does the class compile, and if not, which method is missing or wrong." },
-    { file: "which-calls-compile.html", title: "Which Calls Compile", group: "Workbook 6a · Section 2-1", desc: "A variable of an interface type holding an object: pick the calls the compiler accepts." },
+    { file: "which-calls-compile.html", title: "Which Calls Compile", group: "Workbook 6a · Section 2-2", desc: "A variable of an interface type holding an object: pick the calls the compiler accepts." },
     { file: "default-or-override.html", title: "Default or Override", group: "Workbook 6a · Section 2-2", desc: "Interfaces with default methods and a class: predict which version prints, or whether it compiles at all." },
     { file: "comparable-sorter.html", title: "Comparable Sorter", group: "Workbook 6a · Section 2-2", desc: "A compareTo rule and a short list: put the items in the order sort() will leave them." },
     { file: "generics-validator.html", title: "Generics Validator", group: "Workbook 6a · Section 3-3", desc: "A generic declaration and a line that uses it: compiles, or the reason it does not." },
