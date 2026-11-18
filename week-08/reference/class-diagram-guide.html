@@ -128,6 +128,19 @@
   .tick{display:inline-flex;align-items:center;gap:8px;font-family:var(--mono);font-size:.74rem;color:var(--muted);cursor:pointer;margin-top:2px}
   .tick input{accent-color:var(--good);width:16px;height:16px;margin:0;cursor:pointer}
   .qs,.walk{display:flex;flex-direction:column;gap:8px;grid-column:1 / -1}
+  #grow svg,#lay svg,#anat svg{width:100%;height:auto;display:block}
+  .cb{fill:#0b1020;stroke:rgba(255,255,255,.5);stroke-width:1.2} .cb.hot{stroke:var(--gold);fill:rgba(255,200,98,.1)}
+  .cn{fill:var(--ink);font-family:var(--mono);font-size:11px;font-weight:500;text-anchor:middle} .cn.it{font-style:italic}
+  .cm{fill:var(--muted);font-family:var(--mono);font-size:8.5px;text-anchor:middle}
+  .cr{fill:#bcd0ff;font-family:var(--mono);font-size:9.3px}
+  .cl{stroke:rgba(255,255,255,.5);stroke-width:1.2}
+  .el{stroke:var(--gold);stroke-width:1.6;fill:none} .eh{fill:#0b1020;stroke:var(--gold);stroke-width:1.6} .et{fill:var(--gold);font-family:var(--mono);font-size:12px;text-anchor:middle}
+  .band{cursor:pointer} .band rect{fill:transparent} .band:hover rect{fill:rgba(110,160,255,.12)} .band.on rect{fill:rgba(255,200,98,.14)}
+  .mis{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:10px;grid-column:1 / -1}
+  .mc{border:1px solid var(--line);border-radius:12px;background:rgba(6,10,20,.5);padding:12px;display:flex;flex-direction:column;gap:10px}
+  .mc svg{width:100%;height:auto;display:block}
+  .mc p{margin:0;font-size:.88rem;line-height:1.5;color:var(--ink);border-left:3px solid var(--warn);padding-left:10px}
+  @media (max-width:860px){.mis{grid-template-columns:1fr}}
   .orderc{border:1px dashed rgba(255,200,98,.5);border-radius:12px;padding:12px 14px;font-size:.95rem;line-height:1.55;color:var(--ink);background:rgba(255,200,98,.06);grid-column:1 / -1}
   .orderc b{font-family:var(--mono);font-size:.62rem;letter-spacing:.14em;text-transform:uppercase;color:var(--gold);font-weight:500;display:block;margin-bottom:4px}
   .wk{display:grid;grid-template-columns:auto 1fr;gap:10px;align-items:start;padding:10px 12px;border:1px solid var(--line);border-radius:12px;background:rgba(6,10,20,.45);font-size:.93rem;line-height:1.5;color:#c9d4ea;cursor:pointer}
@@ -143,18 +156,18 @@
 <div class="wrap">
   <p class="tag">Capstone 2 &middot; Class Diagram Guide</p>
   <h1>Class Diagram Guide</h1>
-  <p class="lede"><b>Eight steps from the capstone text to a class diagram you can defend.</b> This page does not tell you which classes to draw. It shows you how to find them, and which questions to ask your own design before Raymond does.</p>
+  <p class="lede"><b>Ten steps from the capstone text to a class diagram you can explain.</b> This page does not tell you which classes to draw. It shows you how to find them, how to draw them, and which questions to ask your own design before you write any code.</p>
 
   <div class="before">
     <div class="b"><b>What the diagram is</b>The plan of your classes, before any code: what each one holds, what each one can do, and how they are joined.</div>
     <div class="b"><b>There is no single right answer</b>Two good diagrams for the same shop can look different. A good one covers the whole text and lets you explain every box.</div>
     <div class="b"><b>The examples are not your capstone</b>The try-it boxes use a cinema on purpose. The thinking is the same; the classes are yours to find.</div>
-    <div class="b"><b>Stuck for 20 minutes?</b>Bring the step number and the question you cannot answer. "Step 5, question 6, my topping cannot know the size" gets you help fast.</div>
+    <div class="b"><b>Stuck for 20 minutes?</b>Name the step and the question you cannot answer: "step 7, question 6, my topping cannot know the size". A precise question is half the answer.</div>
   </div>
 
   <div class="board">
     <nav class="side" aria-label="Steps">
-      <p class="lab"><span>Steps</span><b id="count">0 of 8</b></p>
+      <p class="lab"><span>Steps</span><b id="count">0 of 10</b></p>
       <ol id="toc"></ol>
       <button class="reset" id="reset" type="button">Clear ticks</button>
     </nav>
@@ -199,7 +212,7 @@
       </section>
 
       <section class="step" id="s3">
-        <div class="head"><span class="num">3</span><div><h2>Fill each box</h2><div class="meta"><a class="chip" href="../../week-06/reference/class-diagram-reference.html">Class Diagram Reference</a></div></div>
+        <div class="head"><span class="num">3</span><div><h2>Draw one box</h2><div class="meta"><a class="chip" href="../../week-06/reference/class-diagram-reference.html">Class Diagram Reference</a></div></div>
           <label class="done-box"><input type="checkbox" data-s="3">done</label></div>
         <div class="parts">
           <div class="part do"><p class="k">Do</p><ol>
@@ -208,6 +221,9 @@
             <li>Give each action from your list to the class that <b>holds the data it needs</b>. If a class has to ask three others for everything, the method is in the wrong box.</li>
             <li>Leave out plain getters and setters. They hide the methods that matter.</li>
           </ol></div>
+          <div class="play"><p class="k">A drawn box: press a band</p>
+            <div class="arrowbox"><div id="anat"></div><div class="say" id="say3a"><b>Three bands, always in this order</b>Press the name, the attributes or the methods.</div></div>
+          </div>
           <div class="play"><p class="k">Try it: which lines are complete? Press each one</p>
             <div class="lines" id="lines">
               <button type="button" class="ln" data-ok="0" data-why="A name alone. What kind of value is it: a number, text, yes or no?">size</button>
@@ -247,8 +263,45 @@
       </section>
 
       <section class="step" id="s5">
-        <div class="head"><span class="num">5</span><div><h2>Ask your diagram nine questions</h2><div class="meta"><span class="chip t">the same nine Raymond will ask</span></div></div>
+        <div class="head"><span class="num">5</span><div><h2>Build the picture in five passes</h2><div class="meta"><a class="chip" href="../../week-06/reference/class-diagram-reference.html">Drawing it in diagrams.net</a><a class="chip" href="../../week-07/reference/class-diagram-reference.html">A whole design on one page</a></div></div>
           <label class="done-box"><input type="checkbox" data-s="5">done</label></div>
+        <div class="parts">
+          <div class="part do"><p class="k">Do, in diagrams.net</p><ol>
+            <li><b>Names.</b> Type <code>class</code> in the shapes search and drag one Class shape per class onto the page. Type only the names. Leave room around every box.</li>
+            <li><b>Attributes.</b> Double-click the middle band, one attribute per line.</li>
+            <li><b>Methods.</b> Double-click the bottom band, one method per line.</li>
+            <li><b>Lines.</b> Hover over a box and drag one of its blue arrows onto the other box. Then click the line and set its ends in the Format panel, Style tab: hollow triangle, diamond, or dashed.</li>
+            <li><b>Marks.</b> The word &laquo;interface&raquo; above an interface name, italics for an abstract class, a star where one box holds several of another.</li>
+          </ol></div>
+          <div class="play"><p class="k">Watch a cinema diagram grow: one pass per press</p>
+            <div id="grow"></div>
+            <div class="opts" style="margin-top:12px"><button type="button" class="pick" id="gnext">Next pass</button><button type="button" class="pick" id="gback">Start over</button></div>
+            <div class="say" id="say5"><b>Pass 1 of 5: names</b>One box per class, with room around each. Nothing inside yet.</div>
+          </div>
+          <div class="play"><p class="k">Same diagram, two layouts: press to switch</p>
+            <div id="lay"></div>
+            <div class="opts" style="margin-top:12px"><button type="button" class="pick on" data-l="messy">As it first came out</button><button type="button" class="pick" data-l="tidy">Tidied</button></div>
+            <div class="say" id="say5b"><b>Hard to read</b>Every box and every line is correct, but the interface sits at the bottom, the child is far from its parent, and the lines run in every direction. A reader has to untangle it first.</div>
+          </div>
+          <div class="part looks"><p class="k">Done looks like</p><p>Every class of your list is a box with three bands, every line is attached at both ends, and the picture reads from top to bottom without crossing lines.</p></div>
+          <div class="part watch"><p class="k">Watch out</p><ul><li>Do not start with the lines. Lines between half-empty boxes get redrawn three times.</li><li>Parents and interfaces go above, children below. The class that holds others goes to the left or on top.</li></ul></div>
+        </div>
+      </section>
+
+      <section class="step" id="s6">
+        <div class="head"><span class="num">6</span><div><h2>Spot the drawing mistakes</h2><div class="meta"><span class="chip t">four pictures, one mistake each</span></div></div>
+          <label class="done-box"><input type="checkbox" data-s="6">done</label></div>
+        <div class="parts">
+          <div class="part do"><p class="k">Do</p><p>Each picture below has one drawing mistake. Find it before you press the button. Then look for the same four mistakes in your own diagram.</p></div>
+          <div class="mis" id="mis"></div>
+          <div class="part looks"><p class="k">Done looks like</p><p>You found all four here, and none of them is left in your diagram.</p></div>
+          <div class="part watch"><p class="k">Watch out</p><ul><li>A line that only sits near a box looks fine in a picture. Move the box: if the line stays behind, it was never attached.</li></ul></div>
+        </div>
+      </section>
+
+      <section class="step" id="s7">
+        <div class="head"><span class="num">7</span><div><h2>Ask your diagram nine questions</h2><div class="meta"><span class="chip t">question your own design</span></div></div>
+          <label class="done-box"><input type="checkbox" data-s="7">done</label></div>
         <div class="parts">
           <div class="part do"><p class="k">Do</p><p>Your diagram is drawn. Now question it. Open each question, do the test on your own diagram, and tick it only when you can point to the answer. There is no single right design: two classmates can both tick all nine with different diagrams.</p></div>
           <div class="qs" id="qs"><div class="q" data-q="1"><button type="button" class="qhead" aria-expanded="false"><span class="n">1</span><span>Is there one box for each thing the shop sells?</span><span class="more">open</span></button>
@@ -268,16 +321,16 @@
             <label class="tick"><input type="checkbox" data-q="7">I can point to it in my diagram</label></div></div><div class="q" data-q="8"><button type="button" class="qhead" aria-expanded="false"><span class="n">8</span><span>Is everything the text asks for somewhere, and only once?</span><span class="more">open</span></button>
             <div class="qbody"><p><b>Why it matters</b>Small things are easy to lose: the special option, the sauces and included sides, the order details, the receipt file.</p><p class="t"><b>Test it</b>Go down your word list from step 1 and point to each word in the diagram. Then look for anything kept in two places.</p><p class="n"><b>Not there yet if</b>A word from the text has no home. Or the same information sits in two boxes, where it can disagree.</p>
             <label class="tick"><input type="checkbox" data-q="8">I can point to it in my diagram</label></div></div><div class="q" data-q="9"><button type="button" class="qhead" aria-expanded="false"><span class="n">9</span><span>Does it read as a class diagram?</span><span class="more">open</span></button>
-            <div class="qbody"><p><b>Why it matters</b>Raymond, and you in three days, must be able to read it without asking.</p><p class="t"><b>Test it</b>Give it to a classmate for one minute. Can they tell you what each box holds and how the boxes are joined?</p><p class="n"><b>Not there yet if</b>Missing types or return types, a triangle on the wrong end, a box joined to nothing, an abstract class or interface with no mark.</p>
+            <div class="qbody"><p><b>Why it matters</b>A classmate, and you in three days, must be able to read it without asking.</p><p class="t"><b>Test it</b>Give it to a classmate for one minute. Can they tell you what each box holds and how the boxes are joined?</p><p class="n"><b>Not there yet if</b>Missing types or return types, a triangle on the wrong end, a box joined to nothing, an abstract class or interface with no mark.</p>
             <label class="tick"><input type="checkbox" data-q="9">I can point to it in my diagram</label></div></div></div>
           <div class="part looks"><p class="k">Done looks like</p><p>Nine ticks, each one backed by a place in your diagram you can put a finger on.</p></div>
-          <div class="part watch"><p class="k">Watch out</p><ul><li>A tick you cannot explain is not a tick. Raymond will ask the same nine questions.</li><li>If a test makes you change the diagram, run the earlier tests again.</li></ul></div>
+          <div class="part watch"><p class="k">Watch out</p><ul><li>A tick you cannot explain is not a tick.</li><li>If a test makes you change the diagram, run the earlier tests again.</li></ul></div>
         </div>
       </section>
 
-      <section class="step" id="s6">
-        <div class="head"><span class="num">6</span><div><h2>Walk one order through it</h2><div class="meta"><span class="chip t">finger on the diagram</span></div></div>
-          <label class="done-box"><input type="checkbox" data-s="6">done</label></div>
+      <section class="step" id="s8">
+        <div class="head"><span class="num">8</span><div><h2>Walk one order through it</h2><div class="meta"><span class="chip t">finger on the diagram</span></div></div>
+          <label class="done-box"><input type="checkbox" data-s="8">done</label></div>
         <div class="parts">
           <div class="orderc"><b>The order to walk through</b>One main item in the middle size, with two premium toppings (one of them extra), one regular topping and one sauce. One medium drink. One side product.</div>
           <div class="part do"><p class="k">Do</p><p>Put a finger on your diagram and follow this one order from the first screen to the receipt. Answer each question out loud. Tick it when the diagram answers it without you adding "well, in the code I would...".</p></div>
@@ -287,9 +340,9 @@
         </div>
       </section>
 
-      <section class="step" id="s7">
-        <div class="head"><span class="num">7</span><div><h2>Check for the usual traps</h2><div class="meta"></div></div>
-          <label class="done-box"><input type="checkbox" data-s="7">done</label></div>
+      <section class="step" id="s9">
+        <div class="head"><span class="num">9</span><div><h2>Check for the usual traps</h2><div class="meta"></div></div>
+          <label class="done-box"><input type="checkbox" data-s="9">done</label></div>
         <div class="parts">
           <div class="part do"><p class="k">Six traps, and the question that gets you out</p><ol>
             <li><b>The class that does everything.</b> One box with twenty methods. Whose data does each method really use?</li>
@@ -304,18 +357,17 @@
         </div>
       </section>
 
-      <section class="step" id="s8">
-        <div class="head"><span class="num">8</span><div><h2>Show it to Raymond</h2><div class="meta"><span class="chip t">approved by Wed Nov 25</span></div></div>
-          <label class="done-box"><input type="checkbox" data-s="8">done</label></div>
+      <section class="step" id="s10">
+        <div class="head"><span class="num">10</span><div><h2>Save it and keep it current</h2><div class="meta"><span class="chip t">it lives in your repository</span></div></div>
+          <label class="done-box"><input type="checkbox" data-s="10">done</label></div>
         <div class="parts">
           <div class="part do"><p class="k">Do</p><ol>
-            <li>Come when steps 5 and 6 are fully ticked. Have the diagram open in diagrams.net, not as a picture, so it can be changed on the spot.</li>
-            <li>Be ready to walk the order of step 6 out loud. Raymond will ask "why" about your choices. A different design from your neighbor's is fine if you can explain it.</li>
-            <li>Bring your open questions. "I could not decide whether this is a class or an attribute" is a good one.</li>
-            <li>After the approval: File, Export as, PNG. Save the picture in your repository and show it in your README. Keep the diagram current when the code changes.</li>
+            <li>Keep the <code>.drawio</code> file. It is the one you can still change.</li>
+            <li>File, Export as, PNG. Save the picture in your repository and show it in your README.</li>
+            <li>When the code changes a class, change the diagram the same day and export again. A diagram that no longer matches the code is worse than none.</li>
           </ol></div>
-          <div class="part looks"><p class="k">Done looks like</p><p>Raymond approved the diagram, and the picture is committed in your repository. Only then does the coding start.</p></div>
-          <div class="part watch"><p class="k">Watch out</p><ul><li>Everything must be approved by Wed Nov 25, end of day. The capstone week starts Mon Nov 30 and you work on your own.</li><li>A Custom idea needs Raymond's approval before you draw anything.</li></ul></div>
+          <div class="part looks"><p class="k">Done looks like</p><p>The picture is committed in your repository, visible in the README, and matches what you are about to code.</p></div>
+          <div class="part watch"><p class="k">Watch out</p><ul><li>Export the whole page, not a selection, and check that no box is cut off in the picture.</li></ul></div>
         </div>
       </section>
 
@@ -330,7 +382,7 @@
 <script>
 (function(){
   "use strict";
-  var KEY="hub-cap2-diagram-guide", N=8, NQ=9, NT=7;
+  var KEY="hub-cap2-diagram-guide-2", N=10, NQ=9, NT=7;
   var $=function(id){ return document.getElementById(id); };
   var toc=$("toc"), count=$("count");
   var state={s:{},q:{},t:{}};
@@ -356,8 +408,8 @@
   $("steps").addEventListener("change",function(e){
     var t=e.target;
     if(t.hasAttribute("data-s")) state.s[t.getAttribute("data-s")]=t.checked;
-    if(t.hasAttribute("data-q")){ state.q[t.getAttribute("data-q")]=t.checked; state.s[5]=all(state.q,NQ); }
-    if(t.hasAttribute("data-t")){ state.t[t.getAttribute("data-t")]=t.checked; state.s[6]=all(state.t,NT); }
+    if(t.hasAttribute("data-q")){ state.q[t.getAttribute("data-q")]=t.checked; state.s[7]=all(state.q,NQ); }
+    if(t.hasAttribute("data-t")){ state.t[t.getAttribute("data-t")]=t.checked; state.s[8]=all(state.t,NT); }
     save(); paint();
   });
   $("reset").addEventListener("click",function(){ state={s:{},q:{},t:{}}; save(); paint(); });
@@ -433,7 +485,117 @@
     r.draw(svg); var d=$("draw"); d.textContent=""; d.appendChild(svg); say("say4",r.label,r.text,r.tone||"");
   });
 
-  /* step 5: open and close the questions */
+  /* a small class-diagram drawer, used by steps 3, 5 and 6 */
+  var HEAD=24, ROW=14;
+  function boxH(b,stage){ var h=HEAD+(b.mark&&stage>=5?11:0); if(stage>=2) h+=Math.max(1,b.attrs.length)*ROW+8; if(stage>=3) h+=Math.max(1,b.methods.length)*ROW+8; return h; }
+  function drawBox(svg,b,stage){
+    var h=boxH(b,stage), y=b.y, g=sv("g",{});
+    g.appendChild(sv("rect",{x:b.x,y:y,width:b.w,height:h,rx:3,"class":"cb"}));
+    var top=HEAD+(b.mark&&stage>=5?11:0);
+    if(b.mark&&stage>=5) g.appendChild(sv("text",{x:b.x+b.w/2,y:y+13,"class":"cm"},"«"+b.mark+"»"));
+    g.appendChild(sv("text",{x:b.x+b.w/2,y:y+top-8,"class":"cn"},b.name));
+    var yy=y+top;
+    if(stage>=2){ g.appendChild(sv("line",{x1:b.x,y1:yy,x2:b.x+b.w,y2:yy,"class":"cl"})); b.attrs.forEach(function(a,i){ g.appendChild(sv("text",{x:b.x+7,y:yy+14+i*ROW,"class":"cr"},a)); }); yy+=Math.max(1,b.attrs.length)*ROW+8; }
+    if(stage>=3){ g.appendChild(sv("line",{x1:b.x,y1:yy,x2:b.x+b.w,y2:yy,"class":"cl"})); b.methods.forEach(function(m,i){ g.appendChild(sv("text",{x:b.x+7,y:yy+14+i*ROW,"class":"cr"},m)); }); }
+    svg.appendChild(g); b.h=h; return g;
+  }
+  function edgePoint(b,px,py){   /* where the line from the center of b toward (px,py) leaves the box */
+    var cx=b.x+b.w/2, cy=b.y+b.h/2, dx=px-cx, dy=py-cy, tx=dx?(b.w/2)/Math.abs(dx):1e9, ty=dy?(b.h/2)/Math.abs(dy):1e9, t=Math.min(tx,ty);
+    return [cx+dx*t, cy+dy*t];
+  }
+  function drawEdge(svg,a,b,kind,opt){
+    opt=opt||{};
+    var ac=[a.x+a.w/2,a.y+a.h/2], bc=[b.x+b.w/2,b.y+b.h/2], p1=edgePoint(a,bc[0],bc[1]), p2=edgePoint(b,ac[0],ac[1]);
+    var ang=Math.atan2(p2[1]-p1[1],p2[0]-p1[0]), ux=Math.cos(ang), uy=Math.sin(ang);
+    if(opt.gap){ p2=[p2[0]-ux*opt.gap,p2[1]-uy*opt.gap]; }
+    function rot(px,py,dx,dy,an){ return (px+dx*Math.cos(an)-dy*Math.sin(an))+","+(py+dx*Math.sin(an)+dy*Math.cos(an)); }
+    var s1=p1, s2=p2;
+    if(kind==="has"){ s1=[p1[0]+ux*18,p1[1]+uy*18]; } else { s2=[p2[0]-ux*13,p2[1]-uy*13]; }
+    var ln=sv("line",{x1:s1[0],y1:s1[1],x2:s2[0],y2:s2[1],"class":"el"}); if(kind==="can") ln.setAttribute("stroke-dasharray","6 5"); svg.appendChild(ln);
+    if(kind==="has"){ svg.appendChild(sv("polygon",{points:[rot(p1[0],p1[1],0,0,ang),rot(p1[0],p1[1],9,-5,ang),rot(p1[0],p1[1],18,0,ang),rot(p1[0],p1[1],9,5,ang)].join(" "),"class":"eh"}));
+      if(opt.star) svg.appendChild(sv("text",{x:p2[0]-ux*10-uy*9,y:p2[1]-uy*10+ux*9+4,"class":"et"},"*")); }
+    else { svg.appendChild(sv("polygon",{points:[rot(p2[0],p2[1],0,0,ang),rot(p2[0],p2[1],-13,-7,ang),rot(p2[0],p2[1],-13,7,ang)].join(" "),"class":"eh"})); }
+  }
+  function cinema(pos){
+    var B={order:{name:"Order",attrs:["- items: List<Priced>"],methods:["+ add(p: Priced): void","+ getTotal(): BigDecimal"]},
+      priced:{name:"Priced",mark:"interface",attrs:[],methods:["+ getPrice(): BigDecimal"]},
+      ticket:{name:"Ticket",attrs:["- movie: String","- seat: String"],methods:["+ getPrice(): BigDecimal"]},
+      recl:{name:"ReclinerTicket",attrs:["- footrest: boolean"],methods:["+ getPrice(): BigDecimal"]},
+      pop:{name:"Popcorn",attrs:["- size: int"],methods:["+ getPrice(): BigDecimal"]},
+      drink:{name:"Drink",attrs:["- size: int","- flavor: String"],methods:["+ getPrice(): BigDecimal"]}};
+    for(var k in B){ B[k].x=pos[k][0]; B[k].y=pos[k][1]; B[k].w=152; }
+    return B;
+  }
+  var TIDY={order:[8,14],priced:[330,14],ticket:[160,150],pop:[330,150],drink:[498,150],recl:[160,290]};
+  var MESSY={order:[470,150],priced:[250,300],ticket:[20,20],pop:[250,110],drink:[20,290],recl:[470,10]};
+  var EDGES=[["order","priced","has"],["ticket","priced","can"],["pop","priced","can"],["drink","priced","can"],["recl","ticket","isa"]];
+  function drawCinema(target,pos,stage){
+    var B=cinema(pos), svg=sv("svg",{viewBox:"0 0 660 400",role:"img","aria-label":"A class diagram of a cinema"}), k;
+    for(k in B) B[k].h=boxH(B[k],stage);
+    if(stage>=4) EDGES.forEach(function(e){ drawEdge(svg,B[e[0]],B[e[1]],e[2],{star:stage>=5}); });
+    for(k in B) drawBox(svg,B[k],stage);
+    target.textContent=""; target.appendChild(svg);
+  }
+
+  /* step 3: one drawn box */
+  (function(){
+    var b={name:"Ticket",attrs:["- movie: String","- seat: String"],methods:["+ getPrice(): BigDecimal","+ describe(): String"],x:60,y:12,w:200}, svg=sv("svg",{viewBox:"0 0 320 130",role:"img","aria-label":"One class box with three bands"});
+    drawBox(svg,b,3);
+    var bands=[[12,24,"The name","One word, capital first letter, the same name the class will have in Java. Nothing else goes in this band, except a mark such as «interface» above the name."],
+               [36,36,"The attributes","What one ticket holds. One per line: a sign, the name, a colon, the type. The minus sign means private."],
+               [72,36,"The methods","What one ticket can answer or do. One per line: the sign, the name, what goes in between the brackets, a colon, what comes back."]];
+    bands.forEach(function(r){
+      var g=sv("g",{"class":"band",tabindex:"0",role:"button","aria-label":r[2]}); g.appendChild(sv("rect",{x:60,y:r[0],width:200,height:r[1]}));
+      function go(){ svg.querySelectorAll(".band").forEach(function(x){ x.classList.remove("on"); }); g.classList.add("on"); say("say3a",r[2],r[3]); }
+      g.addEventListener("click",go); g.addEventListener("keydown",function(e){ if(e.key==="Enter"||e.key===" "){ e.preventDefault(); go(); } });
+      svg.appendChild(g);
+    });
+    $("anat").appendChild(svg);
+  })();
+
+  /* step 5: the diagram grows, one pass per press */
+  var PASS=[["Pass 1 of 5: names","One box per class, with room around each. Nothing inside yet."],
+            ["Pass 2 of 5: attributes","What each one holds, one per line, each with its type. Priced holds nothing, and that is fine for an interface."],
+            ["Pass 3 of 5: methods","What each one can answer, with what goes in and what comes back."],
+            ["Pass 4 of 5: lines","One sentence per line. Order holds Priced things. Ticket, Popcorn and Drink can each do what Priced describes. ReclinerTicket is a kind of Ticket."],
+            ["Pass 5 of 5: marks","The interface gets its label, and the star says the order holds several. Now the picture can be read without you standing next to it."]];
+  var pass=1;
+  function grow(){ drawCinema($("grow"),TIDY,pass); say("say5",PASS[pass-1][0],PASS[pass-1][1]); $("gnext").disabled=pass>=5; $("gnext").style.opacity=pass>=5?".4":"1"; }
+  $("gnext").addEventListener("click",function(){ if(pass<5){ pass++; grow(); } });
+  $("gback").addEventListener("click",function(){ pass=1; grow(); });
+  grow();
+  var LAYS={messy:["Hard to read","Every box and every line is correct, but the interface sits at the bottom, the child is far from its parent, and the lines run in every direction. A reader has to untangle it first."],
+            tidy:["Same diagram, easy to read","The interface is on top with the classes that implement it under it. The child sits under its parent. The class that holds the others is on the left. Every line is short and goes one way."]};
+  document.querySelectorAll("[data-l]").forEach(function(b){
+    b.addEventListener("click",function(){
+      document.querySelectorAll("[data-l]").forEach(function(x){ x.classList.remove("on"); }); b.classList.add("on");
+      var k=b.getAttribute("data-l"); drawCinema($("lay"),k==="tidy"?TIDY:MESSY,5); say("say5b",LAYS[k][0],LAYS[k][1],k==="tidy"?"g":"w2");
+    });
+  });
+  drawCinema($("lay"),MESSY,5);
+
+  /* step 6: four pictures, one mistake each */
+  function nb(name,x,y,w){ return {name:name,attrs:[],methods:[],x:x,y:y,w:w||130}; }
+  var MIS=[
+    {draw:function(svg){ var a=nb("Ticket",95,10), b=nb("ReclinerTicket",95,110); a.h=b.h=boxH(a,1); drawEdge(svg,a,b,"isa"); drawBox(svg,a,1); drawBox(svg,b,1); },
+     why:"The triangle touches ReclinerTicket, so this says a ticket is a kind of recliner ticket. The triangle always touches the parent."},
+    {draw:function(svg){ var a=nb("Ticket",10,60), b=nb("Order",180,60); a.h=b.h=boxH(a,1); drawEdge(svg,a,b,"has"); drawBox(svg,a,1); drawBox(svg,b,1); },
+     why:"The diamond sits on Ticket, so this says a ticket holds orders. The diamond goes on the class that holds the other one."},
+    {draw:function(svg){ var a=nb("Popcorn",95,110), b=nb("Priced",95,10); a.h=b.h=boxH(a,1); drawEdge(svg,a,b,"can",{gap:16}); drawBox(svg,a,1); drawBox(svg,b,1); },
+     why:"The line stops just short of Priced. It is attached to nothing: move the box and the line stays behind. Drag the end onto the box until the box turns green."},
+    {draw:function(svg){ var b={name:"Drink",attrs:["size","flavor","getPrice()"],methods:[],x:85,y:30,w:150}; b.h=boxH(b,2); drawBox(svg,b,2); },
+     why:"Two bands only, so the method sits with the attributes. And nothing has a type: what kind of value is size, and what does getPrice give back?"}
+  ];
+  MIS.forEach(function(m,i){
+    var card=document.createElement("div"); card.className="mc";
+    var svg=sv("svg",{viewBox:"0 0 320 150",role:"img","aria-label":"Picture "+(i+1)+" with one drawing mistake"}); m.draw(svg); card.appendChild(svg);
+    var btn=document.createElement("button"); btn.type="button"; btn.className="pick"; btn.textContent="What is wrong in picture "+(i+1)+"?";
+    var out=document.createElement("p"); out.hidden=true; out.textContent=m.why;
+    btn.addEventListener("click",function(){ out.hidden=!out.hidden; btn.classList.toggle("on",!out.hidden); });
+    card.appendChild(btn); card.appendChild(out); $("mis").appendChild(card);
+  });
+
+  /* step 7: open and close the questions */
   $("qs").addEventListener("click",function(e){
     var h=e.target.closest(".qhead"); if(!h) return;
     var q=h.parentNode, open=!q.classList.contains("open");
