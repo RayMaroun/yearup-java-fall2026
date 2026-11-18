@@ -1,0 +1,460 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Class Diagram Guide | Week 8 Visual Hub</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Sora:wght@500;700&family=Inter:wght@400;500&family=JetBrains+Mono:wght@400;500&display=swap">
+<style>
+  :root{
+    --bg:#080c17; --bg2:#0c1428; --surface:rgba(255,255,255,.045); --line:rgba(255,255,255,.09);
+    --ink:#eef2fb; --muted:#8496b6; --accent:#6ea0ff; --accent2:#8b7bff; --good:#46d98a; --warn:#ff6a6a;
+    --gold:#ffc862; --disp:'Sora',system-ui,sans-serif; --body:'Inter',system-ui,sans-serif;
+    --mono:'JetBrains Mono',ui-monospace,monospace;
+  }
+  *{box-sizing:border-box}
+  body{margin:0;min-height:100vh;color:var(--ink);font-family:var(--body);
+    background:radial-gradient(1200px 700px at 70% -10%,#141d38 0%,transparent 55%),
+               radial-gradient(900px 600px at 10% 110%,#161233 0%,transparent 50%),#080c17;
+    overflow-x:hidden}
+  #amb{position:fixed;inset:0;z-index:0;pointer-events:none;opacity:.6}
+  .back{position:relative;z-index:2;display:block;max-width:1120px;margin:0 auto;padding:26px 24px 0;
+    width:100%;font-family:var(--mono);font-size:.8rem;letter-spacing:.04em;color:var(--muted);
+    text-decoration:none;transition:color .15s}
+  .back:hover{color:var(--accent)}
+  .wrap{position:relative;z-index:1;max-width:1120px;margin:0 auto;padding:22px 24px 70px}
+  .tag{font-family:var(--mono);font-size:.72rem;letter-spacing:.22em;text-transform:uppercase;color:var(--accent);margin:0 0 14px}
+  h1{font-family:var(--disp);font-weight:700;font-size:clamp(2.3rem,6vw,3.6rem);line-height:1;margin:0 0 12px;
+    letter-spacing:-.03em;background:linear-gradient(180deg,#fff,#b9c6e6);-webkit-background-clip:text;
+    background-clip:text;color:transparent}
+  .lede{color:var(--muted);max-width:64ch;font-size:1.05rem;margin:0 0 22px;line-height:1.5}
+  .lede b{color:var(--ink)}
+  code{font-family:var(--mono);font-size:.88em;color:#bcd0ff;white-space:nowrap}
+  a{color:var(--accent)}
+
+  /* before you start */
+  .before{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:10px;margin:0 0 26px}
+  .before .b{padding:12px 14px;border:1px solid var(--line);border-radius:14px;background:var(--surface);font-size:.86rem;line-height:1.45;color:#c9d4ea}
+  .before .b b{display:block;font-family:var(--mono);font-size:.62rem;letter-spacing:.14em;text-transform:uppercase;color:var(--gold);margin:0 0 5px;font-weight:500}
+
+  /* layout: sticky step list + cards */
+  .board{display:grid;grid-template-columns:230px minmax(0,1fr);gap:18px;align-items:start}
+  .side{position:sticky;top:16px;border:1px solid var(--line);border-radius:16px;background:rgba(6,10,20,.55);padding:12px}
+  .side .lab{font-family:var(--mono);font-size:.62rem;letter-spacing:.14em;text-transform:uppercase;color:var(--muted);margin:0 0 8px;display:flex;justify-content:space-between}
+  .side .lab b{color:var(--good);font-weight:500}
+  .side ol{list-style:none;margin:0;padding:0;display:flex;flex-direction:column;gap:3px}
+  .side a{display:flex;gap:9px;align-items:center;padding:6px 8px;border-radius:9px;color:var(--muted);text-decoration:none;font-size:.82rem;line-height:1.25;transition:.15s;border:1px solid transparent}
+  .side a:hover{color:var(--ink);border-color:var(--line)}
+  .side a.now{color:var(--ink);background:rgba(110,160,255,.12);border-color:rgba(110,160,255,.35)}
+  .side .n{flex-shrink:0;width:22px;height:22px;border-radius:7px;display:flex;align-items:center;justify-content:center;font-family:var(--mono);font-size:.68rem;
+    background:rgba(110,160,255,.12);color:var(--accent);border:1px solid rgba(110,160,255,.3)}
+  .side a.ok .n{background:rgba(70,217,138,.14);color:var(--good);border-color:rgba(70,217,138,.45)}
+  .side a.ok{color:#9fb0d0}
+  .side .reset{margin-top:10px;width:100%;font-family:var(--body);font-weight:500;font-size:.78rem;padding:7px 10px;border-radius:9px;cursor:pointer;
+    border:1px solid var(--line);background:transparent;color:var(--muted);transition:.15s}
+  .side .reset:hover{border-color:var(--accent);color:var(--accent)}
+
+  .steps{display:flex;flex-direction:column;gap:14px;min-width:0}
+  .step{border:1px solid var(--line);border-radius:18px;background:linear-gradient(180deg,rgba(255,255,255,.03),rgba(255,255,255,.01));padding:18px 20px 16px;scroll-margin-top:14px;transition:border-color .3s}
+  .step.ok{border-color:rgba(70,217,138,.4)}
+  .step.ok .num{background:rgba(70,217,138,.14);color:var(--good);border-color:rgba(70,217,138,.5)}
+  .head{display:flex;gap:12px;align-items:flex-start;margin:0 0 12px}
+  .num{flex-shrink:0;width:40px;height:40px;border-radius:11px;display:flex;align-items:center;justify-content:center;font-family:var(--disp);font-weight:700;font-size:1rem;
+    background:rgba(110,160,255,.14);color:var(--accent);border:1px solid rgba(110,160,255,.3)}
+  .head h2{font-family:var(--disp);font-weight:700;font-size:1.25rem;letter-spacing:-.01em;margin:4px 0 4px}
+  .head .meta{display:flex;flex-wrap:wrap;gap:6px;align-items:center}
+  .chip{font-family:var(--mono);font-size:.64rem;letter-spacing:.06em;padding:3px 9px;border-radius:999px;border:1px solid var(--line);color:var(--muted);text-decoration:none;transition:.15s}
+  a.chip{color:#c4b8ff;border-color:rgba(139,123,255,.4);background:rgba(139,123,255,.08)}
+  a.chip:hover{border-color:#c4b8ff}
+  .chip.t{color:var(--gold);border-color:rgba(255,200,98,.35)}
+  .done-box{margin-left:auto;display:flex;align-items:center;gap:7px;font-family:var(--mono);font-size:.7rem;color:var(--muted);cursor:pointer;white-space:nowrap;padding-top:8px}
+  .done-box input{accent-color:var(--good);width:16px;height:16px;cursor:pointer;margin:0}
+  .step.ok .done-box{color:var(--good)}
+
+  .parts{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:10px}
+  .part{border:1px solid var(--line);border-radius:12px;padding:11px 13px 12px;background:rgba(6,10,20,.45);min-width:0}
+  .part .k{font-family:var(--mono);font-size:.6rem;letter-spacing:.14em;text-transform:uppercase;margin:0 0 7px;color:var(--accent)}
+  .part.looks .k{color:var(--good)} .part.watch .k{color:var(--warn)}
+  .part p,.part li{font-size:.86rem;line-height:1.5;color:#c9d4ea;margin:0}
+  .part ul,.part ol{margin:0;padding-left:18px;display:flex;flex-direction:column;gap:5px}
+  .part.do{grid-column:1 / -1}
+  .part .pre{font-family:var(--mono);font-size:.74rem;line-height:1.5;color:#bcd0ff;background:#05070e;border:1px solid var(--line);border-radius:8px;padding:7px 10px;margin:4px 0 0;white-space:pre;overflow-x:auto}
+  .part .pre i{font-style:normal;color:#6f7f9e}
+
+  .after{margin-top:26px;background:linear-gradient(180deg,rgba(110,160,255,.08),rgba(139,123,255,.04));
+    border:1px solid var(--line);border-left:3px solid var(--accent);border-radius:12px;padding:16px 18px}
+  .after .tk{font-family:var(--mono);font-size:.66rem;letter-spacing:.14em;text-transform:uppercase;color:var(--accent);margin:0 0 8px}
+  .after p{margin:0;font-size:.95rem;color:var(--ink);line-height:1.55}
+  .after b{color:#fff}
+
+  /* interactive pieces of this guide */
+  .play{border:1px solid var(--line);border-radius:14px;background:rgba(6,10,20,.5);padding:16px 18px;grid-column:1 / -1}
+  .play .k{font-family:var(--mono);font-size:.6rem;letter-spacing:.14em;text-transform:uppercase;margin:0 0 10px;color:var(--gold)}
+  .story{font-size:1.02rem;line-height:2.05;color:#c9d4ea;margin:0}
+  .w{font:inherit;color:var(--ink);background:rgba(110,160,255,.1);border:1px solid rgba(110,160,255,.35);border-radius:7px;padding:1px 7px;cursor:pointer;transition:.15s}
+  .w:hover{border-color:var(--accent)} .w.on{background:rgba(255,200,98,.16);border-color:var(--gold);color:var(--gold)}
+  .w:focus-visible,.opt:focus-visible,.pick:focus-visible,.ln:focus-visible,.qhead:focus-visible{outline:2px solid var(--accent);outline-offset:2px}
+  .say{margin:14px 0 0;padding:11px 14px;border-left:3px solid var(--accent);background:rgba(255,255,255,.03);border-radius:0 12px 12px 0;font-size:.95rem;line-height:1.5;color:var(--ink);min-height:3.2em}
+  .say b{font-family:var(--mono);font-size:.66rem;letter-spacing:.12em;text-transform:uppercase;color:var(--gold);font-weight:500;display:block;margin-bottom:3px}
+  .say.g{border-color:var(--good)} .say.g b{color:var(--good)} .say.w2{border-color:var(--warn)} .say.w2 b{color:var(--warn)}
+  .sort{display:flex;flex-direction:column;gap:7px}
+  .srow{display:grid;grid-template-columns:150px 1fr;gap:10px;align-items:center}
+  .srow .word{font-family:var(--mono);font-size:.86rem;color:var(--ink)}
+  .opts{display:flex;flex-wrap:wrap;gap:6px}
+  .opt,.pick{font-family:var(--body);font-weight:500;font-size:.8rem;padding:6px 11px;border-radius:9px;cursor:pointer;border:1px solid var(--line);background:var(--surface);color:var(--ink);transition:.15s}
+  .opt:hover,.pick:hover{border-color:var(--accent);color:var(--accent)}
+  .opt.yes{border-color:var(--good);color:var(--good);background:rgba(70,217,138,.1)} .opt.no{border-color:var(--warn);color:var(--warn)}
+  .pick.on{border-color:var(--gold);color:var(--gold);background:rgba(255,200,98,.1)}
+  .lines{display:flex;flex-direction:column;gap:6px}
+  .ln{font-family:var(--mono);font-size:.86rem;text-align:left;padding:8px 12px;border-radius:9px;cursor:pointer;border:1px solid var(--line);background:#05070e;color:#bcd0ff;transition:.15s}
+  .ln:hover{border-color:var(--accent)} .ln.yes{border-color:var(--good);color:var(--good)} .ln.no{border-color:var(--warn);color:#ffb3b3}
+  .arrowbox{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1.1fr);gap:14px;align-items:center;margin-top:12px}
+  .arrowbox svg{width:100%;height:auto;display:block}
+  .arrowbox .bx{fill:rgba(255,255,255,.05);stroke:rgba(255,255,255,.45);stroke-width:1.4}
+  .arrowbox .tx{fill:var(--ink);font-family:var(--mono);font-size:13px;text-anchor:middle;dominant-baseline:middle}
+  .arrowbox .st{fill:var(--muted);font-family:var(--mono);font-size:10px;text-anchor:middle}
+  .arrowbox .li{stroke:var(--gold);stroke-width:1.8;fill:none} .arrowbox .hd{fill:#0b1020;stroke:var(--gold);stroke-width:1.8}
+  .q{border:1px solid var(--line);border-radius:12px;background:rgba(6,10,20,.45);overflow:hidden}
+  .q.ok{border-color:rgba(70,217,138,.45)}
+  .qhead{display:grid;grid-template-columns:auto 1fr auto;gap:12px;align-items:center;width:100%;text-align:left;padding:12px 14px;background:none;border:0;color:var(--ink);font:inherit;font-size:.98rem;cursor:pointer}
+  .qhead .n{width:26px;height:26px;border-radius:8px;display:flex;align-items:center;justify-content:center;font-family:var(--mono);font-size:.74rem;background:rgba(110,160,255,.12);color:var(--accent);border:1px solid rgba(110,160,255,.3)}
+  .q.ok .qhead .n{background:rgba(70,217,138,.14);color:var(--good);border-color:rgba(70,217,138,.45)}
+  .qhead .more{font-family:var(--mono);font-size:.66rem;color:var(--muted)}
+  .qbody{padding:0 14px 14px 52px;display:none} .q.open .qbody{display:block}
+  .qbody p{margin:0 0 9px;font-size:.9rem;line-height:1.55;color:#c9d4ea}
+  .qbody p b{font-family:var(--mono);font-size:.62rem;letter-spacing:.12em;text-transform:uppercase;font-weight:500;display:block;margin-bottom:2px;color:var(--accent)}
+  .qbody p.t b{color:var(--gold)} .qbody p.n b{color:var(--warn)}
+  .tick{display:inline-flex;align-items:center;gap:8px;font-family:var(--mono);font-size:.74rem;color:var(--muted);cursor:pointer;margin-top:2px}
+  .tick input{accent-color:var(--good);width:16px;height:16px;margin:0;cursor:pointer}
+  .qs,.walk{display:flex;flex-direction:column;gap:8px;grid-column:1 / -1}
+  .orderc{border:1px dashed rgba(255,200,98,.5);border-radius:12px;padding:12px 14px;font-size:.95rem;line-height:1.55;color:var(--ink);background:rgba(255,200,98,.06);grid-column:1 / -1}
+  .orderc b{font-family:var(--mono);font-size:.62rem;letter-spacing:.14em;text-transform:uppercase;color:var(--gold);font-weight:500;display:block;margin-bottom:4px}
+  .wk{display:grid;grid-template-columns:auto 1fr;gap:10px;align-items:start;padding:10px 12px;border:1px solid var(--line);border-radius:12px;background:rgba(6,10,20,.45);font-size:.93rem;line-height:1.5;color:#c9d4ea;cursor:pointer}
+  .wk input{accent-color:var(--good);width:17px;height:17px;margin:3px 0 0;cursor:pointer}
+  .wk.ok{border-color:rgba(70,217,138,.45);color:var(--ink)}
+  @media (max-width:860px){.board{grid-template-columns:1fr}.side{position:static}.parts{grid-template-columns:1fr}.arrowbox{grid-template-columns:1fr}.srow{grid-template-columns:1fr}.qbody{padding-left:14px}}
+  @media (prefers-reduced-motion:reduce){*{transition-duration:.01ms!important}#amb{display:none}}
+</style>
+</head>
+<body>
+<a class="back" href="../../index.html">&#8592; Visual Hub</a>
+<canvas id="amb"></canvas>
+<div class="wrap">
+  <p class="tag">Capstone 2 &middot; Class Diagram Guide</p>
+  <h1>Class Diagram Guide</h1>
+  <p class="lede"><b>Eight steps from the capstone text to a class diagram you can defend.</b> This page does not tell you which classes to draw. It shows you how to find them, and which questions to ask your own design before Raymond does.</p>
+
+  <div class="before">
+    <div class="b"><b>What the diagram is</b>The plan of your classes, before any code: what each one holds, what each one can do, and how they are joined.</div>
+    <div class="b"><b>There is no single right answer</b>Two good diagrams for the same shop can look different. A good one covers the whole text and lets you explain every box.</div>
+    <div class="b"><b>The examples are not your capstone</b>The try-it boxes use a cinema on purpose. The thinking is the same; the classes are yours to find.</div>
+    <div class="b"><b>Stuck for 20 minutes?</b>Bring the step number and the question you cannot answer. "Step 5, question 6, my topping cannot know the size" gets you help fast.</div>
+  </div>
+
+  <div class="board">
+    <nav class="side" aria-label="Steps">
+      <p class="lab"><span>Steps</span><b id="count">0 of 8</b></p>
+      <ol id="toc"></ol>
+      <button class="reset" id="reset" type="button">Clear ticks</button>
+    </nav>
+
+    <div class="steps" id="steps">
+
+      <section class="step" id="s1">
+        <div class="head"><span class="num">1</span><div><h2>Read the text with two colors</h2><div class="meta"><span class="chip t">nouns and verbs</span></div></div>
+          <label class="done-box"><input type="checkbox" data-s="1">done</label></div>
+        <div class="parts">
+          <div class="part do"><p class="k">Do</p><ol>
+            <li>Read your capstone text once from start to finish. Then read it again with two colors: one for the <b>things</b> (nouns), one for the <b>actions</b> (verbs). The text itself gives you this hint.</li>
+            <li>Read the price table the same way. Every row and every column is information your design has to hold somewhere.</li>
+            <li>Write the words down as a plain list. No boxes yet.</li>
+          </ol></div>
+          <div class="play"><p class="k">Try it on another shop first: press the highlighted words</p>
+            <p class="story">Our <button type="button" class="w" data-k="cinema">cinema</button> sells <button type="button" class="w" data-k="ticket">tickets</button>. A ticket is for one <button type="button" class="w" data-k="movie">movie</button> and one <button type="button" class="w" data-k="seat">seat</button>. A seat is <button type="button" class="w" data-k="kinds">standard or recliner</button>, and a recliner <button type="button" class="w" data-k="costs">costs more</button>. The <button type="button" class="w" data-k="customer">customer</button> can add <button type="button" class="w" data-k="snacks">snacks</button> to the <button type="button" class="w" data-k="order">order</button>: <button type="button" class="w" data-k="popcorn">popcorn</button> in three <button type="button" class="w" data-k="sizes">sizes</button>, or a <button type="button" class="w" data-k="drink">drink</button>. At the end the customer sees every item and the <button type="button" class="w" data-k="total">total</button>, and gets a <button type="button" class="w" data-k="slip">printed slip</button>.</p>
+            <div class="say" id="say1"><b>A cinema, not your capstone</b>Each highlighted word is something a designer has to decide about. Press one.</div>
+          </div>
+          <div class="part looks"><p class="k">Done looks like</p><p>A list of 20 to 30 words from your own text, each marked as a thing or an action. Nothing is a class yet.</p></div>
+          <div class="part watch"><p class="k">Watch out</p><ul><li>Do not start from the screens. The screens say what the user does, not what the shop is made of.</li><li>Do not skip the small words: "extra", "included", "one at a time".</li></ul></div>
+        </div>
+      </section>
+
+      <section class="step" id="s2">
+        <div class="head"><span class="num">2</span><div><h2>Sort your words</h2><div class="meta"><span class="chip t">class, attribute, method or value</span></div></div>
+          <label class="done-box"><input type="checkbox" data-s="2">done</label></div>
+        <div class="parts">
+          <div class="part do"><p class="k">Four questions for every word on your list</p><ol>
+            <li>Does it have <b>data of its own and things it can answer</b>? It is probably a class.</li>
+            <li>Does it only <b>describe one thing</b>? It is an attribute of that thing.</li>
+            <li>Is it <b>one choice out of a fixed list</b> (a size, a flavor, a kind)? It is a value of an attribute, not a class per choice.</li>
+            <li>Is it <b>something to do or to work out</b>? It is a method. Decide later whose job it is.</li>
+          </ol></div>
+          <div class="play"><p class="k">Try it: what is each cinema word?</p>
+            <div class="sort" id="sort"><div class="srow" data-a="c" data-why="It has its own data (which movie, which seat) and its own answers (how much it costs). That is a class."><span class="word">ticket</span><span class="opts"><button type="button" class="opt" data-v="c">Class</button><button type="button" class="opt" data-v="a">Attribute</button><button type="button" class="opt" data-v="m">Method</button><button type="button" class="opt" data-v="v">Just a value</button></span></div><div class="srow" data-a="v" data-why="One of two choices for the seat. A choice from a fixed list is the value of an attribute. It would become its own class only if a recliner behaved differently from a standard seat."><span class="word">recliner</span><span class="opts"><button type="button" class="opt" data-v="c">Class</button><button type="button" class="opt" data-v="a">Attribute</button><button type="button" class="opt" data-v="m">Method</button><button type="button" class="opt" data-v="v">Just a value</button></span></div><div class="srow" data-a="a" data-why="It describes one popcorn. A detail that belongs to one thing is an attribute of that thing."><span class="word">size of the popcorn</span><span class="opts"><button type="button" class="opt" data-v="c">Class</button><button type="button" class="opt" data-v="a">Attribute</button><button type="button" class="opt" data-v="m">Method</button><button type="button" class="opt" data-v="v">Just a value</button></span></div><div class="srow" data-a="m" data-why="It is something to do, and the answer changes when the order changes. That is a method. The next question is which class owns it."><span class="word">work out the total</span><span class="opts"><button type="button" class="opt" data-v="c">Class</button><button type="button" class="opt" data-v="a">Attribute</button><button type="button" class="opt" data-v="m">Method</button><button type="button" class="opt" data-v="v">Just a value</button></span></div><div class="srow" data-a="c" data-why="It holds other things and answers questions about them. A thing that holds things is a class."><span class="word">order</span><span class="opts"><button type="button" class="opt" data-v="c">Class</button><button type="button" class="opt" data-v="a">Attribute</button><button type="button" class="opt" data-v="m">Method</button><button type="button" class="opt" data-v="v">Just a value</button></span></div><div class="srow" data-a="a" data-why="A detail of one drink: an attribute. Its values come from a fixed list."><span class="word">flavor of the drink</span><span class="opts"><button type="button" class="opt" data-v="c">Class</button><button type="button" class="opt" data-v="a">Attribute</button><button type="button" class="opt" data-v="m">Method</button><button type="button" class="opt" data-v="v">Just a value</button></span></div></div>
+            <div class="say" id="say2"><b>Your turn</b>Press an answer for each word.</div>
+          </div>
+          <div class="part looks"><p class="k">Done looks like</p><p>Every word on your capstone list is sorted. You have a handful of classes, each with a few attributes, and a list of actions that still need an owner.</p></div>
+          <div class="part watch"><p class="k">Watch out</p><ul><li>A long list of choices (every bread, every topping) is data, not a list of classes.</li><li>If two "classes" hold the same attributes and do the same things, ask what makes them different.</li></ul></div>
+        </div>
+      </section>
+
+      <section class="step" id="s3">
+        <div class="head"><span class="num">3</span><div><h2>Fill each box</h2><div class="meta"><a class="chip" href="../../week-06/reference/class-diagram-reference.html">Class Diagram Reference</a></div></div>
+          <label class="done-box"><input type="checkbox" data-s="3">done</label></div>
+        <div class="parts">
+          <div class="part do"><p class="k">Do</p><ol>
+            <li>One box per class, three parts: the name, the attributes, the methods.</li>
+            <li>Every attribute is written <code>- name: Type</code>. Every method is written <code>+ name(input: Type): ReturnType</code>.</li>
+            <li>Give each action from your list to the class that <b>holds the data it needs</b>. If a class has to ask three others for everything, the method is in the wrong box.</li>
+            <li>Leave out plain getters and setters. They hide the methods that matter.</li>
+          </ol></div>
+          <div class="play"><p class="k">Try it: which lines are complete? Press each one</p>
+            <div class="lines" id="lines">
+              <button type="button" class="ln" data-ok="0" data-why="A name alone. What kind of value is it: a number, text, yes or no?">size</button>
+              <button type="button" class="ln" data-ok="1" data-why="Complete: the sign, the name, the type.">- size: int</button>
+              <button type="button" class="ln" data-ok="0" data-why="What does it give back? A reader cannot tell if this prints the price, returns it, or stores it.">+ getPrice()</button>
+              <button type="button" class="ln" data-ok="0" data-why="The input has no type, and there is no return type. A price is money: which type holds 1.50?">+ getPrice(size)</button>
+              <button type="button" class="ln" data-ok="1" data-why="Complete: what it needs, with its type, and what it gives back.">+ getPrice(size: int): BigDecimal</button>
+            </div>
+            <div class="say" id="say3"><b>Read each line as a promise</b>A complete line tells the reader everything without opening the code.</div>
+          </div>
+          <div class="part looks"><p class="k">Done looks like</p><p>Every attribute has a type. Every method shows what goes in and what comes out. Each box could be handed to a classmate to code without a single question.</p></div>
+          <div class="part watch"><p class="k">Watch out</p><ul><li>Prices are money. Text cannot be added up, and a whole number cannot hold 1.50.</li><li>Where there can be several of something, one field is not enough.</li></ul></div>
+        </div>
+      </section>
+
+      <section class="step" id="s4">
+        <div class="head"><span class="num">4</span><div><h2>Connect the boxes</h2><div class="meta"><a class="chip" href="../../week-06/reference/class-diagram-reference.html">Class Diagram Reference</a><a class="chip" href="../../week-07/reference/class-diagram-reference.html">Class Diagram Reference, week 7</a></div></div>
+          <label class="done-box"><input type="checkbox" data-s="4">done</label></div>
+        <div class="parts">
+          <div class="part do"><p class="k">Three sentences, three kinds of line</p><ol>
+            <li><b>"A is a kind of B."</b> Inheritance: a solid line with a hollow triangle that touches B, the parent.</li>
+            <li><b>"A has B" or "A holds several B."</b> A line from A to B with a hollow diamond on A, the owner.</li>
+            <li><b>"A can do what B describes."</b> A implements the interface B: a dashed line with a hollow triangle that touches B.</li>
+          </ol></div>
+          <div class="play"><p class="k">Try it: say the sentence, see the line</p>
+            <div class="opts" id="rel">
+              <button type="button" class="pick" data-r="isa">A recliner ticket is a kind of ticket</button>
+              <button type="button" class="pick" data-r="has">An order holds several tickets</button>
+              <button type="button" class="pick" data-r="can">Popcorn and a drink can both tell their price</button>
+              <button type="button" class="pick" data-r="bad">Popcorn is a kind of ticket</button>
+            </div>
+            <div class="arrowbox"><div id="draw"></div><div class="say" id="say4"><b>Say it out loud</b>Press a sentence.</div></div>
+          </div>
+          <div class="part looks"><p class="k">Done looks like</p><p>Every box is joined to at least one other. For every line you can say its sentence out loud and it sounds true. Abstract classes and interfaces are marked.</p></div>
+          <div class="part watch"><p class="k">Watch out</p><ul><li>The triangle touches the parent, never the child.</li><li>In diagrams.net, drag each end of a line onto a box until the box turns green. A line that only sits near a box is attached to nothing.</li><li>Inheritance is for "is a kind of", not for borrowing a few lines of code.</li></ul></div>
+        </div>
+      </section>
+
+      <section class="step" id="s5">
+        <div class="head"><span class="num">5</span><div><h2>Ask your diagram nine questions</h2><div class="meta"><span class="chip t">the same nine Raymond will ask</span></div></div>
+          <label class="done-box"><input type="checkbox" data-s="5">done</label></div>
+        <div class="parts">
+          <div class="part do"><p class="k">Do</p><p>Your diagram is drawn. Now question it. Open each question, do the test on your own diagram, and tick it only when you can point to the answer. There is no single right design: two classmates can both tick all nine with different diagrams.</p></div>
+          <div class="qs" id="qs"><div class="q" data-q="1"><button type="button" class="qhead" aria-expanded="false"><span class="n">1</span><span>Is there one box for each thing the shop sells?</span><span class="more">open</span></button>
+            <div class="qbody"><p><b>Why it matters</b>Your main item, the drink and the side product each have data of their own: a size, a flavor, a type, a special option.</p><p class="t"><b>Test it</b>Point to each product in your diagram and read its attributes out loud.</p><p class="n"><b>Not there yet if</b>A product exists only as text or a number inside another class, or only in main.</p>
+            <label class="tick"><input type="checkbox" data-q="1">I can point to it in my diagram</label></div></div><div class="q" data-q="2"><button type="button" class="qhead" aria-expanded="false"><span class="n">2</span><span>Can the order treat everything it sells the same way?</span><span class="more">open</span></button>
+            <div class="qbody"><p><b>Why it matters</b>The order holds things and adds up their prices. It should not have to care which kind of thing each one is.</p><p class="t"><b>Test it</b>The shop adds a fourth product next month. How much of your order class changes?</p><p class="n"><b>Not there yet if</b>The order needs a new list and a new method for every kind of product.</p>
+            <label class="tick"><input type="checkbox" data-q="2">I can point to it in my diagram</label></div></div><div class="q" data-q="3"><button type="button" class="qhead" aria-expanded="false"><span class="n">3</span><span>Where do the toppings of one main item live?</span><span class="more">open</span></button>
+            <div class="qbody"><p><b>Why it matters</b>One item carries many toppings, and the shop will change its list of toppings.</p><p class="t"><b>Test it</b>Can one item hold two meats? Can it hold a topping the shop invents next month, without a new class or a new field?</p><p class="n"><b>Not there yet if</b>Toppings are yes or no fields, or text. Or every single topping has a class of its own.</p>
+            <label class="tick"><input type="checkbox" data-q="3">I can point to it in my diagram</label></div></div><div class="q" data-q="4"><button type="button" class="qhead" aria-expanded="false"><span class="n">4</span><span>Can your design tell a topping that costs extra from a free one?</span><span class="more">open</span></button>
+            <div class="qbody"><p><b>Why it matters</b>Meats and cheeses cost extra and the rest is included. A customer can also ask for "extra" of a topping, and that changes the price too.</p><p class="t"><b>Test it</b>Pick one meat and one regular topping. What in your diagram is different between them? Where is "extra" remembered?</p><p class="n"><b>Not there yet if</b>Nothing in the design separates the two groups, or "extra" has no place.</p>
+            <label class="tick"><input type="checkbox" data-q="4">I can point to it in my diagram</label></div></div><div class="q" data-q="5"><button type="button" class="qhead" aria-expanded="false"><span class="n">5</span><span>Who knows the price of each thing, and who adds up the total?</span><span class="more">open</span></button>
+            <div class="qbody"><p><b>Why it matters</b>Each thing should be able to answer "how much am I?". The order only adds the answers together.</p><p class="t"><b>Test it</b>Put your finger on the method that gives the price of the main item, then the drink, then the side. Then on the one that gives the total.</p><p class="n"><b>Not there yet if</b>Prices are worked out in main or in the class that draws the screens. Or the total is stored where it should be worked out.</p>
+            <label class="tick"><input type="checkbox" data-q="5">I can point to it in my diagram</label></div></div><div class="q" data-q="6"><button type="button" class="qhead" aria-expanded="false"><span class="n">6</span><span>Does every price method have what it needs?</span><span class="more">open</span></button>
+            <div class="qbody"><p><b>Why it matters</b>The price table has one column per size. A method can only use what is in its own class or what it receives as input.</p><p class="t"><b>Test it</b>For each price method, list what it needs to know. For each item on that list: is it an attribute here, or an input?</p><p class="n"><b>Not there yet if</b>A method would have to "just know" something it cannot reach, like the size of the item a topping sits on.</p>
+            <label class="tick"><input type="checkbox" data-q="6">I can point to it in my diagram</label></div></div><div class="q" data-q="7"><button type="button" class="qhead" aria-expanded="false"><span class="n">7</span><span>Does every parent hold something its children share?</span><span class="more">open</span></button>
+            <div class="qbody"><p><b>Why it matters</b>A parent class or an interface is there to hold what is common, once.</p><p class="t"><b>Test it</b>Cover the children with your hand. Is anything left in the parent box?</p><p class="n"><b>Not there yet if</b>The parent box is empty. Or "is a kind of" sounds wrong when you say it.</p>
+            <label class="tick"><input type="checkbox" data-q="7">I can point to it in my diagram</label></div></div><div class="q" data-q="8"><button type="button" class="qhead" aria-expanded="false"><span class="n">8</span><span>Is everything the text asks for somewhere, and only once?</span><span class="more">open</span></button>
+            <div class="qbody"><p><b>Why it matters</b>Small things are easy to lose: the special option, the sauces and included sides, the order details, the receipt file.</p><p class="t"><b>Test it</b>Go down your word list from step 1 and point to each word in the diagram. Then look for anything kept in two places.</p><p class="n"><b>Not there yet if</b>A word from the text has no home. Or the same information sits in two boxes, where it can disagree.</p>
+            <label class="tick"><input type="checkbox" data-q="8">I can point to it in my diagram</label></div></div><div class="q" data-q="9"><button type="button" class="qhead" aria-expanded="false"><span class="n">9</span><span>Does it read as a class diagram?</span><span class="more">open</span></button>
+            <div class="qbody"><p><b>Why it matters</b>Raymond, and you in three days, must be able to read it without asking.</p><p class="t"><b>Test it</b>Give it to a classmate for one minute. Can they tell you what each box holds and how the boxes are joined?</p><p class="n"><b>Not there yet if</b>Missing types or return types, a triangle on the wrong end, a box joined to nothing, an abstract class or interface with no mark.</p>
+            <label class="tick"><input type="checkbox" data-q="9">I can point to it in my diagram</label></div></div></div>
+          <div class="part looks"><p class="k">Done looks like</p><p>Nine ticks, each one backed by a place in your diagram you can put a finger on.</p></div>
+          <div class="part watch"><p class="k">Watch out</p><ul><li>A tick you cannot explain is not a tick. Raymond will ask the same nine questions.</li><li>If a test makes you change the diagram, run the earlier tests again.</li></ul></div>
+        </div>
+      </section>
+
+      <section class="step" id="s6">
+        <div class="head"><span class="num">6</span><div><h2>Walk one order through it</h2><div class="meta"><span class="chip t">finger on the diagram</span></div></div>
+          <label class="done-box"><input type="checkbox" data-s="6">done</label></div>
+        <div class="parts">
+          <div class="orderc"><b>The order to walk through</b>One main item in the middle size, with two premium toppings (one of them extra), one regular topping and one sauce. One medium drink. One side product.</div>
+          <div class="part do"><p class="k">Do</p><p>Put a finger on your diagram and follow this one order from the first screen to the receipt. Answer each question out loud. Tick it when the diagram answers it without you adding "well, in the code I would...".</p></div>
+          <div class="walk" id="walk"><label class="wk"><input type="checkbox" data-t="1"><span>Which objects exist after this order? Count them and name the class of each.</span></label><label class="wk"><input type="checkbox" data-t="2"><span>Where is each of the four toppings held? Follow the line.</span></label><label class="wk"><input type="checkbox" data-t="3"><span>The customer asks what the main item costs. Which method answers? Say what it needs to know, and where it gets each piece.</span></label><label class="wk"><input type="checkbox" data-t="4"><span>One premium topping is "extra". Where is that remembered, and how does it end up costing more?</span></label><label class="wk"><input type="checkbox" data-t="5"><span>Who adds the drink and the side to the price of the main item?</span></label><label class="wk"><input type="checkbox" data-t="6"><span>The customer confirms. What writes the receipt, and where does it get every line of it?</span></label><label class="wk"><input type="checkbox" data-t="7"><span>The customer cancels instead. What happens to everything that was created?</span></label></div>
+          <div class="part looks"><p class="k">Done looks like</p><p>You can tell the story of one order from start to finish using only what is drawn.</p></div>
+          <div class="part watch"><p class="k">Watch out</p><ul><li>The place where you get stuck is the place to change in the diagram.</li><li>Try a second order with no main item at all. The text has a rule for it.</li></ul></div>
+        </div>
+      </section>
+
+      <section class="step" id="s7">
+        <div class="head"><span class="num">7</span><div><h2>Check for the usual traps</h2><div class="meta"></div></div>
+          <label class="done-box"><input type="checkbox" data-s="7">done</label></div>
+        <div class="parts">
+          <div class="part do"><p class="k">Six traps, and the question that gets you out</p><ol>
+            <li><b>The class that does everything.</b> One box with twenty methods. Whose data does each method really use?</li>
+            <li><b>A class for every choice.</b> If two boxes differ only by a name or a number, is that a class or a value?</li>
+            <li><b>The same thing in two places.</b> If the two ever disagree, which one is right?</li>
+            <li><b>Inheritance to borrow code.</b> Say "A is a kind of B" out loud. Does it sound true?</li>
+            <li><b>The parent with nothing in it.</b> What do the children share that could live there?</li>
+            <li><b>The method that cannot know.</b> Where does it get what it needs: its own class, or its inputs?</li>
+          </ol></div>
+          <div class="part looks"><p class="k">Done looks like</p><p>You looked for each trap in your own diagram and either did not find it or fixed it.</p></div>
+          <div class="part watch"><p class="k">Watch out</p><ul><li>A diagram can avoid all six and still be yours. Do not copy a classmate's to be safe: you will have to explain every box.</li></ul></div>
+        </div>
+      </section>
+
+      <section class="step" id="s8">
+        <div class="head"><span class="num">8</span><div><h2>Show it to Raymond</h2><div class="meta"><span class="chip t">approved by Wed Nov 25</span></div></div>
+          <label class="done-box"><input type="checkbox" data-s="8">done</label></div>
+        <div class="parts">
+          <div class="part do"><p class="k">Do</p><ol>
+            <li>Come when steps 5 and 6 are fully ticked. Have the diagram open in diagrams.net, not as a picture, so it can be changed on the spot.</li>
+            <li>Be ready to walk the order of step 6 out loud. Raymond will ask "why" about your choices. A different design from your neighbor's is fine if you can explain it.</li>
+            <li>Bring your open questions. "I could not decide whether this is a class or an attribute" is a good one.</li>
+            <li>After the approval: File, Export as, PNG. Save the picture in your repository and show it in your README. Keep the diagram current when the code changes.</li>
+          </ol></div>
+          <div class="part looks"><p class="k">Done looks like</p><p>Raymond approved the diagram, and the picture is committed in your repository. Only then does the coding start.</p></div>
+          <div class="part watch"><p class="k">Watch out</p><ul><li>Everything must be approved by Wed Nov 25, end of day. The capstone week starts Mon Nov 30 and you work on your own.</li><li>A Custom idea needs Raymond's approval before you draw anything.</li></ul></div>
+        </div>
+      </section>
+
+    </div>
+  </div>
+
+  <div class="after">
+    <p class="tk">If you only remember one thing</p>
+    <p><b>Draw it, then walk an order through it.</b> Every place where you cannot say who holds a piece of information, or who works something out, is a place to change. The diagram is finished when the order gets from the first screen to the receipt without you inventing anything on the way.</p>
+  </div>
+</div>
+<script>
+(function(){
+  "use strict";
+  var KEY="hub-cap2-diagram-guide", N=8, NQ=9, NT=7;
+  var $=function(id){ return document.getElementById(id); };
+  var toc=$("toc"), count=$("count");
+  var state={s:{},q:{},t:{}};
+  try{ var saved=JSON.parse(localStorage.getItem(KEY)||"null"); if(saved&&saved.s) state=saved; }catch(e){}
+  function save(){ try{ localStorage.setItem(KEY,JSON.stringify(state)); }catch(e){} }
+
+  var titles=[];
+  for(var i=1;i<=N;i++){ var h=document.querySelector("#s"+i+" h2"); titles.push(h?h.textContent:"Step "+i); }
+  toc.innerHTML=titles.map(function(t,i){ return '<li><a href="#s'+(i+1)+'" data-s="'+(i+1)+'"><span class="n">'+(i+1)+'</span><span>'+t+'</span></a></li>'; }).join("");
+
+  function paint(){
+    var done=0;
+    for(var i=1;i<=N;i++){
+      var ok=!!state.s[i]; if(ok) done++;
+      var sec=$("s"+i), box=sec.querySelector("input[data-s]"), a=toc.querySelector('a[data-s="'+i+'"]');
+      box.checked=ok; sec.classList.toggle("ok",ok); a.classList.toggle("ok",ok);
+    }
+    count.textContent=done+" of "+N;
+    document.querySelectorAll("#qs .q").forEach(function(q){ var k=q.getAttribute("data-q"), on=!!state.q[k]; q.classList.toggle("ok",on); q.querySelector("input").checked=on; });
+    document.querySelectorAll("#walk .wk").forEach(function(w){ var inp=w.querySelector("input"), on=!!state.t[inp.getAttribute("data-t")]; w.classList.toggle("ok",on); inp.checked=on; });
+  }
+  function all(map,n){ for(var i=1;i<=n;i++) if(!map[i]) return false; return true; }
+  $("steps").addEventListener("change",function(e){
+    var t=e.target;
+    if(t.hasAttribute("data-s")) state.s[t.getAttribute("data-s")]=t.checked;
+    if(t.hasAttribute("data-q")){ state.q[t.getAttribute("data-q")]=t.checked; state.s[5]=all(state.q,NQ); }
+    if(t.hasAttribute("data-t")){ state.t[t.getAttribute("data-t")]=t.checked; state.s[6]=all(state.t,NT); }
+    save(); paint();
+  });
+  $("reset").addEventListener("click",function(){ state={s:{},q:{},t:{}}; save(); paint(); });
+  paint();
+
+  function say(id,label,text,tone){ var el=$(id); el.className="say"+(tone?" "+tone:""); el.textContent=""; var b=document.createElement("b"); b.textContent=label; el.appendChild(b); el.appendChild(document.createTextNode(text)); }
+
+  /* step 1: the cinema paragraph */
+  var WORDS={
+    cinema:["The business itself","The whole application is the cinema, so it is rarely a class of its own."],
+    ticket:["A thing","It has its own data (which movie, which seat) and its own answers (how much). A strong candidate for a class."],
+    movie:["A thing, or a detail?","Does the application need more than its title? If yes, it is a class. If the title is enough, it is an attribute of the ticket."],
+    seat:["A detail of a ticket","An attribute here. It would be a class only if a seat needed data and actions of its own."],
+    kinds:["Two values of one detail","A choice from a fixed list is the value of an attribute, not one class per choice. It becomes two classes only if the two behave differently."],
+    costs:["An action hiding in a verb","Something has to answer \"how much\". That is a method. Whose job is it?"],
+    customer:["The person at the keyboard","They type the answers. Usually not a class, unless the application has to remember them."],
+    snacks:["A group word","Popcorn and a drink are both snacks. When several things are \"a kind of\" something, write it down. It matters when you connect the boxes."],
+    order:["A thing that holds things","Something has to keep everything the customer picked, in one place, and answer questions about all of it."],
+    popcorn:["A thing that is sold","Its own data, its own price. A candidate for a class."],
+    sizes:["A detail with a fixed list of values","An attribute. And notice what else the sentence says: the price depends on it."],
+    drink:["A thing that is sold","Another candidate for a class. What does it have in common with popcorn?"],
+    total:["A result, not a thing","It is worked out from what is in the order, every time. The answer of a method, not something to store."],
+    slip:["An output","Something has to produce it. A method. You decide which class has that job."]
+  };
+  document.querySelectorAll(".story .w").forEach(function(b){
+    b.addEventListener("click",function(){
+      document.querySelectorAll(".story .w").forEach(function(x){ x.classList.remove("on"); });
+      b.classList.add("on"); var w=WORDS[b.getAttribute("data-k")]; say("say1",w[0],w[1]);
+    });
+  });
+
+  /* step 2: the sorter */
+  var NAMES={c:"a class",a:"an attribute",m:"a method",v:"just a value"};
+  $("sort").addEventListener("click",function(e){
+    var btn=e.target.closest(".opt"); if(!btn) return;
+    var row=btn.closest(".srow"), right=row.getAttribute("data-a"), ok=btn.getAttribute("data-v")===right;
+    row.querySelectorAll(".opt").forEach(function(x){ x.classList.remove("yes","no"); });
+    btn.classList.add(ok?"yes":"no");
+    var word=row.querySelector(".word").textContent;
+    say("say2", ok?"Yes, "+NAMES[right]:"Look again", ok?row.getAttribute("data-why"):"\""+word+"\": does it have data and answers of its own, does it describe one thing, is it one choice from a list, or is it something to do?", ok?"g":"w2");
+  });
+
+  /* step 3: complete lines */
+  $("lines").addEventListener("click",function(e){
+    var b=e.target.closest(".ln"); if(!b) return;
+    var ok=b.getAttribute("data-ok")==="1"; b.classList.remove("yes","no"); b.classList.add(ok?"yes":"no");
+    say("say3", ok?"Complete":"Not complete", b.getAttribute("data-why"), ok?"g":"w2");
+  });
+
+  /* step 4: the three lines */
+  var NS="http://www.w3.org/2000/svg";
+  function sv(tag,attrs,text){ var e=document.createElementNS(NS,tag); for(var k in attrs) e.setAttribute(k,attrs[k]); if(text!=null) e.textContent=text; return e; }
+  function box(svg,x,y,name,mark){
+    svg.appendChild(sv("rect",{x:x,y:y,width:130,height:44,rx:5,"class":"bx"}));
+    if(mark) svg.appendChild(sv("text",{x:x+65,y:y+14,"class":"st"},mark));
+    svg.appendChild(sv("text",{x:x+65,y:y+(mark?30:22),"class":"tx"},name));
+  }
+  var RELS={
+    isa:{label:"A solid line, hollow triangle on the parent",text:"ReclinerTicket is a kind of Ticket. The triangle touches Ticket. Everything a ticket holds, the recliner holds too, plus what makes it different.",
+      draw:function(s){ box(s,95,14,"Ticket"); box(s,95,150,"ReclinerTicket"); s.appendChild(sv("line",{x1:160,y1:150,x2:160,y2:76,"class":"li"})); s.appendChild(sv("polygon",{points:"160,58 150,76 170,76","class":"hd"})); }},
+    has:{label:"A line with a hollow diamond on the owner",text:"The order holds the tickets, so the diamond sits on Order. The star says \"several\". The ticket does not know which order it is in.",
+      draw:function(s){ box(s,10,82,"Order"); box(s,180,82,"Ticket"); s.appendChild(sv("line",{x1:164,y1:104,x2:180,y2:104,"class":"li"})); s.appendChild(sv("polygon",{points:"140,104 152,97 164,104 152,111","class":"hd"})); s.appendChild(sv("text",{x:172,y:94,"class":"st"},"*")); }},
+    can:{label:"A dashed line, hollow triangle on the interface",text:"Popcorn and Drink are not a kind of the same thing, but both can answer the same question. The interface names the question. Whoever holds them can ask it without caring which one it is.",
+      draw:function(s){ box(s,95,14,"Priced","«interface»"); box(s,10,150,"Popcorn"); box(s,180,150,"Drink");
+        s.appendChild(sv("polyline",{points:"75,150 75,110 160,110 160,76","class":"li","stroke-dasharray":"6 5"})); s.appendChild(sv("polyline",{points:"245,150 245,110 160,110","class":"li","stroke-dasharray":"6 5"})); s.appendChild(sv("polygon",{points:"160,58 150,76 170,76","class":"hd"})); }},
+    bad:{label:"No line at all",text:"Say it out loud: \"popcorn is a kind of ticket\". It sounds wrong, so it is not inheritance, even if it would let popcorn borrow a price method. Two things that only share an ability need a different line.",tone:"w2",
+      draw:function(s){ box(s,95,14,"Ticket"); box(s,95,150,"Popcorn"); s.appendChild(sv("line",{x1:145,y1:96,x2:175,y2:126,stroke:"#ff6a6a","stroke-width":2.4})); s.appendChild(sv("line",{x1:175,y1:96,x2:145,y2:126,stroke:"#ff6a6a","stroke-width":2.4})); }}
+  };
+  $("rel").addEventListener("click",function(e){
+    var b=e.target.closest(".pick"); if(!b) return;
+    document.querySelectorAll("#rel .pick").forEach(function(x){ x.classList.remove("on"); }); b.classList.add("on");
+    var r=RELS[b.getAttribute("data-r")], svg=sv("svg",{viewBox:"0 0 320 208",role:"img","aria-label":r.label});
+    r.draw(svg); var d=$("draw"); d.textContent=""; d.appendChild(svg); say("say4",r.label,r.text,r.tone||"");
+  });
+
+  /* step 5: open and close the questions */
+  $("qs").addEventListener("click",function(e){
+    var h=e.target.closest(".qhead"); if(!h) return;
+    var q=h.parentNode, open=!q.classList.contains("open");
+    q.classList.toggle("open",open); h.setAttribute("aria-expanded",open?"true":"false"); h.querySelector(".more").textContent=open?"close":"open";
+  });
+
+  /* mark the step in view */
+  var links=toc.querySelectorAll("a");
+  if("IntersectionObserver" in window){
+    var io=new IntersectionObserver(function(entries){
+      entries.forEach(function(en){ if(!en.isIntersecting) return; var id=en.target.id; links.forEach(function(a){ a.classList.toggle("now",a.getAttribute("href")==="#"+id); }); });
+    },{rootMargin:"-30% 0px -60% 0px"});
+    for(var k=1;k<=N;k++) io.observe($("s"+k));
+  }
+
+  var cv=$("amb"),ctx=cv.getContext&&cv.getContext("2d"),parts=[],reduce=matchMedia("(prefers-reduced-motion: reduce)").matches;
+  function sizeC(){if(!ctx)return;cv.width=innerWidth;cv.height=innerHeight;}
+  function initParts(){parts=[];for(var i=0;i<46;i++)parts.push({x:Math.random(),y:Math.random(),r:Math.random()*1.6+.3,s:Math.random()*.02+.004,o:Math.random()*.4+.1});}
+  function drawC(){if(!ctx)return;ctx.clearRect(0,0,cv.width,cv.height);parts.forEach(function(p){p.y-=p.s/60;if(p.y<-.02)p.y=1.02;ctx.beginPath();ctx.arc(p.x*cv.width,p.y*cv.height,p.r,0,7);ctx.fillStyle="rgba(140,170,255,"+p.o+")";ctx.fill();});requestAnimationFrame(drawC);}
+  if(ctx&&!reduce){sizeC();initParts();drawC();addEventListener("resize",sizeC);}
+})();
+</script>
+</body>
+</html>
