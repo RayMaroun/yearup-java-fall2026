@@ -2192,6 +2192,16 @@
   {
     "week": 6,
     "weekLabel": "Week 6",
+    "section": "Exercises",
+    "title": "Gym Memberships: Drawing the Class Diagram",
+    "desc": "Step 1 of the homework in six tickable steps: sort the words, fill a box, draw the arrow, mark what is abstract, export class-diagram.png. Practiced on library items.",
+    "group": "Homework",
+    "url": "week-06/exercises/gym-memberships-diagram.html",
+    "text": "← Week 6 index Homework · Gym Memberships · Step 1 Drawing the Class Diagram Six steps from the hand-out to images/class-diagram.png . You practice here on library items, then you draw the gym on your own. What Step 1 asks A class diagram of the finished program, the way it looks after Step 12. Four classes: Membership , BasicMembership , PremiumMembership and FamilyMembership . Their fields with types and access, their methods, the arrows between them, and what is abstract. Exported as class-diagram.png into a folder images at the root of the project. This page never shows the gym. Every example is a library: LibraryItem and its children Book , Dvd and Magazine . Same moves, different family. 0 of 6 done Clear ticks 1 Read the whole hand-out once, with the classes in mind done Step 1 comes first, but what each class knows and does is spread over Steps 2 to 12 . Read them all before you draw. Keep a list per class with two columns: what it knows and what it does . Look for the lines that start with \"Create\", \"One field of its own\", \"add\" and \"overrides\". Each one adds to your list. Read Steps 11 and 12 twice. They change the program near the end, and your diagram shows that end. Done when: you have a list for each of the four classes. 2 Sort the words done Every word on your list becomes a class, a field, a method, or nothing at all. Try it on a library first. Press a phrase from a library hand-out Reset Class Field Method Stays out Ten phrases, four places. Press one and it "
+  },
+  {
+    "week": 6,
+    "weekLabel": "Week 6",
     "section": "Games",
     "title": "Is-A or Has-A",
     "desc": "Two things appear: decide whether one IS a kind of the other, HAS the other, or neither.",

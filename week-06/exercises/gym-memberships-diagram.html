@@ -1,0 +1,453 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Gym Memberships: Drawing the Class Diagram | Week 6 Visual Hub</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Sora:wght@500;700&family=Inter:wght@400;500&family=JetBrains+Mono:wght@400;500&display=swap">
+<style>
+  :root{
+    --bg:#080c17; --bg2:#0c1428; --surface:rgba(255,255,255,.045); --line:rgba(255,255,255,.09);
+    --ink:#eef2fb; --muted:#8496b6; --accent:#6ea0ff; --accent2:#8b7bff; --good:#46d98a; --warn:#ff6a6a;
+    --gold:#ffc862; --disp:'Sora',system-ui,sans-serif; --body:'Inter',system-ui,sans-serif;
+    --mono:'JetBrains Mono',ui-monospace,monospace;
+  }
+  *{box-sizing:border-box}
+  body{margin:0;min-height:100vh;color:var(--ink);font-family:var(--body);
+    background:radial-gradient(1200px 700px at 70% -10%,#141d38 0%,transparent 55%),
+               radial-gradient(900px 600px at 10% 110%,#161233 0%,transparent 50%),#080c17;
+    overflow-x:hidden}
+  #amb{position:fixed;inset:0;z-index:0;pointer-events:none;opacity:.6}
+  .back{position:relative;z-index:2;display:block;max-width:1120px;margin:0 auto;padding:26px 24px 0;
+    width:100%;font-family:var(--mono);font-size:.8rem;letter-spacing:.04em;color:var(--muted);
+    text-decoration:none;transition:color .15s}
+  .back:hover{color:var(--accent)}
+  .wrap{position:relative;z-index:1;max-width:1120px;margin:0 auto;padding:22px 24px 70px}
+  .tag{font-family:var(--mono);font-size:.72rem;letter-spacing:.22em;text-transform:uppercase;color:var(--accent);margin:0 0 14px}
+  h1{font-family:var(--disp);font-weight:700;font-size:clamp(2.3rem,6vw,3.6rem);line-height:1;margin:0 0 12px;
+    letter-spacing:-.03em;background:linear-gradient(180deg,#fff,#b9c6e6);-webkit-background-clip:text;
+    background-clip:text;color:transparent}
+  .lede{color:var(--muted);max-width:64ch;font-size:1.05rem;margin:0 0 26px;line-height:1.5}
+  .lede b{color:var(--ink)}
+  code{font-family:var(--mono);font-size:.9em;color:#bcd0ff;overflow-wrap:anywhere}
+
+  .stage{position:relative;background:linear-gradient(180deg,rgba(255,255,255,.03),rgba(255,255,255,.01));
+    border:1px solid var(--line);border-radius:24px;padding:18px;
+    box-shadow:0 1px 0 rgba(255,255,255,.06) inset,0 30px 80px -30px rgba(0,0,0,.8)}
+  .lab{font-family:var(--mono);font-size:.7rem;letter-spacing:.12em;text-transform:uppercase;color:var(--muted);margin:0 0 10px}
+  .box{background:rgba(6,10,20,.5);border:1px solid var(--line);border-radius:18px;padding:16px 18px}
+  .brief p{margin:0 0 10px;font-size:1rem;line-height:1.6;color:var(--ink)} .brief p:last-child{margin:0}
+  .brief b{color:#fff} .brief .no{color:var(--muted)}
+  .prog{display:flex;align-items:center;gap:12px;margin:16px 0 14px;font-family:var(--mono);font-size:.72rem;color:var(--muted)}
+  .prog .bar{flex:1;height:6px;border-radius:999px;background:rgba(255,255,255,.08);overflow:hidden}
+  .prog .bar i{display:block;height:100%;width:0;background:var(--good);transition:width .3s}
+  .prog button{font-family:var(--mono);font-size:.66rem;letter-spacing:.08em;text-transform:uppercase;color:var(--muted);background:transparent;
+    border:1px solid var(--line);border-radius:999px;padding:4px 10px;cursor:pointer}
+  .prog button:hover{color:var(--accent);border-color:var(--accent)}
+
+  /* step cards */
+  .steps{display:flex;flex-direction:column;gap:12px}
+  .step{border:1px solid var(--line);border-radius:14px;background:rgba(255,255,255,.025);padding:14px 16px 16px;min-width:0;transition:border-color .2s,background .2s}
+  .step.ok{border-color:rgba(70,217,138,.45);background:rgba(70,217,138,.04)}
+  .hd{display:flex;align-items:flex-start;gap:12px;margin:0 0 10px}
+  .num{flex-shrink:0;width:34px;height:34px;border-radius:11px;display:grid;place-items:center;font-family:var(--disp);font-weight:700;font-size:.95rem;
+    background:rgba(110,160,255,.14);color:var(--accent);border:1px solid rgba(110,160,255,.3)}
+  .step.ok .num{background:rgba(70,217,138,.14);color:var(--good);border-color:rgba(70,217,138,.5)}
+  .hd h2{flex:1;min-width:0;font-family:var(--disp);font-weight:700;font-size:1.12rem;line-height:1.3;letter-spacing:-.01em;margin:6px 0 0}
+  .tickbox{flex-shrink:0;display:flex;align-items:center;gap:7px;font-family:var(--mono);font-size:.7rem;color:var(--muted);cursor:pointer;padding-top:9px}
+  .tickbox input{accent-color:var(--good);width:16px;height:16px;margin:0;cursor:pointer}
+  .step.ok .tickbox{color:var(--good)}
+  .txt{font-size:.95rem;line-height:1.55;color:#c9d4ea;margin:0 0 10px;max-width:72ch}
+  .txt b{color:var(--ink);font-weight:500}
+  ul.txt,ol.txt{padding-left:20px;display:flex;flex-direction:column;gap:5px}
+  .play{border:1px solid var(--line);border-radius:14px;background:rgba(6,10,20,.5);padding:14px 16px;min-width:0}
+  .play .k{font-family:var(--mono);font-size:.62rem;letter-spacing:.14em;text-transform:uppercase;margin:0 0 10px;color:var(--gold)}
+  .say{margin:12px 0 0;padding:10px 14px;border-left:3px solid var(--accent);background:rgba(255,255,255,.03);border-radius:0 12px 12px 0;
+    font-size:.95rem;line-height:1.5;color:var(--ink);min-height:2.9em}
+  .say.y{border-color:var(--gold)} .say.g{border-color:var(--good)} .say.w{border-color:var(--warn)}
+  .say code{color:#bcd0ff}
+  .row{display:flex;flex-wrap:wrap;gap:8px;align-items:center}
+  .ghost{margin-left:auto;font-family:var(--mono);font-size:.66rem;letter-spacing:.08em;text-transform:uppercase;color:var(--muted);background:transparent;
+    border:1px solid var(--line);border-radius:999px;padding:4px 10px;cursor:pointer}
+  .ghost:hover{color:var(--accent);border-color:var(--accent)}
+  .ph,.ans{font-family:var(--body);font-weight:500;font-size:.84rem;padding:7px 12px;border-radius:11px;cursor:pointer;border:1px solid rgba(110,160,255,.35);
+    background:rgba(110,160,255,.08);color:var(--ink);transition:.15s}
+  .ph:hover,.ans:hover{border-color:var(--accent);color:var(--accent)}
+  .ph:focus-visible,.ans:focus-visible,.ln:focus-visible{outline:2px solid var(--accent);outline-offset:2px}
+  .ph.put{display:none}
+  .ans.right{border-color:var(--good);color:var(--good);background:rgba(70,217,138,.1)}
+  .ans.wrong{border-color:var(--warn);color:var(--warn);background:rgba(255,106,106,.08)}
+
+  /* step 2: four bins */
+  .bins{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:8px;margin-top:12px}
+  .bin{border:1px dashed rgba(255,255,255,.16);border-radius:12px;padding:8px 10px;min-height:76px;min-width:0}
+  .bin .bk{font-family:var(--mono);font-size:.62rem;letter-spacing:.12em;text-transform:uppercase;margin:0 0 6px;color:var(--accent)}
+  .bin.out .bk{color:var(--muted)}
+  .bin span{display:block;font-size:.8rem;line-height:1.35;color:var(--ink);padding:4px 7px;margin-top:4px;border-radius:8px;background:rgba(255,255,255,.05);overflow-wrap:anywhere}
+  .bin span.new{background:rgba(255,200,98,.16);color:var(--gold)}
+  .bin.out span{color:var(--muted);text-decoration:line-through;text-decoration-color:rgba(132,150,182,.6)}
+  @media (max-width:700px){.bins{grid-template-columns:repeat(2,minmax(0,1fr))}}
+
+  /* a class box in HTML */
+  .uml{max-width:440px;margin:0 auto;border:1.5px solid rgba(255,255,255,.5);border-radius:6px;background:#0b1020;overflow:hidden}
+  .uml .bd{border-top:1.5px solid rgba(255,255,255,.5);padding:4px 0}
+  .uml .bd:first-child{border-top:0}
+  .ln{display:block;width:100%;text-align:left;font-family:var(--mono);font-size:.84rem;line-height:1.4;padding:5px 12px;border:0;background:transparent;color:#bcd0ff;
+    cursor:pointer;overflow-wrap:anywhere;transition:background .15s}
+  .ln.nm{text-align:center;font-weight:500;color:var(--ink);font-size:.95rem}
+  .ln:hover{background:rgba(110,160,255,.12)}
+  .ln.on{background:rgba(255,200,98,.14);color:var(--gold)}
+  .ln.gone{color:rgba(132,150,182,.65);text-decoration:line-through;text-decoration-color:rgba(255,106,106,.7)}
+  .ln.it,.uml .it{font-style:italic}
+  .ln.static{cursor:default} .ln.static:hover{background:transparent}
+  .ln.flash{color:var(--gold)}
+
+  /* step 4: arrow picture */
+  .pair{display:grid;grid-template-columns:minmax(0,300px) minmax(0,1fr);gap:16px;align-items:center}
+  .pair svg{width:100%;height:auto;display:block}
+  .bx{fill:#0b1020;stroke:rgba(255,255,255,.5);stroke-width:1.3}
+  .sep{stroke:rgba(255,255,255,.5);stroke-width:1.3}
+  .tn{fill:var(--ink);font-family:var(--mono);font-size:14px;font-weight:500;text-anchor:middle}
+  .tr{fill:#bcd0ff;font-family:var(--mono);font-size:12px}
+  .wire{stroke:rgba(132,150,182,.6);stroke-width:1.6;stroke-dasharray:5 5;fill:none}
+  .wire.right{stroke:var(--good);stroke-dasharray:none} .wire.wrong{stroke:var(--warn);stroke-dasharray:none}
+  .head{fill:#0b1020;stroke-width:1.6;display:none}
+  .head.right{display:inline;stroke:var(--good)} .head.wrong{display:inline;stroke:var(--warn)}
+  .side-note{font-size:.8rem;color:var(--muted);margin:6px 0 0;text-align:center}
+  @media (max-width:700px){.pair{grid-template-columns:1fr}.pair svg{max-width:300px;margin:0 auto}}
+
+  /* step 6: clicks and self-check */
+  .checks{display:flex;flex-direction:column;gap:7px;margin-top:4px}
+  .chk{display:grid;grid-template-columns:auto 1fr;gap:10px;align-items:start;padding:9px 12px;border:1px solid var(--line);border-radius:12px;
+    background:rgba(6,10,20,.45);font-size:.92rem;line-height:1.45;color:#c9d4ea;cursor:pointer}
+  .chk input{accent-color:var(--good);width:16px;height:16px;margin:2px 0 0;cursor:pointer}
+  .chk.ok{border-color:rgba(70,217,138,.45);color:var(--ink)}
+
+  .links{display:flex;flex-wrap:wrap;gap:6px}
+  .links a{font-family:var(--mono);font-size:.72rem;padding:5px 11px;border-radius:999px;border:1px solid var(--line);
+    color:var(--accent);text-decoration:none;background:rgba(110,160,255,.06);transition:.15s}
+  .links a:hover{border-color:var(--accent);background:rgba(110,160,255,.14)}
+  .take{margin-top:22px;background:linear-gradient(180deg,rgba(110,160,255,.08),rgba(139,123,255,.04));
+    border:1px solid var(--line);border-left:3px solid var(--accent);border-radius:12px;padding:16px 18px}
+  .take .tk{font-family:var(--mono);font-size:.66rem;letter-spacing:.14em;text-transform:uppercase;color:var(--accent);margin:0 0 8px}
+  .take p{margin:0;font-size:.95rem;color:var(--ink);line-height:1.55}
+  .take b{color:#fff}
+  @media (max-width:560px){.wrap{padding:18px 16px 60px}.back{padding:22px 16px 0}.stage{padding:12px}.step{padding:12px}.play{padding:12px}
+    .hd{flex-wrap:wrap}.tickbox{padding-top:0;margin-left:46px}}
+  @media (prefers-reduced-motion:reduce){*{animation-duration:.01ms!important;transition-duration:.01ms!important}#amb{display:none}}
+</style>
+</head>
+<body>
+<a class="back" href="../index.html#gym-memberships-diagram">&#8592; Week 6 index</a>
+
+<canvas id="amb"></canvas>
+<div class="wrap">
+  <p class="tag">Homework &middot; Gym Memberships &middot; Step 1</p>
+  <h1>Drawing the Class Diagram</h1>
+  <p class="lede"><b>Six steps from the hand-out to <code>images/class-diagram.png</code>.</b> You practice here on library items, then you draw the gym on your own.</p>
+
+  <div class="stage">
+    <p class="lab">What Step 1 asks</p>
+    <div class="box brief">
+      <p>A class diagram of the <b>finished</b> program, the way it looks after Step 12. Four classes: <code>Membership</code>, <code>BasicMembership</code>, <code>PremiumMembership</code> and <code>FamilyMembership</code>. Their fields with types and access, their methods, the arrows between them, and what is abstract. Exported as <code>class-diagram.png</code> into a folder <code>images</code> at the root of the project.</p>
+      <p class="no">This page never shows the gym. Every example is a library: <code>LibraryItem</code> and its children <code>Book</code>, <code>Dvd</code> and <code>Magazine</code>. Same moves, different family.</p>
+    </div>
+
+    <div class="prog"><span id="progTxt">0 of 6 done</span><div class="bar"><i id="progBar"></i></div><button id="bClear" type="button">Clear ticks</button></div>
+
+    <div class="steps">
+
+      <section class="step" data-s="s1">
+        <div class="hd"><span class="num">1</span><h2>Read the whole hand-out once, with the classes in mind</h2>
+          <label class="tickbox"><input type="checkbox" data-t="s1">done</label></div>
+        <ul class="txt">
+          <li>Step 1 comes first, but what each class knows and does is spread over <b>Steps 2 to 12</b>. Read them all before you draw.</li>
+          <li>Keep a list per class with two columns: <b>what it knows</b> and <b>what it does</b>.</li>
+          <li>Look for the lines that start with "Create", "One field of its own", "add" and "overrides". Each one adds to your list.</li>
+          <li>Read Steps 11 and 12 twice. They change the program near the end, and your diagram shows that end.</li>
+        </ul>
+        <p class="txt" style="margin:0"><b>Done when:</b> you have a list for each of the four classes.</p>
+      </section>
+
+      <section class="step" data-s="s2">
+        <div class="hd"><span class="num">2</span><h2>Sort the words</h2>
+          <label class="tickbox"><input type="checkbox" data-t="s2">done</label></div>
+        <p class="txt">Every word on your list becomes a class, a field, a method, or nothing at all. Try it on a library first.</p>
+        <div class="play">
+          <div class="row"><p class="k" style="margin:0">Press a phrase from a library hand-out</p><button class="ghost" id="sortReset" type="button">Reset</button></div>
+          <div class="row" id="pool" style="margin-top:10px"></div>
+          <div class="bins">
+            <div class="bin" data-b="class"><p class="bk">Class</p></div>
+            <div class="bin" data-b="field"><p class="bk">Field</p></div>
+            <div class="bin" data-b="method"><p class="bk">Method</p></div>
+            <div class="bin out" data-b="out"><p class="bk">Stays out</p></div>
+          </div>
+          <div class="say" id="say2">Ten phrases, four places. Press one and it lands where it belongs.</div>
+        </div>
+      </section>
+
+      <section class="step" data-s="s3">
+        <div class="hd"><span class="num">3</span><h2>Fill one box</h2>
+          <label class="tickbox"><input type="checkbox" data-t="s3">done</label></div>
+        <p class="txt">Three bands: the name, the fields, the methods. Fields with a type and an access sign. Real methods, and constructors that take values. <b>No plain getters and setters.</b></p>
+        <div class="play">
+          <div class="row"><p class="k" style="margin:0">Press any line of the box</p><button class="ghost" id="boxReset" type="button">Reset</button></div>
+          <div class="uml" id="box3" style="margin-top:12px">
+            <div class="bd"><button type="button" class="ln nm" data-l="name">LibraryItem</button></div>
+            <div class="bd">
+              <button type="button" class="ln" data-l="title">- title: String</button>
+              <button type="button" class="ln" data-l="days">- daysLate: int</button>
+            </div>
+            <div class="bd">
+              <button type="button" class="ln" data-l="ctor">+ LibraryItem(title: String, daysLate: int)</button>
+              <button type="button" class="ln" data-l="fee">+ getLateFee(): BigDecimal</button>
+              <button type="button" class="ln gone" data-l="getter">+ getTitle(): String</button>
+            </div>
+          </div>
+          <div class="say" id="say3">The box for the parent of the library family. Press a line to see what it says.</div>
+        </div>
+      </section>
+
+      <section class="step" data-s="s4">
+        <div class="hd"><span class="num">4</span><h2>Parent and children, and the arrow</h2>
+          <label class="tickbox"><input type="checkbox" data-t="s4">done</label></div>
+        <p class="txt">What <b>every</b> item has goes once, in the parent. A child box lists only its own field and the methods it writes again. Then one arrow from each child to the parent.</p>
+        <div class="play">
+          <p class="k">Which end gets the hollow triangle?</p>
+          <div class="pair">
+            <div>
+              <svg viewBox="0 0 300 290" role="img" aria-label="LibraryItem above Book, joined by a line">
+                <rect class="bx" x="40" y="6" width="220" height="104" rx="4"/>
+                <text class="tn" x="150" y="28">LibraryItem</text>
+                <line class="sep" x1="40" y1="38" x2="260" y2="38"/>
+                <text class="tr" x="50" y="56">- title: String</text>
+                <text class="tr" x="50" y="74">- daysLate: int</text>
+                <line class="sep" x1="40" y1="82" x2="260" y2="82"/>
+                <text class="tr" x="50" y="100">+ getLateFee(): BigDecimal</text>
+                <rect class="bx" x="40" y="184" width="220" height="86" rx="4"/>
+                <text class="tn" x="150" y="206">Book</text>
+                <line class="sep" x1="40" y1="216" x2="260" y2="216"/>
+                <text class="tr" x="50" y="234">- pages: int</text>
+                <line class="sep" x1="40" y1="242" x2="260" y2="242"/>
+                <text class="tr" x="50" y="260">+ getLateFee(): BigDecimal</text>
+                <line class="wire" id="wire" x1="150" y1="184" x2="150" y2="110"/>
+                <polygon class="head" id="headUp" points="150,111 140,130 160,130"/>
+                <polygon class="head" id="headDown" points="150,183 140,164 160,164"/>
+              </svg>
+              <p class="side-note">Constructors left out to keep the picture small.</p>
+            </div>
+            <div>
+              <div class="row">
+                <button type="button" class="ans" data-a="parent">At LibraryItem</button>
+                <button type="button" class="ans" data-a="child">At Book</button>
+                <button class="ghost" id="arrowReset" type="button">Reset</button>
+              </div>
+              <div class="say" id="say4">A Book and a LibraryItem, one line between them. Pick the end that gets the triangle.</div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <section class="step" data-s="s5">
+        <div class="hd"><span class="num">5</span><h2>Mark what is abstract</h2>
+          <label class="tickbox"><input type="checkbox" data-t="s5">done</label></div>
+        <p class="txt">The course writes abstract in <b>italics</b>: the class name, and each abstract method line. In diagrams.net, select the text and press Cmd+I (Mac) or Ctrl+I (Windows). Some things in the hand-out become abstract only in Steps 11 and 12. Your diagram shows the end, so draw them the way they are after Step 12.</p>
+        <div class="play">
+          <div class="row"><p class="k" style="margin:0">Answer the question, the box answers back</p><button class="ghost" id="absReset" type="button">Reset</button></div>
+          <div class="uml" style="margin-top:12px">
+            <div class="bd"><span class="ln nm static" id="absName">LibraryItem</span></div>
+            <div class="bd"><span class="ln static">- title: String</span><span class="ln static">- daysLate: int</span></div>
+            <div class="bd"><span class="ln static">+ LibraryItem(title: String, daysLate: int)</span><span class="ln static" id="absFee">+ getLateFee(): BigDecimal</span></div>
+          </div>
+          <p class="txt" id="absQ" style="margin:14px 0 8px"></p>
+          <div class="row" id="absA">
+            <button type="button" class="ans" data-a="yes">Yes</button>
+            <button type="button" class="ans" data-a="no">No</button>
+          </div>
+          <div class="say" id="say5">Two questions, one at a time.</div>
+        </div>
+      </section>
+
+      <section class="step" data-s="s6">
+        <div class="hd"><span class="num">6</span><h2>Draw yours in diagrams.net and export</h2>
+          <label class="tickbox"><input type="checkbox" data-t="s6">done</label></div>
+        <ol class="txt">
+          <li>The project <code>gym-memberships</code> exists and is shared on GitHub (Step 1 of the hand-out).</li>
+          <li>At app.diagrams.net draw your four boxes and the arrows. The <a href="../reference/class-diagram-reference.html" style="color:var(--accent)">reference</a> shows the clicks for a box and a hollow triangle.</li>
+          <li>Keep the diagram file too (<b>File</b>, <b>Save</b>). Step 13 asks you to fix it and export again.</li>
+          <li>In IntelliJ, right-click the project root, <b>New</b>, <b>Directory</b>, name it <code>images</code>. Same level as <code>src</code> and <code>pom.xml</code>.</li>
+          <li>In diagrams.net: <b>File</b>, <b>Export as</b>, <b>PNG</b>, <b>Export</b>. Name it <code>class-diagram.png</code> and save it in that <code>images</code> folder.</li>
+          <li>In IntelliJ's commit panel tick the new file, write a message in your own words, <b>Commit and Push</b>.</li>
+          <li>On GitHub open <code>images</code>, then <code>class-diagram.png</code>. You should see your picture.</li>
+        </ol>
+        <p class="lab" style="margin-top:6px">Check your picture before you tick</p>
+        <div class="checks" id="checks">
+          <label class="chk"><input type="checkbox" data-t="c1"><span>Four boxes, one for each class named in the hand-out.</span></label>
+          <label class="chk"><input type="checkbox" data-t="c2"><span>Every field has an access sign and a type: sign, name, colon, type.</span></label>
+          <label class="chk"><input type="checkbox" data-t="c3"><span>Each child has one arrow, and the hollow triangle touches the parent.</span></label>
+          <label class="chk"><input type="checkbox" data-t="c4"><span>What is abstract after Step 12 is in italics.</span></label>
+          <label class="chk"><input type="checkbox" data-t="c5"><span>No plain getters and setters, and nothing from the parent repeated in a child.</span></label>
+        </div>
+      </section>
+
+    </div>
+
+    <p class="lab" style="margin-top:20px">Pages that help</p>
+    <div class="links">
+      <a href="../reference/class-diagram-reference.html">Class Diagram Reference</a>
+      <a href="../visuals/03-reading-a-class-diagram.html">Reading a Class Diagram</a>
+      <a href="../visuals/02-is-a.html">Is-A</a>
+    </div>
+  </div>
+
+  <div class="take">
+    <p class="tk">The one idea</p>
+    <p><b>Design first, code second.</b> One box per class, shared things once in the parent, an arrow from each child to the parent, and abstract in italics.</p>
+  </div>
+
+  <div id="rail"></div>
+</div>
+
+<script>
+(function(){
+  "use strict";
+  var $=function(s){return document.querySelector(s);};
+  var $$=function(s,r){return Array.prototype.slice.call((r||document).querySelectorAll(s));};
+  var reduce=matchMedia("(prefers-reduced-motion: reduce)").matches;
+  var KEY="hub-ex-w6-gym-memberships-diagram";
+  function say(id,html,tone){var el=$(id);el.innerHTML=html;el.className="say"+(tone?" "+tone:"");}
+
+  /* ---------- ticks, kept in localStorage ---------- */
+  var ticks=[]; try{ ticks=JSON.parse(localStorage.getItem(KEY)||"[]"); }catch(e){ ticks=[]; }
+  if(!Array.isArray(ticks)) ticks=[];
+  function save(){ try{localStorage.setItem(KEY,JSON.stringify(ticks));}catch(e){} }
+  function paint(){
+    $$("input[data-t]").forEach(function(cb){
+      var on=ticks.indexOf(cb.getAttribute("data-t"))>=0; cb.checked=on;
+      (cb.closest(".chk")||cb.closest(".step")).classList.toggle("ok",on);
+    });
+    var n=ticks.filter(function(t){return t.charAt(0)==="s";}).length;
+    $("#progTxt").textContent=n+" of 6 done"; $("#progBar").style.width=(100*n/6)+"%";
+  }
+  document.addEventListener("change",function(e){
+    var cb=e.target; if(!cb.matches||!cb.matches("input[data-t]")) return;
+    var t=cb.getAttribute("data-t"), k=ticks.indexOf(t);
+    if(cb.checked&&k<0) ticks.push(t); if(!cb.checked&&k>=0) ticks.splice(k,1);
+    save(); paint();
+  });
+  $("#bClear").addEventListener("click",function(){ ticks=[]; try{localStorage.removeItem(KEY);}catch(e){} paint(); });
+  paint();
+
+  /* ---------- step 2: sort the words ---------- */
+  var WORDS=[
+    {p:"Book",b:"class",s:"A kind of library item with data of its own. It gets its own box: <code>Book</code>."},
+    {p:"the title of an item",b:"field",s:"Something every item knows. A field in the parent: <code>- title: String</code>."},
+    {p:"how many days late it is",b:"field",s:"Another thing every item knows. A whole number: <code>- daysLate: int</code>."},
+    {p:"works out the late fee",b:"method",s:"Something an item does. A method that returns money: <code>+ getLateFee(): BigDecimal</code>."},
+    {p:"the number of pages of a book",b:"field",s:"Only a book has pages. A field in the Book box, not in the parent: <code>- pages: int</code>."},
+    {p:"get the title",b:"out",s:"A plain getter. The field already tells the reader it is there, so it stays out."},
+    {p:"Magazine",b:"class",s:"Another kind of item. Its own box, next to Book and Dvd."},
+    {p:"is built from a title and the days late",b:"method",s:"A constructor that takes values. It goes in the methods band: <code>+ LibraryItem(title: String, daysLate: int)</code>."},
+    {p:"change the days late",b:"out",s:"A plain setter. It stays out, like the getter."},
+    {p:"0.25 for every day late",b:"out",s:"A number used inside the method. The diagram names the method, not how it calculates."}
+  ];
+  var NAMES={"class":"a class","field":"a field","method":"a method","out":"stays out"};
+  function buildPool(){
+    $("#pool").innerHTML=WORDS.map(function(w,i){return '<button type="button" class="ph" data-i="'+i+'">'+w.p+'</button>';}).join("");
+    $$(".bin span").forEach(function(s){s.remove();});
+    say("#say2","Ten phrases, four places. Press one and it lands where it belongs.");
+  }
+  $("#pool").addEventListener("click",function(e){
+    var b=e.target.closest(".ph"); if(!b) return; var w=WORDS[+b.getAttribute("data-i")];
+    b.classList.add("put");
+    $$(".bin span.new").forEach(function(s){s.classList.remove("new");});
+    var sp=document.createElement("span"); sp.className="new"; sp.textContent=w.p;
+    $('.bin[data-b="'+w.b+'"]').appendChild(sp);
+    say("#say2","<b>"+w.p+"</b>: "+NAMES[w.b]+". "+w.s, w.b==="out"?"w":"y");
+    if(!$$(".ph:not(.put)").length) setTimeout(function(){ say("#say2","All sorted. Do the same with your list from Step 1: each word lands in one of the four places.","g"); },reduce?0:900);
+  });
+  $("#sortReset").addEventListener("click",buildPool);
+  buildPool();
+
+  /* ---------- step 3: one box ---------- */
+  var LINES={
+    name:"The name band: the class name, centered. One box for each class.",
+    title:"A field. The <code>-</code> sign means private, and every field in this course is private. Name first, a colon, then the type.",
+    days:"Another field, the same pattern: sign, name, colon, type. No field without a type.",
+    ctor:"A constructor that takes values. <code>+</code> means public. It has no return type, so nothing after the closing bracket. It tells the reader what is needed to build an item.",
+    fee:"A real method: it works something out. The type after the colon is what it returns, here money as BigDecimal.",
+    getter:"Not drawn. A plain getter or setter adds nothing: the field already says it is there. Leave them all out."
+  };
+  $("#box3").addEventListener("click",function(e){
+    var l=e.target.closest(".ln"); if(!l) return; var k=l.getAttribute("data-l");
+    $$("#box3 .ln").forEach(function(x){x.classList.toggle("on",x===l&&k!=="getter");});
+    say("#say3",LINES[k],k==="getter"?"w":"y");
+  });
+  $("#boxReset").addEventListener("click",function(){
+    $$("#box3 .ln").forEach(function(x){x.classList.remove("on");});
+    say("#say3","The box for the parent of the library family. Press a line to see what it says.");
+  });
+
+  /* ---------- step 4: the arrow ---------- */
+  function arrow(pick){
+    var right=pick==="parent";
+    $("#wire").setAttribute("class","wire"+(pick?(right?" right":" wrong"):""));
+    $("#headUp").setAttribute("class","head"+(pick==="parent"?" right":""));
+    $("#headDown").setAttribute("class","head"+(pick==="child"?" wrong":""));
+    $$('[data-s="s4"] .ans').forEach(function(b){
+      b.classList.remove("right","wrong");
+      if(b.getAttribute("data-a")===pick) b.classList.add(right?"right":"wrong");
+    });
+    if(!pick) say("#say4","A Book and a LibraryItem, one line between them. Pick the end that gets the triangle.");
+    else if(right) say("#say4","Right. The line starts at the child and the hollow triangle touches the parent. Read it as a sentence: a Book is a LibraryItem. Dvd and Magazine each get their own arrow to the same parent.","g");
+    else say("#say4","Turn it around. A LibraryItem is not always a Book, so the triangle cannot sit on Book. It touches the parent: a Book is a LibraryItem.","w");
+  }
+  $$('[data-s="s4"] .ans').forEach(function(b){ b.addEventListener("click",function(){ arrow(b.getAttribute("data-a")); }); });
+  $("#arrowReset").addEventListener("click",function(){ arrow(null); });
+
+  /* ---------- step 5: abstract ---------- */
+  var Q=[
+    {q:"Could you ever create just a LibraryItem, one that is not a book, a DVD or a magazine?",
+     no:"Right. Nobody borrows a plain item, it is always some kind of item. So LibraryItem is an abstract class: its name goes in italics.",
+     yes:"Which kind would it be? On the shelf every item is a book, a DVD or a magazine. A plain item never exists. Try again.",
+     el:"#absName"},
+    {q:"Can LibraryItem itself work out a late fee that is right for every kind of item?",
+     no:"Right. Each kind works it out its own way, so the parent only promises the method: getLateFee is abstract and its line goes in italics. In Book, Dvd and Magazine it stays upright, because there it is written.",
+     yes:"Each kind charges its own way, so no single answer fits them all. The parent can only promise the method. Try again.",
+     el:"#absFee"}
+  ];
+  var qi=0;
+  function showQ(){
+    if(qi>=Q.length){ $("#absQ").textContent="Now ask the same two questions about each class of the gym, as it is after Step 12."; $("#absA").style.display="none"; return; }
+    $("#absQ").textContent=Q[qi].q; $("#absA").style.display="";
+    $$("#absA .ans").forEach(function(b){b.classList.remove("right","wrong");});
+  }
+  $("#absA").addEventListener("click",function(e){
+    var b=e.target.closest(".ans"); if(!b||qi>=Q.length) return; var q=Q[qi];
+    if(b.getAttribute("data-a")==="no"){
+      $(q.el).classList.add("it","flash"); say("#say5",q.no,"g"); qi++;
+      setTimeout(showQ,reduce?0:700);
+    } else { b.classList.add("wrong"); say("#say5",q.yes,"w"); }
+  });
+  $("#absReset").addEventListener("click",function(){
+    qi=0; $("#absName").classList.remove("it","flash"); $("#absFee").classList.remove("it","flash");
+    say("#say5","Two questions, one at a time."); showQ();
+  });
+  showQ();
+
+  /* ---------- ambient ---------- */
+  var cv=$("#amb"),ctx=cv.getContext&&cv.getContext("2d"),parts=[];
+  function sizeC(){if(!ctx)return;cv.width=innerWidth;cv.height=innerHeight;}
+  function initParts(){parts=[];for(var i=0;i<46;i++)parts.push({x:Math.random(),y:Math.random(),r:Math.random()*1.6+.3,s:Math.random()*.02+.004,o:Math.random()*.4+.1});}
+  function drawC(){if(!ctx)return;ctx.clearRect(0,0,cv.width,cv.height);
+    parts.forEach(function(p){p.y-=p.s/60;if(p.y<-.02)p.y=1.02;ctx.beginPath();ctx.arc(p.x*cv.width,p.y*cv.height,p.r,0,7);
+      ctx.fillStyle="rgba(140,170,255,"+p.o+")";ctx.fill();});requestAnimationFrame(drawC);}
+  if(ctx&&!reduce){sizeC();initParts();drawC();addEventListener("resize",sizeC);}
+})();
+</script>
+<script src="../manifest.js"></script>
+<script src="../../assets/rail.js"></script>
+<script>Rail.render(document.getElementById("rail"),{week:6,kind:"exercises",current:"gym-memberships-diagram"});</script>
+</body>
+</html>

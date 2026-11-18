@@ -34,7 +34,8 @@ window.HUB_MANIFEST = {
     { file: "vehicle-inheritance.html", title: "Vehicle Inheritance", group: "Workbook 5a · Section 1-2", desc: "A Vehicle parent class and four child classes with no constructors, used from main through inherited getters and setters." },
     { file: "vehicle-inheritance-2.html", title: "Vehicle Inheritance 2", group: "Workbook 5a · Section 1-3", desc: "New project, copy the first one in: constructors in every class, each child calling super, main rebuilt with the new arguments." },
     { file: "assets-manager.html", title: "Assets Manager", group: "Workbook 5a · Section 2-1", desc: "Asset, House and Vehicle with an overridden getValue in BigDecimal, one list of assets, instanceof to show the details." },
-    { file: "abstract-assets-manager.html", title: "Abstract Assets Manager", group: "Workbook 5a · Section 2-2", desc: "New project, copy Assets Manager in: Asset becomes abstract with an abstract getValue, then a Cash class joins." }
+    { file: "abstract-assets-manager.html", title: "Abstract Assets Manager", group: "Workbook 5a · Section 2-2", desc: "New project, copy Assets Manager in: Asset becomes abstract with an abstract getValue, then a Cash class joins." },
+    { file: "gym-memberships-diagram.html", title: "Gym Memberships: Drawing the Class Diagram", group: "Homework", desc: "Step 1 of the homework in six tickable steps: sort the words, fill a box, draw the arrow, mark what is abstract, export class-diagram.png. Practiced on library items." }
   ],
   games: [
     { file: "is-a-or-has-a.html", title: "Is-A or Has-A", group: "Workbook 5a · Section 1-1", desc: "Two things appear: decide whether one IS a kind of the other, HAS the other, or neither." },
