@@ -147,7 +147,10 @@
   .yours .yk{margin:0 0 6px}
   .yours p{font-size:.95rem;line-height:1.55;color:var(--ink);margin:0 0 10px;max-width:72ch}
   .yours a,.txt a{color:var(--accent)}
-  .qq{margin:14px 0 8px;color:var(--ink);font-weight:500}
+  .qq{margin:14px 0 10px;color:var(--ink);font-weight:500;font-size:1rem;max-width:none;border:1px solid rgba(255,200,98,.4);background:rgba(255,200,98,.06);border-radius:12px;padding:10px 14px}
+  .qn{display:block;font-family:var(--mono);font-size:.62rem;letter-spacing:.14em;text-transform:uppercase;color:var(--gold);margin:0 0 4px;font-weight:400}
+  .uml .bd[data-ph]:empty::before{content:attr(data-ph);display:block;padding:5px 12px;font-family:var(--mono);font-size:.76rem;font-style:italic;color:rgba(132,150,182,.7)}
+  .play .ans{font-size:.92rem;padding:9px 14px}
   .bins.three{grid-template-columns:repeat(3,minmax(0,1fr))}
   @media (max-width:700px){.bins.three{grid-template-columns:1fr}}
   .ln.new{color:var(--gold);background:rgba(255,200,98,.12)}
@@ -157,6 +160,18 @@
   .pairbox .uml.small{max-width:300px}
   .pairbox svg.link{width:60px;height:70px;display:block}
   .uml .bd:empty{min-height:30px}
+
+  /* who draws what, and what is left */
+  .who{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:8px;margin-top:12px}
+  .who .w{border:1px solid var(--line);border-radius:12px;padding:9px 10px;background:rgba(6,10,20,.45);min-width:0}
+  .who .w code{font-size:.82rem;color:var(--ink);overflow-wrap:anywhere}
+  .who .wk{font-family:var(--mono);font-size:.6rem;letter-spacing:.12em;text-transform:uppercase;margin:0 0 4px;color:var(--accent)}
+  .who .mine{border:1px dashed rgba(255,200,98,.55);background:rgba(255,200,98,.05)} .who .mine .wk{color:var(--gold)}
+  .left2{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:10px}
+  .left2 .yours{margin-top:0;display:flex;flex-direction:column;gap:7px}
+  .left2 .yours p{margin:0}
+  .left2 .yours code{font-size:1rem;color:var(--ink)}
+  @media (max-width:700px){.who{grid-template-columns:repeat(2,minmax(0,1fr))}.left2{grid-template-columns:1fr}}
 </style>
 </head>
 <body>
@@ -172,10 +187,17 @@
     <p class="lab">How this page works</p>
     <div class="box brief">
       <p>Step 1 of the homework asks for the class diagram of the <b>finished</b> program, the way it looks after Step 12: <code>Membership</code>, <code>BasicMembership</code>, <code>PremiumMembership</code> and <code>FamilyMembership</code>.</p>
-      <p>In each step below you answer questions about the gym, with the hand-out in front of you, and the page draws what your answers say. Then a box marked <b class="yt">Your turn</b> tells you what to draw on your own in diagrams.net. The page starts the diagram. The rest is yours.</p>
+      <p>In each step below you answer questions about the gym, with the hand-out in front of you, and the page draws what your answers say. Then a box marked <b class="yt">Your turn</b> tells you what to draw on your own in diagrams.net. The page does two classes with you. The two others are yours: step 5 says exactly what is left.</p>
     </div>
 
-    <div class="prog"><span id="progTxt">0 of 5 done</span><div class="bar"><i id="progBar"></i></div><button id="bClear" type="button">Clear ticks</button></div>
+    <div class="who">
+      <div class="w with"><p class="wk">With this page</p><code>Membership</code></div>
+      <div class="w with"><p class="wk">With this page</p><code>BasicMembership</code></div>
+      <div class="w mine"><p class="wk">Yours to draw</p><code>PremiumMembership</code></div>
+      <div class="w mine"><p class="wk">Yours to draw</p><code>FamilyMembership</code></div>
+    </div>
+
+    <div class="prog"><span id="progTxt">0 of 6 done</span><div class="bar"><i id="progBar"></i></div><button id="bClear" type="button">Clear ticks</button></div>
 
     <div class="steps">
 
@@ -205,11 +227,11 @@
           <label class="tickbox"><input type="checkbox" data-t="s2">done</label></div>
         <p class="txt">Three bands: the name, the fields, the methods. Every line needs a sign in front and a type after the colon. Answer the questions and the box fills in.</p>
         <div class="play">
-          <div class="row"><p class="k" style="margin:0">Answer, and the box answers back</p><button class="ghost" id="q2Reset" type="button">Reset</button></div>
+          <div class="row"><p class="k" style="margin:0">Press the answer you think is right. Each right answer writes lines into the box.</p><button class="ghost" id="q2Reset" type="button">Reset</button></div>
           <div class="uml" id="box2" style="margin-top:12px">
             <div class="bd"><span class="ln nm static">Membership</span></div>
-            <div class="bd" id="box2f"></div>
-            <div class="bd" id="box2m"></div>
+            <div class="bd" id="box2f" data-ph="the fields appear here"></div>
+            <div class="bd" id="box2m" data-ph="the methods appear here"></div>
           </div>
           <p class="txt qq" id="q2"></p>
           <div class="row" id="a2"></div>
@@ -227,7 +249,7 @@
           <label class="tickbox"><input type="checkbox" data-t="s3">done</label></div>
         <p class="txt">A child box is short. It shows only what the child adds or writes again. Everything it inherits stays in the parent, written once. We do <code>BasicMembership</code> together.</p>
         <div class="play">
-          <div class="row"><p class="k" style="margin:0">Does it go in the BasicMembership box?</p><button class="ghost" id="q3Reset" type="button">Reset</button></div>
+          <div class="row"><p class="k" style="margin:0">Press the answer you think is right. Each right answer adds to the BasicMembership box.</p><button class="ghost" id="q3Reset" type="button">Reset</button></div>
           <div class="pairbox">
             <div class="uml small"><div class="bd"><span class="ln nm static" id="p3name">Membership</span></div><div class="bd"><span class="ln static dim">3 fields</span></div><div class="bd"><span class="ln static dim">constructor and 4 methods</span></div></div>
             <svg class="link" viewBox="0 0 60 70" role="img" aria-label="The line between BasicMembership and Membership">
@@ -237,8 +259,8 @@
             </svg>
             <div class="uml" id="box3">
               <div class="bd"><span class="ln nm static">BasicMembership</span></div>
-              <div class="bd" id="box3f"></div>
-              <div class="bd" id="box3m"></div>
+              <div class="bd" id="box3f" data-ph="its own field appears here"></div>
+              <div class="bd" id="box3m" data-ph="its own methods appear here"></div>
             </div>
           </div>
           <p class="txt qq" id="q3"></p>
@@ -247,8 +269,8 @@
         </div>
         <div class="yours">
           <p class="yk">Your turn</p>
-          <p>Draw the BasicMembership box and its arrow. Then draw <code>PremiumMembership</code> and <code>FamilyMembership</code> the same way, from your lists: the field of its own, its constructor, and only the methods it writes itself. Each one gets its own arrow to Membership. One check: the PremiumMembership box ends up with more method lines than the other two. Steps 4 and 6 tell you which.</p>
-          <label class="chk"><input type="checkbox" data-t="y3"><span>Three child boxes, and three arrows with the hollow triangle at Membership.</span></label>
+          <p>Draw the BasicMembership box and its arrow. Then draw <code>PremiumMembership</code> and <code>FamilyMembership</code> the same way, from your lists: the field of its own, its constructor, and only the methods it writes itself. Each one gets its own arrow to Membership. One check: the PremiumMembership box ends up with more method lines than the other two. Steps 4 and 6 of the hand-out tell you which. Step 5 of this page lists what each of the two needs.</p>
+          <label class="chk"><input type="checkbox" data-t="y3"><span>The BasicMembership box and its arrow are in my diagram.</span></label>
         </div>
       </section>
 
@@ -257,7 +279,7 @@
           <label class="tickbox"><input type="checkbox" data-t="s4">done</label></div>
         <p class="txt">In a class diagram, abstract is written in <b>italics</b>: the name of an abstract class, and the line of an abstract method. The hand-out makes two things abstract near the end, in Steps 11 and 12. Your diagram shows the program after Step 12, so it shows them.</p>
         <div class="play">
-          <div class="row"><p class="k" style="margin:0">Answer, and the box answers back</p><button class="ghost" id="q4Reset" type="button">Reset</button></div>
+          <div class="row"><p class="k" style="margin:0">Press the answer you think is right. Each right answer changes the box.</p><button class="ghost" id="q4Reset" type="button">Reset</button></div>
           <div class="uml" style="margin-top:12px">
             <div class="bd"><span class="ln nm static" id="absName">Membership</span></div>
             <div class="bd"><span class="ln static">- memberName: String</span><span class="ln static">- months: int</span><span class="ln static">- baseRate: BigDecimal</span></div>
@@ -275,8 +297,33 @@
       </section>
 
       <section class="step" data-s="s5">
-        <div class="hd"><span class="num">5</span><h2>Check your picture, then export it</h2>
+        <div class="hd"><span class="num">5</span><h2>What is left: finish the diagram yourself</h2>
           <label class="tickbox"><input type="checkbox" data-t="s5">done</label></div>
+        <p class="txt">The page drew two of the four classes with you. <b>The two others are yours.</b> Nothing below is answered here: use your lists from step 1 and the moves of steps 2 to 4.</p>
+        <div class="left2">
+          <div class="yours">
+            <p class="yk">Yours to draw</p>
+            <p><code>PremiumMembership</code></p>
+            <label class="chk"><input type="checkbox" data-t="p1"><span>Its own field, with a sign and a type.</span></label>
+            <label class="chk"><input type="checkbox" data-t="p2"><span>Its constructor, with every value it receives.</span></label>
+            <label class="chk"><input type="checkbox" data-t="p3"><span>Every method it writes itself, and none it only inherits.</span></label>
+            <label class="chk"><input type="checkbox" data-t="p4"><span>Its arrow to Membership.</span></label>
+          </div>
+          <div class="yours">
+            <p class="yk">Yours to draw</p>
+            <p><code>FamilyMembership</code></p>
+            <label class="chk"><input type="checkbox" data-t="f1"><span>Its own field, with a sign and a type.</span></label>
+            <label class="chk"><input type="checkbox" data-t="f2"><span>Its constructor, with every value it receives.</span></label>
+            <label class="chk"><input type="checkbox" data-t="f3"><span>Every method it writes itself, and none it only inherits.</span></label>
+            <label class="chk"><input type="checkbox" data-t="f4"><span>Its arrow to Membership.</span></label>
+          </div>
+        </div>
+        <p class="txt" style="margin:12px 0 0">When both are drawn, your diagram has four boxes and three arrows, and you are ready for the last check.</p>
+      </section>
+
+      <section class="step" data-s="s6">
+        <div class="hd"><span class="num">6</span><h2>Check your picture, then export it</h2>
+          <label class="tickbox"><input type="checkbox" data-t="s6">done</label></div>
         <p class="lab">Check your picture first</p>
         <div class="checks" id="checks">
           <label class="chk"><input type="checkbox" data-t="c1"><span>Four boxes, with the four class names of the hand-out. <code>Main</code> is not in the diagram.</span></label>
@@ -319,7 +366,7 @@
   var $=function(s){return document.querySelector(s);};
   var $$=function(s,r){return Array.prototype.slice.call((r||document).querySelectorAll(s));};
   var reduce=matchMedia("(prefers-reduced-motion: reduce)").matches;
-  var KEY="hub-ex-w6-gym-memberships-diagram-v2";
+  var KEY="hub-ex-w6-gym-memberships-diagram-v3";
   function say(id,html,tone){var el=$(id);el.innerHTML=html;el.className="say"+(tone?" "+tone:"");}
 
   /* ---------- ticks, kept in localStorage ---------- */
@@ -332,7 +379,7 @@
       (cb.closest(".chk")||cb.closest(".step")).classList.toggle("ok",on);
     });
     var n=ticks.filter(function(t){return t.charAt(0)==="s";}).length;
-    $("#progTxt").textContent=n+" of 5 done"; $("#progBar").style.width=(100*n/5)+"%";
+    $("#progTxt").textContent=n+" of 6 done"; $("#progBar").style.width=(100*n/6)+"%";
   }
   document.addEventListener("change",function(e){
     var cb=e.target; if(!cb.matches||!cb.matches("input[data-t]")) return;
@@ -398,9 +445,9 @@
   function quiz(o){
     var i=0;
     function show(){
-      if(i>=o.qs.length){ $(o.q).textContent=o.end; $(o.a).innerHTML=""; return; }
+      if(i>=o.qs.length){ $(o.q).innerHTML='<span class="qn">All answered</span>'; $(o.q).appendChild(document.createTextNode(o.end)); $(o.a).innerHTML=""; return; }
       var q=o.qs[i];
-      $(o.q).textContent=q.q;
+      $(o.q).innerHTML='<span class="qn">Question '+(i+1)+' of '+o.qs.length+'</span>'; $(o.q).appendChild(document.createTextNode(q.q));
       $(o.a).innerHTML=q.opts.map(function(t,k){return '<button type="button" class="ans" data-k="'+k+'">'+t+'</button>';}).join("");
     }
     $(o.a).addEventListener("click",function(e){
@@ -415,7 +462,7 @@
 
   /* ---------- step 2: fill the Membership box ---------- */
   quiz({q:"#q2",a:"#a2",say:"#say2",reset:"#q2Reset",
-    start:"The box has its name. Five questions fill the two other bands.",
+    start:"The box has only its name so far. Answer the five questions and it fills in, line by line.",
     end:"That is the Membership box. Draw it in your diagram.",
     clear:function(){ $("#box2f").innerHTML=""; $("#box2m").innerHTML=""; },
     qs:[
@@ -451,7 +498,7 @@
     $("#headUp").setAttribute("class","head"+(pick?" right":""));
   }
   quiz({q:"#q3",a:"#a3",say:"#say3",reset:"#q3Reset",
-    start:"Membership is done. Five questions build BasicMembership under it.",
+    start:"Membership is done. Answer the five questions and BasicMembership fills in under it.",
     end:"That is the BasicMembership box and its arrow. Draw them, then do the two other children yourself.",
     clear:function(){ $("#box3f").innerHTML=""; $("#box3m").innerHTML=""; arrow(false); },
     qs:[
@@ -482,7 +529,7 @@
 
   /* ---------- step 4: abstract ---------- */
   quiz({q:"#q4",a:"#a4",say:"#say4",reset:"#q4Reset",
-    start:"Three questions about the end of the hand-out.",
+    start:"Three questions about the end of the hand-out. Watch the box when you answer.",
     end:"Now put the same italics in your own diagram.",
     clear:function(){ $("#absName").classList.remove("it","flash"); $("#absPrice").classList.remove("it","flash"); },
     qs:[

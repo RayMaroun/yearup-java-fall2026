@@ -35,7 +35,7 @@ window.HUB_MANIFEST = {
     { file: "vehicle-inheritance-2.html", title: "Vehicle Inheritance 2", group: "Workbook 5a · Section 1-3", desc: "New project, copy the first one in: constructors in every class, each child calling super, main rebuilt with the new arguments." },
     { file: "assets-manager.html", title: "Assets Manager", group: "Workbook 5a · Section 2-1", desc: "Asset, House and Vehicle with an overridden getValue in BigDecimal, one list of assets, instanceof to show the details." },
     { file: "abstract-assets-manager.html", title: "Abstract Assets Manager", group: "Workbook 5a · Section 2-2", desc: "New project, copy Assets Manager in: Asset becomes abstract with an abstract getValue, then a Cash class joins." },
-    { file: "gym-memberships-diagram.html", title: "Gym Memberships: Drawing the Class Diagram", group: "Homework", desc: "Step 1 of the homework, started together: answer questions about the gym and the Membership and BasicMembership boxes fill in, then a Your turn box says what to draw on your own." }
+    { file: "gym-memberships-diagram.html", title: "Gym Memberships: Drawing the Class Diagram", group: "Homework", desc: "Step 1 of the homework, started together: answer questions about the gym and the Membership and BasicMembership boxes fill in. PremiumMembership and FamilyMembership are yours, with a list of what is left." }
   ],
   games: [
     { file: "is-a-or-has-a.html", title: "Is-A or Has-A", group: "Workbook 5a · Section 1-1", desc: "Two things appear: decide whether one IS a kind of the other, HAS the other, or neither." },
