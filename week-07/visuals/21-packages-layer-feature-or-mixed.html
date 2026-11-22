@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Packages: Layer or Feature | Week 7 Visual Hub</title>
+<title>Packages: Layer, Feature or Mixed | Week 7 Visual Hub</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Sora:wght@500;700&family=Inter:wght@400;500&family=JetBrains+Mono:wght@400;500&display=swap">
 <style>
@@ -116,12 +116,12 @@
 </style>
 </head>
 <body>
-<a class="back" href="../index.html#19-packages-layer-or-feature">&#8592; Week 7 index</a>
+<a class="back" href="../index.html#21-packages-layer-feature-or-mixed">&#8592; Week 7 index</a>
 <canvas id="amb"></canvas>
 <div class="wrap">
   <p class="tag">Packages</p>
-  <h1>Packages: Layer or Feature</h1>
-  <p class="lede"><b>One clinic app, ten classes, two ways to file them. Switch, then tap a file.</b></p>
+  <h1>Packages: Layer, Feature or Mixed</h1>
+  <p class="lede"><b>One clinic app, three ways to file its classes. Switch, then tap a file.</b></p>
 
   <div class="stage">
     <div class="board">
@@ -132,7 +132,12 @@
           <div class="sw" id="sw">
             <button class="swb" data-m="layer">Layer-based<small>by kind of class</small></button>
             <button class="swb" data-m="feature">Feature-based<small>by what the app does</small></button>
+            <button class="swb" data-m="mixed">Mixed<small>layers, split where one gets crowded</small></button>
           </div>
+        </div>
+        <div>
+          <p class="hd">the size of the app</p>
+          <div class="chips"><button class="chip" id="grow"></button></div>
         </div>
         <div>
           <p class="hd">light up one feature</p>
@@ -152,7 +157,7 @@
 
   <div class="take">
     <p class="tk">The one idea</p>
-    <p><b>A package is a folder plus a <code>package</code> statement that matches its path under src/main/java.</b> A class in another package needs an <code>import</code> and must be <code>public</code>; classes in the same package see each other with nothing. Layer-based and feature-based are both valid. Layer-based is the simpler one for a small project, and Raymond accepts either: <b>pick one and keep it for the whole project.</b></p>
+    <p><b>A package is a folder plus a <code>package</code> statement that matches its path under src/main/java.</b> A class in another package needs an <code>import</code> and must be <code>public</code>; classes in the same package see each other with nothing. Layer-based and feature-based are both valid. Layer-based is the simpler one for a small project, and Raymond accepts either: <b>pick one and keep it for the whole project.</b> When one package gets crowded, split it into sub-packages: that is the mix. Larger applications often turn it around, features first with layers inside each.</p>
   </div>
   <div id="rail"></div>
 </div>
@@ -173,8 +178,19 @@
     {id:"Appointment",feat:"appointments",kind:"models",by:"AppointmentService"},
     {id:"AppointmentService",feat:"appointments",kind:"services",by:"AppointmentScreen"},
     {id:"AppointmentScreen",feat:"appointments",kind:"ui",by:"Program"},
-    {id:"Program"}
+    {id:"Program"},
+    /* the six classes that arrive when the app grows */
+    {id:"Insurance",feat:"patients",kind:"models",by:"Patient",x:1},
+    {id:"MedicalRecord",feat:"patients",kind:"models",by:"PatientService",x:1},
+    {id:"Specialty",feat:"doctors",kind:"models",by:"Doctor",x:1},
+    {id:"Schedule",feat:"doctors",kind:"models",by:"DoctorService",x:1},
+    {id:"TimeSlot",feat:"appointments",kind:"models",by:"Appointment",x:1},
+    {id:"Reminder",feat:"appointments",kind:"models",by:"AppointmentService",x:1}
   ];
+  var grown=false;
+  function live(){ return F.filter(function(f){ return grown||!f.x; }); }
+  function inPk(f,p){ var s=sub(f); return s===p || s.indexOf(p+".")===0; }
+  var NUM={10:"ten",16:"sixteen"};
   var FEATS=["patients","doctors","appointments"], KINDS=["models","services","ui"];
   var KNAME={models:"models",services:"services",ui:"screens"};
   var mode="layer", sel=null, hl=null;
@@ -189,10 +205,11 @@
   };
 
   function byId(id){ for(var i=0;i<F.length;i++) if(F[i].id===id) return F[i]; return null; }
-  function sub(f){ return f.kind ? (mode==="layer"?f.kind:f.feat) : ""; }
+  function sub(f){ if(!f.kind) return ""; if(mode==="layer") return f.kind; if(mode==="feature") return f.feat;
+    return f.kind==="models" ? "models."+f.feat : f.kind; }
   function pkgOf(f){ var s=sub(f); return s ? BASE+"."+s : BASE; }
   function isLit(f){ return !!hl && (f.feat===hl || f.kind===hl); }
-  function litIn(p){ return F.filter(function(f){ return isLit(f) && sub(f)===p; }).length; }
+  function litIn(p){ return live().filter(function(f){ return isLit(f) && inPk(f,p); }).length; }
 
   function say(html,tone,line){
     caption.className="caption"+(tone?" "+tone:"");
@@ -215,29 +232,39 @@
       +'<span class="nm">'+f.id+'<i>.java</i></span>'+(tg?'<span class="tg">'+tg+'</span>':"")+'</button>';
   }
   function render(fresh){
-    var s=sel?byId(sel):null, onPath=function(p){ return s && (p==="" || sub(s)===p); };
+    var s=sel?byId(sel):null, onPath=function(p){ return s && (p==="" || inPk(s,p)); };
     var focus=document.activeElement, key=focus&&focus.getAttribute ? (focus.getAttribute("data-f")||focus.getAttribute("data-p")) : null;
     var h=fixRow(0,I.folder("#7d8aa6"),"clinic-app")
       +fixRow(1,I.folder("#7d8aa6"),"src")
       +fixRow(2,I.folder("#7d8aa6"),"main")
       +fixRow(3,I.folder("#4f8fe8"),"java",s?"path":"")
       +fixRow(4,I.pkg,BASE,s?"path":"");
-    var groups=(mode==="layer"?KINDS:FEATS).slice().sort();
+    var groups=(mode==="feature"?FEATS:KINDS).slice().sort();
+    var files=function(p,d){ live().filter(function(f){ return sub(f)===p; })
+       .sort(function(a,b){ return a.id<b.id?-1:1; })
+       .forEach(function(f){ h+=fileRow(f,d,false); }); };
     groups.forEach(function(p){
       var n=litIn(p), c="row pkg"+(onPath(p)&&s.kind?" path":"")+(n?" has":"")+(fresh?" fresh":"");
       h+='<button class="'+c+'" style="--d:5" data-p="'+p+'">'+I.chev+I.pkg+'<span class="nm">'+p+'</span>'
         +(n?'<span class="tg">'+n+(n===1?" file":" files")+'</span>':"")+'</button>';
-      F.filter(function(f){ return sub(f)===p; })
-       .sort(function(a,b){ return a.id<b.id?-1:1; })
-       .forEach(function(f){ h+=fileRow(f,6,false); });
+      if(mode==="mixed"&&p==="models"){
+        FEATS.slice().sort().forEach(function(ft){
+          var q="models."+ft, m=litIn(q);
+          h+='<div class="row pkg'+(s&&sub(s)===q?" path":"")+(m?" has":"")+(fresh?" fresh":"")+'" style="--d:6">'+I.chev+I.pkg+'<span class="nm">'+ft+'</span>'
+            +(m?'<span class="tg">'+m+(m===1?" file":" files")+'</span>':"")+'</div>';
+          files(q,7);
+        });
+      } else files(p,6);
     });
     h+=fileRow(byId("Program"),5,false);
     tree.innerHTML=h;
-    var litPk=groups.filter(function(p){ return litIn(p)>0; }).length;
+    var seenPk={}, litPk=0; live().forEach(function(f){ if(isLit(f)&&!seenPk[sub(f)]){ seenPk[sub(f)]=1; litPk++; } });
     tree.className="tree"+(hl?" hl":"")+(hl&&litPk===1?" one":"");
     if(key){ var el=tree.querySelector('[data-f="'+key+'"],[data-p="'+key+'"]'); if(el) el.focus(); }
     [].forEach.call(document.querySelectorAll(".swb"),function(b){ b.setAttribute("aria-pressed",b.getAttribute("data-m")===mode?"true":"false"); });
-    [].forEach.call(document.querySelectorAll(".chip"),function(b){ b.setAttribute("aria-pressed",b.getAttribute("data-g")===hl?"true":"false"); });
+    [].forEach.call(document.querySelectorAll(".chip[data-g]"),function(b){ b.setAttribute("aria-pressed",b.getAttribute("data-g")===hl?"true":"false"); });
+    $("#grow").setAttribute("aria-pressed",grown?"true":"false");
+    $("#grow").textContent=grown?"back to ten classes":"the app grows: six more classes";
   }
 
   /* the same files slide to their new folders */
@@ -261,8 +288,12 @@
   }
 
   function sayMode(){
-    if(mode==="layer") say('Same ten files, filed by <b class="a">kind of class</b>: every model in models, every service in services, every screen in ui.');
-    else say('Same ten files, filed by <b class="a">what the app does</b>: each feature keeps its own model, service and screen in one package.');
+    var n=NUM[live().length];
+    if(mode==="layer") say('The '+n+' files, filed by <b class="a">kind of class</b>: every model in models, every service in services, every screen in ui.'
+      +(grown?' models now holds <b class="y">nine files</b>: it still works, but that package is getting crowded.':''),grown?"y":"");
+    else if(mode==="feature") say('The '+n+' files, filed by <b class="a">what the app does</b>: each feature keeps its own models, service and screen in one package.');
+    else if(grown) say('The mix: still <b class="a">layers first</b>, but models held nine files, so it is <b class="g">split by feature inside</b>. services and ui are still small and stay flat.',"g");
+    else say('With only ten classes the mix is <b class="w">too much</b>: models is split into three folders that hold one file each. Grow the app to see when it pays off.',"w");
   }
   function sayFile(){
     var f=byId(sel), path=pkgOf(f).split(".").join("/"), line="package "+pkgOf(f)+";";
@@ -277,14 +308,15 @@
       say(head+'<b class="y">'+u.id+'</b> is in another package: it needs <code>import '+pkgOf(f)+'.'+f.id+';</code> and '+f.id+' must be public.',"y",line);
   }
   function sayHl(){
-    var isFeat=FEATS.indexOf(hl)>=0, files=F.filter(isLit), seen={}, n=0;
+    var isFeat=FEATS.indexOf(hl)>=0, files=live().filter(isLit), seen={}, n=0;
     files.forEach(function(f){ if(!seen[sub(f)]){ seen[sub(f)]=1; n++; } });
     var k=files.length;
     if(isFeat){
       if(n>1) say('To change how <b class="y">'+hl+'</b> work, a developer opens '+k+' files in <b class="y">'+n+' packages</b>: here a feature is spread across the layers.',"y");
       else say('To change how <b class="g">'+hl+'</b> work, a developer opens '+k+' files in <b class="g">one package</b>: everything about the feature sits together.',"g");
     } else {
-      if(n>1) say('The '+k+' <b class="y">'+KNAME[hl]+'</b> are now in <b class="y">'+n+' packages</b>, one per feature: here it is the layer that gets spread.',"y");
+      if(n>1&&mode==="mixed") say('The '+k+' <b class="y">'+KNAME[hl]+'</b> are in <b class="y">'+n+' sub-packages</b>, one per feature, but all of them are still under models.',"y");
+      else if(n>1) say('The '+k+' <b class="y">'+KNAME[hl]+'</b> are now in <b class="y">'+n+' packages</b>, one per feature: here it is the layer that gets spread.',"y");
       else say('All '+k+' <b class="g">'+KNAME[hl]+'</b> sit in <b class="g">one package</b>: to see every one of them, a developer opens one folder.',"g");
     }
   }
@@ -292,13 +324,14 @@
 
   function setMode(m){
     if(m===mode){ answer(); return; }
-    mode=m; regroup(); answer();
+    mode=m; if(m==="mixed") grown=true; regroup(); answer();
   }
   function pickFile(id){ hl=null; sel=(sel===id?null:id); render(false); answer(); }
+  function grow(){ grown=!grown; if(sel&&byId(sel).x&&!grown) sel=null; regroup(); answer(); }
   function pickGroup(g){ sel=null; hl=(hl===g?null:g); render(false); answer(); }
   function reset(){
-    var was=mode; mode="layer"; sel=null; hl=null;
-    if(was!=="layer") regroup(); else render(false);
+    var was=mode, big=grown; mode="layer"; sel=null; hl=null; grown=false;
+    if(was!=="layer"||big) regroup(); else render(false);
     say('A small clinic app with <b class="a">ten classes</b>, filed by layer: one package per kind of class. Switch the organization, tap a file, or light up a feature.');
   }
 
@@ -312,6 +345,7 @@
     var f=e.target.closest("[data-f]"); if(f){ pickFile(f.getAttribute("data-f")); return; }
     var p=e.target.closest("[data-p]"); if(p) pickGroup(p.getAttribute("data-p"));
   });
+  $("#grow").addEventListener("click",grow);
   $("#bReset").addEventListener("click",reset);
   reset();
 
@@ -330,6 +364,6 @@
 </script>
 <script src="../manifest.js"></script>
 <script src="../../assets/rail.js"></script>
-<script>Rail.render(document.getElementById("rail"),{week:7,kind:"visuals",current:"19-packages-layer-or-feature"});</script>
+<script>Rail.render(document.getElementById("rail"),{week:7,kind:"visuals",current:"21-packages-layer-feature-or-mixed"});</script>
 </body>
 </html>

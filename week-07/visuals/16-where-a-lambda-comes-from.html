@@ -1,0 +1,264 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Where a Lambda Comes From | Week 7 Visual Hub</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Sora:wght@500;700&family=Inter:wght@400;500&family=JetBrains+Mono:wght@400;500&display=swap">
+<style>
+  :root{
+    --bg:#080c17; --bg2:#0c1428; --surface:rgba(255,255,255,.045); --line:rgba(255,255,255,.09);
+    --ink:#eef2fb; --muted:#8496b6; --accent:#6ea0ff; --accent2:#8b7bff; --good:#46d98a; --warn:#ff6a6a;
+    --gold:#ffc862; --disp:'Sora',system-ui,sans-serif; --body:'Inter',system-ui,sans-serif;
+    --mono:'JetBrains Mono',ui-monospace,monospace;
+  }
+  *{box-sizing:border-box}
+  body{margin:0;min-height:100vh;color:var(--ink);font-family:var(--body);
+    background:radial-gradient(1200px 700px at 70% -10%,#141d38 0%,transparent 55%),
+               radial-gradient(900px 600px at 10% 110%,#161233 0%,transparent 50%),#080c17;
+    overflow-x:hidden}
+  #amb{position:fixed;inset:0;z-index:0;pointer-events:none;opacity:.6}
+  .back{position:relative;z-index:2;display:block;max-width:1120px;margin:0 auto;padding:26px 24px 0;
+    width:100%;font-family:var(--mono);font-size:.8rem;letter-spacing:.04em;color:var(--muted);
+    text-decoration:none;transition:color .15s}
+  .back:hover{color:var(--accent)}
+  .wrap{position:relative;z-index:1;max-width:1120px;margin:0 auto;padding:22px 24px 70px}
+  .tag{font-family:var(--mono);font-size:.72rem;letter-spacing:.22em;text-transform:uppercase;color:var(--accent);margin:0 0 14px}
+  h1{font-family:var(--disp);font-weight:700;font-size:clamp(2.3rem,6vw,3.6rem);line-height:1;margin:0 0 12px;
+    letter-spacing:-.03em;background:linear-gradient(180deg,#fff,#b9c6e6);-webkit-background-clip:text;
+    background-clip:text;color:transparent}
+  .lede{color:var(--muted);max-width:64ch;font-size:1.05rem;margin:0 0 26px;line-height:1.5}
+  .lede b{color:var(--ink)}
+  code{font-family:var(--mono);font-size:.92em;color:#bcd0ff}
+
+  /* ---------- the stage IS the picture ---------- */
+  .stage{position:relative;background:linear-gradient(180deg,rgba(255,255,255,.03),rgba(255,255,255,.01));
+    border:1px solid var(--line);border-radius:24px;padding:22px;
+    box-shadow:0 1px 0 rgba(255,255,255,.06) inset,0 30px 80px -30px rgba(0,0,0,.8)}
+  [hidden]{display:none!important}
+  .hd{display:block;font-family:var(--mono);font-size:.62rem;letter-spacing:.16em;text-transform:uppercase;color:var(--muted);margin:0 0 8px}
+
+  /* the method that shrinks into a lambda: one line, drawn big */
+  .box{padding:18px 18px 12px;border-radius:18px;border:1px solid rgba(110,160,255,.4);background:rgba(110,160,255,.05);transition:border-color .4s,background .4s}
+  .box.lam{border-color:rgba(255,200,98,.55);background:rgba(255,200,98,.05)}
+  .codeline{font-family:var(--mono);font-size:clamp(.95rem,1.9vw,1.32rem);line-height:1.5;padding-bottom:1.9em;white-space:normal}
+  .tk{position:relative;display:inline-block;vertical-align:top;white-space:nowrap;max-width:26ch;color:#c9d4ea;
+    transition:max-width .55s ease,opacity .4s ease,margin .55s ease,color .25s}
+  .tk.sp{margin-right:.6ch} .tk.spl{margin-left:.6ch}
+  .box:not(.lam) .tk.b0{margin-left:.6ch}
+  .tk.ty{color:#8fb4ff} .tk.nm{color:#e7ecf8} .tk.kw{color:#c792ea} .tk.pa{color:#bcd0ff} .tk.bo{color:#c3e88d} .tk.ar{color:var(--gold)}
+  .tk.cut{overflow:hidden}
+  .tk.going{color:var(--warn);text-decoration:line-through}
+  .tk.gone{max-width:0;opacity:0;margin:0}
+  .tk.pa,.tk.bo{border-bottom:2px solid transparent;transition:border-color .3s}
+  .tk.live{border-bottom-color:var(--gold)}
+  .tk .val{position:absolute;left:0;top:100%;margin-top:4px;font-size:.6em;color:var(--gold);white-space:nowrap}
+  .tk .val.t{color:var(--good)} .tk .val.f{color:#ff9d9d}
+  .row2{display:flex;flex-wrap:wrap;gap:10px;align-items:center;margin-top:6px}
+  .step{font-family:var(--mono);font-size:.84rem;padding:11px 14px;border-radius:10px;cursor:pointer;
+    border:1px solid rgba(255,200,98,.45);background:rgba(255,200,98,.06);color:#ffcb6b;transition:.15s}
+  .step:hover{border-color:var(--gold);background:rgba(255,200,98,.14)}
+  .step:disabled{opacity:.4;cursor:default;border-color:var(--line);background:transparent}
+  .tray{display:flex;flex-wrap:wrap;gap:6px;align-items:center;min-height:30px;font-family:var(--mono);font-size:.7rem;color:var(--muted)}
+  .chip{padding:4px 10px;border-radius:999px;border:1px dashed rgba(255,106,106,.45);color:#ffb0b0;text-decoration:line-through;animation:pop .4s ease}
+  @keyframes pop{from{opacity:0;transform:translateY(-10px)}to{opacity:1;transform:none}}
+
+  /* the employees you hand to it */
+  .hand{margin-top:20px}
+  .people{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:8px}
+  @media (max-width:700px){.people{grid-template-columns:1fr 1fr}}
+  .emp{font-family:var(--mono);font-size:.86rem;text-align:left;padding:11px 12px;border-radius:12px;border:1px solid var(--line);
+    background:rgba(0,0,0,.25);color:var(--ink);cursor:pointer;transition:border-color .25s,background .25s,transform .15s}
+  .emp:hover{border-color:rgba(110,160,255,.7);transform:translateY(-2px)}
+  .emp small{display:block;margin-top:4px;font-size:.7rem;color:rgba(132,150,182,.8)}
+  .emp .ans{display:block;margin-top:6px;font-size:.7rem;min-height:1.2em;color:var(--muted)}
+  .emp.cur{border-color:var(--gold);background:rgba(255,200,98,.1)}
+  .emp.t .ans{color:var(--good)} .emp.f .ans{color:#ff9d9d}
+  .ghost{position:fixed;z-index:50;margin:0;pointer-events:none;border-color:var(--gold);background:#1a2238;box-shadow:0 14px 40px -10px rgba(0,0,0,.9)}
+
+  /* the one sentence */
+  .caption{display:flex;gap:14px;align-items:flex-start;margin:18px 2px 0;padding-top:16px;border-top:1px solid var(--line)}
+  .caption .t{flex:1;min-width:0;font-size:1.05rem;line-height:1.55;color:var(--ink);padding-left:16px;border-left:3px solid var(--accent);transition:border-color .3s}
+  .caption .t .line{display:block;margin-top:6px;font-family:var(--mono);font-size:.8rem;color:#bcd0ff;opacity:.9;overflow-wrap:anywhere}
+  .caption.y .t{border-left-color:var(--gold)} .caption.g .t{border-left-color:var(--good)} .caption.w .t{border-left-color:var(--warn)}
+  .caption.w .t .line{color:#ffb0b0}
+  .caption b.a{color:var(--accent)} .caption b.y{color:var(--gold)} .caption b.g{color:var(--good)} .caption b.w{color:var(--warn)}
+  .reset{font-family:var(--body);font-weight:500;font-size:.84rem;padding:8px 14px;border-radius:11px;cursor:pointer;
+    border:1px solid var(--line);background:transparent;color:var(--muted);transition:.15s;flex-shrink:0}
+  .reset:hover{border-color:var(--accent);color:var(--accent)}
+  button:focus-visible,input:focus-visible{outline:2px solid var(--accent);outline-offset:2px}
+
+  .take{margin-top:22px;background:linear-gradient(180deg,rgba(110,160,255,.08),rgba(139,123,255,.04));
+    border:1px solid var(--line);border-left:3px solid var(--accent);border-radius:12px;padding:16px 18px}
+  .take .tk{font-family:var(--mono);font-size:.66rem;letter-spacing:.14em;text-transform:uppercase;color:var(--accent);margin:0 0 8px}
+  .take p{margin:0;font-size:.95rem;color:var(--ink);line-height:1.55}
+  .take b{color:#fff}
+  @media (prefers-reduced-motion:reduce){*{animation-duration:.01ms!important;transition-duration:.01ms!important;animation-delay:0s!important;transition-delay:0s!important}#amb{display:none}}
+</style>
+</head>
+<body>
+<a class="back" href="../index.html#16-where-a-lambda-comes-from">&#8592; Week 7 index</a>
+<canvas id="amb"></canvas>
+<div class="wrap">
+  <p class="tag">Workbook 6a &middot; Section 4-2 &middot; Lambda Expressions</p>
+  <h1>Where a Lambda Comes From</h1>
+  <p class="lede"><b>Start from a method you know. Remove what Java can work out, one piece per press.</b></p>
+
+  <div class="stage">
+    <div id="board">
+      <p class="hd" id="hd"></p>
+      <div class="box" id="box">
+        <div class="codeline" id="codeline"></div>
+        <div class="row2">
+          <button class="step" id="go"></button>
+          <div class="tray" id="tray"></div>
+        </div>
+      </div>
+      <div class="hand">
+        <p class="hd">hand it an employee &middot; tap one</p>
+        <div class="people" id="people"></div>
+      </div>
+    </div>
+    <div class="caption" id="caption">
+      <div class="t" id="status"></div>
+      <button class="reset" id="bReset">Reset</button>
+    </div>
+  </div>
+
+  <div class="take">
+    <p class="tk">The one idea</p>
+    <p><b>A lambda is a method with everything removed that Java can work out by itself.</b> What is left is the parameter, an arrow and the body. It takes the same input and gives the same answer as the method did. It has no name, so you never call it yourself: you hand it to a method such as <code>filter</code> or <code>forEach</code>, and that method calls it.</p>
+  </div>
+  <div id="rail"></div>
+</div>
+<script>
+(function(){
+  "use strict";
+  var $=function(s){return document.querySelector(s);};
+  var reduce=matchMedia("(prefers-reduced-motion: reduce)").matches;
+  var status=$("#status"),caption=$("#caption");
+  /* the one sentence: html for the prose, plain text for the Java statement */
+  function say(html,tone,line){
+    caption.className="caption"+(tone?" "+tone:"");
+    status.innerHTML=html;
+    if(line){ var sp=document.createElement("span"); sp.className="line"; sp.textContent=line; status.appendChild(sp); }
+  }
+
+  var EMP=[["Leo",55],["Potato",35],["John",26],["Raymond",25]];
+  /* the pieces of the line. gone = the press that removes it, show = the press that brings it in */
+  var TOK=[
+    {t:"boolean",c:"ty sp",gone:1},{t:"isYoung",c:"nm",gone:1},{t:"(",c:"",gone:3},{t:"Employee",c:"ty sp",gone:2},
+    {t:"employee",c:"pa",id:"tParam"},{t:")",c:"",gone:3},{t:"->",c:"ar spl sp",show:1},{t:"{",c:"b0 sp",gone:4},
+    {t:"return",c:"kw sp",gone:4},{t:"employee.getAge() < 40",c:"bo",id:"tBody"},{t:";",c:"sp",gone:4},{t:"}",c:"",gone:4}
+  ];
+  var STEPS=[
+    {btn:"Remove the name and the return type",chips:["boolean","isYoung"],
+     txt:'Nobody will call it by name, so the <b class="w">name</b> goes. The <b class="w">return type</b> goes too: Java sees that the body gives true or false. An <b class="y">arrow</b> now joins the parameter to the body. This is already a lambda.'},
+    {btn:"Remove the parameter type",chips:["Employee"],
+     txt:'It will be used on a list of employees, so Java already knows what <b class="a">employee</b> is. The <b class="w">type</b> goes.'},
+    {btn:"Remove the parentheses",chips:["( )"],
+     txt:'There is only one parameter, so the <b class="w">parentheses</b> can go. Two parameters would keep them.'},
+    {btn:"Remove the braces and return",chips:["{ return ; }"],
+     txt:'The body is one expression, so the <b class="w">braces</b>, <b class="w">return</b> and the semicolon go. The value of the expression is the answer.'}
+  ];
+  var step=0, busy=false, line=$("#codeline"), go=$("#go"), tray=$("#tray"), els=[];
+
+  function build(){
+    line.innerHTML=""; els=[];
+    TOK.forEach(function(k){
+      var s=document.createElement("span"); s.className="tk "+k.c; s.textContent=k.t;
+      if(k.id){ s.id=k.id; var v=document.createElement("span"); v.className="val"; s.appendChild(v); }
+      else s.classList.add("cut");
+      if(k.show) s.classList.add("gone");
+      line.appendChild(s); els.push(s);
+    });
+  }
+  function text(){
+    return TOK.filter(function(k){return k.show? step>=k.show : !(k.gone&&step>=k.gone);}).map(function(k){return k.t;}).join(" ")
+      .replace("( ","(").replace(" )",")").replace("isYoung (","isYoung(").replace(" ;",";");
+  }
+  function head(){
+    $("#hd").textContent=step===0?"a method \u00b7 you could write this today":"a lambda \u00b7 the same method, with less written";
+    $("#box").classList.toggle("lam",step>0);
+    go.disabled=step>=STEPS.length;
+    go.textContent=step>=STEPS.length?"Nothing left to remove":STEPS[step].btn;
+  }
+  function clearVals(){
+    $("#tParam .val").textContent=""; $("#tBody .val").textContent=""; $("#tBody .val").className="val";
+    $("#tParam").classList.remove("live"); $("#tBody").classList.remove("live");
+    var c=document.querySelectorAll(".emp.cur"); for(var n=0;n<c.length;n++) c[n].classList.remove("cur");
+  }
+  function people(){
+    $("#people").innerHTML=EMP.map(function(e,n){
+      return '<button class="emp" data-n="'+n+'">'+e[0]+"<small>age "+e[1]+'</small><span class="ans"></span></button>';
+    }).join("");
+  }
+  function next(){
+    if(busy||step>=STEPS.length) return;
+    var s=STEPS[step], n=step+1; busy=true; clearVals();
+    var out=[], inn=[];
+    TOK.forEach(function(k,i){ if(k.gone===n) out.push(els[i]); if(k.show===n) inn.push(els[i]); });
+    out.forEach(function(el){el.classList.add("going");});
+    setTimeout(function(){
+      out.forEach(function(el){el.classList.add("gone");});
+      inn.forEach(function(el){el.classList.remove("gone");});
+      s.chips.forEach(function(c){ var d=document.createElement("span"); d.className="chip"; d.textContent=c; tray.appendChild(d); });
+      step=n; head(); busy=false;
+      var last=step===STEPS.length;
+      say(s.txt+(last?' Tap an employee: it answers exactly as the method did.':""),last?"g":"y",text());
+    },reduce?0:520);
+  }
+  function answer(n){
+    var e=EMP[n], r=e[1]<40, card=document.querySelector('.emp[data-n="'+n+'"]');
+    clearVals(); card.classList.add("cur");
+    $("#tParam").classList.add("live"); $("#tBody").classList.add("live");
+    $("#tParam .val").textContent="is "+e[0];
+    var bv=$("#tBody .val"); bv.textContent=e[1]+" < 40 is "+r; bv.className="val "+(r?"t":"f");
+    card.classList.remove("t","f"); card.classList.add(r?"t":"f"); card.querySelector(".ans").textContent="answer: "+r;
+    say((step===0?"You call the method and pass it ":"The lambda receives ")+'<b class="y">'+e[0]+'</b>. Inside, <b class="a">employee</b> is '+e[0]+
+      ", so the body checks "+e[1]+" < 40 and answers <b"+(r?' class="g"':' class="w"')+">"+r+"</b>."+
+      (step>0?" Same input, same answer as the method.":""),r?"g":"w",
+      (step===0?"isYoung("+e[0].toLowerCase()+")":text())+"   // "+r);
+  }
+  function hand(n){
+    if(busy) return;
+    var card=document.querySelector('.emp[data-n="'+n+'"]'), to=$("#tParam");
+    if(reduce||!card.animate){ answer(n); return; }
+    busy=true;
+    var a=card.getBoundingClientRect(), b=to.getBoundingClientRect(), g=card.cloneNode(true);
+    g.className="emp ghost"; g.style.left=a.left+"px"; g.style.top=a.top+"px"; g.style.width=a.width+"px";
+    document.body.appendChild(g);
+    var dx=b.left+b.width/2-(a.left+a.width/2), dy=b.top+b.height/2-(a.top+a.height/2);
+    g.animate([{transform:"translate(0,0) scale(1)",opacity:1},{transform:"translate("+dx+"px,"+dy+"px) scale(.35)",opacity:.2}],
+      {duration:620,easing:"cubic-bezier(.5,0,.3,1)"}).onfinish=function(){ g.remove(); busy=false; answer(n); };
+  }
+  function reset(){
+    step=0; busy=false; tray.innerHTML=""; build(); people(); head();
+    say("A method you could write today: it takes one employee and answers true or false. Tap an employee to call it, or start removing what Java does not need.","",text());
+  }
+  $("#board").addEventListener("click",function(e){
+    var c=e.target.closest(".emp"); if(c){ hand(+c.getAttribute("data-n")); return; }
+    if(e.target.closest("#go")) next();
+  });
+  $("#bReset").addEventListener("click",reset);
+  reset();
+
+  /* ambient canvas */
+  var cv=$("#amb"),ctx=cv.getContext&&cv.getContext("2d"),parts=[];
+  function sizeC(){if(!ctx)return;cv.width=innerWidth;cv.height=innerHeight;}
+  function initParts(){parts=[];for(var i=0;i<46;i++)parts.push({x:Math.random(),y:Math.random(),
+    r:Math.random()*1.6+.3,s:Math.random()*.02+.004,o:Math.random()*.4+.1});}
+  function drawC(){if(!ctx)return;ctx.clearRect(0,0,cv.width,cv.height);
+    parts.forEach(function(p){p.y-=p.s/60;if(p.y<-.02)p.y=1.02;
+      ctx.beginPath();ctx.arc(p.x*cv.width,p.y*cv.height,p.r,0,7);
+      ctx.fillStyle="rgba(140,170,255,"+p.o+")";ctx.fill();});
+    requestAnimationFrame(drawC);}
+  if(ctx&&!reduce){sizeC();initParts();drawC();addEventListener("resize",sizeC);}
+})();
+</script>
+<script src="../manifest.js"></script>
+<script src="../../assets/rail.js"></script>
+<script>Rail.render(document.getElementById("rail"),{week:7,kind:"visuals",current:"16-where-a-lambda-comes-from"});</script>
+</body>
+</html>

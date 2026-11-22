@@ -2337,7 +2337,7 @@
     "desc": "",
     "group": "Workbook 6a · Section 2-2",
     "url": "week-07/visuals/06-an-interface-as-a-type.html",
-    "text": "← Week 7 index Workbook 6a · Section 2-1 An Interface as a Type One Playable variable. Put three objects in it and try both calls on each. variable · its type is the interface Playable Playable player call a method through player player.stop() player.charge() put an object in player player = new Phone(\"Pocket\") player = new Speaker(\"Boom\") player = new SmartWatch() → ✕ refers to turned away by the compiler SmartWatch implements Caller, Chargeable object · its real class play(String song) stop() charge() prints \"The phone is charging.\" Reset The one idea An interface is a type too. A Playable variable can refer to any object whose class implements Playable, and to no other. The variable's type decides what you may call: only what Playable declares. The object decides what runs."
+    "text": "← Week 7 index Workbook 6a · Section 2-2 An Interface as a Type One Playable variable. Put three objects in it and try both calls on each. variable · its type is the interface Playable Playable player call a method through player player.stop() player.charge() put an object in player player = new Phone(\"Pocket\") player = new Speaker(\"Boom\") player = new SmartWatch() → ✕ refers to turned away by the compiler SmartWatch implements Caller, Chargeable object · its real class play(String song) stop() charge() prints \"The phone is charging.\" Reset The one idea An interface is a type too. A Playable variable can refer to any object whose class implements Playable, and to no other. The variable's type decides what you may call: only what Playable declares. The object decides what runs."
   },
   {
     "week": 7,
@@ -2432,6 +2432,66 @@
   {
     "week": 7,
     "weekLabel": "Week 7",
+    "section": "Visuals",
+    "title": "Where a Lambda Comes From",
+    "desc": "",
+    "group": "Workbook 6a · Section 4-2",
+    "url": "week-07/visuals/16-where-a-lambda-comes-from.html",
+    "text": "← Week 7 index Workbook 6a · Section 4-2 · Lambda Expressions Where a Lambda Comes From Start from a method you know. Remove what Java can work out, one piece per press. hand it an employee · tap one Reset The one idea A lambda is a method with everything removed that Java can work out by itself. What is left is the parameter, an arrow and the body. It takes the same input and gives the same answer as the method did. It has no name, so you never call it yourself: you hand it to a method such as filter or forEach , and that method calls it."
+  },
+  {
+    "week": 7,
+    "weekLabel": "Week 7",
+    "section": "Visuals",
+    "title": "From the Loop to the Stream",
+    "desc": "",
+    "group": "Workbook 6a · Section 4-2",
+    "url": "week-07/visuals/17-from-the-loop-to-the-stream.html",
+    "text": "← Week 7 index Workbook 6a · Section 4-2 · Lambda Expressions From the Loop to the Stream The same search twice: carried by hand in a loop, then flowing through a pipeline. The loop you take each employee, test it and add it yourself Next pass the list for (Employee employee : employees) the test if ( employee.getAge() < 40 ) if the new list matchingEmployees.add(employee); The stream the data flows through a pipeline, you write only the test Run the stream source · data at rest employees.stream() transformation · data in transit .filter(employee -> employee.getAge() < 40 ) filter destination · data at rest .toList() Print the new list fill the new list first, with the loop or the stream above The loop that prints Next pass for (Employee matchingEmployee : matchingEmployees) { System.out.println(matchingEmployee); } println forEach Run forEach matchingEmployees.forEach(matchingEmployee -> System.out.println(matchingEmployee) ); forEach Reset The one idea A stream is a pipeline. The data leaves the source and the work happens while it travels: here filter , with your lambda as the test. toList takes what reaches the end and saves it in a new list, the destination. The loop gives the same result, but you write every step yourself. forEach does the same for the loop that prints."
+  },
+  {
+    "week": 7,
+    "weekLabel": "Week 7",
+    "section": "Visuals",
+    "title": "One Line or Several Lines",
+    "desc": "",
+    "group": "Workbook 6a · Section 4-2",
+    "url": "week-07/visuals/18-one-line-or-several-lines.html",
+    "text": "← Week 7 index Workbook 6a · Section 4-2 · Lambda Expressions One Line or Several Lines The same lambda, short or long. Switch the form and watch which pieces appear. { } braces ; after each statement return Reset The one idea One expression: no braces, no return . Several statements: braces around them and a semicolon after each one. Inside braces, a lambda that has to answer must say return . filter waits for true or false, so its lambda returns. forEach waits for nothing, so its lambda never returns anything."
+  },
+  {
+    "week": 7,
+    "weekLabel": "Week 7",
+    "section": "Visuals",
+    "title": "Stream Methods, One at a Time",
+    "desc": "",
+    "group": "Workbook 6a · Section 4-3",
+    "url": "week-07/visuals/19-stream-methods-one-at-a-time.html",
+    "text": "← Week 7 index Workbook 6a · Section 4-3 · Java Stream Methods Stream Methods, One at a Time Pick a method, send the elements through it, and watch what it does to each one. the list Send the next one Send the rest ↓ ↓ Reset The one idea Each stream method does one small job on the elements that reach it. filter keeps or drops, map changes, distinct removes repeats, sorted puts in order. A stream ends with a method that gives the result: toList , count , forEach or reduce . Chain them with a dot and each element travels through them in order."
+  },
+  {
+    "week": 7,
+    "weekLabel": "Week 7",
+    "section": "Visuals",
+    "title": "reduce, Piece by Piece",
+    "desc": "",
+    "group": "Workbook 6a · Section 4-3",
+    "url": "week-07/visuals/20-reduce.html",
+    "text": "← Week 7 index Workbook 6a · Section 4-3 · Java Stream Methods reduce, Piece by Piece Four parts, one value at the end. Press and follow each part as it is used. inside reduce · the lambda runs once for each element the running result the next element = return what the lambda gives back Run the rest Reset The one idea reduce turns a whole stream into one value. It has a starting value and a lambda with two parameters: the running result and the next element. What the lambda returns becomes the running result for the next element. When the elements run out, the running result is the answer. A sum starts at 0, a product at 1, a text at \"\" ."
+  },
+  {
+    "week": 7,
+    "weekLabel": "Week 7",
+    "section": "Visuals",
+    "title": "Packages: Layer, Feature or Mixed",
+    "desc": "",
+    "group": "Packages",
+    "url": "week-07/visuals/21-packages-layer-feature-or-mixed.html",
+    "text": "← Week 7 index Packages Packages: Layer, Feature or Mixed One clinic app, three ways to file its classes. Switch, then tap a file. organize the packages Layer-based by kind of class Feature-based by what the app does Mixed layers, split where one gets crowded the size of the app light up one feature light up one kind of class Reset The one idea A package is a folder plus a package statement that matches its path under src/main/java. A class in another package needs an import and must be public ; classes in the same package see each other with nothing. Layer-based and feature-based are both valid. Layer-based is the simpler one for a small project, and Raymond accepts either: pick one and keep it for the whole project. When one package gets crowded, split it into sub-packages: that is the mix. Larger applications often turn it around, features first with layers inside each."
+  },
+  {
+    "week": 7,
+    "weekLabel": "Week 7",
     "section": "Reference",
     "title": "Week 7 Cheat Sheet",
     "desc": "The syntax of the week on one page: an interface, implements, default methods, Comparable, a generic class and method, a lambda, the stream methods.",
@@ -2458,6 +2518,16 @@
     "group": "Reference",
     "url": "week-07/reference/common-errors.html",
     "text": "← Week 7 index Week 7 · Reference Common Errors The messages you will meet this week, word for word, and the quiet bugs that print no message at all. Read the first line of the message: it usually names the fix. In IntelliJ each compile message starts with java: . Show All Compile Runtime Quiet bugs Compile A class does not write an interface method See it java: Speaker is not abstract and does not override abstract method play(String) in Playable Speaker says implements Playable but never writes play(String) . Every abstract method of the interface must be written in the class. The same message appears when the name or the parameters differ, because then it is a different method. Fix Write the method with the exact name, parameters and return type from the interface, and put @Override above it so a typo is caught too. Before public class Speaker implements Playable { public void stop() { ... } } After public class Speaker implements Playable { @Override public void play(String song) { ... } @Override public void stop() { ... } } Compile The method is not public See it java: charge() in Radio cannot implement charge() in Chargeable attempting to assign weaker access privileges; was public Methods of an interface are public without saying so. A method that implements one cannot be less open, so the missing public in the class is the error. Fix Add public to the method in the class. Before class Radio implements Chargeable { void charge() { ... } } After class Radio implements "
+  },
+  {
+    "week": 7,
+    "weekLabel": "Week 7",
+    "section": "Reference",
+    "title": "Stream Methods",
+    "desc": "filter, map, sorted, distinct, forEach, count, reduce, collect and toList: what goes in, what comes out, one example each.",
+    "group": "Reference",
+    "url": "week-07/reference/stream-methods.html",
+    "text": "← Week 7 index Week 7 · Reference Stream Methods Every stream method of the week: what goes in, what comes out, whether it ends the stream, and one tiny example with its result. Type in the box to filter, for example map, terminal or long. Filter At a glance 6a · 4-3 Method Kind Goes in Comes out stream() source A collection: a List, for example A Stream of the same elements; nothing runs yet filter(test) intermediate A stream, and a lambda that answers true or false for one element A stream with only the elements for which the lambda said true map(change) intermediate A stream, and a lambda that turns one element into a new value A stream with one new value per element, so the same count; the type may change sorted() intermediate A stream whose elements implement Comparable The same elements in order, smallest first distinct() intermediate A stream, with or without repeated elements The same stream with each value kept once, the first of each forEach(action) terminal A stream or a collection, and a lambda or method reference to run for each element Nothing (void); the action has run for every element count() terminal A stream A long: how many elements are left reduce(start, combine) terminal A stream, a starting value, and a lambda with two parameters: the running result and the next element One single value, of the same type as the elements collect(Collectors.toList()) terminal A stream A List of the elements that are left toList() terminal A stream A List of the elements t"
   },
   {
     "week": 7,
@@ -2542,6 +2612,16 @@
   {
     "week": 7,
     "weekLabel": "Week 7",
+    "section": "Exercises",
+    "title": "Data Processing 2",
+    "desc": "New project, copy the first one in: the same answers again, this time with streams in a new package.",
+    "group": "Workbook 6a · Section 4-3",
+    "url": "week-07/exercises/data-processing-2.html",
+    "text": "← Week 7 index Workbook 6a · Section 4-3 · Exercise 2 Data Processing 2 The same answers again, this time with streams in a new package. What you are building Your data-processing code in a new project , data-processing-2 . Person moves up to com.pluralsight . A new package com.pluralsight.streams gets its own Program.java , and there each for loop becomes a stream: the name search with filter , the average age with map and reduce , and the oldest and youngest ages with stream methods only. The workbook says to continue in data-processing; here it gets its own project and repository. The answers must be the same as with the loops. Do these in order 0 of 8 done Clear ticks What a finished run looks like run (one possible) Enter a name to search: Ames People with matching name: Pat Ames Lee Ames Average age: 31.5 Oldest person's age: 52 Youngest person's age: 19 Yours will differ. If the stream gives other numbers than the loop did, one of them is wrong: find out which. Where people get stuck Person is red in the loops Program. It moved, so the loops Program needs an import of com.pluralsight.Person. Nothing prints after filter. A stream does nothing until its last step. End it with a method that collects or prints. A stream used twice. A stream can be used once. Start a new one from the list each time. The result of a chain is the wrong type. Look at what each method hands to the next: a stream of people, then of ages, then one value. Pages that help Source, Transformation, De"
+  },
+  {
+    "week": 7,
+    "weekLabel": "Week 7",
     "section": "Games",
     "title": "Interface Implementer",
     "desc": "An interface and a class: does the class compile, and if not, which method is missing or wrong.",
@@ -2557,7 +2637,7 @@
     "desc": "A variable of an interface type holding an object: pick the calls the compiler accepts.",
     "group": "Workbook 6a · Section 2-2",
     "url": "week-07/games/which-calls-compile.html",
-    "text": "← Week 7 index Workbook 6a · Section 2-1 · Game Which Calls Compile A variable of an interface type holding an object. Tap the one line the compiler refuses. Eleven rounds. Game which line breaks? score 0 time 0.0s Which Calls Compile Read the classes, then the lines in main. Exactly one line does not compile. Tap it. Remember: the type of the variable decides what you may call. Start Round over Play again round 0 / 11 Press Start or Enter. Restart Enter or Space skips the wait after an answer. the variable type decides what you may call · the object decides which version runs · an interface cannot be built with new · a cast turns the variable type into a class type The one idea The type of the variable decides which calls compile, whatever object it holds. A Playable variable can call only what Playable declares, even when it holds a Phone . To reach more, cast it or use a variable of the bigger type."
+    "text": "← Week 7 index Workbook 6a · Section 2-2 · Game Which Calls Compile A variable of an interface type holding an object. Tap the one line the compiler refuses. Eleven rounds. Game which line breaks? score 0 time 0.0s Which Calls Compile Read the classes, then the lines in main. Exactly one line does not compile. Tap it. Remember: the type of the variable decides what you may call. Start Round over Play again round 0 / 11 Press Start or Enter. Restart Enter or Space skips the wait after an answer. the variable type decides what you may call · the object decides which version runs · an interface cannot be built with new · a cast turns the variable type into a class type The one idea The type of the variable decides which calls compile, whatever object it holds. A Playable variable can call only what Playable declares, even when it holds a Phone . To reach more, cast it or use a variable of the bigger type."
   },
   {
     "week": 7,
@@ -2588,6 +2668,26 @@
     "group": "Workbook 6a · Section 3-3",
     "url": "week-07/games/generics-validator.html",
     "text": "← Week 7 index Workbook 6a · Section 3-3 · Game Generics Validator A generic declaration and a line that uses it. Does it compile, and if not, why? Thirteen rounds. Game does this line compile? score 0 time 0.0s Generics Validator Read the generic class, then the line that uses it. Press 1 to 5: it compiles, the type is wrong, a primitive is used, the bound is not met, or the number of types is wrong. Start Round over Play again round 0 / 13 Press Start or Enter. Restart Enter or Space skips the wait after an answer. T is a blank filled in when the class is used · type arguments are classes, never int or double · extends sets a limit on T · one blank in the class, one type in the <> The one idea A generic class is a blueprint with blanks: the type you put in <> fills every T, and the compiler checks every use. The type must be a class, the right number of them, and inside the bound when the blank says T extends Musician ."
+  },
+  {
+    "week": 7,
+    "weekLabel": "Week 7",
+    "section": "Games",
+    "title": "Lambda Lab",
+    "desc": "A lambda and one input: what does it return, or what does it print.",
+    "group": "Workbook 6a · Section 4-2",
+    "url": "week-07/games/lambda-lab.html",
+    "text": "← Week 7 index Workbook 6a · Section 4-2 · Game Lambda Lab A lambda and one input. What does it return, or what does it print? Fourteen rounds. Game run the lambda score 0 time 0.0s Lambda Lab Read the lambda: parameter, arrow, body. The stream hands it the input shown. Work out what comes back, or what is printed, and pick it. Start Round over Play again round 0 / 14 Press Start or Enter. Restart Enter or Space skips the wait after an answer. parameter -> body · the body is an expression whose value is returned · a block body in braces needs return · two parameters go in parentheses The one idea A lambda is a method without a name: parameters on the left of the arrow, the body on the right. A stream calls it once for each element, handing the element in as the parameter. An expression body is returned as it is; a block body in braces must say return ."
+  },
+  {
+    "week": 7,
+    "weekLabel": "Week 7",
+    "section": "Games",
+    "title": "Stream Predictor",
+    "desc": "A list and a stream pipeline: predict the result.",
+    "group": "Workbook 6a · Section 4-3",
+    "url": "week-07/games/stream-predictor.html",
+    "text": "← Week 7 index Workbook 6a · Section 4-3 · Game Stream Predictor A list and a stream pipeline. Predict what it prints. Sixteen rounds. Game source, steps, result score 0 time 0.0s Stream Predictor Read the list, then follow the pipeline step by step from the top. Pick what the last line prints. A pipeline never changes the original list. Start Round over Play again round 0 / 16 Press Start or Enter. Restart Enter or Space skips the wait after an answer. filter keeps the elements that pass · map changes each element · distinct drops repeats · sorted orders · count and reduce end the stream with a value · each step receives what the step before sent The one idea A stream is a source, a few steps, and an end. Each step receives only what the step before it sent on: filter keeps fewer, map changes each one, distinct drops repeats. The end gives the result, and the original list is left as it was."
   },
   {
     "week": 7,

@@ -1,0 +1,393 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Stream Methods, One at a Time | Week 7 Visual Hub</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Sora:wght@500;700&family=Inter:wght@400;500&family=JetBrains+Mono:wght@400;500&display=swap">
+<style>
+  :root{
+    --bg:#080c17; --bg2:#0c1428; --surface:rgba(255,255,255,.045); --line:rgba(255,255,255,.09);
+    --ink:#eef2fb; --muted:#8496b6; --accent:#6ea0ff; --accent2:#8b7bff; --good:#46d98a; --warn:#ff6a6a;
+    --gold:#ffc862; --disp:'Sora',system-ui,sans-serif; --body:'Inter',system-ui,sans-serif;
+    --mono:'JetBrains Mono',ui-monospace,monospace;
+  }
+  *{box-sizing:border-box}
+  body{margin:0;min-height:100vh;color:var(--ink);font-family:var(--body);
+    background:radial-gradient(1200px 700px at 70% -10%,#141d38 0%,transparent 55%),
+               radial-gradient(900px 600px at 10% 110%,#161233 0%,transparent 50%),#080c17;
+    overflow-x:hidden}
+  #amb{position:fixed;inset:0;z-index:0;pointer-events:none;opacity:.6}
+  .back{position:relative;z-index:2;display:block;max-width:1120px;margin:0 auto;padding:26px 24px 0;
+    width:100%;font-family:var(--mono);font-size:.8rem;letter-spacing:.04em;color:var(--muted);
+    text-decoration:none;transition:color .15s}
+  .back:hover{color:var(--accent)}
+  .wrap{position:relative;z-index:1;max-width:1120px;margin:0 auto;padding:22px 24px 70px}
+  .tag{font-family:var(--mono);font-size:.72rem;letter-spacing:.22em;text-transform:uppercase;color:var(--accent);margin:0 0 14px}
+  h1{font-family:var(--disp);font-weight:700;font-size:clamp(2.3rem,6vw,3.6rem);line-height:1;margin:0 0 12px;
+    letter-spacing:-.03em;background:linear-gradient(180deg,#fff,#b9c6e6);-webkit-background-clip:text;
+    background-clip:text;color:transparent}
+  .lede{color:var(--muted);max-width:64ch;font-size:1.05rem;margin:0 0 26px;line-height:1.5}
+  .lede b{color:var(--ink)}
+  code{font-family:var(--mono);font-size:.92em;color:#bcd0ff}
+
+  /* ---------- the stage IS the picture ---------- */
+  .stage{position:relative;background:linear-gradient(180deg,rgba(255,255,255,.03),rgba(255,255,255,.01));
+    border:1px solid var(--line);border-radius:24px;padding:22px;
+    box-shadow:0 1px 0 rgba(255,255,255,.06) inset,0 30px 80px -30px rgba(0,0,0,.8)}
+  [hidden]{display:none!important}
+  .hd{display:block;font-family:var(--mono);font-size:.62rem;letter-spacing:.16em;text-transform:uppercase;color:var(--muted);margin:0 0 8px}
+
+  /* pick one method */
+  .tabs{display:flex;flex-wrap:wrap;gap:6px;margin-bottom:14px}
+  .tab{font-family:var(--mono);font-size:.84rem;padding:9px 15px;border-radius:999px;cursor:pointer;border:1px solid var(--line);
+    background:transparent;color:var(--muted);transition:.15s}
+  .tab:hover{border-color:var(--accent);color:var(--ink)}
+  .tab.on{background:rgba(110,160,255,.2);border-color:var(--accent);color:#fff}
+
+  /* the list on top, the method in the middle, the result at the bottom */
+  .zone{padding:14px;border-radius:18px;border:1px solid var(--line);background:rgba(6,10,20,.5);min-width:0}
+  .zone .hd{margin:0 0 6px}
+  .code{font-family:var(--mono);font-size:.84rem;line-height:1.5;color:#bcd0ff;overflow-wrap:anywhere;margin-bottom:10px}
+  .row{display:flex;flex-wrap:wrap;gap:8px;align-items:center;min-height:42px}
+  .chip{font-family:var(--mono);font-size:.9rem;padding:8px 13px;border-radius:11px;border:1px solid var(--line);background:rgba(0,0,0,.35);
+    color:var(--ink);white-space:nowrap;transition:opacity .3s,border-color .3s,background .3s,transform .3s,color .3s}
+  .chip.sent{opacity:.32}
+  .chip.cur{border-color:var(--gold);background:rgba(255,200,98,.12)}
+  .chip.new{border-color:var(--gold);color:var(--gold)}
+  .chip.ok{border-color:rgba(70,217,138,.6)}
+  .chip.in{animation:land .35s ease}
+  .chip.drop{opacity:0;transform:translateY(24px)}
+  @keyframes land{from{transform:scale(.85);opacity:.3}to{transform:none;opacity:1}}
+  .ghost{position:fixed;z-index:50;margin:0;pointer-events:none;border-color:var(--gold);background:#1a2238;box-shadow:0 14px 40px -10px rgba(0,0,0,.9)}
+  .acts{display:flex;flex-wrap:wrap;gap:8px;margin-top:12px}
+  .step{font-family:var(--mono);font-size:.84rem;padding:10px 14px;border-radius:10px;cursor:pointer;
+    border:1px solid rgba(255,200,98,.45);background:rgba(255,200,98,.06);color:#ffcb6b;transition:.15s}
+  .step:hover{border-color:var(--gold);background:rgba(255,200,98,.14)}
+  .step:disabled{opacity:.4;cursor:default;border-color:var(--line);background:transparent}
+  .arrow{text-align:center;font-family:var(--mono);color:var(--muted);font-size:.9rem;line-height:1;padding:7px 0}
+  .machs{display:grid;grid-template-columns:repeat(auto-fit,minmax(260px,1fr));gap:12px}
+  .mach{border-color:rgba(255,200,98,.45);background:rgba(255,200,98,.04);display:flex;flex-direction:column}
+  .mach .code{color:var(--gold)}
+  .work{display:grid;grid-template-columns:minmax(0,150px) minmax(0,1fr);gap:12px;align-items:center}
+  @media (max-width:560px){.work{grid-template-columns:1fr}}
+  .slot{display:flex;align-items:center;justify-content:center;min-height:56px;border-radius:14px;border:1px dashed rgba(255,200,98,.4);
+    font-family:var(--mono);font-size:.68rem;color:var(--muted);padding:6px;text-align:center}
+  .read{font-family:var(--mono);font-size:.82rem;color:var(--muted);overflow-wrap:anywhere;min-height:2.8em}
+  .read .r{display:block;margin-top:2px;font-size:1rem;color:var(--gold)} .read .r.t{color:var(--good)} .read .r.f{color:#ff9d9d}
+  .mem{margin-top:10px;padding-top:10px;border-top:1px dashed var(--line);font-family:var(--mono);font-size:.72rem;color:var(--muted)}
+  .mem .row{margin-top:6px;min-height:36px}
+  .mem .chip{font-size:.78rem;padding:5px 9px}
+  .big{font-family:var(--disp);font-weight:700;font-size:1.9rem;color:var(--gold);font-variant-numeric:tabular-nums}
+  .big.tick{animation:land .3s ease}
+  .big.txt{font-family:var(--mono);font-weight:500;font-size:1.15rem;white-space:pre}
+  .res{display:flex;align-items:baseline;gap:12px;font-family:var(--mono);font-size:.84rem;color:var(--muted)}
+  .res .big{color:var(--good)}
+  .con{font-family:var(--mono);font-size:.84rem;line-height:1.6;color:#c3e88d;background:rgba(0,0,0,.45);border:1px solid var(--line);
+    border-radius:10px;padding:8px 12px;min-height:3.4em;width:100%}
+  .none{font-family:var(--mono);font-size:.74rem;color:rgba(132,150,182,.7)}
+
+  /* the one sentence */
+  .caption{display:flex;gap:14px;align-items:flex-start;margin:18px 2px 0;padding-top:16px;border-top:1px solid var(--line)}
+  .caption .t{flex:1;min-width:0;font-size:1.05rem;line-height:1.55;color:var(--ink);padding-left:16px;border-left:3px solid var(--accent);transition:border-color .3s}
+  .caption .t .line{display:block;margin-top:6px;font-family:var(--mono);font-size:.8rem;color:#bcd0ff;opacity:.9;overflow-wrap:anywhere}
+  .caption.y .t{border-left-color:var(--gold)} .caption.g .t{border-left-color:var(--good)} .caption.w .t{border-left-color:var(--warn)}
+  .caption.w .t .line{color:#ffb0b0}
+  .caption b.a{color:var(--accent)} .caption b.y{color:var(--gold)} .caption b.g{color:var(--good)} .caption b.w{color:var(--warn)}
+  .reset{font-family:var(--body);font-weight:500;font-size:.84rem;padding:8px 14px;border-radius:11px;cursor:pointer;
+    border:1px solid var(--line);background:transparent;color:var(--muted);transition:.15s;flex-shrink:0}
+  .reset:hover{border-color:var(--accent);color:var(--accent)}
+  button:focus-visible,input:focus-visible{outline:2px solid var(--accent);outline-offset:2px}
+
+  .take{margin-top:22px;background:linear-gradient(180deg,rgba(110,160,255,.08),rgba(139,123,255,.04));
+    border:1px solid var(--line);border-left:3px solid var(--accent);border-radius:12px;padding:16px 18px}
+  .take .tk{font-family:var(--mono);font-size:.66rem;letter-spacing:.14em;text-transform:uppercase;color:var(--accent);margin:0 0 8px}
+  .take p{margin:0;font-size:.95rem;color:var(--ink);line-height:1.55}
+  .take b{color:#fff}
+  @media (prefers-reduced-motion:reduce){*{animation-duration:.01ms!important;transition-duration:.01ms!important;animation-delay:0s!important;transition-delay:0s!important}#amb{display:none}}
+</style>
+</head>
+<body>
+<a class="back" href="../index.html#19-stream-methods-one-at-a-time">&#8592; Week 7 index</a>
+<canvas id="amb"></canvas>
+<div class="wrap">
+  <p class="tag">Workbook 6a &middot; Section 4-3 &middot; Java Stream Methods</p>
+  <h1>Stream Methods, One at a Time</h1>
+  <p class="lede"><b>Pick a method, send the elements through it, and watch what it does to each one.</b></p>
+
+  <div class="stage">
+    <div id="board">
+      <div class="tabs" id="tabs"></div>
+      <div class="zone">
+        <p class="hd">the list</p>
+        <div class="code" id="srcCode"></div>
+        <div class="row" id="src"></div>
+        <div class="acts">
+          <button class="step" id="one">Send the next one</button>
+          <button class="step" id="all">Send the rest</button>
+        </div>
+      </div>
+      <div class="arrow">&#8595;</div>
+      <div class="machs" id="machs"></div>
+      <div class="arrow">&#8595;</div>
+      <div class="zone">
+        <p class="hd" id="outHd"></p>
+        <div class="code" id="outCode"></div>
+        <div class="row" id="out"></div>
+      </div>
+    </div>
+    <div class="caption" id="caption">
+      <div class="t" id="status"></div>
+      <button class="reset" id="bReset">Reset</button>
+    </div>
+  </div>
+
+  <div class="take">
+    <p class="tk">The one idea</p>
+    <p><b>Each stream method does one small job on the elements that reach it.</b> <code>filter</code> keeps or drops, <code>map</code> changes, <code>distinct</code> removes repeats, <code>sorted</code> puts in order. A stream ends with a method that gives the result: <code>toList</code>, <code>count</code>, <code>forEach</code> or <code>reduce</code>. Chain them with a dot and each element travels through them in order.</p>
+  </div>
+  <div id="rail"></div>
+</div>
+<script>
+(function(){
+  "use strict";
+  var $=function(s){return document.querySelector(s);};
+  var reduce=matchMedia("(prefers-reduced-motion: reduce)").matches;
+  var status=$("#status"),caption=$("#caption");
+  /* the one sentence: html for the prose, plain text for the Java statement */
+  function say(html,tone,line){
+    caption.className="caption"+(tone?" "+tone:"");
+    status.innerHTML=html;
+    if(line){ var sp=document.createElement("span"); sp.className="line"; sp.textContent=line; status.appendChild(sp); }
+  }
+  function wait(ms){return new Promise(function(r){setTimeout(r,reduce?0:ms);});}
+  function el(tag,cls,txt){ var d=document.createElement(tag); if(cls) d.className=cls; if(txt!==undefined) d.textContent=txt; return d; }
+
+  var TITLES=["Halloween","Ghost","Halloween 2","Friday the 13th","Twister","Halloween 3"];
+  var MIXED=["Halloween 3","Ghost","Halloween","Friday the 13th","Twister","Halloween 2"];
+  var NUMS=[3,2,2,3,7,3,5];
+  var WORDS=["Potatoes","are","awesome"];
+  /* what each method does with one element. out: the value that leaves, or nothing */
+  var KIND={
+    filter:{hd:"filter \u00b7 keeps or drops",code:'.filter(title -> title.toLowerCase().contains("halloween"))',
+      run:function(v){ var r=v.toLowerCase().indexOf("halloween")>=0;
+        return {read:'"'+v.toLowerCase()+'".contains("halloween")',res:String(r),ok:r,out:r?v:null,
+          txt:"filter calls the lambda with <b class=\"y\">"+v+"</b>. It answers <b class=\""+(r?"g":"w")+"\">"+r+"</b>: "+(r?"kept, unchanged.":"dropped."),tone:r?"g":"w"}; }},
+    map:{hd:"map \u00b7 changes each element",code:".map(number -> number * number)",
+      run:function(v){ return {read:v+" * "+v,res:String(v*v),out:v*v,changed:true,
+        txt:"map calls the lambda with <b class=\"y\">"+v+"</b> and sends on what it returns: <b class=\"y\">"+(v*v)+"</b>. One in, one out.",tone:"y"}; }},
+    distinct:{hd:"distinct \u00b7 removes repeats",code:".distinct()",mem:"already let through",
+      init:function(st){st.seen=[];},
+      run:function(v,st,m){ var dup=st.seen.indexOf(v)>=0;
+        if(!dup){ st.seen.push(v); m.row.appendChild(el("span","chip in",String(v))); }
+        return {read:"seen "+v+" before?",res:dup?"yes":"no",ok:!dup,out:dup?null:v,
+          txt:dup?"distinct has already let a <b class=\"y\">"+v+"</b> through, so this one is <b class=\"w\">dropped</b>."
+                 :"<b class=\"y\">"+v+"</b> is new: distinct remembers it and <b class=\"g\">lets it through</b>.",tone:dup?"w":"g"}; }},
+    sorted:{hd:"sorted \u00b7 puts in order",code:".sorted()",mem:"waiting inside",
+      init:function(st){st.hold=[];},
+      run:function(v,st,m){ st.hold.push(v); m.row.appendChild(el("span","chip in",String(v)));
+        return {read:"waiting for the rest",res:st.hold.length+" inside",held:true,
+          txt:"sorted keeps <b class=\"y\">"+v+"</b> inside. It cannot know which one is first before it has seen them all.",tone:"y"}; }},
+    count:{hd:"count \u00b7 ends the stream",code:".count()",mem:"counted so far",
+      init:function(st,m){st.n=0; m.big=el("span","big","0"); m.row.appendChild(m.big);},
+      run:function(v,st,m){ st.n++; tick(m.big,st.n);
+        return {read:"one more",res:String(st.n),held:true,
+          txt:"count adds one for <b class=\"y\">"+v+"</b>. It does not look at what the element is.",tone:"y"}; }},
+    forEach:{hd:"forEach \u00b7 ends the stream",code:".forEach(title -> System.out.println(title))",
+      run:function(v){ return {read:'System.out.println("'+v+'")',res:"printed",held:true,print:v,
+        txt:"forEach calls the lambda with <b class=\"y\">"+v+"</b>, and the lambda prints it. Nothing comes out of forEach.",tone:"y"}; }},
+    reduce:{hd:"reduce \u00b7 ends the stream",code:".reduce(0, (sumTotal, num) -> sumTotal + num)",mem:"sumTotal \u00b7 starts at 0",
+      init:function(st,m){st.total=0; m.big=el("span","big","0"); m.row.appendChild(m.big);},
+      run:function(v,st,m){ var was=st.total; st.total+=v; tick(m.big,st.total);
+        return {read:was+" + "+v,res:String(st.total),held:true,
+          txt:"reduce calls the lambda with sumTotal <b class=\"y\">"+was+"</b> and num <b class=\"y\">"+v+"</b>. What it returns, <b class=\"g\">"+st.total+"</b>, is the new sumTotal.",tone:"y"}; }},
+    reduceS:{hd:"reduce \u00b7 ends the stream",code:'.reduce("", (acc, word) -> acc + word + " ")',mem:'acc \u00b7 starts as "" (an empty String)',
+      init:function(st,m){st.total=""; m.big=el("span","big txt",'""'); m.row.appendChild(m.big);},
+      run:function(v,st,m){ var was=st.total; st.total+=v+" "; tick(m.big,'"'+st.total+'"');
+        return {read:'"'+was+'" + "'+v+'" + " "',res:'"'+st.total+'"',held:true,
+          txt:"reduce calls the lambda with acc <b class=\"y\">\""+was+"\"</b> and word <b class=\"y\">"+v+"</b>. What it returns, <b class=\"g\">\""+st.total+"\"</b>, is the new acc.",tone:"y"}; }}
+  };
+  var TABS=[
+    {id:"filter",name:"filter",data:TITLES,src:"titles.stream()",st:["filter"],out:"list",
+     intro:"<b class=\"y\">filter</b> tests each element with your lambda and keeps the ones that answer true.",
+     end:function(o){return "filter let "+o.length+" of "+TITLES.length+" through. It never changes an element: it only keeps or drops.";}},
+    {id:"map",name:"map",data:NUMS,src:"numbers.stream()",st:["map"],out:"list",
+     intro:"<b class=\"y\">map</b> hands each element to your lambda and sends on what the lambda returns.",
+     end:function(){return "Seven went in and seven came out, each one changed. map never drops anything.";}},
+    {id:"distinct",name:"distinct",data:NUMS,src:"numbers.stream()",st:["distinct"],out:"list",
+     intro:"<b class=\"y\">distinct</b> lets each value through once. It takes no lambda.",
+     end:function(o){return "distinct remembered what it had let through and dropped the repeats: "+o.length+" of "+NUMS.length+" are left.";}},
+    {id:"sorted",name:"sorted",data:MIXED,src:"titles.stream()",st:["sorted"],out:"list",
+     intro:"<b class=\"y\">sorted</b> puts the elements in order. Watch when the first one comes out.",
+     end:function(){return "Nothing left sorted until the last element had arrived. Then they came out in order, here alphabetical.";}},
+    {id:"count",name:"count",data:TITLES,src:"titles.stream()",st:["count"],out:"value",label:"long count =",
+     intro:"<b class=\"y\">count</b> ends the stream with one number: how many elements reached it.",
+     end:function(o){return "count gives back one number, "+o+", as a long. The stream is finished.";}},
+    {id:"forEach",name:"forEach",data:TITLES,src:"titles.stream()",st:["forEach"],out:"console",
+     intro:"<b class=\"y\">forEach</b> ends the stream by running your lambda once for each element.",
+     end:function(){return "forEach gave nothing back. It ran the lambda six times, and the lambda printed.";}},
+    {id:"reduce",name:"reduce \u00b7 numbers",data:NUMS,src:"numbers.stream()",st:["reduce"],out:"value",label:"int sum =",
+     intro:"<b class=\"y\">reduce</b> folds all the elements into one value. It carries sumTotal from one element to the next.",
+     end:function(o){return "Seven numbers became one value, "+o+". The 0 was the starting value of sumTotal.";}},
+    {id:"reduceS",name:"reduce \u00b7 words",data:WORDS,src:"words.stream()",st:["reduceS"],out:"value",label:"String sentence =",
+     intro:"<b class=\"y\">reduce</b> works on any type. Here it glues three words into one String, carrying acc from one word to the next.",
+     end:function(o){return "Three words became one String. The \"\" was the starting value of acc. The same reduce that added numbers now joins text.";}},
+    {id:"two",name:"two together",data:NUMS,src:"numbers.stream()",st:["map","distinct"],out:"list",
+     intro:"Two methods chained with a dot. Each element goes through <b class=\"y\">map</b>, then straight on to <b class=\"y\">distinct</b>.",
+     end:function(o){return "One element at a time travelled through both steps. "+o.length+" squares are left, with no repeats.";}}
+  ];
+  var tab=TABS[0], i=0, busy=false, run=0, machs=[], outVals=[], done=false;
+  var src=$("#src"), out=$("#out"), one=$("#one"), all=$("#all");
+
+  function tick(b,n){ b.textContent=String(n); b.classList.remove("tick"); void b.offsetWidth; b.classList.add("tick"); }
+  function statement(){
+    return tab.src+tab.st.map(function(k){return KIND[k].code;}).join("")+(tab.out==="list"?".toList()":"");
+  }
+  /* a copy of the element travels from one place to the next */
+  function fly(from,to,txt){
+    if(reduce||!from.animate) return Promise.resolve();
+    var a=from.getBoundingClientRect(), b=to.getBoundingClientRect(), g=el("span","chip ghost",txt);
+    g.style.left=a.left+"px"; g.style.top=a.top+"px";
+    document.body.appendChild(g);
+    var gw=g.getBoundingClientRect(), dx=b.left+b.width/2-(a.left+gw.width/2), dy=b.top+b.height/2-(a.top+gw.height/2);
+    return new Promise(function(r){
+      g.animate([{transform:"translate(0,0)"},{transform:"translate("+dx+"px,"+dy+"px)"}],{duration:460,easing:"cubic-bezier(.5,0,.3,1)"})
+        .onfinish=function(){ g.remove(); r(); };
+    });
+  }
+  function buttons(){
+    one.disabled=all.disabled=busy||done;
+    one.textContent=done?"All sent":"Send the next one";
+  }
+  function build(){
+    run++; i=0; busy=false; done=false; outVals=[]; machs=[];
+    var g=document.querySelectorAll(".ghost"); for(var n=0;n<g.length;n++) g[n].remove();
+    var tb=$("#tabs"); tb.innerHTML="";
+    TABS.forEach(function(t){ var b=el("button","tab"+(t===tab?" on":""),t.name); b.setAttribute("data-t",t.id); tb.appendChild(b); });
+    $("#srcCode").textContent=tab.src;
+    src.innerHTML=""; tab.data.forEach(function(v){src.appendChild(el("span","chip",String(v)));});
+    var box=$("#machs"); box.innerHTML="";
+    tab.st.forEach(function(k){
+      var K=KIND[k], z=el("div","zone mach"), m={k:K,st:{}};
+      z.appendChild(el("p","hd",K.hd)); z.appendChild(el("div","code",K.code));
+      var w=el("div","work"); m.slot=el("div","slot","one element at a time"); m.read=el("div","read"); w.appendChild(m.slot); w.appendChild(m.read); z.appendChild(w);
+      if(K.mem){ var mm=el("div","mem",K.mem); m.row=el("div","row"); mm.appendChild(m.row); z.appendChild(mm); }
+      if(K.init) K.init(m.st,m);
+      box.appendChild(z); machs.push(m);
+    });
+    $("#outHd").textContent=tab.out==="console"?"the console":"the result";
+    $("#outCode").textContent=tab.out==="list"?".toList()":"";
+    $("#outCode").hidden=tab.out!=="list";
+    out.innerHTML="";
+    if(tab.out==="console"){ out.appendChild(el("div","con")); }
+    else out.appendChild(el("span","none",tab.out==="list"?"nothing yet":"not known until the stream ends"));
+    buttons();
+    say(tab.intro,"",statement());
+  }
+  function emit(from,v){
+    return fly(from,out,String(v)).then(function(){
+      var no=out.querySelector(".none"); if(no) no.remove();
+      out.appendChild(el("span","chip ok in",String(v))); outVals.push(v);
+    });
+  }
+  /* one element through every method of the tab, in order */
+  function send(my){
+    var n=i, chipEl=src.children[n], v=tab.data[n], from=chipEl, s=0;
+    i=n+1; chipEl.classList.add("cur");
+    function stage(){
+      if(my!==run) return;
+      if(s>=machs.length) return emit(from,v);
+      var m=machs[s];
+      return fly(from,m.slot,String(v)).then(function(){
+        if(my!==run) return;
+        if(s===0){ chipEl.classList.remove("cur"); chipEl.classList.add("sent"); }
+        var c=el("span","chip cur",String(v)); m.slot.textContent=""; m.slot.appendChild(c);
+        var r=m.k.run(v,m.st,m);
+        m.read.textContent=r.read; var rs=el("span","r"+(r.ok===true?" t":r.ok===false?" f":""),r.res); m.read.appendChild(rs);
+        say(r.txt,r.tone,statement());
+        if(r.print!==undefined){ out.querySelector(".con").appendChild(el("div","",r.print)); }
+        return wait(560).then(function(){
+          if(my!==run) return;
+          if(r.changed){ c.textContent=String(r.out); c.classList.add("new"); return wait(380); }
+        }).then(function(){
+          if(my!==run) return;
+          if(r.held||r.out===null||r.out===undefined){
+            c.classList.add("drop");
+            return wait(300).then(function(){ if(my===run) m.slot.textContent="one element at a time"; return "stop"; });
+          }
+          v=r.out; from=c; s++;
+          var nx=stage();
+          return Promise.resolve(nx).then(function(x){ if(my===run) m.slot.textContent="one element at a time"; return x; });
+        });
+      });
+    }
+    return Promise.resolve(stage());
+  }
+  /* after the last element: the methods that waited give their result */
+  function finish(my){
+    var m=machs[machs.length-1], chain=Promise.resolve();
+    if(tab.id==="sorted"){
+      var sorted=m.st.hold.slice().sort();
+      chain=chain.then(function(){
+        m.row.innerHTML=""; sorted.forEach(function(v){m.row.appendChild(el("span","chip new in",v));});
+        m.read.textContent="all "+sorted.length+" have arrived"; m.read.appendChild(el("span","r t","in order now"));
+        say("The last one is in. Now sorted knows the order, and they leave one by one.","g",statement());
+        return wait(900);
+      });
+      sorted.forEach(function(v,n){
+        chain=chain.then(function(){ if(my!==run) return; var c=m.row.children[n]; return emit(c,v).then(function(){ c.classList.add("sent"); }); });
+      });
+    } else if(tab.out==="value"){
+      var val=tab.id==="count"?m.st.n:tab.id==="reduceS"?'"'+m.st.total+'"':m.st.total;
+      chain=chain.then(function(){
+        return fly(m.big,out,String(val)).then(function(){
+          if(my!==run) return;
+          out.innerHTML=""; var r=el("div","res",tab.label); r.appendChild(el("span","big in"+(tab.id==="reduceS"?" txt":""),String(val))); out.appendChild(r); outVals=val;
+        });
+      });
+    }
+    return chain.then(function(){
+      if(my!==run) return;
+      done=true;
+      var res=tab.out==="list"?"   // ["+outVals.join(", ")+"]":tab.out==="value"?"   // "+outVals:"";
+      say(tab.end(outVals),"g",statement()+res);
+    });
+  }
+  function go(rest){
+    if(busy||done) return;
+    var my=run; busy=true; buttons();
+    var chain=send(my);
+    if(rest) for(var n=i;n<tab.data.length;n++) chain=chain.then(function(){ if(my===run) return wait(140).then(function(){ if(my===run) return send(my); }); });
+    chain.then(function(){
+      if(my!==run) return;
+      if(i>=tab.data.length) return finish(my);
+    }).then(function(){ if(my!==run) return; busy=false; buttons(); });
+  }
+  $("#board").addEventListener("click",function(e){
+    var t=e.target.closest(".tab");
+    if(t){ var id=t.getAttribute("data-t"); tab=TABS.filter(function(x){return x.id===id;})[0]; build(); return; }
+    if(e.target.closest("#one")){ go(false); return; }
+    if(e.target.closest("#all")) go(true);
+  });
+  $("#bReset").addEventListener("click",build);
+  build();
+
+  /* ambient canvas */
+  var cv=$("#amb"),ctx=cv.getContext&&cv.getContext("2d"),parts=[];
+  function sizeC(){if(!ctx)return;cv.width=innerWidth;cv.height=innerHeight;}
+  function initParts(){parts=[];for(var i=0;i<46;i++)parts.push({x:Math.random(),y:Math.random(),
+    r:Math.random()*1.6+.3,s:Math.random()*.02+.004,o:Math.random()*.4+.1});}
+  function drawC(){if(!ctx)return;ctx.clearRect(0,0,cv.width,cv.height);
+    parts.forEach(function(p){p.y-=p.s/60;if(p.y<-.02)p.y=1.02;
+      ctx.beginPath();ctx.arc(p.x*cv.width,p.y*cv.height,p.r,0,7);
+      ctx.fillStyle="rgba(140,170,255,"+p.o+")";ctx.fill();});
+    requestAnimationFrame(drawC);}
+  if(ctx&&!reduce){sizeC();initParts();drawC();addEventListener("resize",sizeC);}
+})();
+</script>
+<script src="../manifest.js"></script>
+<script src="../../assets/rail.js"></script>
+<script>Rail.render(document.getElementById("rail"),{week:7,kind:"visuals",current:"19-stream-methods-one-at-a-time"});</script>
+</body>
+</html>

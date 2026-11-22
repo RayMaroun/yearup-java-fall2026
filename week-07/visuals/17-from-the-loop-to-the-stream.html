@@ -1,0 +1,358 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>From the Loop to the Stream | Week 7 Visual Hub</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Sora:wght@500;700&family=Inter:wght@400;500&family=JetBrains+Mono:wght@400;500&display=swap">
+<style>
+  :root{
+    --bg:#080c17; --bg2:#0c1428; --surface:rgba(255,255,255,.045); --line:rgba(255,255,255,.09);
+    --ink:#eef2fb; --muted:#8496b6; --accent:#6ea0ff; --accent2:#8b7bff; --good:#46d98a; --warn:#ff6a6a;
+    --gold:#ffc862; --disp:'Sora',system-ui,sans-serif; --body:'Inter',system-ui,sans-serif;
+    --mono:'JetBrains Mono',ui-monospace,monospace;
+  }
+  *{box-sizing:border-box}
+  body{margin:0;min-height:100vh;color:var(--ink);font-family:var(--body);
+    background:radial-gradient(1200px 700px at 70% -10%,#141d38 0%,transparent 55%),
+               radial-gradient(900px 600px at 10% 110%,#161233 0%,transparent 50%),#080c17;
+    overflow-x:hidden}
+  #amb{position:fixed;inset:0;z-index:0;pointer-events:none;opacity:.6}
+  .back{position:relative;z-index:2;display:block;max-width:1120px;margin:0 auto;padding:26px 24px 0;
+    width:100%;font-family:var(--mono);font-size:.8rem;letter-spacing:.04em;color:var(--muted);
+    text-decoration:none;transition:color .15s}
+  .back:hover{color:var(--accent)}
+  .wrap{position:relative;z-index:1;max-width:1120px;margin:0 auto;padding:22px 24px 70px}
+  .tag{font-family:var(--mono);font-size:.72rem;letter-spacing:.22em;text-transform:uppercase;color:var(--accent);margin:0 0 14px}
+  h1{font-family:var(--disp);font-weight:700;font-size:clamp(2.3rem,6vw,3.6rem);line-height:1;margin:0 0 12px;
+    letter-spacing:-.03em;background:linear-gradient(180deg,#fff,#b9c6e6);-webkit-background-clip:text;
+    background-clip:text;color:transparent}
+  .lede{color:var(--muted);max-width:64ch;font-size:1.05rem;margin:0 0 26px;line-height:1.5}
+  .lede b{color:var(--ink)}
+  code{font-family:var(--mono);font-size:.92em;color:#bcd0ff}
+
+  /* ---------- the stage IS the picture ---------- */
+  .stage{position:relative;background:linear-gradient(180deg,rgba(255,255,255,.03),rgba(255,255,255,.01));
+    border:1px solid var(--line);border-radius:24px;padding:22px;
+    box-shadow:0 1px 0 rgba(255,255,255,.06) inset,0 30px 80px -30px rgba(0,0,0,.8)}
+  [hidden]{display:none!important}
+  .hd{display:block;font-family:var(--mono);font-size:.62rem;letter-spacing:.16em;text-transform:uppercase;color:var(--muted);margin:0 0 8px}
+
+  /* two lanes: the loop on top, the pipeline below */
+  #board{position:relative}
+  .lane{padding:14px 16px 16px;border-radius:18px;border:1px solid var(--line);background:rgba(6,10,20,.5)}
+  .lane + .lane{margin-top:12px}
+  .lane.pipeL{border-color:rgba(110,160,255,.4);background:rgba(110,160,255,.04)}
+  .lhead{display:flex;flex-wrap:wrap;gap:10px;align-items:center;margin-bottom:12px}
+  .lhead h2{font-family:var(--disp);font-weight:700;font-size:1.05rem;margin:0;color:#fff}
+  .lhead span{font-size:.86rem;color:var(--muted)}
+  .lhead .step{margin-left:auto}
+  @media (max-width:700px){.lhead .step{margin-left:0;width:100%}}
+  .track{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1.5fr) minmax(0,1fr);gap:14px;align-items:start}
+  @media (max-width:860px){.track{grid-template-columns:1fr}}
+  .part .hd{margin:0 0 4px}
+  .code{font-family:var(--mono);font-size:.78rem;line-height:1.45;color:#bcd0ff;overflow-wrap:anywhere;min-height:2.5em;margin-bottom:8px}
+  .code b{color:var(--gold);font-weight:500}
+  .row{display:flex;flex-wrap:wrap;gap:6px;min-height:84px;align-content:flex-start}
+  .chip{font-family:var(--mono);font-size:.82rem;padding:7px 10px;border-radius:11px;border:1px solid var(--line);background:rgba(0,0,0,.4);
+    color:var(--ink);white-space:nowrap;transition:opacity .3s,border-color .3s,background .3s}
+  .chip i{font-style:normal;color:var(--gold);margin-left:6px}
+  .chip.cur{border-color:var(--gold);background:rgba(255,200,98,.12)}
+  .chip.t{border-color:rgba(70,217,138,.55)} .chip.f{opacity:.4}
+  .chip.in{animation:land .35s ease} .chip.say{border-color:var(--gold)}
+  @keyframes land{from{transform:scale(.85);opacity:.3}to{transform:none;opacity:1}}
+  .fly{position:absolute;z-index:5;margin:0;pointer-events:none;border-color:var(--gold);background:#1a2238;
+    box-shadow:0 10px 30px -10px rgba(0,0,0,.9);transition-property:left,top,opacity;transition-timing-function:cubic-bezier(.45,0,.3,1)}
+  .fly.bad{border-color:var(--warn);opacity:0}
+  .step{font-family:var(--mono);font-size:.84rem;padding:10px 14px;border-radius:10px;cursor:pointer;
+    border:1px solid rgba(255,200,98,.45);background:rgba(255,200,98,.06);color:#ffcb6b;transition:.15s}
+  .step:hover{border-color:var(--gold);background:rgba(255,200,98,.14)}
+  .step:disabled{opacity:.4;cursor:default;border-color:var(--line);background:transparent}
+
+  /* the loop: no pipe, every step is yours */
+  .hand{position:relative;display:flex;align-items:center;justify-content:center;height:64px}
+  .hand:before{content:"";position:absolute;left:0;right:0;top:50%;border-top:2px dashed rgba(132,150,182,.35)}
+  .ifbox{position:relative;font-family:var(--mono);font-size:.9rem;padding:14px 26px;border-radius:12px;border:1px solid rgba(255,200,98,.55);
+    background:#141a2c;color:var(--gold)}
+  /* the stream: a real pipe, the filter sits inside it */
+  .pipe{position:relative;height:64px;border-radius:999px;border:1px solid rgba(110,160,255,.55);
+    background:linear-gradient(180deg,rgba(110,160,255,.22),rgba(110,160,255,.05) 45%,rgba(110,160,255,.18));
+    box-shadow:0 0 30px -12px rgba(110,160,255,.9) inset}
+  .pipe .end{position:absolute;top:50%;width:2px;height:2px}
+  .pipe .end.a{left:9%} .pipe .end.b{left:91%}
+  .ring{position:absolute;left:50%;top:-9px;bottom:-9px;width:92px;margin-left:-46px;border-radius:16px;border:2px solid var(--gold);
+    background:rgba(20,26,44,.86);display:flex;align-items:center;justify-content:center;font-family:var(--mono);font-size:.84rem;color:var(--gold);
+    transition:box-shadow .25s,border-color .25s}
+  .ring.t{border-color:var(--good);box-shadow:0 0 26px -6px rgba(70,217,138,.9)}
+  .ring.f{border-color:var(--warn);box-shadow:0 0 26px -6px rgba(255,106,106,.9)}
+  .ifbox.t{border-color:var(--good);color:var(--good)} .ifbox.f{border-color:var(--warn);color:#ff9d9d}
+  .read{font-family:var(--mono);font-size:.76rem;color:var(--muted);text-align:center;min-height:1.5em;margin-top:14px}
+  .read b{font-weight:500} .read b.t{color:var(--good)} .read b.f{color:#ff9d9d}
+  .con{font-family:var(--mono);font-size:.66rem;line-height:1.6;color:#c3e88d;background:rgba(0,0,0,.45);border:1px solid var(--line);
+    border-radius:10px;padding:7px 10px;overflow-wrap:anywhere}
+  /* the third lane: print the new list, by hand or with forEach */
+  .lane.dim .two{opacity:.35;pointer-events:none}
+  .two{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr);gap:14px;transition:opacity .3s}
+  @media (max-width:860px){.two{grid-template-columns:1fr}}
+  .side{padding:12px;border-radius:14px;border:1px solid var(--line);background:rgba(0,0,0,.2);min-width:0}
+  .side.fe{border-color:rgba(110,160,255,.4);background:rgba(110,160,255,.05)}
+  .side .lhead{margin-bottom:8px} .side .lhead h2{font-size:.92rem}
+  .side .row{min-height:38px}
+  .side .code{min-height:3.9em}
+  .mid{display:flex;justify-content:center;padding:10px 0 12px}
+  .side.fe .ifbox{border-width:2px;border-color:var(--gold);border-radius:16px}
+  .con{margin-top:0;min-height:5.6em}
+
+  /* the one sentence */
+  .caption{display:flex;gap:14px;align-items:flex-start;margin:18px 2px 0;padding-top:16px;border-top:1px solid var(--line)}
+  .caption .t{flex:1;min-width:0;font-size:1.05rem;line-height:1.55;color:var(--ink);padding-left:16px;border-left:3px solid var(--accent);transition:border-color .3s}
+  .caption .t .line{display:block;margin-top:6px;font-family:var(--mono);font-size:.8rem;color:#bcd0ff;opacity:.9;overflow-wrap:anywhere}
+  .caption.y .t{border-left-color:var(--gold)} .caption.g .t{border-left-color:var(--good)} .caption.w .t{border-left-color:var(--warn)}
+  .caption.w .t .line{color:#ffb0b0}
+  .caption b.a{color:var(--accent)} .caption b.y{color:var(--gold)} .caption b.g{color:var(--good)} .caption b.w{color:var(--warn)}
+  .reset{font-family:var(--body);font-weight:500;font-size:.84rem;padding:8px 14px;border-radius:11px;cursor:pointer;
+    border:1px solid var(--line);background:transparent;color:var(--muted);transition:.15s;flex-shrink:0}
+  .reset:hover{border-color:var(--accent);color:var(--accent)}
+  button:focus-visible,input:focus-visible{outline:2px solid var(--accent);outline-offset:2px}
+
+  .take{margin-top:22px;background:linear-gradient(180deg,rgba(110,160,255,.08),rgba(139,123,255,.04));
+    border:1px solid var(--line);border-left:3px solid var(--accent);border-radius:12px;padding:16px 18px}
+  .take .tk{font-family:var(--mono);font-size:.66rem;letter-spacing:.14em;text-transform:uppercase;color:var(--accent);margin:0 0 8px}
+  .take p{margin:0;font-size:.95rem;color:var(--ink);line-height:1.55}
+  .take b{color:#fff}
+  @media (prefers-reduced-motion:reduce){*{animation-duration:.01ms!important;transition-duration:.01ms!important;animation-delay:0s!important;transition-delay:0s!important}#amb{display:none}}
+</style>
+</head>
+<body>
+<a class="back" href="../index.html#17-from-the-loop-to-the-stream">&#8592; Week 7 index</a>
+<canvas id="amb"></canvas>
+<div class="wrap">
+  <p class="tag">Workbook 6a &middot; Section 4-2 &middot; Lambda Expressions</p>
+  <h1>From the Loop to the Stream</h1>
+  <p class="lede"><b>The same search twice: carried by hand in a loop, then flowing through a pipeline.</b></p>
+
+  <div class="stage">
+    <div id="board">
+      <div class="lane">
+        <div class="lhead"><h2>The loop</h2><span>you take each employee, test it and add it yourself</span>
+          <button class="step" id="goL">Next pass</button></div>
+        <div class="track">
+          <div class="part"><p class="hd">the list</p><div class="code">for (Employee employee : employees)</div><div class="row" id="srcL"></div></div>
+          <div class="part"><p class="hd">the test</p><div class="code">if (<b>employee.getAge() &lt; 40</b>)</div>
+            <div class="hand"><div class="ifbox" id="ifL">if</div></div><div class="read" id="readL"></div></div>
+          <div class="part"><p class="hd">the new list</p><div class="code">matchingEmployees.add(employee);</div><div class="row" id="dstL"></div></div>
+        </div>
+      </div>
+      <div class="lane pipeL">
+        <div class="lhead"><h2>The stream</h2><span>the data flows through a pipeline, you write only the test</span>
+          <button class="step" id="goS">Run the stream</button></div>
+        <div class="track">
+          <div class="part"><p class="hd">source &middot; data at rest</p><div class="code">employees.stream()</div><div class="row" id="srcS"></div></div>
+          <div class="part"><p class="hd">transformation &middot; data in transit</p><div class="code">.filter(employee -&gt; <b>employee.getAge() &lt; 40</b>)</div>
+            <div class="pipe"><span class="end a" id="inS"></span><div class="ring" id="ringS">filter</div><span class="end b" id="outS"></span></div>
+            <div class="read" id="readS"></div></div>
+          <div class="part"><p class="hd">destination &middot; data at rest</p><div class="code">.toList()</div><div class="row" id="dstS"></div></div>
+        </div>
+      </div>
+      <div class="lane dim" id="laneP">
+        <div class="lhead"><h2>Print the new list</h2><span id="hintP">fill the new list first, with the loop or the stream above</span></div>
+        <div class="two">
+          <div class="side">
+            <div class="lhead"><h2>The loop that prints</h2><button class="step" id="goPL">Next pass</button></div>
+            <div class="code">for (Employee matchingEmployee : matchingEmployees) { <b>System.out.println(matchingEmployee);</b> }</div>
+            <div class="row" id="srcPL"></div>
+            <div class="mid"><div class="ifbox" id="boxPL">println</div></div>
+            <div class="con" id="conPL"></div>
+          </div>
+          <div class="side fe">
+            <div class="lhead"><h2>forEach</h2><button class="step" id="goPF">Run forEach</button></div>
+            <div class="code">matchingEmployees.forEach(matchingEmployee -&gt; <b>System.out.println(matchingEmployee)</b>);</div>
+            <div class="row" id="srcPF"></div>
+            <div class="mid"><div class="ifbox" id="boxPF">forEach</div></div>
+            <div class="con" id="conPF"></div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="caption" id="caption">
+      <div class="t" id="status"></div>
+      <button class="reset" id="bReset">Reset</button>
+    </div>
+  </div>
+
+  <div class="take">
+    <p class="tk">The one idea</p>
+    <p><b>A stream is a pipeline.</b> The data leaves the source and the work happens while it travels: here <code>filter</code>, with your lambda as the test. <code>toList</code> takes what reaches the end and saves it in a new list, the destination. The loop gives the same result, but you write every step yourself. <code>forEach</code> does the same for the loop that prints.</p>
+  </div>
+  <div id="rail"></div>
+</div>
+<script>
+(function(){
+  "use strict";
+  var $=function(s){return document.querySelector(s);};
+  var reduce=matchMedia("(prefers-reduced-motion: reduce)").matches;
+  var status=$("#status"),caption=$("#caption");
+  /* the one sentence: html for the prose, plain text for the Java statement */
+  function say(html,tone,line){
+    caption.className="caption"+(tone?" "+tone:"");
+    status.innerHTML=html;
+    if(line){ var sp=document.createElement("span"); sp.className="line"; sp.textContent=line; status.appendChild(sp); }
+  }
+  function wait(ms){return new Promise(function(r){setTimeout(r,reduce?0:ms);});}
+
+  var EMP=[["Leo",55,"Maroun"],["Potato",35,"Sensei"],["John",26,"Doe"],["Raymond",25,"Maroun"]];
+  var STREAM="employees.stream().filter(employee -> employee.getAge() < 40).toList()";
+  var board=$("#board"), run=0, iL=0, busyL=false, busyS=false, doneS=false, hitsL=0, hitsS=[];
+  var HITS=EMP.filter(function(e){return e[1]<40;}), openP=false, iP=0, busyP=false, busyF=false, doneF=false;
+
+  function chip(e){ var c=document.createElement("span"); c.className="chip"; c.textContent=e[0];
+    var a=document.createElement("i"); a.textContent=String(e[1]); c.appendChild(a); return c; }
+  function young(e){return e[1]<40;}
+  /* a travelling copy, placed inside the board so it follows the page when it scrolls */
+  function center(el){ var b=board.getBoundingClientRect(), r=el.getBoundingClientRect(); return [r.left-b.left+r.width/2, r.top-b.top+r.height/2]; }
+  function launch(e,from){ var g=chip(e); g.className="chip fly"; board.appendChild(g);
+    var p=center(from); g.style.transitionDuration="0s"; g.style.left=(p[0]-g.offsetWidth/2)+"px"; g.style.top=(p[1]-g.offsetHeight/2)+"px"; void g.offsetWidth; return g; }
+  function move(g,to,ms,dy){ var p=center(to); g.style.transitionDuration=(reduce?0:ms)+"ms";
+    g.style.left=(p[0]-g.offsetWidth/2)+"px"; g.style.top=(p[1]-g.offsetHeight/2+(dy||0))+"px"; return wait(ms); }
+  function mark(el,r){ el.classList.remove("t","f"); void el.offsetWidth; el.classList.add(r?"t":"f"); }
+  function readout(el,e,r){ el.innerHTML=""; el.appendChild(document.createTextNode(e[1]+" < 40 is "));
+    var b=document.createElement("b"); b.className=r?"t":"f"; b.textContent=String(r); el.appendChild(b); }
+
+  function buttons(){
+    var endL=iL>=EMP.length;
+    $("#goL").disabled=busyL||endL; $("#goL").textContent=endL?"The loop is over":"Next pass";
+    $("#goS").disabled=busyS||doneS; $("#goS").textContent=doneS?"The stream is finished":"Run the stream";
+    if(!openP&&(endL||doneS)){ openP=true; $("#laneP").classList.remove("dim"); $("#hintP").textContent="the same list, printed two ways";
+      ["#srcPL","#srcPF"].forEach(function(s){ HITS.forEach(function(e){ var c=chip(e); c.classList.add("in"); $(s).appendChild(c); }); }); }
+    var endP=iP>=HITS.length;
+    $("#goPL").disabled=!openP||busyP||endP; $("#goPL").textContent=endP?"The loop is over":"Next pass";
+    $("#goPF").disabled=!openP||busyF||doneF; $("#goPF").textContent=doneF?"forEach is finished":"Run forEach";
+  }
+  function text(e){return "Employee{firstName='"+e[0]+"', lastName='"+e[2]+"', age="+e[1]+"}";}
+  /* one employee from the new list to the console */
+  function show(my,n,src,box,con){
+    var e=HITS[n], from=$(src).children[n], g=launch(e,from);
+    from.classList.add("cur");
+    return move(g,$(box),480).then(function(){
+      if(my!==run) return;
+      mark($(box),true); var d=document.createElement("div"); d.textContent=text(e); $(con).appendChild(d);
+      return wait(420);
+    }).then(function(){ g.remove(); if(my!==run) return; from.classList.remove("cur"); from.classList.add("f"); $(box).classList.remove("t"); });
+  }
+  function printL(){
+    if(!openP||busyP||iP>=HITS.length) return;
+    var my=run, n=iP, e=HITS[n]; busyP=true; buttons();
+    say("Pass "+(n+1)+": you take <b class=\"y\">"+e[0]+"</b> from the new list and print it yourself.","y","System.out.println(matchingEmployee);   // matchingEmployee is "+e[0]);
+    show(my,n,"#srcPL","#boxPL","#conPL").then(function(){
+      if(my!==run) return;
+      iP=n+1; busyP=false; buttons();
+      if(iP>=HITS.length) say("Three passes, three lines. You wrote the loop and the println. Now run forEach next to it.","g",
+        "for (Employee matchingEmployee : matchingEmployees) { System.out.println(matchingEmployee); }");
+    });
+  }
+  function printF(){
+    if(!openP||busyF||doneF) return;
+    var my=run, all=[]; busyF=true; buttons();
+    say("<b class=\"a\">forEach</b> takes each employee of the list in turn and calls your lambda with it. The lambda prints.","","matchingEmployees.forEach(matchingEmployee -> System.out.println(matchingEmployee));");
+    HITS.forEach(function(e,n){ all.push(wait(n*800).then(function(){ if(my===run) return show(my,n,"#srcPF","#boxPF","#conPF"); })); });
+    Promise.all(all).then(function(){
+      if(my!==run) return;
+      busyF=false; doneF=true; buttons();
+      say("The same three lines as the loop that prints. forEach did the looping, and the only thing you wrote is what to do with each employee.","g",
+        "matchingEmployees.forEach(matchingEmployee -> System.out.println(matchingEmployee));");
+    });
+  }
+  /* the loop: one pass per press, every step is yours */
+  function passL(){
+    if(busyL||iL>=EMP.length) return;
+    var my=run, n=iL, e=EMP[n], r=young(e), from=$("#srcL").children[n], box=$("#ifL");
+    busyL=true; buttons(); from.classList.add("cur");
+    var g=launch(e,from);
+    say("Pass "+(n+1)+": you take <b class=\"y\">"+e[0]+"</b> out of the list and bring it to the if.","y","for (Employee employee : employees)   // employee is "+e[0]);
+    move(g,box,520).then(function(){
+      if(my!==run) return;
+      mark(box,r); readout($("#readL"),e,r);
+      say("The if tests "+e[0]+": "+e[1]+" < 40 is <b class=\""+(r?"g":"w")+"\">"+r+"</b>. "+(r?"So you add this employee to the new list.":"So you add nothing."),
+        r?"g":"w","if (employee.getAge() < 40)   // "+r);
+      return wait(700);
+    }).then(function(){
+      if(my!==run) return;
+      from.classList.remove("cur"); from.classList.add(r?"t":"f");
+      if(!r){ g.classList.add("bad"); return move(g,box,380,46); }
+      return move(g,$("#dstL"),520).then(function(){ if(my!==run) return; var c=chip(e); c.classList.add("t","in"); $("#dstL").appendChild(c); hitsL++; });
+    }).then(function(){
+      if(my!==run) return;
+      g.remove(); box.classList.remove("t","f"); iL=n+1; busyL=false; buttons();
+      if(iL>=EMP.length) say("Four passes, and you wrote every step: the loop, the if, the add. "+hitsL+" employees are in the new list. Now run the stream.","g",
+        "matchingEmployees.size()   // "+hitsL);
+    });
+  }
+  /* the stream: everything flows, the filter works while the data is in transit */
+  function one(my,n){
+    var e=EMP[n], r=young(e), from=$("#srcS").children[n], ring=$("#ringS"), g=launch(e,from);
+    from.classList.add("f");
+    return move(g,$("#inS"),420).then(function(){ if(my!==run) return; return move(g,ring,560); })
+    .then(function(){
+      if(my!==run) return;
+      mark(ring,r); readout($("#readS"),e,r);
+      say("In transit: the filter calls your lambda with <b class=\"y\">"+e[0]+"</b>. "+e[1]+" < 40 is <b class=\""+(r?"g":"w")+"\">"+r+"</b>, so "+e[0]+(r?" continues down the pipe.":" leaves the pipeline here."),
+        r?"g":"w","employee -> employee.getAge() < 40   // "+r);
+      return wait(520);
+    }).then(function(){
+      if(my!==run) return;
+      if(!r){ g.classList.add("bad"); return move(g,ring,420,62); }
+      return move(g,$("#outS"),560).then(function(){ if(my!==run) return; return move(g,$("#dstS"),420); })
+        .then(function(){ if(my!==run) return; var c=chip(e); c.classList.add("t","in"); $("#dstS").appendChild(c); hitsS.push(e); });
+    }).then(function(){ g.remove(); });
+  }
+  function runS(){
+    if(busyS||doneS) return;
+    var my=run, all=[]; busyS=true; buttons();
+    say("<b class=\"a\">stream()</b> lets the data leave the source and enter the pipeline. Watch what happens at the filter.","","employees.stream()");
+    EMP.forEach(function(e,n){ all.push(wait(n*1250).then(function(){ if(my===run) return one(my,n); })); });
+    Promise.all(all).then(function(){
+      if(my!==run) return;
+      $("#ringS").classList.remove("t","f"); busyS=false; doneS=true; buttons();
+      say("<b class=\"g\">toList</b> took what reached the end of the pipeline and saved it in a new list. The same "+hitsS.length+" employees as the loop, and the only thing you wrote is the test.","g",
+        STREAM+"   // "+hitsS.length+" employees");
+    });
+  }
+  function reset(){
+    run++; iL=0; busyL=false; busyS=false; doneS=false; hitsL=0; hitsS=[];
+    var g=document.querySelectorAll(".fly"); for(var n=0;n<g.length;n++) g[n].remove();
+    ["#srcL","#srcS"].forEach(function(s){ $(s).innerHTML=""; EMP.forEach(function(e){$(s).appendChild(chip(e));}); });
+    $("#dstL").innerHTML=""; $("#dstS").innerHTML=""; $("#readL").textContent=""; $("#readS").textContent="";
+    $("#ifL").classList.remove("t","f"); $("#ringS").classList.remove("t","f");
+    openP=false; iP=0; busyP=false; busyF=false; doneF=false; $("#laneP").classList.add("dim"); $("#hintP").textContent="fill the new list first, with the loop or the stream above";
+    ["#srcPL","#srcPF","#conPL","#conPF"].forEach(function(s){ $(s).innerHTML=""; }); $("#boxPL").classList.remove("t"); $("#boxPF").classList.remove("t");
+    buttons();
+    say("The same four employees, twice, and the same question: who is under 40? On top you do it with a loop, one pass per press. Below, the list flows through a pipeline.","",STREAM);
+  }
+  board.addEventListener("click",function(e){
+    if(e.target.closest("#goL")){ passL(); return; }
+    if(e.target.closest("#goS")){ runS(); return; }
+    if(e.target.closest("#goPL")){ printL(); return; }
+    if(e.target.closest("#goPF")) printF();
+  });
+  $("#bReset").addEventListener("click",reset);
+  reset();
+
+  /* ambient canvas */
+  var cv=$("#amb"),ctx=cv.getContext&&cv.getContext("2d"),parts=[];
+  function sizeC(){if(!ctx)return;cv.width=innerWidth;cv.height=innerHeight;}
+  function initParts(){parts=[];for(var i=0;i<46;i++)parts.push({x:Math.random(),y:Math.random(),
+    r:Math.random()*1.6+.3,s:Math.random()*.02+.004,o:Math.random()*.4+.1});}
+  function drawC(){if(!ctx)return;ctx.clearRect(0,0,cv.width,cv.height);
+    parts.forEach(function(p){p.y-=p.s/60;if(p.y<-.02)p.y=1.02;
+      ctx.beginPath();ctx.arc(p.x*cv.width,p.y*cv.height,p.r,0,7);
+      ctx.fillStyle="rgba(140,170,255,"+p.o+")";ctx.fill();});
+    requestAnimationFrame(drawC);}
+  if(ctx&&!reduce){sizeC();initParts();drawC();addEventListener("resize",sizeC);}
+})();
+</script>
+<script src="../manifest.js"></script>
+<script src="../../assets/rail.js"></script>
+<script>Rail.render(document.getElementById("rail"),{week:7,kind:"visuals",current:"17-from-the-loop-to-the-stream"});</script>
+</body>
+</html>

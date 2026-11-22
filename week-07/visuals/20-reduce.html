@@ -1,0 +1,308 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>reduce, Piece by Piece | Week 7 Visual Hub</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Sora:wght@500;700&family=Inter:wght@400;500&family=JetBrains+Mono:wght@400;500&display=swap">
+<style>
+  :root{
+    --bg:#080c17; --bg2:#0c1428; --surface:rgba(255,255,255,.045); --line:rgba(255,255,255,.09);
+    --ink:#eef2fb; --muted:#8496b6; --accent:#6ea0ff; --accent2:#8b7bff; --good:#46d98a; --warn:#ff6a6a;
+    --gold:#ffc862; --disp:'Sora',system-ui,sans-serif; --body:'Inter',system-ui,sans-serif;
+    --mono:'JetBrains Mono',ui-monospace,monospace;
+  }
+  *{box-sizing:border-box}
+  body{margin:0;min-height:100vh;color:var(--ink);font-family:var(--body);
+    background:radial-gradient(1200px 700px at 70% -10%,#141d38 0%,transparent 55%),
+               radial-gradient(900px 600px at 10% 110%,#161233 0%,transparent 50%),#080c17;
+    overflow-x:hidden}
+  #amb{position:fixed;inset:0;z-index:0;pointer-events:none;opacity:.6}
+  .back{position:relative;z-index:2;display:block;max-width:1120px;margin:0 auto;padding:26px 24px 0;
+    width:100%;font-family:var(--mono);font-size:.8rem;letter-spacing:.04em;color:var(--muted);
+    text-decoration:none;transition:color .15s}
+  .back:hover{color:var(--accent)}
+  .wrap{position:relative;z-index:1;max-width:1120px;margin:0 auto;padding:22px 24px 70px}
+  .tag{font-family:var(--mono);font-size:.72rem;letter-spacing:.22em;text-transform:uppercase;color:var(--accent);margin:0 0 14px}
+  h1{font-family:var(--disp);font-weight:700;font-size:clamp(2.3rem,6vw,3.6rem);line-height:1;margin:0 0 12px;
+    letter-spacing:-.03em;background:linear-gradient(180deg,#fff,#b9c6e6);-webkit-background-clip:text;
+    background-clip:text;color:transparent}
+  .lede{color:var(--muted);max-width:64ch;font-size:1.05rem;margin:0 0 26px;line-height:1.5}
+  .lede b{color:var(--ink)}
+  code{font-family:var(--mono);font-size:.92em;color:#bcd0ff}
+
+  /* ---------- the stage IS the picture ---------- */
+  .stage{position:relative;background:linear-gradient(180deg,rgba(255,255,255,.03),rgba(255,255,255,.01));
+    border:1px solid var(--line);border-radius:24px;padding:22px;
+    box-shadow:0 1px 0 rgba(255,255,255,.06) inset,0 30px 80px -30px rgba(0,0,0,.8)}
+  [hidden]{display:none!important}
+  .hd{display:block;font-family:var(--mono);font-size:.62rem;letter-spacing:.16em;text-transform:uppercase;color:var(--muted);margin:0 0 8px}
+
+  #board{position:relative}
+  .top{display:flex;flex-wrap:wrap;gap:8px 18px;align-items:center;margin-bottom:14px}
+  .tabs,.starts{display:flex;flex-wrap:wrap;gap:6px;align-items:center}
+  .starts{margin-left:auto;font-family:var(--mono);font-size:.72rem;color:var(--muted)}
+  @media (max-width:760px){.starts{margin-left:0}}
+  .tab{font-family:var(--mono);font-size:.84rem;padding:9px 15px;border-radius:999px;cursor:pointer;border:1px solid var(--line);
+    background:transparent;color:var(--muted);transition:.15s}
+  .tab:hover{border-color:var(--accent);color:var(--ink)}
+  .tab.on{background:rgba(110,160,255,.2);border-color:var(--accent);color:#fff}
+  .sw{font-family:var(--mono);font-size:.78rem;padding:7px 11px;border-radius:10px;cursor:pointer;border:1px solid rgba(255,106,160,.45);
+    background:transparent;color:#ffb3cf;transition:.15s}
+  .sw:hover,.sw.on{background:rgba(255,106,160,.18);border-color:#ff6aa0;color:#fff}
+
+  /* the statement, with its four parts named */
+  .stmt{display:flex;flex-wrap:wrap;align-items:flex-start;gap:2px;padding:16px 16px 12px;border-radius:18px;border:1px solid var(--line);
+    background:rgba(6,10,20,.5);font-family:var(--mono);font-size:clamp(.82rem,1.6vw,1.12rem);line-height:1.5}
+  .stmt .x{color:var(--muted);padding:5px 0;white-space:pre}
+  .pt{display:flex;flex-direction:column;align-items:center;gap:4px;padding:5px 7px;border-radius:10px;border:1px solid transparent;transition:.25s}
+  .pt .c{white-space:pre}
+  .pt .l{font-size:.56em;letter-spacing:.08em;text-transform:uppercase;white-space:nowrap;opacity:.8}
+  .pt.s{color:#ff8fba} .pt.a{color:#8fb4ff} .pt.b{color:var(--gold)} .pt.r{color:#9fe3b6}
+  .pt.lit{background:rgba(255,255,255,.07);border-color:currentColor;box-shadow:0 0 24px -8px currentColor}
+
+  /* the list, then the two boxes the lambda works with */
+  .zone{margin-top:12px;padding:14px;border-radius:18px;border:1px solid var(--line);background:rgba(6,10,20,.5)}
+  .zone .hd{margin:0 0 8px}
+  .row{display:flex;flex-wrap:wrap;gap:8px;align-items:center;min-height:40px}
+  .chip{font-family:var(--mono);font-size:.92rem;padding:8px 13px;border-radius:11px;border:1px solid rgba(255,200,98,.45);background:rgba(0,0,0,.35);
+    color:var(--gold);white-space:pre;transition:opacity .3s}
+  .chip.sent{opacity:.28}
+  .fly{position:absolute;z-index:5;margin:0;pointer-events:none;background:#1a2238;box-shadow:0 10px 30px -10px rgba(0,0,0,.9);
+    transition-property:left,top,opacity;transition-timing-function:cubic-bezier(.45,0,.3,1)}
+  .fly.s{border-color:#ff6aa0;color:#ff8fba} .fly.r{border-color:var(--good);color:#9fe3b6} .fly.a{border-color:var(--accent);color:#8fb4ff}
+  .calc{display:grid;grid-template-columns:minmax(0,1.25fr) 34px minmax(0,1fr) 34px minmax(0,1.25fr);gap:8px;align-items:stretch}
+  @media (max-width:760px){.calc{grid-template-columns:1fr}.sign{padding:0}}
+  .bx{border-radius:14px;padding:12px 14px;border:2px solid var(--line);background:rgba(255,255,255,.03);min-width:0;transition:border-color .3s,box-shadow .3s}
+  .bx .nm{font-family:var(--mono);font-size:.74rem;margin:0 0 2px} .bx .ds{font-size:.72rem;color:var(--muted);margin:0 0 8px}
+  .bx .val{font-family:var(--mono);font-weight:500;font-size:1.5rem;line-height:1.3;min-height:1.3em;white-space:pre-wrap;overflow-wrap:anywhere}
+  .bx.a{border-color:rgba(110,160,255,.55)} .bx.a .nm,.bx.a .val{color:#8fb4ff}
+  .bx.b{border-color:rgba(255,200,98,.5)} .bx.b .nm,.bx.b .val{color:var(--gold)}
+  .bx.r{border-color:rgba(70,217,138,.5)} .bx.r .nm,.bx.r .val{color:#9fe3b6}
+  .bx .eq{font-family:var(--mono);font-size:.78rem;color:var(--muted);min-height:1.4em;margin:4px 0 0;white-space:pre-wrap;overflow-wrap:anywhere}
+  .bx.lit{box-shadow:0 0 28px -8px currentColor} .bx.a.lit{box-shadow:0 0 28px -8px #6ea0ff} .bx.b.lit{box-shadow:0 0 28px -8px #ffc862} .bx.r.lit{box-shadow:0 0 28px -8px #46d98a}
+  .bx.pop .val{animation:land .35s ease}
+  @keyframes land{from{transform:scale(.8);opacity:.3}to{transform:none;opacity:1}}
+  .sign{display:flex;align-items:center;justify-content:center;font-family:var(--mono);font-size:1.5rem;color:var(--muted)}
+  .acts{display:flex;flex-wrap:wrap;gap:8px;align-items:center;margin-top:12px}
+  .step{font-family:var(--mono);font-size:.84rem;padding:10px 14px;border-radius:10px;cursor:pointer;
+    border:1px solid rgba(255,200,98,.45);background:rgba(255,200,98,.06);color:#ffcb6b;transition:.15s}
+  .step:hover{border-color:var(--gold);background:rgba(255,200,98,.14)}
+  .step:disabled{opacity:.4;cursor:default;border-color:var(--line);background:transparent}
+  .res{margin-left:auto;display:flex;align-items:baseline;gap:10px;font-family:var(--mono);font-size:.86rem;color:var(--muted);padding:8px 14px;border-radius:12px;
+    border:1px dashed var(--line);min-height:44px;transition:.3s}
+  .res b{font-weight:500;font-size:1.25rem;color:var(--good);white-space:pre}
+  .res.end{border:1px solid rgba(70,217,138,.7);box-shadow:0 0 26px -10px rgba(70,217,138,.8)}
+  .res.zero{border-color:var(--warn);box-shadow:0 0 26px -10px rgba(255,106,106,.8)} .res.zero b{color:#ff9d9d}
+  @media (max-width:760px){.res{margin-left:0;width:100%}}
+
+  /* the one sentence */
+  .caption{display:flex;gap:14px;align-items:flex-start;margin:18px 2px 0;padding-top:16px;border-top:1px solid var(--line)}
+  .caption .t{flex:1;min-width:0;font-size:1.05rem;line-height:1.55;color:var(--ink);padding-left:16px;border-left:3px solid var(--accent);transition:border-color .3s}
+  .caption .t .line{display:block;margin-top:6px;font-family:var(--mono);font-size:.8rem;color:#bcd0ff;opacity:.9;overflow-wrap:anywhere}
+  .caption.y .t{border-left-color:var(--gold)} .caption.g .t{border-left-color:var(--good)} .caption.w .t{border-left-color:var(--warn)}
+  .caption.w .t .line{color:#ffb0b0}
+  .caption b.a{color:var(--accent)} .caption b.y{color:var(--gold)} .caption b.g{color:var(--good)} .caption b.w{color:var(--warn)}
+  .reset{font-family:var(--body);font-weight:500;font-size:.84rem;padding:8px 14px;border-radius:11px;cursor:pointer;
+    border:1px solid var(--line);background:transparent;color:var(--muted);transition:.15s;flex-shrink:0}
+  .reset:hover{border-color:var(--accent);color:var(--accent)}
+  button:focus-visible,input:focus-visible{outline:2px solid var(--accent);outline-offset:2px}
+
+  .take{margin-top:22px;background:linear-gradient(180deg,rgba(110,160,255,.08),rgba(139,123,255,.04));
+    border:1px solid var(--line);border-left:3px solid var(--accent);border-radius:12px;padding:16px 18px}
+  .take .tk{font-family:var(--mono);font-size:.66rem;letter-spacing:.14em;text-transform:uppercase;color:var(--accent);margin:0 0 8px}
+  .take p{margin:0;font-size:.95rem;color:var(--ink);line-height:1.55}
+  .take b{color:#fff}
+  @media (prefers-reduced-motion:reduce){*{animation-duration:.01ms!important;transition-duration:.01ms!important;animation-delay:0s!important;transition-delay:0s!important}#amb{display:none}}
+</style>
+</head>
+<body>
+<a class="back" href="../index.html#20-reduce">&#8592; Week 7 index</a>
+<canvas id="amb"></canvas>
+<div class="wrap">
+  <p class="tag">Workbook 6a &middot; Section 4-3 &middot; Java Stream Methods</p>
+  <h1>reduce, Piece by Piece</h1>
+  <p class="lede"><b>Four parts, one value at the end. Press and follow each part as it is used.</b></p>
+
+  <div class="stage">
+    <div id="board">
+      <div class="top">
+        <div class="tabs" id="tabs"></div>
+        <div class="starts" id="starts"></div>
+      </div>
+      <div class="stmt" id="stmt"></div>
+      <div class="zone">
+        <p class="hd" id="listHd"></p>
+        <div class="row" id="src"></div>
+      </div>
+      <div class="zone">
+        <p class="hd">inside reduce &middot; the lambda runs once for each element</p>
+        <div class="calc">
+          <div class="bx a" id="bxA"><p class="nm" id="nmA"></p><p class="ds">the running result</p><div class="val" id="vA"></div></div>
+          <div class="sign" id="sign"></div>
+          <div class="bx b" id="bxB"><p class="nm" id="nmB"></p><p class="ds">the next element</p><div class="val" id="vB"></div></div>
+          <div class="sign">=</div>
+          <div class="bx r" id="bxR"><p class="nm">return</p><p class="ds">what the lambda gives back</p><div class="val" id="vR"></div><p class="eq" id="eq"></p></div>
+        </div>
+        <div class="acts">
+          <button class="step" id="one"></button>
+          <button class="step" id="all">Run the rest</button>
+          <div class="res" id="res"></div>
+        </div>
+      </div>
+    </div>
+    <div class="caption" id="caption">
+      <div class="t" id="status"></div>
+      <button class="reset" id="bReset">Reset</button>
+    </div>
+  </div>
+
+  <div class="take">
+    <p class="tk">The one idea</p>
+    <p><b>reduce turns a whole stream into one value.</b> It has a starting value and a lambda with two parameters: the running result and the next element. What the lambda returns becomes the running result for the next element. When the elements run out, the running result is the answer. A sum starts at 0, a product at 1, a text at <code>""</code>.</p>
+  </div>
+  <div id="rail"></div>
+</div>
+<script>
+(function(){
+  "use strict";
+  var $=function(s){return document.querySelector(s);};
+  var reduce=matchMedia("(prefers-reduced-motion: reduce)").matches;
+  var status=$("#status"),caption=$("#caption");
+  /* the one sentence: html for the prose, plain text for the Java statement */
+  function say(html,tone,line){
+    caption.className="caption"+(tone?" "+tone:"");
+    status.innerHTML=html;
+    if(line){ var sp=document.createElement("span"); sp.className="line"; sp.textContent=line; status.appendChild(sp); }
+  }
+  function wait(ms){return new Promise(function(r){setTimeout(r,reduce?0:ms);});}
+  function el(tag,cls,txt){ var d=document.createElement(tag); if(cls) d.className=cls; if(txt!==undefined) d.textContent=txt; return d; }
+  function show(v){return typeof v==="string"?'"'+v+'"':String(v);}
+  function esc(s){return s.replace(/&/g,"&amp;").replace(/</g,"&lt;");}
+
+  var EX=[
+    {id:"sum",name:"a sum",list:"numbers",data:[3,2,2,3,7,3,5],a:"sumTotal",b:"num",op:"+",body:"sumTotal + num",starts:[0,100],
+     f:function(a,b){return a+b;},expr:function(a,b){return a+" + "+b;},label:"int sum ="},
+    {id:"product",name:"a product",list:"numbers",data:[1,2,3,4,5],a:"sumTotal",b:"num",op:"*",body:"sumTotal * num",starts:[1,0],
+     f:function(a,b){return a*b;},expr:function(a,b){return a+" * "+b;},label:"int product ="},
+    {id:"words",name:"words",list:"words",data:["Potatoes","are","awesome"],a:"acc",b:"word",op:"+",body:'acc + word + " "',starts:["","Hey: "],
+     f:function(a,b){return a+b+" ";},expr:function(a,b){return '"'+a+'" + "'+b+'" + " "';},label:"String sentence ="}
+  ];
+  var ex=EX[0], start=ex.starts[0], acc=null, i=0, busy=false, run=0, done=false, board=$("#board");
+
+  function statement(){ return ex.list+".stream().reduce("+show(start)+", ("+ex.a+", "+ex.b+") -> "+ex.body+")"; }
+  function lit(ids){ var p=document.querySelectorAll(".pt,.bx"); for(var n=0;n<p.length;n++) p[n].classList.remove("lit");
+    ids.forEach(function(id){ var e=$(id); if(e) e.classList.add("lit"); }); }
+  function pop(id){ var b=$(id); b.classList.remove("pop"); void b.offsetWidth; b.classList.add("pop"); }
+  function center(e){ var b=board.getBoundingClientRect(), r=e.getBoundingClientRect(); return [r.left-b.left+r.width/2, r.top-b.top+r.height/2]; }
+  /* a value travels from one part to another */
+  function fly(from,to,txt,cls,ms){
+    if(reduce) return Promise.resolve();
+    var g=el("span","chip fly "+cls,txt); board.appendChild(g);
+    var p=center(from); g.style.transitionDuration="0s"; g.style.left=(p[0]-g.offsetWidth/2)+"px"; g.style.top=(p[1]-g.offsetHeight/2)+"px"; void g.offsetWidth;
+    var q=center(to); g.style.transitionDuration=ms+"ms"; g.style.left=(q[0]-g.offsetWidth/2)+"px"; g.style.top=(q[1]-g.offsetHeight/2)+"px";
+    return wait(ms).then(function(){ g.remove(); });
+  }
+  function buttons(){
+    $("#one").disabled=busy||done; $("#all").disabled=busy||done||acc===null;
+    $("#one").textContent=done?"Finished":acc===null?"Start: use the starting value":"Next element";
+  }
+  function build(){
+    run++; acc=null; i=0; busy=false; done=false;
+    var g=document.querySelectorAll(".fly"); for(var n=0;n<g.length;n++) g[n].remove();
+    var tb=$("#tabs"); tb.innerHTML="";
+    EX.forEach(function(x){ var b=el("button","tab"+(x===ex?" on":""),x.name); b.setAttribute("data-x",x.id); tb.appendChild(b); });
+    var st=$("#starts"); st.innerHTML=""; st.appendChild(el("span","","starting value"));
+    ex.starts.forEach(function(v,n){ var b=el("button","sw"+(v===start?" on":""),show(v)); b.setAttribute("data-s",n); st.appendChild(b); });
+    var s=$("#stmt"); s.innerHTML="";
+    function part(cls,id,code,label){ var p=el("span","pt "+cls); p.id=id; p.appendChild(el("span","c",code)); p.appendChild(el("span","l",label)); s.appendChild(p); }
+    s.appendChild(el("span","x",ex.list+".stream().reduce("));
+    part("s","pS",show(start),"starting value"); s.appendChild(el("span","x",", ("));
+    part("a","pA",ex.a,"running result"); s.appendChild(el("span","x",", "));
+    part("b","pB",ex.b,"next element"); s.appendChild(el("span","x",") -> "));
+    part("r","pR",ex.body,"what the lambda returns"); s.appendChild(el("span","x",")"));
+    $("#listHd").textContent="the list \u00b7 "+ex.list;
+    var src=$("#src"); src.innerHTML=""; ex.data.forEach(function(v){src.appendChild(el("span","chip",show(v)));});
+    $("#nmA").textContent=ex.a; $("#nmB").textContent=ex.b; $("#sign").textContent=ex.op;
+    $("#vA").textContent=""; $("#vB").textContent=""; $("#vR").textContent=""; $("#eq").textContent="";
+    var r=$("#res"); r.className="res"; r.innerHTML=""; r.appendChild(el("span","",ex.label)); r.appendChild(el("b","","?"));
+    lit([]); buttons();
+    say("reduce has four parts: a <b style=\"color:#ff8fba\">starting value</b>, the <b class=\"a\">running result</b>, the <b class=\"y\">next element</b>, and what the lambda <b class=\"g\">returns</b>. Press Start and follow each one.","",statement());
+  }
+  function begin(){
+    var my=run; busy=true; buttons(); lit(["#pS"]);
+    return fly($("#pS"),$("#vA"),show(start),"s",650).then(function(){
+      if(my!==run) return;
+      acc=start; $("#vA").textContent=show(acc); pop("#bxA"); lit(["#pS","#pA","#bxA"]);
+      say("Before any element moves, the <b style=\"color:#ff8fba\">starting value</b> "+esc(show(start))+" goes into <b class=\"a\">"+ex.a+"</b>. That is its first value.","",statement());
+      busy=false; buttons();
+    });
+  }
+  function next(my){
+    var n=i, v=ex.data[n], chipEl=$("#src").children[n], was=acc, out=ex.f(was,v);
+    i=n+1; lit(["#pB"]);
+    return fly(chipEl,$("#vB"),show(v),"",520).then(function(){
+      if(my!==run) return;
+      chipEl.classList.add("sent"); $("#vB").textContent=show(v); pop("#bxB"); lit(["#pA","#pB","#bxA","#bxB"]);
+      return wait(420);
+    }).then(function(){
+      if(my!==run) return;
+      $("#vR").textContent=show(out); $("#eq").textContent=ex.expr(was,v); pop("#bxR"); lit(["#pR","#bxR"]);
+      say("<b class=\"y\">"+ex.b+"</b> is "+esc(show(v))+" and <b class=\"a\">"+ex.a+"</b> is "+esc(show(was))+". The lambda returns <b class=\"g\">"+esc(show(out))+"</b>, and that goes back into "+ex.a+" for the next element.","g",
+        ex.expr(was,v)+"   // "+show(out));
+      return wait(650);
+    }).then(function(){
+      if(my!==run) return;
+      return fly($("#vR"),$("#vA"),show(out),"r",560);
+    }).then(function(){
+      if(my!==run) return;
+      acc=out; $("#vA").textContent=show(acc); pop("#bxA"); $("#vB").textContent=""; $("#vR").textContent=""; $("#eq").textContent=""; lit(["#pA","#bxA"]);
+    });
+  }
+  function finish(my){
+    return wait(350).then(function(){ if(my!==run) return; return fly($("#vA"),$("#res"),show(acc),"a",600); }).then(function(){
+      if(my!==run) return;
+      done=true; var r=$("#res"), zero=ex.id==="product"&&start===0;
+      r.querySelector("b").textContent=show(acc); r.classList.add(zero?"zero":"end"); lit([]);
+      var extra=zero?" It started at 0, and 0 times anything is 0, every time. <b class=\"w\">A product has to start at 1.</b>"
+        :start!==ex.starts[0]?" The starting value is part of the result: change it and the answer changes.":"";
+      say("No elements left. What is in <b class=\"a\">"+ex.a+"</b> leaves reduce as the result: "+esc(show(acc))+"."+extra,zero?"w":"g",statement()+"   // "+show(acc));
+    });
+  }
+  function go(rest){
+    if(busy||done) return;
+    if(acc===null){ begin(); return; }
+    var my=run; busy=true; buttons();
+    var chain=next(my);
+    if(rest) for(var n=i;n<ex.data.length;n++) chain=chain.then(function(){ if(my===run) return wait(200).then(function(){ if(my===run) return next(my); }); });
+    chain.then(function(){ if(my!==run) return; if(i>=ex.data.length) return finish(my); })
+      .then(function(){ if(my!==run) return; busy=false; buttons(); });
+  }
+  board.addEventListener("click",function(e){
+    var t=e.target.closest(".tab"); if(t){ var id=t.getAttribute("data-x"); ex=EX.filter(function(x){return x.id===id;})[0]; start=ex.starts[0]; build(); return; }
+    var s=e.target.closest(".sw"); if(s){ start=ex.starts[+s.getAttribute("data-s")]; build(); return; }
+    if(e.target.closest("#one")){ go(false); return; }
+    if(e.target.closest("#all")) go(true);
+  });
+  $("#bReset").addEventListener("click",function(){ start=ex.starts[0]; build(); });
+  build();
+
+  /* ambient canvas */
+  var cv=$("#amb"),ctx=cv.getContext&&cv.getContext("2d"),parts=[];
+  function sizeC(){if(!ctx)return;cv.width=innerWidth;cv.height=innerHeight;}
+  function initParts(){parts=[];for(var i=0;i<46;i++)parts.push({x:Math.random(),y:Math.random(),
+    r:Math.random()*1.6+.3,s:Math.random()*.02+.004,o:Math.random()*.4+.1});}
+  function drawC(){if(!ctx)return;ctx.clearRect(0,0,cv.width,cv.height);
+    parts.forEach(function(p){p.y-=p.s/60;if(p.y<-.02)p.y=1.02;
+      ctx.beginPath();ctx.arc(p.x*cv.width,p.y*cv.height,p.r,0,7);
+      ctx.fillStyle="rgba(140,170,255,"+p.o+")";ctx.fill();});
+    requestAnimationFrame(drawC);}
+  if(ctx&&!reduce){sizeC();initParts();drawC();addEventListener("resize",sizeC);}
+})();
+</script>
+<script src="../manifest.js"></script>
+<script src="../../assets/rail.js"></script>
+<script>Rail.render(document.getElementById("rail"),{week:7,kind:"visuals",current:"20-reduce"});</script>
+</body>
+</html>

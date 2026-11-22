@@ -1,0 +1,276 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>One Line or Several Lines | Week 7 Visual Hub</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Sora:wght@500;700&family=Inter:wght@400;500&family=JetBrains+Mono:wght@400;500&display=swap">
+<style>
+  :root{
+    --bg:#080c17; --bg2:#0c1428; --surface:rgba(255,255,255,.045); --line:rgba(255,255,255,.09);
+    --ink:#eef2fb; --muted:#8496b6; --accent:#6ea0ff; --accent2:#8b7bff; --good:#46d98a; --warn:#ff6a6a;
+    --gold:#ffc862; --disp:'Sora',system-ui,sans-serif; --body:'Inter',system-ui,sans-serif;
+    --mono:'JetBrains Mono',ui-monospace,monospace;
+  }
+  *{box-sizing:border-box}
+  body{margin:0;min-height:100vh;color:var(--ink);font-family:var(--body);
+    background:radial-gradient(1200px 700px at 70% -10%,#141d38 0%,transparent 55%),
+               radial-gradient(900px 600px at 10% 110%,#161233 0%,transparent 50%),#080c17;
+    overflow-x:hidden}
+  #amb{position:fixed;inset:0;z-index:0;pointer-events:none;opacity:.6}
+  .back{position:relative;z-index:2;display:block;max-width:1120px;margin:0 auto;padding:26px 24px 0;
+    width:100%;font-family:var(--mono);font-size:.8rem;letter-spacing:.04em;color:var(--muted);
+    text-decoration:none;transition:color .15s}
+  .back:hover{color:var(--accent)}
+  .wrap{position:relative;z-index:1;max-width:1120px;margin:0 auto;padding:22px 24px 70px}
+  .tag{font-family:var(--mono);font-size:.72rem;letter-spacing:.22em;text-transform:uppercase;color:var(--accent);margin:0 0 14px}
+  h1{font-family:var(--disp);font-weight:700;font-size:clamp(2.3rem,6vw,3.6rem);line-height:1;margin:0 0 12px;
+    letter-spacing:-.03em;background:linear-gradient(180deg,#fff,#b9c6e6);-webkit-background-clip:text;
+    background-clip:text;color:transparent}
+  .lede{color:var(--muted);max-width:64ch;font-size:1.05rem;margin:0 0 26px;line-height:1.5}
+  .lede b{color:var(--ink)}
+  code{font-family:var(--mono);font-size:.92em;color:#bcd0ff}
+
+  /* ---------- the stage IS the picture ---------- */
+  .stage{position:relative;background:linear-gradient(180deg,rgba(255,255,255,.03),rgba(255,255,255,.01));
+    border:1px solid var(--line);border-radius:24px;padding:22px;
+    box-shadow:0 1px 0 rgba(255,255,255,.06) inset,0 30px 80px -30px rgba(0,0,0,.8)}
+  [hidden]{display:none!important}
+  .hd{display:block;font-family:var(--mono);font-size:.62rem;letter-spacing:.16em;text-transform:uppercase;color:var(--muted);margin:0 0 8px}
+
+  .tabs{display:flex;flex-wrap:wrap;gap:6px;margin-bottom:14px}
+  .tab{font-family:var(--mono);font-size:.82rem;padding:9px 15px;border-radius:999px;cursor:pointer;border:1px solid var(--line);
+    background:transparent;color:var(--muted);transition:.15s}
+  .tab:hover{border-color:var(--accent);color:var(--ink)}
+  .tab.on{background:rgba(110,160,255,.2);border-color:var(--accent);color:#fff}
+
+  /* the lambda, in the form you picked */
+  .box{padding:16px 18px;border-radius:18px;border:1px solid rgba(255,200,98,.5);background:rgba(255,200,98,.04)}
+  .forms{display:flex;flex-wrap:wrap;gap:6px;margin-bottom:14px}
+  .form{font-family:var(--mono);font-size:.8rem;padding:9px 14px;border-radius:10px;cursor:pointer;border:1px solid rgba(255,200,98,.4);
+    background:transparent;color:#ffcb6b;transition:.15s}
+  .form:hover{background:rgba(255,200,98,.12)}
+  .form.on{background:rgba(255,200,98,.2);border-color:var(--gold);color:#fff}
+  .lines{font-family:var(--mono);font-size:clamp(.8rem,1.45vw,1.04rem);line-height:1.5;min-height:10.6em}
+  .ln{display:flex;flex-wrap:wrap;align-items:baseline;gap:4px 18px;padding:3px 8px;border-radius:8px;border-left:3px solid transparent;transition:background .25s,border-color .25s}
+  .ln .src{white-space:pre-wrap;overflow-wrap:anywhere;color:#c9d4ea}
+  .ln .v{font-size:.82em;color:var(--gold);white-space:nowrap}
+  .ln .v.t{color:var(--good)} .ln .v.f{color:#ff9d9d}
+  .ln.hit{background:rgba(255,200,98,.08);border-left-color:var(--gold)}
+  .ln.skip .src{opacity:.4}
+  .p{color:#bcd0ff} .a{color:var(--gold)} .e{color:#c3e88d}
+  .k{color:#fff;background:rgba(255,106,106,.28);border-radius:5px;padding:0 4px;animation:pop .5s ease}
+  @keyframes pop{0%{transform:scale(1.9);background:rgba(255,106,106,.8)}100%{transform:none}}
+  .k{display:inline-block}
+  .need{display:flex;flex-wrap:wrap;gap:8px;margin-top:12px;font-family:var(--mono);font-size:.72rem;color:var(--muted);align-items:center}
+  .need span{padding:4px 10px;border-radius:999px;border:1px solid var(--line);transition:.3s}
+  .need span.yes{border-color:rgba(255,106,106,.6);color:#ffb0b0;background:rgba(255,106,106,.1)}
+  .need span.no{opacity:.45;text-decoration:line-through}
+
+  .hand{margin-top:18px}
+  .row{display:flex;flex-wrap:wrap;gap:8px}
+  .chip{font-family:var(--mono);font-size:.86rem;padding:8px 13px;border-radius:11px;border:1px solid var(--line);background:rgba(0,0,0,.35);
+    color:var(--ink);cursor:pointer;transition:border-color .2s,background .2s,transform .15s}
+  .chip:hover{border-color:rgba(110,160,255,.7);transform:translateY(-2px)}
+  .chip i{font-style:normal;color:var(--gold);margin-left:6px}
+  .chip.cur{border-color:var(--gold);background:rgba(255,200,98,.12)}
+  .con{font-family:var(--mono);font-size:.84rem;line-height:1.6;color:#c3e88d;background:rgba(0,0,0,.45);border:1px solid var(--line);
+    border-radius:10px;padding:8px 12px;min-height:2.9em;margin-top:10px}
+  .con i{font-style:normal;color:var(--muted)}
+
+  /* the one sentence */
+  .caption{display:flex;gap:14px;align-items:flex-start;margin:18px 2px 0;padding-top:16px;border-top:1px solid var(--line)}
+  .caption .t{flex:1;min-width:0;font-size:1.05rem;line-height:1.55;color:var(--ink);padding-left:16px;border-left:3px solid var(--accent);transition:border-color .3s}
+  .caption .t .line{display:block;margin-top:6px;font-family:var(--mono);font-size:.8rem;color:#bcd0ff;opacity:.9;overflow-wrap:anywhere}
+  .caption.y .t{border-left-color:var(--gold)} .caption.g .t{border-left-color:var(--good)} .caption.w .t{border-left-color:var(--warn)}
+  .caption.w .t .line{color:#ffb0b0}
+  .caption b.a{color:var(--accent)} .caption b.y{color:var(--gold)} .caption b.g{color:var(--good)} .caption b.w{color:var(--warn)}
+  .reset{font-family:var(--body);font-weight:500;font-size:.84rem;padding:8px 14px;border-radius:11px;cursor:pointer;
+    border:1px solid var(--line);background:transparent;color:var(--muted);transition:.15s;flex-shrink:0}
+  .reset:hover{border-color:var(--accent);color:var(--accent)}
+  button:focus-visible,input:focus-visible{outline:2px solid var(--accent);outline-offset:2px}
+
+  .take{margin-top:22px;background:linear-gradient(180deg,rgba(110,160,255,.08),rgba(139,123,255,.04));
+    border:1px solid var(--line);border-left:3px solid var(--accent);border-radius:12px;padding:16px 18px}
+  .take .tk{font-family:var(--mono);font-size:.66rem;letter-spacing:.14em;text-transform:uppercase;color:var(--accent);margin:0 0 8px}
+  .take p{margin:0;font-size:.95rem;color:var(--ink);line-height:1.55}
+  .take b{color:#fff}
+  @media (prefers-reduced-motion:reduce){*{animation-duration:.01ms!important;transition-duration:.01ms!important;animation-delay:0s!important;transition-delay:0s!important}#amb{display:none}}
+</style>
+</head>
+<body>
+<a class="back" href="../index.html#18-one-line-or-several-lines">&#8592; Week 7 index</a>
+<canvas id="amb"></canvas>
+<div class="wrap">
+  <p class="tag">Workbook 6a &middot; Section 4-2 &middot; Lambda Expressions</p>
+  <h1>One Line or Several Lines</h1>
+  <p class="lede"><b>The same lambda, short or long. Switch the form and watch which pieces appear.</b></p>
+
+  <div class="stage">
+    <div id="board">
+      <div class="tabs" id="tabs"></div>
+      <div class="box">
+        <div class="forms" id="forms"></div>
+        <div class="lines" id="lines"></div>
+        <div class="need"><span id="nB">{ } braces</span><span id="nS">; after each statement</span><span id="nR">return</span></div>
+      </div>
+      <div class="hand">
+        <p class="hd" id="handHd"></p>
+        <div class="row" id="items"></div>
+        <div class="con" id="con" hidden></div>
+      </div>
+    </div>
+    <div class="caption" id="caption">
+      <div class="t" id="status"></div>
+      <button class="reset" id="bReset">Reset</button>
+    </div>
+  </div>
+
+  <div class="take">
+    <p class="tk">The one idea</p>
+    <p><b>One expression: no braces, no <code>return</code>. Several statements: braces around them and a semicolon after each one.</b> Inside braces, a lambda that has to answer must say <code>return</code>. <code>filter</code> waits for true or false, so its lambda returns. <code>forEach</code> waits for nothing, so its lambda never returns anything.</p>
+  </div>
+  <div id="rail"></div>
+</div>
+<script>
+(function(){
+  "use strict";
+  var $=function(s){return document.querySelector(s);};
+  var reduce=matchMedia("(prefers-reduced-motion: reduce)").matches;
+  var status=$("#status"),caption=$("#caption");
+  /* the one sentence: html for the prose, plain text for the Java statement */
+  function say(html,tone,line){
+    caption.className="caption"+(tone?" "+tone:"");
+    status.innerHTML=html;
+    if(line){ var sp=document.createElement("span"); sp.className="line"; sp.textContent=line; status.appendChild(sp); }
+  }
+  var TITLES=["Halloween","Ghost","Halloween 2","Friday the 13th","Twister","Halloween 3"];
+  var EMP=[["Leo","Maroun",55],["Potato","Sensei",35],["John","Doe",26],["Raymond","Maroun",25]];
+  var FORMS=["one line","the same, with braces","several lines"];
+  /* a line is a list of pieces: [text, class]. class k = a piece the braces form brings in */
+  var P=function(x){return [x,"p"];}, A=[" -> ","a"], K=function(x){return [x,"k"];}, E=function(x){return [x,"e"];}, T=function(x){return [x,""];};
+  var CASES=[
+    {id:"answer",name:"a lambda that answers \u00b7 filter",hd:"hand it a title \u00b7 tap one",
+     lines:[
+       [[P("title"),A,E('title.toLowerCase().contains("halloween")')]],
+       [[P("title"),A,K("{")],
+        [T("    "),K("return"),T(" "),E('title.toLowerCase().contains("halloween")'),K(";")],
+        [K("}")]],
+       [[P("title"),A,K("{")],
+        [T("    "),E("String lower = title.toLowerCase()"),K(";")],
+        [T("    "),E('boolean containsHalloween = lower.contains("halloween")'),K(";")],
+        [T("    "),E("boolean isLongTitle = title.length() > 10"),K(";")],
+        [T("    "),K("return"),T(" "),E("containsHalloween && isLongTitle"),K(";")],
+        [K("}")]]
+     ],
+     need:[[0,0,0],[1,1,1],[1,1,1]],
+     txt:[
+       "One expression. No braces and no return: the value of the expression is the answer that <b class=\"y\">filter</b> gets.",
+       "The same lambda, written with braces. Inside braces Java reads statements, so you have to say which value is the answer: <b class=\"w\">return</b>, and a semicolon.",
+       "Several statements: now the braces are required, each statement ends with a semicolon, and the last line <b class=\"w\">returns</b> the answer filter is waiting for."
+     ],
+     run:function(f,n){
+       var v=TITLES[n], lower=v.toLowerCase(), c=lower.indexOf("halloween")>=0, long=v.length>10, r=f<2?c:(c&&long);
+       var vals=f===0?[[0,String(r),r]]:f===1?[[0,'title is "'+v+'"'],[1,"returns "+r,r]]
+         :[[0,'title is "'+v+'"'],[1,'"'+lower+'"'],[2,String(c),c],[3,v.length+" > 10 is "+long,long],[4,"returns "+r,r]];
+       return {vals:vals,tone:r?"g":"w",
+         txt:"The lambda receives <b class=\"y\">"+v+"</b> and answers <b class=\""+(r?"g":"w")+"\">"+r+"</b>"+
+           (f===2?": the title has to contain the word and be longer than 10 characters. Each line did one small step.":f===1?", exactly as the one-line form did.":"."),
+         line:"filter "+(r?"keeps":"drops")+' "'+v+'"'};
+     }},
+    {id:"does",name:"a lambda that only does something \u00b7 forEach",hd:"hand it an employee \u00b7 tap one",con:true,
+     lines:[
+       [[P("employee"),A,E("System.out.println(employee.getFirstName())")]],
+       [[P("employee"),A,K("{")],
+        [T("    "),E("System.out.println(employee.getFirstName())"),K(";")],
+        [K("}")]],
+       [[P("employee"),A,K("{")],
+        [T("    "),E("if (employee.getAge() < 40) {")],
+        [T("        "),E('System.out.println(employee.getFirstName() + " is young.")'),K(";")],
+        [T("    "),E("} else {")],
+        [T("        "),E('System.out.println(employee.getFirstName() + " is experienced.")'),K(";")],
+        [T("    "),E("}")],
+        [K("}")]]
+     ],
+     need:[[0,0,0],[1,1,0],[1,1,0]],
+     txt:[
+       "One statement that prints. <b class=\"y\">forEach</b> expects no answer, so there is nothing to give back.",
+       "The same lambda with braces: a semicolon after the statement, and still no return, because forEach wants nothing back.",
+       "Several lines: the braces are required. Still <b class=\"g\">no return</b>: this lambda does something, it does not answer."
+     ],
+     run:function(f,n){
+       var e=EMP[n], y=e[2]<40, out=f<2?e[0]:e[0]+(y?" is young.":" is experienced.");
+       var vals=f===0?[[0,"printed"]]:f===1?[[0,"employee is "+e[0]],[1,"printed"]]
+         :[[0,"employee is "+e[0]],[1,e[2]+" < 40 is "+y,y],[y?2:4,"printed"]];
+       return {vals:vals,skip:f===2?[y?4:2]:[],print:out,tone:"y",
+         txt:"The lambda receives <b class=\"y\">"+e[0]+"</b>"+(f===2?", checks the age and prints one of the two lines.":" and prints the first name.")+" Nothing comes back.",
+         line:'System.out.println("'+out+'");'};
+     }}
+  ];
+  var cs=CASES[0], form=0;
+
+  function need(){
+    var n=cs.need[form], ids=["#nB","#nS","#nR"];
+    for(var x=0;x<3;x++){ $(ids[x]).className=n[x]?"yes":"no"; }
+    $("#nR").textContent=cs.id==="does"?"return (never here)":"return";
+  }
+  function draw(){
+    var tb=$("#tabs"); tb.innerHTML="";
+    CASES.forEach(function(c){ var b=document.createElement("button"); b.className="tab"+(c===cs?" on":""); b.textContent=c.name; b.setAttribute("data-c",c.id); tb.appendChild(b); });
+    var fm=$("#forms"); fm.innerHTML="";
+    FORMS.forEach(function(nm,x){ var b=document.createElement("button"); b.className="form"+(x===form?" on":""); b.textContent=nm; b.setAttribute("data-f",x); fm.appendChild(b); });
+    var box=$("#lines"); box.innerHTML="";
+    cs.lines[form].forEach(function(line){
+      var d=document.createElement("div"); d.className="ln"; var s=document.createElement("span"); s.className="src";
+      line.forEach(function(pc){ var sp=document.createElement("span"); if(pc[1]) sp.className=pc[1]; sp.textContent=pc[0]; s.appendChild(sp); });
+      d.appendChild(s); var v=document.createElement("span"); v.className="v"; d.appendChild(v); box.appendChild(d);
+    });
+    need();
+    $("#handHd").textContent=cs.hd;
+    var it=$("#items"); it.innerHTML="";
+    (cs.id==="answer"?TITLES:EMP).forEach(function(x,n){
+      var c=document.createElement("button"); c.className="chip"; c.setAttribute("data-n",n);
+      if(cs.id==="answer") c.textContent=x; else { c.textContent=x[0]; var a=document.createElement("i"); a.textContent=String(x[2]); c.appendChild(a); }
+      it.appendChild(c);
+    });
+    var con=$("#con"); con.hidden=!cs.con; con.innerHTML=cs.con?"<i>the console</i>":"";
+    say(cs.txt[form],form?"w":"",flat());
+  }
+  function flat(){ return cs.lines[form].map(function(l){return l.map(function(p){return p[0];}).join("").trim();}).join(" "); }
+  function tap(n){
+    var r=cs.run(form,n), rows=document.querySelectorAll("#lines .ln"), x;
+    for(x=0;x<rows.length;x++){ rows[x].classList.remove("hit","skip"); var v=rows[x].querySelector(".v"); v.textContent=""; v.className="v"; }
+    r.vals.forEach(function(p){ rows[p[0]].classList.add("hit"); var v=rows[p[0]].querySelector(".v"); v.textContent="// "+p[1]; if(p[2]===true) v.classList.add("t"); if(p[2]===false) v.classList.add("f"); });
+    (r.skip||[]).forEach(function(k){ rows[k].classList.add("skip"); });
+    var ch=document.querySelectorAll("#items .chip"); for(x=0;x<ch.length;x++) ch[x].classList.toggle("cur",x===n);
+    if(r.print!==undefined){ var con=$("#con"); if(con.querySelector("i")) con.innerHTML=""; var d=document.createElement("div"); d.textContent=r.print; con.appendChild(d);
+      while(con.children.length>4) con.removeChild(con.firstChild); }
+    say(r.txt,r.tone,r.line);
+  }
+  $("#board").addEventListener("click",function(e){
+    var t=e.target.closest(".tab"); if(t){ var id=t.getAttribute("data-c"); cs=CASES.filter(function(c){return c.id===id;})[0]; form=0; draw(); return; }
+    var f=e.target.closest(".form"); if(f){ form=+f.getAttribute("data-f"); draw(); return; }
+    var c=e.target.closest(".chip"); if(c) tap(+c.getAttribute("data-n"));
+  });
+  $("#bReset").addEventListener("click",function(){ cs=CASES[0]; form=0; draw(); });
+  draw();
+
+  /* ambient canvas */
+  var cv=$("#amb"),ctx=cv.getContext&&cv.getContext("2d"),parts=[];
+  function sizeC(){if(!ctx)return;cv.width=innerWidth;cv.height=innerHeight;}
+  function initParts(){parts=[];for(var i=0;i<46;i++)parts.push({x:Math.random(),y:Math.random(),
+    r:Math.random()*1.6+.3,s:Math.random()*.02+.004,o:Math.random()*.4+.1});}
+  function drawC(){if(!ctx)return;ctx.clearRect(0,0,cv.width,cv.height);
+    parts.forEach(function(p){p.y-=p.s/60;if(p.y<-.02)p.y=1.02;
+      ctx.beginPath();ctx.arc(p.x*cv.width,p.y*cv.height,p.r,0,7);
+      ctx.fillStyle="rgba(140,170,255,"+p.o+")";ctx.fill();});
+    requestAnimationFrame(drawC);}
+  if(ctx&&!reduce){sizeC();initParts();drawC();addEventListener("resize",sizeC);}
+})();
+</script>
+<script src="../manifest.js"></script>
+<script src="../../assets/rail.js"></script>
+<script>Rail.render(document.getElementById("rail"),{week:7,kind:"visuals",current:"18-one-line-or-several-lines"});</script>
+</body>
+</html>
