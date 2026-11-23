@@ -23,7 +23,31 @@ window.HUB_MANIFEST = {
     { file: "class-diagram-2-drawing-it.html", title: "Drawing It in diagrams.net", group: "Design: your class diagram", desc: "Part 2. What goes in a box, which line means what, the five passes to draw in, and four drawing mistakes to spot." },
     { file: "class-diagram-3-check-your-diagram.html", title: "Check Your Diagram", group: "Design: your class diagram", desc: "Part 3. Walk one order through your diagram, look for the six usual traps, save it in your project, then show it to Raymond." },
     { file: "class-diagram-notation.html", title: "Class Diagram Notation", group: "Design: your class diagram", desc: "The class box, the plus and minus signs, the inheritance arrow, italics for abstract. The reference from week 6, here so you do not have to look for it." },
-    { file: "class-diagram-notation-2.html", title: "Class Diagram Notation 2", group: "Design: your class diagram", desc: "Interfaces and the dashed arrow, has-a lines with the diamond, several of something, a whole design on one page. The reference from week 7." }
+    { file: "class-diagram-notation-2.html", title: "Class Diagram Notation 2", group: "Design: your class diagram", desc: "Interfaces and the dashed arrow, has-a lines with the diamond, several of something, a whole design on one page. The reference from week 7." },
+    { file: "build-guide.html", title: "Build Guide", group: "Build", desc: "Fourteen steps from an empty project to Demo Day, in the order to build them: the classes and their prices first, the screens after. Each step says what done looks like and what to commit." },
+    { file: "requirements-checklist.html", title: "Requirements Checklist", group: "Build", desc: "Your capstone text as tick boxes, in your option's own words and numbers: the rules, the prices, every screen, the receipt, the repository. Tick them before you demo." },
+    { file: "readme-and-repository.html", title: "README and Repository Checklist", group: "Finish", desc: "Everything the capstone asks for besides the program: the repository, the board, the commits, the diagram file, its picture, and the README that shows it." },
+    { file: "demo-day.html", title: "Demo Day", group: "Finish", desc: "The ten minutes on Friday, December 4, part by part: your shop, your design, a live order, one piece of your own code, questions. And what to check before you start." }
+  ],
+  /* pages from earlier weeks, listed on the week 8 index under Toolbox (links, not copies) */
+  toolbox: [
+    { href: "../week-03/visuals/14-user-story.html", title: "User Story", from: "Week 3", desc: "How to write a user story for your project board." },
+    { href: "../week-03/visuals/15-project-board.html", title: "Project Board", from: "Week 3", desc: "The GitHub project board: a card per user story, a checklist of tasks inside." },
+    { href: "../week-03/reference/your-readme.html", title: "Your README", from: "Week 3", desc: "The course README template, section by section." },
+    { href: "../week-04/visuals/07-commit-message.html", title: "The Commit Message", from: "Week 4", desc: "type: what changed. The five types, good and bad examples." },
+    { href: "../week-03/reference/date-patterns.html", title: "Date Patterns", from: "Week 3", desc: "The letters of a date pattern: yyyy, MM, dd, HH, mm, ss." },
+    { href: "../week-05/visuals/14-bigdecimal-operations.html", title: "BigDecimal Operations", from: "Week 5", desc: "Money in Java: add, multiply, compare, with exact cents." },
+    { href: "../week-05/visuals/18-has-a-relationship.html", title: "Has-A", from: "Week 5", desc: "One object that holds another, or a list of others." },
+    { href: "../week-06/visuals/02-is-a.html", title: "Is-A", from: "Week 6", desc: "When inheritance is the right line: say the sentence out loud." },
+    { href: "../week-06/visuals/08-method-overriding.html", title: "Method Overriding", from: "Week 6", desc: "A child that answers the same question in its own way." },
+    { href: "../week-06/visuals/12-a-parent-type-parameter.html", title: "A Parent-Type Parameter", from: "Week 6", desc: "One method that accepts every child of a parent." },
+    { href: "../week-06/visuals/13-heterogeneous-collections.html", title: "A List of Different Things", from: "Week 6", desc: "One list that holds several kinds of object." },
+    { href: "../week-06/visuals/15-abstract-classes.html", title: "Abstract Classes", from: "Week 6", desc: "A parent that is never built by itself." },
+    { href: "../week-06/visuals/16-abstract-methods.html", title: "Abstract Methods", from: "Week 6", desc: "A method every child must write." },
+    { href: "../week-07/visuals/01-what-an-interface-is.html", title: "What an Interface Is", from: "Week 7", desc: "A list of what something can do, with no code." },
+    { href: "../week-07/visuals/03-interface-or-abstract-class.html", title: "Interface or Abstract Class", from: "Week 7", desc: "Which one fits: shared data, or only a shared ability." },
+    { href: "../week-07/visuals/04-implementing-an-interface.html", title: "Implementing an Interface", from: "Week 7", desc: "A class that promises to do what the interface lists." },
+    { href: "../week-07/visuals/09-code-to-the-interface.html", title: "Code to the Interface", from: "Week 7", desc: "Why a list of an interface type keeps your code short." }
   ],
   exercises: [],
   games: []

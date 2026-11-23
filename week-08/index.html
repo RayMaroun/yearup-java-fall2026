@@ -98,6 +98,13 @@
     (M.visuals||[]).forEach(function(p){ if(p.group===ph){ n++; cards+=card("visuals",p,n,""); } });
     if(cards) html+='<p class="section-title">'+esc(ph)+'</p><div class="grid'+(pi===0?" guide":"")+'">'+cards+'</div>';
   });
+  /* the Toolbox: pages from earlier weeks, as links */
+  var tb=(M.toolbox||[]).map(function(p){
+    n++;
+    return '<a class="link" href="'+esc(p.href)+'"><span class="num">'+n+'</span>'
+      +'<span><p class="title">'+esc(p.title)+'</p><p class="desc">'+esc(p.from)+' \u00b7 '+esc(p.desc)+'</p></span></a>';
+  }).join("");
+  if(tb) html+='<p class="section-title">Toolbox \u00b7 pages you already know</p><div class="grid">'+tb+'</div>';
   document.getElementById("phases").innerHTML=html;
   function land(){
     var h=location.hash.replace(/^#/,""); if(!h) return;

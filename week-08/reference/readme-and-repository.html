@@ -1,0 +1,331 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>README and Repository Checklist | Week 8 Visual Hub</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Sora:wght@500;700&family=Inter:wght@400;500&family=JetBrains+Mono:wght@400;500&display=swap">
+<style>
+  :root{
+    --bg:#080c17; --bg2:#0c1428; --surface:rgba(255,255,255,.045); --line:rgba(255,255,255,.09);
+    --ink:#eef2fb; --muted:#8496b6; --accent:#6ea0ff; --accent2:#8b7bff; --good:#46d98a; --warn:#ff6a6a;
+    --gold:#ffc862; --disp:'Sora',system-ui,sans-serif; --body:'Inter',system-ui,sans-serif;
+    --mono:'JetBrains Mono',ui-monospace,monospace;
+  }
+  *{box-sizing:border-box}
+  body{margin:0;min-height:100vh;color:var(--ink);font-family:var(--body);
+    background:radial-gradient(1200px 700px at 70% -10%,#141d38 0%,transparent 55%),
+               radial-gradient(900px 600px at 10% 110%,#161233 0%,transparent 50%),#080c17;
+    overflow-x:hidden}
+  #amb{position:fixed;inset:0;z-index:0;pointer-events:none;opacity:.6}
+  .back{position:relative;z-index:2;display:block;max-width:1120px;margin:0 auto;padding:26px 24px 0;
+    width:100%;font-family:var(--mono);font-size:.8rem;letter-spacing:.04em;color:var(--muted);
+    text-decoration:none;transition:color .15s}
+  .back:hover{color:var(--accent)}
+  .wrap{position:relative;z-index:1;max-width:1120px;margin:0 auto;padding:22px 24px 70px}
+  .tag{font-family:var(--mono);font-size:.72rem;letter-spacing:.22em;text-transform:uppercase;color:var(--accent);margin:0 0 14px}
+  h1{font-family:var(--disp);font-weight:700;font-size:clamp(2.3rem,6vw,3.6rem);line-height:1;margin:0 0 12px;
+    letter-spacing:-.03em;background:linear-gradient(180deg,#fff,#b9c6e6);-webkit-background-clip:text;
+    background-clip:text;color:transparent}
+  .lede{color:var(--muted);max-width:64ch;font-size:1.05rem;margin:0 0 22px;line-height:1.5}
+  .lede b{color:var(--ink)}
+  code{font-family:var(--mono);font-size:.88em;color:#bcd0ff;white-space:nowrap}
+  a{color:var(--accent)}
+
+  /* before you start */
+  .before{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:10px;margin:0 0 26px}
+  .before .b{padding:12px 14px;border:1px solid var(--line);border-radius:14px;background:var(--surface);font-size:.86rem;line-height:1.45;color:#c9d4ea}
+  .before .b b{display:block;font-family:var(--mono);font-size:.62rem;letter-spacing:.14em;text-transform:uppercase;color:var(--gold);margin:0 0 5px;font-weight:500}
+
+  /* layout: sticky step list + cards */
+  .board{display:grid;grid-template-columns:230px minmax(0,1fr);gap:18px;align-items:start}
+  .side{position:sticky;top:16px;border:1px solid var(--line);border-radius:16px;background:rgba(6,10,20,.55);padding:12px}
+  .side .lab{font-family:var(--mono);font-size:.62rem;letter-spacing:.14em;text-transform:uppercase;color:var(--muted);margin:0 0 8px;display:flex;justify-content:space-between}
+  .side .lab b{color:var(--good);font-weight:500}
+  .side ol{list-style:none;margin:0;padding:0;display:flex;flex-direction:column;gap:3px}
+  .side a{display:flex;gap:9px;align-items:center;padding:6px 8px;border-radius:9px;color:var(--muted);text-decoration:none;font-size:.82rem;line-height:1.25;transition:.15s;border:1px solid transparent}
+  .side a:hover{color:var(--ink);border-color:var(--line)}
+  .side a.here{color:var(--ink);background:rgba(110,160,255,.12);border-color:rgba(110,160,255,.35)}
+  .side .n{flex-shrink:0;width:22px;height:22px;border-radius:7px;display:flex;align-items:center;justify-content:center;font-family:var(--mono);font-size:.68rem;
+    background:rgba(110,160,255,.12);color:var(--accent);border:1px solid rgba(110,160,255,.3)}
+  .side a.ok .n{background:rgba(70,217,138,.14);color:var(--good);border-color:rgba(70,217,138,.45)}
+  .side a.ok{color:#9fb0d0}
+  .side .reset{margin-top:10px;width:100%;font-family:var(--body);font-weight:500;font-size:.78rem;padding:7px 10px;border-radius:9px;cursor:pointer;
+    border:1px solid var(--line);background:transparent;color:var(--muted);transition:.15s}
+  .side .reset:hover{border-color:var(--accent);color:var(--accent)}
+
+  .steps{display:flex;flex-direction:column;gap:14px;min-width:0}
+  .step{border:1px solid var(--line);border-radius:18px;background:linear-gradient(180deg,rgba(255,255,255,.03),rgba(255,255,255,.01));padding:18px 20px 16px;scroll-margin-top:14px;transition:border-color .3s}
+  .step.ok{border-color:rgba(70,217,138,.4)}
+  .step.ok .num{background:rgba(70,217,138,.14);color:var(--good);border-color:rgba(70,217,138,.5)}
+  .head{display:flex;gap:12px;align-items:flex-start;margin:0 0 12px}
+  .num{flex-shrink:0;width:40px;height:40px;border-radius:11px;display:flex;align-items:center;justify-content:center;font-family:var(--disp);font-weight:700;font-size:1rem;
+    background:rgba(110,160,255,.14);color:var(--accent);border:1px solid rgba(110,160,255,.3)}
+  .head h2{font-family:var(--disp);font-weight:700;font-size:1.25rem;letter-spacing:-.01em;margin:4px 0 4px}
+  .head .meta{display:flex;flex-wrap:wrap;gap:6px;align-items:center}
+  .chip{font-family:var(--mono);font-size:.64rem;letter-spacing:.06em;padding:3px 9px;border-radius:999px;border:1px solid var(--line);color:var(--muted);text-decoration:none;transition:.15s}
+  a.chip{color:#c4b8ff;border-color:rgba(139,123,255,.4);background:rgba(139,123,255,.08)}
+  a.chip:hover{border-color:#c4b8ff}
+  .chip.t{color:var(--gold);border-color:rgba(255,200,98,.35)}
+  .done-box{margin-left:auto;display:flex;align-items:center;gap:7px;font-family:var(--mono);font-size:.7rem;color:var(--muted);cursor:pointer;white-space:nowrap;padding-top:8px}
+  .done-box input{accent-color:var(--good);width:16px;height:16px;cursor:pointer;margin:0}
+  .step.ok .done-box{color:var(--good)}
+
+  .parts{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:10px}
+  .part{border:1px solid var(--line);border-radius:12px;padding:11px 13px 12px;background:rgba(6,10,20,.45);min-width:0}
+  .part .k{font-family:var(--mono);font-size:.6rem;letter-spacing:.14em;text-transform:uppercase;margin:0 0 7px;color:var(--accent)}
+  .part.looks .k{color:var(--good)} .part.watch .k{color:var(--warn)}
+  .part p,.part li{font-size:.86rem;line-height:1.5;color:#c9d4ea;margin:0}
+  .part ul,.part ol{margin:0;padding-left:18px;display:flex;flex-direction:column;gap:5px}
+  .part.do{grid-column:1 / -1}
+  .part .pre{font-family:var(--mono);font-size:.74rem;line-height:1.5;color:#bcd0ff;background:#05070e;border:1px solid var(--line);border-radius:8px;padding:7px 10px;margin:4px 0 0;white-space:pre;overflow-x:auto}
+  .part .pre i{font-style:normal;color:#6f7f9e}
+
+  /* README sections: keep, required, delete */
+  .secs{list-style:none;margin:4px 0 0;padding:0;display:flex;flex-direction:column;gap:4px}
+  .secs li{display:flex;gap:10px;align-items:baseline;font-size:.84rem;line-height:1.45;color:#c9d4ea}
+  .secs .s{flex-shrink:0;width:96px;font-family:var(--mono);font-size:.6rem;letter-spacing:.1em;text-transform:uppercase;padding:2px 0;border-radius:999px;text-align:center;border:1px solid rgba(110,160,255,.35);color:var(--accent)}
+  .secs .s.req{border-color:rgba(255,200,98,.5);color:var(--gold);background:rgba(255,200,98,.08)}
+  .secs .s.opt{border-color:var(--line);color:var(--muted)}
+
+  .take{margin-top:26px;background:linear-gradient(180deg,rgba(110,160,255,.08),rgba(139,123,255,.04));
+    border:1px solid var(--line);border-left:3px solid var(--accent);border-radius:12px;padding:16px 18px}
+  .take .tk{font-family:var(--mono);font-size:.66rem;letter-spacing:.14em;text-transform:uppercase;color:var(--accent);margin:0 0 8px}
+  .take p{margin:0;font-size:.95rem;color:var(--ink);line-height:1.55}
+  .take b{color:#fff}
+  @media (max-width:860px){.board{grid-template-columns:1fr}.side{position:static}.parts{grid-template-columns:1fr}}
+  @media (max-width:520px){.wrap{padding:18px 16px 60px}.back{padding:22px 16px 0}.step{padding:14px 12px}.head{flex-wrap:wrap}.secs li{flex-direction:column;gap:2px}}
+  @media (prefers-reduced-motion:reduce){*{transition-duration:.01ms!important}#amb{display:none}}
+</style>
+</head>
+<body>
+<a class="back" href="../index.html#readme-and-repository">&#8592; Week 8 index</a>
+<canvas id="amb"></canvas>
+<div class="wrap">
+  <p class="tag">Capstone 2 &middot; Finish</p>
+  <h1>README and Repository Checklist</h1>
+  <p class="lede">Everything your capstone text asks for <b>besides the running program</b>: the repository, the board, the commits, the class diagram and the README. Tick a step when its "done looks like" is true on your screen.</p>
+
+  <div class="before">
+    <div class="b"><b>Your own job this time</b>There is no class time for the setup in this capstone. You create the repository, the board and the README yourself, before the build week starts.</div>
+    <div class="b"><b>Where it comes from</b>The "Setup" page and the "Repository" part of "Other General Project Requirements" in your capstone text. This page turns them into steps.</div>
+    <div class="b"><b>Finish it early</b>Steps 1 to 5 belong to the first days. Steps 6 to 9 are your last hour before you submit, and you do them again after every big change.</div>
+  </div>
+
+  <div class="board">
+    <nav class="side" aria-label="Steps">
+      <p class="lab"><span>Steps</span><b id="count">0 of 9</b></p>
+      <ol id="toc"></ol>
+      <button class="reset" id="reset" type="button">Clear ticks</button>
+    </nav>
+
+    <div class="steps" id="steps">
+
+      <section class="step" id="s1">
+        <div class="head"><span class="num">1</span><div><h2>A public repository with a meaningful name</h2><div class="meta"><span class="chip t">before the build week</span></div></div>
+          <label class="done-box"><input type="checkbox" data-s="1">done</label></div>
+        <div class="parts">
+          <div class="part do"><p class="k">Do</p><ol>
+            <li>Create the project in your <code>capstones</code> folder, the way you did for Capstone 1: IntelliJ, New Project, Maven, Java 17, group <code>com.pluralsight</code>.</li>
+            <li>Give it a name that says what it is: the name of your shop, for example <code>deli-cious</code>. Not a generic name such as <code>capstone-2</code>.</li>
+            <li>In IntelliJ: Git, GitHub, Share Project on GitHub. Leave <b>Private</b> unticked, so the repository is public. Use the same name as the project.</li>
+          </ol></div>
+          <div class="part looks"><p class="k">Done looks like</p><p>Your repository page on GitHub shows the name of your shop and the word Public next to it. Someone who reads only the name knows what the project is.</p></div>
+          <div class="part watch"><p class="k">Watch out</p><ul><li>A private repository cannot be opened by anyone else. Check the badge next to the name.</li><li>The <code>target</code> folder must not be pushed. Keep the <code>.gitignore</code> IntelliJ creates.</li></ul></div>
+        </div>
+      </section>
+
+      <section class="step" id="s2">
+        <div class="head"><span class="num">2</span><div><h2>A project board with user stories</h2><div class="meta"><a class="chip" href="../../week-03/visuals/14-user-story.html">A User Story</a><a class="chip" href="../../week-03/visuals/15-project-board.html">The Project Board</a></div></div>
+          <label class="done-box"><input type="checkbox" data-s="2">done</label></div>
+        <div class="parts">
+          <div class="part do"><p class="k">Do</p><ol>
+            <li>On GitHub, open your repository, then Projects, New project, Board. Columns Todo, In Progress, Done.</li>
+            <li>Read the requirements of your text and write one user story per thing the customer can do: start a new order, add each kind of product, check out, confirm and get a receipt, cancel. Add one card for the class diagram and one for the README.</li>
+            <li>Each card in the shape you learned: As a ..., I want ..., so that ... Under it, two or three acceptance criteria taken from the text's own words.</li>
+            <li>While you build, move the card you work on to In Progress, and to Done when it works.</li>
+          </ol></div>
+          <div class="part looks"><p class="k">Done looks like</p><p>The board is linked to your repository and holds a card for every screen and rule of your text. By Demo Day, the cards you finished are in Done.</p></div>
+          <div class="part watch"><p class="k">Watch out</p><ul><li>A story says what the customer gets, not what you will code. If a card names a method, it is a task, not a story.</li><li>One feature per card. "The whole order" is too big for one card.</li></ul></div>
+        </div>
+      </section>
+
+      <section class="step" id="s3">
+        <div class="head"><span class="num">3</span><div><h2>A commit for each meaningful piece of work</h2><div class="meta"><a class="chip" href="../../week-04/visuals/07-commit-message.html">The Commit Message</a><span class="chip t">every day of the build</span></div></div>
+          <label class="done-box"><input type="checkbox" data-s="3">done</label></div>
+        <div class="parts">
+          <div class="part do"><p class="k">Do</p><ol>
+            <li>Commit each time one small piece works: one product with its price, one screen, the receipt file, the README. In IntelliJ: the Commit panel, tick the files, write the message, Commit and Push.</li>
+            <li>Each message follows the course convention: <code>type: what changed</code> (feat, fix, docs, refactor, chore), a blank line, then bullets on what you did. The shape is on The Commit Message page.</li>
+            <li>Push at the end of every day, at least. A commit that is only on your laptop is not in your repository.</li>
+          </ol></div>
+          <div class="part looks"><p class="k">Done looks like</p><p>The commit list on GitHub reads like a diary of the week: many small commits, each with a type and a clear subject, spread over the build days.</p></div>
+          <div class="part watch"><p class="k">Watch out</p><ul><li>One giant commit on the last day, or messages such as "update" and "changes", hide all your work.</li><li>New files show as unversioned in the Commit panel. Tick them, or they are left behind.</li></ul></div>
+        </div>
+      </section>
+
+      <section class="step" id="s4">
+        <div class="head"><span class="num">4</span><div><h2>The diagram file in your project</h2><div class="meta"><a class="chip" href="class-diagram-3-check-your-diagram.html">Check Your Diagram</a></div></div>
+          <label class="done-box"><input type="checkbox" data-s="4">done</label></div>
+        <div class="parts">
+          <div class="part do"><p class="k">Do</p><ol>
+            <li>In diagrams.net, File, Save as, and pick your project folder: the one that holds <code>pom.xml</code>. Name the file <code>class-diagram.drawio</code>.</li>
+            <li>From now on, open the diagram from that file, so every change lands in your project and gets committed with your code.</li>
+          </ol></div>
+          <div class="part looks"><p class="k">Done looks like</p><p>In IntelliJ's Project panel, <code>class-diagram.drawio</code> sits next to <code>pom.xml</code>. On GitHub, it is in the file list of your repository.</p></div>
+          <div class="part watch"><p class="k">Watch out</p><ul><li>A diagram saved in Downloads, on the Desktop or only in your browser is not in your project, so it is not in your repository.</li><li>The capstone asks for the diagrams.net file itself, not only a picture of it.</li></ul></div>
+        </div>
+      </section>
+
+      <section class="step" id="s5">
+        <div class="head"><span class="num">5</span><div><h2>A picture of the diagram in <code>images</code></h2><div class="meta"><a class="chip" href="class-diagram-3-check-your-diagram.html">Check Your Diagram</a></div></div>
+          <label class="done-box"><input type="checkbox" data-s="5">done</label></div>
+        <div class="parts">
+          <div class="part do"><p class="k">Do</p><ol>
+            <li>Create a folder named <code>images</code> in your project folder, next to <code>pom.xml</code>.</li>
+            <li>In diagrams.net: File, Export as, PNG. Export the whole page. Save it into <code>images</code> as <code>class-diagram.png</code>.</li>
+            <li>Each time you change the diagram, export again over the same file name, so the picture stays current.</li>
+          </ol>
+            <div class="pre">your-shop/
+  class-diagram.drawio   <i>the file you can still change</i>
+  images/
+    class-diagram.png    <i>the picture the README shows</i>
+  pom.xml
+  README.md
+  src/</div></div>
+          <div class="part looks"><p class="k">Done looks like</p><p>Opening <code>images/class-diagram.png</code> shows your whole diagram, every box readable, nothing cut off at the edges.</p></div>
+          <div class="part watch"><p class="k">Watch out</p><ul><li>No spaces in file names, and all small letters. <code>Class Diagram.PNG</code> is the start of a broken picture in step 7.</li><li>A selection exported instead of the page leaves boxes out.</li></ul></div>
+        </div>
+      </section>
+
+      <section class="step" id="s6">
+        <div class="head"><span class="num">6</span><div><h2>The README, from the course template</h2><div class="meta"><a class="chip" href="../../week-03/reference/your-readme.html">Your README</a></div></div>
+          <label class="done-box"><input type="checkbox" data-s="6">done</label></div>
+        <div class="parts">
+          <div class="part do"><p class="k">Do</p><ol>
+            <li>Copy the template from the public repo (<code>templates/readme-template.md</code>) to <code>README.md</code> at the root of your project, next to <code>pom.xml</code>. Replace every comment with your own text.</li>
+            <li>The text asks for four things: what the project is, its main features, how to run it, and the picture of your class diagram. The template's sections, for this capstone:
+              <ul class="secs">
+                <li><span class="s">fill</span><span>Title and one line, Description of the Project: your shop and what the application does.</span></li>
+                <li><span class="s req">required</span><span>Class Diagram. The template marks it optional; in this capstone it stays. Keep its one line, it shows the picture from step 5.</span></li>
+                <li><span class="s">fill</span><span>Features: one bullet per thing the application can do, in the order of your menus. Mark a bonus as a bonus.</span></li>
+                <li><span class="s">fill</span><span>User Stories: the same text as the cards on your board.</span></li>
+                <li><span class="s">fill</span><span>Setup, Prerequisites and Running the application: put the name of your class that has <code>main</code> in place of the placeholder.</span></li>
+                <li><span class="s opt">your call</span><span>Data and configuration: optional. Your program writes receipts to a <code>receipts</code> folder, so a line about it helps a reader. If you leave it out, delete the heading too.</span></li>
+                <li><span class="s">fill</span><span>Technologies Used, Demo (screenshots of your screens in <code>images</code>), A piece of code I am proud of, Future Work, Resources, Author.</span></li>
+                <li><span class="s opt">your call</span><span>Thanks: up to you.</span></li>
+              </ul></li>
+            <li>The one line of Markdown that shows the picture, as it already is in the template:
+              <div class="pre">![Class Diagram](images/class-diagram.png)</div></li>
+          </ol></div>
+          <div class="part looks"><p class="k">Done looks like</p><p>No comment from the template is left, no empty heading, no "Project Title". A stranger reading it knows what your shop sells, what the application does and how to start it.</p></div>
+          <div class="part watch"><p class="k">Watch out</p><ul><li>The template's comments do not show on GitHub. A section you forgot to fill shows as a heading with nothing under it.</li><li>List only what works. Half-done features go under Future Work.</li></ul></div>
+        </div>
+      </section>
+
+      <section class="step" id="s7">
+        <div class="head"><span class="num">7</span><div><h2>Check the README on GitHub</h2><div class="meta"><span class="chip t">after every push of the README</span></div></div>
+          <label class="done-box"><input type="checkbox" data-s="7">done</label></div>
+        <div class="parts">
+          <div class="part do"><p class="k">Do</p><ol>
+            <li>Commit and push <code>README.md</code>, the <code>images</code> folder and <code>class-diagram.drawio</code>.</li>
+            <li>Open your repository page in the browser and scroll down to the README. That is what anyone who opens your project sees first.</li>
+            <li>Look at the class diagram picture, the screenshots, the headings.</li>
+          </ol></div>
+          <div class="part looks"><p class="k">Done looks like</p><p>The README shows under the file list, the class diagram picture appears in full, and every screenshot loads.</p></div>
+          <div class="part watch"><p class="k">Watch out</p><ul><li>A broken picture icon means the path does not match the file. Compare letter by letter: folder name, file name, and the capital letters. GitHub sees <code>Images/Class-Diagram.png</code> and <code>images/class-diagram.png</code> as two different files, even when your laptop does not.</li><li>Not pushed means not there. If the picture is missing from the file list, it was never committed.</li></ul></div>
+        </div>
+      </section>
+
+      <section class="step" id="s8">
+        <div class="head"><span class="num">8</span><div><h2>The diagram matches the code</h2><div class="meta"><a class="chip" href="class-diagram-3-check-your-diagram.html">Check Your Diagram</a></div></div>
+          <label class="done-box"><input type="checkbox" data-s="8">done</label></div>
+        <div class="parts">
+          <div class="part do"><p class="k">Do</p><ol>
+            <li>Put the README picture and your code side by side. Go box by box: every class in the code is a box, every box is a class in the code, with the same names.</li>
+            <li>Anything that changed while you built, change in the <code>.drawio</code> file, export the PNG again over the old one, commit and push both.</li>
+          </ol></div>
+          <div class="part looks"><p class="k">Done looks like</p><p>Someone holding only the picture would find every class of your project in it, with the names you used in the code.</p></div>
+          <div class="part watch"><p class="k">Watch out</p><ul><li>The text says to keep your diagram current. The Wednesday version is a starting point, not the final one.</li><li>Changing the <code>.drawio</code> without a new export leaves the README showing the old picture.</li></ul></div>
+        </div>
+      </section>
+
+      <section class="step" id="s9">
+        <div class="head"><span class="num">9</span><div><h2>Clone it into a new folder and run it</h2><div class="meta"><a class="chip" href="../visuals/06-the-receipt-file.html">The Receipt File</a><span class="chip t">the last check</span></div></div>
+          <label class="done-box"><input type="checkbox" data-s="9">done</label></div>
+        <div class="parts">
+          <div class="part do"><p class="k">Do</p><ol>
+            <li>Copy the address of your repository from the green Code button on GitHub.</li>
+            <li>In IntelliJ: File, New, Project from Version Control. Paste the address and choose a new, empty folder, not your capstones folder.</li>
+            <li>Follow your own README's "Running the application", word for word. Place one order to the end and confirm it.</li>
+          </ol></div>
+          <div class="part looks"><p class="k">Done looks like</p><p>The fresh copy runs without any change, the order goes through, and its receipt file appears in the <code>receipts</code> folder of that copy. It works for someone who only has your repository.</p></div>
+          <div class="part watch"><p class="k">Watch out</p><ul><li>A file that exists only on your laptop, never committed, breaks here. Commit it and try again.</li><li>Close the copy afterwards and keep working in your own project, so your next commit goes to the right place.</li></ul></div>
+        </div>
+      </section>
+
+    </div>
+  </div>
+
+  <div class="take">
+    <p class="tk">If you only remember one thing</p>
+    <p><b>Your repository is what other people see of your project.</b> A clear name, a board, a commit history that tells the story, a README with your diagram in it, and a copy that runs for someone who only has the link.</p>
+  </div>
+  <div id="rail"></div>
+</div>
+<script>
+(function(){
+  "use strict";
+  var KEY="hub-cap2-readme-1", N=9;
+  var toc=document.getElementById("toc"), count=document.getElementById("count");
+  var state={};
+  try{ state=JSON.parse(localStorage.getItem(KEY)||"{}")||{}; }catch(e){ state={}; }
+  function save(){ try{ localStorage.setItem(KEY,JSON.stringify(state)); }catch(e){} }
+
+  var titles=[];
+  for(var i=1;i<=N;i++){ var h=document.querySelector("#s"+i+" h2"); titles.push(h?h.textContent:"Step "+i); }
+  toc.innerHTML=titles.map(function(t,i){ return '<li><a href="#s'+(i+1)+'" data-s="'+(i+1)+'"><span class="n">'+(i+1)+'</span><span>'+t+'</span></a></li>'; }).join("");
+
+  function paint(){
+    var done=0;
+    for(var i=1;i<=N;i++){
+      var ok=!!state[i];
+      if(ok) done++;
+      var sec=document.getElementById("s"+i), box=sec.querySelector("input[data-s]"), a=toc.querySelector('a[data-s="'+i+'"]');
+      box.checked=ok; sec.classList.toggle("ok",ok); a.classList.toggle("ok",ok);
+    }
+    count.textContent=done+" of "+N;
+  }
+  document.getElementById("steps").addEventListener("change",function(e){
+    var box=e.target.closest("input[data-s]"); if(!box) return;
+    state[box.getAttribute("data-s")]=box.checked; save(); paint();
+  });
+  document.getElementById("reset").addEventListener("click",function(){ state={}; save(); paint(); });
+  paint();
+
+  /* mark the step in view */
+  var links=toc.querySelectorAll("a");
+  if("IntersectionObserver" in window){
+    var io=new IntersectionObserver(function(entries){
+      entries.forEach(function(en){
+        if(!en.isIntersecting) return;
+        var id=en.target.id;
+        Array.prototype.forEach.call(links,function(a){ a.classList.toggle("here",a.getAttribute("href")==="#"+id); });
+      });
+    },{rootMargin:"-30% 0px -60% 0px"});
+    for(var k=1;k<=N;k++) io.observe(document.getElementById("s"+k));
+  }
+
+  var cv=document.getElementById("amb"),ctx=cv.getContext&&cv.getContext("2d"),parts=[],reduce=matchMedia("(prefers-reduced-motion: reduce)").matches;
+  function sizeC(){if(!ctx)return;cv.width=innerWidth;cv.height=innerHeight;}
+  function initParts(){parts=[];for(var i=0;i<46;i++)parts.push({x:Math.random(),y:Math.random(),r:Math.random()*1.6+.3,s:Math.random()*.02+.004,o:Math.random()*.4+.1});}
+  function drawC(){if(!ctx)return;ctx.clearRect(0,0,cv.width,cv.height);parts.forEach(function(p){p.y-=p.s/60;if(p.y<-.02)p.y=1.02;ctx.beginPath();ctx.arc(p.x*cv.width,p.y*cv.height,p.r,0,7);ctx.fillStyle="rgba(140,170,255,"+p.o+")";ctx.fill();});requestAnimationFrame(drawC);}
+  if(ctx&&!reduce){sizeC();initParts();drawC();addEventListener("resize",sizeC);}
+})();
+</script>
+<script src="../manifest.js"></script>
+<script src="../../assets/rail.js"></script>
+<script>Rail.render(document.getElementById("rail"),{week:8,kind:"reference",current:"readme-and-repository"});</script>
+</body>
+</html>
