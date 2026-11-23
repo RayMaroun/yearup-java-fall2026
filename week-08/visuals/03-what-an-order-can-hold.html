@@ -1,0 +1,406 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>What an Order Can Hold | Week 8 Visual Hub</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Sora:wght@500;700&family=Inter:wght@400;500&family=JetBrains+Mono:wght@400;500&display=swap">
+<style>
+  :root{
+    --bg:#080c17; --bg2:#0c1428; --surface:rgba(255,255,255,.045); --line:rgba(255,255,255,.09);
+    --ink:#eef2fb; --muted:#8496b6; --accent:#6ea0ff; --accent2:#8b7bff; --good:#46d98a; --warn:#ff6a6a;
+    --gold:#ffc862; --disp:'Sora',system-ui,sans-serif; --body:'Inter',system-ui,sans-serif;
+    --mono:'JetBrains Mono',ui-monospace,monospace;
+    --paper:#f4efe2; --pink:#1c2233; --pmuted:#7a7466; --pgood:#1d8f52; --pwarn:#c93a3a;
+  }
+  *{box-sizing:border-box}
+  body{margin:0;min-height:100vh;color:var(--ink);font-family:var(--body);
+    background:radial-gradient(1200px 700px at 70% -10%,#141d38 0%,transparent 55%),
+               radial-gradient(900px 600px at 10% 110%,#161233 0%,transparent 50%),#080c17;
+    overflow-x:hidden}
+  #amb{position:fixed;inset:0;z-index:0;pointer-events:none;opacity:.6}
+  .back{position:relative;z-index:2;display:block;max-width:1120px;margin:0 auto;padding:26px 24px 0;
+    width:100%;font-family:var(--mono);font-size:.8rem;letter-spacing:.04em;color:var(--muted);
+    text-decoration:none;transition:color .15s}
+  .back:hover{color:var(--accent)}
+  .wrap{position:relative;z-index:1;max-width:1120px;margin:0 auto;padding:22px 24px 70px}
+  .tag{font-family:var(--mono);font-size:.72rem;letter-spacing:.22em;text-transform:uppercase;color:var(--accent);margin:0 0 14px}
+  h1{font-family:var(--disp);font-weight:700;font-size:clamp(2.3rem,6vw,3.6rem);line-height:1;margin:0 0 12px;
+    letter-spacing:-.03em;background:linear-gradient(180deg,#fff,#b9c6e6);-webkit-background-clip:text;
+    background-clip:text;color:transparent}
+  .lede{color:var(--muted);max-width:64ch;font-size:1.05rem;margin:0 0 26px;line-height:1.5}
+  .lede b{color:var(--ink)}
+
+  /* ---------- the stage IS the picture ---------- */
+  .stage{position:relative;background:linear-gradient(180deg,rgba(255,255,255,.03),rgba(255,255,255,.01));
+    border:1px solid var(--line);border-radius:24px;padding:22px;
+    box-shadow:0 1px 0 rgba(255,255,255,.06) inset,0 30px 80px -30px rgba(0,0,0,.8)}
+  [hidden]{display:none!important}
+  .hd{display:block;font-family:var(--mono);font-size:.62rem;letter-spacing:.16em;text-transform:uppercase;color:var(--muted);margin:0 0 8px 2px}
+
+  #board{position:relative}
+  .opts{display:flex;flex-wrap:wrap;gap:6px;margin-bottom:16px}
+  .tab{font-family:var(--mono);font-size:.84rem;padding:9px 15px;border-radius:999px;cursor:pointer;border:1px solid var(--line);
+    background:transparent;color:var(--muted);transition:.15s}
+  .tab:hover{border-color:var(--accent);color:var(--ink)}
+  .tab.on{background:rgba(110,160,255,.2);border-color:var(--accent);color:#fff}
+
+  .shop{display:grid;grid-template-columns:280px minmax(0,1fr);gap:22px;align-items:start}
+  @media (max-width:800px){.shop{grid-template-columns:1fr}}
+
+  /* the three counters */
+  .counters{display:grid;gap:10px}
+  .ctr{display:block;width:100%;text-align:left;cursor:pointer;padding:13px 14px;border-radius:14px;
+    border:1px solid rgba(110,160,255,.35);background:linear-gradient(180deg,rgba(110,160,255,.12),rgba(110,160,255,.04));
+    color:var(--ink);font-family:var(--body);transition:.15s}
+  .ctr:hover{border-color:var(--accent);box-shadow:0 0 26px -10px rgba(110,160,255,.9)}
+  .ctr:disabled{cursor:default;opacity:.55}
+  .ctr .mn{display:block;font-family:var(--mono);font-size:.95rem;color:#bcd0ff;margin-bottom:6px}
+  .ctr .pr{display:flex;justify-content:space-between;gap:10px;font-size:.84rem;color:var(--muted);line-height:1.35}
+  .ctr .pr b{font-family:var(--mono);font-weight:500;color:var(--gold);white-space:nowrap}
+  .ctr.k1{border-color:rgba(255,200,98,.4);background:linear-gradient(180deg,rgba(255,200,98,.1),rgba(255,200,98,.03))}
+  .ctr.k1:hover{border-color:var(--gold);box-shadow:0 0 26px -10px rgba(255,200,98,.9)}
+  .ctr.k2{border-color:rgba(139,123,255,.45);background:linear-gradient(180deg,rgba(139,123,255,.12),rgba(139,123,255,.04))}
+  .ctr.k2:hover{border-color:var(--accent2);box-shadow:0 0 26px -10px rgba(139,123,255,.9)}
+
+  /* the order pad: a paper slip */
+  .padwrap{display:flex;justify-content:center}
+  .pad{position:relative;width:100%;max-width:470px;background:var(--paper);color:var(--pink);border-radius:6px 6px 0 0;
+    padding:18px 20px 26px;box-shadow:0 24px 60px -24px rgba(0,0,0,.9);font-family:var(--mono);
+    -webkit-mask:radial-gradient(7px at 7px 100%,#0000 98%,#000) -7px 0/14px 100% repeat-x;
+            mask:radial-gradient(7px at 7px 100%,#0000 98%,#000) -7px 0/14px 100% repeat-x;padding-bottom:30px}
+  .pad .ph{display:flex;justify-content:space-between;align-items:baseline;gap:10px;border-bottom:2px solid var(--pink);padding-bottom:8px;margin-bottom:4px}
+  .pad .shopname{font-family:var(--disp);font-weight:700;font-size:1.15rem;letter-spacing:-.01em}
+  .pad .sub{font-size:.68rem;letter-spacing:.12em;text-transform:uppercase;color:var(--pmuted)}
+  .lines{min-height:150px;padding:4px 0}
+  .empty{color:var(--pmuted);font-size:.86rem;padding:18px 4px;text-align:center;font-style:italic}
+  .ln{display:grid;grid-template-columns:24px minmax(0,1fr) auto;gap:8px;align-items:baseline;width:100%;text-align:left;cursor:pointer;
+    font:inherit;font-size:.86rem;color:var(--pink);background:transparent;border:0;border-bottom:1px dashed rgba(28,34,51,.25);
+    padding:9px 4px;border-radius:4px;transition:background .15s,opacity .3s,transform .3s}
+  .ln:hover{background:rgba(201,58,58,.09)}
+  .ln:hover .nm{text-decoration:line-through;text-decoration-color:var(--pwarn)}
+  .ln .no{color:var(--pmuted)}
+  .ln .nm{overflow-wrap:anywhere}
+  .ln .nm small{display:block;font-size:.7rem;color:var(--pmuted);margin-top:1px}
+  .ln .p{font-weight:500}
+  .ln.landing{opacity:0}
+  .ln.fresh{animation:fresh .45s ease}
+  @keyframes fresh{from{background:rgba(255,200,98,.55)}to{background:transparent}}
+  .ln.gone{opacity:0;transform:translateX(24px)}
+  .tot{display:flex;justify-content:space-between;align-items:baseline;border-top:2px solid var(--pink);margin-top:6px;padding:10px 4px 0}
+  .tot span{font-size:.75rem;letter-spacing:.14em;text-transform:uppercase}
+  .tot b{font-family:var(--disp);font-weight:700;font-size:1.6rem;font-variant-numeric:tabular-nums}
+  .tot.pop b{animation:pop .4s ease}
+  @keyframes pop{from{transform:scale(1.25);color:#b7791f}to{transform:none}}
+  .padbtns{display:grid;grid-template-columns:1fr auto;gap:8px;margin-top:16px}
+  .co{font-family:var(--disp);font-weight:700;font-size:1.1rem;padding:13px 16px;border-radius:11px;cursor:pointer;
+    border:2px solid var(--pink);background:var(--pink);color:var(--paper);transition:.15s}
+  .co:hover{background:#2c3550}
+  .cx{font-family:var(--mono);font-size:.8rem;padding:10px 12px;border-radius:11px;cursor:pointer;
+    border:1px solid rgba(201,58,58,.55);background:transparent;color:var(--pwarn);transition:.15s}
+  .cx:hover{background:rgba(201,58,58,.1)}
+  .stamp{position:absolute;left:50%;top:44%;transform:translate(-50%,-50%) rotate(-12deg) scale(1);pointer-events:none;
+    font-family:var(--disp);font-weight:700;font-size:2rem;letter-spacing:.08em;text-transform:uppercase;
+    padding:6px 18px;border:4px solid currentColor;border-radius:10px;opacity:.85;background:rgba(244,239,226,.7)}
+  .stamp.ok{color:var(--pgood)} .stamp.no{color:var(--pwarn)}
+  .stamp.in{animation:stampin .3s ease-out}
+  @keyframes stampin{from{transform:translate(-50%,-50%) rotate(-12deg) scale(1.8);opacity:0}}
+  .fly{position:absolute;z-index:6;pointer-events:none;margin:0;font-family:var(--mono);font-size:.84rem;white-space:nowrap;
+    padding:7px 12px;border-radius:9px;background:var(--paper);color:var(--pink);border:1px solid var(--gold);
+    box-shadow:0 12px 30px -10px rgba(0,0,0,.9);transition-property:left,top,opacity;transition-timing-function:cubic-bezier(.45,0,.3,1)}
+
+  /* ready-made orders */
+  .ready{margin-top:22px}
+  .presets{display:flex;flex-wrap:wrap;gap:8px}
+  .pre{display:flex;align-items:center;gap:8px;font-family:var(--mono);font-size:.82rem;padding:9px 13px;border-radius:999px;cursor:pointer;
+    border:1px solid var(--line);background:var(--surface);color:var(--ink);transition:.15s}
+  .pre:hover{border-color:var(--accent)}
+  .pre .st{font-size:.68rem;letter-spacing:.08em;text-transform:uppercase;padding:2px 8px;border-radius:999px}
+  .pre.ok{border-color:rgba(70,217,138,.6)} .pre.ok .st{background:rgba(70,217,138,.16);color:var(--good)}
+  .pre.no{border-color:rgba(255,106,106,.6)} .pre.no .st{background:rgba(255,106,106,.16);color:var(--warn)}
+
+  /* the one sentence */
+  .caption{display:flex;gap:14px;align-items:flex-start;margin:18px 2px 0;padding-top:16px;border-top:1px solid var(--line)}
+  .caption .t{flex:1;min-width:0;min-height:4.8em;font-size:1.05rem;line-height:1.55;color:var(--ink);padding-left:16px;border-left:3px solid var(--accent);transition:border-color .3s}
+  .caption .t .line{display:block;margin-top:6px;font-family:var(--mono);font-size:.8rem;color:#bcd0ff;opacity:.9;overflow-wrap:anywhere}
+  .caption.y .t{border-left-color:var(--gold)} .caption.g .t{border-left-color:var(--good)} .caption.w .t{border-left-color:var(--warn)}
+  .caption.w .t .line{color:#ffb0b0}
+  .caption b.a{color:var(--accent)} .caption b.y{color:var(--gold)} .caption b.g{color:var(--good)} .caption b.w{color:var(--warn)}
+  .reset{font-family:var(--body);font-weight:500;font-size:.84rem;padding:8px 14px;border-radius:11px;cursor:pointer;
+    border:1px solid var(--line);background:transparent;color:var(--muted);transition:.15s;flex-shrink:0}
+  .reset:hover{border-color:var(--accent);color:var(--accent)}
+  button:focus-visible{outline:2px solid var(--accent);outline-offset:2px}
+
+  .take{margin-top:22px;background:linear-gradient(180deg,rgba(110,160,255,.08),rgba(139,123,255,.04));
+    border:1px solid var(--line);border-left:3px solid var(--accent);border-radius:12px;padding:16px 18px}
+  .take .tk{font-family:var(--mono);font-size:.66rem;letter-spacing:.14em;text-transform:uppercase;color:var(--accent);margin:0 0 8px}
+  .take p{margin:0;font-size:.95rem;color:var(--ink);line-height:1.55}
+  .take b{color:#fff}
+  @media (max-width:560px){.stage{padding:14px}.pad{padding:14px 12px 28px}.stamp{font-size:1.5rem}}
+  @media (prefers-reduced-motion:reduce){*{animation-duration:.01ms!important;transition-duration:.01ms!important;animation-delay:0s!important;transition-delay:0s!important}#amb{display:none}}
+</style>
+</head>
+<body>
+<a class="back" href="../index.html#03-what-an-order-can-hold">&#8592; Week 8 index</a>
+<canvas id="amb"></canvas>
+<div class="wrap">
+  <p class="tag">Capstone 2 &middot; Build</p>
+  <h1>What an Order Can Hold</h1>
+  <p class="lede"><b>One order pad, three counters. Fill it, empty it, and try to check it out.</b></p>
+
+  <div class="stage">
+    <div id="board">
+      <div class="opts" id="opts" role="group" aria-label="Your capstone option"></div>
+      <div class="shop">
+        <div>
+          <p class="hd">the counters &middot; one press adds one thing</p>
+          <div class="counters" id="counters"></div>
+        </div>
+        <div class="padwrap">
+          <div class="pad" id="pad">
+            <div class="ph"><span class="shopname" id="shopName"></span><span class="sub">order screen</span></div>
+            <div class="lines" id="lines"></div>
+            <div class="tot" id="tot"><span>Total</span><b id="total">0.00</b></div>
+            <div class="padbtns">
+              <button class="co" id="bCheckout"></button>
+              <button class="cx" id="bCancel"></button>
+            </div>
+            <div class="stamp" id="stamp" hidden></div>
+          </div>
+        </div>
+      </div>
+      <div class="ready">
+        <p class="hd">ready-made orders &middot; one press each</p>
+        <div class="presets" id="presets"></div>
+      </div>
+    </div>
+    <div class="caption" id="caption">
+      <div class="t" id="status"></div>
+      <button class="reset" id="bReset">Reset</button>
+    </div>
+  </div>
+
+  <div class="take">
+    <p class="tk">The one idea</p>
+    <p><b>An order is a list that grows one line at a time, and its total is the sum of its lines.</b> It can hold any number of main items, drinks and side products, in any mix, including zero main items. The one order that cannot be checked out is the empty one. Cancel throws the whole order away.</p>
+  </div>
+  <div id="rail"></div>
+</div>
+<script src="../options.js"></script>
+<script>
+/* the rules of one order: plain functions, data in, data out */
+var OrderPad = (function () {
+  "use strict";
+  function cap(s) { return s.charAt(0).toUpperCase() + s.slice(1); }
+  function menuWords(line) { return line.replace(/^\d+\)\s*/, ""); }
+  /* the three ready-made products, all from CAP2 */
+  function products(o) {
+    var size = o.sizeNames ? o.sizeNames[1] : o.sizes[1];
+    var mainName = size.toLowerCase().indexOf(o.item.toLowerCase()) >= 0 ? size : size + " " + o.Item;
+    var d = window.CAP2.drink;
+    var t = o.third;
+    return [
+      { kind: "main", menu: o.orderMenu[0], name: mainName, note: o.types[0] + " " + o.typeWord + ", no toppings", price: o.sizePrices[1] },
+      { kind: "drink", menu: o.orderMenu[1], name: d.sizes[1] + " Drink", note: o.flavors[0], price: d.prices[1] },
+      { kind: "third", menu: o.orderMenu[2], name: t.name, note: t.types.length ? t.types[0] : "one order", price: t.price }
+    ];
+  }
+  function total(lines) {
+    var c = 0;
+    for (var i = 0; i < lines.length; i++) c += window.CAP2.cents(lines[i].price);
+    return c;
+  }
+  function count(lines, kind) {
+    var n = 0;
+    for (var i = 0; i < lines.length; i++) if (lines[i].kind === kind) n++;
+    return n;
+  }
+  /* what the customer must buy when there is no main item, in the words of the text */
+  function mustBuy(o) {
+    var m = /must purchase (.*?)\./.exec(o.emptyRule);
+    return m ? m[1] : "";
+  }
+  /* Checkout: empty = refused; no main item but a drink or the third product = accepted; main items = accepted */
+  function checkout(lines) {
+    var mains = count(lines, "main"), drinks = count(lines, "drink"), thirds = count(lines, "third");
+    var kind = lines.length === 0 ? "empty" : mains === 0 ? "noMain" : "main";
+    return { ok: kind !== "empty", kind: kind, mains: mains, drinks: drinks, thirds: thirds, cents: total(lines) };
+  }
+  function presets(o) {
+    var p = products(o), m = p[0], d = p[1], t = p[2];
+    return [
+      { label: "1 " + o.Item + " + 1 Drink", lines: [m, d] },
+      { label: "2 " + cap(o.items), lines: [m, m] },
+      { label: "1 Drink only", lines: [d] },
+      { label: t.name + " only", lines: [t] },
+      { label: "Nothing", lines: [] }
+    ];
+  }
+  return { products: products, total: total, count: count, mustBuy: mustBuy, checkout: checkout, presets: presets, menuWords: menuWords, cap: cap };
+})();
+
+(function () {
+  "use strict";
+  var C = window.CAP2, P = OrderPad;
+  var $ = function (s) { return document.querySelector(s); };
+  var still = window.matchMedia && matchMedia("(prefers-reduced-motion: reduce)").matches;
+  var status = $("#status"), caption = $("#caption"), board = $("#board");
+  var key = C.saved(), o = C.options[key], prods = [], lines = [], busy = false, run = 0, seq = 0;
+
+  function el(tag, cls, txt) { var d = document.createElement(tag); if (cls) d.className = cls; if (txt !== undefined) d.textContent = txt; return d; }
+  function esc(s) { return String(s).replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/"/g, "&quot;"); }
+  function wait(ms) { return new Promise(function (r) { setTimeout(r, still ? 0 : ms); }); }
+  function say(html, tone, line) {
+    caption.className = "caption" + (tone ? " " + tone : "");
+    status.innerHTML = html;
+    if (line) { var sp = el("span", "line", line); status.appendChild(sp); }
+  }
+  function money(c) { return C.money(c); }
+  function nItems(n) { return n + " " + (n === 1 ? o.item : o.items); }
+  function center(e) { var b = board.getBoundingClientRect(), r = e.getBoundingClientRect(); return [r.left - b.left + r.width / 2, r.top - b.top + r.height / 2]; }
+  function fly(from, to, txt) {
+    if (still || !from.getBoundingClientRect) return Promise.resolve();
+    var g = el("span", "fly", txt); board.appendChild(g);
+    var p = center(from); g.style.transitionDuration = "0s"; g.style.left = (p[0] - g.offsetWidth / 2) + "px"; g.style.top = (p[1] - g.offsetHeight / 2) + "px"; void g.offsetWidth;
+    var q = center(to); g.style.transitionDuration = "560ms"; g.style.left = (q[0] - g.offsetWidth / 2) + "px"; g.style.top = (q[1] - g.offsetHeight / 2) + "px";
+    return wait(560).then(function () { if (g.parentNode) g.parentNode.removeChild(g); });
+  }
+  function popTotal() { var t = $("#tot"); t.classList.remove("pop"); void t.offsetWidth; t.classList.add("pop"); }
+  function clearStamp() { $("#stamp").hidden = true; }
+  function stamp(ok) { var s = $("#stamp"); s.hidden = false; s.className = "stamp in " + (ok ? "ok" : "no"); s.textContent = ok ? "Accepted" : "Refused"; }
+
+  /* draw the pad from the list of lines */
+  function lineEl(x, n) {
+    var b = el("button", "ln"); b.setAttribute("data-id", x.id); b.setAttribute("aria-label", "Remove " + x.name + " from the order");
+    b.appendChild(el("span", "no", n + "."));
+    var nm = el("span", "nm", x.name); nm.appendChild(el("small", "", x.note)); b.appendChild(nm);
+    b.appendChild(el("span", "p", x.price));
+    return b;
+  }
+  function drawPad() {
+    var box = $("#lines"); box.innerHTML = "";
+    if (!lines.length) box.appendChild(el("p", "empty", "nothing on the order yet"));
+    lines.forEach(function (x, i) { var e = lineEl(x, i + 1); if (x.landing) e.classList.add("landing"); box.appendChild(e); });
+    var landed = lines.filter(function (x) { return !x.landing; });
+    $("#total").textContent = money(P.total(landed));
+  }
+  function newLine(p) { seq++; return { id: "L" + seq, kind: p.kind, menu: p.menu, name: p.name, note: p.note, price: p.price }; }
+
+  function build() {
+    run++; busy = false; o = C.options[key]; prods = P.products(o); lines = [];
+    var g = document.querySelectorAll(".fly"); for (var n = 0; n < g.length; n++) g[n].parentNode.removeChild(g[n]);
+    var ob = $("#opts"); ob.innerHTML = "";
+    C.order.forEach(function (k) { var b = el("button", "tab" + (k === key ? " on" : ""), C.options[k].name); b.setAttribute("data-o", k); b.setAttribute("aria-pressed", k === key ? "true" : "false"); ob.appendChild(b); });
+    var cb = $("#counters"); cb.innerHTML = "";
+    prods.forEach(function (p, i) {
+      var b = el("button", "ctr k" + i); b.setAttribute("data-p", i);
+      b.appendChild(el("span", "mn", p.menu));
+      var pr = el("span", "pr"); pr.appendChild(el("span", "", p.name + ", " + p.note)); pr.appendChild(el("b", "", p.price)); b.appendChild(pr);
+      cb.appendChild(b);
+    });
+    $("#shopName").textContent = o.shop;
+    $("#bCheckout").textContent = o.orderMenu[3];
+    $("#bCancel").textContent = o.orderMenu[4];
+    var pb = $("#presets"); pb.innerHTML = "";
+    P.presets(o).forEach(function (x, i) { var b = el("button", "pre"); b.setAttribute("data-r", i); b.appendChild(el("span", "", x.label)); pb.appendChild(b); });
+    clearStamp(); drawPad();
+    say("This is an empty order pad at <b class=\"a\">" + esc(o.shop) + "</b>. Press a counter to add one thing, press a line to take it off, then press <b class=\"a\">Checkout</b>.", "");
+  }
+
+  function add(i) {
+    if (busy) return;
+    var p = prods[i], x = newLine(p), before = P.total(lines.filter(function (y) { return !y.landing; })), my = run;
+    x.landing = true; lines.push(x); busy = true; clearStamp(); drawPad();
+    var target = document.querySelector('.ln[data-id="' + x.id + '"]');
+    fly($("#counters").children[i], target, p.name + "  " + p.price).then(function () {
+      if (my !== run) return;
+      x.landing = false; busy = false; drawPad();
+      var e = document.querySelector('.ln[data-id="' + x.id + '"]'); if (e) e.classList.add("fresh");
+      popTotal();
+      var after = before + C.cents(p.price);
+      var what = p.kind === "main" ? "ONE " + o.item : p.kind === "drink" ? "ONE drink" : "ONE " + p.name;
+      var extra = p.kind === "main" ? " In your program, " + esc(P.menuWords(p.menu)) + " asks its questions first, then comes back to this screen." : "";
+      say("<b class=\"g\">" + esc(P.menuWords(p.menu)) + "</b> put " + esc(what) + " on the order. The total adds its price: " + money(before) + " + " + p.price + " = <b class=\"g\">" + money(after) + "</b>." + extra, "g", p.menu);
+    });
+  }
+  function removeLine(id) {
+    if (busy) return;
+    var x = null; lines.forEach(function (y) { if (y.id === id) x = y; });
+    if (!x) return;
+    var e = document.querySelector('.ln[data-id="' + id + '"]'), my = run, before = P.total(lines);
+    busy = true; clearStamp(); if (e) e.classList.add("gone");
+    wait(280).then(function () {
+      if (my !== run) return;
+      lines = lines.filter(function (y) { return y.id !== id; });
+      busy = false; drawPad(); popTotal();
+      var after = P.total(lines);
+      say("Took the " + esc(x.name) + " off the order. The total loses its price: " + money(before) + " - " + x.price + " = <b class=\"y\">" + money(after) + "</b>." +
+        (lines.length ? "" : " The pad is empty again."), "y");
+    });
+  }
+  /* the answer of Checkout, in the words of the text */
+  function answer(r) {
+    if (r.kind === "empty") {
+      return { tone: "w", html: "<b class=\"w\">Refused.</b> There is nothing on the order. " + esc(o.emptyRule) };
+    }
+    if (r.kind === "noMain") {
+      var has = r.drinks && r.thirds ? "a drink and an order of " + o.third.name : r.drinks ? "a drink" : "an order of " + o.third.name;
+      return { tone: "g", html: "<b class=\"g\">Accepted.</b> The order has 0 " + esc(o.items) + ", and that is allowed: with 0 " + esc(o.items) + " the customer must purchase " + esc(P.mustBuy(o)) +
+        ", and this order has " + esc(has) + ". Checkout shows each line and the total, <b class=\"g\">" + money(r.cents) + "</b>." };
+    }
+    return { tone: "g", html: "<b class=\"g\">Accepted.</b> The order has " + esc(nItems(r.mains)) + ". A drink or " + esc(o.third.name) + " can be added, but they are not needed. Checkout shows each line and the total, <b class=\"g\">" + money(r.cents) + "</b>." };
+  }
+  function doCheckout(prefix) {
+    if (busy) return null;
+    var r = P.checkout(lines), a = answer(r);
+    stamp(r.ok);
+    say((prefix || "") + a.html, a.tone, o.orderMenu[3]);
+    return r;
+  }
+  function cancel() {
+    if (busy) return;
+    var had = lines.length, was = P.total(lines);
+    lines = []; clearStamp(); drawPad(); popTotal();
+    say(had ? "<b class=\"y\">Cancel Order</b> deleted the order: all " + had + " line" + (had === 1 ? "" : "s") + " are gone, and the total went from " + money(was) + " to <b class=\"y\">0.00</b>. The program goes back to the home screen."
+      : "<b class=\"y\">Cancel Order</b> deletes the order and goes back to the home screen. This pad was already empty.", "y", o.orderMenu[4]);
+  }
+  function preset(i) {
+    if (busy) return;
+    var x = P.presets(o)[i];
+    lines = x.lines.map(newLine); clearStamp(); drawPad();
+    var ls = document.querySelectorAll(".ln"); for (var n = 0; n < ls.length; n++) ls[n].classList.add("fresh");
+    var r = doCheckout("Ready-made order, " + esc(x.label) + ": ");
+    var b = $("#presets").children[i], st = b.querySelector(".st");
+    if (!st) { st = el("span", "st"); b.appendChild(st); }
+    b.className = "pre " + (r.ok ? "ok" : "no"); st.textContent = r.ok ? "valid" : "not valid";
+  }
+
+  board.addEventListener("click", function (e) {
+    var t = e.target.closest(".tab"); if (t) { key = t.getAttribute("data-o"); C.save(key); build(); return; }
+    var c = e.target.closest(".ctr"); if (c) { add(+c.getAttribute("data-p")); return; }
+    var l = e.target.closest(".ln"); if (l) { removeLine(l.getAttribute("data-id")); return; }
+    if (e.target.closest("#bCheckout")) { doCheckout(""); return; }
+    if (e.target.closest("#bCancel")) { cancel(); return; }
+    var p = e.target.closest(".pre"); if (p) preset(+p.getAttribute("data-r"));
+  });
+  $("#bReset").addEventListener("click", build);
+  build();
+
+  /* ambient canvas */
+  var cv = $("#amb"), ctx = cv.getContext && cv.getContext("2d"), parts = [];
+  function sizeC() { if (!ctx) return; cv.width = innerWidth; cv.height = innerHeight; }
+  function initParts() { parts = []; for (var i = 0; i < 46; i++) parts.push({ x: Math.random(), y: Math.random(), r: Math.random() * 1.6 + .3, s: Math.random() * .02 + .004, o: Math.random() * .4 + .1 }); }
+  function drawC() { if (!ctx) return; ctx.clearRect(0, 0, cv.width, cv.height);
+    parts.forEach(function (p) { p.y -= p.s / 60; if (p.y < -.02) p.y = 1.02;
+      ctx.beginPath(); ctx.arc(p.x * cv.width, p.y * cv.height, p.r, 0, 7);
+      ctx.fillStyle = "rgba(140,170,255," + p.o + ")"; ctx.fill(); });
+    requestAnimationFrame(drawC); }
+  if (ctx && !still) { sizeC(); initParts(); drawC(); addEventListener("resize", sizeC); }
+})();
+</script>
+<script src="../manifest.js"></script>
+<script src="../../assets/rail.js"></script>
+<script>Rail.render(document.getElementById("rail"),{week:8,kind:"visuals",current:"03-what-an-order-can-hold"});</script>
+</body>
+</html>

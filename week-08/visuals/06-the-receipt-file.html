@@ -1,0 +1,490 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>The Receipt File | Week 8 Visual Hub</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Sora:wght@500;700&family=Inter:wght@400;500&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --bg:#080c17; --bg2:#0c1428; --surface:rgba(255,255,255,.045); --line:rgba(255,255,255,.09);
+    --ink:#eef2fb; --muted:#8496b6; --accent:#6ea0ff; --accent2:#8b7bff; --good:#46d98a; --warn:#ff6a6a;
+    --gold:#ffc862; --disp:'Sora',system-ui,sans-serif; --body:'Inter',system-ui,sans-serif;
+    --mono:'JetBrains Mono',ui-monospace,monospace;
+  }
+  *{box-sizing:border-box}
+  body{margin:0;min-height:100vh;color:var(--ink);font-family:var(--body);
+    background:radial-gradient(1200px 700px at 70% -10%,#141d38 0%,transparent 55%),
+               radial-gradient(900px 600px at 10% 110%,#161233 0%,transparent 50%),#080c17;
+    overflow-x:hidden}
+  #amb{position:fixed;inset:0;z-index:0;pointer-events:none;opacity:.6}
+  .back{position:relative;z-index:2;display:block;max-width:1120px;margin:0 auto;padding:26px 24px 0;
+    width:100%;font-family:var(--mono);font-size:.8rem;letter-spacing:.04em;color:var(--muted);
+    text-decoration:none;transition:color .15s}
+  .back:hover{color:var(--accent)}
+  .wrap{position:relative;z-index:1;max-width:1120px;margin:0 auto;padding:22px 24px 70px}
+  .tag{font-family:var(--mono);font-size:.72rem;letter-spacing:.22em;text-transform:uppercase;color:var(--accent);margin:0 0 14px}
+  h1{font-family:var(--disp);font-weight:700;font-size:clamp(2.3rem,6vw,3.6rem);line-height:1;margin:0 0 12px;
+    letter-spacing:-.03em;background:linear-gradient(180deg,#fff,#b9c6e6);-webkit-background-clip:text;
+    background-clip:text;color:transparent}
+  .lede{color:var(--muted);max-width:64ch;font-size:1.05rem;margin:0 0 26px;line-height:1.5}
+  .lede b{color:var(--ink)}
+  code{font-family:var(--mono);font-size:.92em;color:#bcd0ff}
+
+  /* ---------- the stage IS the picture ---------- */
+  .stage{position:relative;background:linear-gradient(180deg,rgba(255,255,255,.03),rgba(255,255,255,.01));
+    border:1px solid var(--line);border-radius:24px;padding:22px;
+    box-shadow:0 1px 0 rgba(255,255,255,.06) inset,0 30px 80px -30px rgba(0,0,0,.8)}
+  [hidden]{display:none!important}
+  .hd{display:block;font-family:var(--mono);font-size:.62rem;letter-spacing:.16em;text-transform:uppercase;color:var(--muted);margin:0 0 10px}
+  #board{position:relative}
+  .row2{display:grid;grid-template-columns:minmax(0,1.35fr) minmax(0,1fr);gap:12px}
+  .row3{display:grid;grid-template-columns:minmax(0,1.6fr) minmax(0,1fr);gap:12px;margin-top:12px}
+  @media (max-width:820px){.row2,.row3{grid-template-columns:1fr}}
+  .card{padding:16px;border-radius:18px;border:1px solid var(--line);background:rgba(6,10,20,.5);min-width:0}
+
+  /* the clock and calendar */
+  .when{font-family:var(--disp);font-weight:500;font-size:1.12rem;margin:0 0 12px;color:#dfe7fb}
+  .when span{color:var(--muted);font-family:var(--body);font-weight:400;font-size:.9rem}
+  .parts{display:grid;grid-template-columns:1.3fr repeat(5,1fr);gap:6px}
+  @media (max-width:520px){.parts{grid-template-columns:repeat(3,1fr)}}
+  .pc{display:flex;flex-direction:column;align-items:center;gap:3px;padding:8px 4px;border-radius:12px;border:1px solid var(--line);
+    background:rgba(255,255,255,.03);transition:border-color .25s,box-shadow .25s}
+  .pc .k{font-family:var(--mono);font-size:.58rem;letter-spacing:.1em;text-transform:uppercase;color:var(--muted)}
+  .pc .v{font-family:var(--disp);font-weight:700;font-size:1.35rem;font-variant-numeric:tabular-nums;color:var(--ink);line-height:1.2}
+  .pc .sub{font-family:var(--mono);font-size:.66rem;color:var(--muted);min-height:1em}
+  .pc.lit{border-color:var(--gold);box-shadow:0 0 22px -8px #ffc862}
+  .ar{font-size:.7rem;line-height:1;padding:4px 10px;border-radius:8px;cursor:pointer;border:1px solid var(--line);background:transparent;color:var(--muted);transition:.15s}
+  .ar:hover{border-color:var(--accent);color:var(--ink)}
+  .ar:disabled{opacity:.35;cursor:default}
+  .clockActs{display:flex;flex-wrap:wrap;gap:8px;margin-top:12px}
+  .btn{font-family:var(--body);font-weight:500;font-size:.84rem;padding:8px 14px;border-radius:11px;cursor:pointer;border:1px solid var(--line);
+    background:var(--surface);color:var(--ink);transition:.15s}
+  .btn:hover{border-color:var(--accent);color:#fff}
+  .btn.warn{border-color:rgba(255,106,106,.4);color:#ffb0b0}
+  .btn.warn:hover{border-color:var(--warn);background:rgba(255,106,106,.1)}
+  .btn:disabled{opacity:.35;cursor:default}
+
+  /* the checkout screen */
+  .scr{font-family:var(--mono);font-size:.84rem}
+  .scr .shop{color:var(--gold);margin:0 0 2px}
+  .scr .ttl{color:var(--ink);margin:0 0 10px}
+  .paper{position:relative;padding:10px 12px;border-radius:12px;border:1px dashed rgba(255,255,255,.18);background:rgba(255,255,255,.03)}
+  .paper .cap{font-size:.62rem;letter-spacing:.12em;text-transform:uppercase;color:var(--muted);margin:0 0 8px}
+  .bar{height:8px;border-radius:4px;background:rgba(188,208,255,.22);margin:0 0 7px}
+  .bar.t{background:rgba(70,217,138,.35);width:45%;margin:10px 0 0 auto}
+  .menu{display:flex;flex-direction:column;gap:6px;margin-top:12px}
+  .opt{font-family:var(--mono);font-size:.88rem;text-align:left;padding:9px 13px;border-radius:11px;cursor:pointer;border:1px solid rgba(110,160,255,.4);
+    background:rgba(110,160,255,.08);color:#cfe0ff;transition:.15s}
+  .opt:hover{border-color:var(--accent);background:rgba(110,160,255,.18)}
+  .opt.cx{border-color:rgba(255,200,98,.4);background:rgba(255,200,98,.06);color:#ffd88f}
+  .opt.cx:hover{border-color:var(--gold);background:rgba(255,200,98,.14)}
+  .opt:disabled{opacity:.35;cursor:default}
+  .gone{animation:gone .6s ease forwards}
+  @keyframes gone{to{opacity:0;transform:translateY(16px) scale(.9)}}
+
+  /* the file name, built from tiles */
+  .tiles{display:flex;flex-wrap:wrap;align-items:flex-end;gap:6px 6px}
+  .tg{display:flex;flex-direction:column;align-items:center;gap:4px}
+  .tg .pl{font-family:var(--mono);font-size:.84rem;color:var(--gold);letter-spacing:.04em}
+  .tg .lb{font-family:var(--mono);font-size:.58rem;letter-spacing:.06em;text-transform:uppercase;color:var(--muted);white-space:nowrap}
+  .tl{font-family:var(--mono);font-weight:500;font-size:clamp(1.1rem,2.6vw,1.6rem);min-width:2.4em;height:1.9em;display:flex;align-items:center;justify-content:center;
+    padding:0 8px;border-radius:11px;border:1px dashed rgba(255,255,255,.18);background:rgba(0,0,0,.3);color:var(--ink);transition:border-color .25s,box-shadow .25s}
+  .tl.y4{min-width:3.6em}
+  .tl.full{border-style:solid;border-color:rgba(110,160,255,.55)}
+  .tl.lit{border-color:var(--gold);box-shadow:0 0 22px -8px #ffc862}
+  .tl .z{color:var(--gold)}
+  .fx{font-family:var(--mono);font-size:clamp(1.1rem,2.6vw,1.6rem);color:rgba(255,255,255,.22);padding-bottom:1.25em;transition:color .25s}
+  .fx.on{color:var(--ink)}
+  .traps{display:flex;flex-wrap:wrap;gap:8px;margin-top:14px;align-items:center}
+  .traps .lab{font-family:var(--mono);font-size:.62rem;letter-spacing:.14em;text-transform:uppercase;color:var(--muted);margin-right:4px}
+  .cmp{margin-top:12px;display:flex;flex-direction:column;gap:6px}
+  .cr{display:grid;grid-template-columns:minmax(0,1fr) auto;gap:4px 12px;align-items:center;padding:8px 12px;border-radius:11px;border:1px solid var(--line);background:rgba(255,255,255,.03)}
+  .cr .w1{font-size:.8rem;color:var(--muted)}
+  .cr .nm{font-family:var(--mono);font-size:.98rem;color:var(--ink)}
+  .cr.ok{border-color:rgba(70,217,138,.55)} .cr.ok .nm{color:#9fe3b6}
+  .cr.bad{border-color:rgba(255,106,106,.6);background:rgba(255,106,106,.07)} .cr.bad .nm{color:#ff9d9d}
+  .cr .mk{grid-column:1/-1;font-family:var(--mono);font-size:.7rem;color:var(--muted)}
+  .cr.bad .mk{color:#ffb0b0}
+
+  /* the receipts folder */
+  .folder{position:relative;margin-top:14px;padding:14px 12px 12px;border-radius:4px 14px 14px 14px;border:1px solid rgba(255,200,98,.45);background:rgba(255,200,98,.05);min-height:150px;transition:box-shadow .3s,border-color .3s}
+  .folder:before{content:"receipts";position:absolute;left:-1px;top:-24px;font-family:var(--mono);font-size:.74rem;color:var(--gold);padding:3px 12px;
+    border:1px solid rgba(255,200,98,.45);border-bottom:none;border-radius:10px 10px 0 0;background:rgba(255,200,98,.08)}
+  .folder.ping{border-color:var(--gold);box-shadow:0 0 26px -8px #ffc862}
+  .path{font-family:var(--mono);font-size:.72rem;color:var(--muted);margin:0 0 20px}
+  .files{display:flex;flex-direction:column;gap:6px}
+  .file{display:flex;align-items:center;gap:10px;width:100%;text-align:left;font-family:var(--mono);font-size:.86rem;padding:7px 10px;border-radius:10px;cursor:pointer;
+    border:1px solid var(--line);background:rgba(0,0,0,.3);color:var(--ink);transition:.2s}
+  .file:hover,.file.sel{border-color:var(--accent)}
+  .file.new{animation:land .4s ease}
+  .file.dup{border-color:var(--warn);box-shadow:0 0 22px -8px #ff6a6a}
+  .file .ic{width:16px;height:20px;flex-shrink:0;border-radius:2px 6px 2px 2px;border:1.5px solid #bcd0ff;position:relative}
+  .file .ic:after{content:"";position:absolute;left:3px;right:3px;top:6px;height:1.5px;background:#bcd0ff;box-shadow:0 4px 0 #bcd0ff}
+  .file .on{margin-left:auto;font-size:.66rem;color:var(--muted)}
+  .empty{font-family:var(--mono);font-size:.78rem;color:var(--muted);padding:10px 0}
+  .prev{margin-top:10px}
+  .prev .paper{border-style:solid;border-color:rgba(110,160,255,.4)}
+  .prev .pn{font-family:var(--mono);font-size:.8rem;color:#bcd0ff;margin:0 0 6px}
+  .prev .pw{font-size:.74rem;color:var(--muted);margin:8px 0 0}
+  @keyframes land{from{transform:scale(.85);opacity:.2}to{transform:none;opacity:1}}
+  .fly{position:absolute;z-index:5;margin:0;pointer-events:none;font-family:var(--mono);font-size:1rem;padding:6px 11px;border-radius:10px;
+    border:1px solid var(--gold);background:#1a2238;color:var(--gold);box-shadow:0 10px 30px -10px rgba(0,0,0,.9);white-space:pre;
+    transition-property:left,top,opacity;transition-timing-function:cubic-bezier(.45,0,.3,1)}
+  .fly.doc{border-color:var(--accent);color:#bcd0ff}
+
+  /* the one sentence */
+  .caption{display:flex;gap:14px;align-items:flex-start;margin:18px 2px 0;padding-top:16px;border-top:1px solid var(--line)}
+  .caption .t{flex:1;min-width:0;font-size:1.05rem;line-height:1.55;color:var(--ink);padding-left:16px;border-left:3px solid var(--accent);transition:border-color .3s}
+  .caption .t .line{display:block;margin-top:6px;font-family:var(--mono);font-size:.8rem;color:#bcd0ff;opacity:.9;overflow-wrap:anywhere}
+  .caption.y .t{border-left-color:var(--gold)} .caption.g .t{border-left-color:var(--good)} .caption.w .t{border-left-color:var(--warn)}
+  .caption.w .t .line{color:#ffb0b0}
+  .caption b.a{color:var(--accent)} .caption b.y{color:var(--gold)} .caption b.g{color:var(--good)} .caption b.w{color:var(--warn)}
+  .reset{font-family:var(--body);font-weight:500;font-size:.84rem;padding:8px 14px;border-radius:11px;cursor:pointer;
+    border:1px solid var(--line);background:transparent;color:var(--muted);transition:.15s;flex-shrink:0}
+  .reset:hover{border-color:var(--accent);color:var(--accent)}
+  button:focus-visible{outline:2px solid var(--accent);outline-offset:2px}
+
+  .take{margin-top:22px;background:linear-gradient(180deg,rgba(110,160,255,.08),rgba(139,123,255,.04));
+    border:1px solid var(--line);border-left:3px solid var(--accent);border-radius:12px;padding:16px 18px}
+  .take .tk{font-family:var(--mono);font-size:.66rem;letter-spacing:.14em;text-transform:uppercase;color:var(--accent);margin:0 0 8px}
+  .take p{margin:0;font-size:.95rem;color:var(--ink);line-height:1.55}
+  .take b{color:#fff}
+  @media (prefers-reduced-motion:reduce){*{animation-duration:.01ms!important;transition-duration:.01ms!important;animation-delay:0s!important;transition-delay:0s!important}#amb{display:none}}
+</style>
+</head>
+<body>
+<a class="back" href="../index.html#06-the-receipt-file">&#8592; Week 8 index</a>
+<canvas id="amb"></canvas>
+<div class="wrap">
+  <p class="tag">Capstone 2 &middot; Build</p>
+  <h1>The Receipt File</h1>
+  <p class="lede"><b>The moment an order is confirmed becomes the name of its receipt. Set the clock and confirm.</b></p>
+
+  <div class="stage">
+    <div id="board">
+      <div class="row2">
+        <section class="card">
+          <p class="hd">the clock and calendar</p>
+          <p class="when" id="when"></p>
+          <div class="parts" id="parts"></div>
+          <div class="clockActs"><button class="btn" id="bNow">Now</button></div>
+        </section>
+        <section class="card scr" id="screen"></section>
+      </div>
+      <div class="row3">
+        <section class="card">
+          <p class="hd">the receipt file name</p>
+          <div class="tiles" id="tiles"></div>
+          <div class="traps">
+            <span class="lab">try a trap</span>
+            <button class="btn warn" id="tHH">hh instead of HH</button>
+            <button class="btn warn" id="tPad">no zeros added</button>
+          </div>
+          <div class="cmp" id="cmp" hidden></div>
+        </section>
+        <section class="card">
+          <p class="hd">your project folder</p>
+          <div class="folder" id="folder">
+            <p class="path">your project folder / receipts /</p>
+            <div class="files" id="files"></div>
+          </div>
+          <div class="prev" id="prev" hidden></div>
+        </section>
+      </div>
+    </div>
+    <div class="caption" id="caption">
+      <div class="t" id="status"></div>
+      <button class="reset" id="bReset">Reset</button>
+    </div>
+  </div>
+
+  <div class="take">
+    <p class="tk">The one idea</p>
+    <p><b>One confirmed order, one receipt file, named by the moment of the confirmation.</b> <code>yyyyMMdd-HHmmss.txt</code> reads year, month, day, a dash, hour, minute, second. Every piece keeps its number of digits (March is 03), and HH is the 24-hour clock, so 2 PM is 14. Each receipt goes into the receipts folder inside your project folder and holds the order details shown at checkout. 0) Cancel creates no file.</p>
+  </div>
+  <div id="rail"></div>
+</div>
+<script src="../options.js"></script>
+<script>
+/* the file name rule as plain functions: a moment in, a name out */
+var RECEIPT = (function(){
+  var PAT=[{k:"y",p:"yyyy",w:4,lab:"year"},{k:"M",p:"MM",w:2,lab:"month"},{k:"d",p:"dd",w:2,lab:"day"},
+           {k:"h",p:"HH",w:2,lab:"hour 00-23"},{k:"m",p:"mm",w:2,lab:"minute"},{k:"s",p:"ss",w:2,lab:"second"}];
+  var MONTHS=["January","February","March","April","May","June","July","August","September","October","November","December"];
+  var DAYS=["Sunday","Monday","Tuesday","Wednesday","Thursday","Friday","Saturday"];
+  function pad(n,w){ var s=String(n); while(s.length<w) s="0"+s; return s; }
+  function daysIn(y,M){ return new Date(Date.UTC(y,M,0)).getUTCDate(); }
+  /* one piece of the name; o.hour12 = the hh mistake, o.noPad = the missing zeros mistake */
+  function piece(mo,k,o){
+    o=o||{}; var v=mo[k], w=k==="y"?4:2;
+    if(k==="h"&&o.hour12){ v=v%12; if(v===0) v=12; }
+    return o.noPad?String(v):pad(v,w);
+  }
+  function pieces(mo,o){ return PAT.map(function(p){ return piece(mo,p.k,o); }); }
+  function fileName(mo,o){ var p=pieces(mo,o); return p[0]+p[1]+p[2]+"-"+p[3]+p[4]+p[5]+".txt"; }
+  function addSeconds(mo,n){
+    var t=new Date(Date.UTC(mo.y,mo.M-1,mo.d,mo.h,mo.m,mo.s)+n*1000);
+    return {y:t.getUTCFullYear(),M:t.getUTCMonth()+1,d:t.getUTCDate(),h:t.getUTCHours(),m:t.getUTCMinutes(),s:t.getUTCSeconds()};
+  }
+  function time12(mo){ var h=mo.h%12; if(h===0) h=12; return h+":"+pad(mo.m,2)+":"+pad(mo.s,2)+(mo.h<12?" AM":" PM"); }
+  function human(mo){
+    var wd=DAYS[new Date(Date.UTC(mo.y,mo.M-1,mo.d)).getUTCDay()];
+    return {date:wd+", "+MONTHS[mo.M-1]+" "+mo.d+", "+mo.y, time:time12(mo)};
+  }
+  /* step one part of the moment up or down, wrapping, keeping the day valid */
+  function step(mo,k,dir){
+    var r={y:mo.y,M:mo.M,d:mo.d,h:mo.h,m:mo.m,s:mo.s};
+    function wrap(v,lo,hi){ return v>hi?lo:v<lo?hi:v; }
+    if(k==="y") r.y=wrap(r.y+dir,2020,2035);
+    if(k==="M") r.M=wrap(r.M+dir,1,12);
+    if(k==="d") r.d=wrap(r.d+dir,1,daysIn(r.y,r.M));
+    if(k==="h") r.h=wrap(r.h+dir,0,23);
+    if(k==="m") r.m=wrap(r.m+dir,0,59);
+    if(k==="s") r.s=wrap(r.s+dir,0,59);
+    if(r.d>daysIn(r.y,r.M)) r.d=daysIn(r.y,r.M);
+    return r;
+  }
+  return {PAT:PAT,MONTHS:MONTHS,pad:pad,daysIn:daysIn,piece:piece,pieces:pieces,fileName:fileName,addSeconds:addSeconds,time12:time12,human:human,step:step};
+})();
+
+(function(){
+  "use strict";
+  var R=RECEIPT, CAP2=window.CAP2;
+  var $=function(s){return document.querySelector(s);};
+  var reduce=matchMedia("(prefers-reduced-motion: reduce)").matches;
+  var status=$("#status"),caption=$("#caption"),board=$("#board");
+  var opt=CAP2.options[CAP2.saved()], CHECK=CAP2.screens.checkout, HOME=CAP2.screens.home;
+  var START={y:2026,M:12,d:4,h:14,m:15,s:23};
+  /* minutes between one customer and the next, so each order gets a later moment */
+  var GAPS=[257,668,171,402,95];
+  var mo, files, orderNo, atHome, busy, run, sel;
+
+  function say(html,tone,line){
+    caption.className="caption"+(tone?" "+tone:"");
+    status.innerHTML=html;
+    if(line){ var sp=document.createElement("span"); sp.className="line"; sp.textContent=line; status.appendChild(sp); }
+  }
+  function wait(ms){return new Promise(function(r){setTimeout(r,reduce?0:ms);});}
+  function el(tag,cls,txt){ var d=document.createElement(tag); if(cls) d.className=cls; if(txt!==undefined) d.textContent=txt; return d; }
+  function center(e){ var b=board.getBoundingClientRect(), r=e.getBoundingClientRect(); return [r.left-b.left+r.width/2, r.top-b.top+r.height/2]; }
+  function fly(from,to,txt,cls,ms){
+    if(reduce) return Promise.resolve();
+    var g=el("span","fly"+(cls?" "+cls:""),txt); board.appendChild(g);
+    var p=center(from); g.style.transitionDuration="0s"; g.style.left=(p[0]-g.offsetWidth/2)+"px"; g.style.top=(p[1]-g.offsetHeight/2)+"px"; void g.offsetWidth;
+    var q=center(to); g.style.transitionDuration=ms+"ms"; g.style.left=(q[0]-g.offsetWidth/2)+"px"; g.style.top=(q[1]-g.offsetHeight/2)+"px";
+    return wait(ms).then(function(){ if(g.parentNode) g.parentNode.removeChild(g); });
+  }
+  function whenText(){ var h=R.human(mo); return h.date+" at "+h.time; }
+
+  /* ---------- drawing ---------- */
+  function drawClock(){
+    var h=R.human(mo);
+    var w=$("#when"); w.innerHTML=""; w.appendChild(document.createTextNode(h.time+" ")); w.appendChild(el("span","",h.date));
+    var ps=$("#parts"); ps.innerHTML="";
+    R.PAT.forEach(function(p){
+      var c=el("div","pc"); c.id="pc-"+p.k;
+      c.appendChild(el("span","k",p.lab.split(" ")[0]));
+      var up=el("button","ar","▲"); up.setAttribute("data-k",p.k); up.setAttribute("data-dir","1"); up.setAttribute("aria-label",p.lab+" up"); up.disabled=busy;
+      var dn=el("button","ar","▼"); dn.setAttribute("data-k",p.k); dn.setAttribute("data-dir","-1"); dn.setAttribute("aria-label",p.lab+" down"); dn.disabled=busy;
+      c.appendChild(up);
+      var v=el("span","v",String(mo[p.k])); v.id="pv-"+p.k; c.appendChild(v);
+      c.appendChild(dn);
+      var sub=p.k==="M"?R.MONTHS[mo.M-1].slice(0,3):p.k==="h"?(mo.h%12===0?12:mo.h%12)+(mo.h<12?" AM":" PM"):"";
+      c.appendChild(el("span","sub",sub));
+      ps.appendChild(c);
+    });
+    $("#bNow").disabled=busy;
+  }
+  function drawTiles(filled){
+    var t=$("#tiles"); t.innerHTML="";
+    var parts=R.pieces(mo);
+    R.PAT.forEach(function(p,i){
+      if(i===3){ var d=el("span","fx","-"); d.id="fxDash"; if(filled) d.className="fx on"; t.appendChild(d); }
+      var g=el("div","tg");
+      g.appendChild(el("span","pl",p.p));
+      var tl=el("div","tl"+(p.w===4?" y4":"")); tl.id="tl-"+p.k;
+      if(filled) fillTile(tl,p.k,parts[i]);
+      g.appendChild(tl);
+      g.appendChild(el("span","lb",p.lab));
+      t.appendChild(g);
+    });
+    var x=el("span","fx",".txt"); x.id="fxTxt"; if(filled) x.className="fx on"; t.appendChild(x);
+  }
+  /* the digits of one tile; a zero added in front shows in gold */
+  function fillTile(tl,k,txt){
+    tl.innerHTML=""; tl.className=tl.className.replace(/ ?full/,"")+" full";
+    var raw=String(mo[k]), added=txt.length-raw.length;
+    if(added>0) tl.appendChild(el("span","z",txt.slice(0,added)));
+    tl.appendChild(document.createTextNode(txt.slice(added>0?added:0)));
+  }
+  function drawScreen(){
+    var s=$("#screen"); s.innerHTML="";
+    s.appendChild(el("p","hd",atHome?"the home screen":"the checkout screen"));
+    s.appendChild(el("p","shop",opt.shop));
+    var m=el("div","menu");
+    if(atHome){
+      s.appendChild(el("p","ttl","Home"));
+      HOME.forEach(function(txt,i){
+        var b=el("button","opt"+(i===0?"":" cx"),txt); b.id=i===0?"bNew":"bExit"; b.disabled=busy||i!==0; m.appendChild(b);
+      });
+    } else {
+      s.appendChild(el("p","ttl","Checkout · order "+orderNo));
+      var pp=el("div","paper"); pp.id="paper";
+      pp.appendChild(el("p","cap","the order details and the total"));
+      [88,72,80,60].forEach(function(w){ var b=el("div","bar"); b.style.width=w+"%"; pp.appendChild(b); });
+      pp.appendChild(el("div","bar t"));
+      s.appendChild(pp);
+      CHECK.forEach(function(txt,i){
+        var b=el("button","opt"+(i===0?"":" cx"),txt); b.id=i===0?"bConfirm":"bCancel"; b.disabled=busy; m.appendChild(b);
+      });
+    }
+    s.appendChild(m);
+  }
+  function drawFiles(newName,dupName){
+    var f=$("#files"); f.innerHTML="";
+    if(!files.length) f.appendChild(el("p","empty","(empty)"));
+    files.forEach(function(r){
+      var b=el("button","file"+(r.name===newName?" new":"")+(r.name===dupName?" dup":"")+(sel===r.name?" sel":""));
+      b.setAttribute("data-f",r.name);
+      b.appendChild(el("span","ic")); b.appendChild(el("span","",r.name)); b.appendChild(el("span","on","order "+r.order));
+      f.appendChild(b);
+    });
+    drawPreview();
+  }
+  function drawPreview(){
+    var p=$("#prev"), r=files.filter(function(x){return x.name===sel;})[0];
+    p.innerHTML=""; p.hidden=!r; if(!r) return;
+    var pp=el("div","paper");
+    pp.appendChild(el("p","pn",r.name));
+    pp.appendChild(el("p","cap",opt.shop+" · order "+r.order));
+    [88,72,80,60].forEach(function(w){ var b=el("div","bar"); b.style.width=w+"%"; pp.appendChild(b); });
+    pp.appendChild(el("div","bar t"));
+    pp.appendChild(el("p","pw","Inside: the order details shown at checkout. Confirmed "+r.when+"."));
+    p.appendChild(pp);
+  }
+  function drawAll(filled){ drawClock(); drawTiles(filled); drawScreen(); drawFiles(); }
+  function clearCmp(){ var c=$("#cmp"); c.innerHTML=""; c.hidden=true; }
+  function cmpRow(cls,what,name,mark){
+    var r=el("div","cr "+cls); r.appendChild(el("span","w1",what)); r.appendChild(el("span","nm",name));
+    if(mark) r.appendChild(el("span","mk",mark)); $("#cmp").appendChild(r);
+  }
+  function lit(ids){ var p=document.querySelectorAll(".pc,.tl"); for(var n=0;n<p.length;n++) p[n].classList.remove("lit");
+    ids.forEach(function(id){ var e=$(id); if(e) e.classList.add("lit"); }); }
+  function setBusy(b){ busy=b; drawClock(); drawScreen(); $("#tHH").disabled=b; $("#tPad").disabled=b; }
+
+  /* ---------- presses ---------- */
+  function reset(){
+    run=(run||0)+1; mo=START; files=[]; orderNo=1; atHome=false; busy=false; sel=null;
+    var g=document.querySelectorAll(".fly"); for(var n=0;n<g.length;n++) g[n].parentNode.removeChild(g[n]);
+    clearCmp(); drawAll(false); $("#tHH").disabled=false; $("#tPad").disabled=false;
+    say("Order 1 is on the checkout screen, the receipts folder is empty. Set the clock if you like, then press <b class=\"a\">"+CHECK[0]+"</b> and watch the file name build itself from that moment.","","yyyyMMdd-HHmmss.txt");
+  }
+  function changed(){
+    clearCmp(); drawClock(); drawTiles(false);
+    say("The clock now reads <b class=\"y\">"+whenText()+"</b>. "+(atHome?"Press <b class=\"a\">"+HOME[0]+"</b> for the next order.":"Press <b class=\"a\">"+CHECK[0]+"</b> to name a receipt with this moment."),"y");
+  }
+  function confirm(){
+    var my=++run, parts=R.pieces(mo), name=R.fileName(mo), when=whenText(), n=orderNo;
+    var dup=files.some(function(f){return f.name===name;});
+    clearCmp(); setBusy(true); drawTiles(false);
+    var chain=Promise.resolve();
+    R.PAT.forEach(function(p,i){
+      chain=chain.then(function(){
+        if(my!==run) return;
+        lit(["#pc-"+p.k,"#tl-"+p.k]);
+        if(i===3) $("#fxDash").className="fx on";
+        return fly($("#pv-"+p.k),$("#tl-"+p.k),parts[i],"",420).then(function(){
+          if(my!==run) return;
+          fillTile($("#tl-"+p.k),p.k,parts[i]); return wait(120);
+        });
+      });
+    });
+    chain.then(function(){
+      if(my!==run) return;
+      lit([]); $("#fxTxt").className="fx on"; return wait(250);
+    }).then(function(){
+      if(my!==run) return;
+      return fly($("#paper"),$("#folder"),name,"doc",650);
+    }).then(function(){
+      if(my!==run) return;
+      var padded=R.PAT.filter(function(p,i){ return parts[i].length>String(mo[p.k]).length; }).map(function(p){ return p.lab.split(" ")[0]; });
+      if(dup){
+        atHome=true; busy=false; setBusy(false); drawFiles(null,name);
+        say("A receipt named <b class=\"w\">"+name+"</b> is already in the folder. Two orders confirmed in the same second get the same name, and the second file would replace the first.","w","yyyyMMdd-HHmmss.txt  →  "+name);
+        return;
+      }
+      files.push({name:name,order:n,when:when}); sel=name; atHome=true;
+      setBusy(false); drawFiles(name);
+      var f=$("#folder"); f.classList.add("ping"); setTimeout(function(){ f.classList.remove("ping"); },700);
+      var hr=mo.h>12?" The hour is <b class=\"y\">"+parts[3]+"</b>, not "+R.pad(mo.h%12===0?12:mo.h%12,2)+": HH counts 00 to 23.":"";
+      var pz=padded.length?" A zero went in front of the "+padded.join(", ")+": every piece keeps its number of digits.":"";
+      say("Confirmed. Each piece took its digits from the clock, and <b class=\"g\">"+name+"</b> joined the receipts folder ("+files.length+(files.length===1?" file":" files")+", one per order). Back to the home screen."+hr+pz,"g",
+        "yyyyMMdd-HHmmss.txt  →  "+name);
+    });
+  }
+  function cancel(){
+    run++; clearCmp();
+    var p=$("#paper"); if(p && !reduce) p.classList.add("gone");
+    setTimeout(function(){
+      atHome=true; drawScreen(); drawTiles(false);
+      var f=$("#folder"); f.classList.add("ping"); setTimeout(function(){ f.classList.remove("ping"); },500);
+      say("<b class=\"y\">"+CHECK[1]+"</b> deletes order "+orderNo+" and goes back to the home screen. No receipt file is created: the folder still holds "+files.length+(files.length===1?" file.":" files."),"y");
+    },reduce?0:600);
+  }
+  function newOrder(){
+    orderNo++; atHome=false;
+    var gap=GAPS[(orderNo-2)%GAPS.length]; mo=R.addSeconds(mo,gap);
+    clearCmp(); drawAll(false);
+    say("Order "+orderNo+" is at checkout. The next customer came "+Math.floor(gap/60)+" min "+gap%60+" s later, so the clock reads <b class=\"y\">"+R.human(mo).time+"</b> and this receipt will get a new name.","");
+  }
+  function trapHH(){
+    run++; mo={y:2026,M:12,d:4,h:14,m:15,s:23}; if(atHome) orderNo++; atHome=false; drawClock(); drawTiles(true); drawScreen();
+    var am={y:2026,M:12,d:4,h:2,m:15,s:23};
+    var c=$("#cmp"); c.innerHTML=""; c.hidden=false;
+    cmpRow("ok","2:15:23 PM with HH",R.fileName(mo),"HH: 2 in the afternoon is 14");
+    cmpRow("bad","2:15:23 PM with hh",R.fileName(mo,{hour12:true}),"hh is the 12-hour clock: 2 PM becomes 02");
+    cmpRow("bad","2:15:23 AM with HH",R.fileName(am),"a morning order: the same name as the hh one");
+    say("With <b class=\"w\">hh</b>, 2:15:23 in the afternoon gets the same name as 2:15:23 in the morning, so one receipt would replace the other. <b class=\"g\">HH</b> writes 14 and keeps them apart.","w","HH → 14   hh → 02");
+  }
+  function trapPad(){
+    run++; mo={y:2026,M:3,d:9,h:9,m:5,s:7}; if(atHome) orderNo++; atHome=false; drawClock(); drawTiles(true); drawScreen();
+    var c=$("#cmp"); c.innerHTML=""; c.hidden=false;
+    cmpRow("ok","every piece padded",R.fileName(mo),"always 8 digits, a dash, 6 digits");
+    cmpRow("bad","no zeros added",R.fileName(mo,{noPad:true}),"shorter, and the pieces can no longer be told apart");
+    say("March 9 at 9:05:07 has single digits. With the zeros the name keeps its shape. Without them it is <b class=\"w\">"+R.fileName(mo,{noPad:true})+"</b>, and January 11 and November 1 would both start with "+R.fileName({y:2026,M:1,d:11,h:0,m:0,s:0},{noPad:true}).slice(0,7)+".","w","3 → 03   9 → 09   5 → 05   7 → 07");
+  }
+
+  board.addEventListener("click",function(e){
+    var t=e.target;
+    var a=t.closest(".ar"); if(a){ if(busy) return; mo=R.step(mo,a.getAttribute("data-k"),+a.getAttribute("data-dir")); changed(); return; }
+    if(t.closest("#bNow")){ if(busy) return; var d=new Date(); mo={y:Math.min(Math.max(d.getFullYear(),2020),2035),M:d.getMonth()+1,d:d.getDate(),h:d.getHours(),m:d.getMinutes(),s:d.getSeconds()}; changed(); return; }
+    if(t.closest("#bConfirm")){ if(!busy) confirm(); return; }
+    if(t.closest("#bCancel")){ if(!busy) cancel(); return; }
+    if(t.closest("#bNew")){ if(!busy) newOrder(); return; }
+    if(t.closest("#tHH")){ if(!busy) trapHH(); return; }
+    if(t.closest("#tPad")){ if(!busy) trapPad(); return; }
+    var f=t.closest(".file"); if(f){ sel=f.getAttribute("data-f"); drawFiles(); say("This is "+sel+". Inside are the order details as they were shown at checkout, one file for that one order.",""); }
+  });
+  $("#bReset").addEventListener("click",reset);
+  reset();
+
+  /* ambient canvas */
+  var cv=$("#amb"),ctx=cv.getContext&&cv.getContext("2d"),pts=[];
+  function sizeC(){if(!ctx)return;cv.width=innerWidth;cv.height=innerHeight;}
+  function initPts(){pts=[];for(var i=0;i<46;i++)pts.push({x:Math.random(),y:Math.random(),
+    r:Math.random()*1.6+.3,s:Math.random()*.02+.004,o:Math.random()*.4+.1});}
+  function drawC(){if(!ctx)return;ctx.clearRect(0,0,cv.width,cv.height);
+    pts.forEach(function(p){p.y-=p.s/60;if(p.y<-.02)p.y=1.02;
+      ctx.beginPath();ctx.arc(p.x*cv.width,p.y*cv.height,p.r,0,7);
+      ctx.fillStyle="rgba(140,170,255,"+p.o+")";ctx.fill();});
+    requestAnimationFrame(drawC);}
+  if(ctx&&!reduce){sizeC();initPts();drawC();addEventListener("resize",sizeC);}
+})();
+</script>
+<script src="../manifest.js"></script>
+<script src="../../assets/rail.js"></script>
+<script>Rail.render(document.getElementById("rail"),{week:8,kind:"visuals",current:"06-the-receipt-file"});</script>
+</body>
+</html>

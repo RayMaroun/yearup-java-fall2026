@@ -1,0 +1,540 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Menu Flow Map | Week 8 Visual Hub</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Sora:wght@500;700&family=Inter:wght@400;500&family=JetBrains+Mono:wght@400;500&display=swap">
+<style>
+  :root{
+    --bg:#080c17; --bg2:#0c1428; --surface:rgba(255,255,255,.045); --line:rgba(255,255,255,.09);
+    --ink:#eef2fb; --muted:#8496b6; --accent:#6ea0ff; --accent2:#8b7bff; --good:#46d98a; --warn:#ff6a6a;
+    --gold:#ffc862; --disp:'Sora',system-ui,sans-serif; --body:'Inter',system-ui,sans-serif;
+    --mono:'JetBrains Mono',ui-monospace,monospace;
+  }
+  *{box-sizing:border-box}
+  body{margin:0;min-height:100vh;color:var(--ink);font-family:var(--body);
+    background:radial-gradient(1200px 700px at 70% -10%,#141d38 0%,transparent 55%),
+               radial-gradient(900px 600px at 10% 110%,#161233 0%,transparent 50%),#080c17;
+    overflow-x:hidden}
+  #amb{position:fixed;inset:0;z-index:0;pointer-events:none;opacity:.6}
+  .back{position:relative;z-index:2;display:block;max-width:1120px;margin:0 auto;padding:26px 24px 0;
+    width:100%;font-family:var(--mono);font-size:.8rem;letter-spacing:.04em;color:var(--muted);
+    text-decoration:none;transition:color .15s}
+  .back:hover{color:var(--accent)}
+  .wrap{position:relative;z-index:1;max-width:1120px;margin:0 auto;padding:22px 24px 70px}
+  @media (max-width:560px){.wrap{padding:18px 16px 60px}.back{padding:22px 16px 0}}
+  .tag{font-family:var(--mono);font-size:.72rem;letter-spacing:.22em;text-transform:uppercase;color:var(--accent);margin:0 0 14px}
+  h1{font-family:var(--disp);font-weight:700;font-size:clamp(2.3rem,6vw,3.6rem);line-height:1;margin:0 0 12px;
+    letter-spacing:-.03em;background:linear-gradient(180deg,#fff,#b9c6e6);-webkit-background-clip:text;
+    background-clip:text;color:transparent}
+  .lede{color:var(--muted);max-width:64ch;font-size:1.05rem;margin:0 0 26px;line-height:1.5}
+  .lede b{color:var(--ink)}
+
+  /* ---------- the stage IS the picture ---------- */
+  .stage{position:relative;background:linear-gradient(180deg,rgba(255,255,255,.03),rgba(255,255,255,.01));
+    border:1px solid var(--line);border-radius:24px;padding:22px;
+    box-shadow:0 1px 0 rgba(255,255,255,.06) inset,0 30px 80px -30px rgba(0,0,0,.8)}
+  @media (max-width:560px){.stage{padding:14px}}
+
+  /* the option switch */
+  .pills{display:flex;flex-wrap:wrap;gap:6px;margin-bottom:6px}
+  .pill{font-family:var(--mono);font-size:.84rem;padding:9px 15px;border-radius:999px;cursor:pointer;border:1px solid var(--line);
+    background:transparent;color:var(--muted);transition:.15s}
+  .pill:hover{border-color:var(--accent);color:var(--ink)}
+  .pill.on{background:rgba(110,160,255,.2);border-color:var(--accent);color:#fff}
+
+  /* the map: screens as cards, paths between them */
+  .map{position:relative;display:grid;grid-template-columns:repeat(3,minmax(0,1fr));column-gap:52px;row-gap:56px;
+    padding-top:58px;align-items:start}
+  .paths{position:absolute;left:0;top:0;width:100%;height:100%;pointer-events:none;overflow:visible;z-index:0}
+  .pth{fill:none;stroke:rgba(132,150,182,.32);stroke-width:2;stroke-dasharray:6 6;transition:stroke .3s}
+  .pth.lit{stroke:var(--accent);stroke-dasharray:none}
+  .pth.ret{stroke:var(--gold);stroke-dasharray:none}
+  #sHome{grid-column:1;grid-row:1} #sOrder{grid-column:2;grid-row:1} #sCheckout{grid-column:3;grid-row:1}
+  #sItem{grid-column:1;grid-row:2} #sDrink{grid-column:2;grid-row:2} #sThird{grid-column:3;grid-row:2}
+  @media (max-width:860px){
+    .map{grid-template-columns:1fr;row-gap:30px;padding-top:30px}
+    .paths{display:none}
+    #sHome,#sOrder,#sCheckout,#sItem,#sDrink,#sThird{grid-column:1;grid-row:auto}
+    #sItem{order:2} #sDrink{order:3} #sThird{order:4} #sCheckout{order:5}
+  }
+
+  /* a screen, drawn as a small terminal */
+  .scr{position:relative;z-index:1;display:flex;flex-direction:column;border-radius:14px;border:1px solid rgba(255,255,255,.14);
+    background:#05070e;overflow:hidden;opacity:.5;transition:opacity .3s,border-color .3s,box-shadow .3s}
+  .scr.lit{opacity:1;border-color:rgba(110,160,255,.75);box-shadow:0 0 0 3px rgba(110,160,255,.14),0 0 40px -8px rgba(110,160,255,.75)}
+  .scr.bad{border-color:rgba(255,106,106,.8);box-shadow:0 0 0 3px rgba(255,106,106,.18),0 0 40px -8px rgba(255,106,106,.8)}
+  .scr.shake{animation:shake .4s ease}
+  @keyframes shake{20%{transform:translateX(-6px)}40%{transform:translateX(6px)}60%{transform:translateX(-4px)}80%{transform:translateX(3px)}}
+  .bar{display:flex;align-items:center;gap:6px;padding:8px 12px;background:rgba(255,255,255,.05);border-bottom:1px solid var(--line)}
+  .bar i{width:9px;height:9px;border-radius:50%}
+  .bar i:nth-child(1){background:rgba(255,106,106,.7)} .bar i:nth-child(2){background:rgba(255,200,98,.7)} .bar i:nth-child(3){background:rgba(70,217,138,.7)}
+  .bar span{margin-left:auto;font-family:var(--mono);font-size:.6rem;letter-spacing:.14em;text-transform:uppercase;color:var(--muted)}
+  .body{padding:11px 12px 12px;display:flex;flex-direction:column;gap:7px}
+  .who{font-family:var(--disp);font-weight:700;font-size:1.08rem;margin:0;color:var(--ink);letter-spacing:-.01em;overflow-wrap:anywhere}
+  .sub{font-family:var(--mono);font-size:.66rem;color:var(--muted);margin:0;line-height:1.45}
+  .menu{display:flex;flex-direction:column;gap:3px}
+  .opt{display:flex;align-items:baseline;gap:8px;width:100%;text-align:left;font-family:var(--mono);font-size:.8rem;padding:7px 9px;border-radius:9px;
+    cursor:pointer;border:1px solid transparent;background:transparent;color:#c9d4ea;transition:background .15s,border-color .15s,color .15s}
+  .opt b{font-weight:500;color:var(--gold);min-width:1.4em}
+  .opt span{overflow-wrap:anywhere}
+  .opt:hover:not(:disabled){background:rgba(255,200,98,.08);border-color:rgba(255,200,98,.45)}
+  .opt:disabled{cursor:default}
+  .opt.fin{justify-content:center;border-color:rgba(70,217,138,.45);color:#9fe3b6;margin-top:2px}
+  .opt.fin:hover:not(:disabled){background:rgba(70,217,138,.1);border-color:var(--good)}
+  .opt.hit{background:rgba(255,200,98,.16);border-color:var(--gold);color:#fff}
+
+  /* the questions of an Add screen */
+  .qs{margin:0;padding:0;list-style:none;counter-reset:q;display:flex;flex-direction:column;gap:3px}
+  .qs li{counter-increment:q;display:flex;gap:7px;font-family:var(--mono);font-size:.74rem;line-height:1.4;color:#c9d4ea;
+    padding:4px 7px;border-radius:7px;border:1px solid transparent;transition:background .2s,border-color .2s,color .2s}
+  .qs li::before{content:counter(q);color:rgba(132,150,182,.7);min-width:1em}
+  .qs li em{display:block;font-style:normal;font-size:.64rem;color:var(--muted)}
+  .qs li.ask{background:rgba(255,200,98,.12);border-color:rgba(255,200,98,.6);color:#fff}
+  .qs li.asked{color:#9fe3b6}
+  .qs li .list{display:block;font-size:.62rem;color:var(--muted);margin-top:1px}
+
+  /* the order so far, the details at checkout, the receipts folder */
+  .box{border:1px dashed rgba(255,255,255,.16);border-radius:10px;padding:7px 8px}
+  .box .lab{display:flex;justify-content:space-between;gap:6px;font-family:var(--mono);font-size:.6rem;letter-spacing:.14em;text-transform:uppercase;color:var(--muted);margin:0 0 5px}
+  .box .lab b{font-weight:500;color:var(--gold);letter-spacing:0;font-size:.74rem}
+  .chips{display:flex;flex-wrap:wrap;gap:5px;min-height:24px}
+  .chip{font-family:var(--mono);font-size:.7rem;padding:3px 8px;border-radius:999px;border:1px solid rgba(70,217,138,.5);background:rgba(70,217,138,.07);
+    color:#cdf5dc;white-space:nowrap;transition:opacity .35s,transform .35s}
+  .chip.in{animation:land .35s ease}
+  .chip.gone{opacity:0;transform:translateY(8px);text-decoration:line-through;border-color:var(--warn);color:#ffb0b0}
+  .chip.file{border-color:rgba(110,160,255,.55);background:rgba(110,160,255,.08);color:#cfe0ff}
+  @keyframes land{from{transform:scale(.8);opacity:.2}to{transform:none;opacity:1}}
+  .none{font-family:var(--mono);font-size:.66rem;color:rgba(132,150,182,.65)}
+  .total{display:flex;justify-content:space-between;font-family:var(--mono);font-size:.7rem;color:var(--muted);margin-top:6px;padding-top:5px;border-top:1px solid var(--line)}
+  .total b{font-weight:500;color:var(--ink)}
+  .msg{font-family:var(--mono);font-size:.68rem;line-height:1.45;color:#9fe3b6;padding:5px 8px;border-radius:8px;
+    border:1px dashed rgba(70,217,138,.35);background:rgba(70,217,138,.05)}
+  .msg.w{color:#ffb0b0;border-color:rgba(255,106,106,.45);background:rgba(255,106,106,.06)}
+  .msg:empty{display:none}
+
+  /* the application has ended */
+  .bye{position:absolute;inset:0;display:none;flex-direction:column;align-items:center;justify-content:center;gap:10px;background:rgba(5,7,14,.93);z-index:2}
+  .bye p{margin:0;font-family:var(--disp);font-weight:700;font-size:1.4rem;color:var(--warn);letter-spacing:-.02em}
+  .scr.ended{opacity:1;border-color:rgba(255,106,106,.6);box-shadow:0 0 36px -10px rgba(255,106,106,.7)}
+  .scr.ended .bye{display:flex}
+  .again{font-family:var(--body);font-weight:500;font-size:.84rem;padding:8px 14px;border-radius:11px;cursor:pointer;
+    border:1px solid rgba(110,160,255,.6);background:rgba(110,160,255,.12);color:#cfe0ff}
+  .again:hover{background:rgba(110,160,255,.22)}
+
+  /* you are here */
+  .you{position:absolute;left:0;top:0;z-index:3;pointer-events:none;display:flex;align-items:center;gap:6px;
+    font-family:var(--mono);font-size:.64rem;letter-spacing:.08em;text-transform:uppercase;white-space:nowrap;color:#1a1204;
+    background:var(--gold);padding:4px 10px 4px 7px;border-radius:999px;box-shadow:0 6px 20px -6px rgba(255,200,98,.9)}
+  .you i{width:9px;height:9px;border-radius:50%;background:#1a1204}
+  .you.bump{animation:bump .4s ease}
+  @keyframes bump{30%{margin-top:-7px}60%{margin-top:0}80%{margin-top:-3px}}
+
+  /* the one wrong key */
+  .keys{display:flex;flex-wrap:wrap;align-items:center;gap:10px;margin-top:18px}
+  .keys .lab{font-family:var(--mono);font-size:.66rem;letter-spacing:.14em;text-transform:uppercase;color:var(--muted)}
+  .wrong{font-family:var(--mono);font-size:.82rem;padding:8px 13px;border-radius:11px;cursor:pointer;
+    border:1px solid rgba(255,106,106,.5);background:rgba(255,106,106,.06);color:#ffb0b0;transition:.15s}
+  .wrong:hover:not(:disabled){border-color:var(--warn);background:rgba(255,106,106,.14)}
+  .wrong:disabled{opacity:.35;cursor:default}
+
+  /* the one sentence */
+  .caption{display:flex;gap:14px;align-items:flex-start;margin:14px 2px 0;padding-top:16px;border-top:1px solid var(--line)}
+  .caption .t{flex:1;min-width:0;font-size:1.05rem;line-height:1.55;color:var(--ink);padding-left:16px;border-left:3px solid var(--accent);transition:border-color .3s}
+  .caption .t .line{display:block;margin-top:6px;font-family:var(--mono);font-size:.8rem;color:#bcd0ff;opacity:.9;overflow-wrap:anywhere}
+  .caption.y .t{border-left-color:var(--gold)} .caption.g .t{border-left-color:var(--good)} .caption.w .t{border-left-color:var(--warn)}
+  .caption b.a{color:var(--accent)} .caption b.y{color:var(--gold)} .caption b.g{color:var(--good)} .caption b.w{color:var(--warn)}
+  .reset{font-family:var(--body);font-weight:500;font-size:.84rem;padding:8px 14px;border-radius:11px;cursor:pointer;
+    border:1px solid var(--line);background:transparent;color:var(--muted);transition:.15s;flex-shrink:0}
+  .reset:hover{border-color:var(--accent);color:var(--accent)}
+  button:focus-visible{outline:2px solid var(--accent);outline-offset:2px}
+
+  .take{margin-top:22px;background:linear-gradient(180deg,rgba(110,160,255,.08),rgba(139,123,255,.04));
+    border:1px solid var(--line);border-left:3px solid var(--accent);border-radius:12px;padding:16px 18px}
+  .take .tk{font-family:var(--mono);font-size:.66rem;letter-spacing:.14em;text-transform:uppercase;color:var(--accent);margin:0 0 8px}
+  .take p{margin:0;font-size:.95rem;color:var(--ink);line-height:1.55}
+  .take b{color:#fff}
+  @media (prefers-reduced-motion:reduce){*{animation-duration:.01ms!important;transition-duration:.01ms!important;animation-delay:0s!important;transition-delay:0s!important}#amb{display:none}}
+</style>
+</head>
+<body>
+<a class="back" href="../index.html#02-menu-flow-map">&#8592; Week 8 index</a>
+<canvas id="amb"></canvas>
+<div class="wrap">
+  <p class="tag">Capstone 2 &middot; Build</p>
+  <h1>Menu Flow Map</h1>
+  <p class="lede"><b>Press an option on the lit screen and follow the marker to where it leads.</b></p>
+
+  <div class="stage">
+    <div class="pills" id="pills"></div>
+    <div class="map" id="map">
+      <svg class="paths" id="paths" aria-hidden="true"></svg>
+      <div class="scr" id="sHome" data-s="home"></div>
+      <div class="scr" id="sOrder" data-s="order"></div>
+      <div class="scr" id="sCheckout" data-s="checkout"></div>
+      <div class="scr" id="sItem" data-s="item"></div>
+      <div class="scr" id="sDrink" data-s="drink"></div>
+      <div class="scr" id="sThird" data-s="third"></div>
+      <div class="you" id="you"><i></i>you are here</div>
+    </div>
+    <div class="keys">
+      <span class="lab">The user types</span>
+      <button class="wrong" id="bWrong">7 &middot; not on the menu</button>
+    </div>
+    <div class="caption" id="caption">
+      <div class="t" id="status"></div>
+      <button class="reset" id="bReset">Reset</button>
+    </div>
+  </div>
+
+  <div class="take">
+    <p class="tk">The one idea</p>
+    <p><b>Every screen shows its choices, reads one, and sends the user somewhere.</b> Only <b>0) Exit</b> on Home ends the application. The three Add screens always come back to the order screen. Checkout is the only way to a receipt, and an empty order never gets there. Both cancels delete the order. Anything not on the menu changes nothing: a message, then the same question again.</p>
+  </div>
+  <div id="rail"></div>
+</div>
+<script src="../options.js"></script>
+<script>
+(function(){
+  "use strict";
+  var CAP2=window.CAP2;
+
+  /* ---------- the logic: plain data in, plain data out ---------- */
+  function menuLine(s){ var m=/^(\d+)\)\s*(.*)$/.exec(s); return {k:m[1],label:m[2],text:s}; }
+  function cap(s){ return s.charAt(0).toUpperCase()+s.slice(1); }
+  var MANY="any number", EXTRA="any number; after each one, ask \"Extra?\"";
+
+  /* everything one option puts on the map, read from CAP2 */
+  function model(key){
+    var o=CAP2.options[key], om=o.orderMenu.map(menuLine);
+    var tTitle=o.third.screen.split(" - ")[0], tDoes=o.third.screen.slice(tTitle.length+3);
+    return {
+      key:key, name:o.name, one:o.item, many:o.items, emptyRule:o.emptyRule,
+      home:CAP2.screens.home.map(menuLine),
+      order:om,
+      checkout:CAP2.screens.checkout.map(menuLine),
+      item:{title:om[0].label, word:om[0].label.replace(/^Add /,""), questions:[
+        {q:o.typeQuestion}, {q:o.sizeQuestion},
+        {q:o.premiumA.question, n:EXTRA}, {q:o.premiumB.question, n:EXTRA},
+        {q:"Regular toppings:", n:MANY}, {q:"Select sauces:", n:MANY},
+        {q:o.special.question}]},
+      drink:{title:om[1].label, word:om[1].label.replace(/^Add /,""), steps:[
+        {q:"select the drink size", list:CAP2.drink.sizes}, {q:"then the flavor", list:o.flavors}]},
+      third:{title:tTitle, word:om[2].label.replace(/^Add /,""), screen:o.third.screen, does:tDoes,
+        ask:o.third.types.length>0, steps:[{q:tDoes.split(", then")[0], list:o.third.types}]}
+    };
+  }
+
+  var ROUTE={home:{"1":"new","0":"exit"}, order:{"1":"item","2":"drink","3":"third","4":"checkout","0":"cancel"},
+    checkout:{"1":"confirm","0":"cancel"}, item:{done:"done"}, drink:{done:"done"}, third:{done:"done"}};
+  var SCREEN_NAME={home:"Home",order:"Order",checkout:"Checkout"};
+  function fresh(){ return {at:"home", order:[], ended:false, receipts:[]}; }
+  function copy(st){ return {at:st.at, order:st.order.slice(), ended:st.ended, receipts:st.receipts.slice()}; }
+  function pad(n){ return (n<10?"0":"")+n; }
+  function receiptName(d){
+    return d.getFullYear()+pad(d.getMonth()+1)+pad(d.getDate())+"-"+pad(d.getHours())+pad(d.getMinutes())+pad(d.getSeconds())+".txt";
+  }
+  function screenName(m,s){ return SCREEN_NAME[s]||m[s].title; }
+  function optText(list,k){ for(var i=0;i<list.length;i++) if(list[i].k===k) return list[i].text; return ""; }
+
+  /* one key typed on one screen: the new state, where the marker goes, what the caption says */
+  function step(m,st0,key,now){
+    var st=copy(st0), s=st.at, act=ROUTE[s][key], r={st:st, from:s, to:s, tone:"", html:"", line:"", card:"", cardTone:"", kind:act||"wrong"};
+    if(st.ended) { r.kind="ended"; return r; }
+    if(!act){
+      var where=(s==="home"||s==="order"||s==="checkout")?"it is not on the menu":"it is not one of the choices";
+      r.tone="w"; r.card="\""+key+"\" "+where.replace(/^it /,"")+". Try again."; r.cardTone="w";
+      r.html="The user typed [w|"+key+"], and "+where+". The screen shows a message and asks again. The marker stays on [a|"+screenName(m,s)+"].";
+      return r;
+    }
+    if(s==="home"){
+      if(act==="new"){ st.order=[]; st.at=r.to="order";
+        r.html="[a|"+optText(m.home,"1")+"] goes to the order screen. The new order is empty."; }
+      else { st.ended=true; r.tone="w";
+        r.html="[w|"+optText(m.home,"0")+"] exits the application. Until the user chooses it, the application keeps running. Press [b|Start again] to run it again."; }
+    } else if(s==="order"){
+      var lab="[a|"+optText(m.order,key)+"]";
+      if(act==="item"){ st.at=r.to="item";
+        r.html=lab+" asks these questions, in this order. When they are answered, press [g|done] to go back to the order screen."; }
+      else if(act==="drink"){ st.at=r.to="drink";
+        r.html=lab+": select the drink size, then the flavor, then press [g|done] to go back to the order screen."; }
+      else if(act==="third"){ st.at=r.to="third";
+        r.html=m.third.ask ? lab+": "+m.third.steps[0].q+", then press [g|done] to go back to the order screen."
+                           : lab+" "+m.third.does+"."; }
+      else if(act==="checkout"){
+        if(st.order.length===0){ r.kind="refused"; r.tone="w"; r.card="An empty order cannot be checked out."; r.cardTone="w";
+          r.html="[w|Not allowed.] "+m.emptyRule+" The user stays on the order screen."; }
+        else { st.at=r.to="checkout";
+          r.html=lab+" displays the order details, so the customer can verify that the order is correct, and the total price."; }
+      }
+      else { r.deleted=st.order.length; st.order=[]; st.at=r.to="home"; r.tone="y";
+        r.html="[y|"+optText(m.order,"0")+"] deletes the order and goes back to the home screen."; }
+    } else if(s==="checkout"){
+      if(act==="confirm"){ var f=receiptName(now||new Date()); st.receipts.push(f); r.file=f; st.order=[]; st.at=r.to="home"; r.tone="g";
+        r.line="receipts/"+f;
+        r.html="[g|"+optText(m.checkout,"1")+"] creates the receipt file in the receipts folder, named by the date and time the order was confirmed, and goes back to the home screen."; }
+      else { r.deleted=st.order.length; st.order=[]; st.at=r.to="home"; r.tone="y";
+        r.html="[y|"+optText(m.checkout,"0")+"] deletes the order and goes back to the home screen. No receipt file is created."; }
+    } else {
+      var w=m[s].word; st.order.push(w); r.added=w; st.at=r.to="order"; r.tone="g";
+      if(s==="item") r.html="One "+m.one+" is built and added to the order. "+cap(m.many)+" are added one at a time: each time the customer chooses [a|"+m.item.title+"], they build one "+m.one+" and return to the order screen.";
+      else r.html="[g|"+w+"] is added to the order, and the user is back on the order screen.";
+    }
+    return r;
+  }
+
+  /* ---------- the picture ---------- */
+  var $=function(s){return document.querySelector(s);};
+  var reduce=matchMedia("(prefers-reduced-motion: reduce)").matches;
+  var narrow=matchMedia("(max-width:860px)");
+  var mapEl=$("#map"), svg=$("#paths"), you=$("#you"), status=$("#status"), caption=$("#caption"), bWrong=$("#bWrong");
+  var CARD={home:$("#sHome"),order:$("#sOrder"),checkout:$("#sCheckout"),item:$("#sItem"),drink:$("#sDrink"),third:$("#sThird")};
+  var PATHS=[["home","order"],["order","checkout"],["order","item"],["order","drink"],["order","third"],["checkout","home"]];
+  var key=CAP2.saved(), M=model(key), S=fresh(), busy=false, run=0;
+
+  /* the sentence comes as text with [c|bold words] marks, c = a, y, g, w or b; built with text nodes only */
+  function say(msg,tone,line){
+    caption.className="caption"+(tone?" "+tone:"");
+    status.textContent="";
+    var parts=msg.split(/\[([abgwy])\|([^\]]*)\]/);
+    for(var i=0;i<parts.length;i+=3){
+      if(parts[i]) status.appendChild(document.createTextNode(parts[i]));
+      if(i+2<parts.length){ var b=document.createElement("b"); if(parts[i+1]!=="b") b.className=parts[i+1]; b.textContent=parts[i+2]; status.appendChild(b); }
+    }
+    if(line){ var sp=document.createElement("span"); sp.className="line"; sp.textContent=line; status.appendChild(sp); }
+  }
+  function el(tag,cls,txt){ var d=document.createElement(tag); if(cls) d.className=cls; if(txt!==undefined) d.textContent=txt; return d; }
+  function wait(ms){ return new Promise(function(r){ setTimeout(r,reduce?0:ms); }); }
+  function q(card,sel){ return card.querySelector(sel); }
+
+  function shell(card,label,title,sub){
+    card.innerHTML="";
+    var bar=el("div","bar"); bar.appendChild(el("i")); bar.appendChild(el("i")); bar.appendChild(el("i")); bar.appendChild(el("span","",label));
+    var body=el("div","body"); body.appendChild(el("p","who",title)); if(sub) body.appendChild(el("p","sub",sub));
+    card.appendChild(bar); card.appendChild(body);
+    return body;
+  }
+  function menu(body,s,list){
+    var mn=el("div","menu");
+    list.forEach(function(o){ var b=el("button","opt"); b.setAttribute("data-s",s); b.setAttribute("data-k",o.k);
+      b.appendChild(el("b","",o.k+")")); b.appendChild(el("span","",o.label)); mn.appendChild(b); });
+    body.appendChild(mn);
+  }
+  function box(body,label,cls){
+    var bx=el("div","box "+cls), lb=el("p","lab"); lb.appendChild(el("span","",label)); lb.appendChild(el("b","cnt",""));
+    bx.appendChild(lb); bx.appendChild(el("div","chips")); body.appendChild(bx); return bx;
+  }
+  function questions(body,list){
+    var ol=el("ol","qs");
+    list.forEach(function(x){ var li=el("li"), d=el("div"); d.appendChild(document.createTextNode(x.q));
+      if(x.n) d.appendChild(el("em","",x.n));
+      if(x.list&&x.list.length) d.appendChild(el("span","list",x.list.join(", ")));
+      li.appendChild(d); ol.appendChild(li); });
+    body.appendChild(ol);
+  }
+  function finBtn(body,s){
+    var b=el("button","opt fin","done, back to Order"); b.setAttribute("data-s",s); b.setAttribute("data-k","done"); body.appendChild(b);
+  }
+
+  function draw(){
+    var pl=$("#pills"); pl.innerHTML="";
+    CAP2.order.forEach(function(k){ var b=el("button","pill"+(k===key?" on":""),CAP2.options[k].name); b.setAttribute("data-o",k); pl.appendChild(b); });
+
+    var b=shell(CARD.home,"screen","Home","runs until the user chooses to exit");
+    menu(b,"home",M.home); b.appendChild(el("div","msg"));
+    var bye=el("div","bye"); bye.appendChild(el("p","","Application ended")); bye.appendChild(el("button","again","Start again")); CARD.home.appendChild(bye);
+
+    b=shell(CARD.order,"screen","Order","shows the items added to the order so far");
+    box(b,"the order so far","sofar"); menu(b,"order",M.order); b.appendChild(el("div","msg"));
+
+    b=shell(CARD.checkout,"screen","Checkout","displays the order details and the total price");
+    var det=box(b,"order details","details"), tot=el("div","total"); tot.appendChild(el("span","","total price")); tot.appendChild(el("b","","of the whole order")); det.appendChild(tot);
+    menu(b,"checkout",M.checkout); box(b,"receipts folder","rcpt"); b.appendChild(el("div","msg"));
+
+    b=shell(CARD.item,"screen",M.item.title,"asks these, in this order, then goes back to the order screen");
+    questions(b,M.item.questions); finBtn(b,"item"); b.appendChild(el("div","msg"));
+    b=shell(CARD.drink,"screen",M.drink.title,"then goes back to the order screen");
+    questions(b,M.drink.steps); finBtn(b,"drink"); b.appendChild(el("div","msg"));
+    b=shell(CARD.third,"screen",M.third.title,"then goes back to the order screen");
+    questions(b,M.third.steps);
+    if(M.third.ask) finBtn(b,"third");
+    b.appendChild(el("div","msg"));
+  }
+
+  /* chips in a box */
+  function fill(card,cls,list,label,landLast){
+    var bx=q(card,".box."+cls), ch=q(bx,".chips"); ch.innerHTML="";
+    if(!list.length) ch.appendChild(el("span","none",label));
+    list.forEach(function(w,i){ ch.appendChild(el("span","chip"+(cls==="rcpt"?" file":"")+(landLast&&i===list.length-1?" in":""),w)); });
+    q(bx,".cnt").textContent=cls==="rcpt"||!list.length?"":String(list.length);
+  }
+  function strike(card,cls){
+    var c=card.querySelectorAll(".box."+cls+" .chip"); for(var i=0;i<c.length;i++) c[i].classList.add("gone");
+  }
+  function refresh(land){
+    Object.keys(CARD).forEach(function(s){
+      var c=CARD[s], on=(S.at===s);
+      c.classList.toggle("lit",on&&!S.ended);
+      c.classList.remove("bad");
+      var bs=c.querySelectorAll(".opt"); for(var i=0;i<bs.length;i++) bs[i].disabled=!on||S.ended||busy;
+      if(!on){ var mg=q(c,".msg"); if(mg){ mg.textContent=""; mg.className="msg"; } }
+    });
+    CARD.home.classList.toggle("ended",S.ended);
+    fill(CARD.order,"sofar",S.order,"nothing yet",land==="order");
+    fill(CARD.checkout,"details",S.at==="checkout"?S.order:[],"shown when the user arrives",false);
+    fill(CARD.checkout,"rcpt",S.receipts,"no receipt yet",land==="rcpt");
+    bWrong.disabled=S.ended||busy;
+    if(S.at!=="item"&&S.at!=="drink"&&S.at!=="third"){
+      var li=document.querySelectorAll(".qs li"); for(var j=0;j<li.length;j++) li[j].className="";
+    }
+  }
+
+  /* ---------- paths and the marker ---------- */
+  function box2(s){
+    var r=CARD[s].getBoundingClientRect(), m=mapEl.getBoundingClientRect();
+    return {l:r.left-m.left, t:r.top-m.top, w:r.width, h:r.height, r:r.right-m.left, b:r.bottom-m.top};
+  }
+  function rest(s){ var b=box2(s); return {x:b.l+Math.min(74,b.w/2), y:b.t}; }
+  /* the points of a path, from a to b */
+  function pts(a,bn){
+    var A=box2(a), B=box2(bn);
+    if(a==="checkout"&&bn==="home"){
+      var p0={x:A.l+A.w/2,y:A.t}, p3={x:B.l+B.w/2,y:B.t}, top=Math.max(8,Math.min(A.t,B.t)-46), out=[];
+      for(var i=0;i<=10;i++){ var t=i/10, u=1-t;
+        out.push({x:u*u*u*p0.x+3*u*u*t*p0.x+3*u*t*t*p3.x+t*t*t*p3.x, y:u*u*u*p0.y+3*u*u*t*top+3*u*t*t*top+t*t*t*p3.y}); }
+      return out;
+    }
+    if(A.t===B.t||Math.abs(A.t-B.t)<4){ var y=Math.max(A.t,B.t)+44; return [{x:A.r,y:y},{x:B.l,y:y}]; }
+    return [{x:A.l+A.w/2,y:A.b},{x:B.l+B.w/2,y:B.t}];
+  }
+  function pathKey(a,b){ for(var i=0;i<PATHS.length;i++){ if(PATHS[i][0]===a&&PATHS[i][1]===b) return {i:i,rev:false}; if(PATHS[i][0]===b&&PATHS[i][1]===a) return {i:i,rev:true}; } return null; }
+  function route(a,b){
+    var pk=pathKey(a,b), mid=[];
+    if(pk&&!narrow.matches){ var p=PATHS[pk.i]; mid=pts(p[0],p[1]); if(pk.rev) mid=mid.slice().reverse(); }
+    return [rest(a)].concat(mid).concat([rest(b)]);
+  }
+  function drawPaths(){
+    var ns="http://www.w3.org/2000/svg"; svg.innerHTML="";
+    if(narrow.matches) return;
+    PATHS.forEach(function(p,i){
+      var P=pts(p[0],p[1]), d="M"+P[0].x+" "+P[0].y;
+      for(var j=1;j<P.length;j++) d+=" L"+P[j].x+" "+P[j].y;
+      var e=document.createElementNS(ns,"path"); e.setAttribute("d",d); e.setAttribute("class","pth"); e.setAttribute("data-p",String(i)); svg.appendChild(e);
+    });
+  }
+  function tr(p){ return "translate("+Math.round(p.x)+"px,"+Math.round(p.y)+"px) translate(-12px,-50%)"; }
+  function place(s){ you.style.transform=tr(rest(s)); }
+  function lightPath(a,b,on){
+    var pk=pathKey(a,b); if(!pk) return;
+    var e=svg.querySelector('[data-p="'+pk.i+'"]'); if(!e) return;
+    e.classList.remove("lit"); e.classList.remove("ret");
+    if(on) e.classList.add(b==="order"&&a!=="home"||b==="home"?"ret":"lit");
+  }
+  function travel(a,b,my){
+    lightPath(a,b,true);
+    var R=route(a,b); you.style.transform=tr(R[R.length-1]);
+    var done=function(){ setTimeout(function(){ if(my===run) lightPath(a,b,false); },reduce?0:700); };
+    if(reduce||!you.animate){ done(); return Promise.resolve(); }
+    return new Promise(function(res){
+      var an=you.animate(R.map(function(p){ return {transform:tr(p)}; }),{duration:Math.min(1300,420+R.length*70),easing:"ease-in-out"});
+      an.onfinish=function(){ done(); res(); };
+    });
+  }
+  function bump(card){
+    you.classList.remove("bump"); card.classList.remove("shake"); void you.offsetWidth;
+    if(!reduce){ you.classList.add("bump"); card.classList.add("shake"); }
+  }
+  function cardMsg(s,txt,tone){ var mg=q(CARD[s],".msg"); if(!mg) return; mg.textContent=txt; mg.className="msg"+(tone?" "+tone:""); }
+  /* an Add screen asks its questions one after another */
+  function ask(s,my){
+    var li=CARD[s].querySelectorAll(".qs li"), c=Promise.resolve();
+    for(var i=0;i<li.length;i++) li[i].className="";
+    Array.prototype.forEach.call(li,function(x,i){
+      c=c.then(function(){ if(my!==run) return; if(i>0) li[i-1].className="asked"; x.className="ask"; return wait(230); });
+    });
+    return c.then(function(){ if(my===run&&li.length) li[li.length-1].className="asked"; });
+  }
+
+  /* ---------- one press ---------- */
+  function press(k){
+    if(busy) return;
+    var r=step(M,S,k,new Date()), my=run;
+    if(r.kind==="ended") return;
+    var card=CARD[r.from];
+    if(r.kind==="wrong"||r.kind==="refused"){
+      say(r.html,r.tone); refresh(); card.classList.add("bad"); cardMsg(r.from,r.card,r.cardTone); bump(card); return;
+    }
+    var hit=card.querySelector('.opt[data-k="'+k+'"]'); if(hit){ hit.classList.add("hit"); setTimeout(function(){ hit.classList.remove("hit"); },700); }
+    say(r.html,r.tone,r.line);
+    if(r.from===r.to){ S=r.st; refresh(); return; }
+    busy=true; refresh();
+    var pre=Promise.resolve();
+    if(r.deleted){ strike(CARD[r.from],r.from==="order"?"sofar":"details"); cardMsg(r.from,"Order deleted.","w"); pre=wait(450); }
+    if(r.file){ S.receipts=r.st.receipts; fill(CARD.checkout,"rcpt",S.receipts,"",true); cardMsg("checkout","Receipt saved: "+r.file); pre=wait(650); }
+    pre.then(function(){ if(my!==run) return; return travel(r.from,r.to,my); }).then(function(){
+      if(my!==run) return;
+      S=r.st; busy=false; refresh(r.added?"order":"");
+      if(r.added) cardMsg("order",r.added+" added.");
+      if(r.to==="item"||r.to==="drink"||r.to==="third"){
+        busy=true; refresh();
+        return ask(r.to,my).then(function(){
+          if(my!==run) return; busy=false; refresh();
+          var li=CARD[r.to].querySelectorAll(".qs li"); for(var i=0;i<li.length;i++) li[i].className="asked";
+          if(r.to==="third"&&!M.third.ask) return wait(500).then(function(){ if(my===run) press("done"); });
+        });
+      }
+    });
+  }
+
+  function start(){
+    run++; busy=false; S=fresh();
+    refresh(); place("home"); drawPaths();
+    say("The application starts on [a|Home]. The marker shows which screen the user is on. Press an option on the lit screen.");
+  }
+  function all(){ M=model(key); draw(); start(); }
+
+  /* ---------- wiring ---------- */
+  $("#pills").addEventListener("click",function(e){
+    var p=e.target.closest(".pill"); if(!p) return;
+    key=p.getAttribute("data-o"); CAP2.save(key); all();
+  });
+  mapEl.addEventListener("click",function(e){
+    if(e.target.closest(".again")){ start(); return; }
+    var b=e.target.closest("button.opt"); if(!b||b.disabled) return;
+    if(b.getAttribute("data-s")!==S.at) return;
+    press(b.getAttribute("data-k"));
+  });
+  bWrong.addEventListener("click",function(){ press("7"); });
+  $("#bReset").addEventListener("click",start);
+  /* typing a number works like the real application on the three menu screens */
+  addEventListener("keydown",function(e){
+    if(e.metaKey||e.ctrlKey||e.altKey||!/^[0-9]$/.test(e.key)) return;
+    if(S.at!=="home"&&S.at!=="order"&&S.at!=="checkout") return;
+    e.preventDefault(); press(e.key);
+  });
+  addEventListener("resize",function(){ drawPaths(); place(S.at); });
+  if(document.fonts&&document.fonts.ready) document.fonts.ready.then(function(){ drawPaths(); place(S.at); });
+
+  window.MenuFlow={model:model, step:step, receiptName:receiptName, fresh:fresh, press:press, state:function(){ return S; }};
+  all();
+
+  /* ambient canvas */
+  var cv=$("#amb"),ctx=cv.getContext&&cv.getContext("2d"),parts=[];
+  function sizeC(){if(!ctx)return;cv.width=innerWidth;cv.height=innerHeight;}
+  function initParts(){parts=[];for(var i=0;i<46;i++)parts.push({x:Math.random(),y:Math.random(),
+    r:Math.random()*1.6+.3,s:Math.random()*.02+.004,o:Math.random()*.4+.1});}
+  function drawC(){if(!ctx)return;ctx.clearRect(0,0,cv.width,cv.height);
+    parts.forEach(function(p){p.y-=p.s/60;if(p.y<-.02)p.y=1.02;
+      ctx.beginPath();ctx.arc(p.x*cv.width,p.y*cv.height,p.r,0,7);
+      ctx.fillStyle="rgba(140,170,255,"+p.o+")";ctx.fill();});
+    requestAnimationFrame(drawC);}
+  if(ctx&&!reduce){sizeC();initParts();drawC();addEventListener("resize",sizeC);}
+})();
+</script>
+<script src="../manifest.js"></script>
+<script src="../../assets/rail.js"></script>
+<script>Rail.render(document.getElementById("rail"),{week:8,kind:"visuals",current:"02-menu-flow-map"});</script>
+</body>
+</html>
