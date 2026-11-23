@@ -142,6 +142,8 @@
 
   /* the one sentence */
   .caption{display:flex;gap:14px;align-items:flex-start;margin:14px 2px 0;padding-top:16px;border-top:1px solid var(--line)}
+  /* the map is taller than a screen: the caption stays in view while the learner walks it */
+  @media (min-width:861px){.caption{position:sticky;bottom:0;z-index:6;background:#0d111c;padding-bottom:14px;margin-bottom:-14px;border-radius:0 0 18px 18px}}
   .caption .t{flex:1;min-width:0;font-size:1.05rem;line-height:1.55;color:var(--ink);padding-left:16px;border-left:3px solid var(--accent);transition:border-color .3s}
   .caption .t .line{display:block;margin-top:6px;font-family:var(--mono);font-size:.8rem;color:#bcd0ff;opacity:.9;overflow-wrap:anywhere}
   .caption.y .t{border-left-color:var(--gold)} .caption.g .t{border-left-color:var(--good)} .caption.w .t{border-left-color:var(--warn)}
@@ -433,6 +435,8 @@
     if(on) e.classList.add(b==="order"&&a!=="home"||b==="home"?"ret":"lit");
   }
   function travel(a,b,my){
+    /* bring the screen the marker goes to into view */
+    try{ var rc=CARD[b].getBoundingClientRect(); if(rc.top<8||rc.bottom>innerHeight-120) CARD[b].scrollIntoView({behavior:reduce?"auto":"smooth",block:"center"}); }catch(e){}
     lightPath(a,b,true);
     var R=route(a,b); you.style.transform=tr(R[R.length-1]);
     var done=function(){ setTimeout(function(){ if(my===run) lightPath(a,b,false); },reduce?0:700); };

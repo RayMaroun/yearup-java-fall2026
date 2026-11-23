@@ -52,6 +52,8 @@
 
   .cols{display:grid;grid-template-columns:minmax(0,1.3fr) minmax(0,1fr);gap:16px;align-items:start}
   @media (max-width:860px){.cols{grid-template-columns:1fr}}
+  /* the price table is taller than a screen: the receipt follows the learner down */
+  @media (min-width:861px){.rside{position:sticky;top:14px}}
 
   /* the price table, as on the price page of the text */
   .menu{border:1px solid var(--line);border-radius:18px;background:rgba(6,10,20,.5);padding:14px}
@@ -153,7 +155,7 @@
           <div class="spc" id="spc"></div>
           <p class="note" id="note" hidden></p>
         </div>
-        <div>
+        <div class="rside">
           <p class="hd">the receipt for this one item &middot; press a line to take it off</p>
           <div class="rcpt">
             <p class="rh" id="rHead"></p>
@@ -275,10 +277,11 @@
       t.appendChild(w);
     }
     row(cap(o.typeWord),o.sizePrices,"T"); chips(o.types,"T",false);
-    row(o.premiumA.label,o.premiumA.prices,"A"); chips(o.premiumA.list,"A",true);
-    row(o.premiumA.extraLabel,o.premiumA.extra,"AX","sub");
-    row(o.premiumB.label,o.premiumB.prices,"B"); chips(o.premiumB.list,"B",true);
-    row(o.premiumB.extraLabel,o.premiumB.extra,"BX","sub");
+    /* the Extra row sits with its own group, above the chips, so the dashed line closes the group */
+    row(o.premiumA.label,o.premiumA.prices,"A");
+    row(o.premiumA.extraLabel,o.premiumA.extra,"AX","sub"); chips(o.premiumA.list,"A",true);
+    row(o.premiumB.label,o.premiumB.prices,"B");
+    row(o.premiumB.extraLabel,o.premiumB.extra,"BX","sub"); chips(o.premiumB.list,"B",true);
     row("Regular Toppings",null,"R"); chips(o.regular,"R",false);
     row("Sauces",null,"S"); chips(o.sauces,"S",false);
     var s=$("#spc"); s.innerHTML="";
