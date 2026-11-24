@@ -93,16 +93,15 @@
   .drop span{display:block;font-size:.84rem;color:var(--muted);margin-top:4px}
   .drop.has{border-style:solid;border-color:rgba(70,217,138,.6)} .drop.has b{color:var(--good)}
   .drop input{position:absolute;left:-9999px}
-  .again{margin-top:16px}
 </style>
 </head>
 <body>
 <a class="back" href="../week-08/index.html">&#8592; Week 8 index</a>
 <canvas id="amb"></canvas>
 <div class="wrap">
-  <p class="tag">Capstone 2 &middot; Class diagram</p>
+  <p class="tag">Capstone 2 &middot; Class diagram<span id="tagCheck"></span></p>
   <h1>Hand In Your Diagram</h1>
-  <p class="lede"><b>Send your diagram file to Raymond.</b> Finished or not, at the time he gave you. You can send again: the last one counts.</p>
+  <p class="lede"><b>Send your diagram file to Raymond.</b> Finished or not, at the time he gave you. One hand-in per check, so choose the right file.</p>
 
   <div class="stage"><div class="panel">
     <form id="f" novalidate>
@@ -128,7 +127,7 @@
       <p id="doneWho"></p>
       <p class="link" id="doneFile"></p>
       <p id="doneWhen"></p>
-      <button type="button" class="btn again" id="again">Send another version</button>
+      <p style="margin-top:14px;font-size:.8rem">One hand-in per check.</p>
     </div>
 
     <div class="closedbox hidden" id="closed">
@@ -139,7 +138,7 @@
 </div>
 
 <script src="roster.js?v=2026-10-27c"></script>
-<script src="diagram-hand-in-config.js?v=2026-11-24b"></script>
+<script src="diagram-hand-in-config.js?v=2026-11-24c"></script>
 <script>
 (function(){
   "use strict";
@@ -147,7 +146,9 @@
   var C = window.DIAGRAM_HAND_IN || {}, preview = /[?&]preview=1/.test(location.search);
   var state = { option:"", xml:"", fileName:"" };
 
-  if (!C.endpoint){ $("f").classList.add("hidden"); $("closed").classList.remove("hidden"); }
+  var CHECK = (C.check === 1 || C.check === 2) ? String(C.check) : "";
+  if (!C.endpoint || !CHECK){ $("f").classList.add("hidden"); $("closed").classList.remove("hidden"); }
+  else $("tagCheck").textContent = " \u00b7 Check " + CHECK;
 
   var roster = (window.HUB_ROSTER || []).slice();
   if (preview) roster.push("Raymond Maroun (test)");      /* lets Raymond try the page without using a learner's name */
@@ -199,24 +200,18 @@
     $("go").disabled = true; status("Sending...","acting");
     /* text/plain keeps this a simple request, which the receiving program accepts from another site */
     fetch(C.endpoint, { method:"POST", headers:{ "Content-Type":"text/plain;charset=utf-8" },
-      body: JSON.stringify({ who:who, option:state.option, fileName:state.fileName, xml:state.xml }) })
+      body: JSON.stringify({ who:who, check:CHECK, option:state.option, fileName:state.fileName, xml:state.xml }) })
       .then(function(r){ return r.json(); })
       .then(function(a){
         $("go").disabled = false;
         if (!a || !a.ok){ status((a && a.message) || "It did not go through. Try again, or send your file to Raymond on Teams.","trouble"); return; }
         $("f").classList.add("hidden"); $("done").classList.remove("hidden");
-        $("doneWho").textContent = a.who + (a.number > 1 ? ", version " + a.number : "");
+        $("doneWho").textContent = a.who + ", Check " + a.check;
         $("doneFile").textContent = state.fileName;
         $("doneWhen").textContent = a.when;
       })
       .catch(function(){ $("go").disabled = false; status("It did not go through. Check your connection and try again, or send your file to Raymond on Teams.","trouble"); });
   });
-  $("again").addEventListener("click", function(){
-    state.xml=""; state.fileName=""; $("file").value=""; $("drop").classList.remove("has");
-    $("dropBig").textContent="Choose your .drawio file"; $("dropSmall").textContent="The file you saved from diagrams.net, not a picture. You can also drag it here.";
-    $("done").classList.add("hidden"); $("f").classList.remove("hidden"); status("Choose the new file and press Send.","");
-  });
-
   var cv=$("amb"), ctx=cv&&cv.getContext&&cv.getContext("2d"), parts=[], reduce=matchMedia("(prefers-reduced-motion: reduce)").matches;
   function sizeC(){ if(!ctx) return; cv.width=innerWidth; cv.height=innerHeight; }
   function initParts(){ parts=[]; for(var i=0;i<46;i++) parts.push({x:Math.random(),y:Math.random(),r:Math.random()*1.6+.3,s:Math.random()*.02+.004,o:Math.random()*.4+.1}); }
