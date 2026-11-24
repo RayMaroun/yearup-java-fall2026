@@ -93,8 +93,6 @@
   .drop span{display:block;font-size:.84rem;color:var(--muted);margin-top:4px}
   .drop.has{border-style:solid;border-color:rgba(70,217,138,.6)} .drop.has b{color:var(--good)}
   .drop input{position:absolute;left:-9999px}
-  textarea{width:100%;min-height:74px;resize:vertical;font:inherit;font-size:.95rem;color:var(--ink);background:rgba(6,10,20,.6);border:1px solid var(--line);border-radius:11px;padding:11px 13px}
-  textarea:focus{outline:2px solid var(--accent);outline-offset:1px}
   .again{margin-top:16px}
 </style>
 </head>
@@ -113,10 +111,6 @@
         <select id="who" required><option value="">Choose your name</option></select>
       </div>
       <div class="field">
-        <p class="lab">Which check</p>
-        <div class="choice" id="check"><button type="button" class="cb" data-v="1">Check 1</button><button type="button" class="cb" data-v="2">Check 2</button></div>
-      </div>
-      <div class="field">
         <p class="lab">Your option</p>
         <div class="choice" id="option"><button type="button" class="cb" data-v="deli">The Deli</button><button type="button" class="cb" data-v="pizza">The Pizza</button><button type="button" class="cb" data-v="taco">The Taco</button><button type="button" class="cb" data-v="custom">Custom</button></div>
       </div>
@@ -125,12 +119,8 @@
         <label class="drop" id="drop"><input type="file" id="file" accept=".drawio,.xml,text/xml,application/xml">
           <b id="dropBig">Choose your .drawio file</b><span id="dropSmall">The file you saved from diagrams.net, not a picture. You can also drag it here.</span></label>
       </div>
-      <div class="field">
-        <p class="lab">What you are not sure about &middot; optional</p>
-        <textarea id="note" maxlength="1000" placeholder="One or two lines, if you want Raymond to look at something in particular."></textarea>
-      </div>
       <button type="submit" class="btn primary" id="go">Send my diagram</button>
-      <div class="status" id="status">Pick your name, the check, your option and your file, then press Send.</div>
+      <div class="status" id="status">Pick your name, your option and your file, then press Send.</div>
     </form>
 
     <div class="done hidden" id="done">
@@ -149,13 +139,13 @@
 </div>
 
 <script src="roster.js?v=2026-10-27c"></script>
-<script src="diagram-hand-in-config.js?v=2026-11-24a"></script>
+<script src="diagram-hand-in-config.js?v=2026-11-24b"></script>
 <script>
 (function(){
   "use strict";
   function $(id){ return document.getElementById(id); }
   var C = window.DIAGRAM_HAND_IN || {}, preview = /[?&]preview=1/.test(location.search);
-  var state = { check:"", option:"", xml:"", fileName:"" };
+  var state = { option:"", xml:"", fileName:"" };
 
   if (!C.endpoint){ $("f").classList.add("hidden"); $("closed").classList.remove("hidden"); }
 
@@ -167,11 +157,11 @@
 
   function status(text, tone){ var s=$("status"); s.textContent=text; s.className="status"+(tone?" "+tone:""); }
   function paint(){
-    [["check",state.check],["option",state.option]].forEach(function(g){
+    [["option",state.option]].forEach(function(g){
       [].forEach.call(document.querySelectorAll("#"+g[0]+" .cb"), function(b){ b.classList.toggle("on", b.getAttribute("data-v")===g[1]); });
     });
   }
-  ["check","option"].forEach(function(g){
+  ["option"].forEach(function(g){
     $(g).addEventListener("click", function(e){ var b=e.target.closest(".cb"); if(!b) return; state[g]=b.getAttribute("data-v"); paint(); });
   });
   paint();
@@ -203,20 +193,19 @@
     e.preventDefault();
     var who = $("who").value;
     if (!who){ status("Choose your name.","trouble"); return; }
-    if (!state.check){ status("Choose Check 1 or Check 2.","trouble"); return; }
     if (!state.option){ status("Choose your option.","trouble"); return; }
     if (!state.xml){ status("Choose your .drawio file.","trouble"); return; }
     try { localStorage.setItem("hub-submit-me", who); } catch(err){}
     $("go").disabled = true; status("Sending...","acting");
     /* text/plain keeps this a simple request, which the receiving program accepts from another site */
     fetch(C.endpoint, { method:"POST", headers:{ "Content-Type":"text/plain;charset=utf-8" },
-      body: JSON.stringify({ who:who, check:state.check, option:state.option, fileName:state.fileName, note:$("note").value, xml:state.xml }) })
+      body: JSON.stringify({ who:who, option:state.option, fileName:state.fileName, xml:state.xml }) })
       .then(function(r){ return r.json(); })
       .then(function(a){
         $("go").disabled = false;
         if (!a || !a.ok){ status((a && a.message) || "It did not go through. Try again, or send your file to Raymond on Teams.","trouble"); return; }
         $("f").classList.add("hidden"); $("done").classList.remove("hidden");
-        $("doneWho").textContent = a.who + ", Check " + a.check + (a.number > 1 ? ", hand-in number " + a.number : "");
+        $("doneWho").textContent = a.who + (a.number > 1 ? ", version " + a.number : "");
         $("doneFile").textContent = state.fileName;
         $("doneWhen").textContent = a.when;
       })
