@@ -2,7 +2,8 @@
  * The week is PICTURES, like the spring week 8 (Ray, Nov 24 2026): hints that sit next to the capstone text,
  * never a rewrite of it. Two earlier versions were dropped the same day: 17 pages with a Toolbox, then five
  * text guides shown one step at a time. Ray: too much text, and learners must not use the hub as their only reference.
- * One checklist of ten stops, one page for the class diagram, five pictures for the build.
+ * As in Capstone 1, two pages to work from: the Path (the order of work, ten stops) and the Requirements Checklist
+ * (the text as tick boxes). Then one page for the class diagram, five pictures for the build, one optional bonus page.
  * The enum picture was removed: Ray found it confusing.
  * Rules for every page: it matches the capstone text v7.2Y-R exactly (same rules, numbers, menu numbers, words);
  * it shows what the program must do, never which classes to create and never Java code of the capstone. */
@@ -21,7 +22,8 @@ window.HUB_MANIFEST = {
     { file: "07-signature-items.html", title: "Signature Items", group: "Bonus \u00b7 optional", desc: "Optional, and only when everything else works. A ready-made item the customer can still change: choose one, take a topping off, put another on." }
   ],
   reference: [
-    { file: "capstone-2-checklist.html", title: "The Capstone 2 Checklist", group: "Start here", desc: "Ten stops from your capstone text to Demo Day. Press a stop, tick what is done, and see which pictures help with it." }
+    { file: "capstone-2-path.html", title: "The Capstone 2 Path", group: "Start here", desc: "The order of work: ten stops from your capstone text to Demo Day. Press a stop, tick what is done, and see which pictures help with it." },
+    { file: "requirements-checklist.html", title: "Requirements Checklist", group: "Start here", desc: "Did you build everything? Your capstone text as tick boxes, in your option's own words and prices: the rules, every screen, the receipt, the repository." }
   ],
   exercises: [],
   games: []
