@@ -1,0 +1,416 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Your Class Diagram | Week 8 Visual Hub</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Sora:wght@500;700&family=Inter:wght@400;500&family=JetBrains+Mono:wght@400;500&display=swap">
+<style>
+  :root{
+    --bg:#080c17; --bg2:#0c1428; --surface:rgba(255,255,255,.045); --line:rgba(255,255,255,.09);
+    --ink:#eef2fb; --muted:#8496b6; --accent:#6ea0ff; --accent2:#8b7bff; --good:#46d98a; --warn:#ff6a6a;
+    --gold:#ffc862; --disp:'Sora',system-ui,sans-serif; --body:'Inter',system-ui,sans-serif;
+    --mono:'JetBrains Mono',ui-monospace,monospace;
+    --paper:#f4efe2; --pink:#1c2233; --pmuted:#7a7466; --pgood:#1d8f52; --pwarn:#c93a3a;
+  }
+  *{box-sizing:border-box}
+  body{margin:0;min-height:100vh;color:var(--ink);font-family:var(--body);
+    background:radial-gradient(1200px 700px at 70% -10%,#141d38 0%,transparent 55%),
+               radial-gradient(900px 600px at 10% 110%,#161233 0%,transparent 50%),#080c17;
+    overflow-x:hidden}
+  #amb{position:fixed;inset:0;z-index:0;pointer-events:none;opacity:.6}
+  .back{position:relative;z-index:2;display:block;max-width:1120px;margin:0 auto;padding:26px 24px 0;
+    width:100%;font-family:var(--mono);font-size:.8rem;letter-spacing:.04em;color:var(--muted);
+    text-decoration:none;transition:color .15s}
+  .back:hover{color:var(--accent)}
+  .wrap{position:relative;z-index:1;max-width:1120px;margin:0 auto;padding:22px 24px 70px}
+  .tag{font-family:var(--mono);font-size:.72rem;letter-spacing:.22em;text-transform:uppercase;color:var(--accent);margin:0 0 14px}
+  h1{font-family:var(--disp);font-weight:700;font-size:clamp(2.3rem,6vw,3.6rem);line-height:1;margin:0 0 12px;
+    letter-spacing:-.03em;background:linear-gradient(180deg,#fff,#b9c6e6);-webkit-background-clip:text;
+    background-clip:text;color:transparent}
+  .lede{color:var(--muted);max-width:64ch;font-size:1.05rem;margin:0 0 26px;line-height:1.5}
+  .lede b{color:var(--ink)}
+
+  /* ---------- the stage IS the picture ---------- */
+  .stage{position:relative;background:linear-gradient(180deg,rgba(255,255,255,.03),rgba(255,255,255,.01));
+    border:1px solid var(--line);border-radius:24px;padding:22px;
+    box-shadow:0 1px 0 rgba(255,255,255,.06) inset,0 30px 80px -30px rgba(0,0,0,.8)}
+  [hidden]{display:none!important}
+  .hd{display:block;font-family:var(--mono);font-size:.62rem;letter-spacing:.16em;text-transform:uppercase;color:var(--muted);margin:0 0 8px 2px}
+
+  .opts{display:flex;flex-wrap:wrap;gap:6px;margin-bottom:16px}
+  .tab{font-family:var(--mono);font-size:.84rem;padding:9px 15px;border-radius:999px;cursor:pointer;border:1px solid var(--line);
+    background:transparent;color:var(--muted);transition:.15s}
+  .tab:hover{border-color:var(--accent);color:var(--ink)}
+  .tab.on{background:rgba(110,160,255,.2);border-color:var(--accent);color:#fff}
+
+  /* ---------- the picture: one order on the counter ---------- */
+  .scene{display:grid;grid-template-columns:170px minmax(0,1fr) 170px;gap:14px;align-items:center}
+  @media (max-width:900px){.scene{grid-template-columns:1fr}}
+  .part{font:inherit;text-align:left;cursor:pointer;color:var(--ink);transition:.18s;position:relative}
+  .part:focus-visible{outline:2px solid var(--accent);outline-offset:3px}
+  .part.sel{box-shadow:0 0 0 3px rgba(110,160,255,.35),0 0 34px -8px rgba(110,160,255,.9)}
+  /* a small mark on each part: nothing yet, something missing, all there */
+  .part>.mk{position:absolute;top:-8px;right:-8px;width:20px;height:20px;border-radius:50%;display:none;align-items:center;justify-content:center;
+    font-family:var(--mono);font-size:.7rem;font-weight:500;color:#08101e;z-index:3}
+  .part.good>.mk{display:flex;background:var(--good)} .part.miss>.mk{display:flex;background:var(--gold)}
+
+  /* the screen the customer talks to */
+  .screen{border:1px solid rgba(110,160,255,.4);border-radius:14px;background:#05080f;padding:0;overflow:visible;width:100%}
+  .screen .bar{display:flex;gap:5px;padding:8px 10px;border-bottom:1px solid var(--line)}
+  .screen .bar i{width:7px;height:7px;border-radius:50%;background:#3a4460}
+  .screen .body{padding:10px 12px 12px;font-family:var(--mono);font-size:.74rem;line-height:1.7;color:#bcd0ff}
+  .screen .body b{display:block;font-family:var(--disp);font-size:.9rem;color:var(--ink);margin-bottom:4px}
+  .screen .body em{font-style:normal;color:var(--gold)}
+  .arrow{font-family:var(--mono);font-size:.62rem;letter-spacing:.14em;text-transform:uppercase;color:var(--muted);text-align:center;margin:8px 0 0}
+
+  /* the order: a tray that holds everything */
+  .tray{border:2px dashed rgba(255,255,255,.22);border-radius:22px;padding:14px;background:rgba(255,255,255,.02);width:100%;display:block}
+  .tray.sel{border-style:solid;border-color:var(--accent)}
+  .trayhd{display:flex;justify-content:space-between;align-items:center;margin:0 4px 12px;font-family:var(--mono);font-size:.68rem;letter-spacing:.16em;text-transform:uppercase;color:var(--muted)}
+  .trayhd b{font-family:var(--disp);font-size:1.05rem;letter-spacing:0;text-transform:none;color:var(--ink)}
+  .goods{display:grid;grid-template-columns:minmax(0,1.5fr) minmax(0,1fr);gap:12px;align-items:stretch}
+  @media (max-width:640px){.goods{grid-template-columns:1fr}}
+
+  /* the main item, layer by layer */
+  .item{border:1px solid var(--line);border-radius:18px;background:rgba(6,10,20,.55);padding:12px;display:block;width:100%}
+  .itemhd{display:flex;justify-content:space-between;align-items:center;gap:8px;margin:0 2px 10px}
+  .itemhd b{font-family:var(--disp);font-size:1.02rem}
+  .tags{display:flex;gap:6px;flex-wrap:wrap}
+  .tagb{font-family:var(--mono);font-size:.74rem;padding:6px 10px;border-radius:999px;border:1px solid var(--line);background:rgba(255,255,255,.05)}
+  .tagb.size{border-color:rgba(110,160,255,.5);color:#cfe0ff}
+  .tagb.sp{border-color:rgba(255,106,106,.45);color:#ffc2c2}
+  .stack{display:grid;gap:5px}
+  .layer{display:flex;justify-content:space-between;align-items:center;gap:8px;width:100%;padding:9px 13px;border-radius:10px;border:1px solid transparent;
+    font-family:var(--mono);font-size:.8rem}
+  .layer small{font-family:var(--body);font-size:.72rem;opacity:.8}
+  .layer.base{background:#c9a467;color:#2a1c05;border-radius:18px 18px 8px 8px;padding-top:12px}
+  .layer.pa{background:#b0503f;color:#fff}
+  .layer.pb{background:#e6c04a;color:#3a2a00}
+  .layer.rg{background:#4f9b58;color:#fff}
+  .layer.sc{background:#efe6d2;color:#3a3020;padding-top:6px;padding-bottom:6px}
+  .layer.foot{background:#c9a467;border-radius:8px 8px 18px 18px;height:16px;padding:0;cursor:default}
+  .row2{display:grid;grid-template-columns:minmax(0,1fr) auto;gap:5px;align-items:stretch}
+  .xtra{font-family:var(--mono);font-size:.74rem;padding:0 12px;border-radius:10px;border:1px dashed var(--gold);background:rgba(255,200,98,.14);color:var(--gold)}
+
+  /* the two other products */
+  .side{display:grid;gap:12px}
+  .prod{border:1px solid var(--line);border-radius:18px;background:rgba(6,10,20,.55);padding:12px 14px;display:flex;gap:12px;align-items:center;width:100%}
+  .prod .ic{flex:0 0 38px;height:46px;border-radius:6px 6px 12px 12px;background:linear-gradient(180deg,#6ea0ff,#3d62b8);position:relative}
+  .prod .ic.bag{border-radius:8px;background:linear-gradient(180deg,#ffc862,#c98a1c)}
+  .prod b{display:block;font-family:var(--disp);font-size:.98rem}
+  .prod span{font-family:var(--mono);font-size:.74rem;color:var(--muted)}
+  .total{display:flex;justify-content:space-between;align-items:center;width:100%;margin-top:12px;padding:11px 14px;border-radius:14px;border:1px solid var(--line);background:rgba(6,10,20,.55);
+    font-family:var(--mono);font-size:.78rem;letter-spacing:.14em;text-transform:uppercase;color:var(--muted)}
+  .total b{font-family:var(--disp);font-size:1.25rem;letter-spacing:0;color:var(--ink)}
+
+  /* the receipt file */
+  .rfile{width:100%;border-radius:6px 22px 6px 6px;background:var(--paper);color:var(--pink);padding:14px 12px 16px;border:0}
+  .rfile b{display:block;font-family:var(--mono);font-size:.74rem;overflow-wrap:anywhere;margin-bottom:8px}
+  .rfile i{display:block;height:5px;border-radius:3px;background:#cfc7b2;margin:5px 0}
+  .rfile i:nth-child(3){width:80%} .rfile i:nth-child(4){width:92%} .rfile i:nth-child(5){width:60%}
+
+  /* ---------- the questions of the part that was pressed ---------- */
+  .ask{margin-top:18px;border:1px solid var(--line);border-radius:18px;background:rgba(6,10,20,.55);padding:16px 18px}
+  .ask h2{font-family:var(--disp);font-weight:700;font-size:1.2rem;margin:0 0 4px;color:var(--ink)}
+  .ask .sub{margin:0 0 12px;color:var(--muted);font-size:.95rem}
+  .qrow{display:grid;grid-template-columns:minmax(0,1fr) auto;gap:12px;align-items:center;padding:11px 0;border-top:1px solid var(--line)}
+  @media (max-width:640px){.qrow{grid-template-columns:1fr}}
+  .qrow p{margin:0;font-size:1.02rem;line-height:1.45;color:var(--ink)}
+  .ans{display:flex;gap:6px}
+  .ab{font-family:var(--mono);font-size:.8rem;padding:9px 13px;border-radius:11px;cursor:pointer;border:1px solid var(--line);background:transparent;color:var(--muted);transition:.15s;white-space:nowrap}
+  .ab:hover{color:var(--ink);border-color:var(--accent)}
+  .ab.yes.on{background:rgba(70,217,138,.18);border-color:var(--good);color:#b9f3d3}
+  .ab.no.on{background:rgba(255,200,98,.16);border-color:var(--gold);color:var(--gold)}
+
+  /* ---------- what is still missing ---------- */
+  .tally{display:flex;gap:14px;align-items:center;margin:16px 0 0}
+  .meter{flex:1;height:8px;border-radius:999px;background:rgba(255,255,255,.08);overflow:hidden;display:flex}
+  .meter i{display:block;height:100%;transition:width .3s}
+  .meter .g{background:var(--good)} .meter .y{background:var(--gold)}
+  .tally p{margin:0;font-family:var(--mono);font-size:.82rem;color:var(--ink);white-space:nowrap}
+  .missing{margin:14px 0 0;padding:0;list-style:none;display:grid;gap:6px}
+  .missing li{padding:9px 13px;border-left:3px solid var(--gold);background:rgba(255,200,98,.06);border-radius:0 10px 10px 0;font-size:.95rem;color:var(--ink);cursor:pointer}
+  .missing li b{font-family:var(--mono);font-size:.68rem;letter-spacing:.1em;text-transform:uppercase;color:var(--gold);font-weight:500;margin-right:8px}
+
+  /* ---------- the three lines ---------- */
+  .lines{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:10px;margin-top:22px}
+  @media (max-width:760px){.lines{grid-template-columns:1fr}}
+  .ln{border:1px solid var(--line);border-radius:16px;padding:12px 14px;background:rgba(255,255,255,.025)}
+  .ln svg{display:block;width:100%;height:auto;max-height:96px}
+  .ln b{display:block;font-family:var(--disp);font-size:.98rem;margin-top:6px;color:var(--ink)}
+  .ln span{display:block;font-size:.86rem;color:var(--muted);margin-top:2px}
+  .bx{fill:#0b1020;stroke:rgba(255,255,255,.55);stroke-width:1.3} .tx{fill:var(--ink);font-family:var(--mono);font-size:11px;text-anchor:middle}
+  .li{stroke:var(--gold);stroke-width:1.8;fill:none} .hd2{fill:#0b1020;stroke:var(--gold);stroke-width:1.8} .st{fill:var(--gold);font-family:var(--mono);font-size:13px;text-anchor:middle}
+  .refs{display:flex;flex-wrap:wrap;gap:8px;margin:12px 0 0;font-family:var(--mono);font-size:.76rem;color:var(--muted);align-items:center}
+  .refs a{color:var(--accent);text-decoration:none;padding:6px 11px;border:1px solid var(--line);border-radius:999px}
+  .refs a:hover{border-color:var(--accent)}
+  .warnline{margin:0 0 16px;padding:11px 15px;border:1px dashed rgba(255,200,98,.55);border-radius:14px;background:rgba(255,200,98,.06);font-size:1rem;color:var(--ink)}
+  .warnline b{color:var(--gold)}
+
+  .reset{font-family:var(--body);font-weight:500;font-size:.84rem;padding:8px 14px;border-radius:11px;cursor:pointer;
+    border:1px solid var(--line);background:transparent;color:var(--muted);transition:.15s;flex-shrink:0}
+  .reset:hover{border-color:var(--accent);color:var(--accent)}
+  button:focus-visible{outline:2px solid var(--accent);outline-offset:2px}
+
+  .take{margin-top:22px;background:linear-gradient(180deg,rgba(110,160,255,.08),rgba(139,123,255,.04));
+    border:1px solid var(--line);border-left:3px solid var(--accent);border-radius:12px;padding:16px 18px}
+  .take .tk{font-family:var(--mono);font-size:.66rem;letter-spacing:.14em;text-transform:uppercase;color:var(--accent);margin:0 0 8px}
+  .take p{margin:0;font-size:.95rem;color:var(--ink);line-height:1.55}
+  .take b{color:#fff}
+  @media (max-width:560px){.stage{padding:14px}.pad{padding:14px 12px 28px}.stamp{font-size:1.5rem}}
+  @media (prefers-reduced-motion:reduce){*{animation-duration:.01ms!important;transition-duration:.01ms!important;animation-delay:0s!important;transition-delay:0s!important}#amb{display:none}}
+  /* opened inside another page: only the picture and its one idea */
+  .embed .back,.embed .tag,.embed h1,.embed #rail,.embed #amb{display:none}
+  html.embed{color-scheme:dark}
+  .embed body{background:#080c17}
+  .embed .wrap{padding:14px 14px 18px;max-width:none}
+</style>
+<script>if(/[?&]embed=1/.test(location.search)) document.documentElement.className+=" embed";</script>
+</head>
+<body>
+<a class="back" href="../index.html#01-your-class-diagram">&#8592; Week 8 index</a>
+<canvas id="amb"></canvas>
+<div class="wrap">
+  <p class="tag">Capstone 2 &middot; Design</p>
+  <h1>Your Class Diagram</h1>
+  <p class="lede"><b>One order on the counter.</b> Press each part and ask your own diagram about it.</p>
+
+  <div class="stage">
+    <div class="opts" id="opts" role="group" aria-label="Your capstone option"></div>
+    <p class="warnline"><b>This is not your diagram, and not your instructions.</b> It is one order, drawn. Your capstone text says what the shop sells; your diagram is yours to design.</p>
+
+    <div class="scene">
+      <div>
+        <button type="button" class="part screen" data-p="screen"><span class="mk"></span>
+          <div class="bar"><i></i><i></i><i></i></div>
+          <div class="body" id="scr"></div>
+        </button>
+        <p class="arrow">the screens &#8594;</p>
+      </div>
+
+      <div class="part tray" data-p="order" tabindex="0" role="button"><span class="mk"></span>
+        <div class="trayhd"><b>The order</b><span>holds everything</span></div>
+        <div class="goods">
+          <div class="part item" data-p="item" tabindex="0" role="button"><span class="mk"></span>
+            <div class="itemhd"><b id="itemName"></b>
+              <div class="tags">
+                <button type="button" class="part tagb size" data-p="size"><span class="mk"></span><span id="sizeV"></span></button>
+                <button type="button" class="part tagb sp" data-p="special"><span class="mk"></span><span id="spV"></span></button>
+              </div>
+            </div>
+            <div class="stack">
+              <button type="button" class="part layer base" data-p="type"><span class="mk"></span><span id="typeV"></span><small id="typeL"></small></button>
+              <div class="row2">
+                <button type="button" class="part layer pa" data-p="pa"><span class="mk"></span><span id="paV"></span><small id="paL"></small></button>
+                <button type="button" class="part xtra" data-p="extra"><span class="mk"></span>+ extra</button>
+              </div>
+              <button type="button" class="part layer pb" data-p="pb"><span class="mk"></span><span id="pbV"></span><small id="pbL"></small></button>
+              <button type="button" class="part layer rg" data-p="reg"><span class="mk"></span><span id="rgV"></span><small>regular topping</small></button>
+              <button type="button" class="part layer sc" data-p="sauce"><span class="mk"></span><span id="scV"></span><small>sauce</small></button>
+              <div class="layer foot"></div>
+            </div>
+          </div>
+          <div class="side">
+            <button type="button" class="part prod" data-p="drink"><span class="mk"></span><span class="ic"></span><span><b>Drink</b><span id="drV"></span></span></button>
+            <button type="button" class="part prod" data-p="third"><span class="mk"></span><span class="ic bag"></span><span><b id="thN"></b><span id="thV"></span></span></button>
+          </div>
+        </div>
+        <button type="button" class="part total" data-p="total"><span class="mk"></span><span>Total</span><b>?</b></button>
+      </div>
+
+      <div>
+        <button type="button" class="part rfile" data-p="receipt"><span class="mk"></span><b>20261204-141523.txt</b><i></i><i></i><i></i></button>
+        <p class="arrow">&#8594; the receipt file</p>
+      </div>
+    </div>
+
+    <div class="ask" id="ask" aria-live="polite"></div>
+
+    <div class="tally"><div class="meter"><i class="g" id="barG"></i><i class="y" id="barY"></i></div><p id="count"></p><button class="reset" id="bReset" type="button">Reset</button></div>
+    <ul class="missing" id="missing"></ul>
+
+    <div class="lines">
+      <div class="ln"><svg viewBox="0 0 260 80" role="img" aria-label="A line with a hollow diamond on the owner"><rect class="bx" x="6" y="22" width="92" height="36" rx="4"/><text class="tx" x="52" y="44">A</text><rect class="bx" x="162" y="22" width="92" height="36" rx="4"/><text class="tx" x="208" y="44">B</text><polygon class="hd2" points="98,40 110,33 122,40 110,47"/><line class="li" x1="122" y1="40" x2="162" y2="40"/><text class="st" x="152" y="32">*</text></svg><b>"A holds several B"</b><span>A line with a diamond on A, the one that holds.</span></div>
+      <div class="ln"><svg viewBox="0 0 260 80" role="img" aria-label="A solid line with a hollow triangle on the parent"><rect class="bx" x="6" y="22" width="92" height="36" rx="4"/><text class="tx" x="52" y="44">A</text><rect class="bx" x="162" y="22" width="92" height="36" rx="4"/><text class="tx" x="208" y="44">B</text><line class="li" x1="98" y1="40" x2="146" y2="40"/><polygon class="hd2" points="162,40 146,31 146,49"/></svg><b>"A is a kind of B"</b><span>A solid line, the triangle touches B, the parent.</span></div>
+      <div class="ln"><svg viewBox="0 0 260 80" role="img" aria-label="A dashed line with a hollow triangle on the interface"><rect class="bx" x="6" y="22" width="92" height="36" rx="4"/><text class="tx" x="52" y="44">A</text><rect class="bx" x="162" y="22" width="92" height="36" rx="4"/><text class="tx" x="208" y="44">B</text><line class="li" x1="98" y1="40" x2="146" y2="40" stroke-dasharray="6 5"/><polygon class="hd2" points="162,40 146,31 146,49"/></svg><b>"A can do what B describes"</b><span>A dashed line, the triangle touches B, the interface.</span></div>
+    </div>
+    <p class="refs">How to draw the boxes and the lines: <a href="../../week-06/reference/class-diagram-reference.html">Class Diagram Reference, week 6</a><a href="../../week-07/reference/class-diagram-reference.html">Class Diagram Reference, week 7</a></p>
+  </div>
+
+  <div class="take">
+    <p class="tk">The one idea</p>
+    <p><b>Everything on the counter needs a place in your diagram.</b> Each thing the shop sells, each detail it remembers, each price, and each job: showing the menus, adding up, writing the file. What you answered "not yet" is what your diagram is still missing.</p>
+  </div>
+  <div id="rail"></div>
+</div>
+
+<script src="../options.js"></script>
+<script>
+(function(){
+  "use strict";
+  function $(id){ return document.getElementById(id); }
+  var C=window.CAP2, opt=C.saved(), sel="item";
+  var SINGLE={"Meats":"meat","Cheese":"cheese","Premium Toppings A":"premium topping A","Premium Toppings B":"premium topping B"};
+  function W(){            /* the words of the chosen option */
+    var o=C.options[opt];
+    return {item:o.item, items:o.items, Item:o.Item, type:o.typeWord, typeV:o.types[0], size:(o.sizeNames||o.sizes)[1],
+            pa:SINGLE[o.premiumA.label]||o.premiumA.label, paV:o.premiumA.list[0], pb:SINGLE[o.premiumB.label]||o.premiumB.label, pbV:o.premiumB.list[0],
+            reg:o.regular[0], sauce:o.sauces[0], special:o.special.yes, flavor:o.flavors[0],
+            third:o.third.name, thirdKind:o.third.typeWord, thirdV:o.third.types[0]||"one order", menu:o.orderMenu};
+  }
+  function T(s){ var w=W(); return s.replace(/\{(\w+)\}/g,function(m,k){ return w[k]!=null?w[k]:m; }); }
+
+  /* every part of the picture, and what it asks the learner's diagram */
+  var PARTS={
+    screen:["The screens","What the customer sees and types.",[
+      "Is there a box that shows the menus and reads what the customer types?",
+      "Is it the only box that talks to the customer?",
+      "Does it know which order is being built right now?"]],
+    order:["The order","Everything one customer picked.",[
+      "Is there a box for the order?",
+      "Can it hold {items}, drinks and {third} together, any number of each?",
+      "Can it be empty, and is it clear who refuses to check out an empty order?"]],
+    item:["The {item}","The main thing the shop sells.",[
+      "Is there a box for one {item}?",
+      "Does it hold everything the customer chose for it?",
+      "Can it tell its own price?"]],
+    type:["The {type}","Chosen from a short list.",[
+      "Does the {item} remember which {type} was chosen?",
+      "Is the {type} one value from a list, and not one box for every {type}?"]],
+    size:["The size","Three sizes, and almost every price depends on it.",[
+      "Does the {item} remember its size?",
+      "When a price is worked out, can the size be reached from there?"]],
+    pa:["A {pa}: {paV}","A premium topping. It costs money.",[
+      "Is there something in your diagram for a topping?",
+      "Can one {item} hold several toppings, any number of them?",
+      "Does the price of a {pa} change with the size of the {item}?"]],
+    extra:["The extra portion","Asked after each premium topping.",[
+      "Does your diagram remember that this {pa} is extra?",
+      "Does an extra portion ADD its price to the normal price?",
+      "Regular toppings and sauces have no extra. Does your diagram keep it away from them?"]],
+    pb:["A {pb}: {pbV}","The other premium group, with other prices.",[
+      "Is a {pb} priced differently from a {pa} in your diagram?",
+      "Is it clear where that difference lives?",
+      "Does it have its own extra price too?"]],
+    reg:["A regular topping: {reg}","Included: it adds nothing to the price.",[
+      "Is it still on the {item}, and shown in the order?",
+      "Is it clear what makes it different from a premium topping?"]],
+    sauce:["A sauce: {sauce}","Included as well.",[
+      "Does a sauce have a place on the {item}?",
+      "Did you decide whether a sauce is held like a topping or as something of its own?"]],
+    special:["{special}","A yes or no choice, at no extra cost.",[
+      "Does the {item} remember yes or no for this?"]],
+    drink:["The drink","Sold on its own.",[
+      "Is there a box for a drink?",
+      "Does it remember its size and its flavor?",
+      "Can it tell its own price?"]],
+    third:["{third}","Sold on its own too.",[
+      "Is there a box for it?",
+      "Does it remember what the customer chose for it, if there is a choice?",
+      "Can it tell its own price?"]],
+    total:["The total","Shown at checkout.",[
+      "Is it clear which box adds everything up?",
+      "Does that box ask each thing for its price?"]],
+    receipt:["The receipt file","One file per confirmed order.",[
+      "Is there a box whose job is to write the file?",
+      "Does it get the order details from the order?"]]
+  };
+  var ORDER=["screen","order","item","type","size","pa","extra","pb","reg","sauce","special","drink","third","total","receipt"];
+  var KEY="hub-cap2-diagram-answers", ans={};
+  try{ ans=JSON.parse(localStorage.getItem(KEY)||"{}")||{}; }catch(e){ ans={}; }
+  function save(){ try{ localStorage.setItem(KEY,JSON.stringify(ans)); }catch(e){} }
+
+  function fill(){
+    var w=W();
+    $("scr").innerHTML=""; var b=document.createElement("b"); b.textContent="Order"; $("scr").appendChild(b);
+    w.menu.forEach(function(m){ var d=document.createElement("div"); var k=/^(\d+\))\s*(.*)$/.exec(m); var e=document.createElement("em"); e.textContent=k[1]+" "; d.appendChild(e); d.appendChild(document.createTextNode(k[2])); $("scr").appendChild(d); });
+    $("itemName").textContent="One "+w.item;
+    $("sizeV").textContent=w.size; $("spV").textContent=w.special;
+    $("typeV").textContent=w.typeV; $("typeL").textContent=w.type;
+    $("paV").textContent=w.paV; $("paL").textContent=w.pa;
+    $("pbV").textContent=w.pbV; $("pbL").textContent=w.pb;
+    $("rgV").textContent=w.reg; $("scV").textContent=w.sauce;
+    $("drV").textContent="Medium \u00b7 "+w.flavor;
+    $("thN").textContent=w.third; $("thV").textContent=w.thirdV;
+  }
+  function state(p){        /* "" nothing answered, "miss" at least one not yet, "good" all yes */
+    var n=PARTS[p][2].length, yes=0, no=0;
+    for(var i=0;i<n;i++){ var a=ans[p+i]; if(a==="y") yes++; if(a==="n") no++; }
+    return no?"miss":(yes===n?"good":"");
+  }
+  function marks(){
+    [].forEach.call(document.querySelectorAll(".part[data-p]"),function(el){
+      var p=el.getAttribute("data-p"), s=state(p);
+      el.classList.toggle("good",s==="good"); el.classList.toggle("miss",s==="miss"); el.classList.toggle("sel",p===sel);
+      el.querySelector(".mk").textContent=s==="good"?"\u2713":(s==="miss"?"!":"");
+    });
+  }
+  function tally(){
+    var all=0, yes=0, no=0, list=[];
+    ORDER.forEach(function(p){ PARTS[p][2].forEach(function(q,i){ all++; var a=ans[p+i]; if(a==="y") yes++; if(a==="n"){ no++; list.push([p,T(PARTS[p][0]),T(q)]); } }); });
+    $("barG").style.width=(yes/all*100)+"%"; $("barY").style.width=(no/all*100)+"%";
+    $("count").textContent=yes+" in my diagram \u00b7 "+no+" not yet \u00b7 "+(all-yes-no)+" to ask";
+    var ul=$("missing"); ul.textContent="";
+    list.forEach(function(x){
+      var li=document.createElement("li"), b=document.createElement("b"); b.textContent=x[1];
+      li.appendChild(b); li.appendChild(document.createTextNode(x[2]));
+      li.addEventListener("click",function(){ pick(x[0]); $("ask").scrollIntoView({block:"center",behavior:"smooth"}); });
+      ul.appendChild(li);
+    });
+  }
+  function ask(){
+    var P=PARTS[sel], box=$("ask"); box.textContent="";
+    var h=document.createElement("h2"); h.textContent=T(P[0]); box.appendChild(h);
+    var s=document.createElement("p"); s.className="sub"; s.textContent=T(P[1]); box.appendChild(s);
+    P[2].forEach(function(q,i){
+      var row=document.createElement("div"); row.className="qrow";
+      var p=document.createElement("p"); p.textContent=T(q); row.appendChild(p);
+      var a=document.createElement("div"); a.className="ans";
+      [["y","yes","In my diagram"],["n","no","Not yet"]].forEach(function(o){
+        var b=document.createElement("button"); b.type="button"; b.className="ab "+o[1]+(ans[sel+i]===o[0]?" on":""); b.textContent=o[2];
+        b.addEventListener("click",function(){ ans[sel+i]=(ans[sel+i]===o[0])?"":o[0]; save(); ask(); marks(); tally(); });
+        a.appendChild(b);
+      });
+      row.appendChild(a); box.appendChild(row);
+    });
+  }
+  function pick(p){ sel=p; ask(); marks(); }
+
+  /* press a part of the picture. The innermost part under the pointer wins. */
+  document.querySelector(".scene").addEventListener("click",function(e){
+    var el=e.target.closest(".part[data-p]"); if(!el) return;
+    pick(el.getAttribute("data-p"));
+  });
+  document.querySelector(".scene").addEventListener("keydown",function(e){
+    if(e.key!=="Enter"&&e.key!==" ") return;
+    var el=e.target.closest(".part[data-p]"); if(!el||el.tagName==="BUTTON") return;
+    e.preventDefault(); pick(el.getAttribute("data-p"));
+  });
+  $("bReset").addEventListener("click",function(){ ans={}; save(); ask(); marks(); tally(); });
+
+  C.order.forEach(function(k){
+    var b=document.createElement("button"); b.type="button"; b.className="tab"+(k===opt?" on":""); b.textContent=C.options[k].name;
+    b.addEventListener("click",function(){
+      opt=k; C.save(k);
+      [].forEach.call(document.querySelectorAll("#opts .tab"),function(x){ x.classList.toggle("on",x===b); });
+      fill(); ask(); marks(); tally();
+    });
+    $("opts").appendChild(b);
+  });
+  fill(); ask(); marks(); tally();
+
+  /* ambient canvas */
+  var cv=$("amb"), ctx=cv.getContext&&cv.getContext("2d"), parts=[], reduce=matchMedia("(prefers-reduced-motion: reduce)").matches;
+  function sizeC(){ if(!ctx) return; cv.width=innerWidth; cv.height=innerHeight; }
+  function initParts(){ parts=[]; for(var i=0;i<46;i++) parts.push({x:Math.random(),y:Math.random(),r:Math.random()*1.6+.3,s:Math.random()*.02+.004,o:Math.random()*.4+.1}); }
+  function drawC(){ if(!ctx) return; ctx.clearRect(0,0,cv.width,cv.height); parts.forEach(function(p){ p.y-=p.s/60; if(p.y<-.02) p.y=1.02; ctx.beginPath(); ctx.arc(p.x*cv.width,p.y*cv.height,p.r,0,7); ctx.fillStyle="rgba(140,170,255,"+p.o+")"; ctx.fill(); }); requestAnimationFrame(drawC); }
+  if(ctx&&!reduce){ sizeC(); initParts(); drawC(); addEventListener("resize",sizeC); }
+})();
+</script>
+<script src="../manifest.js"></script>
+<script src="../../assets/rail.js"></script>
+<script>if(!/[?&]embed=1/.test(location.search)) Rail.render(document.getElementById("rail"),{week:8,kind:"visuals",current:"01-your-class-diagram"});</script>
+</body>
+</html>

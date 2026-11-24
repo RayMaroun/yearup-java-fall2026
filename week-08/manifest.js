@@ -12,7 +12,7 @@ window.HUB_MANIFEST = {
   live: false,
   title: "Capstone 2 \u00b7 Your Shop",
   visuals: [
-    { file: "01-from-your-text-to-a-class-diagram.html", title: "From Your Text to a Class Diagram", group: "Design", desc: "Read, draw, test: press the words of your own text, watch an example diagram grow, then walk one order through your own diagram." },
+    { file: "01-your-class-diagram.html", title: "Your Class Diagram", group: "Design", desc: "One order on the counter. Press each part and ask your own diagram about it: is there a place for it, what does it remember, can it tell its price." },
     { file: "02-menu-flow-map.html", title: "Menu Flow Map", group: "Build", desc: "Every screen of your application and where each choice leads. Press an option and walk from Home to the receipt and back." },
     { file: "03-what-an-order-can-hold.html", title: "What an Order Can Hold", group: "Build", desc: "Add things to an order pad, watch the total, and press Checkout: an empty order is refused, a drink alone is fine." },
     { file: "04-building-one-item.html", title: "Building One Item", group: "Build", desc: "The questions of the Add screen, in order: the type, the size, the premium toppings with Extra?, the regular toppings, the sauces, the special option." },
