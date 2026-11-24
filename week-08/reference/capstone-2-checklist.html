@@ -1,0 +1,246 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>The Capstone 2 Checklist | Week 8 Visual Hub</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Sora:wght@500;700&family=Inter:wght@400;500&family=JetBrains+Mono:wght@400;500&display=swap">
+<style>
+  :root{
+    --bg:#080c17; --bg2:#0c1428; --surface:rgba(255,255,255,.045); --line:rgba(255,255,255,.09);
+    --ink:#eef2fb; --muted:#8496b6; --accent:#6ea0ff; --accent2:#8b7bff; --good:#46d98a; --warn:#ff6a6a;
+    --gold:#ffc862; --disp:'Sora',system-ui,sans-serif; --body:'Inter',system-ui,sans-serif;
+    --mono:'JetBrains Mono',ui-monospace,monospace;
+    --paper:#f4efe2; --pink:#1c2233; --pmuted:#7a7466; --pgood:#1d8f52; --pwarn:#c93a3a;
+  }
+  *{box-sizing:border-box}
+  body{margin:0;min-height:100vh;color:var(--ink);font-family:var(--body);
+    background:radial-gradient(1200px 700px at 70% -10%,#141d38 0%,transparent 55%),
+               radial-gradient(900px 600px at 10% 110%,#161233 0%,transparent 50%),#080c17;
+    overflow-x:hidden}
+  #amb{position:fixed;inset:0;z-index:0;pointer-events:none;opacity:.6}
+  .back{position:relative;z-index:2;display:block;max-width:1120px;margin:0 auto;padding:26px 24px 0;
+    width:100%;font-family:var(--mono);font-size:.8rem;letter-spacing:.04em;color:var(--muted);
+    text-decoration:none;transition:color .15s}
+  .back:hover{color:var(--accent)}
+  .wrap{position:relative;z-index:1;max-width:1120px;margin:0 auto;padding:22px 24px 70px}
+  .tag{font-family:var(--mono);font-size:.72rem;letter-spacing:.22em;text-transform:uppercase;color:var(--accent);margin:0 0 14px}
+  h1{font-family:var(--disp);font-weight:700;font-size:clamp(2.3rem,6vw,3.6rem);line-height:1;margin:0 0 12px;
+    letter-spacing:-.03em;background:linear-gradient(180deg,#fff,#b9c6e6);-webkit-background-clip:text;
+    background-clip:text;color:transparent}
+  .lede{color:var(--muted);max-width:64ch;font-size:1.05rem;margin:0 0 26px;line-height:1.5}
+  .lede b{color:var(--ink)}
+
+  /* ---------- the stage IS the picture ---------- */
+  .stage{position:relative;background:linear-gradient(180deg,rgba(255,255,255,.03),rgba(255,255,255,.01));
+    border:1px solid var(--line);border-radius:24px;padding:22px;
+    box-shadow:0 1px 0 rgba(255,255,255,.06) inset,0 30px 80px -30px rgba(0,0,0,.8)}
+  [hidden]{display:none!important}
+  .hd{display:block;font-family:var(--mono);font-size:.62rem;letter-spacing:.16em;text-transform:uppercase;color:var(--muted);margin:0 0 8px 2px}
+
+  /* the path: ten stops in a row */
+  .path{display:grid;grid-template-columns:repeat(5,minmax(0,1fr));gap:10px}
+  @media (max-width:860px){.path{grid-template-columns:repeat(2,minmax(0,1fr))}}
+  .st{font:inherit;text-align:left;cursor:pointer;display:grid;gap:4px;padding:12px 12px 13px;border-radius:16px;border:1px solid var(--line);background:rgba(6,10,20,.5);color:var(--ink);transition:.18s;position:relative}
+  .st:hover{border-color:var(--accent)}
+  .st.sel{border-color:var(--accent);box-shadow:0 0 0 3px rgba(110,160,255,.25),0 0 30px -10px rgba(110,160,255,.9)}
+  .st .dot{width:34px;height:34px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-family:var(--disp);font-weight:700;font-size:.95rem;border:2px solid rgba(255,255,255,.25);color:var(--muted)}
+  .st .nm{font-family:var(--disp);font-weight:700;font-size:.98rem;line-height:1.2;margin-top:4px}
+  .st .wh{font-family:var(--mono);font-size:.64rem;letter-spacing:.1em;text-transform:uppercase;color:var(--muted)}
+  .st.part .dot{border-color:var(--gold);color:var(--gold)}
+  .st.ok .dot{border-color:var(--good);background:var(--good);color:#08101e}
+  .st.ok{border-color:rgba(70,217,138,.45)}
+  .st.gate .dot{border-radius:10px}
+  .st.locked{opacity:.5}
+  .st.locked .wh{color:var(--warn)}
+
+  /* the stop that was pressed */
+  .stop{margin-top:16px;border:1px solid var(--line);border-radius:20px;background:rgba(6,10,20,.55);padding:18px 20px}
+  .stop h2{font-family:var(--disp);font-weight:700;font-size:1.4rem;margin:0 0 12px;color:var(--ink);letter-spacing:-.01em}
+  .ticks{display:grid;gap:8px}
+  .ck{display:grid;grid-template-columns:auto 1fr;gap:12px;align-items:start;padding:13px 15px;border:1px solid var(--line);border-radius:14px;background:rgba(255,255,255,.02);font-size:1.02rem;line-height:1.45;color:#c9d4ea;cursor:pointer;transition:.2s}
+  .ck input{accent-color:var(--good);width:19px;height:19px;margin:2px 0 0;cursor:pointer}
+  .ck.ok{border-color:rgba(70,217,138,.5);color:var(--ink);background:rgba(70,217,138,.06)}
+  .lock{margin:0 0 12px;padding:11px 15px;border-left:3px solid var(--warn);background:rgba(255,106,106,.08);border-radius:0 12px 12px 0;color:var(--ink);font-size:1rem}
+  .light{margin:12px 0 0;padding:11px 15px;border-left:3px solid var(--warn);background:rgba(255,106,106,.08);border-radius:0 12px 12px 0;color:var(--ink);font-size:1rem}
+  .light.on{border-color:var(--good);background:rgba(70,217,138,.08)}
+  .help{display:flex;flex-wrap:wrap;gap:8px;align-items:center;margin:14px 0 0;font-family:var(--mono);font-size:.76rem;color:var(--muted)}
+  .help a{color:var(--accent);text-decoration:none;padding:7px 12px;border:1px solid var(--line);border-radius:999px}
+  .help a:hover{border-color:var(--accent)}
+  .nav{display:flex;justify-content:space-between;margin:16px 0 0}
+  .nb{font-family:var(--mono);font-size:.84rem;padding:10px 16px;border-radius:12px;cursor:pointer;border:1px solid var(--line);background:rgba(255,255,255,.04);color:var(--ink)}
+  .nb:hover{border-color:var(--accent)} .nb[disabled]{opacity:.3;cursor:default}
+  .tally{display:flex;gap:14px;align-items:center;margin:16px 0 0}
+  .meter{flex:1;height:8px;border-radius:999px;background:rgba(255,255,255,.08);overflow:hidden}
+  .meter i{display:block;height:100%;width:0;background:var(--good);transition:width .3s}
+  .tally p{margin:0;font-family:var(--mono);font-size:.82rem;color:var(--ink);white-space:nowrap}
+
+  .reset{font-family:var(--body);font-weight:500;font-size:.84rem;padding:8px 14px;border-radius:11px;cursor:pointer;
+    border:1px solid var(--line);background:transparent;color:var(--muted);transition:.15s;flex-shrink:0}
+  .reset:hover{border-color:var(--accent);color:var(--accent)}
+  button:focus-visible{outline:2px solid var(--accent);outline-offset:2px}
+
+  .take{margin-top:22px;background:linear-gradient(180deg,rgba(110,160,255,.08),rgba(139,123,255,.04));
+    border:1px solid var(--line);border-left:3px solid var(--accent);border-radius:12px;padding:16px 18px}
+  .take .tk{font-family:var(--mono);font-size:.66rem;letter-spacing:.14em;text-transform:uppercase;color:var(--accent);margin:0 0 8px}
+  .take p{margin:0;font-size:.95rem;color:var(--ink);line-height:1.55}
+  .take b{color:#fff}
+  @media (max-width:560px){.stage{padding:14px}.pad{padding:14px 12px 28px}.stamp{font-size:1.5rem}}
+  @media (prefers-reduced-motion:reduce){*{animation-duration:.01ms!important;transition-duration:.01ms!important;animation-delay:0s!important;transition-delay:0s!important}#amb{display:none}}
+</style>
+</head>
+<body>
+<a class="back" href="../index.html#capstone-2-checklist">&#8592; Week 8 index</a>
+<canvas id="amb"></canvas>
+<div class="wrap">
+  <p class="tag">Capstone 2 &middot; Start here</p>
+  <h1>The Capstone 2 Checklist</h1>
+  <p class="lede"><b>Ten stops from your capstone text to Demo Day.</b> Press a stop, tick what is done, and you always know what comes next.</p>
+
+  <div class="stage">
+    <div class="path" id="path"></div>
+    <div class="stop" id="stop" aria-live="polite"></div>
+    <div class="tally"><div class="meter"><i class="g" id="bar"></i></div><p id="count"></p><button class="reset" id="bReset" type="button">Reset</button></div>
+  </div>
+
+  <div class="take">
+    <p class="tk">The one idea</p>
+    <p><b>Text, then design, then code.</b> Your capstone text is the reference for every stop. The diagram comes before the code, and the green light comes before the first line of it.</p>
+  </div>
+  <div id="rail"></div>
+</div>
+
+<script>
+(function(){
+  "use strict";
+  function $(id){ return document.getElementById(id); }
+  /* every stop: its name, when it happens, its ticks, and the pictures that help.
+     "gate" is the stop that opens the build: nothing after it starts before its last tick. */
+  var STOPS=[
+    {name:"Read your text",when:"This week",ticks:[
+      "I read my capstone text from the first page to the last, not only the screens page.",
+      "I chose my option: Deli, Pizza, Taco or Custom, and Raymond knows which one.",
+      "Custom only: Raymond said yes to my shop idea."],help:[]},
+    {name:"Draw your class diagram",when:"This week",ticks:[
+      "I went through Your Class Diagram, part by part.",
+      "My diagram is drawn in diagrams.net.",
+      "The diagram file and a picture of it are in my project, committed and pushed."],
+      help:[["../visuals/01-your-class-diagram.html","Your Class Diagram"]]},
+    {name:"Get the green light",when:"This week",gate:true,ticks:[
+      "I showed my diagram to Raymond.",
+      "I changed what he asked for, and showed it again.",
+      "Raymond gave me the green light."],help:[]},
+    {name:"Set up your project",when:"Build week",ticks:[
+      "My project is created in my capstones folder.",
+      "My GitHub repository is public and has a meaningful name.",
+      "My project board has user stories made from the requirements.",
+      "My README is started from the course template."],
+      help:[["../../week-03/visuals/14-user-story.html","A User Story"],["../../week-03/visuals/15-project-board.html","The Project Board"],["../../week-03/reference/your-readme.html","Your README"]]},
+    {name:"Classes and prices",when:"Build week",ticks:[
+      "The classes of my diagram exist in my code.",
+      "Each thing the shop sells can tell its own price.",
+      "I worked out a few prices by hand from my price table, and my program prints the same numbers."],
+      help:[["../visuals/05-how-a-price-adds-up.html","How a Price Adds Up"],["../visuals/04-building-one-item.html","Building One Item"]]},
+    {name:"The screens",when:"Build week",ticks:[
+      "Every screen of my text exists, with the same menu numbers.",
+      "Something that is not on the menu shows a message and asks again.",
+      "An empty order cannot be checked out.",
+      "Cancel deletes the order and goes back to the home screen."],
+      help:[["../visuals/02-menu-flow-map.html","Menu Flow Map"],["../visuals/03-what-an-order-can-hold.html","What an Order Can Hold"],["../visuals/04-building-one-item.html","Building One Item"]]},
+    {name:"The receipt file",when:"Build week",ticks:[
+      "Confirm writes one file for the order, in a receipts folder inside my project.",
+      "The file is named by the date and time of the confirmation.",
+      "The file holds the order details shown at checkout."],
+      help:[["../visuals/06-the-receipt-file.html","The Receipt File"],["../../week-03/reference/date-patterns.html","Date Patterns"]]},
+    {name:"Check against your text",when:"Build week",ticks:[
+      "I went through my capstone text line by line with my program running.",
+      "My diagram matches my code, and I exported its picture again.",
+      "My commit history has a commit for each meaningful piece of work."],
+      help:[["../../week-04/visuals/07-commit-message.html","The Commit Message"]]},
+    {name:"README and submit",when:"Build week",ticks:[
+      "My README says what the project is, lists its main features and shows how to run it.",
+      "My README shows the picture of my class diagram.",
+      "Everything is pushed, and I opened my repository in a private window to check.",
+      "I submitted my repository link in Brightspace."],
+      help:[["../../week-03/reference/your-readme.html","Your README"]]},
+    {name:"Demo Day",when:"Friday, December 4",ticks:[
+      "I can run through my screens in a few minutes.",
+      "I picked one interesting piece of my own code, and I can explain every line of it.",
+      "I rehearsed my ten minutes once."],help:[]}
+  ];
+  var GATE=2, KEY="hub-cap2-checklist", st={}, sel=0;
+  try{ st=JSON.parse(localStorage.getItem(KEY)||"{}")||{}; }catch(e){ st={}; }
+  function save(){ try{ localStorage.setItem(KEY,JSON.stringify(st)); }catch(e){} }
+  function doneOf(i){ var n=0; STOPS[i].ticks.forEach(function(t,k){ if(st[i+"-"+k]) n++; }); return n; }
+  function needed(i){ return STOPS[i].ticks.filter(function(t){ return t.indexOf("Custom only")!==0; }).length; }
+  function isDone(i){ var n=0; STOPS[i].ticks.forEach(function(t,k){ if(st[i+"-"+k]&&t.indexOf("Custom only")!==0) n++; }); return n>=needed(i); }
+  function green(){ return !!st[GATE+"-"+(STOPS[GATE].ticks.length-1)]; }
+
+  function path(){
+    var el=$("path"); el.textContent="";
+    STOPS.forEach(function(s,i){
+      var b=document.createElement("button"); b.type="button";
+      var locked=i>GATE&&!green();
+      b.className="st"+(i===sel?" sel":"")+(isDone(i)?" ok":(doneOf(i)?" part":""))+(s.gate?" gate":"")+(locked?" locked":"");
+      var dot=document.createElement("span"); dot.className="dot"; dot.textContent=isDone(i)?"✓":String(i+1); b.appendChild(dot);
+      var nm=document.createElement("span"); nm.className="nm"; nm.textContent=s.name; b.appendChild(nm);
+      var wh=document.createElement("span"); wh.className="wh"; wh.textContent=locked?"after the green light":s.when; b.appendChild(wh);
+      b.addEventListener("click",function(){ sel=i; path(); stop(); });
+      el.appendChild(b);
+    });
+  }
+  function stop(){
+    var s=STOPS[sel], el=$("stop"); el.textContent="";
+    var h=document.createElement("h2"); h.textContent=(sel+1)+". "+s.name; el.appendChild(h);
+    if(sel>GATE&&!green()){
+      var lock=document.createElement("p"); lock.className="lock"; lock.textContent="Not yet. This stop opens when Raymond gives you the green light for your diagram. No code before it.";
+      el.appendChild(lock);
+    }
+    var list=document.createElement("div"); list.className="ticks";
+    s.ticks.forEach(function(t,k){
+      var l=document.createElement("label"); l.className="ck"+(st[sel+"-"+k]?" ok":"");
+      var c=document.createElement("input"); c.type="checkbox"; c.checked=!!st[sel+"-"+k];
+      var sp=document.createElement("span"); sp.textContent=t;
+      c.addEventListener("change",function(){ st[sel+"-"+k]=c.checked; save(); l.classList.toggle("ok",c.checked); path(); tally(); if(sel===GATE) stop(); });
+      l.appendChild(c); l.appendChild(sp); list.appendChild(l);
+    });
+    el.appendChild(list);
+    if(s.gate){
+      var g=document.createElement("p"); g.className="light"+(green()?" on":"");
+      g.textContent=green()?"Green light. The build stops are open.":"Red light. The build stops stay closed until the last tick.";
+      el.appendChild(g);
+    }
+    if(s.help.length){
+      var hp=document.createElement("p"); hp.className="help"; hp.appendChild(document.createTextNode("Pictures that help: "));
+      s.help.forEach(function(x){ var a=document.createElement("a"); a.href=x[0]; a.textContent=x[1]; hp.appendChild(a); });
+      el.appendChild(hp);
+    }
+    var nav=document.createElement("div"); nav.className="nav";
+    [["← Back",-1],["Next →",1]].forEach(function(o){
+      var b=document.createElement("button"); b.type="button"; b.className="nb"; b.textContent=o[0]; b.disabled=(sel+o[1]<0||sel+o[1]>=STOPS.length);
+      b.addEventListener("click",function(){ sel+=o[1]; path(); stop(); }); nav.appendChild(b);
+    });
+    el.appendChild(nav);
+  }
+  function tally(){
+    var n=0; STOPS.forEach(function(s,i){ if(isDone(i)) n++; });
+    $("bar").style.width=(n/STOPS.length*100)+"%"; $("count").textContent=n+" of "+STOPS.length+" stops done";
+  }
+  $("bReset").addEventListener("click",function(){ st={}; save(); sel=0; path(); stop(); tally(); });
+  /* open on the first stop that is not done */
+  for(var i=0;i<STOPS.length;i++){ if(!isDone(i)){ sel=i; break; } }
+  path(); stop(); tally();
+
+  var cv=$("amb"), ctx=cv.getContext&&cv.getContext("2d"), parts=[], reduce=matchMedia("(prefers-reduced-motion: reduce)").matches;
+  function sizeC(){ if(!ctx) return; cv.width=innerWidth; cv.height=innerHeight; }
+  function initParts(){ parts=[]; for(var i=0;i<46;i++) parts.push({x:Math.random(),y:Math.random(),r:Math.random()*1.6+.3,s:Math.random()*.02+.004,o:Math.random()*.4+.1}); }
+  function drawC(){ if(!ctx) return; ctx.clearRect(0,0,cv.width,cv.height); parts.forEach(function(p){ p.y-=p.s/60; if(p.y<-.02) p.y=1.02; ctx.beginPath(); ctx.arc(p.x*cv.width,p.y*cv.height,p.r,0,7); ctx.fillStyle="rgba(140,170,255,"+p.o+")"; ctx.fill(); }); requestAnimationFrame(drawC); }
+  if(ctx&&!reduce){ sizeC(); initParts(); drawC(); addEventListener("resize",sizeC); }
+})();
+</script>
+<script src="../manifest.js"></script>
+<script src="../../assets/rail.js"></script>
+<script>Rail.render(document.getElementById("rail"),{week:8,kind:"reference",current:"capstone-2-checklist"});</script>
+</body>
+</html>

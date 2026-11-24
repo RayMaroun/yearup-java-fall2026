@@ -2,11 +2,11 @@
  * The week is PICTURES, like the spring week 8 (Ray, Nov 24 2026): hints that sit next to the capstone text,
  * never a rewrite of it. Two earlier versions were dropped the same day: 17 pages with a Toolbox, then five
  * text guides shown one step at a time. Ray: too much text, and learners must not use the hub as their only reference.
- * One page for the class diagram, five pictures for the build. A checklist page is still to come.
+ * One checklist of ten stops, one page for the class diagram, five pictures for the build.
  * The enum picture was removed: Ray found it confusing.
  * Rules for every page: it matches the capstone text v7.2Y-R exactly (same rules, numbers, menu numbers, words);
  * it shows what the program must do, never which classes to create and never Java code of the capstone. */
-window.HUB_PHASES = ["Design", "Build"];
+window.HUB_PHASES = ["Start here", "Design", "Build"];
 window.HUB_MANIFEST = {
   week: 8,
   live: false,
@@ -19,7 +19,9 @@ window.HUB_MANIFEST = {
     { file: "05-how-a-price-adds-up.html", title: "How a Price Adds Up", group: "Build", desc: "The price table of your option, live: pick a size, add toppings, add an extra portion, and see where every number comes from." },
     { file: "06-the-receipt-file.html", title: "The Receipt File", group: "Build", desc: "Confirm an order and watch its file name being made from the date and the time: yyyyMMdd-HHmmss, with the 24-hour clock." }
   ],
-  reference: [],
+  reference: [
+    { file: "capstone-2-checklist.html", title: "The Capstone 2 Checklist", group: "Start here", desc: "Ten stops from your capstone text to Demo Day. Press a stop, tick what is done, and see which pictures help with it." }
+  ],
   exercises: [],
   games: []
 };
