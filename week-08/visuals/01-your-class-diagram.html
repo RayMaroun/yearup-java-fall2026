@@ -134,15 +134,60 @@
   .missing li{padding:9px 13px;border-left:3px solid var(--gold);background:rgba(255,200,98,.06);border-radius:0 10px 10px 0;font-size:.95rem;color:var(--ink);cursor:pointer}
   .missing li b{font-family:var(--mono);font-size:.68rem;letter-spacing:.1em;text-transform:uppercase;color:var(--gold);font-weight:500;margin-right:8px}
 
-  /* ---------- the three lines ---------- */
-  .lines{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:10px;margin-top:22px}
-  @media (max-width:760px){.lines{grid-template-columns:1fr}}
-  .ln{border:1px solid var(--line);border-radius:16px;padding:12px 14px;background:rgba(255,255,255,.025)}
-  .ln svg{display:block;width:100%;height:auto;max-height:96px}
-  .ln b{display:block;font-family:var(--disp);font-size:.98rem;margin-top:6px;color:var(--ink)}
-  .ln span{display:block;font-size:.86rem;color:var(--muted);margin-top:2px}
-  .bx{fill:#0b1020;stroke:rgba(255,255,255,.55);stroke-width:1.3} .tx{fill:var(--ink);font-family:var(--mono);font-size:11px;text-anchor:middle}
-  .li{stroke:var(--gold);stroke-width:1.8;fill:none} .hd2{fill:#0b1020;stroke:var(--gold);stroke-width:1.8} .st{fill:var(--gold);font-family:var(--mono);font-size:13px;text-anchor:middle}
+  /* ---------- the numbered sections ---------- */
+  .sec{margin-top:26px;padding-top:22px;border-top:1px solid var(--line)}
+  .sech{display:flex;align-items:baseline;flex-wrap:wrap;gap:6px 12px;margin:0 0 14px}
+  .sech.first{margin-top:4px}
+  .sech .n{font-family:var(--disp);font-weight:700;font-size:1.5rem;color:var(--accent);line-height:1}
+  .sech h2{font-family:var(--disp);font-weight:700;font-size:1.25rem;margin:0;color:var(--ink);letter-spacing:-.01em}
+  .sech p{margin:0;color:var(--muted);font-size:.95rem}
+
+  /* small class diagrams, drawn by the script */
+  .dg{border-radius:14px;background:rgba(6,10,20,.55);border:1px solid var(--line);padding:8px}
+  .dg svg{display:block;width:100%;height:auto}
+  .cb{fill:#0b1020;stroke:rgba(255,255,255,.55);stroke-width:1.2} .cb.hot{stroke:var(--gold);fill:rgba(255,200,98,.1)}
+  .cn{fill:var(--ink);font-family:var(--mono);font-size:11.5px;font-weight:500;text-anchor:middle} .cn.it{font-style:italic}
+  .cm{fill:var(--muted);font-family:var(--mono);font-size:8.5px;text-anchor:middle}
+  .cr{fill:#bcd0ff;font-family:var(--mono);font-size:9.6px} .cr.hot{fill:var(--gold)}
+  .cl2{stroke:rgba(255,255,255,.55);stroke-width:1.2}
+  .el{stroke:var(--gold);stroke-width:1.7;fill:none} .eh{fill:#0b1020;stroke:var(--gold);stroke-width:1.7} .et{fill:var(--gold);font-family:var(--mono);font-size:13px;text-anchor:middle}
+
+  /* 2. the three relationships */
+  .rels{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:10px}
+  @media (max-width:860px){.rels{grid-template-columns:1fr}}
+  .rel{border:1px solid var(--line);border-radius:18px;padding:14px;background:rgba(255,255,255,.025)}
+  .rk{margin:0 0 10px;font-family:var(--disp);font-weight:700;font-size:1.1rem;color:var(--ink)}
+  .rs{margin:10px 2px 0;font-size:.93rem;line-height:1.45;color:#c9d4ea} .rs b{color:var(--gold)}
+  .shop{margin:10px 0 0;padding:9px 12px;border-left:3px solid var(--gold);background:rgba(255,200,98,.07);border-radius:0 10px 10px 0;font-size:.93rem;line-height:1.45;color:var(--ink)}
+  .shop b{display:block;font-family:var(--mono);font-size:.62rem;letter-spacing:.14em;text-transform:uppercase;color:var(--gold);font-weight:500;margin-bottom:2px}
+
+  /* 3. before and better */
+  .hints{display:grid;gap:12px}
+  .hint{border:1px solid var(--line);border-radius:18px;padding:16px;background:rgba(255,255,255,.025)}
+  .hint .top{display:flex;flex-wrap:wrap;gap:10px 16px;align-items:center;justify-content:space-between;margin:0 0 12px}
+  .hint .dg{max-width:720px;margin:0 auto}
+  .hint .words{display:grid;grid-template-columns:minmax(0,1.2fr) minmax(0,1fr);gap:14px;align-items:start;margin-top:12px}
+  @media (max-width:760px){.hint .words{grid-template-columns:1fr}}
+  .hint .words .shop{margin:0}
+  .hint h3{font-family:var(--disp);font-weight:700;font-size:1.12rem;margin:0;color:var(--ink)}
+  .sw{display:flex;gap:6px;margin:0}
+  .swb{font-family:var(--mono);font-size:.82rem;padding:8px 14px;border-radius:999px;cursor:pointer;border:1px solid var(--line);background:transparent;color:var(--muted);transition:.15s}
+  .swb:hover{color:var(--ink);border-color:var(--accent)}
+  .swb.on.bad{border-color:var(--warn);color:#ffc2c2;background:rgba(255,106,106,.12)}
+  .swb.on.ok{border-color:var(--good);color:#b9f3d3;background:rgba(70,217,138,.14)}
+  .hsay{margin:0;font-size:1rem;line-height:1.5;color:var(--ink);min-height:3em}
+
+  /* 4. the checklist */
+  .auto{margin:0 0 10px;padding:11px 14px;border-radius:14px;border:1px dashed rgba(110,160,255,.45);background:rgba(110,160,255,.07);font-size:.98rem;color:var(--ink)}
+  .auto b{color:var(--accent)} .auto.done b{color:var(--good)} .auto.done{border-color:rgba(70,217,138,.5);background:rgba(70,217,138,.06)}
+  .cl{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:8px}
+  @media (max-width:760px){.cl{grid-template-columns:1fr}}
+  .ck{display:grid;grid-template-columns:auto 1fr;gap:11px;align-items:start;padding:12px 14px;border:1px solid var(--line);border-radius:14px;background:rgba(6,10,20,.45);font-size:.97rem;line-height:1.45;color:#c9d4ea;cursor:pointer;transition:.2s}
+  .ck input{accent-color:var(--good);width:18px;height:18px;margin:2px 0 0;cursor:pointer}
+  .ck.ok{border-color:rgba(70,217,138,.5);color:var(--ink);background:rgba(70,217,138,.06)}
+  .verdict{margin:14px 0 0;padding:11px 16px;border-left:3px solid var(--accent);font-size:1.05rem;color:var(--ink)}
+  .verdict.go{border-color:var(--good)}
+
   .refs{display:flex;flex-wrap:wrap;gap:8px;margin:12px 0 0;font-family:var(--mono);font-size:.76rem;color:var(--muted);align-items:center}
   .refs a{color:var(--accent);text-decoration:none;padding:6px 11px;border:1px solid var(--line);border-radius:999px}
   .refs a:hover{border-color:var(--accent)}
@@ -175,12 +220,13 @@
 <div class="wrap">
   <p class="tag">Capstone 2 &middot; Design</p>
   <h1>Your Class Diagram</h1>
-  <p class="lede"><b>One order on the counter.</b> Press each part and ask your own diagram about it.</p>
+  <p class="lede"><b>What needs a place, how things connect, and what to check</b> before you show your diagram to Raymond.</p>
 
   <div class="stage">
     <div class="opts" id="opts" role="group" aria-label="Your capstone option"></div>
     <p class="warnline"><b>Everything on this counter needs a place in your diagram.</b> The lists of choices, the prices and the rules are in your capstone text.</p>
 
+    <div class="sech first"><span class="n">1</span><h2>What needs a place in your diagram</h2><p>Press a part of the order.</p></div>
     <div class="scene">
       <div>
         <button type="button" class="part screen" data-p="screen"><span class="mk"></span>
@@ -231,12 +277,28 @@
     <div class="tally"><div class="meter"><i class="g" id="barG"></i><i class="y" id="barY"></i></div><p id="count"></p><button class="reset" id="bReset" type="button">Reset</button></div>
     <ul class="missing" id="missing"></ul>
 
-    <div class="lines">
-      <div class="ln"><svg viewBox="0 0 260 80" role="img" aria-label="A line with a hollow diamond on the owner"><rect class="bx" x="6" y="22" width="92" height="36" rx="4"/><text class="tx" x="52" y="44">A</text><rect class="bx" x="162" y="22" width="92" height="36" rx="4"/><text class="tx" x="208" y="44">B</text><polygon class="hd2" points="98,40 110,33 122,40 110,47"/><line class="li" x1="122" y1="40" x2="162" y2="40"/><text class="st" x="152" y="32">*</text></svg><b>"A holds several B"</b><span>A line with a diamond on A, the one that holds.</span></div>
-      <div class="ln"><svg viewBox="0 0 260 80" role="img" aria-label="A solid line with a hollow triangle on the parent"><rect class="bx" x="6" y="22" width="92" height="36" rx="4"/><text class="tx" x="52" y="44">A</text><rect class="bx" x="162" y="22" width="92" height="36" rx="4"/><text class="tx" x="208" y="44">B</text><line class="li" x1="98" y1="40" x2="146" y2="40"/><polygon class="hd2" points="162,40 146,31 146,49"/></svg><b>"A is a kind of B"</b><span>A solid line, the triangle touches B, the parent.</span></div>
-      <div class="ln"><svg viewBox="0 0 260 80" role="img" aria-label="A dashed line with a hollow triangle on the interface"><rect class="bx" x="6" y="22" width="92" height="36" rx="4"/><text class="tx" x="52" y="44">A</text><rect class="bx" x="162" y="22" width="92" height="36" rx="4"/><text class="tx" x="208" y="44">B</text><line class="li" x1="98" y1="40" x2="146" y2="40" stroke-dasharray="6 5"/><polygon class="hd2" points="162,40 146,31 146,49"/></svg><b>"A can do what B describes"</b><span>A dashed line, the triangle touches B, the interface.</span></div>
-    </div>
-    <p class="refs">How to draw the boxes and the lines: <a href="../../week-06/reference/class-diagram-reference.html">Class Diagram Reference, week 6</a><a href="../../week-07/reference/class-diagram-reference.html">Class Diagram Reference, week 7</a></p>
+    <section class="sec">
+      <div class="sech"><span class="n">2</span><h2>The three relationships you know</h2><p>Every line in your diagram is one of these three.</p></div>
+      <div class="rels">
+        <div class="rel"><p class="rk">Has-a</p><div class="dg" id="dHas"></div><p class="rs">A backpack <b>has</b> several devices. The diamond sits on the one that holds; the star means several.</p><p class="shop"><b>In your shop</b>What holds several of something? What can a customer add any number of?</p></div>
+        <div class="rel"><p class="rk">Is-a &middot; inheritance</p><div class="dg" id="dIsa"></div><p class="rs">A dog <b>is an</b> animal. A solid line, and the triangle touches the parent.</p><p class="shop"><b>In your shop</b>Are some of your things a kind of the same thing? Say "is a" out loud: does it sound true?</p></div>
+        <div class="rel"><p class="rk">Interface</p><div class="dg" id="dCan"></div><p class="rs">A phone and a speaker <b>can</b> both play. A dashed line, and the triangle touches the interface.</p><p class="shop"><b>In your shop</b>Which of your things are different, but must answer the same question?</p></div>
+      </div>
+      <p class="refs">How to draw the boxes and the lines: <a href="../../week-06/reference/class-diagram-reference.html">Class Diagram Reference, week 6</a><a href="../../week-07/reference/class-diagram-reference.html">Class Diagram Reference, week 7</a></p>
+    </section>
+
+    <section class="sec">
+      <div class="sech"><span class="n">3</span><h2>Three ways to make a diagram better</h2><p>Press Before and Better. Then look for the same thing in your own diagram.</p></div>
+      <div class="hints" id="hints"></div>
+    </section>
+
+    <section class="sec">
+      <div class="sech"><span class="n">4</span><h2>Before you show it to Raymond</h2><p>Tick what is true for your diagram today.</p></div>
+      <p class="auto" id="auto"></p>
+      <div class="cl" id="cl"></div>
+      <div class="tally"><div class="meter"><i class="g" id="clBar"></i></div><p id="clCount"></p></div>
+      <p class="verdict" id="verdict"></p>
+    </section>
   </div>
 
   <div class="take">
@@ -352,6 +414,7 @@
     ORDER.forEach(function(p){ PARTS[p][2].forEach(function(q,i){ all++; var a=ans[p+i]; if(a==="y") yes++; if(a==="n"){ no++; list.push([p,T(PARTS[p][0]),T(q)]); } }); });
     $("barG").style.width=(yes/all*100)+"%"; $("barY").style.width=(no/all*100)+"%";
     $("count").textContent=yes+" in my diagram \u00b7 "+no+" not yet \u00b7 "+(all-yes-no)+" to ask";
+    if(window.__clPaint) window.__clPaint();
     var ul=$("missing"); ul.textContent="";
     list.forEach(function(x){
       var li=document.createElement("li"), b=document.createElement("b"); b.textContent=x[1];
@@ -400,6 +463,136 @@
     $("opts").appendChild(b);
   });
   fill(); ask(); marks(); tally();
+
+  /* ---------- a small class-diagram drawer for sections 2 and 3 ---------- */
+  var NS="http://www.w3.org/2000/svg";
+  function sv(tag,attrs,text){ var e=document.createElementNS(NS,tag); for(var k in attrs) e.setAttribute(k,attrs[k]); if(text!=null) e.textContent=text; return e; }
+  function boxH(b){ return 26+(b.mark?11:0)+(b.rows&&b.rows.length?b.rows.length*14+8:0); }
+  function drawBox(svg,b){
+    var h=boxH(b), top=26+(b.mark?11:0);
+    svg.appendChild(sv("rect",{x:b.x,y:b.y,width:b.w,height:h,rx:3,"class":"cb"+(b.hot?" hot":"")}));
+    if(b.mark) svg.appendChild(sv("text",{x:b.x+b.w/2,y:b.y+13,"class":"cm"},"«"+b.mark+"»"));
+    svg.appendChild(sv("text",{x:b.x+b.w/2,y:b.y+top-8,"class":"cn"+(b.italic?" it":"")},b.name));
+    if(b.rows&&b.rows.length){
+      svg.appendChild(sv("line",{x1:b.x,y1:b.y+top,x2:b.x+b.w,y2:b.y+top,"class":"cl2"}));
+      b.rows.forEach(function(r,i){ var hot=r.charAt(0)==="!"; svg.appendChild(sv("text",{x:b.x+7,y:b.y+top+14+i*14,"class":"cr"+(hot?" hot":"")},hot?r.slice(1):r)); });
+    }
+    b.h=h;
+  }
+  function edgePoint(b,px,py){   /* where the line from the center of b toward (px,py) leaves the box */
+    var cx=b.x+b.w/2, cy=b.y+b.h/2, dx=px-cx, dy=py-cy, tx=dx?(b.w/2)/Math.abs(dx):1e9, ty=dy?(b.h/2)/Math.abs(dy):1e9, t=Math.min(tx,ty);
+    return [cx+dx*t, cy+dy*t];
+  }
+  function drawEdge(svg,a,b,kind){
+    var ac=[a.x+a.w/2,a.y+a.h/2], bc=[b.x+b.w/2,b.y+b.h/2], p1=edgePoint(a,bc[0],bc[1]), p2=edgePoint(b,ac[0],ac[1]);
+    var ang=Math.atan2(p2[1]-p1[1],p2[0]-p1[0]), ux=Math.cos(ang), uy=Math.sin(ang);
+    function rot(px,py,dx,dy){ return (px+dx*Math.cos(ang)-dy*Math.sin(ang))+","+(py+dx*Math.sin(ang)+dy*Math.cos(ang)); }
+    var s1=p1, s2=p2;
+    if(kind==="has") s1=[p1[0]+ux*18,p1[1]+uy*18]; else s2=[p2[0]-ux*13,p2[1]-uy*13];
+    var ln=sv("line",{x1:s1[0],y1:s1[1],x2:s2[0],y2:s2[1],"class":"el"}); if(kind==="can") ln.setAttribute("stroke-dasharray","6 5"); svg.appendChild(ln);
+    if(kind==="has"){
+      svg.appendChild(sv("polygon",{points:[rot(p1[0],p1[1],0,0),rot(p1[0],p1[1],9,-5),rot(p1[0],p1[1],18,0),rot(p1[0],p1[1],9,5)].join(" "),"class":"eh"}));
+      svg.appendChild(sv("text",{x:p2[0]-ux*10-uy*9,y:p2[1]-uy*10+ux*9+4,"class":"et"},"*"));
+    } else {
+      svg.appendChild(sv("polygon",{points:[rot(p2[0],p2[1],0,0),rot(p2[0],p2[1],-13,-7),rot(p2[0],p2[1],-13,7)].join(" "),"class":"eh"}));
+    }
+  }
+  /* boxes: {id:{x,y,w,name,rows,mark,italic,hot}}; a row that starts with "!" is drawn in gold.
+     edges: [[from,to,kind]] with kind has | isa | can */
+  function diagram(el,vb,boxes,edges,label){
+    var svg=sv("svg",{viewBox:"0 0 "+vb[0]+" "+vb[1],role:"img","aria-label":label}), k;
+    for(k in boxes) boxes[k].h=boxH(boxes[k]);
+    (edges||[]).forEach(function(e){ drawEdge(svg,boxes[e[0]],boxes[e[1]],e[2]); });
+    for(k in boxes) drawBox(svg,boxes[k]);
+    el.textContent=""; el.appendChild(svg);
+  }
+
+  /* ---------- 2. the three relationships, on examples the class already knows ---------- */
+  diagram($("dHas"),[250,132],{
+    a:{x:4,y:38,w:150,name:"Backpack",rows:["- devices: List<Device>"]},
+    b:{x:186,y:48,w:60,name:"Device"}},[["a","b","has"]],"Backpack has several Device: a diamond on Backpack");
+  diagram($("dIsa"),[250,132],{
+    a:{x:65,y:4,w:120,name:"Animal",rows:["- name: String"]},
+    b:{x:65,y:80,w:120,name:"Dog",rows:["- breed: String"]}},[["b","a","isa"]],"Dog is an Animal: a solid line, the triangle on Animal");
+  diagram($("dCan"),[250,132],{
+    i:{x:42,y:2,w:166,name:"Playable",mark:"interface",rows:["+ play(song: String): void"]},
+    a:{x:6,y:102,w:96,name:"Phone"},
+    b:{x:148,y:102,w:96,name:"Speaker"}},[["a","i","can"],["b","i","can"]],"Phone and Speaker implement Playable: dashed lines, the triangle on Playable");
+
+  /* ---------- 3. before and better ---------- */
+  var HINTS=[
+    {title:"Several classes with the same method? An interface.",
+     shop:"Which method do several of your boxes share? What is its question: \"what is your price?\", \"describe yourself\"?",
+     before:{say:"Phone, Speaker and Radio each have play, but nothing says they share it. Whoever holds them needs three lists and asks each kind separately.",
+       vb:[560,150],boxes:{a:{x:8,y:44,w:172,name:"Phone",rows:["!+ play(song: String): void"]},b:{x:194,y:44,w:172,name:"Speaker",rows:["!+ play(song: String): void"]},c:{x:380,y:44,w:172,name:"Radio",rows:["!+ play(song: String): void"]}},edges:[]},
+     better:{say:"The shared method moves into an interface, and each class promises it. Now one list can hold all three, and whoever holds them asks each one the same thing.",
+       vb:[560,170],boxes:{i:{x:194,y:4,w:172,name:"Playable",mark:"interface",rows:["!+ play(song: String): void"],hot:true},a:{x:8,y:124,w:150,name:"Phone"},b:{x:205,y:124,w:150,name:"Speaker"},c:{x:402,y:124,w:150,name:"Radio"}},edges:[["a","i","can"],["b","i","can"],["c","i","can"]]}},
+    {title:"The same attributes written twice? A parent class.",
+     shop:"Do some of your boxes repeat the same attributes? Could a parent hold them once? If nobody ever builds the parent by itself, it is abstract.",
+     before:{say:"Phone and Speaker both write name and battery. Change one, and you must remember to change the other.",
+       vb:[560,150],boxes:{a:{x:70,y:24,w:180,name:"Phone",rows:["!- name: String","!- battery: int","- currentSong: String"]},b:{x:310,y:24,w:180,name:"Speaker",rows:["!- name: String","!- battery: int","- volume: int"]}},edges:[]},
+     better:{say:"What they share lives once, in the parent. Each child keeps only what makes it different. Device is in italics: abstract, never built by itself.",
+       vb:[560,190],boxes:{p:{x:190,y:4,w:180,name:"Device",italic:true,rows:["!- name: String","!- battery: int"],hot:true},a:{x:40,y:134,w:190,name:"Phone",rows:["- currentSong: String"]},b:{x:330,y:134,w:190,name:"Speaker",rows:["- volume: int"]}},edges:[["a","p","isa"],["b","p","isa"]]}},
+    {title:"One attribute for each thing? One list.",
+     shop:"Where in your diagram is there one attribute per choice, or a fixed number of slots? What should be a list?",
+     before:{say:"Three slots, so a backpack can never hold a fourth device, and an empty slot has to be checked everywhere.",
+       vb:[560,130],boxes:{a:{x:60,y:24,w:210,name:"Backpack",rows:["!- device1: Device","!- device2: Device","!- device3: Device"]},b:{x:400,y:42,w:110,name:"Device"}},edges:[]},
+     better:{say:"One list holds any number, including none. The diamond and the star say it in the picture: a backpack has several devices.",
+       vb:[560,130],boxes:{a:{x:60,y:36,w:210,name:"Backpack",rows:["!- devices: List<Device>"],hot:true},b:{x:400,y:42,w:110,name:"Device"}},edges:[["a","b","has"]]}}
+  ];
+  HINTS.forEach(function(h){
+    var card=document.createElement("div"); card.className="hint";
+    var top=document.createElement("div"); top.className="top";
+    var t=document.createElement("h3"); t.textContent=h.title; top.appendChild(t);
+    var sw=document.createElement("div"); sw.className="sw"; top.appendChild(sw);
+    var dg=document.createElement("div"); dg.className="dg";
+    var words=document.createElement("div"); words.className="words";
+    var say=document.createElement("p"); say.className="hsay"; words.appendChild(say);
+    var shop=document.createElement("p"); shop.className="shop"; var sb=document.createElement("b"); sb.textContent="In your shop"; shop.appendChild(sb); shop.appendChild(document.createTextNode(h.shop)); words.appendChild(shop);
+    var btns=[];
+    function show(which){
+      var d=h[which];
+      diagram(dg,d.vb,JSON.parse(JSON.stringify(d.boxes)),d.edges,h.title+" ("+which+")");
+      say.textContent=d.say;
+      btns.forEach(function(b){ b.classList.toggle("on",b.getAttribute("data-w")===which); });
+    }
+    [["before","Before","bad"],["better","Better","ok"]].forEach(function(o){
+      var b=document.createElement("button"); b.type="button"; b.className="swb "+o[2]; b.setAttribute("data-w",o[0]); b.textContent=o[1];
+      b.addEventListener("click",function(){ show(o[0]); }); sw.appendChild(b); btns.push(b);
+    });
+    card.appendChild(top); card.appendChild(dg); card.appendChild(words); $("hints").appendChild(card);
+    show("before");
+  });
+
+  /* ---------- 4. the checklist before the check-in ---------- */
+  var CHECKS=["Every box has its three parts: the name, the attributes with their types, the methods.",
+              "Every line is a has-a, an is-a or an interface line, and its diamond or triangle sits on the right end.",
+              "Abstract classes are in italics, and interfaces carry «interface» above their name.",
+              "Every price in the diagram is a BigDecimal.",
+              "For every box, I can say in one sentence why it exists.",
+              "It is drawn in diagrams.net, and the diagram file and a picture of it are in my project, committed and pushed."];
+  var CKEY="hub-cap2-diagram-checks", cks={};
+  try{ cks=JSON.parse(localStorage.getItem(CKEY)||"{}")||{}; }catch(e){ cks={}; }
+  function clPaint(){
+    var all=0, yes=0;
+    ORDER.forEach(function(p){ PARTS[p][2].forEach(function(q,i){ all++; if(ans[p+i]==="y") yes++; }); });
+    var a=$("auto"); a.textContent=""; var b=document.createElement("b"); b.textContent=yes+" of "+all;
+    a.appendChild(document.createTextNode("The order picture above: ")); a.appendChild(b); a.appendChild(document.createTextNode(yes===all?" in my diagram. Nothing is missing.":" in my diagram. Go back up for the rest."));
+    a.classList.toggle("done",yes===all);
+    var n=0; CHECKS.forEach(function(c,i){ if(cks[i]) n++; });
+    $("clBar").style.width=(n/CHECKS.length*100)+"%"; $("clCount").textContent=n+" of "+CHECKS.length;
+    var v=$("verdict"), go=(n===CHECKS.length&&yes===all);
+    v.classList.toggle("go",go);
+    v.textContent=go?"Everything is ticked. Show your diagram to Raymond.":"What is not ticked yet is what you work on next, or what you ask Raymond about.";
+  }
+  CHECKS.forEach(function(c,i){
+    var l=document.createElement("label"); l.className="ck"+(cks[i]?" ok":"");
+    var box=document.createElement("input"); box.type="checkbox"; box.checked=!!cks[i];
+    var sp=document.createElement("span"); sp.textContent=c;
+    box.addEventListener("change",function(){ cks[i]=box.checked; l.classList.toggle("ok",box.checked); try{ localStorage.setItem(CKEY,JSON.stringify(cks)); }catch(e){} clPaint(); });
+    l.appendChild(box); l.appendChild(sp); $("cl").appendChild(l);
+  });
+  window.__clPaint=clPaint; clPaint();
 
   /* ambient canvas */
   var cv=$("amb"), ctx=cv.getContext&&cv.getContext("2d"), parts=[], reduce=matchMedia("(prefers-reduced-motion: reduce)").matches;
