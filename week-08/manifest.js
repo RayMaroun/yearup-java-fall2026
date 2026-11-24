@@ -7,7 +7,7 @@
 window.HUB_PHASES = ["Start here", "Design", "Build", "Bonus \u00b7 optional"];
 window.HUB_MANIFEST = {
   week: 8,
-  live: false,
+  live: true,
   title: "Capstone 2 \u00b7 Your Shop",
   visuals: [
     { file: "01-your-class-diagram.html", title: "Your Class Diagram", group: "Design", desc: "One order on the counter. Press each part and ask your own diagram about it: is there a place for it, what does it remember, can it tell its price." },

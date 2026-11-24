@@ -2698,5 +2698,105 @@
     "group": "Workbook 6a",
     "url": "week-07/games/bug-hunter-7.html",
     "text": "← Week 7 index Workbook 6a · Game Bug Hunter 7 A short program with interfaces, generics or streams and one bug. Tap the line that breaks it. Twelve rounds. Game find the bug score 0 time 0.0s Bug Hunter 7 Each snippet has exactly one bug. Read it, then tap the line the compiler or the JVM complains about. Start Round over Play again round 0 / 12 Press Start or Enter. Restart Enter or Space skips the wait after an answer. a class must write every abstract method of its interface · the variable type decides what you may call · T extends sets a limit · a stream must end in collect, count, reduce or forEach · a lambda may use only effectively final locals The one idea Most bugs here are the compiler keeping a promise you made. An interface promises methods, a generic type promises one kind of value, a bound promises a limit, and a lambda promises not to change the locals it reads. Read the error line first and ask which promise it points at."
+  },
+  {
+    "week": 8,
+    "weekLabel": "Week 8",
+    "section": "Visuals",
+    "title": "Your Class Diagram",
+    "desc": "One order on the counter. Press each part and ask your own diagram about it: is there a place for it, what does it remember, can it tell its price.",
+    "group": "Design",
+    "url": "week-08/visuals/01-your-class-diagram.html",
+    "text": "← Week 8 index Capstone 2 · Design Your Class Diagram What needs a place, how things connect, and what to check before you show your diagram to Raymond. Everything on this counter needs a place in your diagram. The lists of choices, the prices and the rules are in your capstone text. 1 What needs a place in your diagram Press a part of the order. the screens → The order holds everything + extra regular topping sauce Drink Total ? 20261204-141523.txt → the receipt file Reset 2 The three relationships you know Every line in your diagram is one of these three. Has-a A backpack has several devices. The diamond sits on the one that holds; the star means several. In your shop What holds several of something? What can a customer add any number of? Is-a · inheritance A dog is an animal. A solid line, and the triangle touches the parent. In your shop Are some of your things a kind of the same thing? Say \"is a\" out loud: does it sound true? Interface A phone and a speaker can both play. A dashed line, and the triangle touches the interface. In your shop Which of your things are different, but must answer the same question? How to draw the boxes and the lines: Class Diagram Reference, week 6 Class Diagram Reference, week 7 3 Three ways to make a diagram better Press Before and Better. Then look for the same thing in your own diagram. 4 How a full diagram might look An example you know: the devices from week 7. Press a line or a box. This is NOT your capstone, and NOT how your diagram sh"
+  },
+  {
+    "week": 8,
+    "weekLabel": "Week 8",
+    "section": "Visuals",
+    "title": "Menu Flow Map",
+    "desc": "Every screen of your application and where each choice leads. Press an option and walk from Home to the receipt and back.",
+    "group": "Build",
+    "url": "week-08/visuals/02-menu-flow-map.html",
+    "text": "← Week 8 index Capstone 2 · Build Menu Flow Map Press an option on the lit screen and follow the marker to where it leads. you are here The user types 7 · not on the menu Reset The one idea Every screen shows its choices, reads one, and sends the user somewhere. Only 0) Exit on Home ends the application. The three Add screens always come back to the order screen. Checkout is the only way to a receipt, and an empty order never gets there. Both cancels delete the order. Anything not on the menu changes nothing: a message, then the same question again."
+  },
+  {
+    "week": 8,
+    "weekLabel": "Week 8",
+    "section": "Visuals",
+    "title": "What an Order Can Hold",
+    "desc": "Add things to an order pad, watch the total, and press Checkout: an empty order is refused, a drink alone is fine.",
+    "group": "Build",
+    "url": "week-08/visuals/03-what-an-order-can-hold.html",
+    "text": "← Week 8 index Capstone 2 · Build What an Order Can Hold One order pad, three counters. Fill it, empty it, and try to check it out. the counters · one press adds one thing order screen Total 0.00 ready-made orders · one press each Reset The one idea An order is a list that grows one line at a time, and its total is the sum of its lines. It can hold any number of main items, drinks and the third product of your shop, in any mix, including zero main items. The one order that cannot be checked out is the empty one. Cancel throws the whole order away."
+  },
+  {
+    "week": 8,
+    "weekLabel": "Week 8",
+    "section": "Visuals",
+    "title": "Building One Item",
+    "desc": "The questions of the Add screen, in order: the type, the size, the premium toppings with Extra?, the regular toppings, the sauces, the special option.",
+    "group": "Build",
+    "url": "week-08/visuals/04-building-one-item.html",
+    "text": "← Week 8 index Capstone 2 · Build Building One Item The cashier asks seven questions, one at a time. Answer them and watch the item grow. The numbers in front of the choices are this picture's own: your text fixes the questions and their order, not how a choice is typed. the order Reset The one idea One item is built from seven questions, always in the same order: the type, the size, the two kinds of premium toppings (each followed by \"Extra?\"), the regular toppings, the sauces, then the special option. A question that allows any number also allows none. When the last answer is in, the item goes onto the order and the application goes back to the order screen."
+  },
+  {
+    "week": 8,
+    "weekLabel": "Week 8",
+    "section": "Visuals",
+    "title": "How a Price Adds Up",
+    "desc": "The price table of your option, live: pick a size, add toppings, add an extra portion, and see where every number comes from.",
+    "group": "Build",
+    "url": "week-08/visuals/05-how-a-price-adds-up.html",
+    "text": "← Week 8 index Capstone 2 · Build How a Price Adds Up One item, one receipt. Pick a size, press toppings, and watch each price land. Show me the example from the text the price of this one item, line by line · press a line to take it off (only on this picture) Total Reset The one idea An item starts at the price of its size, whatever type is chosen. Each premium topping adds its own price for that size, and an extra portion adds the extra price on top of it. Regular toppings, sauces and the special option are included: they add 0.00. Change the size, and the item and every premium topping on it change price together."
+  },
+  {
+    "week": 8,
+    "weekLabel": "Week 8",
+    "section": "Visuals",
+    "title": "The Receipt File",
+    "desc": "Confirm an order and watch its file name being made from the date and the time: yyyyMMdd-HHmmss, with the 24-hour clock.",
+    "group": "Build",
+    "url": "week-08/visuals/06-the-receipt-file.html",
+    "text": "← Week 8 index Capstone 2 · Build The Receipt File The moment an order is confirmed becomes the name of its receipt. Set the clock and confirm. the clock and calendar Now the receipt file name try a trap hh instead of HH no zeros added your project folder your project folder / receipts / Reset The one idea One confirmed order, one receipt file, named by the moment of the confirmation. yyyyMMdd-HHmmss.txt reads year, month, day, a dash, hour, minute, second. Every piece keeps its number of digits (March is 03), and HH is the 24-hour clock, so 2 PM is 14. Each receipt goes into the receipts folder inside your project folder and holds the order details shown at checkout. 0) Cancel creates no file."
+  },
+  {
+    "week": 8,
+    "weekLabel": "Week 8",
+    "section": "Visuals",
+    "title": "Signature Items",
+    "desc": "Optional, and only when everything else works. A ready-made item the customer can still change: choose one, take a topping off, put another on.",
+    "group": "Bonus · optional",
+    "url": "week-08/visuals/07-signature-items.html",
+    "text": "← Week 8 index Capstone 2 · Bonus · Optional Signature Items A ready-made item the customer can still change. Choose one, take a topping off, put another on. Optional. Only when every required part of your capstone works. A bonus on top of a missing screen does not help you. the add screen asks this first then the customer may change it Reset In your diagram The one idea A signature item is an ordinary item that starts filled in. After that it behaves like any other: toppings come off, toppings go on, and its price is worked out the same way, from the same price table."
+  },
+  {
+    "week": 8,
+    "weekLabel": "Week 8",
+    "section": "Reference",
+    "title": "The Capstone 2 Path",
+    "desc": "The order of work: ten stops from your capstone text to Demo Day. Press a stop, tick what is done, and see which pictures help with it.",
+    "group": "Start here",
+    "url": "week-08/reference/capstone-2-path.html",
+    "text": "← Week 8 index Capstone 2 · Start here The Capstone 2 Path Ten stops from your capstone text to Demo Day. Press a stop, tick what is done, and you always know what comes next. Reset The one idea Text, then design, then code. Your capstone text is the reference for every stop. The diagram comes first. The repository, the project board and the code all wait for the green light."
+  },
+  {
+    "week": 8,
+    "weekLabel": "Week 8",
+    "section": "Reference",
+    "title": "Requirements Checklist",
+    "desc": "Did you build everything? Your capstone text as tick boxes, in your option's own words and prices: the rules, every screen, the receipt, the repository.",
+    "group": "Start here",
+    "url": "week-08/reference/requirements-checklist.html",
+    "text": "← Week 8 index Capstone 2 · Build Requirements Checklist Your capstone text as tick boxes, in your option's own words and prices. Tick them as you build, and again before Demo Day. 0 of 0 done required 0 of 0 Clear ticks Every line is a sentence of your capstone text that asks for something. The text is the spec; this page only lists it. Ticks are saved in this browser only, one set per option. The one idea Complete means every box outside the bonus is ticked and you can show each one running. The menu numbers, labels, questions and prices are part of the spec, so match them exactly. In the Custom option, your own names and your own special question take the place of the placeholders."
+  },
+  {
+    "week": 8,
+    "weekLabel": "Week 8",
+    "section": "Reference",
+    "title": "Hand In Your Diagram",
+    "desc": "Send your class diagram file to Raymond when he asks for it: your name, your option, the .drawio file.",
+    "group": "Design",
+    "url": "week-08/reference/diagram-hand-in.html",
+    "text": "← Week 8 index Capstone 2 · Class diagram Hand In Your Diagram Send your diagram file to Raymond. Finished or not, at the time he gave you. One hand-in per check, so choose the right file. Your name Choose your name Your option The Deli The Pizza The Taco Custom Your diagram file Choose your .drawio file The file you saved from diagrams.net, not a picture. You can also drag it here. Send my diagram Pick your name, your option and your file, then press Send. Received One hand-in per check. Not open yet Raymond will tell you when to hand in your diagram."
   }
 ]
