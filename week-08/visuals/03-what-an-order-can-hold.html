@@ -189,7 +189,7 @@
 
   <div class="take">
     <p class="tk">The one idea</p>
-    <p><b>An order is a list that grows one line at a time, and its total is the sum of its lines.</b> It can hold any number of main items, drinks and side products, in any mix, including zero main items. The one order that cannot be checked out is the empty one. Cancel throws the whole order away.</p>
+    <p><b>An order is a list that grows one line at a time, and its total is the sum of its lines.</b> It can hold any number of main items, drinks and the third product of your shop, in any mix, including zero main items. The one order that cannot be checked out is the empty one. Cancel throws the whole order away.</p>
   </div>
   <div id="rail"></div>
 </div>
@@ -207,7 +207,7 @@ var OrderPad = (function () {
     var d = window.CAP2.drink;
     var t = o.third;
     return [
-      { kind: "main", menu: o.orderMenu[0], name: mainName, note: o.types[0] + " " + o.typeWord + ", no toppings", price: o.sizePrices[1] },
+      { kind: "main", menu: o.orderMenu[0], name: mainName, note: (o.types[0].toLowerCase().indexOf(o.typeWord.toLowerCase()) >= 0 ? o.types[0] : o.types[0] + " " + o.typeWord) + ", no toppings", price: o.sizePrices[1] },
       { kind: "drink", menu: o.orderMenu[1], name: d.sizes[1] + " Drink", note: o.flavors[0], price: d.prices[1] },
       { kind: "third", menu: o.orderMenu[2], name: t.name, note: t.types.length ? t.types[0] : "one order", price: t.price }
     ];
@@ -311,7 +311,7 @@ var OrderPad = (function () {
     var pb = $("#presets"); pb.innerHTML = "";
     P.presets(o).forEach(function (x, i) { var b = el("button", "pre"); b.setAttribute("data-r", i); b.appendChild(el("span", "", x.label)); pb.appendChild(b); });
     clearStamp(); drawPad();
-    say("This is an empty order pad at <b class=\"a\">" + esc(o.shop) + "</b>. Press a counter to add one thing, press a line to take it off, then press <b class=\"a\">Checkout</b>.", "");
+    say("This is an empty order pad at <b class=\"a\">" + esc(o.shop) + "</b>. Press a counter to add one thing, then press <b class=\"a\">Checkout</b>.", "");
   }
 
   function add(i) {
@@ -351,11 +351,11 @@ var OrderPad = (function () {
       return { tone: "w", html: "<b class=\"w\">Refused.</b> There is nothing on the order. " + esc(o.emptyRule) };
     }
     if (r.kind === "noMain") {
-      var has = r.drinks && r.thirds ? "a drink and an order of " + o.third.name : r.drinks ? "a drink" : "an order of " + o.third.name;
+      var has = r.drinks && r.thirds ? "a drink and an order of " + o.third.name.toLowerCase() : r.drinks ? "a drink" : "an order of " + o.third.name.toLowerCase();
       return { tone: "g", html: "<b class=\"g\">Accepted.</b> The order has 0 " + esc(o.items) + ", and that is allowed: with 0 " + esc(o.items) + " the customer must purchase " + esc(P.mustBuy(o)) +
         ", and this order has " + esc(has) + ". Checkout shows each line and the total, <b class=\"g\">" + money(r.cents) + "</b>." };
     }
-    return { tone: "g", html: "<b class=\"g\">Accepted.</b> The order has " + esc(nItems(r.mains)) + ". A drink or " + esc(o.third.name) + " can be added, but they are not needed. Checkout shows each line and the total, <b class=\"g\">" + money(r.cents) + "</b>." };
+    return { tone: "g", html: "<b class=\"g\">Accepted.</b> The order has " + esc(nItems(r.mains)) + ". A drink or " + esc(o.third.name.toLowerCase()) + " can be added, but they are not needed. Checkout shows each line and the total, <b class=\"g\">" + money(r.cents) + "</b>." };
   }
   function doCheckout(prefix) {
     if (busy) return null;

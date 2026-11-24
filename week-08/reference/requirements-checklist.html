@@ -135,7 +135,7 @@
 
   <div class="take">
     <p class="tk">The one idea</p>
-    <p><b>Complete means every box outside the bonus is ticked and you can show each one running.</b> The menu numbers, labels, questions and prices are part of the spec, so match them exactly.</p>
+    <p><b>Complete means every box outside the bonus is ticked and you can show each one running.</b> The menu numbers, labels, questions and prices are part of the spec, so match them exactly. In the Custom option, your own names and your own special question take the place of the placeholders.</p>
   </div>
   <div id="rail"></div>
 </div>
@@ -189,7 +189,7 @@
     if(o.sizeNote){
       o.sizeNote.split(/\.\s+/).forEach(function(s){ s=s.replace(/\.$/,""); if(s) r.push({t:esc(s)}); });
     }
-    r.push({t:"Toppings are regular or premium. "+esc(A.label)+" and "+esc(B.label)+" are premium toppings: they cost extra"});
+    r.push({t:"Toppings are regular or premium. "+esc(A.label)+" and "+esc(B.label==="Cheese"?"cheeses":B.label)+" are premium toppings: they cost extra"});
     r.push({t:"The customer can choose any number of premium toppings, including none; each one costs its price for the size of the "+esc(o.item)});
     var p=C.cents(A.prices[1]), x=C.cents(A.extra[1]);
     r.push({t:"After each premium topping, the customer is asked whether they want an extra portion of it (\"Extra?\"). An extra portion adds the "+esc(A.extraLabel)+" or "+esc(B.extraLabel)+" price to the normal price",

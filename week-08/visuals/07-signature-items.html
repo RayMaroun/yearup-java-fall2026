@@ -200,7 +200,7 @@
     var nm=document.createElement("b"); nm.textContent=item.name; hd.appendChild(nm);
     var tg=document.createElement("div"); tg.className="tags";
     var sz=document.createElement("span"); sz.className="tagb size"; sz.textContent=sizeName(o,item.size); tg.appendChild(sz);
-    if(item.special){ var sp=document.createElement("span"); sp.className="tagb sp"; sp.textContent=o.special.yes; tg.appendChild(sp); }
+    var sp=document.createElement("span"); sp.className="tagb sp"; sp.textContent=(item.special?"":"not ")+o.special.yes; tg.appendChild(sp);
     hd.appendChild(tg); el.appendChild(hd);
     var st=document.createElement("div"); st.className="stack";
     st.appendChild(layer("base",item.type,o.typeWord));

@@ -162,7 +162,7 @@
           <p class="note" id="note" hidden></p>
         </div>
         <div class="rside">
-          <p class="hd">the price of this one item, line by line &middot; press a line to take it off</p>
+          <p class="hd">the price of this one item, line by line &middot; press a line to take it off (only on this picture)</p>
           <div class="rcpt">
             <p class="rh" id="rHead"></p>
             <div id="lines"></div>
@@ -385,7 +385,7 @@
     var twice=st.lines.some(function(l){ return l.g===g&&l.name===name; });
     var l=addLine(st,g,name), d=linePrice(o,st.size,l); renderReceipt(); land(l,cell(g),C.money(d));
     say(esc(cap(name))+" is a premium topping ("+esc(p.label)+"). On "+esc(onSize(o,st.size))+" it costs <b class=\"y\">"+C.money(d)+
-      "</b>: that is the lit cell of the "+esc(p.label)+" row."+(twice?" The same one twice is allowed: each one costs its price.":" Press extra portion on its line to add more."),"y",
+      "</b>: that is the lit cell of the "+esc(p.label)+" row."+(twice?" Here the same one can go on twice, and each one costs its price. Your text leaves that to you: your program may allow each one only once.":" Press extra portion on its line to add more."),"y",
       plus(was,d));
   }
   function addFree(g,i){
