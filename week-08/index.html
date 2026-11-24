@@ -89,8 +89,9 @@
   var html="", n=0;
   PHASES.forEach(function(ph,pi){
     var cards="";
-    (M.reference||[]).forEach(function(p){ if(p.group===ph){ n++; cards+=card("reference",p,n,(pi===0&&cards==="")?"main":""); } });
+    (M.reference||[]).forEach(function(p){ if(p.group===ph&&!p.after){ n++; cards+=card("reference",p,n,(pi===0&&cards==="")?"main":""); } });
     (M.visuals||[]).forEach(function(p){ if(p.group===ph){ n++; cards+=card("visuals",p,n,""); } });
+    (M.reference||[]).forEach(function(p){ if(p.group===ph&&p.after){ n++; cards+=card("reference",p,n,""); } });   /* a guide page marked after: true comes after the pictures */
     if(cards) html+='<p class="section-title">'+esc(ph)+'</p><div class="grid'+(pi===0?" guide":"")+'">'+cards+'</div>';
   });
   /* the Toolbox: pages from earlier weeks, as links */

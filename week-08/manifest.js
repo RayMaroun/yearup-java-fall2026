@@ -20,7 +20,8 @@ window.HUB_MANIFEST = {
   ],
   reference: [
     { file: "capstone-2-path.html", title: "The Capstone 2 Path", group: "Start here", desc: "The order of work: ten stops from your capstone text to Demo Day. Press a stop, tick what is done, and see which pictures help with it." },
-    { file: "requirements-checklist.html", title: "Requirements Checklist", group: "Start here", desc: "Did you build everything? Your capstone text as tick boxes, in your option's own words and prices: the rules, every screen, the receipt, the repository." }
+    { file: "requirements-checklist.html", title: "Requirements Checklist", group: "Start here", desc: "Did you build everything? Your capstone text as tick boxes, in your option's own words and prices: the rules, every screen, the receipt, the repository." },
+    { file: "diagram-hand-in.html", title: "Hand In Your Diagram", group: "Design", after: true, desc: "Send your class diagram file to Raymond when he asks for it: your name, your option, the .drawio file." }
   ],
   exercises: [],
   games: []

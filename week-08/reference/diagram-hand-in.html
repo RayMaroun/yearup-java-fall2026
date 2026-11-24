@@ -96,7 +96,7 @@
 </style>
 </head>
 <body>
-<a class="back" href="../week-08/index.html">&#8592; Week 8 index</a>
+<a class="back" href="../index.html#diagram-hand-in">&#8592; Week 8 index</a>
 <canvas id="amb"></canvas>
 <div class="wrap">
   <p class="tag">Capstone 2 &middot; Class diagram<span id="tagCheck"></span></p>
@@ -135,10 +135,11 @@
       <p>Raymond will tell you when to hand in your diagram.</p>
     </div>
   </div></div>
+  <div id="rail"></div>
 </div>
 
-<script src="roster.js?v=2026-10-27c"></script>
-<script src="diagram-hand-in-config.js?v=2026-11-24c"></script>
+<script src="../../tools/roster.js?v=2026-10-27c"></script>
+<script src="diagram-hand-in-config.js?v=2026-11-24d"></script>
 <script>
 (function(){
   "use strict";
@@ -219,5 +220,8 @@
   if(ctx&&!reduce){ sizeC(); initParts(); drawC(); addEventListener("resize",sizeC); }
 })();
 </script>
+<script src="../manifest.js"></script>
+<script src="../../assets/rail.js"></script>
+<script>Rail.render(document.getElementById("rail"),{week:8,kind:"reference",current:"diagram-hand-in"});</script>
 </body>
 </html>
