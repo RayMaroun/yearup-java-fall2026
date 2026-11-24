@@ -6,7 +6,7 @@
  * The enum picture was removed: Ray found it confusing.
  * Rules for every page: it matches the capstone text v7.2Y-R exactly (same rules, numbers, menu numbers, words);
  * it shows what the program must do, never which classes to create and never Java code of the capstone. */
-window.HUB_PHASES = ["Start here", "Design", "Build"];
+window.HUB_PHASES = ["Start here", "Design", "Build", "Bonus \u00b7 optional"];
 window.HUB_MANIFEST = {
   week: 8,
   live: false,
@@ -17,7 +17,8 @@ window.HUB_MANIFEST = {
     { file: "03-what-an-order-can-hold.html", title: "What an Order Can Hold", group: "Build", desc: "Add things to an order pad, watch the total, and press Checkout: an empty order is refused, a drink alone is fine." },
     { file: "04-building-one-item.html", title: "Building One Item", group: "Build", desc: "The questions of the Add screen, in order: the type, the size, the premium toppings with Extra?, the regular toppings, the sauces, the special option." },
     { file: "05-how-a-price-adds-up.html", title: "How a Price Adds Up", group: "Build", desc: "The price table of your option, live: pick a size, add toppings, add an extra portion, and see where every number comes from." },
-    { file: "06-the-receipt-file.html", title: "The Receipt File", group: "Build", desc: "Confirm an order and watch its file name being made from the date and the time: yyyyMMdd-HHmmss, with the 24-hour clock." }
+    { file: "06-the-receipt-file.html", title: "The Receipt File", group: "Build", desc: "Confirm an order and watch its file name being made from the date and the time: yyyyMMdd-HHmmss, with the 24-hour clock." },
+    { file: "07-signature-items.html", title: "Signature Items", group: "Bonus \u00b7 optional", desc: "Optional, and only when everything else works. A ready-made item the customer can still change: choose one, take a topping off, put another on." }
   ],
   reference: [
     { file: "capstone-2-checklist.html", title: "The Capstone 2 Checklist", group: "Start here", desc: "Ten stops from your capstone text to Demo Day. Press a stop, tick what is done, and see which pictures help with it." }
