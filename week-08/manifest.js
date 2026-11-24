@@ -1,11 +1,8 @@
 /* Week 8 manifest: Capstone 2 (Deli, Pizza, Taco or Custom shop).
- * The week is PICTURES, like the spring week 8 (Ray, Nov 24 2026): hints that sit next to the capstone text,
- * never a rewrite of it. Two earlier versions were dropped the same day: 17 pages with a Toolbox, then five
- * text guides shown one step at a time. Ray: too much text, and learners must not use the hub as their only reference.
- * As in Capstone 1, two pages to work from: the Path (the order of work, ten stops) and the Requirements Checklist
+ * The week is pictures: hints that sit next to the capstone text, never a rewrite of it.
+ * Two pages to work from: the Path (the order of work, ten stops) and the Requirements Checklist
  * (the text as tick boxes). Then one page for the class diagram, five pictures for the build, one optional bonus page.
- * The enum picture was removed: Ray found it confusing.
- * Rules for every page: it matches the capstone text v7.2Y-R exactly (same rules, numbers, menu numbers, words);
+ * Rules for every page: it matches the capstone text exactly (same rules, numbers, menu numbers, words);
  * it shows what the program must do, never which classes to create and never Java code of the capstone. */
 window.HUB_PHASES = ["Start here", "Design", "Build", "Bonus \u00b7 optional"];
 window.HUB_MANIFEST = {

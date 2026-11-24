@@ -1,4 +1,4 @@
-/* Week 8 · Capstone 2: the data of the four options, exactly as in the capstone texts v7.2Y-R.
+/* Week 8 · Capstone 2: the data of the four options, exactly as in the capstone texts.
  * ONE source for every week 8 picture, so no page can disagree with another or with the text.
  * Loaded before the page script:  <script src="../options.js"></script>   then use window.CAP2.
  * Prices are text ("5.50"), in the order of the three sizes. To add them up, use CAP2.cents("5.50") and
