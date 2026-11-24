@@ -139,7 +139,13 @@
   .take b{color:#fff}
   @media (max-width:560px){.stage{padding:14px}.pad{padding:14px 12px 28px}.stamp{font-size:1.5rem}}
   @media (prefers-reduced-motion:reduce){*{animation-duration:.01ms!important;transition-duration:.01ms!important;animation-delay:0s!important;transition-delay:0s!important}#amb{display:none}}
+  /* opened inside a step of a guide: only the picture and its one idea */
+  .embed .back,.embed .tag,.embed h1,.embed #rail,.embed #amb{display:none}
+  html.embed{color-scheme:dark}
+  .embed body{background:#080c17}
+  .embed .wrap{padding:14px 14px 18px;max-width:none}
 </style>
+<script>if(/[?&]embed=1/.test(location.search)) document.documentElement.className+=" embed";</script>
 </head>
 <body>
 <a class="back" href="../index.html#03-what-an-order-can-hold">&#8592; Week 8 index</a>
@@ -401,6 +407,6 @@ var OrderPad = (function () {
 </script>
 <script src="../manifest.js"></script>
 <script src="../../assets/rail.js"></script>
-<script>Rail.render(document.getElementById("rail"),{week:8,kind:"visuals",current:"03-what-an-order-can-hold"});</script>
+<script>if(!/[?&]embed=1/.test(location.search)) Rail.render(document.getElementById("rail"),{week:8,kind:"visuals",current:"03-what-an-order-can-hold"});</script>
 </body>
 </html>
