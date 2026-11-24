@@ -71,10 +71,10 @@
     background:rgba(255,255,255,.03);border-radius:0 12px 12px 0;margin-top:18px;color:var(--muted)}
   .status.acting{border-color:var(--good);color:var(--good)}
   .status.trouble{border-color:var(--warn);color:var(--warn)}
-  .done{text-align:center;padding:30px 10px}
-  .done .big{font-family:var(--disp);font-weight:700;font-size:1.6rem;color:var(--good);margin:0 0 8px}
-  .done p{color:var(--muted);margin:0 0 6px;font-size:.95rem}
-  .done .link{font-family:var(--mono);font-size:.8rem;color:var(--ink);word-break:break-all}
+  div.done{text-align:center;padding:30px 10px}
+  div.done .big{font-family:var(--disp);font-weight:700;font-size:1.6rem;color:var(--good);margin:0 0 8px}
+  div.done p{color:var(--muted);margin:0 0 6px;font-size:.95rem}
+  div.done .link{font-family:var(--mono);font-size:.8rem;color:var(--ink);word-break:break-all}
   .closedbox{text-align:center;padding:36px 10px}
   .closedbox .big{font-family:var(--disp);font-weight:700;font-size:1.6rem;color:var(--warn);margin:0 0 8px}
   .closedbox p{color:var(--muted);margin:0;font-size:.95rem}
@@ -104,6 +104,11 @@
   <p class="lede"><b>Send your diagram file to Raymond</b> at the time he gave you. Hand in a real version of your whole diagram, even if some lines are still missing: two boxes is not a hand-in. Stuck? Tell Raymond before the time, not after. One hand-in per check, so choose the right file.</p>
 
   <div class="stage"><div class="panel">
+    <div class="stats hidden" id="due">
+      <div class="stat"><div class="k">Deadline</div><div class="v" id="dueWhen"></div><div class="s">Eastern time</div></div>
+      <div class="stat"><div class="k">Time left</div><div class="v" id="dueLeft"></div><div class="s" id="dueLocal"></div></div>
+    </div>
+
     <form id="f" novalidate>
       <div class="field">
         <p class="lab">Your name</p>
@@ -131,15 +136,15 @@
     </div>
 
     <div class="closedbox hidden" id="closed">
-      <p class="big">Not open yet</p>
-      <p>Raymond will tell you when to hand in your diagram.</p>
+      <p class="big" id="closedBig">Not open yet</p>
+      <p id="closedSmall">Raymond will tell you when to hand in your diagram.</p>
     </div>
   </div></div>
   <div id="rail"></div>
 </div>
 
 <script src="../../tools/roster.js?v=2026-10-27c"></script>
-<script src="diagram-hand-in-config.js?v=2026-11-24d"></script>
+<script src="diagram-hand-in-config.js?v=2026-11-24e"></script>
 <script>
 (function(){
   "use strict";
@@ -150,6 +155,31 @@
   var CHECK = (C.check === 1 || C.check === 2) ? String(C.check) : "";
   if (!C.endpoint || !CHECK){ $("f").classList.add("hidden"); $("closed").classList.remove("hidden"); }
   else $("tagCheck").textContent = " \u00b7 Check " + CHECK;
+
+  /* the deadline of the open check: shown on the page, and the page stops taking files once it has passed */
+  var DUE = C.due ? new Date(C.due) : null, isOver = false;
+  if (DUE && isNaN(DUE)) DUE = null;
+  function over(){ return !!DUE && Date.now() > DUE.getTime(); }
+  function pad(n){ return (n<10?"0":"")+n; }
+  function tick(){
+    if (!DUE || !CHECK) return;
+    var et = new Intl.DateTimeFormat("en-US",{timeZone:"America/New_York",weekday:"short",month:"short",day:"numeric",hour:"numeric",minute:"2-digit"}).format(DUE);
+    var loc = new Intl.DateTimeFormat(undefined,{weekday:"short",month:"short",day:"numeric",hour:"numeric",minute:"2-digit",timeZoneName:"short"}).format(DUE);
+    $("due").classList.remove("hidden");
+    $("dueWhen").textContent = et + " ET"; $("dueLocal").textContent = "Your time: " + loc;
+    var left = $("dueLeft"); left.className = "v";
+    if (over()){
+      left.textContent = "deadline passed"; left.className = "v warn";
+      if (!isOver){ isOver = true;
+        if ($("done").classList.contains("hidden")){ $("f").classList.add("hidden"); $("closed").classList.remove("hidden");
+          $("closedBig").textContent = "Closed"; $("closedSmall").textContent = "Check " + CHECK + " closed " + et + " ET. Talk to Raymond if you missed it."; } }
+      return;
+    }
+    var ms = DUE.getTime() - Date.now(), d = Math.floor(ms/864e5), h = Math.floor(ms%864e5/36e5), m = Math.floor(ms%36e5/6e4), sec = Math.floor(ms%6e4/1e3);
+    left.textContent = d>0 ? d+"d "+pad(h)+"h "+pad(m)+"m" : pad(h)+":"+pad(m)+":"+pad(sec);
+    if (ms < 36e5) left.className = "v warn"; else left.className = "v gold";
+  }
+  tick(); setInterval(tick, 1000);
 
   var roster = (window.HUB_ROSTER || []).slice();
   if (preview) roster.push("Raymond Maroun (test)");      /* lets Raymond try the page without using a learner's name */
@@ -196,6 +226,7 @@
     var who = $("who").value;
     if (!who){ status("Choose your name.","trouble"); return; }
     if (!state.option){ status("Choose your option.","trouble"); return; }
+    if (over()){ tick(); return; }
     if (!state.xml){ status("Choose your .drawio file.","trouble"); return; }
     try { localStorage.setItem("hub-submit-me", who); } catch(err){}
     $("go").disabled = true; status("Sending...","acting");
