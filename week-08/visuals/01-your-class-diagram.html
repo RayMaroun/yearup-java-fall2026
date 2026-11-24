@@ -177,7 +177,17 @@
   .swb.on.ok{border-color:var(--good);color:#b9f3d3;background:rgba(70,217,138,.14)}
   .hsay{margin:0;font-size:1rem;line-height:1.5;color:var(--ink);min-height:3em}
 
-  /* 4. the checklist */
+  /* 4. one finished diagram, to read */
+  .whole{max-width:820px;margin:0 auto}
+  .eg,.bg{cursor:pointer}
+  .hit{stroke:transparent;stroke-width:22;fill:none}
+  .eg.sel .el{stroke:#fff;stroke-width:2.8} .eg.sel .eh{stroke:#fff;stroke-width:2.8} .eg.sel .et{fill:#fff}
+  .bg.sel .cb{stroke:var(--gold);stroke-width:2;fill:rgba(255,200,98,.08)}
+  .bg:hover .cb{stroke:var(--accent)} .eg:hover .el{stroke:#ffe1a6}
+  .say{margin:14px 0 0;padding:11px 16px;border-left:3px solid var(--accent);font-size:1.02rem;line-height:1.5;color:var(--ink);min-height:3.6em}
+  .say b{font-family:var(--mono);font-size:.66rem;letter-spacing:.12em;text-transform:uppercase;color:var(--gold);font-weight:500;display:block;margin-bottom:3px}
+
+  /* 5. the checklist */
   .auto{margin:0 0 10px;padding:11px 14px;border-radius:14px;border:1px dashed rgba(110,160,255,.45);background:rgba(110,160,255,.07);font-size:.98rem;color:var(--ink)}
   .auto b{color:var(--accent)} .auto.done b{color:var(--good)} .auto.done{border-color:rgba(70,217,138,.5);background:rgba(70,217,138,.06)}
   .cl{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:8px}
@@ -293,7 +303,14 @@
     </section>
 
     <section class="sec">
-      <div class="sech"><span class="n">4</span><h2>Before you show it to Raymond</h2><p>Tick what is true for your diagram today.</p></div>
+      <div class="sech"><span class="n">4</span><h2>What a finished diagram looks like</h2><p>The devices from week 7. Press a line or a box.</p></div>
+      <p class="warnline"><b>Read how it is drawn, not what is in it.</b> Your shop has other boxes, and more of them.</p>
+      <div class="dg whole" id="whole"></div>
+      <div class="say" id="sayW"></div>
+    </section>
+
+    <section class="sec">
+      <div class="sech"><span class="n">5</span><h2>Before you show it to Raymond</h2><p>Tick what is true for your diagram today.</p></div>
       <p class="auto" id="auto"></p>
       <div class="cl" id="cl"></div>
       <div class="tally"><div class="meter"><i class="g" id="clBar"></i></div><p id="clCount"></p></div>
@@ -564,7 +581,49 @@
     show("before");
   });
 
-  /* ---------- 4. the checklist before the check-in ---------- */
+  /* ---------- 4. one finished diagram to read: the devices of week 7 ---------- */
+  (function(){
+    var B={
+      play:{x:20,y:8,w:300,name:"Playable",mark:"interface",rows:["+ play(song: String): void","+ stop(): void"],
+        say:["An interface","Only what something can do: no attributes. The label above the name says it is an interface."]},
+      charge:{x:420,y:8,w:300,name:"Chargeable",mark:"interface",rows:["+ charge(): void"],
+        say:["An interface","A second ability, kept apart from the first. Not everything that plays can be charged."]},
+      device:{x:20,y:176,w:300,name:"Device",italic:true,rows:["- name: String","- battery: int","+ describe(): String"],
+        say:["An abstract class, in italics","Nobody builds a plain device, only a phone or another kind. It holds what all devices share, once."]},
+      phone:{x:420,y:176,w:300,name:"Phone",rows:["- currentSong: String","+ play(song: String): void","+ stop(): void","+ charge(): void","+ describe(): String"],
+        say:["A child class","It writes only what makes a phone different. Its name and its battery come from Device."]},
+      pack:{x:20,y:352,w:300,name:"Backpack",rows:["- devices: List<Device>","+ add(device: Device): void"],
+        say:["The one that holds","One list, of the parent type. It can hold a phone or any other device without knowing which kind."]}
+    };
+    var E=[["device","play","can","Interface","Every device can play, so Device promises what Playable describes. A dashed line, and the triangle touches the interface."],
+           ["phone","charge","can","Interface","A phone can be charged. Not every device can, so only Phone promises Chargeable."],
+           ["phone","device","isa","Is-a","A phone is a device. A solid line, and the triangle touches the parent."],
+           ["pack","device","has","Has-a","A backpack has several devices, any number. The diamond sits on the one that holds, and the star means several."]];
+    var svg=sv("svg",{viewBox:"0 0 740 440",role:"img","aria-label":"The devices of week 7 as one class diagram"}), k, sel=null;
+    function sayW(a,b){ var el=$("sayW"); el.textContent=""; var h=document.createElement("b"); h.textContent=a; el.appendChild(h); el.appendChild(document.createTextNode(b)); }
+    function pick(node,a,b){ if(sel) sel.classList.remove("sel"); sel=node; node.classList.add("sel"); sayW(a,b); }
+    for(k in B) B[k].h=boxH(B[k]);
+    E.forEach(function(e){
+      var g=sv("g",{"class":"eg",tabindex:"0",role:"button","aria-label":e[3]+": "+B[e[0]].name+" to "+B[e[1]].name});
+      drawEdge(g,B[e[0]],B[e[1]],e[2]);
+      var a=B[e[0]], b=B[e[1]];
+      g.appendChild(sv("line",{x1:a.x+a.w/2,y1:a.y+a.h/2,x2:b.x+b.w/2,y2:b.y+b.h/2,"class":"hit"}));
+      g.addEventListener("click",function(){ pick(g,e[3],e[4]); });
+      g.addEventListener("keydown",function(ev){ if(ev.key==="Enter"||ev.key===" "){ ev.preventDefault(); pick(g,e[3],e[4]); } });
+      svg.appendChild(g);
+    });
+    Object.keys(B).forEach(function(id){
+      var b=B[id], g=sv("g",{"class":"bg",tabindex:"0",role:"button","aria-label":b.name});
+      drawBox(g,b);
+      g.addEventListener("click",function(){ pick(g,b.say[0],b.say[1]); });
+      g.addEventListener("keydown",function(ev){ if(ev.key==="Enter"||ev.key===" "){ ev.preventDefault(); pick(g,b.say[0],b.say[1]); } });
+      svg.appendChild(g);
+    });
+    $("whole").appendChild(svg);
+    sayW("Five boxes, four lines","Each line is one of the three relationships. Press one to see which, and why it was the right one here.");
+  })();
+
+  /* ---------- 5. the checklist before the check-in ---------- */
   var CHECKS=["Every box has its three parts: the name, the attributes with their types, the methods.",
               "Every line is a has-a, an is-a or an interface line, and its diamond or triangle sits on the right end.",
               "Abstract classes are in italics, and interfaces carry «interface» above their name.",
