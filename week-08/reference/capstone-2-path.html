@@ -106,7 +106,7 @@
 
   <div class="take">
     <p class="tk">The one idea</p>
-    <p><b>Text, then design, then code.</b> Your capstone text is the reference for every stop. The repository, the board and the diagram come before the code, and the green light comes before the first line of it.</p>
+    <p><b>Text, then design, then code.</b> Your capstone text is the reference for every stop. The diagram comes first. The repository, the project board and the code all wait for the green light.</p>
   </div>
   <div id="rail"></div>
 </div>
@@ -122,21 +122,22 @@
       "I read my capstone text from the first page to the last, not only the screens page.",
       "I chose my option: Deli, Pizza, Taco or Custom, and Raymond knows which one.",
       "Custom only: Raymond approved my Custom capstone."],help:[]},
-    {name:"Set up your project",when:"This week",ticks:[
-      "My project is created in my capstones folder.",
-      "My GitHub repository is public and has a meaningful name.",
-      "My project board has user stories made from the requirements.",
-      "My README is started from the course template."],
-      help:[["../../week-03/visuals/14-user-story.html","A User Story"],["../../week-03/visuals/15-project-board.html","The Project Board"],["../../week-03/reference/your-readme.html","Your README"]]},
     {name:"Draw your class diagram",when:"This week",ticks:[
       "I went through Your Class Diagram, part by part.",
       "My diagram is drawn in diagrams.net.",
-      "The diagram file and a picture of it are in my project, committed and pushed to my repository."],
+      "I saved the diagram file on my computer and exported a picture of it."],
       help:[["../visuals/01-your-class-diagram.html","Your Class Diagram"]]},
     {name:"Get the green light",when:"This week",gate:true,ticks:[
-      "I showed my diagram to Raymond.",
-      "I changed what he asked for, and showed it again.",
+      "I sent my diagram to Raymond.",
+      "I changed what he asked for, and sent it again.",
       "Raymond gave me the green light."],help:[]},
+    {name:"Set up your project",when:"After the green light",ticks:[
+      "My project is created in my capstones folder.",
+      "My GitHub repository is public and has a meaningful name.",
+      "My project board has user stories made from the requirements.",
+      "My README is started from the course template.",
+      "My diagram file and its picture are in my project, committed and pushed."],
+      help:[["../../week-03/visuals/14-user-story.html","A User Story"],["../../week-03/visuals/15-project-board.html","The Project Board"],["../../week-03/reference/your-readme.html","Your README"]]},
     {name:"Classes and prices",when:"Build week",ticks:[
       "The classes of my diagram exist in my code.",
       "Each thing the shop sells can tell its own price.",
@@ -169,7 +170,7 @@
       "I picked one interesting piece of my own code, and I can explain every line of it.",
       "I rehearsed my ten minutes once."],help:[]}
   ];
-  var GATE=3, KEY="hub-cap2-checklist", st={}, sel=0;
+  var GATE=2, KEY="hub-cap2-checklist", st={}, sel=0;
   try{ st=JSON.parse(localStorage.getItem(KEY)||"{}")||{}; }catch(e){ st={}; }
   function save(){ try{ localStorage.setItem(KEY,JSON.stringify(st)); }catch(e){} }
   function doneOf(i){ var n=0; STOPS[i].ticks.forEach(function(t,k){ if(st[i+"-"+k]) n++; }); return n; }
@@ -194,7 +195,7 @@
     var s=STOPS[sel], el=$("stop"); el.textContent="";
     var h=document.createElement("h2"); h.textContent=(sel+1)+". "+s.name; el.appendChild(h);
     if(sel>GATE&&!green()){
-      var lock=document.createElement("p"); lock.className="lock"; lock.textContent="Not yet. This stop opens when Raymond gives you the green light for your diagram. No code before it.";
+      var lock=document.createElement("p"); lock.className="lock"; lock.textContent="Not yet. This stop opens when Raymond gives you the green light for your diagram. No project setup and no code before it.";
       el.appendChild(lock);
     }
     var list=document.createElement("div"); list.className="ticks";
