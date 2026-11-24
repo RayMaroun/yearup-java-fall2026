@@ -1,0 +1,239 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Hand In Your Diagram | Visual Hub</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Sora:wght@500;700&family=Inter:wght@400;500&family=JetBrains+Mono:wght@400;500&display=swap">
+<style>
+  :root{
+    --bg:#080c17; --bg2:#0c1428; --surface:rgba(255,255,255,.045); --line:rgba(255,255,255,.09);
+    --ink:#eef2fb; --muted:#8496b6; --accent:#6ea0ff; --accent2:#8b7bff; --good:#46d98a; --warn:#ff6a6a;
+    --gold:#ffc862; --disp:'Sora',system-ui,sans-serif; --body:'Inter',system-ui,sans-serif;
+    --mono:'JetBrains Mono',ui-monospace,monospace;
+  }
+  *{box-sizing:border-box}
+  body{margin:0;min-height:100vh;color:var(--ink);font-family:var(--body);
+    background:radial-gradient(1200px 700px at 70% -10%,#141d38 0%,transparent 55%),
+               radial-gradient(900px 600px at 10% 110%,#161233 0%,transparent 50%),#080c17;
+    overflow-x:hidden}
+  #amb{position:fixed;inset:0;z-index:0;pointer-events:none;opacity:.6}
+  .back{position:relative;z-index:2;display:block;max-width:760px;margin:0 auto;padding:26px 24px 0;
+    width:100%;font-family:var(--mono);font-size:.8rem;letter-spacing:.04em;color:var(--muted);
+    text-decoration:none;transition:color .15s}
+  .back:hover{color:var(--accent)}
+  .wrap{position:relative;z-index:1;max-width:760px;margin:0 auto;padding:22px 24px 70px}
+  .tag{font-family:var(--mono);font-size:.72rem;letter-spacing:.22em;text-transform:uppercase;color:var(--accent);margin:0 0 14px}
+  h1{font-family:var(--disp);font-weight:700;font-size:clamp(2.3rem,6vw,3.6rem);line-height:1;margin:0 0 12px;
+    letter-spacing:-.03em;background:linear-gradient(180deg,#fff,#b9c6e6);-webkit-background-clip:text;
+    background-clip:text;color:transparent}
+  .lede{color:var(--muted);max-width:64ch;font-size:1.05rem;margin:0 0 26px;line-height:1.5}
+  .lede b{color:var(--ink)}
+  .stage{position:relative;background:linear-gradient(180deg,rgba(255,255,255,.03),rgba(255,255,255,.01));
+    border:1px solid var(--line);border-radius:24px;padding:8px;
+    box-shadow:0 1px 0 rgba(255,255,255,.06) inset,0 30px 80px -30px rgba(0,0,0,.8)}
+  .panel{border-radius:18px;padding:26px;background:linear-gradient(180deg,rgba(110,160,255,.06),rgba(139,123,255,.03));border:1px solid var(--line)}
+  .head{display:flex;justify-content:space-between;align-items:flex-start;gap:16px;flex-wrap:wrap;margin-bottom:22px}
+  .ws{font-family:var(--disp);font-weight:700;font-size:1.5rem;letter-spacing:-.02em;margin:0 0 4px}
+  .lab{font-family:var(--mono);font-size:.7rem;letter-spacing:.12em;text-transform:uppercase;color:var(--muted);margin:0 0 8px}
+  .pill{font-family:var(--mono);font-size:.68rem;letter-spacing:.1em;text-transform:uppercase;padding:6px 12px;border-radius:999px;
+    border:1px solid var(--line);background:rgba(0,0,0,.35);color:var(--muted);white-space:nowrap}
+  .pill.open{border-color:rgba(70,217,138,.5);color:var(--good)}
+  .pill.closed{border-color:rgba(255,106,106,.5);color:var(--warn)}
+  .pill.soon{border-color:rgba(255,200,98,.5);color:var(--gold)}
+  .stats{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin:0 0 22px}
+  @media (max-width:520px){.stats{grid-template-columns:1fr}}
+  .stat{background:rgba(255,255,255,.03);border:1px solid var(--line);border-radius:12px;padding:11px 13px}
+  .stat .k{font-family:var(--mono);font-size:.62rem;letter-spacing:.1em;text-transform:uppercase;color:var(--muted)}
+  .stat .v{font-family:var(--disp);font-weight:700;font-size:1.25rem;font-variant-numeric:tabular-nums;margin-top:3px}
+  .stat .v.warn{color:var(--warn)}
+  .stat .v.gold{color:var(--gold)}
+  .stat .s{font-size:.74rem;color:var(--muted);margin-top:2px}
+  .field{margin-bottom:16px}
+  .row2{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+  @media (max-width:520px){.row2{grid-template-columns:1fr}}
+  select,input[type=text],input[type=url]{width:100%;font-family:var(--mono);font-size:.86rem;color:var(--ink);background:rgba(0,0,0,.32);
+    border:1px solid var(--line);border-radius:12px;padding:11px 12px;appearance:none;-webkit-appearance:none}
+  select{background-image:linear-gradient(45deg,transparent 50%,var(--muted) 50%),linear-gradient(135deg,var(--muted) 50%,transparent 50%);
+    background-position:calc(100% - 18px) 50%,calc(100% - 13px) 50%;background-size:5px 5px;background-repeat:no-repeat;cursor:pointer}
+  select option{background:#0c1428;color:var(--ink)}
+  select:focus,input:focus{outline:none;border-color:var(--accent)}
+  .note{font-size:.8rem;color:var(--muted);line-height:1.5;margin:6px 0 0}
+  .note b{color:var(--gold)}
+  .btn{font-family:var(--body);font-weight:500;font-size:.9rem;padding:11px 18px;border-radius:11px;cursor:pointer;
+    border:1px solid var(--line);background:var(--surface);color:var(--ink);transition:.15s}
+  .btn:hover{border-color:var(--accent);color:var(--accent)}
+  .btn.primary{border-color:rgba(110,160,255,.5);background:rgba(110,160,255,.12)}
+  .btn:disabled{opacity:.35;cursor:not-allowed}
+  .btn:focus-visible{outline:2px solid var(--accent);outline-offset:2px}
+  .status{font-family:var(--mono);font-size:.82rem;line-height:1.5;padding:10px 14px;border-left:3px solid var(--accent);
+    background:rgba(255,255,255,.03);border-radius:0 12px 12px 0;margin-top:18px;color:var(--muted)}
+  .status.acting{border-color:var(--good);color:var(--good)}
+  .status.trouble{border-color:var(--warn);color:var(--warn)}
+  .done{text-align:center;padding:30px 10px}
+  .done .big{font-family:var(--disp);font-weight:700;font-size:1.6rem;color:var(--good);margin:0 0 8px}
+  .done p{color:var(--muted);margin:0 0 6px;font-size:.95rem}
+  .done .link{font-family:var(--mono);font-size:.8rem;color:var(--ink);word-break:break-all}
+  .closedbox{text-align:center;padding:36px 10px}
+  .closedbox .big{font-family:var(--disp);font-weight:700;font-size:1.6rem;color:var(--warn);margin:0 0 8px}
+  .closedbox p{color:var(--muted);margin:0;font-size:.95rem}
+  .closedbox.soon .big{color:var(--gold)}
+  .hidden{display:none}
+  @media (prefers-reduced-motion:reduce){*{transition:none!important}}
+
+  /* the choices of this page: which check, which option */
+  .choice{display:flex;flex-wrap:wrap;gap:8px}
+  .cb{font-family:var(--mono);font-size:.86rem;padding:10px 16px;border-radius:999px;cursor:pointer;border:1px solid var(--line);background:transparent;color:var(--muted);transition:.15s}
+  .cb:hover{border-color:var(--accent);color:var(--ink)}
+  .cb.on{background:rgba(110,160,255,.2);border-color:var(--accent);color:#fff}
+  .drop{display:block;border:2px dashed rgba(110,160,255,.4);border-radius:16px;padding:22px 16px;text-align:center;cursor:pointer;transition:.15s;background:rgba(6,10,20,.4)}
+  .drop:hover,.drop.over{border-color:var(--accent);background:rgba(110,160,255,.08)}
+  .drop b{display:block;font-family:var(--disp);font-size:1.05rem;color:var(--ink)}
+  .drop span{display:block;font-size:.84rem;color:var(--muted);margin-top:4px}
+  .drop.has{border-style:solid;border-color:rgba(70,217,138,.6)} .drop.has b{color:var(--good)}
+  .drop input{position:absolute;left:-9999px}
+  textarea{width:100%;min-height:74px;resize:vertical;font:inherit;font-size:.95rem;color:var(--ink);background:rgba(6,10,20,.6);border:1px solid var(--line);border-radius:11px;padding:11px 13px}
+  textarea:focus{outline:2px solid var(--accent);outline-offset:1px}
+  .again{margin-top:16px}
+</style>
+</head>
+<body>
+<a class="back" href="../week-08/index.html">&#8592; Week 8 index</a>
+<canvas id="amb"></canvas>
+<div class="wrap">
+  <p class="tag">Capstone 2 &middot; Class diagram</p>
+  <h1>Hand In Your Diagram</h1>
+  <p class="lede"><b>Send your diagram file to Raymond.</b> Finished or not, at the time he gave you. You can send again: the last one counts.</p>
+
+  <div class="stage"><div class="panel">
+    <form id="f" novalidate>
+      <div class="field">
+        <p class="lab">Your name</p>
+        <select id="who" required><option value="">Choose your name</option></select>
+      </div>
+      <div class="field">
+        <p class="lab">Which check</p>
+        <div class="choice" id="check"><button type="button" class="cb" data-v="1">Check 1</button><button type="button" class="cb" data-v="2">Check 2</button></div>
+      </div>
+      <div class="field">
+        <p class="lab">Your option</p>
+        <div class="choice" id="option"><button type="button" class="cb" data-v="deli">The Deli</button><button type="button" class="cb" data-v="pizza">The Pizza</button><button type="button" class="cb" data-v="taco">The Taco</button><button type="button" class="cb" data-v="custom">Custom</button></div>
+      </div>
+      <div class="field">
+        <p class="lab">Your diagram file</p>
+        <label class="drop" id="drop"><input type="file" id="file" accept=".drawio,.xml,text/xml,application/xml">
+          <b id="dropBig">Choose your .drawio file</b><span id="dropSmall">The file you saved from diagrams.net, not a picture. You can also drag it here.</span></label>
+      </div>
+      <div class="field">
+        <p class="lab">What you are not sure about &middot; optional</p>
+        <textarea id="note" maxlength="1000" placeholder="One or two lines, if you want Raymond to look at something in particular."></textarea>
+      </div>
+      <button type="submit" class="btn primary" id="go">Send my diagram</button>
+      <div class="status" id="status">Pick your name, the check, your option and your file, then press Send.</div>
+    </form>
+
+    <div class="done hidden" id="done">
+      <p class="big">Received</p>
+      <p id="doneWho"></p>
+      <p class="link" id="doneFile"></p>
+      <p id="doneWhen"></p>
+      <button type="button" class="btn again" id="again">Send another version</button>
+    </div>
+
+    <div class="closedbox hidden" id="closed">
+      <p class="big">Not open yet</p>
+      <p>Raymond will tell you when to hand in your diagram.</p>
+    </div>
+  </div></div>
+</div>
+
+<script src="roster.js?v=2026-10-27c"></script>
+<script src="diagram-hand-in-config.js?v=2026-11-24a"></script>
+<script>
+(function(){
+  "use strict";
+  function $(id){ return document.getElementById(id); }
+  var C = window.DIAGRAM_HAND_IN || {}, preview = /[?&]preview=1/.test(location.search);
+  var state = { check:"", option:"", xml:"", fileName:"" };
+
+  if (!C.endpoint){ $("f").classList.add("hidden"); $("closed").classList.remove("hidden"); }
+
+  var roster = (window.HUB_ROSTER || []).slice();
+  if (preview) roster.push("Raymond Maroun (test)");      /* lets Raymond try the page without using a learner's name */
+  roster.forEach(function(n){ var o=document.createElement("option"); o.value=n; o.textContent=n; $("who").appendChild(o); });
+  try { var me = localStorage.getItem("hub-submit-me"); if (me && roster.indexOf(me) >= 0) $("who").value = me; } catch(e){}
+  try { var so = localStorage.getItem("hub-cap2-diagram-guide-4-opt"); if (so) state.option = so; } catch(e){}
+
+  function status(text, tone){ var s=$("status"); s.textContent=text; s.className="status"+(tone?" "+tone:""); }
+  function paint(){
+    [["check",state.check],["option",state.option]].forEach(function(g){
+      [].forEach.call(document.querySelectorAll("#"+g[0]+" .cb"), function(b){ b.classList.toggle("on", b.getAttribute("data-v")===g[1]); });
+    });
+  }
+  ["check","option"].forEach(function(g){
+    $(g).addEventListener("click", function(e){ var b=e.target.closest(".cb"); if(!b) return; state[g]=b.getAttribute("data-v"); paint(); });
+  });
+  paint();
+
+  function take(file){
+    if (!file) return;
+    if (file.size > 2000000){ status("This file is very large, probably because it has pictures in it. Remove them, save, and choose the file again.","trouble"); return; }
+    var r = new FileReader();
+    r.onload = function(){
+      var text = String(r.result || "");
+      if (text.indexOf("<mxGraphModel") < 0 && text.indexOf("<mxfile") < 0){
+        state.xml=""; state.fileName=""; $("drop").classList.remove("has");
+        $("dropBig").textContent="Choose your .drawio file";
+        status("That does not look like a diagrams.net file. Choose the .drawio file of your diagram, not a picture of it.","trouble"); return;
+      }
+      state.xml = text; state.fileName = file.name;
+      $("drop").classList.add("has"); $("dropBig").textContent = file.name; $("dropSmall").textContent = "Ready to send. Choose another file to replace it.";
+      status("File ready. Press Send.","");
+    };
+    r.onerror = function(){ status("The file could not be read. Choose it again.","trouble"); };
+    r.readAsText(file);
+  }
+  $("file").addEventListener("change", function(){ take(this.files && this.files[0]); });
+  ["dragover","dragenter"].forEach(function(ev){ $("drop").addEventListener(ev, function(e){ e.preventDefault(); $("drop").classList.add("over"); }); });
+  ["dragleave","drop"].forEach(function(ev){ $("drop").addEventListener(ev, function(e){ e.preventDefault(); $("drop").classList.remove("over"); }); });
+  $("drop").addEventListener("drop", function(e){ take(e.dataTransfer && e.dataTransfer.files && e.dataTransfer.files[0]); });
+
+  $("f").addEventListener("submit", function(e){
+    e.preventDefault();
+    var who = $("who").value;
+    if (!who){ status("Choose your name.","trouble"); return; }
+    if (!state.check){ status("Choose Check 1 or Check 2.","trouble"); return; }
+    if (!state.option){ status("Choose your option.","trouble"); return; }
+    if (!state.xml){ status("Choose your .drawio file.","trouble"); return; }
+    try { localStorage.setItem("hub-submit-me", who); } catch(err){}
+    $("go").disabled = true; status("Sending...","acting");
+    /* text/plain keeps this a simple request, which the receiving program accepts from another site */
+    fetch(C.endpoint, { method:"POST", headers:{ "Content-Type":"text/plain;charset=utf-8" },
+      body: JSON.stringify({ who:who, check:state.check, option:state.option, fileName:state.fileName, note:$("note").value, xml:state.xml }) })
+      .then(function(r){ return r.json(); })
+      .then(function(a){
+        $("go").disabled = false;
+        if (!a || !a.ok){ status((a && a.message) || "It did not go through. Try again, or send your file to Raymond on Teams.","trouble"); return; }
+        $("f").classList.add("hidden"); $("done").classList.remove("hidden");
+        $("doneWho").textContent = a.who + ", Check " + a.check + (a.number > 1 ? ", hand-in number " + a.number : "");
+        $("doneFile").textContent = state.fileName;
+        $("doneWhen").textContent = a.when;
+      })
+      .catch(function(){ $("go").disabled = false; status("It did not go through. Check your connection and try again, or send your file to Raymond on Teams.","trouble"); });
+  });
+  $("again").addEventListener("click", function(){
+    state.xml=""; state.fileName=""; $("file").value=""; $("drop").classList.remove("has");
+    $("dropBig").textContent="Choose your .drawio file"; $("dropSmall").textContent="The file you saved from diagrams.net, not a picture. You can also drag it here.";
+    $("done").classList.add("hidden"); $("f").classList.remove("hidden"); status("Choose the new file and press Send.","");
+  });
+
+  var cv=$("amb"), ctx=cv&&cv.getContext&&cv.getContext("2d"), parts=[], reduce=matchMedia("(prefers-reduced-motion: reduce)").matches;
+  function sizeC(){ if(!ctx) return; cv.width=innerWidth; cv.height=innerHeight; }
+  function initParts(){ parts=[]; for(var i=0;i<46;i++) parts.push({x:Math.random(),y:Math.random(),r:Math.random()*1.6+.3,s:Math.random()*.02+.004,o:Math.random()*.4+.1}); }
+  function drawC(){ if(!ctx) return; ctx.clearRect(0,0,cv.width,cv.height); parts.forEach(function(p){ p.y-=p.s/60; if(p.y<-.02) p.y=1.02; ctx.beginPath(); ctx.arc(p.x*cv.width,p.y*cv.height,p.r,0,7); ctx.fillStyle="rgba(140,170,255,"+p.o+")"; ctx.fill(); }); requestAnimationFrame(drawC); }
+  if(ctx&&!reduce){ sizeC(); initParts(); drawC(); addEventListener("resize",sizeC); }
+})();
+</script>
+</body>
+</html>
