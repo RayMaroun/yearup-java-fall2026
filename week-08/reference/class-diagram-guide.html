@@ -169,6 +169,9 @@
   .sum li{margin:3px 0;color:#cdd6ea}
   .sum a{color:var(--accent)}
   .sum .none{margin:0;color:var(--good)}
+  details.part.traps>summary{cursor:pointer}
+  details.part.traps ol{margin:10px 0 0;padding-left:20px}
+  details.part.traps li{margin:4px 0}
 </style>
 </head>
 <body>
@@ -181,52 +184,35 @@
 
   <div class="board">
     <nav class="side" aria-label="Steps">
-      <p class="lab"><span>Steps</span><b id="count">0 of 11</b></p>
+      <p class="lab"><span>Steps</span><b id="count">0 of 6</b></p>
       <ol id="toc"></ol>
       <button class="reset" id="reset" type="button">Clear ticks</button>
     </nav>
 
     <div class="steps" id="steps">
 
-      <section class="step" id="s1" data-phase="Find your things">
-        <div class="head"><span class="num">1</span><div><h2>Read the text with two colors</h2><div class="meta"><span class="chip t">nouns and verbs</span><label class="chip optpick">Your option <select id="optsel"><option value="deli">The Deli</option><option value="pizza">The Pizza</option><option value="taco">The Taco</option><option value="custom">Custom</option></select></label></div></div>
+      <section class="step" id="s1" data-phase="Find">
+        <div class="head"><span class="num">1</span><div><h2>Find the things in your text</h2><div class="meta"><span class="chip t">nouns and verbs</span><a class="chip" href="../visuals/01-a-fixed-list-of-choices.html">A Fixed List of Choices (enum), optional</a><label class="chip optpick">Your option <select id="optsel"><option value="deli">The Deli</option><option value="pizza">The Pizza</option><option value="taco">The Taco</option><option value="custom">Custom</option></select></label></div></div>
           <label class="done-box"><input type="checkbox" data-s="1">done</label></div>
         <div class="parts">
-          <div class="part do"><p class="k">Do</p><ol>
-            <li>Read your capstone text once from start to finish. Then read it again with two colors: one for the <b>things</b> (nouns), one for the <b>actions</b> (verbs). The text itself gives you this hint.</li>
-            <li>Read the price table the same way. Every row and every column is information your design has to hold somewhere.</li>
-            <li>Write the words down as a plain list. No boxes yet.</li>
-          </ol></div>
+          <div class="part do"><p class="k">Do</p><p>Go through your capstone text and its price table and mark the <b>things</b> (nouns) and the <b>actions</b> (verbs). The text below is yours in short: press its highlighted words.</p></div>
           <div class="play"><p class="k">Your own text: press the highlighted words</p>
             <p class="story">The <button type="button" class="w" data-k="item"><span data-w="item"></span></button> is the core of our business. Customers can order <span data-w="items"></span> in <button type="button" class="w" data-k="sizes">3 sizes</button> (<span data-w="sizes"></span>). When they order, they choose the type of <button type="button" class="w" data-k="base"><span data-w="base"></span></button>. The customer can then choose their <button type="button" class="w" data-k="toppings">toppings</button>. Toppings are categorized as <button type="button" class="w" data-k="groups">regular and premium</button>. <span data-w="premiums"></span> are premium toppings and <button type="button" class="w" data-k="cost">cost extra</button>; all other toppings and the sauces are included. After each premium topping the customer can ask for an <button type="button" class="w" data-k="extra">extra portion</button>. Each <span data-w="item"></span> can <button type="button" class="w" data-k="special"><span data-w="special"></span></button>. A customer can place an <button type="button" class="w" data-k="order">order</button> with <button type="button" class="w" data-k="zero">0 or more</button> <span data-w="items"></span>, and can add <button type="button" class="w" data-k="drink">drinks</button> and <button type="button" class="w" data-k="side"><span data-w="side"></span></button>. At the end the application shows the <button type="button" class="w" data-k="details">order details</button> and the <button type="button" class="w" data-k="total">total cost</button>, and saves a <button type="button" class="w" data-k="receipt">receipt file</button> for every order.</p>
             <div class="say" id="say1"><b>What a designer sees</b>Each highlighted word is something your design has to decide about. Press one.</div>
           </div>
-          <div class="part looks"><p class="k">Done looks like</p><p>A list of 20 to 30 words from your own text, each marked as a thing or an action. Nothing is a class yet.</p></div>
-          <div class="part watch"><p class="k">Watch out</p><ul><li>Do not start from the screens. The screens say what the user does, not what the shop is made of.</li><li>Do not skip the small words: "extra", "included", "one at a time".</li></ul></div>
-        </div>
-      </section>
-
-      <section class="step" id="s2" data-phase="Find your things">
-        <div class="head"><span class="num">2</span><div><h2>Sort your words</h2><div class="meta"><span class="chip t">class, attribute, method or value</span><a class="chip" href="../visuals/01-a-fixed-list-of-choices.html">A Fixed List of Choices (enum), optional</a></div></div>
-          <label class="done-box"><input type="checkbox" data-s="2">done</label></div>
-        <div class="parts">
-          <div class="part do"><p class="k">A cinema sells tickets and snacks. Four questions for every word on a list</p><ol>
+          <div class="part do"><p class="k">Four questions for every word you marked</p><ol>
             <li>Does it have <b>data of its own and things it can answer</b>? It is probably a class.</li>
             <li>Does it only <b>describe one thing</b>? It is an attribute of that thing.</li>
             <li>Is it <b>one choice out of a fixed list</b> (a size, a flavor, a kind)? It is a value of an attribute, not a class per choice.</li>
             <li>Is it <b>something to do or to work out</b>? It is a method. Decide later whose job it is.</li>
           </ol></div>
-          <div class="play"><p class="k">Try it on another shop: what is each cinema word?</p>
-            <div class="sort" id="sort"><div class="srow" data-a="c" data-why="It has its own data (which movie, which seat) and its own answers (how much it costs). That is a class."><span class="word">ticket</span><span class="opts"><button type="button" class="opt" data-v="c">Class</button><button type="button" class="opt" data-v="a">Attribute</button><button type="button" class="opt" data-v="m">Method</button><button type="button" class="opt" data-v="v">Just a value</button></span></div><div class="srow" data-a="v" data-why="One of two choices for the seat. A choice from a fixed list is the value of an attribute. It would become its own class only if a recliner behaved differently from a standard seat."><span class="word">recliner</span><span class="opts"><button type="button" class="opt" data-v="c">Class</button><button type="button" class="opt" data-v="a">Attribute</button><button type="button" class="opt" data-v="m">Method</button><button type="button" class="opt" data-v="v">Just a value</button></span></div><div class="srow" data-a="a" data-why="It describes one popcorn. A detail that belongs to one thing is an attribute of that thing."><span class="word">size of the popcorn</span><span class="opts"><button type="button" class="opt" data-v="c">Class</button><button type="button" class="opt" data-v="a">Attribute</button><button type="button" class="opt" data-v="m">Method</button><button type="button" class="opt" data-v="v">Just a value</button></span></div><div class="srow" data-a="m" data-why="It is something to do, and the answer changes when the order changes. That is a method. The next question is which class owns it."><span class="word">work out the total</span><span class="opts"><button type="button" class="opt" data-v="c">Class</button><button type="button" class="opt" data-v="a">Attribute</button><button type="button" class="opt" data-v="m">Method</button><button type="button" class="opt" data-v="v">Just a value</button></span></div><div class="srow" data-a="c" data-why="It holds other things and answers questions about them. A thing that holds things is a class."><span class="word">order</span><span class="opts"><button type="button" class="opt" data-v="c">Class</button><button type="button" class="opt" data-v="a">Attribute</button><button type="button" class="opt" data-v="m">Method</button><button type="button" class="opt" data-v="v">Just a value</button></span></div><div class="srow" data-a="a" data-why="A detail of one drink: an attribute. Its values come from a fixed list."><span class="word">flavor of the drink</span><span class="opts"><button type="button" class="opt" data-v="c">Class</button><button type="button" class="opt" data-v="a">Attribute</button><button type="button" class="opt" data-v="m">Method</button><button type="button" class="opt" data-v="v">Just a value</button></span></div></div>
-            <div class="say" id="say2"><b>Your turn</b>Press an answer for each word.</div>
-          </div>
-          <div class="part looks"><p class="k">Done looks like</p><p>Every word on your capstone list is sorted. You have a handful of classes, each with a few attributes, and a list of actions that still need an owner.</p></div>
-          <div class="part watch"><p class="k">Watch out</p><ul><li>A long list of choices (every bread, every topping) is data, not a list of classes.</li><li>If two "classes" hold the same attributes and do the same things, ask what makes them different.</li></ul></div>
+          <div class="part looks"><p class="k">Done looks like</p><p>A list of the things in your text, each one marked: a class, an attribute, a value from a fixed list, or an action that still needs an owner.</p></div>
+          <div class="part watch"><p class="k">Watch out</p><ul><li>A long list of choices (every <span data-w="base"></span>, every topping) is data, not a list of classes.</li><li>Do not start from the screens. The screens say what the user does, not what the shop is made of.</li><li>Do not skip the small words: "extra", "included", "one at a time".</li></ul></div>
         </div>
       </section>
 
       <section class="step" id="s3" data-phase="Decide">
-        <div class="head"><span class="num">3</span><div><h2>Make the seven decisions of this capstone</h2><div class="meta"><span class="chip t">before you draw anything</span></div></div>
+        <div class="head"><span class="num">2</span><div><h2>Make the seven decisions of this capstone</h2><div class="meta"><span class="chip t">before you draw anything</span></div></div>
           <label class="done-box"><input type="checkbox" data-s="3">done</label></div>
         <div class="parts">
           <div class="part do"><p class="k">Do</p><p>Every diagram for this capstone answers the same seven questions, one way or another. Open each one, read what the text says, look at the ways to go, and choose. There is more than one good answer: what matters is that you choose on purpose and can say why. The names of your classes are yours.</p></div>
@@ -252,59 +238,8 @@
         </div>
       </section>
 
-      <section class="step" id="s4" data-phase="Draw">
-        <div class="head"><span class="num">4</span><div><h2>Draw one box</h2><div class="meta"><a class="chip" href="../../week-06/reference/class-diagram-reference.html">Class Diagram Reference</a></div></div>
-          <label class="done-box"><input type="checkbox" data-s="4">done</label></div>
-        <div class="parts">
-          <div class="part do"><p class="k">Do</p><ol>
-            <li>One box per class, three parts: the name, the attributes, the methods.</li>
-            <li>Every attribute is written <code>- name: Type</code>. Every method is written <code>+ name(input: Type): ReturnType</code>.</li>
-            <li>Give each action from your list to the class that <b>holds the data it needs</b>. If a class has to ask three others for everything, the method is in the wrong box.</li>
-            <li>Leave out plain getters and setters. They hide the methods that matter.</li>
-          </ol></div>
-          <div class="play"><p class="k">A drawn box: press a band</p>
-            <div class="arrowbox"><div id="anat"></div><div class="say" id="say3a"><b>Three bands, always in this order</b>Press the name, the attributes or the methods.</div></div>
-          </div>
-          <div class="play"><p class="k">Try it: which lines are complete? Press each one</p>
-            <div class="lines" id="lines">
-              <button type="button" class="ln" data-ok="0" data-why="A name alone. What kind of value is it: a number, text, yes or no?">size</button>
-              <button type="button" class="ln" data-ok="1" data-why="Complete: the sign, the name, the type.">- size: int</button>
-              <button type="button" class="ln" data-ok="0" data-why="What does it give back? A reader cannot tell if this prints the price, returns it, or stores it.">+ getPrice()</button>
-              <button type="button" class="ln" data-ok="0" data-why="The input has no type, and there is no return type. A price is money: which type holds 1.50?">+ getPrice(size)</button>
-              <button type="button" class="ln" data-ok="1" data-why="Complete: what it needs, with its type, and what it gives back.">+ getPrice(size: int): BigDecimal</button>
-            </div>
-            <div class="say" id="say3"><b>Read each line as a promise</b>A complete line tells the reader everything without opening the code.</div>
-          </div>
-          <div class="part looks"><p class="k">Done looks like</p><p>Every attribute has a type. Every method shows what goes in and what comes out. Each box could be handed to a classmate to code without a single question.</p></div>
-          <div class="part watch"><p class="k">Watch out</p><ul><li>Prices are money. Text cannot be added up, and a whole number cannot hold 1.50.</li><li>Where there can be several of something, one field is not enough.</li></ul></div>
-        </div>
-      </section>
-
-      <section class="step" id="s5" data-phase="Draw">
-        <div class="head"><span class="num">5</span><div><h2>Connect the boxes</h2><div class="meta"><a class="chip" href="../../week-06/reference/class-diagram-reference.html">Class Diagram Reference</a><a class="chip" href="../../week-07/reference/class-diagram-reference.html">Class Diagram Reference, week 7</a></div></div>
-          <label class="done-box"><input type="checkbox" data-s="5">done</label></div>
-        <div class="parts">
-          <div class="part do"><p class="k">Three sentences, three kinds of line</p><ol>
-            <li><b>"A is a kind of B."</b> Inheritance: a solid line with a hollow triangle that touches B, the parent.</li>
-            <li><b>"A has B" or "A holds several B."</b> A line from A to B with a hollow diamond on A, the owner.</li>
-            <li><b>"A can do what B describes."</b> A implements the interface B: a dashed line with a hollow triangle that touches B.</li>
-          </ol></div>
-          <div class="play"><p class="k">Try it: say the sentence, see the line</p>
-            <div class="opts" id="rel">
-              <button type="button" class="pick" data-r="isa">A recliner ticket is a kind of ticket</button>
-              <button type="button" class="pick" data-r="has">An order holds several tickets</button>
-              <button type="button" class="pick" data-r="can">Popcorn and a drink can both tell their price</button>
-              <button type="button" class="pick" data-r="bad">Popcorn is a kind of ticket</button>
-            </div>
-            <div class="arrowbox"><div id="draw"></div><div class="say" id="say4"><b>Say it out loud</b>Press a sentence.</div></div>
-          </div>
-          <div class="part looks"><p class="k">Done looks like</p><p>Every box is joined to at least one other. For every line you can say its sentence out loud and it sounds true. Abstract classes and interfaces are marked.</p></div>
-          <div class="part watch"><p class="k">Watch out</p><ul><li>The triangle touches the parent, never the child.</li><li>In diagrams.net, drag each end of a line onto a box until the box turns green. A line that only sits near a box is attached to nothing.</li><li>Inheritance is for "is a kind of", not for borrowing a few lines of code.</li></ul></div>
-        </div>
-      </section>
-
       <section class="step" id="s6" data-phase="Draw">
-        <div class="head"><span class="num">6</span><div><h2>Build the picture in five passes</h2><div class="meta"><a class="chip" href="../../week-06/reference/class-diagram-reference.html">Drawing it in diagrams.net</a><a class="chip" href="../../week-07/reference/class-diagram-reference.html">A whole design on one page</a></div></div>
+        <div class="head"><span class="num">3</span><div><h2>Draw it in five passes</h2><div class="meta"><a class="chip" href="../../week-06/reference/class-diagram-reference.html">Drawing it in diagrams.net</a><a class="chip" href="../../week-07/reference/class-diagram-reference.html">A whole design on one page</a></div></div>
           <label class="done-box"><input type="checkbox" data-s="6">done</label></div>
         <div class="parts">
           <div class="part do"><p class="k">Do, in diagrams.net</p><ol>
@@ -314,15 +249,15 @@
             <li><b>Lines.</b> Hover over a box and drag one of its blue arrows onto the other box. Then click the line and set its ends in the Format panel, Style tab: hollow triangle, diamond, or dashed.</li>
             <li><b>Marks.</b> The word &laquo;interface&raquo; above an interface name, italics for an abstract class, a star where one box holds several of another.</li>
           </ol></div>
-          <div class="play"><p class="k">Watch a cinema diagram grow: one pass per press</p>
+          <div class="part do"><p class="k">Pass 4, the lines: three sentences, three kinds of line</p><ol>
+            <li><b>"A is a kind of B."</b> Inheritance: a solid line with a hollow triangle that touches B, the parent.</li>
+            <li><b>"A has B" or "A holds several B."</b> A line from A to B with a hollow diamond on A, the owner.</li>
+            <li><b>"A can do what B describes."</b> A implements the interface B: a dashed line with a hollow triangle that touches B.</li>
+          </ol></div>
+          <div class="play"><p class="k">A cinema, not your shop: watch its diagram grow, one pass per press</p>
             <div id="grow"></div>
             <div class="opts" style="margin-top:12px"><button type="button" class="pick" id="gnext">Next pass</button><button type="button" class="pick" id="gback">Start over</button></div>
             <div class="say" id="say5"><b>Pass 1 of 5: names</b>One box per class, with room around each. Nothing inside yet.</div>
-          </div>
-          <div class="play"><p class="k">Same diagram, two layouts: press to switch</p>
-            <div id="lay"></div>
-            <div class="opts" style="margin-top:12px"><button type="button" class="pick on" data-l="messy">As it first came out</button><button type="button" class="pick" data-l="tidy">Tidied</button></div>
-            <div class="say" id="say5b"><b>Hard to read</b>Every box and every line is correct, but the interface sits at the bottom, the child is far from its parent, and the lines run in every direction. A reader has to untangle it first.</div>
           </div>
           <div class="part looks"><p class="k">Done looks like</p><p>Every class of your list is a box with three bands, every line is attached at both ends, and the picture reads from top to bottom without crossing lines.</p></div>
           <div class="part watch"><p class="k">Watch out</p><ul><li>Do not start with the lines. Lines between half-empty boxes get redrawn three times.</li><li>Parents and interfaces go above, children below. The class that holds others goes to the left or on top.</li></ul></div>
@@ -330,7 +265,7 @@
       </section>
 
       <section class="step" id="s7" data-phase="Draw">
-        <div class="head"><span class="num">7</span><div><h2>Spot the drawing mistakes</h2><div class="meta"><span class="chip t">four pictures, one mistake each</span></div></div>
+        <div class="head"><span class="num">4</span><div><h2>Spot the drawing mistakes</h2><div class="meta"><span class="chip t">four pictures, one mistake each</span></div></div>
           <label class="done-box"><input type="checkbox" data-s="7">done</label></div>
         <div class="parts">
           <div class="part do"><p class="k">Do</p><p>Each picture below has one drawing mistake. Find it before you press the button. Then look for the same four mistakes in your own diagram.</p></div>
@@ -341,53 +276,30 @@
       </section>
 
       <section class="step" id="s8" data-phase="Check">
-        <div class="head"><span class="num">8</span><div><h2>Walk one order through it</h2><div class="meta"><span class="chip t">finger on the diagram</span></div></div>
+        <div class="head"><span class="num">5</span><div><h2>Walk one order through it</h2><div class="meta"><span class="chip t">finger on the diagram</span></div></div>
           <label class="done-box"><input type="checkbox" data-s="8">done</label></div>
         <div class="parts">
           <div class="orderc"><b>The order to walk through</b>One <span data-w="item"></span> in the middle size, with two premium toppings (one of them with an extra portion), one regular topping and one sauce. One medium drink. And <span data-w="side"></span>.</div>
           <div class="part do"><p class="k">Do</p><p>Put a finger on your diagram and follow this one order from the first screen to the receipt. Answer each question out loud. Tick it when the diagram answers it without you adding "well, in the code I would...".</p></div>
           <div class="walk" id="walk"><label class="wk"><input type="checkbox" data-t="1"><span>Which objects exist after this order? Count them and name the class of each.</span></label><label class="wk"><input type="checkbox" data-t="2"><span>Where is each of the four toppings held? Follow the line.</span></label><label class="wk"><input type="checkbox" data-t="3"><span>The customer asks what the main item costs. Which method answers? Say what it needs to know, and where it gets each piece.</span></label><label class="wk"><input type="checkbox" data-t="4"><span>One premium topping has an extra portion. Where is that remembered, and how does it end up costing more?</span></label><label class="wk"><input type="checkbox" data-t="5"><span>Who adds the drink and the rest to the price of the main item?</span></label><label class="wk"><input type="checkbox" data-t="6"><span>The customer confirms. What writes the receipt, and where does it get every line of it?</span></label><label class="wk"><input type="checkbox" data-t="7"><span>The customer cancels instead. What happens to everything that was created?</span></label></div>
-          <div class="part looks"><p class="k">Done looks like</p><p>You can tell the story of one order from start to finish using only what is drawn.</p></div>
-          <div class="part watch"><p class="k">Watch out</p><ul><li>The place where you get stuck is the place to change in the diagram.</li><li>Try a second order with no main item at all. The text has a rule for it.</li></ul></div>
-        </div>
-      </section>
-
-      <section class="step" id="s9" data-phase="Check">
-        <div class="head"><span class="num">9</span><div><h2>Check for the usual traps</h2><div class="meta"></div></div>
-          <label class="done-box"><input type="checkbox" data-s="9">done</label></div>
-        <div class="parts">
-          <div class="part do"><p class="k">Six traps, and the question that gets you out</p><ol>
+          <details class="part traps"><summary class="k">Stuck on a question? Six usual traps, and the question that gets you out</summary><ol>
             <li><b>The class that does everything.</b> One box with twenty methods. Whose data does each method really use?</li>
             <li><b>A class for every choice.</b> If two boxes differ only by a name or a number, is that a class or a value?</li>
             <li><b>The same thing in two places.</b> If the two ever disagree, which one is right?</li>
             <li><b>Inheritance to borrow code.</b> Say "A is a kind of B" out loud. Does it sound true?</li>
             <li><b>The parent with nothing in it.</b> What do the children share that could live there?</li>
             <li><b>The method that cannot know.</b> Where does it get what it needs: its own class, or its inputs?</li>
-          </ol></div>
-          <div class="part looks"><p class="k">Done looks like</p><p>You looked for each trap in your own diagram and either did not find it or fixed it.</p></div>
-          <div class="part watch"><p class="k">Watch out</p><ul><li>A diagram can avoid all six and still be yours. Do not copy a classmate's to be safe: you will have to explain every box.</li></ul></div>
-        </div>
-      </section>
-
-      <section class="step" id="s10" data-phase="Check">
-        <div class="head"><span class="num">10</span><div><h2>Save it and keep it current</h2><div class="meta"><span class="chip t">it lives in your repository</span></div></div>
-          <label class="done-box"><input type="checkbox" data-s="10">done</label></div>
-        <div class="parts">
-          <div class="part do"><p class="k">Do</p><ol>
-            <li>Keep the <code>.drawio</code> file in your project. It is the one you can still change.</li>
-            <li>File, Export as, PNG. Save the picture in your project too, and show it in your README.</li>
-            <li>When the code changes a class, change the diagram the same day and export again. A diagram that no longer matches the code is worse than none.</li>
-          </ol></div>
-          <div class="part looks"><p class="k">Done looks like</p><p>The diagram file and its picture are committed and pushed, the picture is visible in the README, and both match what you are about to code.</p></div>
-          <div class="part watch"><p class="k">Watch out</p><ul><li>Export the whole page, not a selection, and check that no box is cut off in the picture.</li></ul></div>
+          </ol></details>
+          <div class="part looks"><p class="k">Done looks like</p><p>You can tell the story of one order from start to finish using only what is drawn.</p></div>
+          <div class="part watch"><p class="k">Watch out</p><ul><li>The place where you get stuck is the place to change in the diagram.</li><li>Try a second order with no main item at all. The text has a rule for it.</li></ul></div>
         </div>
       </section>
 
       <section class="step" id="s11" data-phase="Check">
-        <div class="head"><span class="num">11</span><div><h2>What you bring to Raymond</h2><div class="meta"><span class="chip t">your own summary</span></div></div>
+        <div class="head"><span class="num">6</span><div><h2>What you bring to Raymond</h2><div class="meta"><span class="chip t">your own summary</span></div></div>
           <label class="done-box"><input type="checkbox" data-s="11">done</label></div>
         <div class="parts">
-          <div class="part do"><p class="k">Do</p><p>This step keeps score of your ticks. Whatever is still open below is what your talk with Raymond is about: the fewer open points, the shorter the talk. Go back and close what you can, then show him your diagram with this summary on screen.</p></div>
+          <div class="part do"><p class="k">Do</p><p>This step keeps score of your ticks. Whatever is still open below is what your talk with Raymond is about: the fewer open points, the shorter the talk. Go back and close what you can, then show him your diagram with this summary on screen.</p><p>Before the talk, commit and push the <code>.drawio</code> file and a picture of it (File, Export as, PNG), so he can open your diagram too.</p></div>
           <div class="sum" id="sum"></div>
           <div class="part looks"><p class="k">Done looks like</p><p>Raymond gave you the green light for your diagram. Only then do you start to code.</p></div>
           <div class="part watch"><p class="k">Watch out</p><ul><li>An unfinished diagram shown early is better than a finished one shown late: it can still be changed.</li><li>You will be asked "why" about your boxes. A diagram you cannot explain does not get the green light, even if it is correct.</li></ul></div>
@@ -670,7 +582,7 @@
 
 <script src="../walk.js"></script>
 <script>
-/* Step 11: the summary. It reads the ticks of the page and lists what is still open. */
+/* The last step: the summary. It reads the ticks of the page and lists what is still open. */
 (function(){
   "use strict";
   var sum=document.getElementById("sum"); if(!sum) return;
