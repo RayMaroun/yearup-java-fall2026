@@ -1,23 +1,25 @@
 /* Week 8 manifest: Capstone 2 (Deli, Pizza, Taco or Custom shop).
- * FIVE pages, on purpose (Ray, Nov 24 2026: the first version had 17 pages and a Toolbox, too much to find a way through):
- * one guide for the design, one guide for the build, the text as a checklist, and the two finish pages.
- * The guides show one step at a time (walk.js). The pictures in visuals/ are not listed here:
- * they open inside the build step that uses them, and the enum picture inside the design guide.
+ * The week is PICTURES, like the spring week 8 (Ray, Nov 24 2026): hints that sit next to the capstone text,
+ * never a rewrite of it. Two earlier versions were dropped the same day: 17 pages with a Toolbox, then five
+ * text guides shown one step at a time. Ray: too much text, and learners must not use the hub as their only reference.
+ * One page for the class diagram, five pictures for the build. A checklist page is still to come.
+ * The enum picture was removed: Ray found it confusing.
  * Rules for every page: it matches the capstone text v7.2Y-R exactly (same rules, numbers, menu numbers, words);
- * it steers and asks, it never says which classes to create and never shows Java code of the capstone. */
-window.HUB_PHASES = ["Design", "Build", "Finish"];
+ * it shows what the program must do, never which classes to create and never Java code of the capstone. */
+window.HUB_PHASES = ["Design", "Build"];
 window.HUB_MANIFEST = {
   week: 8,
   live: false,
   title: "Capstone 2 \u00b7 Your Shop",
-  visuals: [],
-  reference: [
-    { file: "class-diagram-guide.html", title: "Class Diagram Guide", group: "Design", desc: "From your capstone text to a diagram you can explain, one step at a time. The last step shows what is still open before you show it to Raymond." },
-    { file: "build-guide.html", title: "Build Guide", group: "Build", desc: "From an empty project to Demo Day, one step at a time: the classes and their prices first, the screens after. Each step has its picture and says what done looks like." },
-    { file: "requirements-checklist.html", title: "Requirements Checklist", group: "Build", desc: "Your capstone text as tick boxes, in your option's own words and numbers: the rules, the prices, every screen, the receipt, the repository." },
-    { file: "readme-and-repository.html", title: "README and Repository", group: "Finish", desc: "Everything the capstone asks for besides the program: the repository, the board, the commits, the diagram file, its picture, the README." },
-    { file: "demo-day.html", title: "Demo Day", group: "Finish", desc: "The ten minutes on Friday, December 4, part by part, and what to check before you start." }
+  visuals: [
+    { file: "01-from-your-text-to-a-class-diagram.html", title: "From Your Text to a Class Diagram", group: "Design", desc: "Read, draw, test: press the words of your own text, watch an example diagram grow, then walk one order through your own diagram." },
+    { file: "02-menu-flow-map.html", title: "Menu Flow Map", group: "Build", desc: "Every screen of your application and where each choice leads. Press an option and walk from Home to the receipt and back." },
+    { file: "03-what-an-order-can-hold.html", title: "What an Order Can Hold", group: "Build", desc: "Add things to an order pad, watch the total, and press Checkout: an empty order is refused, a drink alone is fine." },
+    { file: "04-building-one-item.html", title: "Building One Item", group: "Build", desc: "The questions of the Add screen, in order: the type, the size, the premium toppings with Extra?, the regular toppings, the sauces, the special option." },
+    { file: "05-how-a-price-adds-up.html", title: "How a Price Adds Up", group: "Build", desc: "The price table of your option, live: pick a size, add toppings, add an extra portion, and see where every number comes from." },
+    { file: "06-the-receipt-file.html", title: "The Receipt File", group: "Build", desc: "Confirm an order and watch its file name being made from the date and the time: yyyyMMdd-HHmmss, with the 24-hour clock." }
   ],
+  reference: [],
   exercises: [],
   games: []
 };
