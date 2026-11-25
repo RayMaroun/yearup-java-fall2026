@@ -7,6 +7,6 @@
  * After every change here, bump the ?v= tag on the script line in diagram-hand-in.html. */
 window.DIAGRAM_HAND_IN = {
   check: 2,
-  due: "2026-11-25T11:30:00-05:00",
+  due: "2026-11-25T11:50:00-05:00",
   endpoint: "https://script.google.com/macros/s/AKfycbyOK4vR2Vut7Em05tKCf6sGDqZb-yczipGG1zeVIRmtaWwPQi79JvkbSiz_b6uMqoBP/exec"
 };
