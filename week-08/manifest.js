@@ -4,7 +4,7 @@
  * (the text as tick boxes). Then one page for the class diagram, five pictures for the build, one optional bonus page.
  * Rules for every page: it matches the capstone text exactly (same rules, numbers, menu numbers, words);
  * it shows what the program must do, never which classes to create and never Java code of the capstone. */
-window.HUB_PHASES = ["Start here", "Design", "Build", "Bonus \u00b7 optional"];
+window.HUB_PHASES = ["Start here", "Design", "Build", "Demo Day", "Bonus \u00b7 optional"];
 window.HUB_MANIFEST = {
   week: 8,
   live: true,
@@ -21,7 +21,8 @@ window.HUB_MANIFEST = {
   reference: [
     { file: "capstone-2-path.html", title: "The Capstone 2 Path", group: "Start here", desc: "The order of work: ten stops from your capstone text to Demo Day. Press a stop, tick what is done, and see which pictures help with it." },
     { file: "requirements-checklist.html", title: "Requirements Checklist", group: "Start here", desc: "Did you build everything? Your capstone text as tick boxes, in your option's own words and prices: the rules, every screen, the receipt, the repository." },
-    { file: "diagram-hand-in.html", title: "Hand In Your Diagram", group: "Design", after: true, desc: "Send your class diagram file to Raymond when he asks for it: your name, your option, the .drawio file." }
+    { file: "diagram-hand-in.html", title: "Hand In Your Diagram", group: "Design", after: true, desc: "Send your class diagram file to Raymond when he asks for it: your name, your option, the .drawio file." },
+    { file: "demo-day.html", title: "Your Demo", group: "Demo Day", desc: "Ten minutes, nine parts, in order: introduction, commits, project board, user stories, README and class diagram, code, one piece to show, the live demo, questions. Ask yourself the questions, then rehearse against the clock." }
   ],
   exercises: [],
   games: []

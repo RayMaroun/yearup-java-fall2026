@@ -2798,5 +2798,15 @@
     "group": "Design",
     "url": "week-08/reference/diagram-hand-in.html",
     "text": "← Week 8 index Capstone 2 · Class diagram Hand In Your Diagram Send your diagram file to Raymond at the time he gave you. Hand in a real version of your whole diagram, even if some lines are still missing: two boxes is not a hand-in. Stuck? Tell Raymond before the time, not after. One hand-in per check, so choose the right file. Deadline Eastern time Time left Your name Choose your name Your option The Deli The Pizza The Taco Custom Your diagram file Choose your .drawio file The file you saved from diagrams.net, not a picture. You can also drag it here. Send my diagram Pick your name, your option and your file, then press Send. Received One hand-in per check. Not open yet Raymond will tell you when to hand in your diagram."
+  },
+  {
+    "week": 8,
+    "weekLabel": "Week 8",
+    "section": "Reference",
+    "title": "Your Demo",
+    "desc": "Ten minutes, nine parts, in order: introduction, commits, project board, user stories, README and class diagram, code, one piece to show, the live demo, questions. Ask yourself the questions, then rehearse against the clock.",
+    "group": "Demo Day",
+    "url": "week-08/reference/demo-day.html",
+    "text": "← Week 8 index Capstone 2 · Demo Day Your Demo Ten minutes, nine parts, in this order. Press a part and ask yourself its questions about your own project. Then press Rehearse and talk it through against the clock. 10:00 Ten minutes in all. Press Rehearse , start talking, and follow the part that lights up. Rehearse Reset The one idea Show your work in the order you made it. What it is, how you worked (commits, board, stories), what you designed (README and class diagram), what you wrote (the code), and then it running. Explain your own decisions: not too deep, not too vague."
   }
 ]
